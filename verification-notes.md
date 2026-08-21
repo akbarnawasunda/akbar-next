@@ -15,3 +15,11 @@ Direct browser evidence on `/admin` confirmed `/legacy/style.css`, `/legacy/admi
 Direct browser evidence on `/epk` confirmed `/legacy/style.css` and the Google Fonts stylesheet are both present in `document.styleSheets` and performance resources; the computed body font is `"Space Grotesk", sans-serif`; and the visible press-kit content includes the title, bio, genres, booking contact, download control, and back link.
 
 Direct browser evidence on `/privacy` confirmed `/legacy/style.css` and the Google Fonts stylesheet are present in `document.styleSheets` and performance resources; the computed body font is `"Space Grotesk", sans-serif`; and the visible page contains the privacy policy title, last-updated date, collection disclosures, third-party services, and legal-rights content.
+
+After replacing the two cross-origin iTunes JSONP script injections with guarded JSON fetches, the home route loaded with its complete legacy surface and preview controls. The browser console contained no output after loading `/?from_webdev=1`, so the reported opaque `Script error.` did not recur in the repaired preview.
+
+After adding the reference-counted legacy runtime loader guard, the home page reloaded successfully at `/?from_webdev=1&scriptfix=1`. The mode-toggle interaction changed the page into its purple rave state, confirming the legacy event handler still executed after the guard was introduced.
+
+The refreshed guarded page exposed the fetched release preview controls. Activating a 30-second preview control scrolled to the release rail and left the preview control available without breaking the release UI.
+
+After exercising both the mode toggle and a release preview, the browser console remained empty. No opaque `Script error.` or new runtime error was recorded.

@@ -19,3 +19,8 @@
 - [x] Inspect network and DOM evidence that `/legacy/style.css`, `/legacy/admin.css`, and the Google Fonts stylesheet load successfully on restored routes.
 - [x] Perform route-by-route visual verification for `/`, `/admin`, `/epk`, `/privacy`, and an unmatched path, documenting any layout or styling issues.
 - [x] Collect and document network/DOM evidence for stylesheet and Google Fonts loading on `/epk` and `/privacy`.
+- [x] Diagnose the opaque home-page `Script error.` and isolate the legacy or external source.
+- [x] Prevent duplicate or opaque external script failures while preserving home-page interactions.
+- [ ] Verify the repaired home route and save a checkpoint.
+- [x] Add duplicate-load guards to the legacy script loader and re-verify the home route.
+- [x] Exercise key home interactions after the repair and confirm no console errors recur.

@@ -6,13 +6,10 @@ function norm(s){return String(s||'').toLowerCase().replace(/[^a-z0-9\s]/g,'').r
 var MAP=null;
 function loadMap(done){
 if(MAP)return done(MAP);
-var cb='__prevcb'+Date.now();
-var s=document.createElement('script');
-window[cb]=function(d){delete window[cb];s.remove();MAP={};((d&&d.results)||[]).forEach(function(r){var k=norm(r.trackName);if(k&&!MAP[k]&&r.previewUrl)MAP[k]=r.previewUrl});done(MAP)};
-s.onerror=function(){delete window[cb];s.remove();done({})};
-s.src='https://itunes.apple.com/search?term='+encodeURIComponent('Akbar Nawasunda')+'&entity=song&limit=50&callback='+cb;
-document.head.appendChild(s);
-setTimeout(function(){if(!MAP){MAP={};done(MAP)}},8000);
+fetch('https://itunes.apple.com/search?term='+encodeURIComponent('Akbar Nawasunda')+'&entity=song&limit=50')
+.then(function(response){if(!response.ok)throw new Error('iTunes search failed');return response.json()})
+.then(function(d){MAP={};((d&&d.results)||[]).forEach(function(r){var k=norm(r.trackName);if(k&&!MAP[k]&&r.previewUrl)MAP[k]=r.previewUrl});done(MAP)})
+.catch(function(){MAP={};done(MAP)});
 }
 var audio=null,curBtn=null;
 function stopAll(){if(audio){audio.pause();audio=null}if(curBtn){curBtn.classList.remove('playing');curBtn=null}}

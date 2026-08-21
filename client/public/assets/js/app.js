@@ -477,21 +477,14 @@ function norm(s) {
   return String(s || '').toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
 }
 function itunesSearch(term, done) {
-  var cbName = '__itcb' + Date.now();
-  var s = document.createElement('script');
-  var settled = false;
-  function finish(d) {
-    if (settled) return;
-    settled = true;
-    delete window[cbName];
-    s.remove();
-    done(d);
-  }
-  window[cbName] = function(d) { finish(d); };
-  s.onerror = function() { finish(null); };
-  s.src = 'https://itunes.apple.com/search?term=' + encodeURIComponent(term) + '&entity=song&limit=50&callback=' + cbName;
-  document.head.appendChild(s);
-  setTimeout(function() { finish(null); }, 8000);
+  var url = 'https://itunes.apple.com/search?term=' + encodeURIComponent(term) + '&entity=song&limit=50';
+  fetch(url)
+    .then(function(response) {
+      if (!response.ok) throw new Error('iTunes search failed');
+      return response.json();
+    })
+    .then(function(data) { done(data); })
+    .catch(function() { done(null); });
 }
 var mapPromise = null;
 function getMap() {
