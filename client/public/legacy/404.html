@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 — Kesasar? | Akbar Nawasunda</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050508;color:#fff;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+body::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 45% at 50% 0%,rgba(108,99,255,.16),transparent),radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.5px);background-size:auto,26px 26px}
+.vinyl{position:absolute;left:50%;top:50%;width:520px;height:520px;transform:translate(-50%,-50%);border-radius:50%;background:repeating-radial-gradient(circle,#0c0c12 0 2px,#11111a 2px 4px);opacity:.35;animation:spin 6s linear infinite}
+.vinyl::after{content:"";position:absolute;inset:38%;border-radius:50%;background:#6c63ff;box-shadow:0 0 40px rgba(108,99,255,.6)}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+.box{position:relative;z-index:1;text-align:center;padding:24px}
+.k{font-size:clamp(90px,24vw,220px);line-height:.9;font-weight:800;letter-spacing:-.02em;background:linear-gradient(90deg,#6c63ff,#9a94ff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 30px rgba(108,99,255,.45))}
+h1{font-size:clamp(20px,5vw,34px);font-weight:800;margin:10px 0 8px}
+p{color:#8b8b96;font-size:14px;margin-bottom:26px}
+a{display:inline-block;padding:14px 26px;border-radius:999px;background:#0a0a10;border:2px solid #6c63ff;color:#fff;font-weight:700;font-size:13px;letter-spacing:.08em;text-decoration:none;box-shadow:0 0 26px rgba(108,99,255,.45);transition:.2s}
+a:hover{transform:translateY(-2px);box-shadow:0 0 40px rgba(108,99,255,.65)}
+.mq{position:absolute;bottom:0;left:0;right:0;border-top:1px solid rgba(255,255,255,.09);padding:12px 0;overflow:hidden;white-space:nowrap;color:#8b8b96;font-size:11px;letter-spacing:.3em}
+.mq span{display:inline-block;animation:mq 18s linear infinite}
+@keyframes mq{to{transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+<div class="vinyl"></div>
+<div class="box">
+<div class="k">404</div>
+<h1>WADUH, KESASAR BRO</h1>
+<p>Halaman yang lu cari gak ada di setlist. Balik ke panggung utama aja.</p>
+<a href="/">BALIK KE PANGGUNG</a>
+</div>
+<div class="mq"><span>JEDAG JEDUG • INDO BASS • BREAKBEAT • JUNGLE DUTCH • KENDANG CHOPS • JEDAG JEDUG • INDO BASS • BREAKBEAT • JUNGLE DUTCH • KENDANG CHOPS •&nbsp;</span></div>
+</body>
+</html>

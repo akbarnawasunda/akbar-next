@@ -1,0 +1,21 @@
+# Deployment Recovery Checklist
+
+- [ ] Confirm the current build script and deployment output contract.
+- [ ] Configure the Next.js project to generate a static export and populate `dist/`.
+- [ ] Remove or adapt route settings that prevent static export.
+- [ ] Run type checking and production build; verify `dist/index.html` and route assets exist.
+- [ ] Save a new checkpoint after successful verification.
+- [x] Resolve the full-stack upgrade conflicts while preserving the portfolio routes and vanilla interactions.
+- [x] Add a protected File Storage upload procedure using `storagePut` and persist file metadata in the database.
+- [x] Add an authenticated asset library UI for uploading and viewing stored portfolio media.
+- [x] Add Vitest coverage for the File Storage procedure and verify full-stack build/test flows.
+- [x] Restore the original portfolio experience in the active full-stack client, including home, admin, EPK, privacy, and 404 routes with vanilla interactions.
+- [x] Add Vitest coverage for successful asset upload/list flows with mocked storage and database helpers, then rerun the complete verification sequence.
+- [x] Load the legacy CSS and required head assets in the active full-stack client for preserved page presentation.
+- [x] Replace the router catch-all with the legacy 404 experience.
+- [x] Re-verify the active legacy pages after CSS and catch-all restoration.
+- [x] Open the full-stack preview and verify `/`, `/admin`, `/epk`, `/privacy`, and an unmatched route after the LegacyDocument CSS/head restoration.
+- [x] Confirm legacy CSS, fonts, and 404 catch-all behavior render without broken layout or missing styling.
+- [x] Inspect network and DOM evidence that `/legacy/style.css`, `/legacy/admin.css`, and the Google Fonts stylesheet load successfully on restored routes.
+- [x] Perform route-by-route visual verification for `/`, `/admin`, `/epk`, `/privacy`, and an unmatched path, documenting any layout or styling issues.
+- [x] Collect and document network/DOM evidence for stylesheet and Google Fonts loading on `/epk` and `/privacy`.

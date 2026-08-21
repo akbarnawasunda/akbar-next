@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Akbar Nawasunda — EPK / Press Kit</title>
+<meta name="description" content="Electronic Press Kit of Akbar Nawasunda aka DJ Akbar Remix — stats, bio, platforms, booking contact.">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050508;--panel:#0c0c12;--line:rgba(255,255,255,.09);--txt:#fff;--dim:#8b8b96;--acc:#6c63ff;--acc2:#9a94ff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:'Plus Jakarta Sans',system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace}
+.epk{max-width:860px;margin:0 auto;padding:48px 22px 60px}
+header{display:flex;gap:18px;align-items:center;margin-bottom:36px}
+.logo{width:72px;height:72px;border-radius:16px;border:1px solid var(--line)}
+.kicker{font-size:10px;letter-spacing:.3em;color:var(--acc2)}
+h1{font-size:clamp(30px,6vw,48px);font-weight:800;letter-spacing:-.02em;line-height:1.05}
+.aka{font-size:11px;color:var(--dim);margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:34px}
+@media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat b{display:block;font-size:20px;font-weight:800}
+.stat span{font-size:9px;letter-spacing:.2em;color:var(--dim)}
+section{margin-bottom:30px}
+h2{font-size:10px;letter-spacing:.3em;color:var(--acc2);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:14px}
+.lead{font-size:16px;font-weight:700;color:var(--txt);margin-bottom:10px}
+section p{color:var(--dim);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:11px;color:var(--dim)}
+#links{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:640px){#links{grid-template-columns:1fr}}
+#links a{display:block;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:13px;font-weight:700;color:var(--txt);text-decoration:none}
+#links a span{color:var(--acc2)}
+.contact b{color:var(--txt)}
+.actions{display:flex;gap:10px;margin:34px 0 20px;flex-wrap:wrap}
+.actions button,.actions a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;padding:12px 20px;border-radius:999px;border:2px solid var(--acc);background:#0a0a10;color:#fff;cursor:pointer;text-decoration:none;box-shadow:0 0 20px rgba(108,99,255,.35)}
+.actions a{border-color:var(--line);box-shadow:none;color:var(--dim)}
+footer{font-size:10px;color:var(--dim);letter-spacing:.15em}
+@media print{
+body{background:#fff;color:#000}
+.no-print{display:none}
+.epk{max-width:100%;padding:0}
+.stat,#links a{background:#fff;border-color:#ccc}
+h1,.lead,#links a,.stat b,.contact b{color:#000}
+p,.stat span,.aka,.kicker,h2,#links a span,footer,.chips span{color:#444}
+section{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="epk">
+<header>
+<img src="/logo-an.png" class="logo" alt="Akbar Nawasunda logo">
+<div>
+<p class="kicker mono">ELECTRONIC PRESS KIT — 2026</p>
+<h1>AKBAR NAWASUNDA</h1>
+<p class="aka mono">aka DJ Akbar Remix — Bandung, Indonesia (UTC+7)</p>
+</div>
+</header>
+<div class="stats">
+<div class="stat"><b id="sFoll">—</b><span class="mono">TOTAL FOLLOWERS</span></div>
+<div class="stat"><b id="sViews">—</b><span class="mono">YOUTUBE VIEWS</span></div>
+<div class="stat"><b id="sPlat">—</b><span class="mono">PLATFORMS</span></div>
+<div class="stat"><b id="sTrk">—</b><span class="mono">TRACKS</span></div>
+</div>
+<section>
+<h2 class="mono">BIO</h2>
+<p class="lead" id="bioShort"></p>
+<p id="bioLong"></p>
+</section>
+<section>
+<h2 class="mono">GENRES & STYLE</h2>
+<div class="chips"><span>Breakbeat</span><span>Indo Bass</span><span>Jedag Jedug</span><span>Jungle Dutch</span><span>Kendang Chops</span></div>
+</section>
+<section>
+<h2 class="mono">PLATFORMS & LINKS</h2>
+<ul id="links"></ul>
+</section>
+<section class="contact">
+<h2 class="mono">BOOKING & CONTACT</h2>
+<p>Remix requests, custom arrangements, collabs & licensing: <b>akbarnawasunda@gmail.com</b> (reply &lt; 24h) or via the form at <b>akbarnawasunda.my.id/#collab</b>.</p>
+</section>
+<div class="actions no-print">
+<button onclick="window.print()">⬇ DOWNLOAD PDF</button>
+<a href="/">← BACK TO SITE</a>
+</div>
+<footer class="mono">© 2026 AKBAR NAWASUNDA — LIVE DATA FROM AKBARNAWASUNDA.MY.ID</footer>
+</div>
+<script>
+fetch('data/content.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).then(function(db){
+if(!db)return;
+var q=function(s){return document.querySelector(s)};
+if(db.stats){
+if(db.stats.followers)q('#sFoll').textContent=db.stats.followers;
+if(db.stats.views)q('#sViews').textContent=db.stats.views;
+if(db.stats.platforms)q('#sPlat').textContent=db.stats.platforms;
+if(db.stats.tracks)q('#sTrk').textContent=db.stats.tracks;
+}
+var bio=(db.bio&&(db.bio.en||db.bio.id))||{};
+if(bio.short)q('#bioShort').textContent=bio.short;
+if(bio.long)q('#bioLong').textContent=bio.long;
+var S=db.socials||{};
+var L=[['Spotify',S.spotify],['Apple Music',S.apple],['YouTube',S.youtube],['SoundCloud',S.soundcloud],['Deezer',S.deezer],['Instagram',S.instagram],['TikTok',S.tiktok],['X / Twitter',S.twitter]];
+q('#links').innerHTML=L.filter(function(x){return x[1]}).map(function(x){return '<li><a href="'+x[1]+'" target="_blank" rel="noopener">'+x[0]+' <span class="mono">↗</span></a></li>'}).join('');
+});
+</script>
+</body>
+</html>
