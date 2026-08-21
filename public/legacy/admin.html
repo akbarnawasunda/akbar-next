@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404: NOT_FOUND</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script>document.documentElement.setAttribute('data-admin-theme',localStorage.getItem('an_ui_theme')||'dark')</script>
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+<div id="decoy404" style="position:fixed;inset:0;background:#fafafa;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<div style="width:100%;max-width:660px;background:#fff;border:1px solid #eaeaea;border-radius:8px;padding:28px 32px;color:#000">
+<p style="margin:0 0 26px;font-size:22px"><strong>404</strong>: NOT_FOUND</p>
+<p style="margin:0 0 18px;font-size:15px">Code: <code style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px">`NOT_FOUND`</code></p>
+<p style="margin:0;font-size:15px">ID: <code id="vercelId" style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px"></code></p>
+</div>
+</div>
+<button id="ghostDot" aria-label=" " style="position:fixed;top:0;right:0;width:16px;height:16px;background:transparent;border:none;opacity:0;cursor:default;z-index:10000"></button>
+<script>
+(function(){
+var d=document.getElementById('decoy404'),g=document.getElementById('ghostDot');
+var idEl=document.getElementById('vercelId');
+if(idEl)idEl.textContent='`sin1::67zmn-'+Date.now()+'-'+Math.random().toString(16).slice(2,14)+'`';
+if(localStorage.getItem('an_token')){
+if(d)d.remove();if(g)g.remove();
+document.title='AN/ADMIN — Control Center';
+}else{
+document.title='404: NOT_FOUND';
+g.addEventListener('click',function(){d.remove();g.remove();document.title='AN/ADMIN — Control Center';});
+}
+})();
+</script>
+<div class="topbar">
+<div class="brand">AN<span>/</span>ADMIN<em class="ver">v16</em></div>
+<div class="top-actions">
+<a class="ghost-link" href="https://akbarnawasunda.my.id" target="_blank" rel="noopener">View Site ↗</a>
+<button id="palBtn" class="btn-ghost" title="Ctrl+K">⌘K</button>
+<button id="themeToggle" class="btn-ghost icon-btn" title="Ganti dark/light"></button>
+<button id="reload" class="btn-ghost">Reload</button>
+<button id="logout" class="btn-ghost">Disconnect</button>
+</div>
+</div>
+<div id="status" class="status-bar"></div>
+<div id="draftBar" class="draft-bar" hidden><span>⚠ Draft belum disimpan dari sesi sebelumnya ketemu.</span><div style="display:flex;gap:8px"><button id="draftYes" class="btn-primary">Restore</button><button id="draftNo" class="btn-ghost">Buang</button></div></div>
+<div class="wrap">
+<div id="authBox" class="auth-box">
+<h2>AN/ADMIN</h2>
+<p>Masuk pake GitHub Personal Access Token buat ngontrol site lu.</p>
+<input id="token" type="password" placeholder="ghp_xxxxxxxxxxxx" style="margin-bottom:12px">
+<button id="login" class="btn-primary" style="width:100%;justify-content:center">Connect GitHub</button>
+</div>
+<div id="editor" hidden>
+<div class="layout">
+<nav class="sidebar">
+<button class="nav-item active" data-tab="dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</button>
+<button class="nav-item" data-tab="media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg>Media</button>
+<button class="nav-item" data-tab="hero"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Hero & Stats</button>
+<button class="nav-item" data-tab="texts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V5h16v2M9 20h6M12 5v15"/></svg>Site Texts</button>
+<button class="nav-item" data-tab="platforms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14 0 18-3-4-3-14.5 0-18z"/></svg>Platforms & Socials</button>
+<button class="nav-item" data-tab="bio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4 4-6 8-6s7.2 2 8 6"/></svg>Bio Text</button>
+<button class="nav-item" data-tab="embeds"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M10 9l5 3-5 3z"/></svg>Embeds</button>
+<button class="nav-item" data-tab="theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="8.5" cy="10" r="1.2" fill="currentColor"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="10" r="1.2" fill="currentColor"/><path d="M12 21a9 9 0 0 0 9-9c0-2-1.5-3-3-3h-2a2.5 2.5 0 0 0-2 4c.6.8.2 2-1 2z"/></svg>Theme</button>
+<button class="nav-item" data-tab="drop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l14-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>Drop Board</button>
+<button class="nav-item" data-tab="license"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>License</button>
+<button class="nav-item" data-tab="releases"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></svg>Releases</button>
+<button class="nav-item" data-tab="footer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="16" width="18" height="5" rx="1"/><path d="M7 16v-4M12 16v-4M17 16v-4"/></svg>Footer</button>
+</nav>
+<div class="main">
+<div class="main-head">
+<h1 id="panelTitle">Dashboard</h1>
+<button id="save" class="btn-primary"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Save & Deploy<span class="dirty-dot"></span></button>
+</div>
+<div class="panel active" id="panel-dash">
+<div class="stat-grid">
+<div class="stat-card"><span class="stat-num" id="dRel">0</span><span class="stat-lbl">Releases</span></div>
+<div class="stat-card"><span class="stat-num" id="dPlat">0</span><span class="stat-lbl">Platforms</span></div>
+<div class="stat-card"><span class="stat-num" id="dEmb">0</span><span class="stat-lbl">Embed URLs</span></div>
+<div class="stat-card"><span class="stat-num" id="dTheme">NEON</span><span class="stat-lbl">Active Theme</span></div>
+</div>
+<div class="chart-card"><span class="stat-lbl">Releases per tahun</span><div id="dChart" class="bars"></div></div>
+<div class="quick-grid">
+<button class="quick-card" data-goto="releases"><b>Kelola Releases</b><span>tambah / edit / urutkan track</span></button>
+<button class="quick-card" data-goto="media"><b>Upload Media</b><span>drag-drop gambar/file ke assets/media/</span></button>
+<button class="quick-card" data-goto="theme"><b>Ganti Theme</b><span>NEON / MELUNA / KAMPUNG</span></button>
+<button class="quick-card" data-goto="platforms"><b>Platforms & Socials</b><span>grid site + link EPK</span></button>
+</div>
+</div>
+<div class="panel" id="panel-media">
+<p class="hint hint-box">Upload gambar atau file ke <code>assets/media/</code>. Setelah upload, URL otomatis ke-copy ke clipboard. Langsung paste di cover art, embed, atau field URL lainnya.</p>
+<div class="drop-zone" id="dropZone">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+<p><strong>Drag & drop file di sini</strong></p>
+<p class="hint">atau klik buat pilih file (max 5MB)</p>
+</div>
+<input type="file" id="fileInput" style="display:none" accept="image/*,audio/*,video/*,.pdf,.zip">
+<div id="mediaGrid" class="media-grid"></div>
+</div>
+<div class="panel" id="panel-hero">
+<div class="grid">
+<div class="field"><label class="field-label">Hero Badge</label><input data-f="hero.badge" placeholder="OPEN UNTUK KOLABORASI..."></div>
+<div class="field"><label class="field-label">Hero AKA</label><input data-f="hero.aka" placeholder="DJ Akbar Remix"></div>
+</div>
+<div class="grid-2">
+<div class="field"><label class="field-label">Followers</label><input data-f="stats.followers" placeholder="5,875+"></div>
+<div class="field"><label class="field-label">YouTube Views</label><input data-f="stats.views" placeholder="1JT+"></div>
+<div class="field"><label class="field-label">Platforms</label><input data-f="stats.platforms" placeholder="9"></div>
+<div class="field"><label class="field-label">Tracks</label><input data-f="stats.tracks" placeholder="40+"></div>
+</div>
+</div>
+<div class="panel" id="panel-texts">
+<p class="hint hint-box">Kosongin field = pakai default translations.js. Isi = override global semua bahasa.</p>
+<div class="grid">
+<div class="field"><label class="field-label">Hero Tagline</label><input data-f="texts.hero_tag" placeholder="// PRODUSER MUSIK..."></div>
+<div class="field"><label class="field-label">Pad Sub</label><input data-f="texts.pad_sub"></div>
+<div class="field"><label class="field-label">Spotify Sub</label><input data-f="texts.spotify_sub"></div>
+<div class="field"><label class="field-label">SoundCloud Sub</label><input data-f="texts.sc_sub"></div>
+<div class="field"><label class="field-label">YouTube Sub</label><input data-f="texts.yt_sub"></div>
+<div class="field"><label class="field-label">Releases Sub</label><input data-f="texts.rel_sub"></div>
+<div class="field"><label class="field-label">Platforms Title</label><input data-f="texts.platforms_title" placeholder="ALL PLATFORM MUSIK"></div>
+<div class="field"><label class="field-label">Platforms Sub</label><input data-f="texts.platforms_sub"></div>
+</div>
+</div>
+<div class="panel" id="panel-platforms">
+<p class="hint hint-box">SATU menu buat dua hal: grid <b>ALL PLATFORMS</b> di site + link sosial di <b>EPK</b>. <b>Warna otomatis</b> ngikutin brand default icon (TikTok/Instagram pake warna asli logo) — gak ada lagi pilih warna manual.</p>
+<button id="seedPlat" class="add-btn" style="border-color:var(--neon);color:var(--neon)">★ Isi 11 Platform Default (sama persis kayak site sekarang)</button>
+<button id="addPlat" class="add-btn">+ Tambah Platform Baru</button>
+<div id="platRows"></div>
+<p class="hint">Pilih icon = SVG colored kepasang otomatis di marquee + grid. Urutan list = urutan tampil di site.</p>
+</div>
+<div class="panel" id="panel-bio">
+<div class="lang-tabs">
+<button class="lang-tab active" data-lang="id">ID</button>
+<button class="lang-tab" data-lang="en">EN</button>
+<button class="lang-tab" data-lang="zh">ZH</button>
+<button class="lang-tab" data-lang="ja">JA</button>
+<button class="lang-tab" data-lang="ko">KO</button>
+<button class="lang-tab" data-lang="es">ES</button>
+<button class="lang-tab" data-lang="ar">AR</button>
+</div>
+<div class="field"><label class="field-label">Bio Singkat</label><textarea id="bioShort" rows="3"></textarea></div>
+<div class="field"><label class="field-label">Bio Lengkap</label><textarea id="bioLong" rows="6"></textarea></div>
+</div>
+<div class="panel" id="panel-embeds">
+<div class="field"><label class="field-label">Spotify Embeds</label><textarea id="featSp" rows="4" placeholder="https://open.spotify.com/track/..."></textarea><p class="hint">Satu URL per baris. 1 URL = embed tunggal, 2+ = rail swipe.</p></div>
+<div class="field"><label class="field-label">YouTube Embeds</label><textarea id="featYt" rows="4" placeholder="https://youtu.be/..."></textarea><p class="hint">watch/youtu.be = VIDEO, @channel = CHANNEL.</p></div>
+<div class="field"><label class="field-label">SoundCloud Embeds</label><textarea id="featSC" rows="4" placeholder="https://soundcloud.com/..."></textarea><p class="hint">Kosongin = pakai embed bawaan site.</p></div>
+</div>
+<div class="panel" id="panel-theme">
+<div class="theme-grid">
+<div class="theme-card" data-theme="1"><div class="theme-preview preview-neon"></div><h4>Mode 1: NEON</h4><p>Identitas asli. Dark purple, neon pink & cyan.</p></div>
+<div class="theme-card" data-theme="2"><div class="theme-preview preview-meluna"></div><h4>Mode 2: MELUNA</h4><p>Dark indigo, font bold. Vibe distributor.</p></div>
+<div class="theme-card" data-theme="3"><div class="theme-preview preview-kampung"></div><h4>Mode 3: KAMPUNG</h4><p>Warm orange & gold. Vibe hajatan.</p></div>
+</div>
+<p class="hint">Pilih salah satu, Save & Deploy. Site ganti tema global.</p>
+</div>
+<div class="panel" id="panel-drop">
+<div class="field"><label class="field-label">Drop Board Text</label><input data-f="dropBoard.text" placeholder="LATEST DROP: ..."></div>
+<div class="field"><label class="field-label">Drop Board Link</label><input data-f="dropBoard.link" placeholder="https://open.spotify.com/..."></div>
+<p class="hint">Banner live di atas section RILIS. Kosongin text = banner hilang.</p>
+</div>
+<div class="panel" id="panel-license">
+<div class="field"><label class="field-label">License Text</label><textarea data-f="license" rows="5"></textarea></div>
+</div>
+<div class="panel" id="panel-footer">
+<p class="hint hint-box">Atur teks footer site. Kosongin field = pakai default HTML. Tahun copyright wajib diisi biar tiap tahun baru gak perlu edit kode.</p>
+<div class="grid">
+<div class="field"><label class="field-label">Tahun Copyright</label><input data-f="footer.year" placeholder="2026"></div>
+<div class="field"><label class="field-label">Nama Copyright</label><input data-f="footer.name" placeholder="AKBAR NAWASUNDA"></div>
+<div class="field"><label class="field-label">Teks Hak Cipta</label><input data-f="footer.rights" placeholder="Seluruh hak cipta dilindungi."></div>
+<div class="field"><label class="field-label">Status Text</label><input data-f="footer.status" placeholder="SYSTEM ONLINE"></div>
+<div class="field"><label class="field-label">Nama Kota</label><input data-f="footer.city" placeholder="BANDUNG"></div>
+<div class="field"><label class="field-label">Link Google Maps</label><input data-f="footer.maps" placeholder="https://maps.app.goo.gl/..."></div>
+<div class="field"><label class="field-label">Zona Waktu</label><input data-f="footer.tz" placeholder="UTC+7"></div>
+</div>
+</div>
+<div class="panel" id="panel-releases">
+<input id="relSearch" placeholder="Cari release berdasarkan judul..." style="margin-bottom:12px">
+<button id="addRel" class="add-btn">+ Tambah Release Baru</button>
+<div id="relRows"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="palette" class="pal" hidden><div class="pal-box"><input id="palInput" placeholder="Ketik perintah atau tab..."><button id="palClose" class="pal-close btn-ghost" aria-label="Tutup" onclick="document.getElementById('palette').hidden=true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button><div id="palList"></div></div></div>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>

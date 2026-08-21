@@ -1,0 +1,24 @@
+{
+  "name": "Akbar Nawasunda — Official Website",
+  "short_name": "Akbar Nawasunda",
+  "description": "Official website of Akbar Nawasunda aka DJ Akbar Remix — music producer, remixer and DJ from Bandung, Indonesia.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#050508",
+  "theme_color": "#050508",
+  "icons": [
+    {
+      "src": "/assets/media/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/media/logo-an.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
