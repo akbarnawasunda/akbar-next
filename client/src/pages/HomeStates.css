@@ -1,0 +1,25 @@
+.content-state {
+  max-width: 1120px;
+  margin: -18px auto 34px;
+  padding: 10px 13px;
+  border-left: 2px solid #8a5cff;
+  background: rgba(138, 92, 255, 0.08);
+  color: #c9c7d9;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.content-state-live {
+  border-left-color: #d8ff65;
+  color: #d8ff65;
+}
+
+.content-state-warn {
+  border-left-color: #ffbe74;
+  color: #ffcf99;
+}
+
+@media (max-width: 820px) {
+  .content-state { margin: -5px 0 28px; font-size: 9px; line-height: 1.55; }
+}

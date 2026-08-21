@@ -72,6 +72,14 @@ const trpcClient = trpc.createClient({
   ],
 });
 
+// The preserved legacy Lab has a service worker. Remove stale registrations in
+// development so it cannot serve cached modules after route or content changes.
+if (import.meta.env.DEV && "serviceWorker" in navigator) {
+  navigator.serviceWorker.getRegistrations().then(registrations => {
+    registrations.forEach(registration => void registration.unregister());
+  }).catch(() => undefined);
+}
+
 createRoot(document.getElementById("root")!).render(
   <trpc.Provider client={trpcClient} queryClient={queryClient}>
     <QueryClientProvider client={queryClient}>

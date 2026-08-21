@@ -64,7 +64,7 @@ export default function LegacyDocument({ source, scripts = "home" }: Props) {
         if (!entry.active) return;
         await new Promise<void>((resolve) => { const tag = document.createElement("script"); tag.src = src; tag.onload = () => resolve(); tag.onerror = () => resolve(); document.body.appendChild(tag); entry.tags.push(tag); });
       }
-      if (entry.active && "serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined);
+      if (entry.active && import.meta.env.PROD && "serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined);
     };
     void load();
     return () => releaseRuntime(runtimeKey, entry);

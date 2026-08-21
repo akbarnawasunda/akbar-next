@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertStoredAsset, InsertUser, storedAssets, users } from "../drizzle/schema";
+import { artistContent, fanSignals, InsertArtistContent, InsertFanSignal, InsertStoredAsset, InsertUser, storedAssets, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -100,4 +100,43 @@ export async function listStoredAssets(ownerId: number) {
   const db = await getDb();
   if (!db) return [];
   return db.select().from(storedAssets).where(eq(storedAssets.ownerId, ownerId));
+}
+
+export async function createFanSignal(signal: InsertFanSignal) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  await db.insert(fanSignals).values(signal).onDuplicateKeyUpdate({
+    set: { source: signal.source ?? "home" },
+  });
+  return { email: signal.email, source: signal.source ?? "home" };
+}
+
+export async function listPublishedArtistContent() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(artistContent).where(eq(artistContent.isPublished, true)).orderBy(asc(artistContent.sortOrder));
+}
+
+export async function listAllArtistContent() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(artistContent).orderBy(asc(artistContent.kind), asc(artistContent.sortOrder));
+}
+
+export async function upsertArtistContent(item: InsertArtistContent) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  await db.insert(artistContent).values(item).onDuplicateKeyUpdate({
+    set: {
+      kind: item.kind,
+      title: item.title,
+      subtitle: item.subtitle,
+      label: item.label,
+      href: item.href,
+      imageUrl: item.imageUrl,
+      sortOrder: item.sortOrder,
+      isPublished: item.isPublished,
+    },
+  });
+  return { slug: item.slug };
 }

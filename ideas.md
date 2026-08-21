@@ -63,3 +63,21 @@ Use a compact AN monogram built from two offset signal bars: an angular A formed
 
 ## Implementation Reminder
 Preserve the original asset contents and vanilla scripts. React/Next routing should provide the shell, metadata, and page boundaries; client-only wrappers should isolate browser-dependent behavior such as Three.js, Web Audio, Canvas, service-worker registration, and the admin panel.
+
+## Premium Artist-Platform Revision Direction
+
+### Reference Patterns to Adapt, Not Copy
+The reviewed reference demonstrates four patterns worth adapting: an immersive visual entry point, a focused full-screen menu, a narrative-led artist universe, and explicit fan pathways for community, live events, shop, and music platforms. Akbar Nawasunda will keep its own midnight-indigo, neon-violet, Indonesian bass identity rather than replicating another artist’s visual language or assets.
+
+### Proposed Product Identity: AN // NIGHT FREQUENCY
+The revised site becomes a future-ready artist operating system: a cinematic public home that converts listeners into fans, a modular release and video surface, a live-event-ready schedule, a fan-signup layer, and a creator-facing set of interactive music tools. The existing Jedag Pad, sequencer, and game become a distinctive “Lab” experience instead of competing with the conversion-focused hero.
+
+### Homepage Hierarchy
+1. Full-screen “current era” hero with a single dominant release, smart platform CTA, and secondary fan-community CTA.
+2. Current release, visual/video premiere, and next live date as compact high-value modules.
+3. A horizontal release vault and video grid designed for continuous future additions.
+4. The interactive Lab, collaboration portal, and fan signal signup as deeper engagement modules.
+5. A durable footer integrating all listening platforms, contact, legal, and future commerce/community routes.
+
+### Future-Ready Modules
+The public architecture should accommodate a release CMS, show/event records, gated fan drops, email/newsletter audiences, community prompts, merch/Shopify connection, and a lightweight press/booking kit without changing the core navigation model.

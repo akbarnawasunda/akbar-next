@@ -2,8 +2,8 @@ import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
-import { createStoredAsset, listStoredAssets } from "./db";
+import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { createFanSignal, createStoredAsset, listAllArtistContent, listPublishedArtistContent, listStoredAssets, upsertArtistContent } from "./db";
 import { storagePut } from "./storage";
 
 const MAX_ASSET_BYTES = 10 * 1024 * 1024;
@@ -45,6 +45,31 @@ export const appRouter = router({
           size: input.size,
         });
       }),
+  }),
+  fanSignal: router({
+    subscribe: publicProcedure
+      .input(z.object({
+        email: z.string().trim().toLowerCase().email().max(320),
+        source: z.enum(["home", "footer"]).default("home"),
+      }))
+      .mutation(({ input }) => createFanSignal(input)),
+  }),
+  content: router({
+    list: publicProcedure.query(() => listPublishedArtistContent()),
+    listAll: adminProcedure.query(() => listAllArtistContent()),
+    upsert: adminProcedure
+      .input(z.object({
+        kind: z.enum(["hero", "release", "video", "live"]),
+        slug: z.string().trim().toLowerCase().regex(/^[a-z0-9-]+$/).max(128),
+        title: z.string().trim().min(1).max(255),
+        subtitle: z.string().trim().max(2_000).default(""),
+        label: z.string().trim().max(128).default(""),
+        href: z.string().trim().max(1_024).default(""),
+        imageUrl: z.string().trim().max(1_024).default(""),
+        sortOrder: z.number().int().min(0).max(10_000).default(0),
+        isPublished: z.boolean().default(true),
+      }))
+      .mutation(({ input }) => upsertArtistContent(input)),
   }),
 });
 

@@ -24,3 +24,17 @@
 - [x] Verify the repaired home route and save a checkpoint; checkpoint `ab7f4e11` is saved and live.
 - [x] Add duplicate-load guards to the legacy script loader and re-verify the home route.
 - [x] Exercise key home interactions after the repair and confirm no console errors recur.
+- [x] Establish a premium electronic-artist visual direction that retains Akbar Nawasunda’s identity.
+- [x] Replace the legacy home shell with a cinematic, responsive artist-platform homepage.
+- [x] Add future-ready public modules for releases, videos, tour/event readiness, newsletter capture, and fan engagement.
+- [x] Build a content architecture that can evolve from static portfolio data to managed admin content.
+- [x] Preserve core music tools and validate the redesigned experience across desktop and mobile.
+- [x] Add a duplicate-safe, public fan-signal signup workflow backed by the database.
+- [x] Add database-backed artist content models and public read procedures for releases, videos, live status, and the current era.
+- [x] Add an owner-only content-management workflow and wire the homepage to managed content with loading, empty, and fallback states.
+- [ ] Verify the owner studio while authenticated as an admin, including content list and save/edit success paths.
+- [ ] Create managed artist-content records through the owner workflow and confirm the public homepage renders them instead of static fallback content.
+- [x] Make the managed-content loading and empty states explicit in the public homepage UI.
+- [ ] Complete owner-authenticated Studio publish verification when the user chooses to authorize a sign-in session.
+- [x] Initialize the managed-content database with verified existing release, visual, and live-status information for the public launch.
+- [x] Fix the `/studio` route so the owner-management access screen resolves instead of the legacy 404 fallback.

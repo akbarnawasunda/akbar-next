@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
@@ -23,7 +23,35 @@ export const storedAssets = mysqlTable("storedAssets", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
+/** Public email permissions for the AN // NIGHT FREQUENCY fan channel. */
+export const fanSignals = mysqlTable("fanSignals", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  source: varchar("source", { length: 64 }).notNull().default("home"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+/** Owner-managed entries rendered in the public artist platform. */
+export const artistContent = mysqlTable("artistContent", {
+  id: int("id").autoincrement().primaryKey(),
+  kind: mysqlEnum("kind", ["hero", "release", "video", "live"]).notNull(),
+  slug: varchar("slug", { length: 128 }).notNull().unique(),
+  title: varchar("title", { length: 255 }).notNull(),
+  subtitle: text("subtitle").notNull(),
+  label: varchar("label", { length: 128 }).notNull().default(""),
+  href: varchar("href", { length: 1024 }).notNull().default(""),
+  imageUrl: varchar("imageUrl", { length: 1024 }).notNull().default(""),
+  sortOrder: int("sortOrder").notNull().default(0),
+  isPublished: boolean("isPublished").notNull().default(true),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type StoredAsset = typeof storedAssets.$inferSelect;
 export type InsertStoredAsset = typeof storedAssets.$inferInsert;
+export type FanSignal = typeof fanSignals.$inferSelect;
+export type InsertFanSignal = typeof fanSignals.$inferInsert;
+export type ArtistContent = typeof artistContent.$inferSelect;
+export type InsertArtistContent = typeof artistContent.$inferInsert;

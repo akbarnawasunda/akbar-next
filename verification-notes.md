@@ -23,3 +23,17 @@ After adding the reference-counted legacy runtime loader guard, the home page re
 The refreshed guarded page exposed the fetched release preview controls. Activating a 30-second preview control scrolled to the release rail and left the preview control available without breaking the release UI.
 
 After exercising both the mode toggle and a release preview, the browser console remained empty. No opaque `Script error.` or new runtime error was recorded.
+
+The restarted preview now serves the redesigned AN // NIGHT FREQUENCY homepage. Desktop verification confirmed the fixed top navigation, a readable cinematic hero with the new original midnight-indigo asset, clear release context, primary listening CTA, and Fan Signal entry point. The previous legacy homepage remains available at `/lab` for the interactive tools.
+
+Mobile full-page verification at 390px confirmed that the premium homepage collapses into a readable single-column sequence while retaining the release, visual, live, Lab, future-platform, signup, and footer modules. Separate desktop verification confirmed `/lab` still resolves to the original interactive audio and canvas experience, including the main Jedag controls.
+
+Post-integration verification confirmed the public homepage is still serving its archive fallback content cleanly when no managed records exist. The first `/studio` preview resolved to the legacy 404 fallback despite the route existing in source, so the studio route requires a runtime refresh and explicit recheck before the implementation can be considered complete.
+
+After a runtime restart, `/studio` no longer showed the legacy 404 but rendered a blank document. Browser inspection found an empty `#root` with no rendered text and no browser-console output. This indicates the route needs further runtime diagnosis before access management can be signed off.
+
+The blank studio route was traced to a stale legacy service-worker registration that served outdated development modules. The legacy service worker is now production-only, and development bootstrapping unregisters stale registrations. Reloading `/studio?refresh=1` rendered the intended “Studio access” sign-in surface with its functional sign-in button.
+
+Verified existing artist data was initialized as managed records for the hero, current release, primary visual, and live-status modules. The public homepage now reports “LIVE CONTENT,” labels its release as managed from AN // STUDIO, renders the managed current era/release/video/live values, and retains archive information only for modules that have not yet been migrated to Studio.
+
+The finalized managed hero uses only the owner-controlled database title, without a fixed suffix appended by the UI. Desktop verification confirmed the title remains readable as “MAKE THE NIGHT MOVE,” with the live-content status visible beside the current release.
