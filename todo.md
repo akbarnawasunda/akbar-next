@@ -1,10 +1,10 @@
 # Deployment Recovery Checklist
 
-- [ ] Confirm the current build script and deployment output contract.
-- [ ] Configure the Next.js project to generate a static export and populate `dist/`.
-- [ ] Remove or adapt route settings that prevent static export.
-- [ ] Run type checking and production build; verify `dist/index.html` and route assets exist.
-- [ ] Save a new checkpoint after successful verification.
+- [x] Confirm the current build script and deployment output contract; full-stack deployment now builds `dist/` with Vite and esbuild.
+- [x] Superseded by the full-stack conversion: the active Vite build generates the deployer-required `dist/` directory.
+- [x] Superseded by the full-stack conversion: static-export-only route settings were removed from the active runtime.
+- [x] Run type checking and production build; verify the full-stack `dist/` output and route assets exist.
+- [x] Save a new checkpoint after successful verification; checkpoint `858f8ed2` is saved and live.
 - [x] Resolve the full-stack upgrade conflicts while preserving the portfolio routes and vanilla interactions.
 - [x] Add a protected File Storage upload procedure using `storagePut` and persist file metadata in the database.
 - [x] Add an authenticated asset library UI for uploading and viewing stored portfolio media.
