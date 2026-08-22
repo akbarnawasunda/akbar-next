@@ -48,3 +48,5 @@
 - [x] Add an accessible mobile navigation drawer for the Night Frequency public header.
 - [x] Harden the mobile navigation drawer with Escape, focus return, and outside-interaction closing behavior.
 - [x] Verify the mobile Night Frequency navigation and rerun the complete quality gate after the drawer change.
+- [x] Confirm checkpoint `35ec0d92` matches the configured GitHub `main` branch.
+- [ ] Commit and push the current GitHub-first handoff metadata without creating another production checkpoint.
