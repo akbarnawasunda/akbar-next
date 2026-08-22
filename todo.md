@@ -100,3 +100,8 @@
 - [x] Buat text scramble interaktif berdurasi 2–3 detik untuk heading/CTA terpilih di Home, Music, Visuals, Live, Universe, About, dan EPK.
 - [x] Pastikan halaman detail rilisan memakai artwork legacy/CMS yang sama dengan katalog, lalu verifikasi visualnya pada route publik.
 - [x] Tambahkan tes regresi serta verifikasi Android, reduced-motion, build, dan deployment untuk pengalaman visual baru.
+- [x] Tambahkan schema dan prosedur database untuk inquiry booking, remix, collaboration, dan licensing yang masuk dari publik.
+- [x] Bangun halaman inquiry publik dan form terstruktur dengan validasi, pilihan jenis kebutuhan, serta status submit yang jelas.
+- [x] Bangun halaman Licensing & Usage berbasis data legacy terverifikasi tanpa membuat klaim harga atau hak yang belum ditetapkan.
+- [x] Tambahkan CTA inquiry dari EPK, release detail, dan Universe serta operasi owner untuk membaca inquiry masuk.
+- [ ] Tambahkan tes, verifikasi desktop/Android, build, dan deployment untuk alur conversion baru.

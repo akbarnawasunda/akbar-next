@@ -3,7 +3,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
-import { createFanSignal, createStoredAsset, listAllArtistContent, listFanSignals, listPublishedArtistContent, listStoredAssets, upsertArtistContent } from "./db";
+import { createArtistInquiry, createFanSignal, createStoredAsset, listAllArtistContent, listArtistInquiries, listFanSignals, listPublishedArtistContent, listStoredAssets, updateArtistInquiryStatus, upsertArtistContent } from "./db";
 import { storagePut } from "./storage";
 
 const MAX_ASSET_BYTES = 10 * 1024 * 1024;
@@ -54,6 +54,32 @@ export const appRouter = router({
       }))
       .mutation(({ input }) => createFanSignal(input)),
     list: adminProcedure.query(() => listFanSignals()),
+  }),
+  inquiry: router({
+    submit: publicProcedure
+      .input(z.object({
+        inquiryType: z.enum(["booking", "remix", "collaboration", "licensing"]),
+        name: z.string().trim().min(2).max(160),
+        email: z.string().trim().toLowerCase().email().max(320),
+        organization: z.string().trim().max(160).optional(),
+        projectTitle: z.string().trim().min(2).max(255),
+        location: z.string().trim().max(160).optional(),
+        timeline: z.string().trim().max(160).optional(),
+        budgetContext: z.string().trim().max(255).optional(),
+        message: z.string().trim().min(12).max(4_000),
+        source: z.enum(["epk", "release", "universe", "licensing"]),
+      }))
+      .mutation(({ input }) => createArtistInquiry({
+        ...input,
+        organization: input.organization || null,
+        location: input.location || null,
+        timeline: input.timeline || null,
+        budgetContext: input.budgetContext || null,
+      })),
+    list: adminProcedure.query(() => listArtistInquiries()),
+    updateStatus: adminProcedure
+      .input(z.object({ id: z.number().int().positive(), status: z.enum(["new", "reviewed", "closed"]) }))
+      .mutation(({ input }) => updateArtistInquiryStatus(input.id, input.status)),
   }),
   content: router({
     list: publicProcedure.query(() => listPublishedArtistContent()),

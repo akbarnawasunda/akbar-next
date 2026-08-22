@@ -47,6 +47,24 @@ export const artistContent = mysqlTable("artistContent", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
+/** Public work requests submitted from booking, release, licensing, or collaboration flows. */
+export const artistInquiries = mysqlTable("artistInquiries", {
+  id: int("id").autoincrement().primaryKey(),
+  inquiryType: mysqlEnum("inquiryType", ["booking", "remix", "collaboration", "licensing"]).notNull(),
+  name: varchar("name", { length: 160 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  organization: varchar("organization", { length: 160 }),
+  projectTitle: varchar("projectTitle", { length: 255 }).notNull(),
+  location: varchar("location", { length: 160 }),
+  timeline: varchar("timeline", { length: 160 }),
+  budgetContext: varchar("budgetContext", { length: 255 }),
+  message: text("message").notNull(),
+  source: mysqlEnum("source", ["epk", "release", "universe", "licensing"]).notNull(),
+  status: mysqlEnum("status", ["new", "reviewed", "closed"]).notNull().default("new"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type StoredAsset = typeof storedAssets.$inferSelect;
@@ -55,3 +73,5 @@ export type FanSignal = typeof fanSignals.$inferSelect;
 export type InsertFanSignal = typeof fanSignals.$inferInsert;
 export type ArtistContent = typeof artistContent.$inferSelect;
 export type InsertArtistContent = typeof artistContent.$inferInsert;
+export type ArtistInquiry = typeof artistInquiries.$inferSelect;
+export type InsertArtistInquiry = typeof artistInquiries.$inferInsert;

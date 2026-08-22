@@ -1,6 +1,6 @@
 import { asc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { artistContent, fanSignals, InsertArtistContent, InsertFanSignal, InsertStoredAsset, InsertUser, storedAssets, users } from "../drizzle/schema";
+import { artistContent, artistInquiries, fanSignals, InsertArtistContent, InsertArtistInquiry, InsertFanSignal, InsertStoredAsset, InsertUser, storedAssets, users } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -145,4 +145,24 @@ export async function upsertArtistContent(item: InsertArtistContent) {
     },
   });
   return { slug: item.slug };
+}
+
+export async function createArtistInquiry(inquiry: InsertArtistInquiry) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  const result = await db.insert(artistInquiries).values(inquiry);
+  return { id: Number(result[0].insertId), ...inquiry, status: inquiry.status ?? "new" };
+}
+
+export async function listArtistInquiries() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(artistInquiries).orderBy(asc(artistInquiries.status), asc(artistInquiries.createdAt));
+}
+
+export async function updateArtistInquiryStatus(id: number, status: "new" | "reviewed" | "closed") {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  await db.update(artistInquiries).set({ status }).where(eq(artistInquiries.id, id));
+  return { id, status };
 }

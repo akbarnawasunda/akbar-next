@@ -14,6 +14,9 @@ import PressKit from "./pages/PressKit";
 import AssetLibrary from "./pages/AssetLibrary";
 import About from "./pages/About";
 import ReleaseDetail from "./pages/ReleaseDetail";
+import Inquiry from "./pages/Inquiry";
+import Licensing from "./pages/Licensing";
+import InquiryStudio from "./pages/InquiryStudio";
 import LegacyDocument from "./components/LegacyDocument";
 
 function Router() {
@@ -27,8 +30,11 @@ function Router() {
       <Route path={"/live"} component={Live} />
       <Route path={"/universe"} component={Universe} />
       <Route path={"/about"} component={About} />
+      <Route path={"/inquire"} component={Inquiry} />
+      <Route path={"/licensing"} component={Licensing} />
       <Route path={"/assets"} component={AssetLibrary} />
       <Route path={"/studio"} component={ContentStudio} />
+      <Route path={"/studio/inquiries"} component={InquiryStudio} />
       <Route path={"/admin"} component={() => <LegacyDocument source="/legacy/admin.html" scripts="admin" />} />
       <Route path={"/epk"} component={PressKit} />
       <Route path={"/privacy"} component={() => <LegacyDocument source="/legacy/privacy.html" />} />
