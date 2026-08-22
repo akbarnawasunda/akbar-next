@@ -12,6 +12,12 @@ describe("RMX brand motion mark", () => {
     const proxy = source("server/brandAssetProxy.ts");
     expect(proxy).toContain('app.get("/api/brand/rmx-mark"');
     expect(proxy).toContain("akbar-nawasunda-rmx-mark_d59968bf.jpg");
+    const vercel = source("vercel.json");
+    expect(vercel).toContain('"source": "/api/brand/rmx-mark"');
+    expect(vercel).toContain("akbar-nawasunda-rmx-mark_d59968bf.jpg");
+    expect(vercel.indexOf('"source": "/api/brand/rmx-mark"')).toBeLessThan(
+      vercel.indexOf('"source": "/(.*)"'),
+    );
   });
 
   it("plays a canvas particle dissolve only from a user action and clears after one sequence", () => {

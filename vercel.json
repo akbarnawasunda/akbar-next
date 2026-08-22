@@ -5,6 +5,10 @@
   "outputDirectory": "dist/public",
   "installCommand": "pnpm install --frozen-lockfile",
   "rewrites": [
+    {
+      "source": "/api/brand/rmx-mark",
+      "destination": "https://akbarfolio-424qdvsv.manus.space/manus-storage/akbar-nawasunda-rmx-mark_d59968bf.jpg"
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

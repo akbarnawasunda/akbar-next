@@ -137,3 +137,5 @@
 - [x] Verifikasi runtime tap/click particle mark dan izin CORS asset RMX pada browser desktop serta emulasi Android 375 × 812 sebelum deployment.
 - [x] Tangkap bukti desktop dan emulasi Android bahwa particle RMX benar-benar menyebar lalu membentuk ulang artwork setelah interaksi.
 - [x] Verifikasi particle mark di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [ ] Investigasi dan perbaiki particle mark RMX yang tidak terlihat berjalan saat kotak kecil ditekan di deployment live.
+- [ ] Verifikasi ulang interaksi particle mark yang diperbaiki pada production desktop dan mobile, lalu dorong ke GitHub/Vercel.
