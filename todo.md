@@ -92,3 +92,6 @@
 - [x] Bangun halaman detail rilisan publik berbasis CMS untuk artwork, release story, credits, dan official listening links dengan fallback yang jujur.
 - [x] Perluas tes untuk data content model, public routing, dan motion fallback; lalu verifikasi desktop, Android, build, serta deployment.
 - [x] Tambahkan tes regresi untuk fallback `prefers-reduced-motion` pada text scramble dan motion partikel/vinyl.
+- [x] Audit seluruh file relevan dari repository lama akbarnawasunda-portofolio untuk mengidentifikasi konten artis yang autentik.
+- [x] Ekstrak dan petakan bio, rilisan, kontak, kredensial, tautan, serta aset terverifikasi dari repository lama ke struktur platform baru.
+- [x] Terapkan data lama yang jelas sumbernya ke fallback konten publik atau CMS tanpa mengarang klaim baru.

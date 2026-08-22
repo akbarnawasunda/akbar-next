@@ -25,4 +25,14 @@ describe("artist content contract", () => {
     expect(pressKit).toContain("REQUEST PACK");
     expect(live).toContain("NO DATE CONFIRMED YET.");
   });
+
+  it("preserves verified legacy artist identity and catalog in the public fallback", () => {
+    const platformContent = source("client/src/content/artistPlatform.ts");
+
+    expect(platformContent).toContain('aliases: ["DJ Akbar Remix"]');
+    expect(platformContent).toContain('"Jedag Jedug"');
+    expect(platformContent).toContain('"Jungle Dutch"');
+    expect(platformContent).toContain('"Ngertenono Ati Medium Hall"');
+    expect(platformContent).toContain('"Die With A Smile × Warga +62"');
+  });
 });
