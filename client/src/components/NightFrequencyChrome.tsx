@@ -7,7 +7,7 @@ import "./OfficialBrand.css";
 import "./EcosystemRefinement.css";
 
 const navItems = [
-  { href: "/music", label: "MUSIC" }, { href: "/visuals", label: "VISUALS" }, { href: "/live", label: "LIVE" }, { href: "/universe", label: "UNIVERSE" }, { href: "/lab", label: "LAB" },
+  { href: "/music", label: "MUSIC" }, { href: "/visuals", label: "VISUALS" }, { href: "/live", label: "LIVE" }, { href: "/universe", label: "UNIVERSE" },
 ];
 
 export function NightHeader({ active }: { active?: string }) {

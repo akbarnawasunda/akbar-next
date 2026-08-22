@@ -77,3 +77,8 @@
 - [ ] Document live-site verification results for every public route after the rewrite deployment.
 - [x] Improve the public visual treatment using the original artist identity before the next GitHub deployment.
 - [ ] Re-verify all public routes and remove remaining stale relative storage references before the next GitHub deployment.
+- [x] Hapus route `/lab`, seluruh tautan navigasi, dan seluruh CTA publik yang masih mengarah ke pengalaman LAB lama.
+- [x] Rancang ulang homepage dengan arah warna dan atmosfer yang lebih berkarakter untuk musik elektronik Akbar Nawasunda.
+- [x] Perkuat hierarki homepage untuk discovery musik, visual, live signal, dan konversi Fan Signal tanpa mengembalikan pengalaman LAB.
+- [x] Tambahkan atau perbarui tes navigasi/routing untuk memastikan LAB tidak lagi terekspos sebagai route publik.
+- [ ] Verifikasi desktop, Android/mobile, type check, test, production build, serta deployment Vercel setelah perombakan homepage.

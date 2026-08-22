@@ -1,13 +1,15 @@
-import { ArrowDownRight, ArrowUpRight, Disc3, Headphones, Mail, Play, Radio, Sparkles, Ticket, Waves } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Disc3, Headphones, Mail, Play, Radio, Sparkles, Ticket } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
-import { currentRelease, futureModules, officialBrand, platformLinks, publicStorageAsset, releases, videos } from "@/content/artistPlatform";
+import { ArtistSignalMotion } from "@/components/ArtistSignalMotion";
+import { allPlatformLinks, currentRelease, futureModules, officialBrand, platformLinks, publicStorageAsset, releases, videos } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
 import { useSanityArtistContent } from "@/sanity/publicContent";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
 import "./HomeStates.css";
 import "./HomeRefinement.css";
+import "./HomeArtistUpgrade.css";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -55,18 +57,18 @@ export default function Home() {
           <a href="/visuals">VISUALS</a>
           <a href="/live">LIVE</a>
           <a href="/universe">UNIVERSE</a>
-          <a href="/lab">LAB</a>
         </nav>
         <a className="nav-signal" href="#signal"><Radio size={14} /> FAN SIGNAL</a>
         <button className="an-menu-toggle" type="button" aria-label={mobileNavOpen ? "Tutup navigasi" : "Buka navigasi"} aria-expanded={mobileNavOpen} aria-controls="an-mobile-navigation" onClick={() => setMobileNavOpen(open => !open)}>{mobileNavOpen ? "CLOSE" : "MENU"}</button>
         <div id="an-mobile-navigation" className={`an-mobile-navigation${mobileNavOpen ? " is-open" : ""}`} aria-hidden={!mobileNavOpen}>
-          <a href="/music" onClick={() => setMobileNavOpen(false)}>MUSIC</a><a href="/visuals" onClick={() => setMobileNavOpen(false)}>VISUALS</a><a href="/live" onClick={() => setMobileNavOpen(false)}>LIVE</a><a href="/universe" onClick={() => setMobileNavOpen(false)}>UNIVERSE</a><a href="/lab" onClick={() => setMobileNavOpen(false)}>LAB</a><a className="mobile-signal" href="#signal" onClick={() => setMobileNavOpen(false)}>JOIN FAN SIGNAL</a>
+          <a href="/music" onClick={() => setMobileNavOpen(false)}>MUSIC</a><a href="/visuals" onClick={() => setMobileNavOpen(false)}>VISUALS</a><a href="/live" onClick={() => setMobileNavOpen(false)}>LIVE</a><a href="/universe" onClick={() => setMobileNavOpen(false)}>UNIVERSE</a><a className="mobile-signal" href="#signal" onClick={() => setMobileNavOpen(false)}>JOIN FAN SIGNAL</a>
         </div>
       </header>
 
       <main id="top">
         <section className="an-hero" style={{ "--hero-image": `url(${heroImage})` } as React.CSSProperties}>
           <div className="hero-grain" aria-hidden="true" />
+          <div className="home-hero-orbit"><ArtistSignalMotion /></div>
           <div className="hero-copy">
             <p className="eyebrow"><span /> {heroKicker}</p>
             <h1>{heroTitle || <>MAKE<br /><em>THE NIGHT</em><br />MOVE.</>}</h1>
@@ -80,7 +82,12 @@ export default function Home() {
             <div><span>NOW PLAYING</span><strong>{activeRelease.title}</strong><small>{activeRelease.type}</small></div>
             <div className="status-row"><span>{contentState}</span><b>ONLINE</b><i /></div>
           </aside>
-          <div className="hero-footer"><span>SCROLL TO EXPLORE</span><span className="scroll-line" /><span>01 / 06</span></div>
+          <div className="hero-footer"><span>SCROLL TO EXPLORE</span><span className="scroll-line" /><span>01 / 05</span></div>
+        </section>
+
+        <section className="home-signal-deck" aria-labelledby="signal-deck-title">
+          <div className="home-signal-copy"><p className="eyebrow"><span /> AN // LIVE SIGNAL</p><h2 id="signal-deck-title">ONE ARTIST.<br /><em>EVERY FREQUENCY.</em></h2><p>Masuk lewat platform yang kamu pakai, lalu lanjutkan ke rilisan, visual, dan kabar live dari sumber resminya.</p><a className="home-deck-cta" href="/music">ENTER THE RELEASE VAULT <ArrowUpRight size={15} /></a></div>
+          <div className="home-platform-rack">{allPlatformLinks.map((platform, index) => <a key={platform.label} href={platform.href} target="_blank" rel="noreferrer"><span>0{index + 1}</span><strong>{platform.label}</strong><ArrowUpRight size={16} /></a>)}</div>
         </section>
 
         <section className="section section-current" id="music">
@@ -117,13 +124,8 @@ export default function Home() {
           <div className="live-status"><span>{managedLive?.label || "NEXT LIVE"}</span><strong>{managedLive?.title || <>NO DATE<br />ANNOUNCED</>}</strong><small>{managedLive ? "LIVE UPDATE" : "WATCH THIS SPACE"}</small></div>
         </section>
 
-        <section className="section lab-section">
-          <div className="lab-heading"><div><p className="eyebrow">04 · THE INTERACTIVE LAB</p><h2>DON&apos;T JUST<br /><em>LISTEN.</em></h2></div><p>Masuk ke ruang eksperimen: Jedag Pad, sequencer, dan mini game yang dibangun langsung dari dunia suara Akbar Nawasunda.</p></div>
-          <a className="lab-launch" href="/lab"><div><Waves size={36} /><span>AN / LAB</span></div><h3>OPEN THE<br />INSTRUMENT</h3><ArrowUpRight size={32} /></a>
-        </section>
-
         <section className="section future-section">
-          <p className="eyebrow">05 · BUILT FOR WHAT&apos;S NEXT</p><div className="future-head"><h2>AN ARTIST WORLD,<br /><em>NOT A SINGLE PAGE.</em></h2><p>Platform ini disusun untuk tumbuh bersama rilisan, pertunjukan, dan komunitas—tanpa kehilangan fokus pada musik.</p></div>
+          <p className="eyebrow">04 · BUILT FOR WHAT&apos;S NEXT</p><div className="future-head"><h2>AN ARTIST WORLD,<br /><em>NOT A SINGLE PAGE.</em></h2><p>Platform ini disusun untuk tumbuh bersama rilisan, pertunjukan, dan komunitas—tanpa kehilangan fokus pada musik.</p></div>
           <div className="future-grid">{futureModules.map(module => <article key={module.number}><span>{module.number}</span><h3>{module.title}</h3><p>{module.copy}</p></article>)}</div>
         </section>
 

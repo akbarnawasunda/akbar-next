@@ -23,7 +23,6 @@ function Router() {
       <Route path={"/visuals"} component={Visuals} />
       <Route path={"/live"} component={Live} />
       <Route path={"/universe"} component={Universe} />
-      <Route path={"/lab"} component={() => <LegacyDocument source="/legacy/index.html" />} />
       <Route path={"/assets"} component={AssetLibrary} />
       <Route path={"/studio"} component={ContentStudio} />
       <Route path={"/admin"} component={() => <LegacyDocument source="/legacy/admin.html" scripts="admin" />} />
