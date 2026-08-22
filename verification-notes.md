@@ -148,3 +148,23 @@ Screenshot headless viewport mobile `390×844` juga menunjukkan portrait fallbac
 Commit `2fa0365` terdeteksi sebagai deployment production `dpl_864UdQBtVBCqzjCP35gq1LfDVYQA` dan berstatus `READY`. Build Vercel mengkloning branch `main`, menjalankan `pnpm install --frozen-lockfile`, menyelesaikan `vite build` + esbuild, lalu deployment selesai tanpa error fatal. Warning yang sama tetap ada untuk analytics env yang tidak didefinisikan, satu runtime image path, dan chunk JavaScript di atas 500 kB.
 
 Grouped runtime errors project dalam 24 jam terakhir: tidak ada. Direct smoke fetch ke deployment mendapat HTTP `302` menuju Vercel SSO karena deployment protection aktif; URL share sementara juga diarahkan ke SSO oleh endpoint fetch, sehingga validasi visual production dilakukan melalui deployment metadata/build logs dan local production-equivalent build, bukan melalui HTML protected langsung.
+
+
+## Collision audit follow-up — 2026-08-23
+
+Audit bounding box desktop `1280×1100` menemukan particle hero (`x=804..1227`, `y=404..826`) beririsan dengan area `.hero-copy` (`x=609..1188`, `y=364..696`) dan `.hero-actions`. Sebagian collision report adalah parent-child normal (`.hero-copy` dengan `.hero-actions`, section dengan child), tetapi irisan particle-copy adalah overlap visual yang perlu diputuskan/fix agar particle tidak menimpa deskripsi atau CTA. Page tetap tidak memiliki horizontal overflow bermakna dan particle berada pada class `is-idle`.
+
+
+## Particle overlap confirmation — 2026-08-23
+
+Computed positioning mengonfirmasi canvas particle adalah child absolute dari `.an-hero`, berukuran `422×422px`, berada di `x=804..1227` dan `y=404..826`, sementara copy berada di `x=609..1188` dan `y=364..696`. Jadi ada overlap area nyata di sisi kanan copy/CTA pada desktop. Perbaikannya perlu menjaga particle tetap terlihat tetapi menggeser canvas lebih ke kanan/bawah atau mempersempit zona copy agar teks dan CTA punya area eksklusif.
+
+
+## Collision guard validation — 2026-08-23
+
+Setelah collision guard diterapkan, particle desktop berada di `x=848.2..1188.2`, `y=539.8..879.8`, sedangkan judul berakhir di `y=384.4`, deskripsi di `y=434.1`, dan CTA terakhir di `y=509.1`. Collision check terhadap eyebrow, h1, deskripsi, primary CTA, dan Fan Signal CTA semuanya `false`. Particle tetap class `is-idle` dan page tetap tanpa horizontal overflow bermakna.
+
+
+## Mobile collision validation — 2026-08-23
+
+Emulasi CDP viewport `390×844` menghasilkan `overflow: 0`. Portrait berada pada `x=20..370`, `y=116..552.8`; h1 berakhir pada `y=726`; deskripsi berakhir pada `y=791.4`; primary CTA berada pada `y=816.4..861.4`; dan particle mulai pada `y=931.4` dengan ukuran `350×350`. Semua overlap check portrait/h1/deskripsi/dua CTA terhadap particle bernilai `false`. Hero mobile kini memiliki tinggi flow `1357.4px`, sehingga particle tidak lagi diposisikan negatif menimpa CTA.

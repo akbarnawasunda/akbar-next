@@ -19,6 +19,14 @@ describe("homepage platform cards and portrait exposure", () => {
     expect(css).toContain("grid-template-columns:repeat(3,minmax(0,1fr))");
   });
 
+  it("keeps the particle lane separate from hero copy", () => {
+    const layout = source("client/src/pages/HomeLayoutRefinement.css");
+    expect(layout).toContain("Collision guard: keep the particle canvas");
+    expect(layout).toContain('"portrait particle"');
+    expect(layout).toContain("position: relative !important");
+    expect(layout).toContain("margin: 38px 0 0 auto");
+  });
+
   it("keeps the official portrait bright enough without removing copy contrast", () => {
     const home = source("client/src/pages/Home.tsx");
     const brand = source("client/src/content/artistPlatform.ts");
