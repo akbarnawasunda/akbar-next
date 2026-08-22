@@ -9,6 +9,10 @@
       "source": "/api/brand/rmx-mark",
       "destination": "https://akbarfolio-424qdvsv.manus.space/manus-storage/akbar-nawasunda-rmx-mark_d59968bf.jpg"
     },
+    {
+      "source": "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg",
+      "destination": "https://akbarfolio-424qdvsv.manus.space/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

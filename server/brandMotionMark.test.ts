@@ -15,7 +15,12 @@ describe("RMX brand motion mark", () => {
     const vercel = source("vercel.json");
     expect(vercel).toContain('"source": "/api/brand/rmx-mark"');
     expect(vercel).toContain("akbar-nawasunda-rmx-mark_d59968bf.jpg");
+    expect(vercel).toContain('"source": "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"');
+    expect(vercel).toContain("akbar-nawasunda-official-portrait_2c39f68f.jpg");
     expect(vercel.indexOf('"source": "/api/brand/rmx-mark"')).toBeLessThan(
+      vercel.indexOf('"source": "/(.*)"'),
+    );
+    expect(vercel.indexOf('"source": "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"')).toBeLessThan(
       vercel.indexOf('"source": "/(.*)"'),
     );
   });
