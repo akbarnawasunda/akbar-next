@@ -1,34 +1,32 @@
-export type Release = {
-  title: string;
-  format: string;
-  year: string;
-  href: string;
-  platform: string;
-};
+export type Release = { title: string; format: string; year: string; href: string; platform: string };
+export type Video = { title: string; label: string; href: string; image: string };
 
-export type Video = {
-  title: string;
-  label: string;
-  href: string;
-  image: string;
+export const MANUS_ASSET_ORIGIN = "https://akbarfolio-424qdvsv.manus.space";
+export const publicStorageAsset = (path: string) => `${MANUS_ASSET_ORIGIN}${path}`;
+
+export const officialBrand = {
+  logo: publicStorageAsset("/manus-storage/logo-an-transparent_c606ed92.png"),
+  socialPreview: publicStorageAsset("/manus-storage/og-image_79f65fc5.png"),
+  favicon: publicStorageAsset("/manus-storage/favicon_d67eea7c.png"),
 };
 
 export const platformLinks = [
-  { label: "Spotify", href: "https://open.spotify.com/artist/5teZ2VRr7VBSDqZ0ueP3hd" },
+  { label: "Spotify", href: "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw" },
   { label: "YouTube", href: "https://www.youtube.com/@akbarnawasunda" },
   { label: "SoundCloud", href: "https://soundcloud.com/akbarnawasunda" },
   { label: "Instagram", href: "https://www.instagram.com/akbarnawasunda" },
 ];
 
 export const currentRelease = {
-  eyebrow: "CURRENT FREQUENCY · 2026",
-  title: "GARAm & MADU × BACKPACKER",
-  type: "VISUAL RELEASE",
-  href: "https://youtu.be/rv4DK8nVWd0?si=c9KvLgfdQhHfjmMJ",
-  image: "/manus-storage/an-night-frequency-release_0b545b29.jpg",
+  eyebrow: "CURRENT FREQUENCY · 2025",
+  title: "MASIH MENCINTAINYA — PAPINKA",
+  type: "DJ AKBAR REMIX",
+  href: "https://soundcloud.com/akbarnawasunda/masih-mencintainya-papinka-2025-akbar-nawasunda",
+  image: officialBrand.socialPreview,
 };
 
 export const releases: Release[] = [
+  { title: "Masih Mencintainya — Papinka", format: "Remix", year: "2025", platform: "SoundCloud", href: "https://soundcloud.com/akbarnawasunda/masih-mencintainya-papinka-2025-akbar-nawasunda" },
   { title: "Lali Dalane", format: "Single", year: "2024", platform: "Spotify", href: "https://open.spotify.com/intl-id/album/3r5GTZnjOFsSfHx5YeANIS?si=9MJhKIkeRkmOBYMbtKP5wg" },
   { title: "Pada Imut Aisyah Tak Belagu", format: "Single", year: "2025", platform: "Apple Music", href: "https://music.apple.com/id/song/pada-imut-aisyah-tak-belagu/1868511241?l=id" },
   { title: "DJ Rantau Den Panjauah", format: "Remix", year: "2024", platform: "Spotify", href: "https://open.spotify.com/intl-id/track/32xyWKqnleBI5U56jvnGUa?si=b22bacdf3ab24e2e" },
@@ -36,9 +34,9 @@ export const releases: Release[] = [
 ];
 
 export const videos: Video[] = [
-  { title: "Garam dan Madu × Backpacker", label: "LATEST VISUAL", href: "https://youtu.be/rv4DK8nVWd0?si=c9KvLgfdQhHfjmMJ", image: "/manus-storage/an-night-frequency-stage_113bf174.jpg" },
-  { title: "Kalah — Aftershine", label: "DJ AKBAR REMIX", href: "https://www.youtube.com/@akbarnawasunda", image: "/manus-storage/an-night-frequency-hero_7e2eb970.jpg" },
-  { title: "DJ Die With A Smile", label: "BREAKBEAT SESSION", href: "https://www.youtube.com/@akbarnawasunda", image: "/manus-storage/an-night-frequency-release_0b545b29.jpg" },
+  { title: "Garam dan Madu × Backpacker", label: "LATEST VISUAL", href: "https://youtu.be/rv4DK8nVWd0", image: officialBrand.socialPreview },
+  { title: "Akbar Nawasunda — Official Visual", label: "YOUTUBE PREMIERE", href: "https://youtu.be/BOTdDcx31Zc", image: officialBrand.socialPreview },
+  { title: "Breakbeat Session", label: "DJ AKBAR REMIX", href: "https://youtu.be/g37Cn8ajC6M", image: officialBrand.socialPreview },
 ];
 
 export const futureModules = [

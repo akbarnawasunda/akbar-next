@@ -1,0 +1,16 @@
+{
+  "name": "akbar-nawasunda-sanity-studio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "@sanity/vision": "^4.18.0",
+    "sanity": "^6.10.1",
+    "styled-components": "^6.5.3"
+  }
+}

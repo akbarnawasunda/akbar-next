@@ -1,12 +1,13 @@
 import { ArrowDownRight, ArrowUpRight, Disc3, Headphones, Mail, Play, Radio, Sparkles, Ticket, Waves } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
-import { currentRelease, futureModules, platformLinks, releases, videos } from "@/content/artistPlatform";
+import { currentRelease, futureModules, officialBrand, platformLinks, releases, videos } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
+import "@/components/OfficialBrand.css";
 import "./Home.css";
 import "./HomeStates.css";
 
-const heroImage = "/manus-storage/an-night-frequency-hero_7e2eb970.jpg";
+const heroImage = officialBrand.socialPreview;
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ export default function Home() {
   const managedVideos = managedContent.filter(item => item.kind === "video").slice(0, 3);
   const managedLive = managedContent.find(item => item.kind === "live");
   const activeRelease = managedRelease ? { ...currentRelease, title: managedRelease.title, type: managedRelease.label || currentRelease.type, href: managedRelease.href || currentRelease.href, image: managedRelease.imageUrl || currentRelease.image } : currentRelease;
-  const activeVideos = managedVideos.length ? managedVideos.map(item => ({ title: item.title, label: item.label || "VISUAL", href: item.href || "https://www.youtube.com/@akbarnawasunda", image: item.imageUrl || "/manus-storage/an-night-frequency-hero_7e2eb970.jpg" })) : videos;
+  const activeVideos = managedVideos.length ? managedVideos.map(item => ({ title: item.title, label: item.label || "VISUAL", href: item.href || "https://www.youtube.com/@akbarnawasunda", image: item.imageUrl || officialBrand.socialPreview })) : videos;
   const contentState = contentQuery.isLoading ? "SYNCING CONTENT" : contentQuery.isError ? "ARCHIVE VIEW" : managedContent.length ? "LIVE CONTENT" : "ARCHIVE VIEW";
   const subscribe = trpc.fanSignal.subscribe.useMutation({
     onSuccess: () => {
@@ -37,7 +38,7 @@ export default function Home() {
     <div className="an-site">
       <header className="an-nav">
         <a className="an-wordmark" href="#top" aria-label="Akbar Nawasunda home">
-          <span className="an-mark">AN</span><span>AKBAR NAWASUNDA</span>
+          <img className="an-brand-logo" src={officialBrand.logo} alt="" /><span>AKBAR NAWASUNDA</span>
         </a>
         <nav aria-label="Navigasi utama">
           <a href="/music">MUSIC</a>

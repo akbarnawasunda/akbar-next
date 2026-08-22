@@ -50,3 +50,14 @@
 - [x] Verify the mobile Night Frequency navigation and rerun the complete quality gate after the drawer change.
 - [x] Confirm checkpoint `35ec0d92` matches the configured GitHub `main` branch.
 - [x] Commit and push the current GitHub-first handoff metadata without creating another production checkpoint.
+- [ ] Diagnose and fix the external deployment platform’s incorrect Next.js detection for the Vite plus Express application.
+- [x] Audit and reuse authentic logo, favicon, Open Graph image, and other suitable media from the original portfolio repository.
+- [ ] Add real music and video embeds with graceful public fallback states to the Vercel-facing experience.
+- [ ] Establish an owner-friendly, no-code content administration path compatible with the selected deployment architecture.
+- [ ] Select and integrate an external CMS compatible with the Vercel static deployment for non-code artist-content management.
+- [ ] Embed a Sanity Studio at `/admin` with artist-content schemas and configure it for the supplied public project and dataset.
+- [ ] Read published Sanity artist content in the public Vite routes with a static fallback when the CMS is empty or unavailable.
+- [ ] Move the owner Sanity Studio into a standalone deployment so its editor bundle does not burden the Vercel public website.
+- [ ] Configure the standalone Sanity Studio as a second Vercel project rooted at `cms/sanity-studio` for phone-friendly owner access.
+- [ ] Improve the public visual treatment using the original artist identity before the next GitHub deployment.
+- [ ] Re-verify all public routes and remove remaining stale relative storage references before the next GitHub deployment.
