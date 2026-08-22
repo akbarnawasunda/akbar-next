@@ -12,6 +12,7 @@ import "./HomeStates.css";
 import "./HomeRefinement.css";
 import "./HomeArtistUpgrade.css";
 import "./PlatformMediaUpgrade.css";
+import "./HomePortraitRefinement.css";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -70,6 +71,7 @@ export default function Home() {
 
       <main id="top">
         <section className="an-hero">
+          <div className="home-hero-portrait"><img src={officialBrand.portrait} alt="Portrait resmi Akbar Nawasunda" fetchPriority="high" /></div>
           <div className="hero-copy">
             <p className="eyebrow"><span /> {heroKicker}</p>
             <h1>{heroTitle || "AKBAR NAWASUNDA."}</h1>

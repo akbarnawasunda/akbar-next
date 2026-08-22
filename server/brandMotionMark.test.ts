@@ -20,6 +20,17 @@ describe("RMX brand motion mark", () => {
     );
   });
 
+  it("uses the supplied official portrait as the homepage hero visual while preserving the particle layer", () => {
+    const brand = source("client/src/content/artistPlatform.ts");
+    const home = source("client/src/pages/Home.tsx");
+    const heroCss = source("client/src/pages/HomeArtistUpgrade.css");
+    expect(brand).toContain('portrait: "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"');
+    expect(home).toContain("home-hero-portrait");
+    expect(home).toContain("Portrait resmi Akbar Nawasunda");
+    expect(heroCss).toContain(".home-hero-portrait");
+    expect(heroCss).toContain(".an-rmx-particle-hero{z-index:2");
+  });
+
   it("builds the RMX silhouette from canvas particles and replays a dissolve only from user action", () => {
     const component = source("client/src/components/BrandMotionMark.tsx");
     const css = source("client/src/components/BrandMotionMark.css");

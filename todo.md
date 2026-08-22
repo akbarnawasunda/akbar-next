@@ -143,3 +143,7 @@
 - [x] Bangun particle hero murni berbasis pixel artwork RMX sehingga siluet logo terbentuk langsung dari titik-titik tanpa gambar logo yang terlihat.
 - [x] Buat interaksi form–dissolve–reform yang jelas pada particle hero, aman untuk Android, dan statis pada reduced-motion.
 - [x] Verifikasi visual serta runtime particle hero baru di desktop dan mobile, lalu dorong ke GitHub/Vercel.
+- [x] Unggah portrait resmi Akbar Nawasunda ke storage web sebagai aset hero yang aman untuk deployment.
+- [x] Jadikan portrait resmi visual utama homepage dengan crop responsif, fokus wajah yang terjaga, dan copy/CTA yang tetap terbaca.
+- [x] Pertahankan particle RMX sebagai layer hero yang terlihat jelas di atas foto tanpa kartu kecil atau benturan dengan wajah.
+- [ ] Verifikasi homepage foto plus particle di desktop/mobile, jalankan quality gate, lalu dorong ke GitHub/Vercel.
