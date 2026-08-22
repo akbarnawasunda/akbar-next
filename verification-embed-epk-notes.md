@@ -19,3 +19,7 @@ The SoundCloud player endpoint returned an HTTP 408 during the audit, confirming
 The YouTube no-cookie embed endpoint responded during the audit, but its response is subject to browser privacy policies, network filtering, and individual video embedding permissions. The same direct-source-first pattern is therefore used for video: the user can open the official YouTube page even if the optional iframe is unavailable.
 
 The visual-language changes were deliberate rather than cosmetic. Music now uses direct catalog language and actual release context instead of repeated abstract “signal/frequency” slogans. Visuals foregrounds the viewing choice—play in place or open YouTube—rather than promising a player will always work. EPK is organized as a printable factual document with artist snapshot, verified materials, selected releases, and contact actions; it is no longer a repeated marketing-card layout. On mobile, all primary actions are explicit verbs: `OPEN`, `PLAY HERE`, `CONTACT`, `SAVE / PRINT`, or `BOOKING INQUIRY`.
+
+## Production deployment
+
+Commit `c8bb8cf` (`Fix media embeds and finalize online EPK`) was pushed to GitHub `main`. The resulting Vercel production deployment `dpl_Dw9WT9fPUu36wH4FoipvnXRJFh4o` reached `READY` at `https://akbar-next-ofy1ls8fe-akbarnawasundas-projects.vercel.app`.

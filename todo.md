@@ -115,4 +115,4 @@
 - [x] Tambahkan fallback media yang stabil, informatif, dan tetap mengarahkan ke tautan resmi saat embed pihak ketiga diblokir.
 - [x] Ubah EPK dari daftar placeholder menjadi press kit yang siap dibaca, dibagikan, dan dihubungi tanpa mengarang materi yang belum tersedia.
 - [x] Hilangkan pola visual berulang yang terasa template/AI pada katalog, EPK, dan CTA mobile dengan keputusan editorial yang lebih spesifik.
-- [ ] Verifikasi perbaikan di Android, test, production build, GitHub, dan Vercel.
+- [x] Verifikasi perbaikan di Android, test, production build, GitHub, dan Vercel.
