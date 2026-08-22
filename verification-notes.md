@@ -141,3 +141,10 @@ Setelah inspeksi desktop dan screenshot mobile, browser page mengalami restart/H
 Setelah viewport dikembalikan ke hero dan formasi selesai, browser melaporkan class `an-rmx-particle-hero is-idle`, `891` particle, canvas terlihat, dan checksum berubah dari `13378235` menjadi `13330355` dalam `2,2 detik`. Ini mengonfirmasi idle loop aktif dan bukan sekadar frame terakhir yang diam. Saat hero di-scroll keluar viewport, scheduler tetap dibatalkan oleh IntersectionObserver.
 
 Screenshot headless viewport mobile `390×844` juga menunjukkan portrait fallback tampil penuh, header mobile tidak overlap, judul dan deskripsi memiliki hierarchy jelas, CTA tetap terlihat, serta particle berwarna mulai terbentuk di bawah copy.
+
+
+## Production deployment — 2026-08-23
+
+Commit `2fa0365` terdeteksi sebagai deployment production `dpl_864UdQBtVBCqzjCP35gq1LfDVYQA` dan berstatus `READY`. Build Vercel mengkloning branch `main`, menjalankan `pnpm install --frozen-lockfile`, menyelesaikan `vite build` + esbuild, lalu deployment selesai tanpa error fatal. Warning yang sama tetap ada untuk analytics env yang tidak didefinisikan, satu runtime image path, dan chunk JavaScript di atas 500 kB.
+
+Grouped runtime errors project dalam 24 jam terakhir: tidak ada. Direct smoke fetch ke deployment mendapat HTTP `302` menuju Vercel SSO karena deployment protection aktif; URL share sementara juga diarahkan ke SSO oleh endpoint fetch, sehingga validasi visual production dilakukan melalui deployment metadata/build logs dan local production-equivalent build, bukan melalui HTML protected langsung.
