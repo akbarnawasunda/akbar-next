@@ -1,0 +1,51 @@
+.route-motion {
+  min-height: 100vh;
+  animation: route-enter 320ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+@keyframes route-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.route-motion a[href],
+.route-motion button:not(:disabled),
+.route-motion [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.route-motion a[href]:focus-visible,
+.route-motion button:not(:disabled):focus-visible,
+.route-motion [role="button"]:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .route-motion a[href],
+  .route-motion button:not(:disabled) {
+    transition:
+      color 180ms cubic-bezier(0.23, 1, 0.32, 1),
+      border-color 180ms cubic-bezier(0.23, 1, 0.32, 1),
+      background-color 180ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-motion {
+    animation: none;
+  }
+
+  .route-motion a[href],
+  .route-motion button:not(:disabled) {
+    transition: none;
+  }
+}

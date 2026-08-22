@@ -1,7 +1,8 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
@@ -22,6 +23,7 @@ import LegacyDocument from "./components/LegacyDocument";
 import "./components/PlasmaRefinement.css";
 import "./components/EditorialSimplification.css";
 import "./components/MaturePalette.css";
+import "./components/RouteMotion.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -60,6 +62,20 @@ function Router() {
 //   to keep consistent foreground/background color across components
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
+function RouteMotion() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location]);
+
+  return (
+    <div className="route-motion" key={location} data-route={location}>
+      <Router />
+    </div>
+  );
+}
+
 function App() {
   return (
     <ErrorBoundary>
@@ -69,7 +85,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <RouteMotion />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

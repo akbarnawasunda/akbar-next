@@ -168,3 +168,22 @@ Setelah collision guard diterapkan, particle desktop berada di `x=848.2..1188.2`
 ## Mobile collision validation — 2026-08-23
 
 Emulasi CDP viewport `390×844` menghasilkan `overflow: 0`. Portrait berada pada `x=20..370`, `y=116..552.8`; h1 berakhir pada `y=726`; deskripsi berakhir pada `y=791.4`; primary CTA berada pada `y=816.4..861.4`; dan particle mulai pada `y=931.4` dengan ukuran `350×350`. Semua overlap check portrait/h1/deskripsi/dua CTA terhadap particle bernilai `false`. Hero mobile kini memiliki tinggi flow `1357.4px`, sehingga particle tidak lagi diposisikan negatif menimpa CTA.
+
+
+## Motion polish audit — 2026-08-23
+
+Particle hero setelah polish berada pada state `is-idle` dengan 567 particle desktop. Sampling canvas menemukan pixel aktif berwarna, termasuk distribusi blue `317`, warm `163`, dan lime `152` pada sample, dengan filter glow multi-lapis cyan/acid/amber. Checksum canvas terukur dan page tetap tidak mengalami horizontal overflow (`-20px` karena scrollbar viewport).
+
+Motion layer baru mencakup route shell keyed by Wouter location, reset scroll saat route berubah, reveal heading/copy/status bertahap, hover depth dan image scale, active press feedback, serta horizontal scroll-snap carousel pada release/video grid mobile.
+
+
+## Route transition smoke test — 2026-08-23
+
+Navigasi internal homepage → `/music` → `/` berhasil melalui `Link` Wouter tanpa full reload. Route shell berganti sesuai `data-route`, halaman kembali dimulai dari posisi scroll atas, dan konten Music tetap tampil normal. Homepage kembali menampilkan particle hero dan semua nav utama.
+
+
+## Motion polish final validation — 2026-08-23
+
+`pnpm check` berhasil, `pnpm test` berhasil dengan 44 test pada 15 file, dan `pnpm build` berhasil. Build tetap hanya memberi warning non-blocking yang sudah ada: analytics env tidak didefinisikan, satu runtime storage image belum resolve saat build, dan chunk client sekitar 756 kB raw.
+
+Smoke test route homepage → Music → homepage berhasil dengan Wouter Link, route shell keyed, dan reset scroll via effect. Desktop particle menunjukkan state `is-idle`, filter multi-color aktif, dan pixel sample berisi kelompok blue/warm/lime yang terlihat. Mobile release/video grid memakai horizontal scroll-snap dengan `touch-action: pan-x pan-y`; reduced-motion mematikan animation, transform, dan snap motion.

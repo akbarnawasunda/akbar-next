@@ -37,6 +37,25 @@ describe("homepage enhancement contract", () => {
     expect(component).toContain("idleActive ? drawIdle : draw");
   });
 
+  it("wires route transition, touch swipe, and richer particle rendering", () => {
+    const app = source("client/src/App.tsx");
+    const home = source("client/src/pages/Home.tsx");
+    const motion = source("client/src/pages/HomeMotionRefinement.css");
+    const particle = source("client/src/components/BrandMotionMark.tsx");
+
+    expect(app).toContain("useLocation");
+    expect(app).toContain("RouteMotion");
+    expect(app).toContain(
+      'window.scrollTo({ top: 0, left: 0, behavior: "auto" })'
+    );
+    expect(home).toContain('import "./HomeMotionRefinement.css";');
+    expect(motion).toContain("scroll-snap-type: x mandatory");
+    expect(motion).toContain("touch-action: pan-x pan-y");
+    expect(particle).toContain('"#bca7ff"');
+    expect(particle).toContain("imageSmoothingEnabled = false");
+    expect(particle).toContain("idleTime * 0.62");
+  });
+
   it("keeps motion enhancements opt-in for reduced-motion users", () => {
     const css = source("client/src/pages/Home.css");
     const globalCss = source("client/src/index.css");

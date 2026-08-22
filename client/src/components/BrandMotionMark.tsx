@@ -67,6 +67,8 @@ export function BrandMotionMark({ src }: { src: string }) {
     const sampleContext = sample.getContext("2d", { willReadFrequently: true });
     if (!sampleContext) return;
 
+    context.imageSmoothingEnabled = false;
+    sampleContext.imageSmoothingEnabled = true;
     sampleContext.drawImage(image, 0, 0, sample.width, sample.height);
     let imageData: ImageData;
     try {
@@ -103,12 +105,16 @@ export function BrandMotionMark({ src }: { src: string }) {
         const blueParticle = isBlueAccent && blue > green + 8;
         const colorRoll = Math.random();
         const color = blueParticle
-          ? "#9bc9ff"
-          : colorRoll > 0.88
+          ? colorRoll > 0.42
+            ? "#9bc9ff"
+            : "#bca7ff"
+          : colorRoll > 0.78
             ? "#d8ff65"
-            : colorRoll > 0.76
+            : colorRoll > 0.57
               ? "#f0a06d"
-              : "#f4ead8";
+              : colorRoll > 0.32
+                ? "#bde3ff"
+                : "#f4ead8";
 
         candidates.push({
           tx: targetX,
@@ -119,9 +125,9 @@ export function BrandMotionMark({ src }: { src: string }) {
           dy: Math.sin(angle) * dissolveRadius,
           color,
           size:
-            (mobile ? 1.15 : 1.3) +
-            (Math.random() > 0.86 ? 0.9 : Math.random() * 0.45),
-          alpha: 0.72 + Math.random() * 0.28,
+            (mobile ? 1.2 : 1.35) +
+            (Math.random() > 0.82 ? 1.05 : Math.random() * 0.55),
+          alpha: 0.82 + Math.random() * 0.18,
           phase: Math.random() * Math.PI * 2,
         });
       }
@@ -138,13 +144,13 @@ export function BrandMotionMark({ src }: { src: string }) {
       context.clearRect(0, 0, width, height);
       context.globalCompositeOperation = "lighter";
       particles.forEach(particle => {
-        context.globalAlpha = Math.min(1, particle.alpha * 0.16);
+        context.globalAlpha = Math.min(1, particle.alpha * 0.3);
         context.fillStyle = particle.color;
         context.fillRect(
           particle.tx - 0.7,
           particle.ty - 0.7,
-          particle.size + 1.4,
-          particle.size + 1.4
+          particle.size + 1.8,
+          particle.size + 1.8
         );
       });
       context.globalCompositeOperation = "source-over";
@@ -192,16 +198,19 @@ export function BrandMotionMark({ src }: { src: string }) {
       context.globalCompositeOperation = "lighter";
       particles.forEach(particle => {
         const driftX =
-          Math.sin(idleTime * 0.78 + particle.phase) * (mobile ? 2.8 : 4.8) +
-          Math.cos(idleTime * 0.38 + particle.ty * 0.02) * (mobile ? 1.1 : 1.9);
+          Math.sin(idleTime * 0.62 + particle.phase) * (mobile ? 3.4 : 5.8) +
+          Math.cos(idleTime * 0.29 + particle.ty * 0.02) *
+            (mobile ? 1.35 : 2.2) +
+          Math.sin(idleTime * 0.16 + particle.phase * 1.7) *
+            (mobile ? 0.8 : 1.35);
         const driftY =
-          Math.cos(idleTime * 0.64 + particle.phase * 1.24) *
-            (mobile ? 2.4 : 4.1) +
-          Math.sin(idleTime * 0.31 + particle.tx * 0.018) *
-            (mobile ? 0.9 : 1.7);
+          Math.cos(idleTime * 0.53 + particle.phase * 1.24) * (mobile ? 3 : 5) +
+          Math.sin(idleTime * 0.24 + particle.tx * 0.018) * (mobile ? 1.1 : 2) +
+          Math.cos(idleTime * 0.13 + particle.phase * 0.7) *
+            (mobile ? 0.7 : 1.2);
         const pulse =
-          0.84 + (Math.sin(idleTime * 1.6 + particle.phase) + 1) * 0.13;
-        context.globalAlpha = Math.min(1, particle.alpha * pulse * 0.2);
+          0.78 + (Math.sin(idleTime * 1.45 + particle.phase) + 1) * 0.16;
+        context.globalAlpha = Math.min(1, particle.alpha * pulse * 0.34);
         context.fillStyle = particle.color;
         context.fillRect(
           particle.tx + driftX - 0.8,
@@ -213,16 +222,19 @@ export function BrandMotionMark({ src }: { src: string }) {
       context.globalCompositeOperation = "source-over";
       particles.forEach(particle => {
         const driftX =
-          Math.sin(idleTime * 0.78 + particle.phase) * (mobile ? 2.8 : 4.8) +
-          Math.cos(idleTime * 0.38 + particle.ty * 0.02) * (mobile ? 1.1 : 1.9);
+          Math.sin(idleTime * 0.62 + particle.phase) * (mobile ? 3.4 : 5.8) +
+          Math.cos(idleTime * 0.29 + particle.ty * 0.02) *
+            (mobile ? 1.35 : 2.2) +
+          Math.sin(idleTime * 0.16 + particle.phase * 1.7) *
+            (mobile ? 0.8 : 1.35);
         const driftY =
-          Math.cos(idleTime * 0.64 + particle.phase * 1.24) *
-            (mobile ? 2.4 : 4.1) +
-          Math.sin(idleTime * 0.31 + particle.tx * 0.018) *
-            (mobile ? 0.9 : 1.7);
+          Math.cos(idleTime * 0.53 + particle.phase * 1.24) * (mobile ? 3 : 5) +
+          Math.sin(idleTime * 0.24 + particle.tx * 0.018) * (mobile ? 1.1 : 2) +
+          Math.cos(idleTime * 0.13 + particle.phase * 0.7) *
+            (mobile ? 0.7 : 1.2);
         const pulse =
-          0.84 + (Math.sin(idleTime * 1.6 + particle.phase) + 1) * 0.13;
-        context.globalAlpha = Math.min(1, particle.alpha * pulse);
+          0.78 + (Math.sin(idleTime * 1.45 + particle.phase) + 1) * 0.16;
+        context.globalAlpha = Math.min(1, particle.alpha * pulse * 1.04);
         context.fillStyle = particle.color;
         context.fillRect(
           particle.tx + driftX,
@@ -281,14 +293,14 @@ export function BrandMotionMark({ src }: { src: string }) {
           opacity *= 0.78 + reform * 0.22;
         }
 
-        context.globalAlpha = Math.min(1, opacity * 0.2);
+        context.globalAlpha = Math.min(1, opacity * 0.3);
         context.globalCompositeOperation = "lighter";
         context.fillStyle = particle.color;
         context.fillRect(
           x - 0.7,
           y - 0.7,
-          particle.size + 1.4,
-          particle.size + 1.4
+          particle.size + 1.8,
+          particle.size + 1.8
         );
         context.globalCompositeOperation = "source-over";
         context.globalAlpha = Math.min(1, opacity);

@@ -1,0 +1,238 @@
+.an-site {
+  --motion-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --motion-ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.an-site .reveal-target.reveal-ready:not(.is-revealed) {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0) scale(0.985);
+  will-change: opacity, transform;
+}
+
+.an-site .reveal-target.is-revealed {
+  transition:
+    opacity 640ms var(--motion-ease),
+    transform 640ms var(--motion-ease);
+}
+
+.an-site .reveal-target.is-revealed .section-heading,
+.an-site .reveal-target.is-revealed .section-inline,
+.an-site .reveal-target.is-revealed .home-signal-copy,
+.an-site .reveal-target.is-revealed .live-copy,
+.an-site .reveal-target.is-revealed .live-status,
+.an-site .reveal-target.is-revealed form {
+  animation: home-motion-rise 620ms var(--motion-ease-spring) both;
+}
+
+.an-site .reveal-target.is-revealed .section-heading,
+.an-site .reveal-target.is-revealed .home-signal-copy,
+.an-site .reveal-target.is-revealed .live-copy {
+  animation-delay: 70ms;
+}
+
+.an-site .reveal-target.is-revealed .live-status,
+.an-site .reveal-target.is-revealed form {
+  animation-delay: 150ms;
+}
+
+@keyframes home-motion-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.an-site .home-platform-card,
+.an-site .release-card,
+.an-site .video-card,
+.an-site .home-deck-cta,
+.an-site .button-quiet,
+.an-site .text-link {
+  transition:
+    transform 220ms var(--motion-ease),
+    color 220ms var(--motion-ease),
+    border-color 220ms var(--motion-ease),
+    background-color 220ms var(--motion-ease),
+    box-shadow 220ms var(--motion-ease);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.an-site .home-platform-card {
+  transform: translate3d(0, 0, 0);
+}
+
+.an-site .home-platform-card:hover {
+  transform: translate3d(5px, -2px, 0);
+  border-color: rgba(216, 255, 101, 0.48);
+  box-shadow: inset 0 0 0 1px rgba(216, 255, 101, 0.12);
+}
+
+.an-site .home-platform-card:hover .home-platform-arrow,
+.an-site .home-deck-cta:hover svg,
+.an-site .button-quiet:hover svg,
+.an-site .text-link:hover svg {
+  transform: translate3d(3px, -3px, 0);
+}
+
+.an-site .home-platform-arrow,
+.an-site .home-deck-cta svg,
+.an-site .button-quiet svg,
+.an-site .text-link svg {
+  transition: transform 220ms var(--motion-ease);
+}
+
+.an-site .release-card,
+.an-site .video-card {
+  backface-visibility: hidden;
+}
+
+.an-site .release-card:hover {
+  box-shadow:
+    0 20px 46px rgba(0, 0, 0, 0.24),
+    inset 0 0 0 1px rgba(216, 255, 101, 0.22);
+}
+
+.an-site .release-card-art img,
+.an-site .video-card > img,
+.an-site .release-cover img {
+  transition:
+    transform 520ms var(--motion-ease),
+    filter 520ms var(--motion-ease);
+}
+
+.an-site .release-card:hover .release-card-art img,
+.an-site .video-card:hover > img,
+.an-site .release-cover:hover img {
+  transform: scale(1.045);
+  filter: saturate(1.08) contrast(1.04);
+}
+
+.an-site .button-primary,
+.an-site .button-quiet,
+.an-site .home-deck-cta,
+.an-site .text-link,
+.an-site .home-platform-card,
+.an-site .release-card,
+.an-site .video-card {
+  outline-offset: 4px;
+}
+
+.an-site .button-primary:focus-visible,
+.an-site .button-quiet:focus-visible,
+.an-site .home-deck-cta:focus-visible,
+.an-site .text-link:focus-visible,
+.an-site .home-platform-card:focus-visible,
+.an-site .release-card:focus-visible,
+.an-site .video-card:focus-visible {
+  outline: 2px solid var(--acid);
+}
+
+@media (hover: none) {
+  .an-site .home-platform-card:active,
+  .an-site .release-card:active,
+  .an-site .video-card:active,
+  .an-site .home-deck-cta:active,
+  .an-site .button-quiet:active,
+  .an-site .text-link:active {
+    transform: scale(0.985);
+  }
+
+  .an-site .release-card:hover,
+  .an-site .video-card:hover,
+  .an-site .home-platform-card:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .an-site .release-grid,
+  .an-site .video-grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(80vw, 1fr);
+    grid-template-columns: none;
+    grid-template-rows: 1fr;
+    gap: 14px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding-bottom: 14px;
+    scroll-padding-inline: 20px;
+    scroll-snap-type: x mandatory;
+    scrollbar-color: rgba(216, 255, 101, 0.7) rgba(255, 255, 255, 0.08);
+    scrollbar-width: thin;
+    touch-action: pan-x pan-y;
+  }
+
+  .an-site .release-grid > *,
+  .an-site .video-grid > * {
+    min-width: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .an-site .release-card,
+  .an-site .video-card,
+  .an-site .video-card:first-child {
+    grid-column: auto;
+  }
+
+  .an-site .video-grid {
+    grid-auto-columns: minmax(84vw, 1fr);
+    grid-auto-rows: minmax(300px, 380px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .reveal-target.reveal-ready:not(.is-revealed) {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  .an-site .reveal-target.is-revealed .section-heading,
+  .an-site .reveal-target.is-revealed .section-inline,
+  .an-site .reveal-target.is-revealed .home-signal-copy,
+  .an-site .reveal-target.is-revealed .live-copy,
+  .an-site .reveal-target.is-revealed .live-status,
+  .an-site .reveal-target.is-revealed form {
+    animation: none;
+  }
+
+  .an-site .release-grid,
+  .an-site .video-grid {
+    scroll-snap-type: none;
+  }
+
+  .an-site .home-platform-card,
+  .an-site .release-card,
+  .an-site .video-card,
+  .an-site .home-deck-cta,
+  .an-site .button-quiet,
+  .an-site .text-link,
+  .an-site .home-platform-arrow,
+  .an-site .home-deck-cta svg,
+  .an-site .button-quiet svg,
+  .an-site .text-link svg,
+  .an-site .release-card-art img,
+  .an-site .video-card > img,
+  .an-site .release-cover img {
+    transition: none;
+  }
+
+  .an-site .home-platform-card:hover,
+  .an-site .release-card:hover,
+  .an-site .video-card:hover,
+  .an-site .home-platform-card:active,
+  .an-site .release-card:active,
+  .an-site .video-card:active,
+  .an-site .home-deck-cta:active,
+  .an-site .button-quiet:active,
+  .an-site .text-link:active {
+    transform: none;
+  }
+}

@@ -10,6 +10,7 @@ import {
   Ticket,
 } from "lucide-react";
 import { FormEvent, useState } from "react";
+import { Link } from "wouter";
 import { toast } from "sonner";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { BrandMotionMark } from "@/components/BrandMotionMark";
@@ -38,6 +39,7 @@ import "./PlatformMediaUpgrade.css";
 import "./HomePortraitRefinement.css";
 import "./HomePlatformCards.css";
 import "./HomeLayoutRefinement.css";
+import "./HomeMotionRefinement.css";
 
 export default function Home() {
   usePerformanceMonitor();
@@ -132,11 +134,11 @@ export default function Home() {
           <span>AKBAR NAWASUNDA</span>
         </a>
         <nav aria-label="Navigasi utama">
-          <a href="/music">MUSIC</a>
-          <a href="/visuals">VISUALS</a>
-          <a href="/live">LIVE</a>
-          <a href="/universe">ARCHIVE</a>
-          <a href="/about">ABOUT</a>
+          <Link href="/music">MUSIC</Link>
+          <Link href="/visuals">VISUALS</Link>
+          <Link href="/live">LIVE</Link>
+          <Link href="/universe">ARCHIVE</Link>
+          <Link href="/about">ABOUT</Link>
         </nav>
         <a className="nav-signal" href="#signal">
           <Radio size={14} /> FAN SIGNAL
@@ -156,21 +158,21 @@ export default function Home() {
           className={`an-mobile-navigation${mobileNavOpen ? " is-open" : ""}`}
           aria-hidden={!mobileNavOpen}
         >
-          <a href="/music" onClick={() => setMobileNavOpen(false)}>
+          <Link href="/music" onClick={() => setMobileNavOpen(false)}>
             MUSIC
-          </a>
-          <a href="/visuals" onClick={() => setMobileNavOpen(false)}>
+          </Link>
+          <Link href="/visuals" onClick={() => setMobileNavOpen(false)}>
             VISUALS
-          </a>
-          <a href="/live" onClick={() => setMobileNavOpen(false)}>
+          </Link>
+          <Link href="/live" onClick={() => setMobileNavOpen(false)}>
             LIVE
-          </a>
-          <a href="/universe" onClick={() => setMobileNavOpen(false)}>
+          </Link>
+          <Link href="/universe" onClick={() => setMobileNavOpen(false)}>
             ARCHIVE
-          </a>
-          <a href="/about" onClick={() => setMobileNavOpen(false)}>
+          </Link>
+          <Link href="/about" onClick={() => setMobileNavOpen(false)}>
             ABOUT
-          </a>
+          </Link>
           <a
             className="mobile-signal"
             href="#signal"
@@ -237,9 +239,9 @@ export default function Home() {
               <br />
               DI PLATFORM PILIHAN.
             </h2>
-            <a className="home-deck-cta" href="/music">
+            <Link className="home-deck-cta" href="/music">
               LIHAT MUSIK <ArrowUpRight size={15} />
-            </a>
+            </Link>
           </div>
           <div className="home-platform-rack">
             {allPlatformLinks.map((platform, index) => (
@@ -441,6 +443,7 @@ export default function Home() {
               ref={liveActionRef}
               className="button-primary"
               href={managedLive?.href || "#signal"}
+
               target={managedLive?.href ? "_blank" : undefined}
               rel={managedLive?.href ? "noreferrer" : undefined}
             >
@@ -526,15 +529,16 @@ export default function Home() {
         </div>
         <div className="footer-links">
           <span>ACCESS</span>
-          <a href="/epk">
+          <Link href="/epk">
             Electronic Press Kit <ArrowUpRight size={13} />
-          </a>
+          </Link>
+
           <a href="mailto:akbarnawasunda@gmail.com">
             Book / Collaborate <ArrowUpRight size={13} />
           </a>
-          <a href="/privacy">
+          <Link href="/privacy">
             Privacy <ArrowUpRight size={13} />
-          </a>
+          </Link>
         </div>
         <p className="footer-bottom">
           © {new Date().getFullYear()} AKBAR NAWASUNDA · ALL SIGNALS RESERVED
