@@ -104,4 +104,5 @@
 - [x] Bangun halaman inquiry publik dan form terstruktur dengan validasi, pilihan jenis kebutuhan, serta status submit yang jelas.
 - [x] Bangun halaman Licensing & Usage berbasis data legacy terverifikasi tanpa membuat klaim harga atau hak yang belum ditetapkan.
 - [x] Tambahkan CTA inquiry dari EPK, release detail, dan Universe serta operasi owner untuk membaca inquiry masuk.
-- [ ] Tambahkan tes, verifikasi desktop/Android, build, dan deployment untuk alur conversion baru.
+- [x] Tambahkan tes, verifikasi Android, build, dan deployment untuk alur conversion baru.
+- [x] Verifikasi form inquiry, licensing, EPK, detail rilisan, dan CTA kolaborasi pada viewport desktop sebelum menutup quality gate conversion.
