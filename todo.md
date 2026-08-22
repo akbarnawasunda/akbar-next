@@ -123,4 +123,4 @@
 - [x] Audit copy dan motion pada seluruh rute publik untuk menandai teks generik, CTA berulang, dan animasi yang tidak menambah makna.
 - [x] Terapkan sistem copy ringkas: satu pesan utama, satu konteks faktual, dan satu aksi jelas per section publik.
 - [x] Kurangi efek dekoratif serta standardisasi motion menjadi transisi singkat, responsif, dan optional bagi reduced-motion.
-- [ ] Verifikasi penyederhanaan pada desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Verifikasi penyederhanaan pada desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
