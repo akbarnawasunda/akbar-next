@@ -37,6 +37,7 @@ import "./HomeArtistUpgrade.css";
 import "./PlatformMediaUpgrade.css";
 import "./HomePortraitRefinement.css";
 import "./HomePlatformCards.css";
+import "./HomeLayoutRefinement.css";
 
 export default function Home() {
   usePerformanceMonitor();
@@ -50,6 +51,7 @@ export default function Home() {
   const liveActionRef = useMagnetic<HTMLAnchorElement>();
   const [email, setEmail] = useState("");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
   const contentQuery = trpc.content.list.useQuery();
   const sanityContent = useSanityArtistContent();
   const managedContent = contentQuery.data ?? [];
@@ -183,9 +185,14 @@ export default function Home() {
         <section className="an-hero">
           <div className="home-hero-portrait">
             <img
-              src={officialBrand.portrait}
+              src={portraitSrc}
               alt="Portrait resmi Akbar Nawasunda"
               fetchPriority="high"
+              onError={() => {
+                if (portraitSrc !== officialBrand.portraitFallback) {
+                  setPortraitSrc(officialBrand.portraitFallback);
+                }
+              }}
               decoding="async"
               width={800}
               height={1000}

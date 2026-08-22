@@ -192,16 +192,15 @@ export function BrandMotionMark({ src }: { src: string }) {
       context.globalCompositeOperation = "lighter";
       particles.forEach(particle => {
         const driftX =
-          Math.sin(idleTime * 0.78 + particle.phase) * (mobile ? 1.2 : 2.1) +
-          Math.cos(idleTime * 0.38 + particle.ty * 0.02) *
-            (mobile ? 0.45 : 0.9);
+          Math.sin(idleTime * 0.78 + particle.phase) * (mobile ? 2.8 : 4.8) +
+          Math.cos(idleTime * 0.38 + particle.ty * 0.02) * (mobile ? 1.1 : 1.9);
         const driftY =
           Math.cos(idleTime * 0.64 + particle.phase * 1.24) *
-            (mobile ? 1 : 1.8) +
+            (mobile ? 2.4 : 4.1) +
           Math.sin(idleTime * 0.31 + particle.tx * 0.018) *
-            (mobile ? 0.4 : 0.8);
+            (mobile ? 0.9 : 1.7);
         const pulse =
-          0.88 + (Math.sin(idleTime * 1.6 + particle.phase) + 1) * 0.07;
+          0.84 + (Math.sin(idleTime * 1.6 + particle.phase) + 1) * 0.13;
         context.globalAlpha = Math.min(1, particle.alpha * pulse * 0.2);
         context.fillStyle = particle.color;
         context.fillRect(
@@ -214,16 +213,15 @@ export function BrandMotionMark({ src }: { src: string }) {
       context.globalCompositeOperation = "source-over";
       particles.forEach(particle => {
         const driftX =
-          Math.sin(idleTime * 0.78 + particle.phase) * (mobile ? 1.2 : 2.1) +
-          Math.cos(idleTime * 0.38 + particle.ty * 0.02) *
-            (mobile ? 0.45 : 0.9);
+          Math.sin(idleTime * 0.78 + particle.phase) * (mobile ? 2.8 : 4.8) +
+          Math.cos(idleTime * 0.38 + particle.ty * 0.02) * (mobile ? 1.1 : 1.9);
         const driftY =
           Math.cos(idleTime * 0.64 + particle.phase * 1.24) *
-            (mobile ? 1 : 1.8) +
+            (mobile ? 2.4 : 4.1) +
           Math.sin(idleTime * 0.31 + particle.tx * 0.018) *
-            (mobile ? 0.4 : 0.8);
+            (mobile ? 0.9 : 1.7);
         const pulse =
-          0.88 + (Math.sin(idleTime * 1.6 + particle.phase) + 1) * 0.07;
+          0.84 + (Math.sin(idleTime * 1.6 + particle.phase) + 1) * 0.13;
         context.globalAlpha = Math.min(1, particle.alpha * pulse);
         context.fillStyle = particle.color;
         context.fillRect(

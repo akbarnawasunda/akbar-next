@@ -99,3 +99,45 @@ Final CSS cascade now computes particle opacity at `0.96`, with 899 desktop part
 ## Particle idle motion validation — 2026-08-22
 
 After the scheduling fix, a 350 ms canvas checksum changed from `830288353` to `750786139`, confirming that idle particles move continuously. The component remained `is-idle`, computed opacity was `0.96`, and the canvas contained 899 desktop particles.
+
+
+## Homepage layout audit — 2026-08-23
+
+Browser inspection at 1280×1100 found the hero at 860 px tall with the particle canvas positioned at 422×422 and opacity 0.96. The hero portrait URL was present but `naturalWidth`/`naturalHeight` were both 0, so the photo was not loading in the local server; this explains the empty/dark hero background. The particle canvas had 899 desktop particles and `is-idle` was active. Main sections measured approximately: platform 665 px, current release 854 px, release grid 1,012 px, visual 948 px, live 630 px, Fan Signal 463 px. Layout polish should prioritize hero asset fallback/visibility, tighter section rhythm, and consistent content max-widths.
+
+
+## Hero portrait fallback — 2026-08-23
+
+The official portrait URL resolves directly in the browser to a 1122×1402 portrait image, while the local `/manus-storage/...` proxy returned no image because Forge storage credentials are not present in the local environment. The image was saved into `client/public/assets/akbar-official-portrait-fallback.png` and `.webp` for a local runtime fallback; the WebP version will be preferred to reduce payload.
+
+
+## Layout refinement + portrait fallback — 2026-08-23
+
+- `HomeLayoutRefinement.css` diimport paling akhir dan mengonsolidasikan gutter, max-width, hierarchy section, grid release/video, live/status, Fan Signal, footer, serta breakpoint 1080/820/560px.
+- Local browser desktop (`1280×1100`, `http://localhost:3101/?layout=refined`) menampilkan portrait fallback lokal dengan `naturalWidth=1122`, `naturalHeight=1402`, source `/assets/akbar-official-portrait-fallback.webp`; storage proxy failure tidak lagi membuat hero kosong.
+- Hero terukur `900px` tinggi; portrait terukur `531.9×664.6px`; particle canvas `433×433`, `899` particle, class `is-idle`, opacity `0.96`, z-index `2`.
+- Fallback PNG dihapus; WebP dipertahankan sebagai asset publik yang dipakai oleh `officialBrand.portraitFallback`.
+- Idle particle drift diperbesar dari sekitar `2.1/1.8px` desktop menjadi sekitar `4.8/4.1px` plus komponen kedua dan pulse alpha lebih terbaca; loop `requestAnimationFrame` tetap aktif hanya saat hero terlihat.
+- `pnpm check`, `pnpm test` (42 tests / 15 files), dan `pnpm build` PASS; warning build existing tetap hanya analytics env/runtime image/chunk size.
+
+
+## Visual desktop follow-up — 2026-08-23
+
+Screenshot browser setelah idle beberapa saat memperlihatkan particle canvas dengan titik putih, biru, oranye, dan hijau yang jelas di atas hero, bukan panel hitam kosong. Hero tetap terbagi menjadi portrait kiri dan copy/particle kanan. Setelah scroll satu viewport, platform deck terlihat menjadi dua kolom yang seimbang dengan 10 kartu teratur, dan current release memakai dua kolom dengan cover serta detail yang tidak saling bertabrakan.
+
+
+## Desktop section metrics — 2026-08-23
+
+Metrik DOM setelah scroll menunjukkan platform deck `510px`, release section `1,089px`, release grid `1,111×621px` dengan delapan kartu, visual grid `1,111×430px` dengan tiga kartu, live `590px`, Fan Signal `412px`, dan footer `343px`. Tidak ada overflow horizontal bermakna (`scrollWidth - innerWidth = -15`, akibat scrollbar viewport). Tiga elemen reveal masih opacity 0 karena belum memasuki viewport; ini sesuai perilaku lazy reveal, bukan error layout.
+
+
+## Motion checksum follow-up — 2026-08-23
+
+Setelah inspeksi desktop dan screenshot mobile, browser page mengalami restart/HMR sehingga particle kembali ke class `is-animating` dengan 891 particle. Dua pengukuran checksum terpisah (`450ms` dan `3200ms`) saat fase ini sama; hasil ini bukan validasi idle karena formasi belum mencapai `is-idle` atau rendering sedang dihentikan lifecycle visibility. Komponen perlu diaudit ulang pada transisi `is-animating` → `is-idle` dan offscreen observer sebelum finalisasi.
+
+
+## Idle motion final validation — 2026-08-23
+
+Setelah viewport dikembalikan ke hero dan formasi selesai, browser melaporkan class `an-rmx-particle-hero is-idle`, `891` particle, canvas terlihat, dan checksum berubah dari `13378235` menjadi `13330355` dalam `2,2 detik`. Ini mengonfirmasi idle loop aktif dan bukan sekadar frame terakhir yang diam. Saat hero di-scroll keluar viewport, scheduler tetap dibatalkan oleh IntersectionObserver.
+
+Screenshot headless viewport mobile `390×844` juga menunjukkan portrait fallback tampil penuh, header mobile tidak overlap, judul dan deskripsi memiliki hierarchy jelas, CTA tetap terlihat, serta particle berwarna mulai terbentuk di bawah copy.

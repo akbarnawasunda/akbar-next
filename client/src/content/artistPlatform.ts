@@ -8,6 +8,7 @@ export const officialBrand = {
   logo: publicStorageAsset("/manus-storage/logo-an-transparent_c606ed92.png"),
   socialPreview: publicStorageAsset("/manus-storage/og-image_79f65fc5.png"),
   portrait: "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg",
+  portraitFallback: "/assets/akbar-official-portrait-fallback.webp",
   favicon: publicStorageAsset("/manus-storage/favicon_d67eea7c.png"),
   rmxMark: "/api/brand/rmx-mark",
 };
