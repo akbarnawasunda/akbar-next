@@ -99,4 +99,4 @@
 - [x] Terapkan artwork per-rilisan yang tersedia dari sumber legacy/CMS pada homepage, kartu katalog, release detail, dan embed.
 - [x] Buat text scramble interaktif berdurasi 2–3 detik untuk heading/CTA terpilih di Home, Music, Visuals, Live, Universe, About, dan EPK.
 - [x] Pastikan halaman detail rilisan memakai artwork legacy/CMS yang sama dengan katalog, lalu verifikasi visualnya pada route publik.
-- [ ] Tambahkan tes regresi serta verifikasi Android, reduced-motion, build, dan deployment untuk pengalaman visual baru.
+- [x] Tambahkan tes regresi serta verifikasi Android, reduced-motion, build, dan deployment untuk pengalaman visual baru.
