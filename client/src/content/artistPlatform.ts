@@ -17,6 +17,11 @@ export const platformLinks = [
   { label: "Instagram", href: "https://www.instagram.com/akbarnawasunda" },
 ];
 
+export const allPlatformLinks = [
+  ...platformLinks,
+  { label: "Apple Music", href: "https://music.apple.com/id/song/pada-imut-aisyah-tak-belagu/1868511241?l=id" },
+];
+
 export const currentRelease = {
   eyebrow: "CURRENT FREQUENCY · 2025",
   title: "MASIH MENCINTAINYA — PAPINKA",

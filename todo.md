@@ -68,6 +68,9 @@
 - [x] Add refined motion, tactile interaction states, and responsive card rhythm across the homepage without reducing readability.
 - [x] Correct the mobile homepage hero flow so status information and copy remain readable without overlap.
 - [x] Extend the refined visual system to Music, Visuals, Live, Universe, and EPK, then verify the consistent mobile and desktop experience.
+- [x] Add a unified all-platform listening hub using verified Akbar Nawasunda destination links.
+- [x] Add real artwork/thumbnail treatment to each supported music and video embed with safe visual fallbacks.
+- [x] Add a performant Akbar Nawasunda particle field and rotating vinyl component with the original AN mark at its center.
 - [ ] Deploy the corrected root Vercel rewrite and verify direct navigation on the live site for the public SPA routes.
-- [ ] Improve the public visual treatment using the original artist identity before the next GitHub deployment.
+- [x] Improve the public visual treatment using the original artist identity before the next GitHub deployment.
 - [ ] Re-verify all public routes and remove remaining stale relative storage references before the next GitHub deployment.

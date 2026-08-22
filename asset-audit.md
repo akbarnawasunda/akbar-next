@@ -12,3 +12,7 @@ The source repository `akbarnawasunda/akbarnawasunda-portofolio` contains authen
 The current Night Frequency artwork is generated platform styling rather than the artist’s original published identity. The next public iteration should prioritize the original logo and preview artwork while preserving the dark, responsive presentation system.
 
 For dark navigation, the original logo has also been processed into a tightly cropped, transparent AN monogram at `/home/ubuntu/webdev-static-assets/akbar-original-brand/logo-an-transparent.png`. It preserves the original black and electric-blue mark while removing its presentation-card background.
+
+## Verified listening sources
+
+The official SoundCloud profiles confirm two artist-owned tracks for the expanded listening module: `MASIH MENCINTAINYA - PAPINKA 2025 [ Akbar Nawasunda]` and `NGERTENONO ATI MEDIUM HALL [ Akbar Nawasunda ] #MBFRECORDS`. Both will retain their verified direct SoundCloud destinations. Artwork-rich cards will use the owned AN Open Graph artwork as a safe fallback and source-linked video thumbnails where a platform supports stable thumbnail URLs.
