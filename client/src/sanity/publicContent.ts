@@ -2,16 +2,20 @@ import { createClient } from "@sanity/client";
 import { useEffect, useState } from "react";
 import { dataset, projectId } from "./config";
 
-export type CmsRelease = { _id: string; title: string; year?: string; format?: string; platform?: string; url: string; embedUrl?: string; isCurrent?: boolean; order?: number };
+export type CmsRelease = { _id: string; title: string; year?: string; format?: string; platform?: string; url: string; embedUrl?: string; artworkUrl?: string; story?: string; credits?: string; spotifyUrl?: string; appleMusicUrl?: string; isCurrent?: boolean; order?: number };
 export type CmsVisual = { _id: string; title: string; label?: string; youtubeId?: string; url?: string; imageUrl?: string; order?: number };
-export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; releases: CmsRelease[]; visuals: CmsVisual[]; live?: { status?: string; message?: string; actionUrl?: string } };
+export type CmsEvent = { _id: string; title: string; date: string; city?: string; venue?: string; country?: string; posterUrl?: string; ticketUrl?: string; rsvpUrl?: string; status?: "announced" | "sold out" | "cancelled" | "past"; isFeatured?: boolean };
+export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; releases: CmsRelease[]; visuals: CmsVisual[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
 
 const client = createClient({ projectId, dataset, apiVersion: "2026-08-22", useCdn: true });
 const query = `{
   "hero": *[_type == "artistSite"][0]{heroTitle, heroKicker, heroBody, heroImage, primaryActionUrl, primaryActionLabel},
-  "releases": *[_type == "release"] | order(order asc){_id, title, year, format, platform, url, embedUrl, isCurrent, order},
+  "profile": *[_type == "artistProfile"][0]{shortBio, longBio, location, genres, portraitImage, artistStatement},
+  "pressKit": *[_type == "pressKit"][0]{intro, bookingEmail, pressEmail, oneSheetUrl, photoPackUrl, logoPackUrl, technicalRiderUrl},
+  "releases": *[_type == "release"] | order(order asc){_id, title, year, format, platform, url, embedUrl, artworkUrl, story, credits, spotifyUrl, appleMusicUrl, isCurrent, order},
   "visuals": *[_type == "visual"] | order(order asc){_id, title, label, youtubeId, url, imageUrl, order},
-  "live": *[_type == "liveSignal"][0]{status, message, actionUrl}
+  "live": *[_type == "liveSignal"][0]{status, message, actionUrl},
+  "events": *[_type == "event" && (!defined(status) || status != "past")] | order(date asc){_id, title, date, city, venue, country, posterUrl, ticketUrl, rsvpUrl, status, isFeatured}
 }`;
 
 export function useSanityArtistContent() {

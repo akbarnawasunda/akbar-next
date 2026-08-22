@@ -15,5 +15,8 @@ describe("public navigation", () => {
     expect(homepage).not.toContain('href="/lab"');
     expect(chrome).not.toContain('href: "/lab"');
     expect(universe).not.toContain('href="/lab"');
+    expect(router).toContain('path={"/about"}');
+    expect(router).toContain('path={"/music/:slug"}');
+    expect(chrome).toContain('href: "/about"');
   });
 });

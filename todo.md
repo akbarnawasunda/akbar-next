@@ -82,3 +82,12 @@
 - [x] Perkuat hierarki homepage untuk discovery musik, visual, live signal, dan konversi Fan Signal tanpa mengembalikan pengalaman LAB.
 - [x] Tambahkan atau perbarui tes navigasi/routing untuk memastikan LAB tidak lagi terekspos sebagai route publik.
 - [x] Verifikasi desktop, Android/mobile, type check, test, production build, serta deployment Vercel setelah perombakan homepage.
+- [x] Audit kelengkapan konten, fitur, dan operasi pada official artist website Akbar Nawasunda.
+- [x] Petakan celah kritis serta backlog prioritas untuk musik, live, press, fan CRM, dan CMS.
+- [x] Susun rekomendasi ide produk serta roadmap pengembangan bertahap untuk ekosistem artis musik.
+- [x] Tambahkan model konten dan CMS untuk artist biography, release story, press assets, booking profile, serta event/tour.
+- [x] Bangun halaman publik About / Biography, release detail, dan EPK yang dilengkapi status aman untuk materi asli yang belum tersedia.
+- [x] Tambahkan jalur booking yang terstruktur dan event-ready Live Signal tanpa mengarang jadwal, testimonial, atau detail acara.
+- [x] Tambahkan text scramble, reveal, dan particle motion reusable yang menghormati `prefers-reduced-motion` serta tetap ringan di Android.
+- [x] Bangun halaman detail rilisan publik berbasis CMS untuk artwork, release story, credits, dan official listening links dengan fallback yang jujur.
+- [ ] Perluas tes untuk data content model, public routing, dan motion fallback; lalu verifikasi desktop, Android, build, serta deployment.

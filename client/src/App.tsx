@@ -12,6 +12,8 @@ import Live from "./pages/Live";
 import Universe from "./pages/Universe";
 import PressKit from "./pages/PressKit";
 import AssetLibrary from "./pages/AssetLibrary";
+import About from "./pages/About";
+import ReleaseDetail from "./pages/ReleaseDetail";
 import LegacyDocument from "./components/LegacyDocument";
 
 function Router() {
@@ -20,9 +22,11 @@ function Router() {
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/music"} component={Music} />
+      <Route path={"/music/:slug"} component={ReleaseDetail} />
       <Route path={"/visuals"} component={Visuals} />
       <Route path={"/live"} component={Live} />
       <Route path={"/universe"} component={Universe} />
+      <Route path={"/about"} component={About} />
       <Route path={"/assets"} component={AssetLibrary} />
       <Route path={"/studio"} component={ContentStudio} />
       <Route path={"/admin"} component={() => <LegacyDocument source="/legacy/admin.html" scripts="admin" />} />

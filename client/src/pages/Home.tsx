@@ -2,6 +2,7 @@ import { ArrowDownRight, ArrowUpRight, Disc3, Headphones, Mail, Play, Radio, Spa
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { ArtistSignalMotion } from "@/components/ArtistSignalMotion";
+import { ScrambleText } from "@/components/ScrambleText";
 import { allPlatformLinks, currentRelease, futureModules, officialBrand, platformLinks, publicStorageAsset, releases, videos } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
 import { useSanityArtistContent } from "@/sanity/publicContent";
@@ -57,11 +58,12 @@ export default function Home() {
           <a href="/visuals">VISUALS</a>
           <a href="/live">LIVE</a>
           <a href="/universe">UNIVERSE</a>
+          <a href="/about">ABOUT</a>
         </nav>
         <a className="nav-signal" href="#signal"><Radio size={14} /> FAN SIGNAL</a>
         <button className="an-menu-toggle" type="button" aria-label={mobileNavOpen ? "Tutup navigasi" : "Buka navigasi"} aria-expanded={mobileNavOpen} aria-controls="an-mobile-navigation" onClick={() => setMobileNavOpen(open => !open)}>{mobileNavOpen ? "CLOSE" : "MENU"}</button>
         <div id="an-mobile-navigation" className={`an-mobile-navigation${mobileNavOpen ? " is-open" : ""}`} aria-hidden={!mobileNavOpen}>
-          <a href="/music" onClick={() => setMobileNavOpen(false)}>MUSIC</a><a href="/visuals" onClick={() => setMobileNavOpen(false)}>VISUALS</a><a href="/live" onClick={() => setMobileNavOpen(false)}>LIVE</a><a href="/universe" onClick={() => setMobileNavOpen(false)}>UNIVERSE</a><a className="mobile-signal" href="#signal" onClick={() => setMobileNavOpen(false)}>JOIN FAN SIGNAL</a>
+          <a href="/music" onClick={() => setMobileNavOpen(false)}>MUSIC</a><a href="/visuals" onClick={() => setMobileNavOpen(false)}>VISUALS</a><a href="/live" onClick={() => setMobileNavOpen(false)}>LIVE</a><a href="/universe" onClick={() => setMobileNavOpen(false)}>UNIVERSE</a><a href="/about" onClick={() => setMobileNavOpen(false)}>ABOUT</a><a className="mobile-signal" href="#signal" onClick={() => setMobileNavOpen(false)}>JOIN FAN SIGNAL</a>
         </div>
       </header>
 
@@ -71,7 +73,7 @@ export default function Home() {
           <div className="home-hero-orbit"><ArtistSignalMotion /></div>
           <div className="hero-copy">
             <p className="eyebrow"><span /> {heroKicker}</p>
-            <h1>{heroTitle || <>MAKE<br /><em>THE NIGHT</em><br />MOVE.</>}</h1>
+            <ScrambleText as="h1" text={heroTitle || "MAKE THE\nNIGHT MOVE."} />
             <p className="hero-description">{heroBody}</p>
             <div className="hero-actions">
               <a className="button-primary" href={heroActionUrl} target="_blank" rel="noreferrer"><Play size={15} fill="currentColor" /> {heroActionLabel}</a>
