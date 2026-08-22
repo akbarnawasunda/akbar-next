@@ -7,7 +7,7 @@ const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf
 describe("AN Archive", () => {
   it("grounds the archive in verified artist history, genres, and release artwork", () => {
     const archive = source("client/src/pages/Universe.tsx");
-    expect(archive).toContain("AN ARCHIVE / ARTIST RECORD");
+    expect(archive).toContain("AN ARCHIVE");
     expect(archive).toContain("verifiedArtistProfile.longBio");
     expect(archive).toContain("verifiedArtistProfile.genres.map");
     expect(archive).toContain("releases.slice(0, 4)");

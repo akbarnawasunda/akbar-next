@@ -24,7 +24,7 @@ describe("official media fallback and online EPK", () => {
   it("makes the EPK usable online without claiming nonexistent photo packs or a technical rider", () => {
     const epk = source("client/src/pages/PressKit.tsx");
     expect(epk).toContain("SAVE / PRINT EPK");
-    expect(epk).toContain("OFFICIAL MATERIALS");
+    expect(epk).toContain("ASET RESMI");
     expect(epk).not.toContain("PHOTO PACK");
     expect(epk).not.toContain("TECH RIDER");
   });

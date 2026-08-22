@@ -19,6 +19,7 @@ import Licensing from "./pages/Licensing";
 import InquiryStudio from "./pages/InquiryStudio";
 import LegacyDocument from "./components/LegacyDocument";
 import "./components/PlasmaRefinement.css";
+import "./components/EditorialSimplification.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes

@@ -120,3 +120,7 @@
 - [x] Ubah halaman Universe menjadi AN Archive dengan artwork rilisan, genre, dan konteks artist tanpa foto press atau klaim baru.
 - [x] Tambahkan jalur resmi untuk release, remix/collaboration, dan booking dari AN Archive.
 - [x] Verifikasi AN Archive pada desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Audit copy dan motion pada seluruh rute publik untuk menandai teks generik, CTA berulang, dan animasi yang tidak menambah makna.
+- [x] Terapkan sistem copy ringkas: satu pesan utama, satu konteks faktual, dan satu aksi jelas per section publik.
+- [x] Kurangi efek dekoratif serta standardisasi motion menjadi transisi singkat, responsif, dan optional bagi reduced-motion.
+- [ ] Verifikasi penyederhanaan pada desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.

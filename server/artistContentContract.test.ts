@@ -23,8 +23,8 @@ describe("artist content contract", () => {
     const live = source("client/src/pages/Live.tsx");
 
     expect(pressKit).toContain("Request material");
-    expect(pressKit).toContain("sudah tersedia secara resmi");
-    expect(live).toContain("NO DATE CONFIRMED YET.");
+    expect(pressKit).toContain("Aset yang tersedia secara resmi");
+    expect(live).toContain("BELUM ADA JADWAL.");
   });
 
   it("preserves verified legacy artist identity and catalog in the public fallback", () => {
