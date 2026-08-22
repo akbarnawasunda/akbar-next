@@ -43,7 +43,7 @@ export const currentRelease = {
   title: "MASIH MENCINTAINYA — PAPINKA",
   type: "DJ AKBAR REMIX",
   href: "https://soundcloud.com/akbarnawasunda/masih-mencintainya-papinka-2025-akbar-nawasunda",
-  image: officialBrand.socialPreview,
+  image: "https://i1.sndcdn.com/artworks-Zyzr6WJb8jUksH1v-u0tohw-t500x500.jpg",
 };
 
 export const releases: Release[] = [

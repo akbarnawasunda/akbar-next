@@ -54,5 +54,7 @@ describe("artist content contract", () => {
     expect(home).toContain("<PlatformIcon label={platform.label}");
     expect(music).toContain("<PlatformIcon label={platform.label}");
     expect(content).toContain('image: "https://i.scdn.co/image/');
+    expect(content).toContain('image: "https://i1.sndcdn.com/artworks-');
+    expect(home).toContain("managedRelease.imageUrl !== officialBrand.socialPreview ? managedRelease.imageUrl : currentRelease.image");
   });
 });

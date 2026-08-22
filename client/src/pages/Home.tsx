@@ -24,7 +24,7 @@ export default function Home() {
   const managedRelease = managedContent.find(item => item.kind === "release");
   const managedVideos = managedContent.filter(item => item.kind === "video").slice(0, 3);
   const managedLive = managedContent.find(item => item.kind === "live");
-  const activeRelease = managedRelease ? { ...currentRelease, title: managedRelease.title, type: managedRelease.label || currentRelease.type, href: managedRelease.href || currentRelease.href, image: managedRelease.imageUrl || currentRelease.image } : currentRelease;
+  const activeRelease = managedRelease ? { ...currentRelease, title: managedRelease.title, type: managedRelease.label || currentRelease.type, href: managedRelease.href || currentRelease.href, image: managedRelease.imageUrl && managedRelease.imageUrl !== officialBrand.socialPreview ? managedRelease.imageUrl : currentRelease.image } : currentRelease;
   const cmsHero = sanityContent.data?.hero;
   const hasCmsHero = Boolean(cmsHero?.heroTitle || cmsHero?.heroBody || cmsHero?.primaryActionUrl);
   const heroImage = cmsHero?.heroImage || officialBrand.socialPreview;
