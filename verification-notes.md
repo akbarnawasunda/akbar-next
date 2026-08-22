@@ -45,3 +45,5 @@ Mobile viewport verification at 375 px confirmed Music, Universe, and EPK retain
 Original artist-owned branding from `akbarnawasunda-portofolio` is now present across the public platform: the cropped AN logo is used in public headers and footers, the original blue-and-white Open Graph artwork drives public hero sections, and the original favicon/OG asset has been wired into the Vite document head. Desktop validation confirmed the refreshed identity on `/`, `/music`, `/visuals`, `/live`, `/universe`, and `/epk`.
 
 Music now includes two official SoundCloud players and Visuals includes two official YouTube embeds. Each embed also presents a direct official-platform fallback link, so third-party playback blocking does not remove access to the intended release or visual.
+
+Phone viewport verification at 375 px confirmed the refreshed original-brand homepage and Music hero retain readable content hierarchy, the official AN mark, current-release actions, and a discoverable menu control without horizontal overflow.

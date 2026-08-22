@@ -59,6 +59,7 @@
 - [ ] Read published Sanity artist content in the public Vite routes with a static fallback when the CMS is empty or unavailable.
 - [ ] Move the owner Sanity Studio into a standalone deployment so its editor bundle does not burden the Vercel public website.
 - [ ] Configure the standalone Sanity Studio as a second Vercel project rooted at `cms/sanity-studio` for phone-friendly owner access.
+- [ ] Fix the standalone Sanity Studio Vercel install command so the `sanity` build binary is available during deployment.
 - [ ] Deploy the corrected root Vercel rewrite and verify direct navigation on the live site for the public SPA routes.
 - [ ] Improve the public visual treatment using the original artist identity before the next GitHub deployment.
 - [ ] Re-verify all public routes and remove remaining stale relative storage references before the next GitHub deployment.
