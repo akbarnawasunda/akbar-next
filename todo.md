@@ -119,4 +119,4 @@
 - [x] Audit data terverifikasi untuk narasi perjalanan DJ Akbar Remix ke Akbar Nawasunda pada AN Archive.
 - [x] Ubah halaman Universe menjadi AN Archive dengan artwork rilisan, genre, dan konteks artist tanpa foto press atau klaim baru.
 - [x] Tambahkan jalur resmi untuk release, remix/collaboration, dan booking dari AN Archive.
-- [ ] Verifikasi AN Archive pada desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Verifikasi AN Archive pada desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
