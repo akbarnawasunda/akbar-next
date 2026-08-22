@@ -129,3 +129,6 @@
 - [x] Rebalance Home, katalog, form, EPK, navigasi, dan state interaktif agar tidak tampak seperti dashboard atau template developer.
 - [x] Verifikasi rework warna di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
 - [x] Verifikasi palet graphite–copper pada Visuals, Live, About, dan AN Archive di desktop serta Android, lalu dokumentasikan hasilnya.
+- [x] Audit penggunaan logo saat ini dan pilih satu motion mark yang layak dipicu pengguna, bukan autoplay dekoratif.
+- [x] Implementasikan motion logo singkat dengan fallback reduced-motion serta aman untuk Android.
+- [ ] Verifikasi motion logo di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.

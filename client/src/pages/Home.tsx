@@ -2,6 +2,7 @@ import { ArrowDownRight, ArrowUpRight, Disc3, Headphones, Mail, Play, Radio, Spa
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { PlatformIcon } from "@/components/PlatformIcon";
+import { BrandMotionMark } from "@/components/BrandMotionMark";
 import { allPlatformLinks, currentRelease, officialBrand, platformLinks, publicStorageAsset, releases, videos } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
 import { useSanityArtistContent } from "@/sanity/publicContent";
@@ -79,9 +80,7 @@ export default function Home() {
               <a className="button-quiet" href="#signal">MASUK FAN SIGNAL <ArrowDownRight size={16} /></a>
             </div>
           </div>
-          <aside className="hero-status" aria-label="Status artis">
-            <div><span>NOW PLAYING</span><strong>{activeRelease.title}</strong><small>{activeRelease.type}</small></div>
-          </aside>
+          <BrandMotionMark src={officialBrand.rmxMark} />
         </section>
 
         <section className="home-signal-deck" aria-labelledby="signal-deck-title">
