@@ -124,3 +124,7 @@
 - [x] Terapkan sistem copy ringkas: satu pesan utama, satu konteks faktual, dan satu aksi jelas per section publik.
 - [x] Kurangi efek dekoratif serta standardisasi motion menjadi transisi singkat, responsif, dan optional bagi reduced-motion.
 - [x] Verifikasi penyederhanaan pada desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Audit seluruh aksen cyan, surface gelap, gradient, dan CTA yang saat ini terasa seperti UI-tech generik.
+- [x] Terapkan palet editorial baru dengan aksen hemat, kontras aksesibel, dan kedalaman warna yang lebih material.
+- [x] Rebalance Home, katalog, form, EPK, navigasi, dan state interaktif agar tidak tampak seperti dashboard atau template developer.
+- [ ] Verifikasi rework warna di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.

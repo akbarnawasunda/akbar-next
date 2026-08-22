@@ -20,6 +20,7 @@ import InquiryStudio from "./pages/InquiryStudio";
 import LegacyDocument from "./components/LegacyDocument";
 import "./components/PlasmaRefinement.css";
 import "./components/EditorialSimplification.css";
+import "./components/MaturePalette.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
