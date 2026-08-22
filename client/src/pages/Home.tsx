@@ -2,6 +2,8 @@ import { ArrowDownRight, ArrowUpRight, Disc3, Headphones, Mail, Play, Radio, Spa
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { ArtistSignalMotion } from "@/components/ArtistSignalMotion";
+import { NameParticleField } from "@/components/NameParticleField";
+import { PlatformTicker } from "@/components/PlatformTicker";
 import { ScrambleText } from "@/components/ScrambleText";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { allPlatformLinks, currentRelease, futureModules, officialBrand, platformLinks, publicStorageAsset, releases, videos } from "@/content/artistPlatform";
@@ -75,7 +77,7 @@ export default function Home() {
           <div className="home-hero-orbit"><ArtistSignalMotion /></div>
           <div className="hero-copy">
             <p className="eyebrow"><span /> {heroKicker}</p>
-            <ScrambleText as="h1" interactive duration={2400} text={heroTitle || "MAKE THE\nNIGHT MOVE."} />
+            <ScrambleText as="h1" interactive signature duration={2400} text={heroTitle || "MAKE THE\nNIGHT MOVE."} />
             <p className="hero-description">{heroBody}</p>
             <div className="hero-actions">
               <a className="button-primary" href={heroActionUrl} target="_blank" rel="noreferrer"><Play size={15} fill="currentColor" /> {heroActionLabel}</a>
@@ -93,6 +95,8 @@ export default function Home() {
           <div className="home-signal-copy"><p className="eyebrow"><span /> AN // LIVE SIGNAL</p><ScrambleText as="h2" interactive duration={2400} id="signal-deck-title" text={"ONE ARTIST.\nEVERY FREQUENCY."} /><p>Masuk lewat platform yang kamu pakai, lalu lanjutkan ke rilisan, visual, dan kabar live dari sumber resminya.</p><a className="home-deck-cta" href="/music">ENTER THE RELEASE VAULT <ArrowUpRight size={15} /></a></div>
           <div className="home-platform-rack">{allPlatformLinks.map((platform, index) => <a key={platform.label} href={platform.href} target="_blank" rel="noreferrer"><span>0{index + 1}</span><strong><PlatformIcon label={platform.label} />{platform.label}</strong><ArrowUpRight size={16} /></a>)}</div>
         </section>
+        <PlatformTicker />
+        <section className="home-name-field-wrap" aria-label="Particle signature Akbar Nawasunda"><NameParticleField /></section>
 
         <section className="section section-current" id="music">
           <div className="section-heading"><p className="eyebrow">01 · CURRENT FREQUENCY</p><ScrambleText as="h2" interactive duration={2400} text={"THE RELEASE\nIN FOCUS."} /></div>

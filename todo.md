@@ -106,3 +106,8 @@
 - [x] Tambahkan CTA inquiry dari EPK, release detail, dan Universe serta operasi owner untuk membaca inquiry masuk.
 - [x] Tambahkan tes, verifikasi Android, build, dan deployment untuk alur conversion baru.
 - [x] Verifikasi form inquiry, licensing, EPK, detail rilisan, dan CTA kolaborasi pada viewport desktop sebelum menutup quality gate conversion.
+- [x] Audit dan sederhanakan penggunaan text scramble agar setiap jenis teks memiliki motion yang tepat.
+- [x] Bangun particle name-field yang menyebar dan menyatu membentuk teks AKBAR NAWASUNDA dengan fallback reduced-motion.
+- [x] Tambahkan ticker platform horizontal yang bergerak lembut dengan ikon SVG dan kontrol reduced-motion.
+- [x] Ganti aksen chartreuse/kuning dengan palet aksen baru yang lebih selaras dengan identitas elektronika malam Akbar Nawasunda.
+- [x] Audit serta sempurnakan detail visual/motion yang masih generik, lalu verifikasi desktop, Android, build, dan deployment.

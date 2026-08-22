@@ -24,4 +24,24 @@ describe("motion accessibility fallback", () => {
     expect(scramble).toContain("duration = 2400");
     expect(scramble).toContain("an-scramble-interactive");
   });
+
+  it("keeps scramble copy stable on first paint unless a signature moment opts into autoStart", () => {
+    const scramble = source("client/src/components/ScrambleText.tsx");
+    expect(scramble).toContain("autoStart = false");
+    expect(scramble).toContain("if (!autoStart) return");
+  });
+
+  it("uses a canvas name-field with viewport-aware particle caps, visibility pausing, and reduced-motion fallback", () => {
+    const particle = source("client/src/components/NameParticleField.tsx");
+    expect(particle).toContain("IntersectionObserver");
+    expect(particle).toContain("mobile ? 760 : 2100");
+    expect(particle).toContain('matchMedia("(prefers-reduced-motion: reduce)")');
+    expect(particle).toContain("paintFinal");
+  });
+
+  it("provides a continuously moving but reduced-motion-safe platform ticker", () => {
+    const ticker = source("client/src/components/PlatformTicker.css");
+    expect(ticker).toContain("an-platform-ticker 34s linear infinite");
+    expect(ticker).toMatch(/prefers-reduced-motion\s*:\s*reduce/);
+  });
 });

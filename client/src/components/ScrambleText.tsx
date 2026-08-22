@@ -3,7 +3,7 @@ import "./ScrambleText.css";
 
 const glyphs = "AN01//+*~";
 
-export function ScrambleText({ text, className = "", as: Tag = "span", delay = 60, interactive = false, duration = 2400, id }: { text: string; className?: string; as?: "span" | "p" | "h1" | "h2" | "h3"; delay?: number; interactive?: boolean; duration?: number; id?: string }) {
+export function ScrambleText({ text, className = "", as: Tag = "span", delay = 60, interactive = false, signature = false, duration = 2400, autoStart = false, id }: { text: string; className?: string; as?: "span" | "p" | "h1" | "h2" | "h3"; delay?: number; interactive?: boolean; signature?: boolean; duration?: number; autoStart?: boolean; id?: string }) {
   const [value, setValue] = useState(text);
   const timer = useRef<number | null>(null);
   const isReduced = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -19,9 +19,11 @@ export function ScrambleText({ text, className = "", as: Tag = "span", delay = 6
     }, 33);
   }, [duration, text]);
   useEffect(() => {
+    if (!autoStart) return;
     const kickoff = window.setTimeout(run, delay);
     return () => { window.clearTimeout(kickoff); if (timer.current) window.clearInterval(timer.current); };
-  }, [delay, run]);
-  const onKeyDown = (event: KeyboardEvent) => { if (interactive && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); run(); } };
-  return <Tag id={id} className={`an-scramble ${interactive ? "an-scramble-interactive" : ""} ${className}`} style={{ animationDelay: `${delay}ms` }} aria-label={text} {...(interactive ? { role: "button", tabIndex: 0, onClick: run, onKeyDown } : {})}><span aria-hidden="true">{value}</span></Tag>;
+  }, [autoStart, delay, run]);
+  const canScramble = interactive && signature;
+  const onKeyDown = (event: KeyboardEvent) => { if (canScramble && (event.key === "Enter" || event.key === " ")) { event.preventDefault(); run(); } };
+  return <Tag id={id} className={`an-scramble ${canScramble ? "an-scramble-interactive" : ""} ${className}`} style={{ animationDelay: `${delay}ms` }} aria-label={text} {...(canScramble ? { role: "button", tabIndex: 0, onClick: run, onKeyDown } : {})}><span aria-hidden="true">{value}</span></Tag>;
 }
