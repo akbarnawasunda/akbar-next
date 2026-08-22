@@ -6,6 +6,11 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import ContentStudio from "./pages/ContentStudio";
+import Music from "./pages/Music";
+import Visuals from "./pages/Visuals";
+import Live from "./pages/Live";
+import Universe from "./pages/Universe";
+import PressKit from "./pages/PressKit";
 import AssetLibrary from "./pages/AssetLibrary";
 import LegacyDocument from "./components/LegacyDocument";
 
@@ -14,11 +19,15 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/music"} component={Music} />
+      <Route path={"/visuals"} component={Visuals} />
+      <Route path={"/live"} component={Live} />
+      <Route path={"/universe"} component={Universe} />
       <Route path={"/lab"} component={() => <LegacyDocument source="/legacy/index.html" />} />
       <Route path={"/assets"} component={AssetLibrary} />
       <Route path={"/studio"} component={ContentStudio} />
       <Route path={"/admin"} component={() => <LegacyDocument source="/legacy/admin.html" scripts="admin" />} />
-      <Route path={"/epk"} component={() => <LegacyDocument source="/legacy/epk.html" />} />
+      <Route path={"/epk"} component={PressKit} />
       <Route path={"/privacy"} component={() => <LegacyDocument source="/legacy/privacy.html" />} />
       <Route path={"/404"} component={() => <LegacyDocument source="/legacy/404.html" />} />
       {/* Final fallback route */}

@@ -111,6 +111,12 @@ export async function createFanSignal(signal: InsertFanSignal) {
   return { email: signal.email, source: signal.source ?? "home" };
 }
 
+export async function listFanSignals() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(fanSignals).orderBy(asc(fanSignals.createdAt));
+}
+
 export async function listPublishedArtistContent() {
   const db = await getDb();
   if (!db) return [];

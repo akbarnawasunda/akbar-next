@@ -3,7 +3,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
-import { createFanSignal, createStoredAsset, listAllArtistContent, listPublishedArtistContent, listStoredAssets, upsertArtistContent } from "./db";
+import { createFanSignal, createStoredAsset, listAllArtistContent, listFanSignals, listPublishedArtistContent, listStoredAssets, upsertArtistContent } from "./db";
 import { storagePut } from "./storage";
 
 const MAX_ASSET_BYTES = 10 * 1024 * 1024;
@@ -53,6 +53,7 @@ export const appRouter = router({
         source: z.enum(["home", "footer"]).default("home"),
       }))
       .mutation(({ input }) => createFanSignal(input)),
+    list: adminProcedure.query(() => listFanSignals()),
   }),
   content: router({
     list: publicProcedure.query(() => listPublishedArtistContent()),

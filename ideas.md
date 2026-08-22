@@ -81,3 +81,15 @@ The revised site becomes a future-ready artist operating system: a cinematic pub
 
 ### Future-Ready Modules
 The public architecture should accommodate a release CMS, show/event records, gated fan drops, email/newsletter audiences, community prompts, merch/Shopify connection, and a lightweight press/booking kit without changing the core navigation model.
+
+## Expanded Ecosystem Route Map
+
+| Route | Primary visitor job | Public value | Future management model |
+| --- | --- | --- | --- |
+| `/` | Discover the current era | Cinematic entry, current release, quick conversion | Hero/current-era and featured content records |
+| `/music` | Browse catalog | Release vault, original/remix discovery, listening links | Release records, smart links, pre-save state |
+| `/visuals` | Watch and share | Video premieres and visual archive | Video records and media assets |
+| `/live` | Plan attendance | Next-live state, tickets, alert conversion | Event records, venue, ticket, city data |
+| `/universe` | Join and participate | Fan pathways, Lab, collab, future drops | Fan cohorts, challenges, gated drops |
+| `/epk` | Book or cover the artist | Press facts, assets, booking contact | Bio, press assets, booking status |
+| `/studio` | Operate the platform | Owner content, leads, assets | Role-gated database and File Storage operations |

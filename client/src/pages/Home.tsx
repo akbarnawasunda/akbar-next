@@ -40,9 +40,10 @@ export default function Home() {
           <span className="an-mark">AN</span><span>AKBAR NAWASUNDA</span>
         </a>
         <nav aria-label="Navigasi utama">
-          <a href="#music">MUSIC</a>
-          <a href="#visuals">VISUALS</a>
-          <a href="#live">LIVE</a>
+          <a href="/music">MUSIC</a>
+          <a href="/visuals">VISUALS</a>
+          <a href="/live">LIVE</a>
+          <a href="/universe">UNIVERSE</a>
           <a href="/lab">LAB</a>
         </nav>
         <a className="nav-signal" href="#signal"><Radio size={14} /> FAN SIGNAL</a>

@@ -37,4 +37,14 @@
 - [x] Make the managed-content loading and empty states explicit in the public homepage UI.
 - [ ] Complete owner-authenticated Studio publish verification when the user chooses to authorize a sign-in session.
 - [x] Initialize the managed-content database with verified existing release, visual, and live-status information for the public launch.
+- [x] Build dedicated Music and Release Vault pages with playable, platform-linked catalog discovery.
+- [x] Build a dedicated Visuals page for video premieres, visual archive, and social discovery pathways.
+- [x] Build a dedicated Live page with event-ready states, venue/ticket architecture, and Fan Signal conversion.
+- [x] Build a Community/Universe page with fan journeys, creator challenges, and future gated-drop pathways.
+- [x] Upgrade the EPK into a modern press and booking experience with downloadable materials and contact workflows.
+- [x] Expand the owner Studio information architecture for public content, fan leads, and asset operations.
+- [x] Create a cohesive cross-platform navigation, footer, route metadata, and responsive user journey across all modules.
 - [x] Fix the `/studio` route so the owner-management access screen resolves instead of the legacy 404 fallback.
+- [x] Add an accessible mobile navigation drawer for the Night Frequency public header.
+- [x] Harden the mobile navigation drawer with Escape, focus return, and outside-interaction closing behavior.
+- [x] Verify the mobile Night Frequency navigation and rerun the complete quality gate after the drawer change.
