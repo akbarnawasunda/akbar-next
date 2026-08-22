@@ -139,3 +139,7 @@
 - [x] Verifikasi particle mark di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
 - [x] Investigasi dan perbaiki particle mark RMX yang tidak terlihat berjalan saat kotak kecil ditekan di deployment live.
 - [x] Verifikasi ulang interaksi particle mark yang diperbaiki pada production desktop dan mobile, lalu dorong ke GitHub/Vercel.
+- [x] Hapus kartu kecil/gambar RMX sebagai elemen hero karena pendekatan tersebut tidak memenuhi arah particle logo yang diminta.
+- [x] Bangun particle hero murni berbasis pixel artwork RMX sehingga siluet logo terbentuk langsung dari titik-titik tanpa gambar logo yang terlihat.
+- [x] Buat interaksi form–dissolve–reform yang jelas pada particle hero, aman untuk Android, dan statis pada reduced-motion.
+- [ ] Verifikasi visual serta runtime particle hero baru di desktop dan mobile, lalu dorong ke GitHub/Vercel.

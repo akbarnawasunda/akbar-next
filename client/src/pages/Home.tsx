@@ -27,7 +27,6 @@ export default function Home() {
   const activeRelease = managedRelease ? { ...currentRelease, title: managedRelease.title, type: managedRelease.label || currentRelease.type, href: managedRelease.href || currentRelease.href, image: managedRelease.imageUrl && managedRelease.imageUrl !== officialBrand.socialPreview ? managedRelease.imageUrl : currentRelease.image } : currentRelease;
   const cmsHero = sanityContent.data?.hero;
   const hasCmsHero = Boolean(cmsHero?.heroTitle || cmsHero?.heroBody || cmsHero?.primaryActionUrl);
-  const heroImage = cmsHero?.heroImage || officialBrand.socialPreview;
   const heroKicker = cmsHero?.heroKicker || managedHero?.label || "AKBAR NAWASUNDA";
   const suppliedHeroTitle = cmsHero?.heroTitle || managedHero?.title;
   const heroTitle = /make the night move/i.test(suppliedHeroTitle || "") ? undefined : suppliedHeroTitle;
@@ -70,7 +69,7 @@ export default function Home() {
       </header>
 
       <main id="top">
-        <section className="an-hero" style={{ "--hero-image": `url(${heroImage})` } as React.CSSProperties}>
+        <section className="an-hero">
           <div className="hero-copy">
             <p className="eyebrow"><span /> {heroKicker}</p>
             <h1>{heroTitle || "AKBAR NAWASUNDA."}</h1>

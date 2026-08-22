@@ -20,13 +20,20 @@ describe("RMX brand motion mark", () => {
     );
   });
 
-  it("plays a canvas particle dissolve only from a user action and clears after one sequence", () => {
+  it("builds the RMX silhouette from canvas particles and replays a dissolve only from user action", () => {
     const component = source("client/src/components/BrandMotionMark.tsx");
-    expect(component).toContain("onClick={() => setIsAnimating(true)}");
+    const css = source("client/src/components/BrandMotionMark.css");
+    expect(component).toContain("onClick={replay}");
     expect(component).toContain("requestAnimationFrame(draw)");
-    expect(component).toContain("particleCap = mobile ? 300 : 520");
+    expect(component).toContain("particleCap = mobile ? 1200 : 2400");
+    expect(component).toContain("sampleContext.drawImage(image");
+    expect(component).toContain("isInk");
+    expect(component).toContain("isBlueAccent");
     expect(component).toContain('canvas.dataset.particleMode = mobile ? "mobile" : "desktop"');
-    expect(component).toContain("Putar particle logo Akbar Nawasunda");
+    expect(component).toContain("Mainkan ulang particle logo Akbar Nawasunda");
+    expect(component).not.toContain("an-rmx-mark-caption");
+    expect(css).toContain(".an-rmx-particle-hero");
+    expect(css).not.toContain("background:#d8cfbe");
   });
 
   it("keeps the mark static when reduced motion is requested", () => {
@@ -34,6 +41,7 @@ describe("RMX brand motion mark", () => {
     const css = source("client/src/components/BrandMotionMark.css");
     expect(component).toContain('matchMedia("(prefers-reduced-motion: reduce)")');
     expect(css).toMatch(/prefers-reduced-motion\s*:\s*reduce/);
-    expect(css).toContain(".an-rmx-mark.is-animating canvas{opacity:0}");
+    expect(component).toContain("if (!particles.length || reducedMotion)");
+    expect(css).toContain(".an-rmx-particle-hero{cursor:default}");
   });
 });
