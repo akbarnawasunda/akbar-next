@@ -12,6 +12,8 @@ type Particle = {
   size: number;
   alpha: number;
   phase: number;
+  mobility: number;
+  spark: boolean;
 };
 
 const easeOutCubic = (value: number) => 1 - Math.pow(1 - value, 3);
@@ -106,15 +108,15 @@ export function BrandMotionMark({ src }: { src: string }) {
         const colorRoll = Math.random();
         const color = blueParticle
           ? colorRoll > 0.42
-            ? "#9bc9ff"
-            : "#bca7ff"
+            ? "#74b9ff"
+            : "#9c7cff"
           : colorRoll > 0.78
             ? "#d8ff65"
             : colorRoll > 0.57
-              ? "#f0a06d"
+              ? "#ff9f6e"
               : colorRoll > 0.32
-                ? "#bde3ff"
-                : "#f4ead8";
+                ? "#6ee7d8"
+                : "#f7e6c6";
 
         candidates.push({
           tx: targetX,
@@ -127,8 +129,10 @@ export function BrandMotionMark({ src }: { src: string }) {
           size:
             (mobile ? 1.2 : 1.35) +
             (Math.random() > 0.82 ? 1.05 : Math.random() * 0.55),
-          alpha: 0.82 + Math.random() * 0.18,
+          alpha: 0.88 + Math.random() * 0.12,
           phase: Math.random() * Math.PI * 2,
+          mobility: 0.22 + Math.random() * 0.46,
+          spark: Math.random() > 0.84,
         });
       }
     }
@@ -191,54 +195,60 @@ export function BrandMotionMark({ src }: { src: string }) {
     let idleStartedAt: number | null = null;
     let idleActive = false;
 
+    const getIdleOffset = (
+      particle: Particle,
+      idleTime: number,
+      intensity = 1
+    ) => {
+      const mobility =
+        particle.mobility * (particle.spark ? 1.52 : 0.68) * intensity;
+      return {
+        x:
+          (Math.sin(idleTime * 0.62 + particle.phase) * (mobile ? 3.4 : 5.8) +
+            Math.cos(idleTime * 0.29 + particle.ty * 0.02) *
+              (mobile ? 1.35 : 2.2) +
+            Math.sin(idleTime * 0.16 + particle.phase * 1.7) *
+              (mobile ? 0.8 : 1.35)) *
+          mobility,
+        y:
+          (Math.cos(idleTime * 0.53 + particle.phase * 1.24) *
+            (mobile ? 3 : 5) +
+            Math.sin(idleTime * 0.24 + particle.tx * 0.018) *
+              (mobile ? 1.1 : 2) +
+            Math.cos(idleTime * 0.13 + particle.phase * 0.7) *
+              (mobile ? 0.7 : 1.2)) *
+          mobility,
+      };
+    };
+
     const drawIdle = (time: number) => {
       if (idleStartedAt === null) idleStartedAt = time;
       const idleTime = (time - idleStartedAt) * 0.001;
       context.clearRect(0, 0, width, height);
       context.globalCompositeOperation = "lighter";
       particles.forEach(particle => {
-        const driftX =
-          Math.sin(idleTime * 0.62 + particle.phase) * (mobile ? 3.4 : 5.8) +
-          Math.cos(idleTime * 0.29 + particle.ty * 0.02) *
-            (mobile ? 1.35 : 2.2) +
-          Math.sin(idleTime * 0.16 + particle.phase * 1.7) *
-            (mobile ? 0.8 : 1.35);
-        const driftY =
-          Math.cos(idleTime * 0.53 + particle.phase * 1.24) * (mobile ? 3 : 5) +
-          Math.sin(idleTime * 0.24 + particle.tx * 0.018) * (mobile ? 1.1 : 2) +
-          Math.cos(idleTime * 0.13 + particle.phase * 0.7) *
-            (mobile ? 0.7 : 1.2);
+        const offset = getIdleOffset(particle, idleTime, 1.12);
         const pulse =
           0.78 + (Math.sin(idleTime * 1.45 + particle.phase) + 1) * 0.16;
         context.globalAlpha = Math.min(1, particle.alpha * pulse * 0.34);
         context.fillStyle = particle.color;
         context.fillRect(
-          particle.tx + driftX - 0.8,
-          particle.ty + driftY - 0.8,
-          particle.size + 1.6,
-          particle.size + 1.6
+          particle.tx + offset.x - 0.9,
+          particle.ty + offset.y - 0.9,
+          particle.size + 1.8,
+          particle.size + 1.8
         );
       });
       context.globalCompositeOperation = "source-over";
       particles.forEach(particle => {
-        const driftX =
-          Math.sin(idleTime * 0.62 + particle.phase) * (mobile ? 3.4 : 5.8) +
-          Math.cos(idleTime * 0.29 + particle.ty * 0.02) *
-            (mobile ? 1.35 : 2.2) +
-          Math.sin(idleTime * 0.16 + particle.phase * 1.7) *
-            (mobile ? 0.8 : 1.35);
-        const driftY =
-          Math.cos(idleTime * 0.53 + particle.phase * 1.24) * (mobile ? 3 : 5) +
-          Math.sin(idleTime * 0.24 + particle.tx * 0.018) * (mobile ? 1.1 : 2) +
-          Math.cos(idleTime * 0.13 + particle.phase * 0.7) *
-            (mobile ? 0.7 : 1.2);
+        const offset = getIdleOffset(particle, idleTime, 0.72);
         const pulse =
           0.78 + (Math.sin(idleTime * 1.45 + particle.phase) + 1) * 0.16;
         context.globalAlpha = Math.min(1, particle.alpha * pulse * 1.04);
         context.fillStyle = particle.color;
         context.fillRect(
-          particle.tx + driftX,
-          particle.ty + driftY,
+          particle.tx + offset.x,
+          particle.ty + offset.y,
           particle.size,
           particle.size
         );

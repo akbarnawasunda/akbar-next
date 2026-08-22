@@ -51,9 +51,23 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain('import "./HomeMotionRefinement.css";');
     expect(motion).toContain("scroll-snap-type: x mandatory");
     expect(motion).toContain("touch-action: pan-x pan-y");
-    expect(particle).toContain('"#bca7ff"');
+    expect(particle).toContain('"#9c7cff"');
     expect(particle).toContain("imageSmoothingEnabled = false");
     expect(particle).toContain("idleTime * 0.62");
+  });
+
+  it("keeps the editorial brand system wired across public surfaces", () => {
+    const app = source("client/src/App.tsx");
+    const index = source("client/index.html");
+    const brand = source("client/src/components/BrandSystem.css");
+
+    expect(app).toContain('import "./components/BrandSystem.css";');
+    expect(index).toContain("Bebas+Neue");
+    expect(index).toContain("Manrope");
+    expect(brand).toContain("--an-graphite: #071419");
+    expect(brand).toContain('font-family: "Bebas Neue"');
+    expect(brand).toContain('font-family: "Manrope"');
+    expect(brand).toContain('font-family: "IBM Plex Mono"');
   });
 
   it("keeps motion enhancements opt-in for reduced-motion users", () => {

@@ -1,0 +1,305 @@
+:root {
+  --an-plasma: #e47d5c;
+  --an-plasma-rgb: 228, 125, 92;
+  --an-graphite: #071419;
+  --an-plum: #0f262d;
+  --an-bone: #f4ead7;
+  --an-stone: #a8b8b4;
+  --an-parchment: #dce8d4;
+  --an-mint: #79d6c7;
+  --an-sky: #8bb8ff;
+  --an-deep: #10221f;
+}
+
+.an-site,
+.nf-page {
+  --acid: var(--an-plasma);
+  --ink: var(--an-graphite);
+  --paper: var(--an-bone);
+  --muted: var(--an-stone);
+  --line: rgba(244, 234, 215, 0.16);
+  --violet: var(--an-mint);
+  --ice: #c5d9d2;
+  background: var(--an-graphite) !important;
+  color: var(--an-bone) !important;
+  font-family: "Manrope", sans-serif;
+}
+
+.an-site h1,
+.an-site h2,
+.nf-page h1,
+.nf-page h2 {
+  font-family: "Bebas Neue", "Arial Narrow", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+}
+
+.an-site h2,
+.nf-page h2 {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.055em;
+}
+
+.an-site h3,
+.nf-page h3,
+.an-site strong,
+.nf-page strong {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.an-site p,
+.nf-page p,
+.an-site li,
+.nf-page li,
+.an-site input,
+.nf-page input,
+.an-site textarea,
+.nf-page textarea {
+  font-family: "Manrope", sans-serif;
+}
+
+.an-site .an-wordmark,
+.an-site .footer-brand strong,
+.nf-page .nf-brand,
+.nf-page .nf-footer strong {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.045em;
+}
+
+.an-site .an-nav nav a,
+.an-site .nav-signal,
+.an-site .eyebrow,
+.an-site .mono-label,
+.an-site .button-primary,
+.an-site .button-quiet,
+.an-site .text-link,
+.an-site .home-platform-copy small,
+.an-site .release-card p,
+.an-site .release-number,
+.an-site .live-status span,
+.an-site .live-status small,
+.an-site .footer-links > span,
+.nf-page .nf-nav a,
+.nf-page .nf-page-eyebrow,
+.nf-page .nf-meta,
+.nf-page .nf-button,
+.nf-page .nf-text-button {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.an-site .an-hero,
+.nf-page .nf-page-hero {
+  background-color: var(--an-graphite) !important;
+}
+
+.an-site .an-nav,
+.nf-header {
+  background: rgba(7, 20, 25, 0.9) !important;
+  border-color: rgba(121, 214, 199, 0.18) !important;
+}
+
+.an-site .an-nav nav a,
+.an-site .nav-signal,
+.nf-nav nav a,
+.nf-header a {
+  color: rgba(244, 234, 215, 0.7) !important;
+}
+
+.an-site .an-nav nav a:hover,
+.an-site .an-nav nav a:focus-visible,
+.an-site .nav-signal:hover,
+.nf-nav nav a.is-active,
+.nf-nav nav a:hover {
+  color: var(--an-mint) !important;
+}
+
+.an-site .nav-signal {
+  border-color: rgba(121, 214, 199, 0.52) !important;
+  color: var(--an-mint) !important;
+}
+
+.an-site .an-hero:after,
+.nf-page .nf-page-hero:after {
+  background: linear-gradient(
+    90deg,
+    rgba(7, 20, 25, 0.98),
+    rgba(7, 20, 25, 0.72) 55%,
+    rgba(7, 20, 25, 0.2)
+  ) !important;
+}
+
+.an-site .home-signal-deck,
+.an-site .section-current,
+.an-site .release-section,
+.an-site .visual-section,
+.an-site .live-section,
+.nf-page .nf-section {
+  background-color: var(--an-graphite) !important;
+  background-image: none !important;
+  border-color: rgba(244, 234, 215, 0.12) !important;
+}
+
+.an-site .release-section,
+.nf-page .dark-panel {
+  background-color: var(--an-plum) !important;
+}
+
+.an-site .home-platform-rack,
+.nf-platform-grid,
+.nf-catalog-card,
+.nf-visual-card,
+.an-event-card,
+.an-epk-asset,
+.an-license-grid article,
+.an-inquiry-form,
+.an-inquiry-aside,
+.an-archive-timeline {
+  background: rgba(244, 234, 215, 0.035) !important;
+  border-color: rgba(121, 214, 199, 0.2) !important;
+  box-shadow: none !important;
+}
+
+.an-site .home-platform-rack a,
+.nf-platform-grid a {
+  background: transparent !important;
+  border-color: rgba(244, 234, 215, 0.14) !important;
+  color: var(--an-bone) !important;
+}
+
+.an-site .home-platform-rack a:hover,
+.nf-platform-grid a:hover {
+  background: rgba(121, 214, 199, 0.11) !important;
+  border-color: rgba(121, 214, 199, 0.46) !important;
+  color: var(--an-bone) !important;
+}
+
+.an-site .home-platform-rack a:hover span,
+.an-site .home-platform-rack a span {
+  color: var(--an-stone) !important;
+}
+
+.an-site .home-platform-rack .an-platform-icon,
+.an-site .release-card .an-platform-icon,
+.an-platform-icon,
+.an-site .eyebrow,
+.nf-page-eyebrow,
+.an-site .release-number {
+  color: var(--an-mint) !important;
+}
+
+.an-site .eyebrow > span,
+.nf-page-eyebrow:before {
+  background: var(--an-mint) !important;
+}
+
+.an-site .release-card,
+.nf-catalog-card,
+.nf-visual-card,
+.an-archive-release {
+  background: #0b1b21 !important;
+  border-color: rgba(244, 234, 215, 0.15) !important;
+}
+
+.an-site .release-card:hover,
+.nf-catalog-card:hover,
+.nf-visual-card:hover,
+.an-archive-release:hover {
+  border-color: rgba(228, 125, 92, 0.62) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24) !important;
+}
+
+.an-site .button-primary,
+.nf-page .nf-button,
+.nf-page .an-inquiry-submit,
+.an-booking-actions a:hover,
+.an-release-links a:hover,
+.an-inquiry-type-row button.is-active {
+  background: var(--an-plasma) !important;
+  color: var(--an-deep) !important;
+  border-color: var(--an-plasma) !important;
+}
+
+.an-site .button-quiet,
+.nf-page .nf-text-button,
+.an-back-link,
+.an-event-actions a {
+  color: var(--an-bone) !important;
+  border-color: rgba(244, 234, 215, 0.34) !important;
+}
+
+.an-site .button-quiet:hover,
+.nf-page .nf-text-button:hover,
+.an-back-link:hover,
+.an-event-actions a:hover {
+  color: var(--an-mint) !important;
+  border-color: var(--an-mint) !important;
+  background: transparent !important;
+}
+
+.an-site .signal-section,
+.nf-page .nf-signal-block {
+  background: var(--an-parchment) !important;
+  color: var(--an-deep) !important;
+}
+
+.an-site .signal-section .eyebrow,
+.an-site .signal-section h2,
+.an-site .signal-section p,
+.an-site .signal-section label,
+.an-site .signal-section small,
+.nf-page .nf-signal-block h2,
+.nf-page .nf-signal-block p,
+.nf-page .nf-signal-block .nf-page-eyebrow {
+  color: var(--an-deep) !important;
+}
+
+.an-site .signal-section .eyebrow > span,
+.nf-page .nf-signal-block .nf-page-eyebrow:before {
+  background: var(--an-deep) !important;
+}
+
+.an-site .signal-section .signal-input,
+.nf-page .nf-signal-block input {
+  border-color: rgba(16, 34, 31, 0.46) !important;
+  background: rgba(255, 255, 255, 0.36) !important;
+  color: var(--an-deep) !important;
+}
+
+.an-site .signal-section .signal-input button,
+.nf-page .nf-signal-block .nf-button {
+  background: var(--an-deep) !important;
+  color: var(--an-parchment) !important;
+  border-color: var(--an-deep) !important;
+}
+
+.an-site .an-footer,
+.nf-footer {
+  background: #050e12 !important;
+  border-color: rgba(121, 214, 199, 0.16) !important;
+}
+
+.an-site .an-footer,
+.an-site .an-footer a,
+.nf-footer,
+.nf-footer a {
+  color: rgba(244, 234, 215, 0.68) !important;
+}
+
+.an-site .an-footer a:hover,
+.nf-footer a:hover {
+  color: var(--an-mint) !important;
+}
+
+@media (max-width: 820px) {
+  .an-site .an-hero:after,
+  .nf-page .nf-page-hero:after {
+    background: linear-gradient(
+      180deg,
+      rgba(7, 20, 25, 0.86),
+      rgba(7, 20, 25, 0.38) 44%,
+      rgba(7, 20, 25, 0.98)
+    ) !important;
+  }
+}

@@ -170,3 +170,13 @@ Kesan kotak berasal dari backing radial gelap dan box-shadow parent particle. Se
 
 
 Screenshot bersih desktop setelah patch menunjukkan tidak ada panel persegi di belakang particle. Particle logo dan halo transparan menyatu dengan area hero; warna warm, lime, dan blue tetap terbaca, sementara portrait dan copy tidak tertutup.
+
+
+## Brand refresh audit — 2026-08-23
+
+Browser desktop mengonfirmasi font aktual: hero title `Bebas Neue`, section heading `Space Grotesk`, body `Manrope`, metadata/button `IBM Plex Mono`. Token warna aktif: graphite/deep petrol `rgb(7, 20, 25)`, bone `rgb(244, 234, 215)`, plasma coral `rgb(228, 125, 92)`, dan signal mint `rgb(121, 214, 199)`. Particle berada pada state `is-idle` dengan 567 particle, glow cyan/blue, acid, dan amber; overflow horizontal tetap aman.
+
+
+## Brand refresh mobile audit — 2026-08-23
+
+Screenshot mobile 390px setelah asset termuat menunjukkan portrait hero tampil penuh, title `Bebas Neue` terbaca tegas, CTA coral tetap kontras, dan tidak ada clipping/overflow pada hero. Screenshot pertama sebelum asset selesai hanya memperlihatkan fase loading browser, bukan kegagalan asset final.

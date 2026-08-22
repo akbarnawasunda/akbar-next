@@ -52,12 +52,15 @@ describe("RMX brand motion mark", () => {
     expect(component).toContain("sampleContext.drawImage(image");
     expect(component).toContain("isInk");
     expect(component).toContain("isBlueAccent");
+    expect(component).toContain('"#74b9ff"');
+    expect(component).toContain("mobility");
     expect(component).toContain(
       'canvas.dataset.particleMode = mobile ? "mobile" : "desktop"'
     );
     expect(component).toContain("Mainkan ulang particle logo Akbar Nawasunda");
     expect(component).not.toContain("an-rmx-mark-caption");
     expect(css).toContain(".an-rmx-particle-hero");
+    expect(css).toContain("background: transparent !important");
     expect(css).not.toContain("background:#d8cfbe");
   });
 
