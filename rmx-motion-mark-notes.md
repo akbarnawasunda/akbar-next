@@ -51,3 +51,9 @@ The final desktop composition keeps copy and action links in the dark left field
 The first production verification revealed that the new `/manus-storage/` portrait path was being handled by the SPA fallback, yielding an image element with zero natural dimensions even though the local preview worked. A dedicated Vercel rewrite was added before the fallback and deployed. Production verification remains open until the image element reports its expected dimensions and the hero is visibly populated on the newest deployment.
 
 The rewrite fix is now confirmed in production. The portrait resolves at `1122 × 1402` from the same-origin hero path, and the post-load production capture shows the photo, the left-aligned copy/CTA, and the RMX dot field together. The desktop canvas reports 829 sampled particle targets in this smaller over-photo layout; particle replay remains unchanged from the previously verified canvas implementation.
+
+During the subsequent visual review, the portrait asset itself loaded correctly at full dimensions but a later global hero overlay still applied an overly opaque left-to-right gradient. The portrait refinement now overrides that final overlay with a lighter right side and reduces the particle layer opacity slightly, preserving the readable title while making the official photo the primary visual again.
+
+## Platform card and exposure refinement
+
+The homepage platform section now uses individual accessible cards for each official link rather than a flat numbered list. The cards carry brand-specific icon accents—Spotify green, YouTube red, SoundCloud orange, Apple Music pink, Deezer violet, Amazon Music gold, Tidal teal, TikTok cyan, Instagram pink, and X neutral—while retaining a restrained graphite card surface. Visual review confirms the portrait is now visibly readable in the hero, and the particle field remains a secondary projection over the jacket instead of masking the face.

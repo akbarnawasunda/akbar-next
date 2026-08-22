@@ -13,6 +13,7 @@ import "./HomeRefinement.css";
 import "./HomeArtistUpgrade.css";
 import "./PlatformMediaUpgrade.css";
 import "./HomePortraitRefinement.css";
+import "./HomePlatformCards.css";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -86,7 +87,7 @@ export default function Home() {
 
         <section className="home-signal-deck" aria-labelledby="signal-deck-title">
           <div className="home-signal-copy"><p className="eyebrow"><span /> PLATFORM RESMI</p><h2 id="signal-deck-title">DENGAR<br/>DI PLATFORM PILIHAN.</h2><a className="home-deck-cta" href="/music">LIHAT MUSIK <ArrowUpRight size={15} /></a></div>
-          <div className="home-platform-rack">{allPlatformLinks.map((platform, index) => <a key={platform.label} href={platform.href} target="_blank" rel="noreferrer"><span>0{index + 1}</span><strong><PlatformIcon label={platform.label} />{platform.label}</strong><ArrowUpRight size={16} /></a>)}</div>
+          <div className="home-platform-rack">{allPlatformLinks.map((platform, index) => <a className={`home-platform-card platform-${platform.label.toLowerCase().replace(/\s+/g, "-")}`} key={platform.label} href={platform.href} target="_blank" rel="noreferrer" aria-label={`Buka Akbar Nawasunda di ${platform.label}`}><span className="home-platform-number">0{index + 1}</span><span className="home-platform-icon-shell"><PlatformIcon label={platform.label} /></span><span className="home-platform-copy"><strong>{platform.label}</strong><small>PLATFORM RESMI</small></span><ArrowUpRight className="home-platform-arrow" size={15} /></a>)}</div>
         </section>
 
         <section className="section section-current" id="music">

@@ -148,3 +148,7 @@
 - [x] Pertahankan particle RMX sebagai layer hero yang terlihat jelas di atas foto tanpa kartu kecil atau benturan dengan wajah.
 - [x] Verifikasi homepage foto plus particle di desktop/mobile, jalankan quality gate, lalu dorong ke GitHub/Vercel.
 - [x] Perbaiki rewrite Vercel portrait resmi yang masih tertangkap fallback SPA sehingga production memuat gambar hero, bukan HTML.
+- [x] Ubah platform resmi menjadi grid kartu dengan ikon dan aksen warna yang mengikuti identitas masing-masing layanan.
+- [x] Perbaiki exposure portrait hero agar wajah terlihat lebih jelas di desktop dan mobile tanpa mengurangi keterbacaan copy atau particle RMX.
+- [ ] Dokumentasikan penggunaan portrait resmi yang saat ini hanya berada di homepage dan verifikasi visual pembaruan platform/hero.
+- [ ] Jalankan quality gate, dorong revisi platform dan portrait ke GitHub/Vercel, lalu uji production.
