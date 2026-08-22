@@ -146,5 +146,5 @@
 - [x] Unggah portrait resmi Akbar Nawasunda ke storage web sebagai aset hero yang aman untuk deployment.
 - [x] Jadikan portrait resmi visual utama homepage dengan crop responsif, fokus wajah yang terjaga, dan copy/CTA yang tetap terbaca.
 - [x] Pertahankan particle RMX sebagai layer hero yang terlihat jelas di atas foto tanpa kartu kecil atau benturan dengan wajah.
-- [ ] Verifikasi homepage foto plus particle di desktop/mobile, jalankan quality gate, lalu dorong ke GitHub/Vercel.
-- [ ] Perbaiki rewrite Vercel portrait resmi yang masih tertangkap fallback SPA sehingga production memuat gambar hero, bukan HTML.
+- [x] Verifikasi homepage foto plus particle di desktop/mobile, jalankan quality gate, lalu dorong ke GitHub/Vercel.
+- [x] Perbaiki rewrite Vercel portrait resmi yang masih tertangkap fallback SPA sehingga production memuat gambar hero, bukan HTML.
