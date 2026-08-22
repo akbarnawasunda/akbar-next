@@ -20,7 +20,8 @@ const releaseSlug = (value: string) => value.toLowerCase().normalize("NFD").repl
 export default function Music() {
   const cms = useSanityArtistContent();
   const cmsReleases = cms.data?.releases ?? [];
-  const catalog = cmsReleases.length ? cmsReleases.map(item => ({ title: item.title, format: item.format || "Single", year: item.year || "—", platform: item.platform || "Official link", href: item.url })) : releases;
+  const cmsCatalog = cmsReleases.map(item => ({ title: item.title, format: item.format || "Single", year: item.year || "—", platform: item.platform || "Official link", href: item.url }));
+  const catalog = [...cmsCatalog, ...releases.filter(legacy => !cmsCatalog.some(current => current.title.trim().toLowerCase() === legacy.title.trim().toLowerCase()))];
   const cmsCurrent = cmsReleases.find(item => item.isCurrent) || cmsReleases[0];
   const featured = cmsCurrent ? { ...currentRelease, title: cmsCurrent.title, type: cmsCurrent.platform || "OFFICIAL RELEASE", href: cmsCurrent.url, artwork: cmsCurrent.artworkUrl, story: cmsCurrent.story, credits: cmsCurrent.credits } : { ...currentRelease, artwork: undefined, story: undefined, credits: undefined };
   const embeddedDrops = cmsReleases.filter(item => item.embedUrl).slice(0, 2).map(item => ({ title: item.title, url: item.embedUrl! }));

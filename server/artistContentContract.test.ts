@@ -35,4 +35,11 @@ describe("artist content contract", () => {
     expect(platformContent).toContain('"Ngertenono Ati Medium Hall"');
     expect(platformContent).toContain('"Die With A Smile × Warga +62"');
   });
+
+  it("merges published CMS releases with legacy catalog fallback instead of replacing it", () => {
+    const musicPage = source("client/src/pages/Music.tsx");
+
+    expect(musicPage).toContain("const cmsCatalog = cmsReleases.map");
+    expect(musicPage).toContain("releases.filter(legacy => !cmsCatalog.some");
+  });
 });
