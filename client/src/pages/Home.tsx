@@ -3,23 +3,31 @@ import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { currentRelease, futureModules, officialBrand, platformLinks, releases, videos } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
+import { useSanityArtistContent } from "@/sanity/publicContent";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
 import "./HomeStates.css";
 
-const heroImage = officialBrand.socialPreview;
-
 export default function Home() {
   const [email, setEmail] = useState("");
   const contentQuery = trpc.content.list.useQuery();
+  const sanityContent = useSanityArtistContent();
   const managedContent = contentQuery.data ?? [];
   const managedHero = managedContent.find(item => item.kind === "hero");
   const managedRelease = managedContent.find(item => item.kind === "release");
   const managedVideos = managedContent.filter(item => item.kind === "video").slice(0, 3);
   const managedLive = managedContent.find(item => item.kind === "live");
   const activeRelease = managedRelease ? { ...currentRelease, title: managedRelease.title, type: managedRelease.label || currentRelease.type, href: managedRelease.href || currentRelease.href, image: managedRelease.imageUrl || currentRelease.image } : currentRelease;
+  const cmsHero = sanityContent.data?.hero;
+  const hasCmsHero = Boolean(cmsHero?.heroTitle || cmsHero?.heroBody || cmsHero?.primaryActionUrl);
+  const heroImage = cmsHero?.heroImage || officialBrand.socialPreview;
+  const heroKicker = cmsHero?.heroKicker || managedHero?.label || "INDONESIA · ELECTRONIC / BASS";
+  const heroTitle = cmsHero?.heroTitle || managedHero?.title;
+  const heroBody = cmsHero?.heroBody || managedHero?.subtitle || "Produser, remixer, dan arsitek energi malam. Suara baru dari Bandung Barat untuk speaker, layar, dan lantai dansa.";
+  const heroActionUrl = cmsHero?.primaryActionUrl || managedHero?.href || activeRelease.href;
+  const heroActionLabel = cmsHero?.primaryActionLabel || "DENGAR SEKARANG";
   const activeVideos = managedVideos.length ? managedVideos.map(item => ({ title: item.title, label: item.label || "VISUAL", href: item.href || "https://www.youtube.com/@akbarnawasunda", image: item.imageUrl || officialBrand.socialPreview })) : videos;
-  const contentState = contentQuery.isLoading ? "SYNCING CONTENT" : contentQuery.isError ? "ARCHIVE VIEW" : managedContent.length ? "LIVE CONTENT" : "ARCHIVE VIEW";
+  const contentState = sanityContent.isLoading ? "SYNCING CMS" : hasCmsHero ? "LIVE CMS" : contentQuery.isLoading ? "SYNCING CONTENT" : contentQuery.isError ? "ARCHIVE VIEW" : managedContent.length ? "LIVE CONTENT" : "ARCHIVE VIEW";
   const subscribe = trpc.fanSignal.subscribe.useMutation({
     onSuccess: () => {
       setEmail("");
@@ -54,11 +62,11 @@ export default function Home() {
         <section className="an-hero" style={{ "--hero-image": `url(${heroImage})` } as React.CSSProperties}>
           <div className="hero-grain" aria-hidden="true" />
           <div className="hero-copy">
-            <p className="eyebrow"><span /> {managedHero?.label || "INDONESIA · ELECTRONIC / BASS"}</p>
-            <h1>{managedHero ? managedHero.title : <>MAKE<br /><em>THE NIGHT</em><br />MOVE.</>}</h1>
-            <p className="hero-description">{managedHero?.subtitle || "Produser, remixer, dan arsitek energi malam. Suara baru dari Bandung Barat untuk speaker, layar, dan lantai dansa."}</p>
+            <p className="eyebrow"><span /> {heroKicker}</p>
+            <h1>{heroTitle || <>MAKE<br /><em>THE NIGHT</em><br />MOVE.</>}</h1>
+            <p className="hero-description">{heroBody}</p>
             <div className="hero-actions">
-              <a className="button-primary" href={managedHero?.href || activeRelease.href} target="_blank" rel="noreferrer"><Play size={15} fill="currentColor" /> DENGAR SEKARANG</a>
+              <a className="button-primary" href={heroActionUrl} target="_blank" rel="noreferrer"><Play size={15} fill="currentColor" /> {heroActionLabel}</a>
               <a className="button-quiet" href="#signal">MASUK FAN SIGNAL <ArrowDownRight size={16} /></a>
             </div>
           </div>

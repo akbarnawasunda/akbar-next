@@ -61,6 +61,8 @@
 - [ ] Configure the standalone Sanity Studio as a second Vercel project rooted at `cms/sanity-studio` for phone-friendly owner access.
 - [ ] Fix the standalone Sanity Studio Vercel install command so the `sanity` build binary is available during deployment.
 - [ ] Allow Sanity Studio’s required `esbuild` postinstall binary in the standalone pnpm deployment configuration.
+- [ ] Confirm a sustainable free-tier CMS option or switch to an owner-approved GitHub-based alternative before relying on Sanity for routine content updates.
+- [ ] Connect the published Sanity Artist Site document to the Vercel homepage hero and verify that owner edits replace its static fallback.
 - [ ] Deploy the corrected root Vercel rewrite and verify direct navigation on the live site for the public SPA routes.
 - [ ] Improve the public visual treatment using the original artist identity before the next GitHub deployment.
 - [ ] Re-verify all public routes and remove remaining stale relative storage references before the next GitHub deployment.
