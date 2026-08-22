@@ -111,3 +111,8 @@
 - [x] Tambahkan ticker platform horizontal yang bergerak lembut dengan ikon SVG dan kontrol reduced-motion.
 - [x] Ganti aksen chartreuse/kuning dengan palet aksen baru yang lebih selaras dengan identitas elektronika malam Akbar Nawasunda.
 - [x] Audit serta sempurnakan detail visual/motion yang masih generik, lalu verifikasi desktop, Android, build, dan deployment.
+- [x] Audit semua embed musik/video yang gagal muncul dan identifikasi penyebab per-provider tanpa menghapus link resmi.
+- [x] Tambahkan fallback media yang stabil, informatif, dan tetap mengarahkan ke tautan resmi saat embed pihak ketiga diblokir.
+- [x] Ubah EPK dari daftar placeholder menjadi press kit yang siap dibaca, dibagikan, dan dihubungi tanpa mengarang materi yang belum tersedia.
+- [x] Hilangkan pola visual berulang yang terasa template/AI pada katalog, EPK, dan CTA mobile dengan keputusan editorial yang lebih spesifik.
+- [ ] Verifikasi perbaikan di Android, test, production build, GitHub, dan Vercel.

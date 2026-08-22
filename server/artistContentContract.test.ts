@@ -22,7 +22,8 @@ describe("artist content contract", () => {
     const pressKit = source("client/src/pages/PressKit.tsx");
     const live = source("client/src/pages/Live.tsx");
 
-    expect(pressKit).toContain("REQUEST PACK");
+    expect(pressKit).toContain("Request material");
+    expect(pressKit).toContain("sudah tersedia secara resmi");
     expect(live).toContain("NO DATE CONFIRMED YET.");
   });
 
