@@ -136,4 +136,4 @@
 - [x] Ganti scan ringan dengan canvas particle dissolve-and-reform yang dipicu saat pengguna menekan mark RMX.
 - [x] Verifikasi runtime tap/click particle mark dan izin CORS asset RMX pada browser desktop serta emulasi Android 375 × 812 sebelum deployment.
 - [x] Tangkap bukti desktop dan emulasi Android bahwa particle RMX benar-benar menyebar lalu membentuk ulang artwork setelah interaksi.
-- [ ] Verifikasi particle mark di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Verifikasi particle mark di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
