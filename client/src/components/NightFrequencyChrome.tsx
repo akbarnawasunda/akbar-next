@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { officialBrand, platformLinks } from "@/content/artistPlatform";
 import "./NightFrequencyChrome.css";
 import "./OfficialBrand.css";
+import "./EcosystemRefinement.css";
 
 const navItems = [
   { href: "/music", label: "MUSIC" }, { href: "/visuals", label: "VISUALS" }, { href: "/live", label: "LIVE" }, { href: "/universe", label: "UNIVERSE" }, { href: "/lab", label: "LAB" },

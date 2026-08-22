@@ -50,19 +50,24 @@
 - [x] Verify the mobile Night Frequency navigation and rerun the complete quality gate after the drawer change.
 - [x] Confirm checkpoint `35ec0d92` matches the configured GitHub `main` branch.
 - [x] Commit and push the current GitHub-first handoff metadata without creating another production checkpoint.
-- [ ] Diagnose and fix the external deployment platform’s incorrect Next.js detection for the Vite plus Express application.
+- [x] Diagnose and fix the external deployment platform’s incorrect Next.js detection for the Vite plus Express application.
 - [x] Audit and reuse authentic logo, favicon, Open Graph image, and other suitable media from the original portfolio repository.
-- [ ] Add real music and video embeds with graceful public fallback states to the Vercel-facing experience.
-- [ ] Establish an owner-friendly, no-code content administration path compatible with the selected deployment architecture.
-- [ ] Select and integrate an external CMS compatible with the Vercel static deployment for non-code artist-content management.
-- [ ] Embed a Sanity Studio at `/admin` with artist-content schemas and configure it for the supplied public project and dataset.
-- [ ] Read published Sanity artist content in the public Vite routes with a static fallback when the CMS is empty or unavailable.
-- [ ] Move the owner Sanity Studio into a standalone deployment so its editor bundle does not burden the Vercel public website.
-- [ ] Configure the standalone Sanity Studio as a second Vercel project rooted at `cms/sanity-studio` for phone-friendly owner access.
-- [ ] Fix the standalone Sanity Studio Vercel install command so the `sanity` build binary is available during deployment.
-- [ ] Allow Sanity Studio’s required `esbuild` postinstall binary in the standalone pnpm deployment configuration.
-- [ ] Confirm a sustainable free-tier CMS option or switch to an owner-approved GitHub-based alternative before relying on Sanity for routine content updates.
-- [ ] Connect the published Sanity Artist Site document to the Vercel homepage hero and verify that owner edits replace its static fallback.
+- [x] Add real music and video embeds with graceful public fallback states to the Vercel-facing experience.
+- [x] Establish an owner-friendly, no-code content administration path compatible with the selected deployment architecture.
+- [x] Select and integrate an external CMS compatible with the Vercel static deployment for non-code artist-content management.
+- [x] Supersede the embedded `/admin` Studio approach with a standalone Sanity Studio configured for the supplied public project and dataset.
+- [x] Read published Sanity artist content in the public Vite routes with a static fallback when the CMS is empty or unavailable.
+- [x] Move the owner Sanity Studio into a standalone deployment so its editor bundle does not burden the Vercel public website.
+- [x] Configure the standalone Sanity Studio as a second Vercel project rooted at `cms/sanity-studio` for phone-friendly owner access.
+- [x] Fix the standalone Sanity Studio Vercel install command so the `sanity` build binary is available during deployment.
+- [x] Allow Sanity Studio’s required `esbuild` postinstall binary in the standalone pnpm deployment configuration.
+- [x] Confirm a sustainable free-tier CMS option or switch to an owner-approved GitHub-based alternative before relying on Sanity for routine content updates.
+- [x] Connect the published Sanity Artist Site document to the Vercel homepage hero and verify that owner edits replace its static fallback.
+- [x] Refine the public artist UI with higher-impact visual hierarchy, original-identity detail, responsive polish, and restrained motion across the entire public route system.
+- [x] Add a mobile-safe homepage navigation drawer and strengthen the hero’s signal hierarchy using the original artist identity.
+- [x] Add refined motion, tactile interaction states, and responsive card rhythm across the homepage without reducing readability.
+- [x] Correct the mobile homepage hero flow so status information and copy remain readable without overlap.
+- [x] Extend the refined visual system to Music, Visuals, Live, Universe, and EPK, then verify the consistent mobile and desktop experience.
 - [ ] Deploy the corrected root Vercel rewrite and verify direct navigation on the live site for the public SPA routes.
 - [ ] Improve the public visual treatment using the original artist identity before the next GitHub deployment.
 - [ ] Re-verify all public routes and remove remaining stale relative storage references before the next GitHub deployment.

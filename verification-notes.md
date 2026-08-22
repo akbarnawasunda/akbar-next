@@ -47,3 +47,7 @@ Original artist-owned branding from `akbarnawasunda-portofolio` is now present a
 Music now includes two official SoundCloud players and Visuals includes two official YouTube embeds. Each embed also presents a direct official-platform fallback link, so third-party playback blocking does not remove access to the intended release or visual.
 
 Phone viewport verification at 375 px confirmed the refreshed original-brand homepage and Music hero retain readable content hierarchy, the official AN mark, current-release actions, and a discoverable menu control without horizontal overflow.
+
+The homepage refinement was revalidated at desktop and phone viewports after adding a compact mobile navigation drawer, original-brand signal layering, tactile interaction states, and a stacked hero-status flow. A phone-viewport audit of Music, Visuals, Live, Universe, and EPK now guides the next shared visual-system pass.
+
+The shared ecosystem refinement was verified at desktop and 375 px phone viewports across Music, Visuals, Live, Universe, and EPK. Each route now retains a consistent original-brand hero treatment, clear mobile navigation controls, readable signal cards, and responsive type hierarchy without horizontal overflow.

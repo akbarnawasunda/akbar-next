@@ -7,9 +7,11 @@ import { useSanityArtistContent } from "@/sanity/publicContent";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
 import "./HomeStates.css";
+import "./HomeRefinement.css";
 
 export default function Home() {
   const [email, setEmail] = useState("");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const contentQuery = trpc.content.list.useQuery();
   const sanityContent = useSanityArtistContent();
   const managedContent = contentQuery.data ?? [];
@@ -56,6 +58,10 @@ export default function Home() {
           <a href="/lab">LAB</a>
         </nav>
         <a className="nav-signal" href="#signal"><Radio size={14} /> FAN SIGNAL</a>
+        <button className="an-menu-toggle" type="button" aria-label={mobileNavOpen ? "Tutup navigasi" : "Buka navigasi"} aria-expanded={mobileNavOpen} aria-controls="an-mobile-navigation" onClick={() => setMobileNavOpen(open => !open)}>{mobileNavOpen ? "CLOSE" : "MENU"}</button>
+        <div id="an-mobile-navigation" className={`an-mobile-navigation${mobileNavOpen ? " is-open" : ""}`} aria-hidden={!mobileNavOpen}>
+          <a href="/music" onClick={() => setMobileNavOpen(false)}>MUSIC</a><a href="/visuals" onClick={() => setMobileNavOpen(false)}>VISUALS</a><a href="/live" onClick={() => setMobileNavOpen(false)}>LIVE</a><a href="/universe" onClick={() => setMobileNavOpen(false)}>UNIVERSE</a><a href="/lab" onClick={() => setMobileNavOpen(false)}>LAB</a><a className="mobile-signal" href="#signal" onClick={() => setMobileNavOpen(false)}>JOIN FAN SIGNAL</a>
+        </div>
       </header>
 
       <main id="top">
