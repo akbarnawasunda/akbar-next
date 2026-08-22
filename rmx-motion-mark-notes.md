@@ -4,4 +4,14 @@ The user-provided RMX artwork is stored as a project asset and appears once in t
 
 Desktop review confirms the mark balances the hero rather than competing with the main name and two primary actions. At Android 375 × 812, the card scales to 142 px, stays beside the hero copy without obscuring actions, and remains a sufficiently large touch target. Reduced-motion users receive the static artwork because all motion keyframes are explicitly disabled.
 
-`pnpm test` passed 36 tests, `pnpm check` passed, and `pnpm build` passed. Commit `03e3485` was pushed to GitHub `main`; Vercel deployment `dpl_CGp8aZfYTP8gDdHsBvCFVKDADLtE` reached `READY` at `https://akbar-next-8m1q308w1-akbarnawasundas-projects.vercel.app`.
+## Particle revision
+
+The initial scan treatment has been replaced with a canvas particle dissolve-and-reform. The canvas samples the dark and blue areas of the provided RMX artwork, spreads those particles outward, then rebuilds the mark in one user-triggered pass. The hard cap is 520 particles on desktop and 300 on Android; this is deliberately far below a literal “millions” target to protect Android frame rate and battery.
+
+Static desktop and Android review confirms the RMX card remains legible and does not obstruct the hero before interaction. The particle sequence itself is covered by a source-level regression test for user triggering, canvas animation, performance cap, and reduced-motion behavior.
+
+## Runtime particle validation
+
+The original external storage URL failed the canvas CORS requirement after its CloudFront redirect. A fixed-path same-origin endpoint, `/api/brand/rmx-mark`, now fetches and serves only the RMX artwork with an image content type and cache header. Runtime browser validation showed the complete interaction: the static RMX artwork loads, a real click produces the visible spread of sampled dark/blue particle pixels, and the mark reforms into the original artwork at the end of the sequence. This was confirmed in the live development browser rather than inferred from source alone.
+
+Desktop runtime inspection recorded the canvas in `desktop` mode with `is-animating=true`, canvas opacity `1`, and non-zero visible particle pixels immediately after a real click; after 1.4 seconds it returned to `is-animating=false`, canvas opacity `0`, image opacity `1`, and a loaded RMX artwork. Android hardware is not connected to the sandbox, so the Android check is explicitly a Chrome 375 × 812 mobile emulation with real pointer press/release on the 142 × 170 px mark: it entered `mobile` mode, began with 90 sampled particles, then completed with `is-animating=false`, canvas opacity `0`, image opacity `1`, and a loaded RMX artwork. The lower sampled count is valid because the cap is a maximum; small logo artwork has fewer eligible non-white source pixels.

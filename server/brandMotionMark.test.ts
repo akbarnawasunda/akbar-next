@@ -8,19 +8,26 @@ describe("RMX brand motion mark", () => {
   it("uses the user-provided RMX asset in the public identity data", () => {
     const content = source("client/src/content/artistPlatform.ts");
     expect(content).toContain("rmxMark");
-    expect(content).toContain("akbar-nawasunda-rmx-mark_d59968bf.jpg");
+    expect(content).toContain('rmxMark: "/api/brand/rmx-mark"');
+    const proxy = source("server/brandAssetProxy.ts");
+    expect(proxy).toContain('app.get("/api/brand/rmx-mark"');
+    expect(proxy).toContain("akbar-nawasunda-rmx-mark_d59968bf.jpg");
   });
 
-  it("plays only from a user action and clears its one-shot animation class afterwards", () => {
+  it("plays a canvas particle dissolve only from a user action and clears after one sequence", () => {
     const component = source("client/src/components/BrandMotionMark.tsx");
     expect(component).toContain("onClick={() => setIsAnimating(true)}");
-    expect(component).toContain("onAnimationEnd={() => setIsAnimating(false)}");
-    expect(component).toContain("Putar motion logo Akbar Nawasunda");
+    expect(component).toContain("requestAnimationFrame(draw)");
+    expect(component).toContain("particleCap = mobile ? 300 : 520");
+    expect(component).toContain('canvas.dataset.particleMode = mobile ? "mobile" : "desktop"');
+    expect(component).toContain("Putar particle logo Akbar Nawasunda");
   });
 
   it("keeps the mark static when reduced motion is requested", () => {
+    const component = source("client/src/components/BrandMotionMark.tsx");
     const css = source("client/src/components/BrandMotionMark.css");
+    expect(component).toContain('matchMedia("(prefers-reduced-motion: reduce)")');
     expect(css).toMatch(/prefers-reduced-motion\s*:\s*reduce/);
-    expect(css).toContain("animation:none!important");
+    expect(css).toContain(".an-rmx-mark.is-animating canvas{opacity:0}");
   });
 });
