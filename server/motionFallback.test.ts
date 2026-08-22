@@ -18,4 +18,10 @@ describe("motion accessibility fallback", () => {
     expect(scrambleCss).toMatch(/prefers-reduced-motion\s*:\s*reduce/);
     expect(signalCss).toMatch(/prefers-reduced-motion\s*:\s*reduce/);
   });
+
+  it("keeps interactive scramble duration within the intended two-to-three second window", () => {
+    const scramble = source("client/src/components/ScrambleText.tsx");
+    expect(scramble).toContain("duration = 2400");
+    expect(scramble).toContain("an-scramble-interactive");
+  });
 });

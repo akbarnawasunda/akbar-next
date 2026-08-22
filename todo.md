@@ -95,3 +95,8 @@
 - [x] Audit seluruh file relevan dari repository lama akbarnawasunda-portofolio untuk mengidentifikasi konten artis yang autentik.
 - [x] Ekstrak dan petakan bio, rilisan, kontak, kredensial, tautan, serta aset terverifikasi dari repository lama ke struktur platform baru.
 - [x] Terapkan data lama yang jelas sumbernya ke fallback konten publik atau CMS tanpa mengarang klaim baru.
+- [x] Tambahkan ikon SVG yang terarah dan aksesibel untuk Spotify, Apple Music, YouTube, SoundCloud, Instagram, Deezer, Amazon Music, Tidal, TikTok, serta X.
+- [x] Terapkan artwork per-rilisan yang tersedia dari sumber legacy/CMS pada homepage, kartu katalog, release detail, dan embed.
+- [x] Buat text scramble interaktif berdurasi 2–3 detik untuk heading/CTA terpilih di Home, Music, Visuals, Live, Universe, About, dan EPK.
+- [x] Pastikan halaman detail rilisan memakai artwork legacy/CMS yang sama dengan katalog, lalu verifikasi visualnya pada route publik.
+- [ ] Tambahkan tes regresi serta verifikasi Android, reduced-motion, build, dan deployment untuk pengalaman visual baru.

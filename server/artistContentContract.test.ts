@@ -42,4 +42,17 @@ describe("artist content contract", () => {
     expect(musicPage).toContain("const cmsCatalog = cmsReleases.map");
     expect(musicPage).toContain("releases.filter(legacy => !cmsCatalog.some");
   });
+
+  it("uses platform SVGs and available per-release artwork in music discovery modules", () => {
+    const icon = source("client/src/components/PlatformIcon.tsx");
+    const home = source("client/src/pages/Home.tsx");
+    const music = source("client/src/pages/Music.tsx");
+    const content = source("client/src/content/artistPlatform.ts");
+
+    expect(icon).toContain('simple-icons/icons/spotify.svg?raw');
+    expect(icon).toContain('simple-icons/icons/soundcloud.svg?raw');
+    expect(home).toContain("<PlatformIcon label={platform.label}");
+    expect(music).toContain("<PlatformIcon label={platform.label}");
+    expect(content).toContain('image: "https://i.scdn.co/image/');
+  });
 });

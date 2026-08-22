@@ -3,6 +3,7 @@ import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { ArtistSignalMotion } from "@/components/ArtistSignalMotion";
 import { ScrambleText } from "@/components/ScrambleText";
+import { PlatformIcon } from "@/components/PlatformIcon";
 import { allPlatformLinks, currentRelease, futureModules, officialBrand, platformLinks, publicStorageAsset, releases, videos } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
 import { useSanityArtistContent } from "@/sanity/publicContent";
@@ -11,6 +12,7 @@ import "./Home.css";
 import "./HomeStates.css";
 import "./HomeRefinement.css";
 import "./HomeArtistUpgrade.css";
+import "./PlatformMediaUpgrade.css";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -73,7 +75,7 @@ export default function Home() {
           <div className="home-hero-orbit"><ArtistSignalMotion /></div>
           <div className="hero-copy">
             <p className="eyebrow"><span /> {heroKicker}</p>
-            <ScrambleText as="h1" text={heroTitle || "MAKE THE\nNIGHT MOVE."} />
+            <ScrambleText as="h1" interactive duration={2400} text={heroTitle || "MAKE THE\nNIGHT MOVE."} />
             <p className="hero-description">{heroBody}</p>
             <div className="hero-actions">
               <a className="button-primary" href={heroActionUrl} target="_blank" rel="noreferrer"><Play size={15} fill="currentColor" /> {heroActionLabel}</a>
@@ -88,12 +90,12 @@ export default function Home() {
         </section>
 
         <section className="home-signal-deck" aria-labelledby="signal-deck-title">
-          <div className="home-signal-copy"><p className="eyebrow"><span /> AN // LIVE SIGNAL</p><h2 id="signal-deck-title">ONE ARTIST.<br /><em>EVERY FREQUENCY.</em></h2><p>Masuk lewat platform yang kamu pakai, lalu lanjutkan ke rilisan, visual, dan kabar live dari sumber resminya.</p><a className="home-deck-cta" href="/music">ENTER THE RELEASE VAULT <ArrowUpRight size={15} /></a></div>
-          <div className="home-platform-rack">{allPlatformLinks.map((platform, index) => <a key={platform.label} href={platform.href} target="_blank" rel="noreferrer"><span>0{index + 1}</span><strong>{platform.label}</strong><ArrowUpRight size={16} /></a>)}</div>
+          <div className="home-signal-copy"><p className="eyebrow"><span /> AN // LIVE SIGNAL</p><ScrambleText as="h2" interactive duration={2400} id="signal-deck-title" text={"ONE ARTIST.\nEVERY FREQUENCY."} /><p>Masuk lewat platform yang kamu pakai, lalu lanjutkan ke rilisan, visual, dan kabar live dari sumber resminya.</p><a className="home-deck-cta" href="/music">ENTER THE RELEASE VAULT <ArrowUpRight size={15} /></a></div>
+          <div className="home-platform-rack">{allPlatformLinks.map((platform, index) => <a key={platform.label} href={platform.href} target="_blank" rel="noreferrer"><span>0{index + 1}</span><strong><PlatformIcon label={platform.label} />{platform.label}</strong><ArrowUpRight size={16} /></a>)}</div>
         </section>
 
         <section className="section section-current" id="music">
-          <div className="section-heading"><p className="eyebrow">01 · CURRENT FREQUENCY</p><h2>THE RELEASE<br /><em>IN FOCUS.</em></h2></div>
+          <div className="section-heading"><p className="eyebrow">01 · CURRENT FREQUENCY</p><ScrambleText as="h2" interactive duration={2400} text={"THE RELEASE\nIN FOCUS."} /></div>
           {contentQuery.isLoading ? <p className="content-state">SYNCING MANAGED CONTENT…</p> : contentQuery.isError ? <p className="content-state content-state-warn">LIVE CONTENT IS UNAVAILABLE — SHOWING VERIFIED ARCHIVE CONTENT.</p> : !managedContent.length ? <p className="content-state">ARCHIVE VIEW — OWNER-PUBLISHED CONTENT WILL APPEAR HERE WHEN AVAILABLE.</p> : <p className="content-state content-state-live">LIVE CONTENT — THIS MODULE IS MANAGED FROM AN // STUDIO.</p>}
           <div className="feature-release">
             <div className="release-cover"><img src={activeRelease.image} alt="Abstract visual for current release" /><span className="cover-orbit" /></div>
@@ -107,14 +109,14 @@ export default function Home() {
         </section>
 
         <section className="section release-section">
-          <div className="section-inline"><div><p className="eyebrow">RELEASE VAULT</p><h2>EVERY DROP<br /><em>HAS A SIGNAL.</em></h2></div><a className="text-link" href="https://open.spotify.com/artist/5teZ2VRr7VBSDqZ0ueP3hd" target="_blank" rel="noreferrer">OPEN SPOTIFY <ArrowUpRight size={16} /></a></div>
+          <div className="section-inline"><div><p className="eyebrow">RELEASE VAULT</p><ScrambleText as="h2" interactive duration={2400} text={"EVERY DROP\nHAS A SIGNAL."} /></div><a className="text-link" href="https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw" target="_blank" rel="noreferrer">OPEN SPOTIFY <PlatformIcon label="Spotify" /> <ArrowUpRight size={16} /></a></div>
           <div className="release-grid">
-            {releases.map((release, index) => <a className="release-card" key={release.title} href={release.href} target="_blank" rel="noreferrer"><span className="release-number">0{index + 1}</span><Disc3 size={23} /><p>{release.format} · {release.year}</p><h3>{release.title}</h3><span>{release.platform} <ArrowUpRight size={14} /></span></a>)}
+            {releases.map((release, index) => <a className="release-card" key={release.title} href={release.href} target="_blank" rel="noreferrer">{release.image && <div className="release-card-art"><img src={release.image} alt="" loading="lazy" /></div>}<span className="release-number">0{index + 1}</span><PlatformIcon label={release.platform} /><p>{release.format} · {release.year}</p><h3>{release.title}</h3><span className="release-platform-line">{release.platform} <ArrowUpRight size={14} /></span></a>)}
           </div>
         </section>
 
         <section className="section visual-section" id="visuals">
-          <div className="section-heading"><p className="eyebrow">02 · MOTION / VISUAL</p><h2>TURN THE<br /><em>VOLUME INTO LIGHT.</em></h2></div>
+          <div className="section-heading"><p className="eyebrow">02 · MOTION / VISUAL</p><ScrambleText as="h2" interactive duration={2400} text={"TURN THE\nVOLUME INTO LIGHT."} /></div>
           <div className="video-grid">
             {activeVideos.map((video, index) => <a key={video.title} className={`video-card video-${index + 1}`} href={video.href} target="_blank" rel="noreferrer"><img src={video.image} alt="" /><div className="video-overlay" /><div className="video-content"><span>{video.label}</span><h3>{video.title}</h3><div className="round-play"><Play size={17} fill="currentColor" /></div></div></a>)}
           </div>
@@ -122,7 +124,7 @@ export default function Home() {
 
         <section className="section live-section" id="live">
           <div className="live-backdrop" style={{ backgroundImage: `url(${publicStorageAsset("/manus-storage/an-night-frequency-stage_113bf174.jpg")})` }} />
-          <div className="live-copy"><p className="eyebrow">03 · LIVE SIGNAL</p><h2>WHEN THE<br /><em>ROOM IS READY.</em></h2><p>{managedLive?.subtitle || "Jadwal pertunjukan akan tampil di sini ketika tanggal diumumkan. Masuk ke Fan Signal untuk mendengar kabar lebih dulu."}</p><a className="button-primary" href={managedLive?.href || "#signal"} target={managedLive?.href ? "_blank" : undefined} rel={managedLive?.href ? "noreferrer" : undefined}><Ticket size={16} /> GET FIRST NOTICE</a></div>
+          <div className="live-copy"><p className="eyebrow">03 · LIVE SIGNAL</p><ScrambleText as="h2" interactive duration={2400} text={"WHEN THE\nROOM IS READY."} /><p>{managedLive?.subtitle || "Jadwal pertunjukan akan tampil di sini ketika tanggal diumumkan. Masuk ke Fan Signal untuk mendengar kabar lebih dulu."}</p><a className="button-primary" href={managedLive?.href || "#signal"} target={managedLive?.href ? "_blank" : undefined} rel={managedLive?.href ? "noreferrer" : undefined}><Ticket size={16} /> GET FIRST NOTICE</a></div>
           <div className="live-status"><span>{managedLive?.label || "NEXT LIVE"}</span><strong>{managedLive?.title || <>NO DATE<br />ANNOUNCED</>}</strong><small>{managedLive ? "LIVE UPDATE" : "WATCH THIS SPACE"}</small></div>
         </section>
 
