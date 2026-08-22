@@ -90,4 +90,5 @@
 - [x] Tambahkan jalur booking yang terstruktur dan event-ready Live Signal tanpa mengarang jadwal, testimonial, atau detail acara.
 - [x] Tambahkan text scramble, reveal, dan particle motion reusable yang menghormati `prefers-reduced-motion` serta tetap ringan di Android.
 - [x] Bangun halaman detail rilisan publik berbasis CMS untuk artwork, release story, credits, dan official listening links dengan fallback yang jujur.
-- [ ] Perluas tes untuk data content model, public routing, dan motion fallback; lalu verifikasi desktop, Android, build, serta deployment.
+- [x] Perluas tes untuk data content model, public routing, dan motion fallback; lalu verifikasi desktop, Android, build, serta deployment.
+- [x] Tambahkan tes regresi untuk fallback `prefers-reduced-motion` pada text scramble dan motion partikel/vinyl.
