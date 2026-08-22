@@ -52,7 +52,6 @@ The homepage refinement was revalidated at desktop and phone viewports after add
 
 The shared ecosystem refinement was verified at desktop and 375 px phone viewports across Music, Visuals, Live, Universe, and EPK. Each route now retains a consistent original-brand hero treatment, clear mobile navigation controls, readable signal cards, and responsive type hierarchy without horizontal overflow.
 
-
 ## Enhancement smoke test — 2026-08-22
 
 - Homepage lokal berhasil dimuat di `http://localhost:3000/` dengan title `Akbar Nawasunda — Night Frequency`.
@@ -60,56 +59,45 @@ The shared ecosystem refinement was verified at desktop and 375 px phone viewpor
 - Screenshot viewport mempertahankan palette gelap editorial dan struktur hero/platform setelah enhancement.
 - Pemeriksaan console masih perlu dilakukan untuk memastikan tidak ada runtime error setelah hook scroll reveal, magnetic CTA, tilt card, skeleton, LCP monitor, dan particle visibility pause/resume ditambahkan.
 
-
 ## Enhancement diagnostics — 2026-08-22
 
 Homepage lokal berhasil merender seluruh route content, dan console tidak menunjukkan error runtime; hanya ada log development React serta satu laporan LCP. DOM inspection mengonfirmasi enam section memiliki `reveal-ready`, dengan section yang masuk viewport berubah ke `is-revealed` dan section di bawah viewport tetap opacity 0 sampai terlihat. Smoke test menemukan `/api/brand/rmx-mark` mengembalikan 502 karena sumber upstream gagal di sandbox; fallback lokal berbasis asset branding resmi ditambahkan ke `BrandMotionMark` agar particle canvas tidak blank ketika upstream tidak tersedia.
-
 
 ## Enhancement fallback validation — 2026-08-22
 
 Setelah reload, source image particle beralih ke `/assets/akbar-rmx-mark-fallback.jpg` dengan natural size 1000×1000. Canvas berhasil membentuk 841 particle mode desktop pada ukuran 422×422, sehingga hero tidak lagi blank ketika `/api/brand/rmx-mark` upstream gagal. DOM inspection juga menunjukkan section yang berada di viewport sudah `is-revealed`, sementara section di bawah viewport tetap menunggu IntersectionObserver.
 
-
 ## Scroll reveal validation — 2026-08-22
 
 Setelah scroll satu viewport, section musik berubah menjadi `is-revealed` dengan opacity 1 dan transform netral; section release, visual, live, dan Fan Signal tetap menunggu sampai memasuki viewport. DOM browser tidak menunjukkan error runtime baru.
-
 
 ## Final local smoke test — 2026-08-22
 
 Server enhancement diisolasi pada port 3100. Root merespons HTTP 200 HTML, `/api/trpc/auth.me?batch=1&input=%7B%7D` merespons HTTP 200 JSON, dan fallback RMX asset merespons HTTP 200 `image/jpeg` dengan 113,784 bytes. Browser pada port 3100 menemukan fallback image dan tidak melaporkan error console; hanya React DevTools info serta laporan LCP development.
 
-
 ## Particle contrast audit — 2026-08-22
 
 Browser inspection after the first idle-motion patch found the particle button computed at opacity `0.64`, despite the new BrandMotionMark CSS setting `0.96 !important`. The later `HomeArtistUpgrade.css` mobile/desktop overrides were still winning in the active cascade. Those overrides were updated to `0.96 !important` on desktop and `0.9 !important` on mobile. The canvas had 899 desktop particles and the component was in `is-idle` state with the new fallback asset loaded.
-
 
 ## Particle contrast cascade follow-up — 2026-08-22
 
 After updating HomeArtistUpgrade.css, browser CSSOM still computed `.an-site .an-hero .an-rmx-particle-hero { opacity: 0.64 !important; }` from an active stylesheet entry. The particle component had 899 desktop particles and `is-idle`, but the late 0.64 rule continued to reduce visibility. The next fix must remove or override that exact 0.64 declaration at its source rather than only changing the earlier BrandMotionMark rule.
 
-
 ## Idle motion follow-up — 2026-08-22
 
 Final CSS cascade now computes particle opacity at `0.96`, with 899 desktop particles and `is-idle` active. A 350 ms canvas pixel checksum remained unchanged, revealing that `drawIdle()` rendered once but did not schedule its next `requestAnimationFrame`. The idle loop needs an explicit self-schedule guarded by viewport visibility.
-
 
 ## Particle idle motion validation — 2026-08-22
 
 After the scheduling fix, a 350 ms canvas checksum changed from `830288353` to `750786139`, confirming that idle particles move continuously. The component remained `is-idle`, computed opacity was `0.96`, and the canvas contained 899 desktop particles.
 
-
 ## Homepage layout audit — 2026-08-23
 
 Browser inspection at 1280×1100 found the hero at 860 px tall with the particle canvas positioned at 422×422 and opacity 0.96. The hero portrait URL was present but `naturalWidth`/`naturalHeight` were both 0, so the photo was not loading in the local server; this explains the empty/dark hero background. The particle canvas had 899 desktop particles and `is-idle` was active. Main sections measured approximately: platform 665 px, current release 854 px, release grid 1,012 px, visual 948 px, live 630 px, Fan Signal 463 px. Layout polish should prioritize hero asset fallback/visibility, tighter section rhythm, and consistent content max-widths.
 
-
 ## Hero portrait fallback — 2026-08-23
 
 The official portrait URL resolves directly in the browser to a 1122×1402 portrait image, while the local `/manus-storage/...` proxy returned no image because Forge storage credentials are not present in the local environment. The image was saved into `client/public/assets/akbar-official-portrait-fallback.png` and `.webp` for a local runtime fallback; the WebP version will be preferred to reduce payload.
-
 
 ## Layout refinement + portrait fallback — 2026-08-23
 
@@ -120,21 +108,17 @@ The official portrait URL resolves directly in the browser to a 1122×1402 portr
 - Idle particle drift diperbesar dari sekitar `2.1/1.8px` desktop menjadi sekitar `4.8/4.1px` plus komponen kedua dan pulse alpha lebih terbaca; loop `requestAnimationFrame` tetap aktif hanya saat hero terlihat.
 - `pnpm check`, `pnpm test` (42 tests / 15 files), dan `pnpm build` PASS; warning build existing tetap hanya analytics env/runtime image/chunk size.
 
-
 ## Visual desktop follow-up — 2026-08-23
 
 Screenshot browser setelah idle beberapa saat memperlihatkan particle canvas dengan titik putih, biru, oranye, dan hijau yang jelas di atas hero, bukan panel hitam kosong. Hero tetap terbagi menjadi portrait kiri dan copy/particle kanan. Setelah scroll satu viewport, platform deck terlihat menjadi dua kolom yang seimbang dengan 10 kartu teratur, dan current release memakai dua kolom dengan cover serta detail yang tidak saling bertabrakan.
-
 
 ## Desktop section metrics — 2026-08-23
 
 Metrik DOM setelah scroll menunjukkan platform deck `510px`, release section `1,089px`, release grid `1,111×621px` dengan delapan kartu, visual grid `1,111×430px` dengan tiga kartu, live `590px`, Fan Signal `412px`, dan footer `343px`. Tidak ada overflow horizontal bermakna (`scrollWidth - innerWidth = -15`, akibat scrollbar viewport). Tiga elemen reveal masih opacity 0 karena belum memasuki viewport; ini sesuai perilaku lazy reveal, bukan error layout.
 
-
 ## Motion checksum follow-up — 2026-08-23
 
 Setelah inspeksi desktop dan screenshot mobile, browser page mengalami restart/HMR sehingga particle kembali ke class `is-animating` dengan 891 particle. Dua pengukuran checksum terpisah (`450ms` dan `3200ms`) saat fase ini sama; hasil ini bukan validasi idle karena formasi belum mencapai `is-idle` atau rendering sedang dihentikan lifecycle visibility. Komponen perlu diaudit ulang pada transisi `is-animating` → `is-idle` dan offscreen observer sebelum finalisasi.
-
 
 ## Idle motion final validation — 2026-08-23
 
@@ -142,33 +126,27 @@ Setelah viewport dikembalikan ke hero dan formasi selesai, browser melaporkan cl
 
 Screenshot headless viewport mobile `390×844` juga menunjukkan portrait fallback tampil penuh, header mobile tidak overlap, judul dan deskripsi memiliki hierarchy jelas, CTA tetap terlihat, serta particle berwarna mulai terbentuk di bawah copy.
 
-
 ## Production deployment — 2026-08-23
 
 Commit `2fa0365` terdeteksi sebagai deployment production `dpl_864UdQBtVBCqzjCP35gq1LfDVYQA` dan berstatus `READY`. Build Vercel mengkloning branch `main`, menjalankan `pnpm install --frozen-lockfile`, menyelesaikan `vite build` + esbuild, lalu deployment selesai tanpa error fatal. Warning yang sama tetap ada untuk analytics env yang tidak didefinisikan, satu runtime image path, dan chunk JavaScript di atas 500 kB.
 
 Grouped runtime errors project dalam 24 jam terakhir: tidak ada. Direct smoke fetch ke deployment mendapat HTTP `302` menuju Vercel SSO karena deployment protection aktif; URL share sementara juga diarahkan ke SSO oleh endpoint fetch, sehingga validasi visual production dilakukan melalui deployment metadata/build logs dan local production-equivalent build, bukan melalui HTML protected langsung.
 
-
 ## Collision audit follow-up — 2026-08-23
 
 Audit bounding box desktop `1280×1100` menemukan particle hero (`x=804..1227`, `y=404..826`) beririsan dengan area `.hero-copy` (`x=609..1188`, `y=364..696`) dan `.hero-actions`. Sebagian collision report adalah parent-child normal (`.hero-copy` dengan `.hero-actions`, section dengan child), tetapi irisan particle-copy adalah overlap visual yang perlu diputuskan/fix agar particle tidak menimpa deskripsi atau CTA. Page tetap tidak memiliki horizontal overflow bermakna dan particle berada pada class `is-idle`.
-
 
 ## Particle overlap confirmation — 2026-08-23
 
 Computed positioning mengonfirmasi canvas particle adalah child absolute dari `.an-hero`, berukuran `422×422px`, berada di `x=804..1227` dan `y=404..826`, sementara copy berada di `x=609..1188` dan `y=364..696`. Jadi ada overlap area nyata di sisi kanan copy/CTA pada desktop. Perbaikannya perlu menjaga particle tetap terlihat tetapi menggeser canvas lebih ke kanan/bawah atau mempersempit zona copy agar teks dan CTA punya area eksklusif.
 
-
 ## Collision guard validation — 2026-08-23
 
 Setelah collision guard diterapkan, particle desktop berada di `x=848.2..1188.2`, `y=539.8..879.8`, sedangkan judul berakhir di `y=384.4`, deskripsi di `y=434.1`, dan CTA terakhir di `y=509.1`. Collision check terhadap eyebrow, h1, deskripsi, primary CTA, dan Fan Signal CTA semuanya `false`. Particle tetap class `is-idle` dan page tetap tanpa horizontal overflow bermakna.
 
-
 ## Mobile collision validation — 2026-08-23
 
 Emulasi CDP viewport `390×844` menghasilkan `overflow: 0`. Portrait berada pada `x=20..370`, `y=116..552.8`; h1 berakhir pada `y=726`; deskripsi berakhir pada `y=791.4`; primary CTA berada pada `y=816.4..861.4`; dan particle mulai pada `y=931.4` dengan ukuran `350×350`. Semua overlap check portrait/h1/deskripsi/dua CTA terhadap particle bernilai `false`. Hero mobile kini memiliki tinggi flow `1357.4px`, sehingga particle tidak lagi diposisikan negatif menimpa CTA.
-
 
 ## Motion polish audit — 2026-08-23
 
@@ -176,14 +154,19 @@ Particle hero setelah polish berada pada state `is-idle` dengan 567 particle des
 
 Motion layer baru mencakup route shell keyed by Wouter location, reset scroll saat route berubah, reveal heading/copy/status bertahap, hover depth dan image scale, active press feedback, serta horizontal scroll-snap carousel pada release/video grid mobile.
 
-
 ## Route transition smoke test — 2026-08-23
 
 Navigasi internal homepage → `/music` → `/` berhasil melalui `Link` Wouter tanpa full reload. Route shell berganti sesuai `data-route`, halaman kembali dimulai dari posisi scroll atas, dan konten Music tetap tampil normal. Homepage kembali menampilkan particle hero dan semua nav utama.
-
 
 ## Motion polish final validation — 2026-08-23
 
 `pnpm check` berhasil, `pnpm test` berhasil dengan 44 test pada 15 file, dan `pnpm build` berhasil. Build tetap hanya memberi warning non-blocking yang sudah ada: analytics env tidak didefinisikan, satu runtime storage image belum resolve saat build, dan chunk client sekitar 756 kB raw.
 
 Smoke test route homepage → Music → homepage berhasil dengan Wouter Link, route shell keyed, dan reset scroll via effect. Desktop particle menunjukkan state `is-idle`, filter multi-color aktif, dan pixel sample berisi kelompok blue/warm/lime yang terlihat. Mobile release/video grid memakai horizontal scroll-snap dengan `touch-action: pan-x pan-y`; reduced-motion mematikan animation, transform, dan snap motion.
+
+## Particle box audit — 2026-08-23
+
+Kesan kotak berasal dari backing radial gelap dan box-shadow parent particle. Setelah patch, computed style menunjukkan `background: rgba(0, 0, 0, 0)`, `backgroundImage: none`, `boxShadow: none`, `border: 0`, serta `overflow: visible`. Canvas tetap memiliki glow particle, tetapi tidak lagi membawa panel persegi; overflow document tidak bertambah pada viewport audit.
+
+
+Screenshot bersih desktop setelah patch menunjukkan tidak ada panel persegi di belakang particle. Particle logo dan halo transparan menyatu dengan area hero; warna warm, lime, dan blue tetap terbaca, sementara portrait dan copy tidak tertutup.

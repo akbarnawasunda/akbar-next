@@ -14,31 +14,31 @@
   width: min(49vw, 720px) !important;
   aspect-ratio: 1;
   border: 0;
-  background:
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(155, 201, 255, 0.14),
-      transparent 42%
-    ),
-    radial-gradient(
-      circle at 32% 70%,
-      rgba(240, 160, 109, 0.1),
-      transparent 38%
-    ),
-    radial-gradient(
-      circle at center,
-      rgba(7, 7, 18, 0.5) 0%,
-      rgba(7, 7, 18, 0.2) 44%,
-      transparent 74%
-    );
+  background: transparent !important;
   padding: 0;
   color: inherit;
   cursor: crosshair;
   isolation: isolate;
+  overflow: visible;
   opacity: 0.96 !important;
-  box-shadow:
-    0 0 0 1px rgba(155, 201, 255, 0.1),
-    0 0 64px rgba(216, 255, 101, 0.08);
+  box-shadow: none !important;
+}
+
+.an-rmx-particle-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -12%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(155, 201, 255, 0.1) 0%,
+    rgba(240, 160, 109, 0.055) 28%,
+    transparent 68%
+  );
+  filter: blur(10px);
+  opacity: 0.9;
+  pointer-events: none;
 }
 
 .an-rmx-particle-hero canvas {
@@ -117,9 +117,8 @@
   }
 
   .an-rmx-particle-hero {
-    box-shadow:
-      0 0 0 1px rgba(155, 201, 255, 0.08),
-      0 0 48px rgba(216, 255, 101, 0.08);
+    background: transparent !important;
+    box-shadow: none !important;
   }
 }
 
@@ -137,6 +136,11 @@
   }
 
   .an-rmx-particle-hero {
-    box-shadow: none;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .an-rmx-particle-hero::before {
+    display: none;
   }
 }
