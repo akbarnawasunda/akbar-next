@@ -81,4 +81,4 @@
 - [x] Rancang ulang homepage dengan arah warna dan atmosfer yang lebih berkarakter untuk musik elektronik Akbar Nawasunda.
 - [x] Perkuat hierarki homepage untuk discovery musik, visual, live signal, dan konversi Fan Signal tanpa mengembalikan pengalaman LAB.
 - [x] Tambahkan atau perbarui tes navigasi/routing untuk memastikan LAB tidak lagi terekspos sebagai route publik.
-- [ ] Verifikasi desktop, Android/mobile, type check, test, production build, serta deployment Vercel setelah perombakan homepage.
+- [x] Verifikasi desktop, Android/mobile, type check, test, production build, serta deployment Vercel setelah perombakan homepage.
