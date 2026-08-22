@@ -3,3 +3,5 @@
 The user-provided RMX artwork is stored as a project asset and appears once in the Home hero, replacing the generic status card. It is a user-triggered, 0.84-second mark animation: a copper scan travels through a short image drift and then returns to a static state. It does not autoplay, loop, animate while scrolling, or run outside Home.
 
 Desktop review confirms the mark balances the hero rather than competing with the main name and two primary actions. At Android 375 × 812, the card scales to 142 px, stays beside the hero copy without obscuring actions, and remains a sufficiently large touch target. Reduced-motion users receive the static artwork because all motion keyframes are explicitly disabled.
+
+`pnpm test` passed 36 tests, `pnpm check` passed, and `pnpm build` passed. Commit `03e3485` was pushed to GitHub `main`; Vercel deployment `dpl_CGp8aZfYTP8gDdHsBvCFVKDADLtE` reached `READY` at `https://akbar-next-8m1q308w1-akbarnawasundas-projects.vercel.app`.
