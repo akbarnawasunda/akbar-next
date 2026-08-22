@@ -71,6 +71,9 @@
 - [x] Add a unified all-platform listening hub using verified Akbar Nawasunda destination links.
 - [x] Add real artwork/thumbnail treatment to each supported music and video embed with safe visual fallbacks.
 - [x] Add a performant Akbar Nawasunda particle field and rotating vinyl component with the original AN mark at its center.
-- [ ] Deploy the corrected root Vercel rewrite and verify direct navigation on the live site for the public SPA routes.
+- [x] Verify direct live navigation on the Vercel Music and Visuals routes after the corrected SPA rewrite deployment.
+- [ ] Verify direct live navigation on the remaining public SPA routes (`/`, `/live`, `/universe`, `/epk`, and `/lab`) after the Vercel deployment.
+- [ ] Replace remaining relative `/manus-storage/...` public-page asset references with Vercel-safe absolute asset URLs and rerun production build verification.
+- [ ] Document live-site verification results for every public route after the rewrite deployment.
 - [x] Improve the public visual treatment using the original artist identity before the next GitHub deployment.
 - [ ] Re-verify all public routes and remove remaining stale relative storage references before the next GitHub deployment.

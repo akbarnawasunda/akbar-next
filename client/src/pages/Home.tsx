@@ -1,7 +1,7 @@
 import { ArrowDownRight, ArrowUpRight, Disc3, Headphones, Mail, Play, Radio, Sparkles, Ticket, Waves } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
-import { currentRelease, futureModules, officialBrand, platformLinks, releases, videos } from "@/content/artistPlatform";
+import { currentRelease, futureModules, officialBrand, platformLinks, publicStorageAsset, releases, videos } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
 import { useSanityArtistContent } from "@/sanity/publicContent";
 import "@/components/OfficialBrand.css";
@@ -112,7 +112,7 @@ export default function Home() {
         </section>
 
         <section className="section live-section" id="live">
-          <div className="live-backdrop" style={{ backgroundImage: `url(/manus-storage/an-night-frequency-stage_113bf174.jpg)` }} />
+          <div className="live-backdrop" style={{ backgroundImage: `url(${publicStorageAsset("/manus-storage/an-night-frequency-stage_113bf174.jpg")})` }} />
           <div className="live-copy"><p className="eyebrow">03 · LIVE SIGNAL</p><h2>WHEN THE<br /><em>ROOM IS READY.</em></h2><p>{managedLive?.subtitle || "Jadwal pertunjukan akan tampil di sini ketika tanggal diumumkan. Masuk ke Fan Signal untuk mendengar kabar lebih dulu."}</p><a className="button-primary" href={managedLive?.href || "#signal"} target={managedLive?.href ? "_blank" : undefined} rel={managedLive?.href ? "noreferrer" : undefined}><Ticket size={16} /> GET FIRST NOTICE</a></div>
           <div className="live-status"><span>{managedLive?.label || "NEXT LIVE"}</span><strong>{managedLive?.title || <>NO DATE<br />ANNOUNCED</>}</strong><small>{managedLive ? "LIVE UPDATE" : "WATCH THIS SPACE"}</small></div>
         </section>
