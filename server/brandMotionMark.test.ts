@@ -2,7 +2,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
+const source = (path: string) =>
+  readFileSync(resolve(process.cwd(), path), "utf8");
 
 describe("RMX brand motion mark", () => {
   it("uses the user-provided RMX asset in the public identity data", () => {
@@ -15,25 +16,31 @@ describe("RMX brand motion mark", () => {
     const vercel = source("vercel.json");
     expect(vercel).toContain('"source": "/api/brand/rmx-mark"');
     expect(vercel).toContain("akbar-nawasunda-rmx-mark_d59968bf.jpg");
-    expect(vercel).toContain('"source": "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"');
+    expect(vercel).toContain(
+      '"source": "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"'
+    );
     expect(vercel).toContain("akbar-nawasunda-official-portrait_2c39f68f.jpg");
     expect(vercel.indexOf('"source": "/api/brand/rmx-mark"')).toBeLessThan(
-      vercel.indexOf('"source": "/(.*)"'),
+      vercel.indexOf('"source": "/(.*)"')
     );
-    expect(vercel.indexOf('"source": "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"')).toBeLessThan(
-      vercel.indexOf('"source": "/(.*)"'),
-    );
+    expect(
+      vercel.indexOf(
+        '"source": "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"'
+      )
+    ).toBeLessThan(vercel.indexOf('"source": "/(.*)"'));
   });
 
   it("uses the supplied official portrait as the homepage hero visual while preserving the particle layer", () => {
     const brand = source("client/src/content/artistPlatform.ts");
     const home = source("client/src/pages/Home.tsx");
     const heroCss = source("client/src/pages/HomeArtistUpgrade.css");
-    expect(brand).toContain('portrait: "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"');
+    expect(brand).toContain(
+      'portrait: "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"'
+    );
     expect(home).toContain("home-hero-portrait");
     expect(home).toContain("Portrait resmi Akbar Nawasunda");
     expect(heroCss).toContain(".home-hero-portrait");
-    expect(heroCss).toContain(".an-rmx-particle-hero{z-index:2");
+    expect(heroCss).toMatch(/\.an-rmx-particle-hero\s*\{[\s\S]*z-index:\s*2;/);
   });
 
   it("builds the RMX silhouette from canvas particles and replays a dissolve only from user action", () => {
@@ -45,7 +52,9 @@ describe("RMX brand motion mark", () => {
     expect(component).toContain("sampleContext.drawImage(image");
     expect(component).toContain("isInk");
     expect(component).toContain("isBlueAccent");
-    expect(component).toContain('canvas.dataset.particleMode = mobile ? "mobile" : "desktop"');
+    expect(component).toContain(
+      'canvas.dataset.particleMode = mobile ? "mobile" : "desktop"'
+    );
     expect(component).toContain("Mainkan ulang particle logo Akbar Nawasunda");
     expect(component).not.toContain("an-rmx-mark-caption");
     expect(css).toContain(".an-rmx-particle-hero");
@@ -55,9 +64,11 @@ describe("RMX brand motion mark", () => {
   it("keeps the mark static when reduced motion is requested", () => {
     const component = source("client/src/components/BrandMotionMark.tsx");
     const css = source("client/src/components/BrandMotionMark.css");
-    expect(component).toContain('matchMedia("(prefers-reduced-motion: reduce)")');
+    expect(component).toContain(
+      'matchMedia("(prefers-reduced-motion: reduce)")'
+    );
     expect(css).toMatch(/prefers-reduced-motion\s*:\s*reduce/);
     expect(component).toContain("if (!particles.length || reducedMotion)");
-    expect(css).toContain(".an-rmx-particle-hero{cursor:default}");
+    expect(css).toMatch(/\.an-rmx-particle-hero\s*\{\s*cursor:\s*default;/);
   });
 });

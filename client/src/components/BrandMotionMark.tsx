@@ -27,6 +27,7 @@ export function BrandMotionMark({ src }: { src: string }) {
   const [imageSrc, setImageSrc] = useState(src);
   const [sequence, setSequence] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isIdle, setIsIdle] = useState(false);
 
   useEffect(() => {
     setImageSrc(src);
@@ -100,11 +101,14 @@ export function BrandMotionMark({ src }: { src: string }) {
         const dissolveRadius =
           Math.max(width, height) * (0.58 + Math.random() * 0.46);
         const blueParticle = isBlueAccent && blue > green + 8;
+        const colorRoll = Math.random();
         const color = blueParticle
-          ? "#78a8df"
-          : Math.random() > 0.9
-            ? "#c7794c"
-            : "#ece6dc";
+          ? "#9bc9ff"
+          : colorRoll > 0.88
+            ? "#d8ff65"
+            : colorRoll > 0.76
+              ? "#f0a06d"
+              : "#f4ead8";
 
         candidates.push({
           tx: targetX,
@@ -115,9 +119,9 @@ export function BrandMotionMark({ src }: { src: string }) {
           dy: Math.sin(angle) * dissolveRadius,
           color,
           size:
-            (mobile ? 1 : 1.15) +
-            (Math.random() > 0.92 ? 0.85 : Math.random() * 0.35),
-          alpha: 0.52 + Math.random() * 0.46,
+            (mobile ? 1.15 : 1.3) +
+            (Math.random() > 0.86 ? 0.9 : Math.random() * 0.45),
+          alpha: 0.72 + Math.random() * 0.28,
           phase: Math.random() * Math.PI * 2,
         });
       }
@@ -132,8 +136,20 @@ export function BrandMotionMark({ src }: { src: string }) {
 
     const drawStatic = () => {
       context.clearRect(0, 0, width, height);
+      context.globalCompositeOperation = "lighter";
       particles.forEach(particle => {
-        context.globalAlpha = particle.alpha;
+        context.globalAlpha = Math.min(1, particle.alpha * 0.16);
+        context.fillStyle = particle.color;
+        context.fillRect(
+          particle.tx - 0.7,
+          particle.ty - 0.7,
+          particle.size + 1.4,
+          particle.size + 1.4
+        );
+      });
+      context.globalCompositeOperation = "source-over";
+      particles.forEach(particle => {
+        context.globalAlpha = Math.min(1, particle.alpha * 0.96);
         context.fillStyle = particle.color;
         context.fillRect(
           particle.tx,
@@ -147,11 +163,13 @@ export function BrandMotionMark({ src }: { src: string }) {
 
     if (!particles.length || reducedMotion) {
       drawStatic();
+      setIsIdle(false);
       return;
     }
 
     runningRef.current = true;
     setIsAnimating(true);
+    setIsIdle(false);
     const initialFormation = sequence === 0;
     const duration = initialFormation
       ? mobile
@@ -163,6 +181,63 @@ export function BrandMotionMark({ src }: { src: string }) {
     let startedAt = 0;
     let pausedAt: number | null = null;
     let pausedDuration = 0;
+
+    let idleStartedAt: number | null = null;
+    let idleActive = false;
+
+    const drawIdle = (time: number) => {
+      if (idleStartedAt === null) idleStartedAt = time;
+      const idleTime = (time - idleStartedAt) * 0.001;
+      context.clearRect(0, 0, width, height);
+      context.globalCompositeOperation = "lighter";
+      particles.forEach(particle => {
+        const driftX =
+          Math.sin(idleTime * 0.78 + particle.phase) * (mobile ? 1.2 : 2.1) +
+          Math.cos(idleTime * 0.38 + particle.ty * 0.02) *
+            (mobile ? 0.45 : 0.9);
+        const driftY =
+          Math.cos(idleTime * 0.64 + particle.phase * 1.24) *
+            (mobile ? 1 : 1.8) +
+          Math.sin(idleTime * 0.31 + particle.tx * 0.018) *
+            (mobile ? 0.4 : 0.8);
+        const pulse =
+          0.88 + (Math.sin(idleTime * 1.6 + particle.phase) + 1) * 0.07;
+        context.globalAlpha = Math.min(1, particle.alpha * pulse * 0.2);
+        context.fillStyle = particle.color;
+        context.fillRect(
+          particle.tx + driftX - 0.8,
+          particle.ty + driftY - 0.8,
+          particle.size + 1.6,
+          particle.size + 1.6
+        );
+      });
+      context.globalCompositeOperation = "source-over";
+      particles.forEach(particle => {
+        const driftX =
+          Math.sin(idleTime * 0.78 + particle.phase) * (mobile ? 1.2 : 2.1) +
+          Math.cos(idleTime * 0.38 + particle.ty * 0.02) *
+            (mobile ? 0.45 : 0.9);
+        const driftY =
+          Math.cos(idleTime * 0.64 + particle.phase * 1.24) *
+            (mobile ? 1 : 1.8) +
+          Math.sin(idleTime * 0.31 + particle.tx * 0.018) *
+            (mobile ? 0.4 : 0.8);
+        const pulse =
+          0.88 + (Math.sin(idleTime * 1.6 + particle.phase) + 1) * 0.07;
+        context.globalAlpha = Math.min(1, particle.alpha * pulse);
+        context.fillStyle = particle.color;
+        context.fillRect(
+          particle.tx + driftX,
+          particle.ty + driftY,
+          particle.size,
+          particle.size
+        );
+      });
+      context.globalAlpha = 1;
+      frameRef.current = visibleRef.current
+        ? window.requestAnimationFrame(drawIdle)
+        : null;
+    };
 
     const draw = (time: number) => {
       if (!visibleRef.current) {
@@ -189,7 +264,7 @@ export function BrandMotionMark({ src }: { src: string }) {
           const formation = easeOutCubic(progress);
           x = particle.sx + (particle.tx - particle.sx) * formation;
           y = particle.sy + (particle.ty - particle.sy) * formation;
-          opacity *= 0.18 + formation * 0.82;
+          opacity *= 0.22 + formation * 0.78;
         } else if (progress < 0.42) {
           const dissolve = easeOutCubic(progress / 0.42);
           x = particle.tx + particle.dx * dissolve;
@@ -205,11 +280,20 @@ export function BrandMotionMark({ src }: { src: string }) {
             particle.ty +
             particle.dy +
             (particle.ty - (particle.ty + particle.dy)) * reform;
-          opacity *= 0.72 + reform * 0.28;
+          opacity *= 0.78 + reform * 0.22;
         }
 
-        context.globalAlpha = opacity;
+        context.globalAlpha = Math.min(1, opacity * 0.2);
+        context.globalCompositeOperation = "lighter";
         context.fillStyle = particle.color;
+        context.fillRect(
+          x - 0.7,
+          y - 0.7,
+          particle.size + 1.4,
+          particle.size + 1.4
+        );
+        context.globalCompositeOperation = "source-over";
+        context.globalAlpha = Math.min(1, opacity);
         context.fillRect(x, y, particle.size, particle.size);
       });
       context.globalAlpha = 1;
@@ -217,10 +301,10 @@ export function BrandMotionMark({ src }: { src: string }) {
       if (progress < 1) {
         frameRef.current = window.requestAnimationFrame(draw);
       } else {
-        frameRef.current = null;
-        drawStatic();
-        runningRef.current = false;
+        idleActive = true;
         setIsAnimating(false);
+        setIsIdle(true);
+        drawIdle(time);
       }
     };
 
@@ -235,7 +319,9 @@ export function BrandMotionMark({ src }: { src: string }) {
             frameRef.current = null;
           }
         } else if (runningRef.current && frameRef.current === null) {
-          frameRef.current = window.requestAnimationFrame(draw);
+          frameRef.current = window.requestAnimationFrame(
+            idleActive ? drawIdle : draw
+          );
         }
       },
       { threshold: 0.1 }
@@ -249,21 +335,24 @@ export function BrandMotionMark({ src }: { src: string }) {
         window.cancelAnimationFrame(frameRef.current);
       frameRef.current = null;
       runningRef.current = false;
+      setIsAnimating(false);
+      setIsIdle(false);
     };
   }, [assetReady, sequence]);
 
   const replay = () => {
     if (
-      !runningRef.current &&
+      !isAnimating &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches
     ) {
+      setIsIdle(false);
       setSequence(value => value + 1);
     }
   };
 
   return (
     <button
-      className={`an-rmx-particle-hero${isAnimating ? " is-animating" : ""}`}
+      className={`an-rmx-particle-hero${isAnimating ? " is-animating" : ""}${isIdle ? " is-idle" : ""}`}
       type="button"
       onClick={replay}
       aria-label="Mainkan ulang particle logo Akbar Nawasunda"

@@ -32,6 +32,9 @@ describe("homepage enhancement contract", () => {
     expect(component).toContain("new IntersectionObserver");
     expect(component).toContain("cancelAnimationFrame");
     expect(component).toContain("FALLBACK_RMX_MARK");
+    expect(component).toContain('"#d8ff65"');
+    expect(component).toContain("drawIdle");
+    expect(component).toContain("idleActive ? drawIdle : draw");
   });
 
   it("keeps motion enhancements opt-in for reduced-motion users", () => {

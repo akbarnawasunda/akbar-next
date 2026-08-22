@@ -79,3 +79,23 @@ Setelah scroll satu viewport, section musik berubah menjadi `is-revealed` dengan
 ## Final local smoke test — 2026-08-22
 
 Server enhancement diisolasi pada port 3100. Root merespons HTTP 200 HTML, `/api/trpc/auth.me?batch=1&input=%7B%7D` merespons HTTP 200 JSON, dan fallback RMX asset merespons HTTP 200 `image/jpeg` dengan 113,784 bytes. Browser pada port 3100 menemukan fallback image dan tidak melaporkan error console; hanya React DevTools info serta laporan LCP development.
+
+
+## Particle contrast audit — 2026-08-22
+
+Browser inspection after the first idle-motion patch found the particle button computed at opacity `0.64`, despite the new BrandMotionMark CSS setting `0.96 !important`. The later `HomeArtistUpgrade.css` mobile/desktop overrides were still winning in the active cascade. Those overrides were updated to `0.96 !important` on desktop and `0.9 !important` on mobile. The canvas had 899 desktop particles and the component was in `is-idle` state with the new fallback asset loaded.
+
+
+## Particle contrast cascade follow-up — 2026-08-22
+
+After updating HomeArtistUpgrade.css, browser CSSOM still computed `.an-site .an-hero .an-rmx-particle-hero { opacity: 0.64 !important; }` from an active stylesheet entry. The particle component had 899 desktop particles and `is-idle`, but the late 0.64 rule continued to reduce visibility. The next fix must remove or override that exact 0.64 declaration at its source rather than only changing the earlier BrandMotionMark rule.
+
+
+## Idle motion follow-up — 2026-08-22
+
+Final CSS cascade now computes particle opacity at `0.96`, with 899 desktop particles and `is-idle` active. A 350 ms canvas pixel checksum remained unchanged, revealing that `drawIdle()` rendered once but did not schedule its next `requestAnimationFrame`. The idle loop needs an explicit self-schedule guarded by viewport visibility.
+
+
+## Particle idle motion validation — 2026-08-22
+
+After the scheduling fix, a 350 ms canvas checksum changed from `830288353` to `750786139`, confirming that idle particles move continuously. The component remained `is-idle`, computed opacity was `0.96`, and the canvas contained 899 desktop particles.
