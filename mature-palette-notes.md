@@ -22,3 +22,9 @@ The replacement palette uses near-black graphite as the base, smoked aubergine f
 Desktop review covered Home, Music, Inquiry, and EPK. Android review covered the same routes at 375 × 812. Copper remains concentrated in compact labels, active navigation, key actions, and selected form states; it no longer floods the page. Warm parchment provides one deliberate light section for audience capture rather than a cyan application-style callout. Graphite and aubergine surfaces separate long pages without the blue-violet dashboard look.
 
 `pnpm test` passed 33 tests, `pnpm check` passed, and `pnpm build` passed. The existing unresolved legacy-stage-image warning and Vite chunk-size advisory remain non-blocking build warnings.
+
+Commit `c17dba8` (`Refine artist palette with copper and parchment`) was pushed to GitHub `main`. Vercel deployment `dpl_CJNgKCd5cWGN9FtayTVypnkckabT` reached `READY` at `https://akbar-next-ni1n8zl0k-akbarnawasundas-projects.vercel.app`.
+
+## Complete route coverage
+
+Visuals, Live, About, and AN Archive were also checked at desktop and 375 × 812 Android widths. The graphite base keeps artwork from reading as interface decoration, copper appears only in compact status and action roles, and the parchment audience-capture section remains the single deliberate light break. The header, footer, active navigation, empty Live state, Archive timeline, and About contact section retain clear contrast without reintroducing cyan or dashboard-like surfaces.

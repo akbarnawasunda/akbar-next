@@ -127,4 +127,5 @@
 - [x] Audit seluruh aksen cyan, surface gelap, gradient, dan CTA yang saat ini terasa seperti UI-tech generik.
 - [x] Terapkan palet editorial baru dengan aksen hemat, kontras aksesibel, dan kedalaman warna yang lebih material.
 - [x] Rebalance Home, katalog, form, EPK, navigasi, dan state interaktif agar tidak tampak seperti dashboard atau template developer.
-- [ ] Verifikasi rework warna di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Verifikasi rework warna di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Verifikasi palet graphite–copper pada Visuals, Live, About, dan AN Archive di desktop serta Android, lalu dokumentasikan hasilnya.
