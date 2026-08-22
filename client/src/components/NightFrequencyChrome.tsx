@@ -8,7 +8,7 @@ import "./EcosystemRefinement.css";
 import "@/pages/ArtistModules.css";
 
 const navItems = [
-  { href: "/music", label: "MUSIC" }, { href: "/visuals", label: "VISUALS" }, { href: "/live", label: "LIVE" }, { href: "/universe", label: "UNIVERSE" }, { href: "/about", label: "ABOUT" },
+  { href: "/music", label: "MUSIC" }, { href: "/visuals", label: "VISUALS" }, { href: "/live", label: "LIVE" }, { href: "/universe", label: "ARCHIVE" }, { href: "/about", label: "ABOUT" },
 ];
 
 export function NightHeader({ active }: { active?: string }) {
@@ -28,5 +28,5 @@ export function NightHeader({ active }: { active?: string }) {
 }
 
 export function NightFooter() {
-  return <footer className="nf-footer"><div className="nf-footer-brand"><img className="nf-footer-logo" src={officialBrand.logo} alt="Akbar Nawasunda logo" /><strong>AKBAR NAWASUNDA</strong><p>PRODUCER / REMIXER / INDONESIA</p></div><div className="nf-footer-column"><span>DISCOVER</span><Link href="/music">Music <ArrowUpRight size={13} /></Link><Link href="/visuals">Visuals <ArrowUpRight size={13} /></Link><Link href="/live">Live <ArrowUpRight size={13} /></Link><Link href="/universe">Universe <ArrowUpRight size={13} /></Link><Link href="/about">About <ArrowUpRight size={13} /></Link></div><div className="nf-footer-column"><span>CONNECT</span>{platformLinks.map(link => <a key={link.label} href={link.href} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={13} /></a>)}<Link href="/epk">EPK / Booking <ArrowUpRight size={13} /></Link></div><p className="nf-footer-bottom">© {new Date().getFullYear()} AKBAR NAWASUNDA · ALL SIGNALS RESERVED</p></footer>;
+  return <footer className="nf-footer"><div className="nf-footer-brand"><img className="nf-footer-logo" src={officialBrand.logo} alt="Akbar Nawasunda logo" /><strong>AKBAR NAWASUNDA</strong><p>PRODUCER / REMIXER / INDONESIA</p></div><div className="nf-footer-column"><span>DISCOVER</span><Link href="/music">Music <ArrowUpRight size={13} /></Link><Link href="/visuals">Visuals <ArrowUpRight size={13} /></Link><Link href="/live">Live <ArrowUpRight size={13} /></Link><Link href="/universe">AN Archive <ArrowUpRight size={13} /></Link><Link href="/about">About <ArrowUpRight size={13} /></Link></div><div className="nf-footer-column"><span>CONNECT</span>{platformLinks.map(link => <a key={link.label} href={link.href} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={13} /></a>)}<Link href="/epk">EPK / Booking <ArrowUpRight size={13} /></Link></div><p className="footer-bottom">© {new Date().getFullYear()} AKBAR NAWASUNDA · ALL SIGNALS RESERVED</p></footer>;
 }
