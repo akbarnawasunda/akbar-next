@@ -51,3 +51,31 @@ Phone viewport verification at 375 px confirmed the refreshed original-brand hom
 The homepage refinement was revalidated at desktop and phone viewports after adding a compact mobile navigation drawer, original-brand signal layering, tactile interaction states, and a stacked hero-status flow. A phone-viewport audit of Music, Visuals, Live, Universe, and EPK now guides the next shared visual-system pass.
 
 The shared ecosystem refinement was verified at desktop and 375 px phone viewports across Music, Visuals, Live, Universe, and EPK. Each route now retains a consistent original-brand hero treatment, clear mobile navigation controls, readable signal cards, and responsive type hierarchy without horizontal overflow.
+
+
+## Enhancement smoke test — 2026-08-22
+
+- Homepage lokal berhasil dimuat di `http://localhost:3000/` dengan title `Akbar Nawasunda — Night Frequency`.
+- Browser menemukan navigation, hero CTA, platform links, release cards, video cards, live CTA, Fan Signal form, dan footer links.
+- Screenshot viewport mempertahankan palette gelap editorial dan struktur hero/platform setelah enhancement.
+- Pemeriksaan console masih perlu dilakukan untuk memastikan tidak ada runtime error setelah hook scroll reveal, magnetic CTA, tilt card, skeleton, LCP monitor, dan particle visibility pause/resume ditambahkan.
+
+
+## Enhancement diagnostics — 2026-08-22
+
+Homepage lokal berhasil merender seluruh route content, dan console tidak menunjukkan error runtime; hanya ada log development React serta satu laporan LCP. DOM inspection mengonfirmasi enam section memiliki `reveal-ready`, dengan section yang masuk viewport berubah ke `is-revealed` dan section di bawah viewport tetap opacity 0 sampai terlihat. Smoke test menemukan `/api/brand/rmx-mark` mengembalikan 502 karena sumber upstream gagal di sandbox; fallback lokal berbasis asset branding resmi ditambahkan ke `BrandMotionMark` agar particle canvas tidak blank ketika upstream tidak tersedia.
+
+
+## Enhancement fallback validation — 2026-08-22
+
+Setelah reload, source image particle beralih ke `/assets/akbar-rmx-mark-fallback.jpg` dengan natural size 1000×1000. Canvas berhasil membentuk 841 particle mode desktop pada ukuran 422×422, sehingga hero tidak lagi blank ketika `/api/brand/rmx-mark` upstream gagal. DOM inspection juga menunjukkan section yang berada di viewport sudah `is-revealed`, sementara section di bawah viewport tetap menunggu IntersectionObserver.
+
+
+## Scroll reveal validation — 2026-08-22
+
+Setelah scroll satu viewport, section musik berubah menjadi `is-revealed` dengan opacity 1 dan transform netral; section release, visual, live, dan Fan Signal tetap menunggu sampai memasuki viewport. DOM browser tidak menunjukkan error runtime baru.
+
+
+## Final local smoke test — 2026-08-22
+
+Server enhancement diisolasi pada port 3100. Root merespons HTTP 200 HTML, `/api/trpc/auth.me?batch=1&input=%7B%7D` merespons HTTP 200 JSON, dan fallback RMX asset merespons HTTP 200 `image/jpeg` dengan 113,784 bytes. Browser pada port 3100 menemukan fallback image dan tidak melaporkan error console; hanya React DevTools info serta laporan LCP development.

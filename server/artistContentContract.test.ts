@@ -2,7 +2,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
+const source = (path: string) =>
+  readFileSync(resolve(process.cwd(), path), "utf8");
 
 describe("artist content contract", () => {
   it("defines owner-managed profile, press, release-story, and event fields in the CMS contract", () => {
@@ -13,9 +14,9 @@ describe("artist content contract", () => {
     expect(studioSchema).toContain('name: "pressKit"');
     expect(studioSchema).toContain('name: "event"');
     expect(studioSchema).toContain('name: "story"');
-    expect(publicContent).toContain('profile?:');
-    expect(publicContent).toContain('pressKit?:');
-    expect(publicContent).toContain('events: CmsEvent[]');
+    expect(publicContent).toContain("profile?:");
+    expect(publicContent).toContain("pressKit?:");
+    expect(publicContent).toContain("events: CmsEvent[]");
   });
 
   it("keeps public modules honest when official material is not published", () => {
@@ -50,12 +51,15 @@ describe("artist content contract", () => {
     const music = source("client/src/pages/Music.tsx");
     const content = source("client/src/content/artistPlatform.ts");
 
-    expect(icon).toContain('simple-icons/icons/spotify.svg?raw');
-    expect(icon).toContain('simple-icons/icons/soundcloud.svg?raw');
+    expect(icon).toContain("simple-icons/icons/spotify.svg?raw");
+    expect(icon).toContain("simple-icons/icons/soundcloud.svg?raw");
     expect(home).toContain("<PlatformIcon label={platform.label}");
     expect(music).toContain("<PlatformIcon label={platform.label}");
     expect(content).toContain('image: "https://i.scdn.co/image/');
     expect(content).toContain('image: "https://i1.sndcdn.com/artworks-');
-    expect(home).toContain("managedRelease.imageUrl !== officialBrand.socialPreview ? managedRelease.imageUrl : currentRelease.image");
+    expect(home).toMatch(
+      /managedRelease\.imageUrl\s*!==\s*officialBrand\.socialPreview/
+    );
+    expect(home).toContain("currentRelease.image");
   });
 });
