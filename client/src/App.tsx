@@ -17,6 +17,7 @@ import ReleaseDetail from "./pages/ReleaseDetail";
 import Inquiry from "./pages/Inquiry";
 import Licensing from "./pages/Licensing";
 import InquiryStudio from "./pages/InquiryStudio";
+import Admin from "./pages/Admin";
 import LegacyDocument from "./components/LegacyDocument";
 import "./components/PlasmaRefinement.css";
 import "./components/EditorialSimplification.css";
@@ -38,10 +39,16 @@ function Router() {
       <Route path={"/assets"} component={AssetLibrary} />
       <Route path={"/studio"} component={ContentStudio} />
       <Route path={"/studio/inquiries"} component={InquiryStudio} />
-      <Route path={"/admin"} component={() => <LegacyDocument source="/legacy/admin.html" scripts="admin" />} />
+      <Route path={"/admin"} component={Admin} />
       <Route path={"/epk"} component={PressKit} />
-      <Route path={"/privacy"} component={() => <LegacyDocument source="/legacy/privacy.html" />} />
-      <Route path={"/404"} component={() => <LegacyDocument source="/legacy/404.html" />} />
+      <Route
+        path={"/privacy"}
+        component={() => <LegacyDocument source="/legacy/privacy.html" />}
+      />
+      <Route
+        path={"/404"}
+        component={() => <LegacyDocument source="/legacy/404.html" />}
+      />
       {/* Final fallback route */}
       <Route component={() => <LegacyDocument source="/legacy/404.html" />} />
     </Switch>

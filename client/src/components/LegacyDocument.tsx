@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const homeScripts = ["translations.js", "audio.js", "jedag-run.js", "share-card.js?v=2", "app.js?v=16", "wav-export.js", "content-render.js?v=14", "fx.js?v=2", "particles.js?v=6", "previews.js?v=2", "embed-skin.js?v=3", "footer.js?v=2", "newsletter.js?v=1", "smart-collab.js?v=1", "seo-jsonld.js"];
 
-type Props = { source: string; scripts?: "home" | "admin" };
+type Props = { source: string; scripts?: "home" };
 type RuntimeEntry = {
   refs: number;
   active: boolean;
@@ -33,14 +33,14 @@ export default function LegacyDocument({ source, scripts = "home" }: Props) {
 
   useEffect(() => {
     if (!markup) return;
-    const runtimeKey = `${source}:${scripts}`;
+    const runtimeKey = source;
     const existingEntry = runtimeEntries.get(runtimeKey);
     if (existingEntry) {
       existingEntry.refs += 1;
       if (existingEntry.disposeTimer) window.clearTimeout(existingEntry.disposeTimer);
       return () => releaseRuntime(runtimeKey, existingEntry);
     }
-    const styleLinks = ["/legacy/style.css", ...(scripts === "admin" ? ["/legacy/admin.css"] : [])].map((href) => {
+    const styleLinks = ["/legacy/style.css"].map((href) => {
       const link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = href;
@@ -51,7 +51,7 @@ export default function LegacyDocument({ source, scripts = "home" }: Props) {
     fontLink.rel = "stylesheet";
     fontLink.href = "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Bebas+Neue&family=Space+Grotesk:wght@500;700&family=Chakra+Petch:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Anton&family=JetBrains+Mono:wght@400;600&display=swap";
     document.head.appendChild(fontLink);
-    const sources = scripts === "admin" ? ["/assets/js/admin.js"] : homeScripts.map((name) => `/assets/js/${name}`);
+    const sources = homeScripts.map((name) => `/assets/js/${name}`);
     const entry: RuntimeEntry = { refs: 1, active: true, tags: [], styleLinks, fontLink };
     runtimeEntries.set(runtimeKey, entry);
     const load = async () => {
@@ -68,7 +68,7 @@ export default function LegacyDocument({ source, scripts = "home" }: Props) {
     };
     void load();
     return () => releaseRuntime(runtimeKey, entry);
-  }, [markup, scripts, source]);
+  }, [markup, source]);
 
   if (error) return <main className="container py-16"><p role="alert">{error}</p><a href="/">Return to the archive</a></main>;
   return <div className="legacy-root" dangerouslySetInnerHTML={{ __html: markup }} />;

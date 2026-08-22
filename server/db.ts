@@ -1,15 +1,37 @@
 import { asc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { artistContent, artistInquiries, fanSignals, InsertArtistContent, InsertArtistInquiry, InsertFanSignal, InsertStoredAsset, InsertUser, storedAssets, users } from "../drizzle/schema";
-import { ENV } from './_core/env';
+import {
+  artistContent,
+  artistInquiries,
+  fanSignals,
+  InsertArtistContent,
+  InsertArtistInquiry,
+  InsertFanSignal,
+  InsertStoredAsset,
+  InsertUser,
+  storedAssets,
+  users,
+} from "../drizzle/schema";
+import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
+// Aiven requires TLS; DATABASE_SSL_CA can be supplied for strict certificate
+// validation. The legacy fallback keeps existing deployments working while
+// still encrypting traffic when a CA bundle is not available.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      const sslCa = process.env.DATABASE_SSL_CA?.replace(/\\n/g, "\n");
+      _db = drizzle({
+        connection: {
+          uri: process.env.DATABASE_URL,
+          ssl: sslCa
+            ? { ca: sslCa, rejectUnauthorized: true }
+            : { rejectUnauthorized: false },
+        },
+      });
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -56,8 +78,8 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       values.role = user.role;
       updateSet.role = user.role;
     } else if (user.openId === ENV.ownerOpenId) {
-      values.role = 'admin';
-      updateSet.role = 'admin';
+      values.role = "admin";
+      updateSet.role = "admin";
     }
 
     if (!values.lastSignedIn) {
@@ -84,7 +106,11 @@ export async function getUserByOpenId(openId: string) {
     return undefined;
   }
 
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.openId, openId))
+    .limit(1);
 
   return result.length > 0 ? result[0] : undefined;
 }
@@ -99,15 +125,21 @@ export async function createStoredAsset(asset: InsertStoredAsset) {
 export async function listStoredAssets(ownerId: number) {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(storedAssets).where(eq(storedAssets.ownerId, ownerId));
+  return db
+    .select()
+    .from(storedAssets)
+    .where(eq(storedAssets.ownerId, ownerId));
 }
 
 export async function createFanSignal(signal: InsertFanSignal) {
   const db = await getDb();
   if (!db) throw new Error("Database is not available");
-  await db.insert(fanSignals).values(signal).onDuplicateKeyUpdate({
-    set: { source: signal.source ?? "home" },
-  });
+  await db
+    .insert(fanSignals)
+    .values(signal)
+    .onDuplicateKeyUpdate({
+      set: { source: signal.source ?? "home" },
+    });
   return { email: signal.email, source: signal.source ?? "home" };
 }
 
@@ -120,30 +152,40 @@ export async function listFanSignals() {
 export async function listPublishedArtistContent() {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(artistContent).where(eq(artistContent.isPublished, true)).orderBy(asc(artistContent.sortOrder));
+  return db
+    .select()
+    .from(artistContent)
+    .where(eq(artistContent.isPublished, true))
+    .orderBy(asc(artistContent.sortOrder));
 }
 
 export async function listAllArtistContent() {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(artistContent).orderBy(asc(artistContent.kind), asc(artistContent.sortOrder));
+  return db
+    .select()
+    .from(artistContent)
+    .orderBy(asc(artistContent.kind), asc(artistContent.sortOrder));
 }
 
 export async function upsertArtistContent(item: InsertArtistContent) {
   const db = await getDb();
   if (!db) throw new Error("Database is not available");
-  await db.insert(artistContent).values(item).onDuplicateKeyUpdate({
-    set: {
-      kind: item.kind,
-      title: item.title,
-      subtitle: item.subtitle,
-      label: item.label,
-      href: item.href,
-      imageUrl: item.imageUrl,
-      sortOrder: item.sortOrder,
-      isPublished: item.isPublished,
-    },
-  });
+  await db
+    .insert(artistContent)
+    .values(item)
+    .onDuplicateKeyUpdate({
+      set: {
+        kind: item.kind,
+        title: item.title,
+        subtitle: item.subtitle,
+        label: item.label,
+        href: item.href,
+        imageUrl: item.imageUrl,
+        sortOrder: item.sortOrder,
+        isPublished: item.isPublished,
+      },
+    });
   return { slug: item.slug };
 }
 
@@ -151,18 +193,31 @@ export async function createArtistInquiry(inquiry: InsertArtistInquiry) {
   const db = await getDb();
   if (!db) throw new Error("Database is not available");
   const result = await db.insert(artistInquiries).values(inquiry);
-  return { id: Number(result[0].insertId), ...inquiry, status: inquiry.status ?? "new" };
+  return {
+    id: Number(result[0].insertId),
+    ...inquiry,
+    status: inquiry.status ?? "new",
+  };
 }
 
 export async function listArtistInquiries() {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(artistInquiries).orderBy(asc(artistInquiries.status), asc(artistInquiries.createdAt));
+  return db
+    .select()
+    .from(artistInquiries)
+    .orderBy(asc(artistInquiries.status), asc(artistInquiries.createdAt));
 }
 
-export async function updateArtistInquiryStatus(id: number, status: "new" | "reviewed" | "closed") {
+export async function updateArtistInquiryStatus(
+  id: number,
+  status: "new" | "reviewed" | "closed"
+) {
   const db = await getDb();
   if (!db) throw new Error("Database is not available");
-  await db.update(artistInquiries).set({ status }).where(eq(artistInquiries.id, id));
+  await db
+    .update(artistInquiries)
+    .set({ status })
+    .where(eq(artistInquiries.id, id));
   return { id, status };
 }
