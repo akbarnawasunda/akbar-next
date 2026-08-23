@@ -21,12 +21,27 @@ const query = `{
   "events": *[_type == "event" && (!defined(status) || status != "past")] | order(date asc){_id, title, date, city, venue, country, posterUrl, ticketUrl, rsvpUrl, status, isFeatured}
 }`;
 
+let publicContentPromise: Promise<CmsArtistContent | null> | null = null;
+
+export function fetchPublicContent() {
+  if (!publicContentPromise) {
+    publicContentPromise = client
+      .fetch<CmsArtistContent>(query)
+      .catch(() => null);
+  }
+  return publicContentPromise;
+}
+
 export function useSanityArtistContent() {
   const [data, setData] = useState<CmsArtistContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     let active = true;
-    client.fetch<CmsArtistContent>(query).then(result => { if (active) setData(result); }).catch(() => { if (active) setData(null); }).finally(() => { if (active) setIsLoading(false); });
+    fetchPublicContent().then(result => {
+      if (active) setData(result);
+    }).finally(() => {
+      if (active) setIsLoading(false);
+    });
     return () => { active = false; };
   }, []);
   return { data, isLoading };

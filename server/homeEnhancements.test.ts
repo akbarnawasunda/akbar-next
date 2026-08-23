@@ -59,6 +59,9 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain('data-no-scramble="true"');
     expect(home).toContain("hero-title-mask");
     expect(home).toContain("Garam & Madu × Backpacker");
+    expect(home).toContain("const cmsCurrentRelease");
+    expect(home).toContain("const displayReleases");
+    expect(home).toContain("const activeRelease = cmsCurrentRelease");
     expect(home).toContain("/assets/akbar-night-frequency-hero.webp");
     expect(home).toContain("/assets/akbar-night-frequency-stage.webp");
     expect(home).not.toContain("MANAGED RELEASE");

@@ -1,0 +1,204 @@
+import { ArrowLeft, ArrowUpRight, CalendarDays, CheckCircle2, Disc3, Mail, MapPin, ShieldCheck } from "lucide-react";
+import type { ReactNode } from "react";
+import { Link, useRoute } from "wouter";
+import { BrandMotionMark } from "@/components/BrandMotionMark";
+import { EnglishChannelLinks, EnglishFooter, EnglishHeader } from "@/components/EnglishChrome";
+import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
+import { PlatformIcon } from "@/components/PlatformIcon";
+import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
+import { allPlatformLinks, currentRelease, officialBrand, releases, verifiedArtistProfile, videos } from "@/content/artistPlatform";
+import type { CmsRelease, CmsVisual } from "@/sanity/publicContent";
+import { useSanityArtistContent } from "@/sanity/publicContent";
+import "./EcosystemPages.css";
+import "./OfficialEmbeds.css";
+import "./MediaEnhancements.css";
+
+const bookingEmail = verifiedArtistProfile.bookingEmail;
+const englishLongBio = "Akbar Nawasunda's musical journey began in 2020 as an independent bedroom producer known as DJ Akbar Remix. His experiments brought popular songs into a Bandung-rooted space of Breakbeat, Jedag Jedug, and Jungle Dutch. Today, as Akbar Nawasunda, he releases original work combining pop melody, electronic bass, and remix energy for global digital platforms.";
+const releaseSlug = (value: string) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const youtubeId = (href: string) => href.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([^?&/]+)/)?.[1] || "";
+const youtubeThumbnail = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const soundcloudEmbed = (url: string) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%230a1737&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
+
+type CatalogItem = {
+  title: string;
+  format: string;
+  year: string;
+  platform: string;
+  href: string;
+  image: string;
+  story?: string;
+  credits?: string;
+  spotifyUrl?: string;
+  appleMusicUrl?: string;
+};
+
+function mergedCatalog(cmsReleases: CmsRelease[]): CatalogItem[] {
+  const cmsCatalog = cmsReleases.map(item => {
+    const fallback = releases.find(release => release.title.trim().toLowerCase() === item.title.trim().toLowerCase());
+    return {
+      title: item.title,
+      format: item.format || fallback?.format || "Release",
+      year: item.year || fallback?.year || "—",
+      platform: item.platform || fallback?.platform || "Official link",
+      href: item.url || fallback?.href || "https://soundcloud.com/akbarnawasunda",
+      image: item.artworkUrl || fallback?.image || officialBrand.socialPreview,
+      story: item.story,
+      credits: item.credits,
+      spotifyUrl: item.spotifyUrl,
+      appleMusicUrl: item.appleMusicUrl,
+    };
+  });
+  return [
+    ...cmsCatalog,
+    ...releases
+      .filter(legacy => !cmsCatalog.some(item => item.title.trim().toLowerCase() === legacy.title.trim().toLowerCase()))
+      .map(legacy => ({
+        title: legacy.title,
+        format: legacy.format || "Release",
+        year: legacy.year || "—",
+        platform: legacy.platform || "Official link",
+        href: legacy.href,
+        image: legacy.image || officialBrand.socialPreview,
+      })),
+  ];
+}
+
+function EnglishFrame({ children }: { children: ReactNode }) {
+  return <div className="nf-page en-page"><EnglishHeader />{children}<EnglishFooter /></div>;
+}
+
+export function EnglishHome() {
+  const cms = useSanityArtistContent();
+  const catalog = mergedCatalog(cms.data?.releases ?? []);
+  const current = cms.data?.releases.find(item => item.isCurrent) || cms.data?.releases[0];
+  const active: CatalogItem = current ? {
+    title: current.title,
+    format: current.format || "Release",
+    year: current.year || "—",
+    platform: current.platform || currentRelease.type,
+    href: current.url || currentRelease.href,
+    image: current.artworkUrl || currentRelease.image,
+    story: current.story,
+    credits: current.credits,
+    spotifyUrl: current.spotifyUrl,
+    appleMusicUrl: current.appleMusicUrl,
+  } : {
+    title: currentRelease.title,
+    format: "Remix",
+    year: "2025",
+    platform: currentRelease.type,
+    href: currentRelease.href,
+    image: currentRelease.image,
+  };
+  return <EnglishFrame><main className="en-content">
+    <section className="nf-page-hero en-hero">
+      <div className="en-hero-copy"><p className="nf-page-eyebrow en-kicker">AKBAR NAWASUNDA / INTERNATIONAL EDITION</p><h1>AKBAR<br /><em>NAWASUNDA.</em></h1><p className="en-lead">Producer, remixer, and electronic bass artist from Bandung Barat, Indonesia.</p><div className="en-hero-actions"><Link className="nf-button" href="/en/music">EXPLORE MUSIC <ArrowUpRight size={15} /></Link><Link className="nf-text-button" href="/en/epk">PRESS & BOOKING <ArrowUpRight size={15} /></Link></div><p className="en-inline-note"><MapPin size={14} /> Bandung Barat · Indonesia</p></div>
+      <div className="en-particle-lane"><BrandMotionMark src={officialBrand.rmxMark} locale="en" /><small>ORIGINAL IRIS-REACTOR MARK<br />TAP TO REPLAY THE FORMATION</small><img className="en-hero-portrait" src={officialBrand.portrait} alt="Akbar Nawasunda in his studio" /></div>
+    </section>
+    <section className="nf-section"><div className="en-section-intro"><p className="nf-page-eyebrow">CURRENT FREQUENCY</p><h2>{active.title}</h2><p>{active.story || "An official release from Akbar Nawasunda, connecting pop melody, electronic bass, and remix energy."}</p><div className="en-action-row"><a className="nf-button" href={active.href} target="_blank" rel="noreferrer">LISTEN TO THE RELEASE <ArrowUpRight size={15} /></a><span className="en-inline-note">{active.platform || "OFFICIAL RELEASE"}</span></div></div><div className="en-signal-strip"><div><strong>Built for sound, not noise.</strong><span>Original releases, official remixes, and a direct route for professional inquiries.</span></div><Link className="nf-text-button" href="/en/inquire">START AN INQUIRY <ArrowUpRight size={15} /></Link></div></section>
+    <section className="nf-section dark-panel"><div className="en-section-intro"><p className="nf-page-eyebrow">SELECTED CATALOG</p><h2>RELEASES<br /><em>IN MOTION.</em></h2><p>Browse the verified catalog and open each release through its official platform.</p></div><div className="en-catalog">{catalog.slice(0, 4).map((item, index) => <Link key={`${item.title}-${index}`} className="en-release-card" href={`/en/music/${releaseSlug(item.title)}`}><ResilientArtworkImage src={item.image} backupSrc={officialBrand.socialPreview} alt={`Artwork for ${item.title}`} /><div className="en-release-card-copy"><span>{String(index + 1).padStart(2, "0")} / {item.format} · {item.year}</span><h3>{item.title}</h3><p>{item.platform}</p></div></Link>)}</div></section>
+    <section className="nf-section"><div className="en-two-column"><div className="en-aside"><span className="nf-page-eyebrow">THE SIGNAL</span><strong>Stay close to the source.</strong><p>Official channels carry the latest music and visual releases. No inflated claims, no invented calendar—just the work as it arrives.</p></div><div className="en-copy-block"><p className="nf-page-eyebrow">A DIRECT ROUTE</p><h2>FROM THE<br /><em>STUDIO.</em></h2><p>Akbar Nawasunda began creating independently in 2020 as DJ Akbar Remix. The current project turns that remix language into original releases for digital platforms around the world.</p><EnglishChannelLinks /></div></div></section>
+  </main></EnglishFrame>;
+}
+
+export function EnglishMusic() {
+  const cms = useSanityArtistContent();
+  const cmsReleases = cms.data?.releases ?? [];
+  const catalog = mergedCatalog(cmsReleases);
+  const current = cmsReleases.find(item => item.isCurrent) || cmsReleases[0];
+  const featured: CatalogItem = current ? (catalog.find(item => item.title.trim().toLowerCase() === current.title.trim().toLowerCase()) || {
+    title: current.title,
+    format: current.format || "Release",
+    year: current.year || "—",
+    platform: current.platform || "Official link",
+    href: current.url || currentRelease.href,
+    image: current.artworkUrl || currentRelease.image,
+    story: current.story,
+    credits: current.credits,
+    spotifyUrl: current.spotifyUrl,
+    appleMusicUrl: current.appleMusicUrl,
+  }) : {
+    title: currentRelease.title,
+    format: "Remix",
+    year: "2025",
+    platform: currentRelease.type,
+    href: currentRelease.href,
+    image: currentRelease.image,
+  };
+  const drops = cmsReleases.filter(item => item.embedUrl).slice(0, 2).map(item => ({ title: item.title, url: item.embedUrl! }));
+  const players = drops.length ? drops : [{ title: "Masih Mencintainya — Papinka", url: currentRelease.href }, { title: "Ngertenono Ati Medium Hall", url: "https://soundcloud.com/akbarnawasunda/ngertenono_ati_medium_hall_mbfrecords" }];
+  return <EnglishFrame><main className="en-content"><section className="nf-page-hero en-hero" style={{ "--page-image": `url(${featured.image || officialBrand.socialPreview})` } as React.CSSProperties}><div><p className="nf-page-eyebrow">MUSIC / OFFICIAL CATALOG</p><h1>MUSIC<br /><em>ARCHIVE.</em></h1><p>Original releases and official remixes by Akbar Nawasunda.</p></div><div className="nf-hero-note"><span>{cms.isLoading ? "LOADING CATALOG" : "FEATURED RELEASE"}</span><strong>{featured.title}</strong><a className="nf-text-button" href={featured.href} target="_blank" rel="noreferrer">LISTEN <ArrowUpRight size={15} /></a></div></section>
+    <section className="nf-section"><div className="en-section-intro"><p className="nf-page-eyebrow">OFFICIAL PLATFORM ROUTES</p><h2>CHOOSE<br /><em>YOUR PLATFORM.</em></h2><p>Use the official links below. Player embeds remain optional and load only when requested.</p></div><div className="nf-platform-grid">{allPlatformLinks.map(platform => <a key={platform.label} href={platform.href} target="_blank" rel="noreferrer"><PlatformIcon label={platform.label} />{platform.label}<ArrowUpRight size={15} /></a>)}</div></section>
+    <section className="nf-section"><div className="en-two-column"><div className="en-aside"><p className="nf-page-eyebrow">FEATURED RELEASE</p><strong>{featured.title}</strong><span>{featured.format || "Release"} · {featured.year || "2025"} · {featured.platform || "Official link"}</span></div><div className="en-copy-block"><p className="nf-page-eyebrow">RELEASE NOTE</p><h2>KEEP THE<br /><em>FREQUENCY.</em></h2><p>{featured.story || "Release details will appear here when published. The official listening route is always available."}</p>{featured.credits && <p className="en-inline-note">CREDITS · {featured.credits}</p>}<Link className="nf-text-button" href={`/en/music/${releaseSlug(featured.title)}`}>OPEN RELEASE DETAIL <ArrowUpRight size={15} /></Link></div></div></section>
+    <section className="nf-section dark-panel"><div className="en-section-intro"><p className="nf-page-eyebrow">CLICK-TO-LOAD PLAYERS</p><h2>LISTEN<br /><em>DIRECTLY.</em></h2><p>Open a player when you want it, or use the official source link on every card.</p></div><div className="en-visual-grid">{players.map(drop => { const known = catalog.find(item => item.title.toLowerCase().includes(drop.title.toLowerCase().split(" — ")[0])); return <div className="en-visual-card" key={drop.url}><OfficialMediaFrame title={drop.title} provider="SoundCloud" sourceUrl={drop.url} embedUrl={soundcloudEmbed(drop.url)} artwork={known?.image || officialBrand.socialPreview} backupArtwork={officialBrand.socialPreview} description="Official link available." /></div>; })}</div></section>
+    <section className="nf-section"><div className="en-section-intro"><p className="nf-page-eyebrow">FULL CATALOG</p><h2>EVERY<br /><em>RELEASE.</em></h2></div><div className="en-catalog">{catalog.map((item, index) => <Link key={`${item.title}-${index}`} className="en-release-card" href={`/en/music/${releaseSlug(item.title)}`}><ResilientArtworkImage src={item.image} backupSrc={officialBrand.socialPreview} alt={`Artwork for ${item.title}`} /><div className="en-release-card-copy"><span>{String(index + 1).padStart(2, "0")} / {item.format} · {item.year}</span><h3>{item.title}</h3><p>{item.platform}</p></div></Link>)}</div></section></main></EnglishFrame>;
+}
+
+export function EnglishVisuals() {
+  const cms = useSanityArtistContent();
+  const cmsVisuals = cms.data?.visuals ?? [];
+  const visualItems = cmsVisuals.length ? cmsVisuals.map(item => ({ title: item.title, label: item.label || "OFFICIAL VISUAL", href: item.url || (item.youtubeId ? `https://youtu.be/${item.youtubeId}` : "https://www.youtube.com/@akbarnawasunda"), youtubeId: item.youtubeId || "", image: item.imageUrl || (item.youtubeId ? youtubeThumbnail(item.youtubeId) : officialBrand.socialPreview) })) : videos.map(item => ({ title: item.title, label: item.label, href: item.href, youtubeId: youtubeId(item.href), image: youtubeId(item.href) ? youtubeThumbnail(youtubeId(item.href)) : officialBrand.socialPreview }));
+  return <EnglishFrame><main className="en-content"><section className="nf-page-hero en-hero"><div><p className="nf-page-eyebrow">VISUALS / OFFICIAL CHANNEL</p><h1>VIDEO<br /><em>ARCHIVE.</em></h1><p>Visual releases, DJ edits, and official uploads from the Akbar Nawasunda channel.</p></div><div className="nf-hero-note"><span>{cms.isLoading ? "LOADING VISUALS" : "OFFICIAL CHANNEL"}</span><strong>AKBAR NAWASUNDA</strong><a className="nf-text-button" href="https://www.youtube.com/@akbarnawasunda" target="_blank" rel="noreferrer">OPEN YOUTUBE <ArrowUpRight size={15} /></a></div></section><section className="nf-section"><div className="en-section-intro"><p className="nf-page-eyebrow">SELECTED VISUALS</p><h2>WATCH<br /><em>THE SIGNAL.</em></h2><p>Preview thumbnails first. Embedded players load only after you choose to play.</p></div><div className="en-visual-grid">{visualItems.map(item => item.youtubeId ? <div className="en-visual-card" key={item.title}><OfficialMediaFrame title={item.title} provider="YouTube" sourceUrl={item.href} embedUrl={`https://www.youtube-nocookie.com/embed/${item.youtubeId}`} artwork={item.image} backupArtwork={officialBrand.socialPreview} description="Official video channel." /></div> : <a className="en-service-card" href={item.href} target="_blank" rel="noreferrer"><span>{item.label}</span><h3>{item.title}</h3><p>Open the official source to view this visual.</p><ArrowUpRight size={17} /></a>)}</div></section><section className="nf-section dark-panel"><div className="en-contact-panel"><div><p className="nf-page-eyebrow">DIRECTOR / BOOKER / CURATOR</p><h2>NEED THE<br /><em>RIGHT CUT?</em></h2><p>For visual collaboration, licensing, or a release-related brief, send the context directly.</p></div><a className="nf-button" href={`mailto:${bookingEmail}?subject=Visual%20inquiry`}><Mail size={15} /> EMAIL THE STUDIO <ArrowUpRight size={15} /></a></div></section></main></EnglishFrame>;
+}
+
+function formatEnglishDate(date: string) { const parsed = new Date(date); return Number.isNaN(parsed.getTime()) ? date : new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(parsed).toUpperCase(); }
+
+export function EnglishLive() {
+  const cms = useSanityArtistContent();
+  const events = cms.data?.events ?? [];
+  const featured = events.find(event => event.isFeatured) || events[0];
+  return <EnglishFrame><main className="en-content"><section className="nf-page-hero en-hero"><div><p className="nf-page-eyebrow">LIVE / VERIFIED DATES</p><h1>LIVE<br /><em>SIGNAL.</em></h1><p>{cms.data?.live?.message || "Public dates will appear here after they are officially announced."}</p></div><div className="nf-hero-note"><span>{featured ? "NEXT CONFIRMED SHOW" : "CURRENT STATUS"}</span><strong>{featured?.title || "NO PUBLIC DATE"}</strong>{featured?.ticketUrl ? <a className="nf-text-button" href={featured.ticketUrl} target="_blank" rel="noreferrer">TICKETS <ArrowUpRight size={15} /></a> : <Link className="nf-text-button" href="/en/inquire">BOOKING INQUIRY <ArrowUpRight size={15} /></Link>}</div></section><section className="nf-section"><div className="en-section-intro"><p className="nf-page-eyebrow">EVENT BOARD</p><h2>LIVE<br /><em>DATES.</em></h2><p>Only confirmed, publicly available dates are shown. No placeholder events are published.</p></div>{events.length ? <div className="en-service-grid">{events.map(event => <article className="en-service-card" key={event._id}><span><CalendarDays size={14} /> {formatEnglishDate(event.date)}</span><h3>{event.title}</h3><p><MapPin size={13} /> {event.venue ? `${event.venue}, ` : ""}{event.city || ""}{event.country ? ` · ${event.country}` : ""}</p><div className="en-action-row">{event.ticketUrl && <a className="nf-text-button" href={event.ticketUrl} target="_blank" rel="noreferrer">TICKETS <ArrowUpRight size={13} /></a>}{event.rsvpUrl && <a className="nf-text-button" href={event.rsvpUrl} target="_blank" rel="noreferrer">RSVP <ArrowUpRight size={13} /></a>}</div></article>)}</div> : <div className="en-empty"><span className="nf-page-eyebrow">LIVE SIGNAL / STANDBY</span><strong>No confirmed show is public yet.</strong><p>The calendar stays quiet until a real date, place, and official route are ready to share.</p><Link className="nf-button" href="/en/inquire">ASK ABOUT BOOKING <ArrowUpRight size={15} /></Link></div>}</section><section className="nf-section dark-panel"><div className="en-two-column"><div className="en-aside"><p className="nf-page-eyebrow">OFFICIAL CHANNELS</p><strong>Keep the line open.</strong><p>Follow the official platforms for new releases and future live announcements.</p></div><div className="en-copy-block"><p className="nf-page-eyebrow">BOOKING</p><h2>BRING THE<br /><em>FREQUENCY.</em></h2><p>Share your city, date window, venue context, and project brief. Availability and terms are discussed directly.</p><a className="nf-button" href={`mailto:${bookingEmail}?subject=Live%20booking%20inquiry`}>EMAIL BOOKING <ArrowUpRight size={15} /></a></div></div></section></main></EnglishFrame>;
+}
+
+export function EnglishUniverse() {
+  const catalog = mergedCatalog(useSanityArtistContent().data?.releases ?? []);
+  return <EnglishFrame><main className="en-content"><section className="nf-page-hero en-hero"><div><p className="nf-page-eyebrow">AN ARCHIVE / ORIGIN</p><h1>THE<br /><em>UNIVERSE.</em></h1><p>A concise route through the sound, identity, and catalog behind Akbar Nawasunda.</p></div><div className="nf-hero-note"><span>ORIGIN</span><strong>2020 / BANDUNG BARAT</strong><a className="nf-text-button" href="#origin">READ THE STORY <ArrowUpRight size={15} /></a></div></section><section className="nf-section" id="origin"><div className="en-two-column"><div className="en-aside"><p className="nf-page-eyebrow">THE BEGINNING</p><strong>From DJ Akbar Remix to Akbar Nawasunda.</strong><span>Independent producer · Bandung Barat · Indonesia</span></div><div className="en-copy-block"><p className="nf-page-eyebrow">THE THROUGH-LINE</p><h2>REBUILD THE<br /><em>ENERGY.</em></h2><p>Akbar Nawasunda began creating independently in 2020 as DJ Akbar Remix, experimenting with Breakbeat, Jedag Jedug, and Jungle Dutch through a Bandung-rooted remix language. The current name carries that energy into original releases that connect pop melody, electronic bass, and remix instinct.</p><div className="en-stat-row"><div className="en-stat"><strong>2020</strong><span>CREATIVE ORIGIN</span></div><div className="en-stat"><strong>{verifiedArtistProfile.location.split(",")[0]}</strong><span>HOME BASE</span></div></div><div className="en-genre-row">{verifiedArtistProfile.genres.map(genre => <span key={genre}>{genre}</span>)}</div></div></div></section><section className="nf-section dark-panel"><div className="en-section-intro"><p className="nf-page-eyebrow">RELEASED WORK</p><h2>THE<br /><em>CATALOG.</em></h2><p>Open each title through the official platform route.</p></div><div className="en-catalog">{catalog.slice(0, 6).map((item, index) => <Link key={`${item.title}-${index}`} className="en-release-card" href={`/en/music/${releaseSlug(item.title)}`}><ResilientArtworkImage src={item.image} backupSrc={officialBrand.socialPreview} alt={`Artwork for ${item.title}`} /><div className="en-release-card-copy"><span>{item.year} / {item.platform}</span><h3>{item.title}</h3></div></Link>)}</div></section></main></EnglishFrame>;
+}
+
+export function EnglishAbout() {
+  const cms = useSanityArtistContent();
+  const profile = cms.data?.profile;
+  const location = profile?.location || verifiedArtistProfile.location;
+  const genres = profile?.genres?.length ? profile.genres : verifiedArtistProfile.genres;
+  return <EnglishFrame><main className="en-content"><section className="nf-page-hero en-hero" style={{ "--page-image": `url(${profile?.portraitImage || officialBrand.portrait})` } as React.CSSProperties}><div><p className="nf-page-eyebrow">ABOUT / ARTIST PROFILE</p><h1>THE<br /><em>ARTIST.</em></h1><p>{profile?.shortBio || "Producer and remixer from Bandung Barat, now releasing original work as Akbar Nawasunda."}</p></div><div className="nf-hero-note"><span>BASED IN</span><strong>{location}</strong><a className="nf-text-button" href="/en/music">EXPLORE MUSIC <ArrowUpRight size={15} /></a></div></section><section className="nf-section"><div className="en-two-column"><div className="en-aside"><p className="nf-page-eyebrow">PROFILE</p><strong>Sound with a point of view.</strong><span>Also known as {verifiedArtistProfile.aliases.join(" / ")}</span></div><div className="en-copy-block"><p className="nf-page-eyebrow">THE JOURNEY</p><h2>MAKE IT<br /><em>MOVE.</em></h2><p>{profile?.longBio || englishLongBio}</p><div className="en-genre-row">{genres.map(genre => <span key={genre}>{genre}</span>)}</div></div></div></section><section className="nf-section dark-panel"><div className="en-contact-panel"><div><p className="nf-page-eyebrow">PRESS / BOOKING</p><h2>WORK WITH<br /><em>THE SIGNAL.</em></h2><p>For a press brief, collaboration, or booking request, use the direct professional route.</p></div><Link className="nf-button" href="/en/epk">OPEN EPK <ArrowUpRight size={15} /></Link></div></section></main></EnglishFrame>;
+}
+
+export function EnglishEpk() {
+  const cms = useSanityArtistContent();
+  const pressKit = cms.data?.pressKit;
+  const email = pressKit?.bookingEmail || bookingEmail;
+  const optionalAssets = [{ label: "ONE-SHEET", url: pressKit?.oneSheetUrl }, { label: "PHOTO PACK", url: pressKit?.photoPackUrl }, { label: "LOGO PACK", url: pressKit?.logoPackUrl }, { label: "TECHNICAL RIDER", url: pressKit?.technicalRiderUrl }].filter(item => item.url);
+  return <EnglishFrame><main className="en-content"><section className="nf-epk-hero en-hero"><p className="nf-page-eyebrow">EPK / PRESS & BOOKING</p><h1>THE<br /><em>PRESS KIT.</em></h1><p>Professional context for bookers, curators, collaborators, and media working with Akbar Nawasunda.</p><div className="en-action-row"><a className="nf-button" href={`mailto:${email}?subject=Akbar%20Nawasunda%20booking%20inquiry`}><Mail size={15} /> CONTACT BOOKING <ArrowUpRight size={15} /></a><Link className="nf-text-button" href="/en/about">READ ARTIST PROFILE <ArrowUpRight size={15} /></Link></div></section><section className="nf-section"><div className="en-two-column"><div className="en-aside"><p className="nf-page-eyebrow">POSITIONING</p><strong>Producer / Remixer / Electronic Bass</strong><span>{verifiedArtistProfile.location}</span></div><div className="en-copy-block"><p className="nf-page-eyebrow">SHORT BIO</p><h2>BUILT FOR<br /><em>IMPACT.</em></h2><p>Akbar Nawasunda is a producer and remixer from Bandung Barat, Indonesia. Starting in 2020 as DJ Akbar Remix, his work moves through Breakbeat, Indo Bass, Jedag Jedug, Jungle Dutch, and Kendang Chops before arriving at original releases under the Akbar Nawasunda name.</p><div className="en-genre-row">{verifiedArtistProfile.genres.map(genre => <span key={genre}>{genre}</span>)}</div></div></div></section><section className="nf-section dark-panel"><div className="en-section-intro"><p className="nf-page-eyebrow">PRESS ASSETS</p><h2>WHAT IS<br /><em>READY.</em></h2><p>Only assets that have been published and verified in the studio are linked here. If an item is not listed, request it directly.</p></div><div className="en-service-grid">{optionalAssets.length ? optionalAssets.map(item => <a className="en-service-card" href={item.url} key={item.label} target="_blank" rel="noreferrer"><span>{item.label}</span><h3>OPEN ASSET</h3><p>Published file available through the official CMS.</p><ArrowUpRight size={17} /></a>) : <div className="en-empty"><span className="nf-page-eyebrow">ASSET STATUS</span><strong>Available on request.</strong><p>The current public kit keeps unavailable photo packs, riders, and contracts off the site. Email the studio with the exact requirement.</p><a className="nf-button" href={`mailto:${email}?subject=Press%20asset%20request`}><Mail size={15} /> REQUEST ASSETS</a></div>}</div></section></main></EnglishFrame>;
+}
+
+const inquiryServices = [
+  ["01", "Booking", "For shows, curated programs, and event opportunities with a clear date and venue context."],
+  ["02", "Remix requests", "Send the source, intended direction, and release or usage context for a considered response."],
+  ["03", "Custom arrangements", "Production support for a defined brief, mood, reference, and delivery scope."],
+  ["04", "Collaborations", "Bring a focused idea for a track, visual, or cross-disciplinary project."],
+];
+
+export function EnglishInquiry() {
+  return <EnglishFrame><main className="en-content"><section className="nf-page-hero en-hero"><div><p className="nf-page-eyebrow">INQUIRE / DIRECT CONTACT</p><h1>MAKE A<br /><em>REQUEST.</em></h1><p>Tell the studio what you are building, when it needs to happen, and what kind of response you need.</p></div><div className="nf-hero-note"><span>OFFICIAL ROUTE</span><strong>EMAIL THE STUDIO</strong><a className="nf-text-button" href={`mailto:${bookingEmail}`}>SEND A BRIEF <ArrowUpRight size={15} /></a></div></section><section className="nf-section"><div className="en-section-intro"><p className="nf-page-eyebrow">WHAT CAN WE BUILD?</p><h2>START WITH<br /><em>CONTEXT.</em></h2><p>A strong first message includes the project, date or timeline, location, budget range when relevant, and the exact deliverable you are asking about.</p></div><div className="en-service-grid">{inquiryServices.map(([number, title, copy]) => <article className="en-service-card" key={title}><span>{number}</span><h3>{title}</h3><p>{copy}</p></article>)}</div></section><section className="nf-section dark-panel"><div className="en-contact-panel"><div><p className="nf-page-eyebrow">BOOKING / COLLAB / PRESS</p><h2>DIRECT IS<br /><em>BETTER.</em></h2><p>Use the official address below. This route opens your mail client so you keep control of the message and attachments.</p><div className="en-email">{bookingEmail}</div></div><a className="nf-button" href={`mailto:${bookingEmail}?subject=Akbar%20Nawasunda%20inquiry`}><Mail size={15} /> OPEN EMAIL <ArrowUpRight size={15} /></a></div></section></main></EnglishFrame>;
+}
+
+export function EnglishLicensing() {
+  const routes = [["01", "Content use", "For social, editorial, branded, or platform content that needs a defined track and usage window."], ["02", "Commercial use", "Commercial permissions, fees, exclusivity, and deliverables are discussed case by case."], ["03", "Clearance first", "A request is an opening conversation, not automatic permission to use a recording."], ["04", "Credit matters", "Non-commercial use with clear credit is appreciated, but still needs a confirmed route when rights are involved."]];
+  return <EnglishFrame><main className="en-content"><section className="nf-page-hero en-hero"><div><p className="nf-page-eyebrow">LICENSING / MUSIC USAGE</p><h1>LICENSE<br /><em>THE MUSIC.</em></h1><p>For content, campaigns, edits, and other uses that need a clear, direct conversation about rights.</p></div><div className="nf-hero-note"><span>STATUS</span><strong>REQUEST FIRST</strong><a className="nf-text-button" href={`mailto:${bookingEmail}?subject=Music%20licensing%20inquiry`}>ASK ABOUT USE <ArrowUpRight size={15} /></a></div></section><section className="nf-section"><div className="en-section-intro"><p className="nf-page-eyebrow">THE ROUTE</p><h2>CLARITY<br /><em>BEFORE USE.</em></h2><p>Send the title, the project, where it will appear, the territory, duration, audience, and whether the use is commercial or non-commercial.</p></div><div className="en-service-grid">{routes.map(([number, title, copy]) => <article className="en-service-card" key={title}><span>{number}</span><h3>{title}</h3><p>{copy}</p></article>)}</div></section><section className="nf-section dark-panel"><div className="en-contact-panel"><div><p className="nf-page-eyebrow">BEFORE YOU PUBLISH</p><h2>DESCRIBE<br /><em>THE USE.</em></h2><p>Rights, approvals, fees, exclusivity, and deliverables depend on the project. This page is an inquiry route, not an automatic license.</p></div><a className="nf-button" href={`mailto:${bookingEmail}?subject=Music%20licensing%20inquiry`}><Mail size={15} /> SEND LICENSING BRIEF <ArrowUpRight size={15} /></a></div></section></main></EnglishFrame>;
+}
+
+export function EnglishPrivacy() {
+  const sections = [["short-version", "Short version"], ["collection", "What we collect"], ["cookies", "Cookies & storage"], ["services", "Third-party services"], ["rights", "Your rights"]];
+  return <EnglishFrame><main className="en-content"><section className="nf-section en-privacy-intro"><div className="en-two-column"><div className="en-copy-block"><p className="nf-page-eyebrow">AKBAR NAWASUNDA / DATA NOTE</p><h1>PRIVACY<br /><em>POLICY.</em></h1><p>This is the English reading of the public data note for the official Akbar Nawasunda website.</p></div><aside className="en-contact-panel"><ShieldCheck size={20} /><div><span className="nf-page-eyebrow">DATA POSTURE</span><h2>LIGHT BY DEFAULT.</h2><p>No advertising, no tracking cookies, and no sale of personal data.</p></div></aside></div></section><section className="nf-section"><div className="en-legal-layout"><nav className="en-legal-index" aria-label="Privacy Policy sections">{sections.map(([id, label], index) => <a href={`#${id}`} key={id}>{String(index + 1).padStart(2, "0")} / {label}</a>)}</nav><div><article className="en-legal-block" id="short-version"><p className="nf-page-eyebrow">01 / THE SHORT VERSION</p><h2>LIGHT ON<br /><em>YOUR DATA.</em></h2><p className="en-legal-note">No advertising, no tracking cookies, no selling data.</p><p>The site is designed to keep data collection limited to what is needed for contact, site operation, and clearly described services.</p></article><article className="en-legal-block" id="collection"><p className="nf-page-eyebrow">02 / WHAT WE COLLECT</p><h2>WHAT ENTERS<br /><em>THE SYSTEM.</em></h2><ul><li>Contact details and project context when you send an inquiry.</li><li>Limited interface or authentication support stored by the browser when required.</li><li>Aggregate, privacy-friendly analytics only when configured by the site owner.</li></ul></article><article className="en-legal-block" id="cookies"><p className="nf-page-eyebrow">03 / COOKIES & LOCAL STORAGE</p><h2>NO HIDDEN<br /><em>TRACKING.</em></h2><p>The site does not set advertising or tracking cookies. Limited local storage may support interface preferences or authentication.</p><p>Spotify, YouTube, and SoundCloud players use a click-to-load pattern. Their services receive requests only after you choose to open or play them, and their own privacy policies then apply.</p></article><article className="en-legal-block" id="services"><p className="nf-page-eyebrow">04 / THIRD-PARTY SERVICES</p><h2>WHO HELPS<br /><em>RUN THE SITE.</em></h2><ul><li>Vercel for hosting and delivery.</li><li>Google Fonts for typefaces.</li><li>Umami when privacy-friendly analytics are configured.</li><li>Spotify, YouTube, and SoundCloud for optional media players.</li><li>Apple Music and other platform services for official release routes.</li></ul></article><article className="en-legal-block" id="rights"><p className="nf-page-eyebrow">05 / YOUR RIGHTS</p><h2>YOUR DATA.<br /><em>YOUR CALL.</em></h2><p>You may ask about access, correction, or deletion of personal data held through an inquiry or site service. Requests should be sent to the official contact address.</p><a className="nf-button" href={`mailto:${bookingEmail}?subject=Privacy%20request`}><Mail size={15} /> CONTACT ABOUT YOUR DATA <ArrowUpRight size={15} /></a></article><p className="en-inline-note"><CheckCircle2 size={14} /> Last reviewed: 14 Aug 2026 · Indonesia</p></div></div></section></main></EnglishFrame>;
+}
+
+export function EnglishReleaseDetail() {
+  const [, params] = useRoute("/en/music/:slug");
+  const cms = useSanityArtistContent();
+  const catalog = mergedCatalog(cms.data?.releases ?? []);
+  const release = catalog.find(item => releaseSlug(item.title) === params?.slug);
+  if (!release && !cms.isLoading) return <EnglishFrame><main className="en-content"><section className="nf-section en-empty"><p className="nf-page-eyebrow">RELEASE NOT FOUND</p><strong>This release is not available.</strong><Link className="nf-button" href="/en/music"><ArrowLeft size={15} /> BACK TO MUSIC</Link></section></main></EnglishFrame>;
+  const links = release ? [{ label: release.platform, href: release.href }, ...(release.spotifyUrl ? [{ label: "Spotify", href: release.spotifyUrl }] : []), ...(release.appleMusicUrl ? [{ label: "Apple Music", href: release.appleMusicUrl }] : [])] : [];
+  return <EnglishFrame><main className="en-content"><section className="nf-page-hero en-hero" style={{ "--page-image": `url(${release?.image || officialBrand.socialPreview})` } as React.CSSProperties}><div><Link className="en-back-link" href="/en/music"><ArrowLeft size={14} /> BACK TO MUSIC</Link><p className="nf-page-eyebrow">RELEASE / {release?.format || "LOADING"}</p><h1>{release?.title || "LOADING RELEASE…"}</h1><p>{release ? `${release.format} · ${release.year} · ${release.platform}` : "Loading the official catalog."}</p></div><div className="nf-hero-note"><span>OFFICIAL RELEASE</span><strong>{release?.year || "—"}</strong>{release && <a className="nf-text-button" href={release.href} target="_blank" rel="noreferrer">LISTEN <ArrowUpRight size={15} /></a>}</div></section><section className="nf-section"><div className="en-two-column"><div className="en-release-card"><ResilientArtworkImage src={release?.image || officialBrand.socialPreview} backupSrc={officialBrand.socialPreview} alt={release ? `Artwork for ${release.title}` : "Release artwork loading"} /><div className="en-release-card-copy"><span><Disc3 size={13} /> {release?.format || "RELEASE"}</span></div></div><div className="en-copy-block"><p className="nf-page-eyebrow">ABOUT THE RELEASE</p><h2>{release?.title || "RELEASE"}</h2><p>{release?.story || "Release details will appear when published. The official listening route remains available from the platform link."}</p><p className="en-inline-note">{release?.credits || "Official credits not published."}</p></div></div></section><section className="nf-section dark-panel"><div className="en-section-intro"><p className="nf-page-eyebrow">LISTEN ON</p><h2>OFFICIAL<br /><em>PLATFORMS.</em></h2></div><div className="en-service-grid">{links.map(link => <a className="en-service-card" key={link.label} href={link.href} target="_blank" rel="noreferrer"><span>{link.label}</span><h3>OPEN PLATFORM</h3><ArrowUpRight size={17} /></a>)}<Link className="en-service-card" href="/en/licensing"><span>USAGE</span><h3>LICENSE THIS TRACK</h3><ArrowUpRight size={17} /></Link></div></section></main></EnglishFrame>;
+}

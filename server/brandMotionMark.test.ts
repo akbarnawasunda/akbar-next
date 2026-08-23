@@ -9,7 +9,7 @@ describe("RMX brand motion mark", () => {
   it("uses the user-provided RMX asset in the public identity data", () => {
     const content = source("client/src/content/artistPlatform.ts");
     expect(content).toContain("rmxMark");
-    expect(content).toContain('rmxMark: "/api/brand/rmx-mark"');
+    expect(content).toContain('rmxMark: "/assets/akbar-rmx-mark.webp"');
     const proxy = source("server/brandAssetProxy.ts");
     expect(proxy).toContain('app.get("/api/brand/rmx-mark"');
     expect(proxy).toContain("akbar-nawasunda-rmx-mark_d59968bf.jpg");
@@ -35,7 +35,7 @@ describe("RMX brand motion mark", () => {
     const home = source("client/src/pages/Home.tsx");
     const heroCss = source("client/src/pages/HomeArtistUpgrade.css");
     expect(brand).toContain(
-      'portrait: "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"'
+      'portrait: "/assets/akbar-official-portrait.webp"'
     );
     expect(home).toContain("home-hero-portrait");
     expect(home).toContain("Portrait resmi Akbar Nawasunda");

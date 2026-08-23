@@ -29,7 +29,9 @@ const clamp = (value: number, min = 0, max = 1) =>
 const roundHalf = (value: number) => Math.round(value * 2) / 2;
 const FALLBACK_RMX_MARK = "/assets/akbar-rmx-mark-fallback.jpg";
 
-export function BrandMotionMark({ src }: { src: string }) {
+export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: "id" | "en" }) {
+  const replayLabel = locale === "en" ? "Replay the Akbar Nawasunda particle logo" : "Mainkan ulang particle logo Akbar Nawasunda";
+  const accessText = locale === "en" ? "Tap to scatter and reform the particle logo." : "Ketuk untuk memecah dan membentuk ulang logo partikel.";
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameRef = useRef<number | null>(null);
@@ -506,7 +508,7 @@ export function BrandMotionMark({ src }: { src: string }) {
       className={`an-rmx-particle-hero${isAnimating ? " is-animating" : ""}${isIdle ? " is-idle" : ""}`}
       type="button"
       onClick={replay}
-      aria-label="Mainkan ulang particle logo Akbar Nawasunda"
+      aria-label={replayLabel}
     >
       <img
         ref={imageRef}
@@ -521,7 +523,7 @@ export function BrandMotionMark({ src }: { src: string }) {
       />
       <canvas ref={canvasRef} aria-hidden="true" />
       <span className="an-rmx-particle-access">
-        Ketuk untuk memecah dan membentuk ulang logo partikel.
+        {accessText}
       </span>
     </button>
   );

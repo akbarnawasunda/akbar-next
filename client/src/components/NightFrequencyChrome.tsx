@@ -1,6 +1,6 @@
 import { ArrowUpRight, Menu, Radio, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { platformLinks } from "@/content/artistPlatform";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import "./NightFrequencyChrome.css";
@@ -17,6 +17,8 @@ const navItems = [
 ];
 
 export function NightHeader({ active }: { active?: string }) {
+  const [pathname] = useLocation();
+  const englishPath = pathname === "/" ? "/en" : `/en${pathname}`;
   const [isOpen, setIsOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -58,6 +60,11 @@ export function NightHeader({ active }: { active?: string }) {
           </Link>
         ))}
       </nav>
+      <div className="an-language-switcher" aria-label="Language selection">
+        <Link className="is-active" href={pathname} aria-current="page">ID</Link>
+        <span aria-hidden="true">/</span>
+        <Link href={englishPath}>EN</Link>
+      </div>
       <a className="nf-signal" href="#signal">
         <Radio size={14} /> FAN SIGNAL
       </a>
@@ -95,6 +102,7 @@ export function NightHeader({ active }: { active?: string }) {
           <a href="#signal" onClick={close}>
             <Radio size={14} /> JOIN FAN SIGNAL
           </a>
+          <div className="en-mobile-language"><span>LANGUAGE</span><div className="an-language-switcher"><Link className="is-active" href={pathname}>ID</Link><span aria-hidden="true">/</span><Link href={englishPath}>EN</Link></div></div>
         </div>
       </div>
     </header>

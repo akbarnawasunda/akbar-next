@@ -79,19 +79,57 @@ export default function Home() {
       ? "/assets/akbar-night-frequency-stage.webp"
       : imageUrl;
   };
-  const activeRelease = managedRelease
+  const cmsReleases = sanityContent.data?.releases ?? [];
+  const cmsCurrentRelease =
+    cmsReleases.find(item => item.isCurrent) || cmsReleases[0];
+  const cmsCatalog = cmsReleases.map(item => {
+    const fallback = releases.find(
+      release =>
+        release.title.trim().toLowerCase() === item.title.trim().toLowerCase()
+    );
+    return {
+      title: item.title,
+      format: item.format || fallback?.format || "Release",
+      year: item.year || fallback?.year || "—",
+      platform: item.platform || fallback?.platform || "Official link",
+      href: item.url || fallback?.href || "https://soundcloud.com/akbarnawasunda",
+      image: item.artworkUrl || fallback?.image || officialBrand.socialPreview,
+    };
+  });
+  const displayReleases = [
+    ...cmsCatalog,
+    ...releases.filter(
+      legacy =>
+        !cmsCatalog.some(
+          current =>
+            current.title.trim().toLowerCase() === legacy.title.trim().toLowerCase()
+        )
+    ),
+  ];
+  const activeRelease = cmsCurrentRelease
     ? {
         ...currentRelease,
-        title: normalizeManagedTitle(managedRelease.title),
-        type: managedRelease.label || currentRelease.type,
-        href: managedRelease.href || currentRelease.href,
-        image:
-          managedRelease.imageUrl &&
-          managedRelease.imageUrl !== officialBrand.socialPreview
-            ? managedRelease.imageUrl
-            : currentRelease.image,
+        title: cmsCurrentRelease.title,
+        type:
+          cmsCurrentRelease.platform ||
+          cmsCurrentRelease.format ||
+          currentRelease.type,
+        href: cmsCurrentRelease.url || currentRelease.href,
+        image: cmsCurrentRelease.artworkUrl || currentRelease.image,
       }
-    : currentRelease;
+    : managedRelease
+      ? {
+          ...currentRelease,
+          title: normalizeManagedTitle(managedRelease.title),
+          type: managedRelease.label || currentRelease.type,
+          href: managedRelease.href || currentRelease.href,
+          image:
+            managedRelease.imageUrl &&
+            managedRelease.imageUrl !== officialBrand.socialPreview
+              ? managedRelease.imageUrl
+              : currentRelease.image,
+        }
+      : currentRelease;
   const cmsHero = sanityContent.data?.hero;
   const hasCmsHero = Boolean(
     cmsHero?.heroTitle || cmsHero?.heroBody || cmsHero?.primaryActionUrl
@@ -326,11 +364,14 @@ export default function Home() {
             </div>
             <div className="release-detail">
               <p className="mono-label">
-                {managedRelease?.label || currentRelease.eyebrow}
+                {cmsCurrentRelease
+                  ? `${cmsCurrentRelease.format || cmsCurrentRelease.platform || "RELEASE"}${cmsCurrentRelease.year ? ` · ${cmsCurrentRelease.year}` : ""}`
+                  : managedRelease?.label || currentRelease.eyebrow}
               </p>
               <h3>{activeRelease.title}</h3>
               <p>
-                {managedRelease?.subtitle ||
+                {cmsCurrentRelease?.story ||
+                  managedRelease?.subtitle ||
                   "Buka rilisan ini di platform resminya."}
               </p>
               <div className="release-detail-actions">
@@ -375,7 +416,7 @@ export default function Home() {
           <div className="release-grid" aria-busy={contentQuery.isLoading}>
             {contentQuery.isLoading
               ? [1, 2, 3, 4].map(index => <SkeletonCard key={index} />)
-              : releases.map((release, index) => (
+              : displayReleases.map((release, index) => (
                   <TiltCard
                     key={release.title}
                     className="release-card"

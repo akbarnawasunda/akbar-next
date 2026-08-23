@@ -1,0 +1,63 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { describe, expect, it } from "vitest";
+
+const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
+
+describe("international artist layer", () => {
+  it("registers separate English public URLs without replacing Indonesian routes", () => {
+    const app = source("client/src/App.tsx");
+    const english = source("client/src/pages/EnglishPages.tsx");
+    expect(app).toContain('path={"/"} component={Home}');
+    expect(app).toContain('path={"/en"} component={EnglishHome}');
+    expect(app).toContain('path={"/en/music/:slug"} component={EnglishReleaseDetail}');
+    expect(app).toContain('path={"/en/epk"} component={EnglishEpk}');
+    expect(app).toContain('path={"/en/privacy"} component={EnglishPrivacy}');
+    expect(english).toContain("Producer, remixer, and electronic bass artist from Bandung Barat, Indonesia.");
+    expect(english).toContain("No confirmed show is public yet.");
+    expect(english).toContain("Available on request.");
+    expect(english).not.toContain("FanSignalInline");
+  });
+
+  it("keeps a visible language switcher in both public chrome implementations", () => {
+    const idChrome = source("client/src/components/NightFrequencyChrome.tsx");
+    const enChrome = source("client/src/components/EnglishChrome.tsx");
+    expect(idChrome).toContain('aria-label="Language selection"');
+    expect(idChrome).toContain('href={englishPath}');
+    expect(enChrome).toContain('href={indonesianPath(pathname)}');
+    expect(enChrome).toContain('href="/en/inquire"');
+    expect(enChrome).toContain('aria-controls="english-mobile-menu"');
+  });
+
+  it("emits route-aware canonical, language alternates, and only factual schema types", () => {
+    const app = source("client/src/App.tsx");
+    const schema = source("client/src/components/StructuredData.tsx");
+    const html = source("client/index.html");
+    const robots = source("client/public/robots.txt");
+    const sitemap = source("client/public/sitemap.xml");
+    expect(app).toContain('document.documentElement.lang = isEnglish ? "en" : "id"');
+    expect(app).toContain('link.dataset.languageLink = "true"');
+    expect(html).toContain('hreflang="id"');
+    expect(html).toContain('hreflang="en"');
+    expect(robots).toContain("Sitemap: https://akbarnawasunda.my.id/sitemap.xml");
+    expect(robots).toContain("Disallow: /studio");
+    expect(sitemap).toContain("https://akbarnawasunda.my.id/en/music");
+    expect(sitemap).toContain('hreflang="en"');
+    expect(schema).toContain('"@type": "MusicGroup"');
+    expect(schema).toContain('"@type": "MusicRecording"');
+    expect(schema).toContain('"@type": "MusicEvent"');
+    expect(schema).toContain('pathWithoutLanguage === "/live"');
+    expect(schema).toContain('cms.data?.events.length');
+  });
+
+  it("shares the all-content Sanity promise between page data and metadata", () => {
+    const publicContent = source("client/src/sanity/publicContent.ts");
+    const settings = source("client/src/sanity/siteSettings.ts");
+    expect(publicContent).toContain("let publicContentPromise");
+    expect(publicContent).toContain("export function fetchPublicContent()");
+    expect(publicContent).toContain("publicContentPromise = client");
+    expect(settings).toContain('import { fetchPublicContent } from "./publicContent"');
+    expect(settings).toContain("const content = await fetchPublicContent()");
+    expect(settings).not.toContain("client.fetch");
+  });
+});
