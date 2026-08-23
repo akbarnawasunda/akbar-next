@@ -9,8 +9,8 @@ describe("AN Control Room", () => {
     const admin = projectFile("client/src/pages/Admin.tsx");
     const layout = projectFile("client/src/components/DashboardLayout.tsx");
 
-    expect(admin).toContain("Sanity Studio");
-    expect(admin).toContain("https://www.sanity.io/manage");
+    expect(admin).toContain("Custom Website Editor");
+    expect(admin).toContain('href: "/studio"');
     expect(admin).toContain("Inquiry Inbox");
     expect(admin).toContain("Asset Library");
     expect(admin).toContain("GITHUB → MAIN → VERCEL");

@@ -5,7 +5,7 @@ import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { allPlatformLinks, currentRelease, officialBrand, releases } from "@/content/artistPlatform";
-import { useSanityArtistContent } from "@/sanity/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
 import { Link } from "wouter";
 import "./EcosystemPages.css";
 import "./OfficialEmbeds.css";
@@ -20,7 +20,7 @@ const soundcloudEmbed = (url: string) => `https://w.soundcloud.com/player/?url=$
 const releaseSlug = (value: string) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 export default function Music() {
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const cmsReleases = cms.data?.releases ?? [];
   const cmsCatalog = cmsReleases.map(item => {
     const archive = releases.find(release => release.title.trim().toLowerCase() === item.title.trim().toLowerCase());

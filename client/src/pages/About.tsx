@@ -1,12 +1,12 @@
 import { ArrowUpRight, MapPin, Radio, Sparkles } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
-import { useSanityArtistContent } from "@/sanity/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./ArtistModules.css";
 
 export default function About() {
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const profile = cms.data?.profile;
   const shortBio = profile?.shortBio || verifiedArtistProfile.shortBio;
   const longBio = profile?.longBio || verifiedArtistProfile.longBio;

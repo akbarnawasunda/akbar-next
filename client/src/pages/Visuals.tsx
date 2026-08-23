@@ -4,7 +4,7 @@ import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { officialBrand, videos } from "@/content/artistPlatform";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
-import { useSanityArtistContent } from "@/sanity/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./OfficialEmbeds.css";
 import "./MediaEnhancements.css";
@@ -13,7 +13,7 @@ const officialVideos = [{ id: "rv4DK8nVWd0", title: "Garam dan Madu × Backpacke
 const thumbnailFor = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 
 export default function Visuals() {
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const cmsVisuals = cms.data?.visuals ?? [];
   const embedded = cmsVisuals.filter(item => item.youtubeId).slice(0, 2).map(item => ({ id: item.youtubeId!, title: item.title }));
   const players = embedded.length ? embedded : officialVideos;

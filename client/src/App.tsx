@@ -1,5 +1,5 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
@@ -38,6 +38,8 @@ const { EnglishHome, EnglishMusic, EnglishVisuals, EnglishLive, EnglishUniverse,
 import LegacyDocument from "./components/LegacyDocument";
 import { ScrollProgress } from "./components/ScrollProgress";
 import { MotionOrchestrator } from "./components/MotionOrchestrator";
+import { trpc } from "./lib/trpc";
+import { customDocumentsToPublicContent } from "./content/publicContent";
 import "./components/PlasmaRefinement.css";
 import "./components/EditorialSimplification.css";
 import "./components/MaturePalette.css";
@@ -131,25 +133,8 @@ const englishTitles: Record<string, string> = {
 
 function CmsMetadata() {
   const [location] = useLocation();
-  const [settings, setSettings] = useState<{
-    siteTitle?: string;
-    metaDescription?: string;
-    ogTitle?: string;
-    ogDescription?: string;
-    socialPreviewUrl?: string;
-    canonicalUrl?: string;
-  } | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    import("./sanity/siteSettings")
-      .then(({ fetchSiteSettings }) => fetchSiteSettings())
-      .then(result => {
-        if (active) setSettings(result);
-      })
-      .catch(() => undefined);
-    return () => { active = false; };
-  }, []);
+  const customContent = trpc.content.documents.useQuery();
+  const settings = useMemo(() => customDocumentsToPublicContent(customContent.data as Parameters<typeof customDocumentsToPublicContent>[0])?.siteSettings ?? null, [customContent.data]);
 
   useEffect(() => {
     const isEnglish = location === "/en" || location.startsWith("/en/");

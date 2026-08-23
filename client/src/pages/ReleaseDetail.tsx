@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowUpRight, Disc3, Headphones, Music2 } from "lucide-react
 import { Link, useParams } from "wouter";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { officialBrand, releases } from "@/content/artistPlatform";
-import { useSanityArtistContent } from "@/sanity/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./ArtistModules.css";
 import "./ReleaseDetail.css";
@@ -11,7 +11,7 @@ const slugify = (value: string) => value.toLowerCase().normalize("NFD").replace(
 
 export default function ReleaseDetail() {
   const { slug = "" } = useParams<{ slug: string }>();
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const cmsRelease = (cms.data?.releases ?? []).find(item => slugify(item.title) === slug);
   const archiveRelease = releases.find(item => slugify(item.title) === slug);
   const release = cmsRelease ? { title: cmsRelease.title, year: cmsRelease.year || "—", format: cmsRelease.format || "Release", platform: cmsRelease.platform || "Official link", href: cmsRelease.url, artwork: cmsRelease.artworkUrl || archiveRelease?.image || officialBrand.socialPreview, story: cmsRelease.story, credits: cmsRelease.credits, spotifyUrl: cmsRelease.spotifyUrl, appleMusicUrl: cmsRelease.appleMusicUrl } : archiveRelease ? { ...archiveRelease, artwork: archiveRelease.image || officialBrand.socialPreview, story: undefined, credits: undefined, spotifyUrl: undefined, appleMusicUrl: undefined } : null;

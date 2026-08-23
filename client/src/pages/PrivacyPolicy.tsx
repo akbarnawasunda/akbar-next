@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { verifiedArtistProfile } from "@/content/artistPlatform";
-import { useSanityArtistContent } from "@/sanity/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./PrivacyPolicy.css";
 
@@ -54,7 +54,7 @@ const sections = [
 
 export default function PrivacyPolicy() {
   const contactEmail = verifiedArtistProfile.bookingEmail;
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const legal = cms.data?.legal;
   const legalSection = (key: string) => legal?.sections?.find(section => section.key === key);
   const reviewedIntro = legal?.intro?.trim();

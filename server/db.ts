@@ -1,4 +1,4 @@
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq, like, notLike } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   artistContent,
@@ -13,6 +13,7 @@ import {
   users,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
+import { toArtistContentInput, toCustomArtistDocuments, type CustomDocumentType, type DocumentPayload } from "./customContent";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
@@ -155,7 +156,7 @@ export async function listPublishedArtistContent() {
   return db
     .select()
     .from(artistContent)
-    .where(eq(artistContent.isPublished, true))
+    .where(and(eq(artistContent.isPublished, true), notLike(artistContent.slug, "custom-%")))
     .orderBy(asc(artistContent.sortOrder));
 }
 
@@ -165,6 +166,7 @@ export async function listAllArtistContent() {
   return db
     .select()
     .from(artistContent)
+    .where(notLike(artistContent.slug, "custom-%"))
     .orderBy(asc(artistContent.kind), asc(artistContent.sortOrder));
 }
 
@@ -187,6 +189,44 @@ export async function upsertArtistContent(item: InsertArtistContent) {
       },
     });
   return { slug: item.slug };
+}
+
+export async function listCustomArtistContent(publishedOnly = false) {
+  const db = await getDb();
+  if (!db) return [];
+  const rows = await db
+    .select()
+    .from(artistContent)
+    .where(publishedOnly ? and(eq(artistContent.isPublished, true), like(artistContent.slug, "custom-%")) : like(artistContent.slug, "custom-%"))
+    .orderBy(asc(artistContent.sortOrder));
+  return toCustomArtistDocuments(rows);
+}
+
+export async function upsertCustomArtistDocument(input: {
+  documentType: CustomDocumentType;
+  slug: string;
+  payload: DocumentPayload;
+  sortOrder: number;
+  isPublished: boolean;
+}) {
+  const item = toArtistContentInput(input);
+  const saved = await upsertArtistContent(item);
+  return { ...saved, documentType: input.documentType, slug: input.slug };
+}
+
+export async function deleteCustomArtistDocument(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database is not available");
+  const customRow = await db
+    .select({ id: artistContent.id })
+    .from(artistContent)
+    .where(and(eq(artistContent.id, id), like(artistContent.slug, "custom-%")))
+    .limit(1);
+  if (!customRow.length) throw new Error("Custom document not found");
+  await db
+    .delete(artistContent)
+    .where(and(eq(artistContent.id, id), like(artistContent.slug, "custom-%")));
+  return { id };
 }
 
 export async function createArtistInquiry(inquiry: InsertArtistInquiry) {

@@ -6,14 +6,17 @@ const source = (path: string) =>
   readFileSync(resolve(process.cwd(), path), "utf8");
 
 describe("artist content contract", () => {
-  it("defines owner-managed profile, press, release-story, and event fields in the CMS contract", () => {
-    const studioSchema = source("cms/sanity-studio/sanity.config.ts");
-    const publicContent = source("client/src/sanity/publicContent.ts");
+  it("defines owner-managed profile, press, release-story, and event fields in the custom editor contract", () => {
+    const editor = source("client/src/pages/ContentStudio.tsx");
+    const codec = source("server/customContent.ts");
+    const publicContent = source("client/src/content/publicContent.ts");
 
-    expect(studioSchema).toContain('name: "artistProfile"');
-    expect(studioSchema).toContain('name: "pressKit"');
-    expect(studioSchema).toContain('name: "event"');
-    expect(studioSchema).toContain('name: "story"');
+    expect(editor).toContain('value: "profile"');
+    expect(editor).toContain('value: "pressKit"');
+    expect(editor).toContain('value: "event"');
+    expect(editor).toContain('key: "story"');
+    expect(codec).toContain('"profile"');
+    expect(codec).toContain('"pressKit"');
     expect(publicContent).toContain("profile?:");
     expect(publicContent).toContain("pressKit?:");
     expect(publicContent).toContain("events: CmsEvent[]");

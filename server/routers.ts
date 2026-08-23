@@ -4,9 +4,10 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { TRPCError } from "@trpc/server";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
-import { createArtistInquiry, createFanSignal, createStoredAsset, listAllArtistContent, listArtistInquiries, listFanSignals, listPublishedArtistContent, listStoredAssets, updateArtistInquiryStatus, upsertArtistContent } from "./db";
+import { createArtistInquiry, createFanSignal, createStoredAsset, deleteCustomArtistDocument, listAllArtistContent, listArtistInquiries, listCustomArtistContent, listFanSignals, listPublishedArtistContent, listStoredAssets, updateArtistInquiryStatus, upsertArtistContent, upsertCustomArtistDocument } from "./db";
 import { createResendBroadcast, getResendReadiness, sendResendBroadcast, syncFanSignalContact, ResendApiError } from "./resend";
 import { storagePut } from "./storage";
+import { customDocumentTypes } from "./customContent";
 
 const MAX_ASSET_BYTES = 10 * 1024 * 1024;
 
@@ -134,6 +135,20 @@ export const appRouter = router({
   content: router({
     list: publicProcedure.query(() => listPublishedArtistContent()),
     listAll: adminProcedure.query(() => listAllArtistContent()),
+    documents: publicProcedure.query(() => listCustomArtistContent(true)),
+    documentsAll: adminProcedure.query(() => listCustomArtistContent(false)),
+    saveDocument: adminProcedure
+      .input(z.object({
+        documentType: z.enum(customDocumentTypes),
+        slug: z.string().trim().max(128).default("default"),
+        payload: z.record(z.string(), z.unknown()).refine(value => JSON.stringify(value).length <= 100_000, "Document payload is too large"),
+        sortOrder: z.number().int().min(0).max(10_000).default(0),
+        isPublished: z.boolean().default(true),
+      }))
+      .mutation(({ input }) => upsertCustomArtistDocument(input)),
+    deleteDocument: adminProcedure
+      .input(z.object({ id: z.number().int().positive() }))
+      .mutation(({ input }) => deleteCustomArtistDocument(input.id)),
     upsert: adminProcedure
       .input(z.object({
         kind: z.enum(["hero", "release", "video", "live"]),

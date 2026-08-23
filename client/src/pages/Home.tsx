@@ -31,7 +31,7 @@ import { trpc } from "@/lib/trpc";
 import { useMagnetic } from "@/hooks/useMagnetic";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { useSanityArtistContent } from "@/sanity/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
 import "./HomeStates.css";
@@ -57,7 +57,7 @@ export default function Home() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
   const contentQuery = trpc.content.list.useQuery();
-  const sanityContent = useSanityArtistContent();
+  const publicContent = usePublicArtistContent();
   const managedContent = contentQuery.data ?? [];
   const managedHero = managedContent.find(item => item.kind === "hero");
   const managedRelease = managedContent.find(item => item.kind === "release");
@@ -79,7 +79,7 @@ export default function Home() {
       ? "/assets/akbar-night-frequency-stage.webp"
       : imageUrl;
   };
-  const cmsReleases = sanityContent.data?.releases ?? [];
+  const cmsReleases = publicContent.data?.releases ?? [];
   const cmsCurrentRelease =
     cmsReleases.find(item => item.isCurrent) || cmsReleases[0];
   const cmsCatalog = cmsReleases.map(item => {
@@ -130,7 +130,7 @@ export default function Home() {
               : currentRelease.image,
         }
       : currentRelease;
-  const cmsHero = sanityContent.data?.hero;
+  const cmsHero = publicContent.data?.hero;
   const hasCmsHero = Boolean(
     cmsHero?.heroTitle || cmsHero?.heroBody || cmsHero?.primaryActionUrl
   );

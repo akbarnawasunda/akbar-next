@@ -2,7 +2,7 @@ import { ArrowUpRight, CalendarDays, MapPin, Radio, Ticket } from "lucide-react"
 import FanSignalInline from "@/components/FanSignalInline";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { officialBrand } from "@/content/artistPlatform";
-import { useSanityArtistContent } from "@/sanity/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./VercelAssetOverrides.css";
 import "./ArtistModules.css";
@@ -10,7 +10,7 @@ import "./ArtistModules.css";
 const formatDate = (value: string) => new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
 
 export default function Live() {
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const events = (cms.data?.events ?? []).filter(event => !/no date announced|tba/i.test(event.title));
   const featured = events.find(event => event.isFeatured) || events[0];
   const signal = cms.data?.live;

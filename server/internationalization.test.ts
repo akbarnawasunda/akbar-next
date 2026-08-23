@@ -50,14 +50,13 @@ describe("international artist layer", () => {
     expect(schema).toContain('cms.data?.events.length');
   });
 
-  it("shares the all-content Sanity promise between page data and metadata", () => {
-    const publicContent = source("client/src/sanity/publicContent.ts");
-    const settings = source("client/src/sanity/siteSettings.ts");
-    expect(publicContent).toContain("let publicContentPromise");
-    expect(publicContent).toContain("export function fetchPublicContent()");
-    expect(publicContent).toContain("publicContentPromise = client");
-    expect(settings).toContain('import { fetchPublicContent } from "./publicContent"');
-    expect(settings).toContain("const content = await fetchPublicContent()");
-    expect(settings).not.toContain("client.fetch");
+  it("shares one public custom-content query between page data and metadata", () => {
+    const publicContent = source("client/src/content/publicContent.ts");
+    const app = source("client/src/App.tsx");
+    expect(publicContent).toContain("trpc.content.documents.useQuery()");
+    expect(publicContent).toContain("customDocumentsToPublicContent");
+    expect(app).toContain("trpc.content.documents.useQuery()");
+    expect(publicContent).not.toContain("@sanity/client");
+    expect(publicContent).not.toContain("_type ==");
   });
 });

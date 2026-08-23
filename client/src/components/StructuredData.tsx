@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { officialBrand, platformLinks, releases, verifiedArtistProfile } from "@/content/artistPlatform";
-import { useSanityArtistContent } from "@/sanity/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
 
 const siteOrigin = "https://akbarnawasunda.my.id";
 const releaseSlug = (value: string) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -35,7 +35,7 @@ function artistEntity() {
 
 export function StructuredData() {
   const [location] = useLocation();
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
 
   useEffect(() => {
     const isEnglish = location === "/en" || location.startsWith("/en/");

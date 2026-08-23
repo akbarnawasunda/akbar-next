@@ -10,7 +10,7 @@ import {
   releases,
   verifiedArtistProfile,
 } from "@/content/artistPlatform";
-import { useSanityArtistContent } from "@/sanity/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./VercelAssetOverrides.css";
 import "./ArtistModules.css";
@@ -26,7 +26,7 @@ const externalProps = (href: string) => ({
 });
 
 export default function PressKit() {
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const press = cms.data?.pressKit;
   const [portraitSrc, setPortraitSrc] = useState(officialBrand.editorialPortrait);
   const bookingEmail = press?.bookingEmail || verifiedArtistProfile.bookingEmail;

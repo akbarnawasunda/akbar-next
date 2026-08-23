@@ -17,14 +17,14 @@ import "./Admin.css";
 
 const tools = [
   {
-    icon: Database,
-    eyebrow: "PRIMARY CMS",
-    title: "Sanity Studio",
-    copy: "Edit hero, profile, EPK, releases, visuals, live signal, dan event tanpa redeploy.",
-    detail: "PROJECT 3T6L52ON · PRODUCTION",
-    href: "https://www.sanity.io/manage",
-    action: "OPEN SANITY MANAGE",
-    external: true,
+        icon: Database,
+    eyebrow: "PRIMARY EDITOR",
+    title: "Custom Website Editor",
+    copy: "Edit hero, profile, EPK, releases, visuals, live signal, event, SEO, dan legal dari dashboard website.",
+    detail: "OWNER-ONLY · DATABASE-BACKED",
+    href: "/studio",
+    action: "OPEN WEBSITE EDITOR",
+    external: false,
     tone: "mint",
   },
   {
@@ -178,7 +178,7 @@ function AdminContent() {
           <p className="an-control-room-kicker"><span /> WORKSPACE ROUTES</p>
           <h2>EVERYTHING<br /><em>IN REACH.</em></h2>
         </div>
-        <p>Gunakan jalur yang sesuai dengan jenis perubahan. Konten editorial masuk ke Sanity; sistem dan desain tetap melalui code.</p>
+        <p>Gunakan jalur yang sesuai dengan jenis perubahan. Konten editorial masuk ke Custom Website Editor; sistem dan desain tetap melalui code.</p>
       </section>
 
       <section className="an-control-tool-grid" aria-label="Workspace tools">
@@ -191,8 +191,8 @@ function AdminContent() {
           <h2>EDIT.<br />PUBLISH.<br /><em>VERIFY.</em></h2>
         </div>
         <ol>
-          <li><b>01</b><span><strong>EDIT IN SANITY</strong>Untuk hero, profile, EPK, release, visual, live signal, dan event.</span></li>
-          <li><b>02</b><span><strong>PUBLISH THE CHANGE</strong>Tekan Publish di Sanity; public site membaca data terbaru tanpa redeploy.</span></li>
+          <li><b>01</b><span><strong>EDIT IN WEBSITE EDITOR</strong>Untuk hero, profile, EPK, release, visual, live signal, event, SEO, dan legal.</span></li>
+          <li><b>02</b><span><strong>SAVE & PUBLISH</strong>Pilih Save & publish; public site membaca data terbaru tanpa redeploy.</span></li>
           <li><b>03</b><span><strong>VERIFY IN PREVIEW</strong>Buka public site dan cek mobile sebelum membagikan link.</span></li>
         </ol>
       </section>

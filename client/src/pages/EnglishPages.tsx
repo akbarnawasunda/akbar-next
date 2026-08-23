@@ -8,8 +8,8 @@ import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
 import { allPlatformLinks, currentRelease, officialBrand, releases, verifiedArtistProfile, videos } from "@/content/artistPlatform";
-import type { CmsRelease, CmsVisual } from "@/sanity/publicContent";
-import { useSanityArtistContent } from "@/sanity/publicContent";
+import type { CmsRelease, CmsVisual } from "@/content/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./OfficialEmbeds.css";
 import "./MediaEnhancements.css";
@@ -81,7 +81,7 @@ function EnglishFrame({ children }: { children: ReactNode }) {
 }
 
 export function EnglishHome() {
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const catalog = mergedCatalog(cms.data?.releases ?? []);
   const current = cms.data?.releases.find(item => item.isCurrent) || cms.data?.releases[0];
   const activeRelease: CatalogItem = current ? {
@@ -127,7 +127,7 @@ export function EnglishHome() {
 }
 
 export function EnglishMusic() {
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const cmsReleases = cms.data?.releases ?? [];
   const catalog = mergedCatalog(cmsReleases);
   const current = cmsReleases.find(item => item.isCurrent) || cmsReleases[0];
@@ -160,7 +160,7 @@ export function EnglishMusic() {
 }
 
 export function EnglishVisuals() {
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const cmsVisuals = cms.data?.visuals ?? [];
   const visualItems = cmsVisuals.length ? cmsVisuals.map(item => ({ title: item.title, label: item.label || "OFFICIAL VISUAL", href: item.url || (item.youtubeId ? `https://youtu.be/${item.youtubeId}` : "https://www.youtube.com/@akbarnawasunda"), youtubeId: item.youtubeId || "", image: item.imageUrl || (item.youtubeId ? youtubeThumbnail(item.youtubeId) : officialBrand.socialPreview) })) : videos.map(item => ({ title: item.title, label: item.label, href: item.href, youtubeId: youtubeId(item.href), image: youtubeId(item.href) ? youtubeThumbnail(youtubeId(item.href)) : officialBrand.socialPreview }));
   return <EnglishFrame><main className="en-content"><section className="nf-page-hero en-hero"><div><p className="nf-page-eyebrow">VISUALS / OFFICIAL CHANNEL</p><h1>VIDEO<br /><em>ARCHIVE.</em></h1><p>Visual releases, DJ edits, and official uploads from the Akbar Nawasunda channel.</p></div><div className="nf-hero-note"><span>{cms.isLoading ? "LOADING VISUALS" : "OFFICIAL CHANNEL"}</span><strong>AKBAR NAWASUNDA</strong><a className="nf-text-button" href="https://www.youtube.com/@akbarnawasunda" target="_blank" rel="noreferrer">OPEN YOUTUBE <ArrowUpRight size={15} /></a></div></section><section className="nf-section"><div className="en-section-intro"><p className="nf-page-eyebrow">SELECTED VISUALS</p><h2>WATCH<br /><em>THE SIGNAL.</em></h2><p>Preview thumbnails first. Embedded players load only after you choose to play.</p></div><div className="en-visual-grid">{visualItems.map(item => item.youtubeId ? <div className="en-visual-card" key={item.title}><OfficialMediaFrame title={item.title} provider="YouTube" sourceUrl={item.href} embedUrl={`https://www.youtube-nocookie.com/embed/${item.youtubeId}`} artwork={item.image} backupArtwork={officialBrand.socialPreview} description="Official video channel." /></div> : <a className="en-service-card" href={item.href} target="_blank" rel="noreferrer"><span>{item.label}</span><h3>{item.title}</h3><p>Open the official source to view this visual.</p><ArrowUpRight size={17} /></a>)}</div></section><section className="nf-section dark-panel"><div className="en-contact-panel"><div><p className="nf-page-eyebrow">DIRECTOR / BOOKER / CURATOR</p><h2>NEED THE<br /><em>RIGHT CUT?</em></h2><p>For visual collaboration, licensing, or a release-related brief, send the context directly.</p></div><a className="nf-button" href={`mailto:${bookingEmail}?subject=Visual%20inquiry`}><Mail size={15} /> EMAIL THE STUDIO <ArrowUpRight size={15} /></a></div></section></main></EnglishFrame>;
@@ -169,19 +169,19 @@ export function EnglishVisuals() {
 function formatEnglishDate(date: string) { const parsed = new Date(date); return Number.isNaN(parsed.getTime()) ? date : new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(parsed).toUpperCase(); }
 
 export function EnglishLive() {
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const events = cms.data?.events ?? [];
   const featured = events.find(event => event.isFeatured) || events[0];
   return <EnglishFrame><main className="en-content"><section className="nf-page-hero en-hero"><div><p className="nf-page-eyebrow">LIVE / VERIFIED DATES</p><h1>LIVE<br /><em>SIGNAL.</em></h1><p>{cms.data?.live?.message || "Public dates will appear here after they are officially announced."}</p></div><div className="nf-hero-note"><span>{featured ? "NEXT CONFIRMED SHOW" : "CURRENT STATUS"}</span><strong>{featured?.title || "NO PUBLIC DATE"}</strong>{featured?.ticketUrl ? <a className="nf-text-button" href={featured.ticketUrl} target="_blank" rel="noreferrer">TICKETS <ArrowUpRight size={15} /></a> : <Link className="nf-text-button" href="/en/inquire">BOOKING INQUIRY <ArrowUpRight size={15} /></Link>}</div></section><section className="nf-section"><div className="en-section-intro"><p className="nf-page-eyebrow">EVENT BOARD</p><h2>LIVE<br /><em>DATES.</em></h2><p>Only confirmed, publicly available dates are shown. No placeholder events are published.</p></div>{events.length ? <div className="en-service-grid">{events.map(event => <article className="en-service-card" key={event._id}><span><CalendarDays size={14} /> {formatEnglishDate(event.date)}</span><h3>{event.title}</h3><p><MapPin size={13} /> {event.venue ? `${event.venue}, ` : ""}{event.city || ""}{event.country ? ` · ${event.country}` : ""}</p><div className="en-action-row">{event.ticketUrl && <a className="nf-text-button" href={event.ticketUrl} target="_blank" rel="noreferrer">TICKETS <ArrowUpRight size={13} /></a>}{event.rsvpUrl && <a className="nf-text-button" href={event.rsvpUrl} target="_blank" rel="noreferrer">RSVP <ArrowUpRight size={13} /></a>}</div></article>)}</div> : <div className="en-empty"><span className="nf-page-eyebrow">LIVE SIGNAL / STANDBY</span><strong>No confirmed show is public yet.</strong><p>The calendar stays quiet until a real date, place, and official route are ready to share.</p><Link className="nf-button" href="/en/inquire">ASK ABOUT BOOKING <ArrowUpRight size={15} /></Link></div>}</section><section className="nf-section dark-panel"><div className="en-two-column"><div className="en-aside"><p className="nf-page-eyebrow">OFFICIAL CHANNELS</p><strong>Keep the line open.</strong><p>Follow the official platforms for new releases and future live announcements.</p></div><div className="en-copy-block"><p className="nf-page-eyebrow">BOOKING</p><h2>BRING THE<br /><em>FREQUENCY.</em></h2><p>Share your city, date window, venue context, and project brief. Availability and terms are discussed directly.</p><a className="nf-button" href={`mailto:${bookingEmail}?subject=Live%20booking%20inquiry`}>EMAIL BOOKING <ArrowUpRight size={15} /></a></div></div></section></main></EnglishFrame>;
 }
 
 export function EnglishUniverse() {
-  const catalog = mergedCatalog(useSanityArtistContent().data?.releases ?? []);
+  const catalog = mergedCatalog(usePublicArtistContent().data?.releases ?? []);
   return <EnglishFrame><main className="en-content"><section className="nf-page-hero en-hero"><div><p className="nf-page-eyebrow">AN ARCHIVE / ORIGIN</p><h1>THE<br /><em>UNIVERSE.</em></h1><p>A concise route through the sound, identity, and catalog behind Akbar Nawasunda.</p></div><div className="nf-hero-note"><span>ORIGIN</span><strong>2020 / BANDUNG BARAT</strong><a className="nf-text-button" href="#origin">READ THE STORY <ArrowUpRight size={15} /></a></div></section><section className="nf-section" id="origin"><div className="en-two-column"><div className="en-aside"><p className="nf-page-eyebrow">THE BEGINNING</p><strong>From DJ Akbar Remix to Akbar Nawasunda.</strong><span>Independent producer · Bandung Barat · Indonesia</span></div><div className="en-copy-block"><p className="nf-page-eyebrow">THE THROUGH-LINE</p><h2>REBUILD THE<br /><em>ENERGY.</em></h2><p>Akbar Nawasunda began creating independently in 2020 as DJ Akbar Remix, experimenting with Breakbeat, Jedag Jedug, and Jungle Dutch through a Bandung-rooted remix language. The current name carries that energy into original releases that connect pop melody, electronic bass, and remix instinct.</p><div className="en-stat-row"><div className="en-stat"><strong>2020</strong><span>CREATIVE ORIGIN</span></div><div className="en-stat"><strong>{verifiedArtistProfile.location.split(",")[0]}</strong><span>HOME BASE</span></div></div><div className="en-genre-row">{verifiedArtistProfile.genres.map(genre => <span key={genre}>{genre}</span>)}</div></div></div></section><section className="nf-section en-archive-art-feature"><div className="en-archive-art-frame"><img src={officialBrand.archivePortrait} alt="Editorial Akbar Nawasunda artwork about a future city" loading="lazy" decoding="async" width={800} height={1000} /></div><div className="en-archive-art-copy"><p className="nf-page-eyebrow">VISUAL LANGUAGE / 001</p><h2>THE FUTURE<br />IS HERE.</h2><p>One visual direction from the Akbar Nawasunda world: industrial, high-contrast, and close to electronic bass energy.</p><p className="en-archive-art-note">ARCHIVE VISUAL · NOT AN AUDIO RELEASE</p><Link className="nf-button" href="/en/visuals">VIEW VISUALS <ArrowUpRight size={15} /></Link></div></section><section className="nf-section dark-panel"><div className="en-section-intro"><p className="nf-page-eyebrow">RELEASED WORK</p><h2>THE<br /><em>CATALOG.</em></h2><p>Open each title through the official platform route.</p></div><div className="en-catalog">{catalog.slice(0, 6).map((item, index) => <Link key={`${item.title}-${index}`} className="en-release-card" href={`/en/music/${releaseSlug(item.title)}`}><ResilientArtworkImage src={item.image} backupSrc={officialBrand.socialPreview} alt={`Artwork for ${item.title}`} /><div className="en-release-card-copy"><span>{item.year} / {item.platform}</span><h3>{item.title}</h3></div></Link>)}</div></section></main></EnglishFrame>;
 }
 
 export function EnglishAbout() {
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const profile = cms.data?.profile;
   const shortBio = "Producer and remixer from Bandung Barat. Since 2020, he has released original work as Akbar Nawasunda across digital music platforms.";
   const longBio = englishLongBio;
@@ -195,7 +195,7 @@ export function EnglishAbout() {
 }
 
 export function EnglishEpk() {
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const pressKit = cms.data?.pressKit;
   const email = pressKit?.bookingEmail || bookingEmail;
   const optionalAssets = [{ label: "ONE SHEET", title: "Artist one sheet", url: pressKit?.oneSheetUrl }, { label: "PRESS IMAGES", title: "Press image set", url: pressKit?.photoPackUrl }, { label: "BRAND KIT", title: "Logo package", url: pressKit?.logoPackUrl }, { label: "SHOW NOTES", title: "Technical rider", url: pressKit?.technicalRiderUrl }].filter(item => item.url);
@@ -233,7 +233,7 @@ export function EnglishPrivacy() {
 
 export function EnglishReleaseDetail() {
   const [, params] = useRoute("/en/music/:slug");
-  const cms = useSanityArtistContent();
+  const cms = usePublicArtistContent();
   const catalog = mergedCatalog(cms.data?.releases ?? []);
   const release = catalog.find(item => releaseSlug(item.title) === params?.slug);
   if (!release && !cms.isLoading) return <EnglishFrame><main className="en-content"><section className="nf-section en-empty"><p className="nf-page-eyebrow">RELEASE NOT FOUND</p><strong>This release is not available.</strong><Link className="nf-button" href="/en/music"><ArrowLeft size={15} /> BACK TO MUSIC</Link></section></main></EnglishFrame>;
