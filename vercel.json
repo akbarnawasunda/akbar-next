@@ -13,14 +13,6 @@
   ],
   "rewrites": [
     {
-      "source": "/api/trpc",
-      "destination": "https://akbarfolio-424qdvsv.manus.space/api/trpc"
-    },
-    {
-      "source": "/api/trpc/:path*",
-      "destination": "https://akbarfolio-424qdvsv.manus.space/api/trpc/:path*"
-    },
-    {
       "source": "/api/brand/rmx-mark",
       "destination": "https://akbarfolio-424qdvsv.manus.space/manus-storage/akbar-nawasunda-rmx-mark_d59968bf.jpg"
     },
