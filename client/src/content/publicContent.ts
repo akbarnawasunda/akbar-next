@@ -168,5 +168,9 @@ export function publicPlatformLinks(content: CmsArtistContent | null | undefined
 
 export function usePublicArtistContent() {
   const query = trpc.content.documents.useQuery();
-  return { data: customDocumentsToPublicContent(query.data as CustomDocument[] | undefined), isLoading: query.isLoading };
+  return {
+    data: customDocumentsToPublicContent(query.data as CustomDocument[] | undefined),
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

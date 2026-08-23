@@ -230,6 +230,14 @@
     inset: -10%;
     opacity: 0.28;
     filter: saturate(1.14) contrast(1.04) brightness(1.04);
+    background-image:
+      linear-gradient(
+        145deg,
+        rgba(7, 20, 25, 0.12),
+        rgba(7, 20, 25, 0.52) 74%,
+        rgba(7, 20, 25, 0.78)
+      ),
+      url("/assets/akbar-night-frequency-hero-mobile.webp");
   }
 
   .an-section-index {
@@ -517,6 +525,11 @@
     width: min(100%, 420px);
     height: 290px;
     opacity: 0.5;
+    filter: blur(10px) saturate(1.04);
+  }
+
+  .an-site .live-backdrop {
+    background-image: url("/assets/akbar-night-frequency-hero-mobile.webp") !important;
   }
 }
 @media (prefers-reduced-motion: reduce) {

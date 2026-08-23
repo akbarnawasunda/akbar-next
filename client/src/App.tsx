@@ -119,16 +119,16 @@ function languagePair(pathname: string) {
 }
 
 const englishTitles: Record<string, string> = {
-  "/en": "Akbar Nawasunda — Producer, Remixer, Electronic Bass Artist",
-  "/en/music": "Music Archive — Akbar Nawasunda",
-  "/en/visuals": "Visual Archive — Akbar Nawasunda",
-  "/en/live": "Live Signal — Akbar Nawasunda",
-  "/en/universe": "The Universe — Akbar Nawasunda",
-  "/en/about": "About the Artist — Akbar Nawasunda",
-  "/en/epk": "Press & Booking EPK — Akbar Nawasunda",
-  "/en/inquire": "Inquire — Akbar Nawasunda",
-  "/en/licensing": "Music Licensing — Akbar Nawasunda",
-  "/en/privacy": "Privacy Policy — Akbar Nawasunda",
+  "/en": "Akbar Nawasunda | Official Website",
+  "/en/music": "Music Archive | Akbar Nawasunda",
+  "/en/visuals": "Visual Archive | Akbar Nawasunda",
+  "/en/live": "Live Signal | Akbar Nawasunda",
+  "/en/universe": "The Universe | Akbar Nawasunda",
+  "/en/about": "About the Artist | Akbar Nawasunda",
+  "/en/epk": "Press & Booking EPK | Akbar Nawasunda",
+  "/en/inquire": "Inquire | Akbar Nawasunda",
+  "/en/licensing": "Music Licensing | Akbar Nawasunda",
+  "/en/privacy": "Privacy Policy | Akbar Nawasunda",
 };
 
 function CmsMetadata() {
@@ -145,8 +145,8 @@ function CmsMetadata() {
       ? pathname.split("/").pop()?.split("-").map(word => word ? word[0].toUpperCase() + word.slice(1) : word).join(" ")
       : undefined;
     const defaultTitle = isEnglish
-      ? englishTitles[pathname] || (releaseTitleFromPath ? `${releaseTitleFromPath} — Akbar Nawasunda` : "Akbar Nawasunda — Official English Edition")
-      : pathname === "/" ? "Akbar Nawasunda — Official Website" : "Akbar Nawasunda — Official Site";
+      ? englishTitles[pathname] || (releaseTitleFromPath ? `${releaseTitleFromPath} | Akbar Nawasunda` : "Akbar Nawasunda | Official Website")
+      : pathname === "/" ? "Akbar Nawasunda | Official Website" : "Akbar Nawasunda | Official Site";
     const defaultDescription = isEnglish
       ? "Akbar Nawasunda is a producer, remixer, and electronic bass artist from Bandung Barat, Indonesia."
       : "Website resmi Akbar Nawasunda — producer, remixer, dan electronic bass artist dari Bandung Barat, Indonesia.";

@@ -17,7 +17,8 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain("useMagnetic");
     expect(home).toContain("<TiltCard");
     expect(home).toContain("<SkeletonCard");
-    expect(home).toContain("aria-busy={contentQuery.isLoading}");
+    expect(home).toContain("aria-busy={contentIsLoading}");
+    expect(home).toContain("enabled: publicContent.isError");
     expect(home).toContain('fetchPriority="high"');
     expect(reveal).toContain("IntersectionObserver");
     expect(reveal).toContain("prefers-reduced-motion: reduce");
@@ -117,6 +118,8 @@ describe("homepage enhancement contract", () => {
     const index = source("client/index.html");
     const sitemap = source("client/public/sitemap.xml");
     expect(index).toContain('<html lang="id">');
+    expect(index).toContain('<title>Akbar Nawasunda | Official Website</title>');
+    expect(index).toContain('akbar-night-frequency-hero-mobile.webp');
     expect(index).toContain(
       'rel="canonical" href="https://akbarnawasunda.my.id/"'
     );

@@ -48,7 +48,9 @@ describe("RMX brand motion mark", () => {
     const css = source("client/src/components/BrandMotionMark.css");
     expect(component).toContain("onClick={replay}");
     expect(component).toContain("requestAnimationFrame(draw)");
-    expect(component).toContain("particleCap = mobile ? 1800 : 3000");
+    expect(component).toContain("const particleCap = constrainedDevice ? 900 : mobile ? 1400 : 3000;");
+    expect(component).toContain("const minFrameInterval = constrainedDevice ? 1000 / 30 : 0;");
+    expect(component).toContain("navigator.hardwareConcurrency");
     expect(component).toContain("duration = initialFormation ? (mobile ? 3300 : 3600) : mobile ? 3500 : 3800");
     expect(component).toContain("drawOrbitingLines");
     expect(component).toContain('canvas.dataset.stage = "overscan-iris"');

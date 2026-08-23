@@ -54,12 +54,16 @@ export default function Home() {
   const liveActionRef = useMagnetic<HTMLAnchorElement>();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
-  const contentQuery = trpc.content.list.useQuery();
   const publicContent = usePublicArtistContent();
+  const contentQuery = trpc.content.list.useQuery(undefined, {
+    enabled: publicContent.isError,
+  });
   const editablePlatformLinks = publicPlatformLinks(publicContent.data);
   const cmsEvents = publicContent.data?.events ?? [];
   const featuredEvent = cmsEvents.find(event => event.isFeatured) || cmsEvents[0];
   const managedContent = contentQuery.data ?? [];
+  const contentIsLoading = publicContent.isLoading || contentQuery.isLoading;
+  const contentHasError = publicContent.isError && contentQuery.isError;
   const managedHero = managedContent.find(item => item.kind === "hero");
   const managedRelease = managedContent.find(item => item.kind === "release");
   const managedVideos = managedContent
@@ -351,9 +355,9 @@ export default function Home() {
               DIDENGARKAN.
             </h2>
           </div>
-          {contentQuery.isLoading ? (
+          {contentIsLoading ? (
             <p className="content-state">MEMUAT RILISAN…</p>
-          ) : contentQuery.isError ? (
+          ) : contentHasError ? (
             <p className="content-state content-state-warn">
               MENAMPILKAN ARSIP RILISAN.
             </p>
@@ -418,8 +422,8 @@ export default function Home() {
               <ArrowUpRight size={16} />
             </a>
           </div>
-          <div className="release-grid" aria-busy={contentQuery.isLoading}>
-            {contentQuery.isLoading
+          <div className="release-grid" aria-busy={contentIsLoading}>
+            {contentIsLoading
               ? [1, 2, 3, 4].map(index => <SkeletonCard key={index} />)
               : displayReleases.map((release, index) => (
                   <TiltCard

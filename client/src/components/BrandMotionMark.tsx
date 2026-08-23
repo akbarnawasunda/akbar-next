@@ -66,7 +66,16 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
     ).matches;
     visibleRef.current = true;
     const mobile = window.matchMedia("(max-width: 820px)").matches;
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2);
+    const connection = (navigator as Navigator & {
+      connection?: { effectiveType?: string; saveData?: boolean };
+    }).connection;
+    const constrainedDevice = mobile && (
+      connection?.saveData === true ||
+      connection?.effectiveType === "slow-2g" ||
+      connection?.effectiveType === "2g" ||
+      (navigator.hardwareConcurrency ?? 8) <= 4
+    );
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, constrainedDevice ? 1.25 : mobile ? 1.5 : 2);
     const bounds = canvas.getBoundingClientRect();
     const hostBounds = canvas.parentElement?.getBoundingClientRect() ?? bounds;
     const width = Math.max(1, Math.round(bounds.width));
@@ -104,8 +113,8 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
       return;
     }
 
-    const particleCap = mobile ? 1800 : 3000;
-    const step = mobile ? 3.6 : 4.2;
+    const particleCap = constrainedDevice ? 900 : mobile ? 1400 : 3000;
+    const step = constrainedDevice ? 4.35 : mobile ? 4.0 : 4.2;
     const candidates: Particle[] = [];
     const centerX = width / 2;
     const centerY = height / 2;
@@ -201,7 +210,7 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
     const drawIrisReactor = (time: number, energy = 1) => {
       const seconds = time * 0.001;
       const radius = Math.min(hostWidth, hostHeight) * (mobile ? 0.24 : 0.22);
-      const spokeCount = mobile ? 12 : 16;
+      const spokeCount = constrainedDevice ? 8 : mobile ? 12 : 16;
       const palette = ["#67e8f9", "#d8ff65", "#ff9f6e", "#9c7cff"];
 
       context.save();
@@ -276,7 +285,7 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
           speed: 75,
           offset: 4.4,
         },
-      ];
+      ].slice(0, constrainedDevice ? 1 : mobile ? 2 : 3);
 
       context.save();
       context.globalCompositeOperation = "lighter";
@@ -319,29 +328,37 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
       context.restore();
     };
 
+    const particleX = new Float32Array(particles.length);
+    const particleY = new Float32Array(particles.length);
+    const particleOpacity = new Float32Array(particles.length);
     const drawParticles = (
       getPosition: (particle: Particle) => { x: number; y: number; opacity: number }
     ) => {
-      context.globalCompositeOperation = "lighter";
-      particles.forEach(particle => {
+      particles.forEach((particle, index) => {
         const position = getPosition(particle);
-        context.globalAlpha = Math.min(1, position.opacity * 0.3);
+        particleX[index] = position.x;
+        particleY[index] = position.y;
+        particleOpacity[index] = position.opacity;
+      });
+
+      context.globalCompositeOperation = "lighter";
+      particles.forEach((particle, index) => {
+        context.globalAlpha = Math.min(1, particleOpacity[index] * 0.3);
         context.fillStyle = particle.color;
         context.fillRect(
-          roundHalf(position.x - 0.8),
-          roundHalf(position.y - 0.8),
+          roundHalf(particleX[index] - 0.8),
+          roundHalf(particleY[index] - 0.8),
           particle.size + 1.8,
           particle.size + 1.8
         );
       });
       context.globalCompositeOperation = "source-over";
-      particles.forEach(particle => {
-        const position = getPosition(particle);
-        context.globalAlpha = Math.min(1, position.opacity);
+      particles.forEach((particle, index) => {
+        context.globalAlpha = Math.min(1, particleOpacity[index]);
         context.fillStyle = particle.color;
         context.fillRect(
-          roundHalf(position.x),
-          roundHalf(position.y),
+          roundHalf(particleX[index]),
+          roundHalf(particleY[index]),
           particle.size,
           particle.size
         );
@@ -368,6 +385,8 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
     const initialFormation = sequence === 0;
     const duration = initialFormation ? (mobile ? 3300 : 3600) : mobile ? 3500 : 3800;
     let startedAt = 0;
+    let lastFrameAt = 0;
+    const minFrameInterval = constrainedDevice ? 1000 / 30 : 0;
     let pausedAt: number | null = null;
     let pausedDuration = 0;
     let idleStartedAt: number | null = null;
@@ -416,6 +435,13 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
     };
 
     const drawIdle = (time: number) => {
+      if (minFrameInterval && lastFrameAt && time - lastFrameAt < minFrameInterval) {
+        frameRef.current = visibleRef.current
+          ? window.requestAnimationFrame(drawIdle)
+          : null;
+        return;
+      }
+      lastFrameAt = time;
       if (idleStartedAt === null) idleStartedAt = time;
       const idleTime = (time - idleStartedAt) * 0.001;
       context.clearRect(0, 0, width, height);
@@ -442,6 +468,11 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
         return;
       }
       if (!startedAt) startedAt = time;
+      if (minFrameInterval && lastFrameAt && time - lastFrameAt < minFrameInterval) {
+        frameRef.current = window.requestAnimationFrame(draw);
+        return;
+      }
+      lastFrameAt = time;
       if (pausedAt !== null) {
         pausedDuration += time - pausedAt;
         pausedAt = null;
