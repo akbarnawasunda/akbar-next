@@ -468,6 +468,45 @@ async function getUserByOpenId(openId) {
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
   return result.length > 0 ? result[0] : void 0;
 }
+function isDuplicateDatabaseError(error) {
+  const dbError = error;
+  return dbError.code === "ER_DUP_ENTRY" || dbError.errno === 1062 || dbError.message?.toLowerCase().includes("duplicate") === true;
+}
+async function ensureDashboardUser(user) {
+  if (!user.openId) throw new Error("Dashboard user openId is required");
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot ensure dashboard user: database not available");
+    return;
+  }
+  const lastSignedIn = user.lastSignedIn ?? /* @__PURE__ */ new Date();
+  const values = { ...user, lastSignedIn };
+  const updateValues = {
+    openId: user.openId,
+    name: user.name ?? null,
+    email: user.email ?? null,
+    loginMethod: user.loginMethod ?? null,
+    role: user.role ?? "user",
+    lastSignedIn
+  };
+  const internalNameValues = { ...updateValues, name: user.openId };
+  const existing = await db.select().from(users).where(eq(users.openId, user.openId)).limit(1);
+  if (existing[0]) {
+    try {
+      await db.update(users).set(updateValues).where(eq(users.id, existing[0].id));
+    } catch (error) {
+      if (!isDuplicateDatabaseError(error) || !user.name || user.name === user.openId) throw error;
+      await db.update(users).set(internalNameValues).where(eq(users.id, existing[0].id));
+    }
+    return;
+  }
+  try {
+    await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateValues });
+  } catch (error) {
+    if (!isDuplicateDatabaseError(error) || !user.name || user.name === user.openId) throw error;
+    await db.insert(users).values({ ...values, name: user.openId }).onDuplicateKeyUpdate({ set: internalNameValues });
+  }
+}
 async function createStoredAsset(asset) {
   const db = await getDb();
   if (!db) throw new Error("Database is not available");
@@ -1067,7 +1106,7 @@ async function loginWithDashboardPassword(req, res, username, password) {
   }
   const ownerName = process.env.DASHBOARD_OWNER_NAME?.trim() || "Akbar Nawasunda";
   const ownerEmail = process.env.DASHBOARD_OWNER_EMAIL?.trim() || null;
-  await upsertUser({
+  await ensureDashboardUser({
     openId: DASHBOARD_OPEN_ID,
     name: ownerName,
     email: ownerEmail,

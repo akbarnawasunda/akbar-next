@@ -116,6 +116,59 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+/**
+ * Bootstrap the password-protected dashboard without relying on a new unique
+ * row. Older deployments can carry a unique index on `users.name`; retrying
+ * with the stable internal identity keeps the owner session idempotent while
+ * never reusing another user's row just because their display name matches.
+ * This helper is dashboard-specific so normal Manus OAuth upsert semantics
+ * remain unchanged.
+ */
+function isDuplicateDatabaseError(error: unknown): boolean {
+  const dbError = error as { code?: string; errno?: number; message?: string };
+  return dbError.code === "ER_DUP_ENTRY" || dbError.errno === 1062 || dbError.message?.toLowerCase().includes("duplicate") === true;
+}
+
+export async function ensureDashboardUser(user: InsertUser): Promise<void> {
+  if (!user.openId) throw new Error("Dashboard user openId is required");
+
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot ensure dashboard user: database not available");
+    return;
+  }
+
+  const lastSignedIn = user.lastSignedIn ?? new Date();
+  const values: InsertUser = { ...user, lastSignedIn };
+  const updateValues = {
+    openId: user.openId,
+    name: user.name ?? null,
+    email: user.email ?? null,
+    loginMethod: user.loginMethod ?? null,
+    role: user.role ?? "user" as const,
+    lastSignedIn,
+  };
+  const internalNameValues = { ...updateValues, name: user.openId };
+  const existing = await db.select().from(users).where(eq(users.openId, user.openId)).limit(1);
+
+  if (existing[0]) {
+    try {
+      await db.update(users).set(updateValues).where(eq(users.id, existing[0].id));
+    } catch (error) {
+      if (!isDuplicateDatabaseError(error) || !user.name || user.name === user.openId) throw error;
+      await db.update(users).set(internalNameValues).where(eq(users.id, existing[0].id));
+    }
+    return;
+  }
+
+  try {
+    await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateValues });
+  } catch (error) {
+    if (!isDuplicateDatabaseError(error) || !user.name || user.name === user.openId) throw error;
+    await db.insert(users).values({ ...values, name: user.openId }).onDuplicateKeyUpdate({ set: internalNameValues });
+  }
+}
+
 export async function createStoredAsset(asset: InsertStoredAsset) {
   const db = await getDb();
   if (!db) throw new Error("Database is not available");

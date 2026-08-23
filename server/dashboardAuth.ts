@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { sdk } from "./_core/sdk";
-import { getDb, getUserByOpenId, upsertUser } from "./db";
+import { ensureDashboardUser, getDb, getUserByOpenId } from "./db";
 
 const DASHBOARD_OPEN_ID = "dashboard-owner";
 const MAX_ATTEMPTS = 5;
@@ -96,7 +96,7 @@ export async function loginWithDashboardPassword(
 
   const ownerName = process.env.DASHBOARD_OWNER_NAME?.trim() || "Akbar Nawasunda";
   const ownerEmail = process.env.DASHBOARD_OWNER_EMAIL?.trim() || null;
-  await upsertUser({
+  await ensureDashboardUser({
     openId: DASHBOARD_OPEN_ID,
     name: ownerName,
     email: ownerEmail,
