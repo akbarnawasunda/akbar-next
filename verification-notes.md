@@ -190,3 +190,10 @@ Homepage lokal setelah adopsi menampilkan foto `akbar-night-frequency-hero.webp`
 ## Final portfolio adoption verification — 2026-08-23
 
 Browser reload normal menunjukkan logo header memakai `/assets/akbar-logo-fallback.webp` dengan `naturalWidth=1000` dan visibility visible saat remote logo tidak tersedia. Hero memakai foto pengguna `/assets/akbar-night-frequency-hero.webp` pada opacity `0.48`. Homepage memiliki 6 section index, 2 marquee track, dan scroll progress global; overflow horizontal tetap aman (`scrollWidth - innerWidth = -20`).
+
+
+## Public motion and domain readiness — 2026-08-23
+
+MotionOrchestrator diuji pada `/music`: heading menjalankan `data-scramble-running="true"`, teks berubah sementara menjadi karakter scramble, lalu kembali utuh setelah sekitar 630 ms. Enam section halaman turunan menggunakan class motion reveal; pada initial viewport section yang terlihat aktif, sisanya akan aktif saat masuk viewport. Reduced-motion check tetap tersedia.
+
+Domain lama `https://akbarnawasunda.my.id/` masih merespons HTTP 200 dari Vercel dan masih menyajikan website lama. Project `akbar-next` Vercel saat ini hanya memiliki alias `akbar-next-seven.vercel.app`, `akbar-next-akbarnawasundas-projects.vercel.app`, dan branch alias; custom domain `.my.id` belum terpasang. Metadata aplikasi baru sudah diarahkan ke canonical `https://akbarnawasunda.my.id/` dan root `sitemap.xml` sudah dibuat. Cutover DNS/domain binding belum dilakukan.

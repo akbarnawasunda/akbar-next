@@ -1,0 +1,57 @@
+.nf-page main > section {
+  --nf-motion-delay: 0ms;
+  opacity: 0;
+  transform: translate3d(0, 24px, 0) scale(0.992);
+  transition:
+    opacity 720ms cubic-bezier(0.23, 1, 0.32, 1) var(--nf-motion-delay),
+    transform 720ms cubic-bezier(0.23, 1, 0.32, 1) var(--nf-motion-delay);
+  will-change: opacity, transform;
+}
+
+.nf-page main > section:nth-child(2n) {
+  --nf-motion-delay: 70ms;
+}
+
+.nf-page main > section:nth-child(3n) {
+  --nf-motion-delay: 120ms;
+}
+
+.nf-page main > section.is-motion-in-view {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+[data-scramble-running="true"] {
+  min-width: 0.98em;
+  text-shadow: 0 0 18px rgba(121, 214, 199, 0.22);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nf-page .nf-button:hover,
+  .nf-page .nf-text-button:hover,
+  .nf-page .nf-platform-grid a:hover,
+  .nf-page .nf-catalog-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .nf-page .nf-button:active,
+  .nf-page .nf-text-button:active,
+  .nf-page .nf-platform-grid a:active,
+  .nf-page .nf-catalog-card:active {
+    transform: translateY(-1px) scale(0.985);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-page main > section {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+
+  [data-scramble-running="true"] {
+    text-shadow: none;
+  }
+}

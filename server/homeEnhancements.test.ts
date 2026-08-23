@@ -62,11 +62,16 @@ describe("homepage enhancement contract", () => {
     const marquee = source("client/src/components/PlatformMarquee.tsx");
     const progress = source("client/src/components/ScrollProgress.tsx");
     const patterns = source("client/src/pages/HomePortfolioPatterns.css");
+    const orchestrator = source("client/src/components/MotionOrchestrator.tsx");
+    const orchestratorCss = source(
+      "client/src/components/MotionOrchestrator.css"
+    );
 
     expect(app).toContain(
       'import { ScrollProgress } from "./components/ScrollProgress";'
     );
     expect(app).toContain("<ScrollProgress />");
+    expect(app).toContain("<MotionOrchestrator />");
     expect(home).toContain(
       'import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";'
     );
@@ -79,6 +84,9 @@ describe("homepage enhancement contract", () => {
     expect(progress).toContain("requestAnimationFrame");
     expect(patterns).toContain("akbar-night-frequency-hero.webp");
     expect(patterns).toContain("an-section-index");
+    expect(orchestrator).toContain("SCRAMBLE_CHARS");
+    expect(orchestrator).toContain(".nf-page main > section");
+    expect(orchestratorCss).toContain('data-scramble-running="true"');
     expect(home).toContain("ResilientBrandImage");
     expect(source("client/src/content/artistPlatform.ts")).toContain(
       'logoFallback: "/assets/akbar-logo-fallback.webp"'
@@ -86,6 +94,16 @@ describe("homepage enhancement contract", () => {
     expect(source("client/src/components/NightFrequencyChrome.tsx")).toContain(
       "ResilientBrandImage"
     );
+    const index = source("client/index.html");
+    const sitemap = source("client/public/sitemap.xml");
+    expect(index).toContain('<html lang="id">');
+    expect(index).toContain(
+      'rel="canonical" href="https://akbarnawasunda.my.id/"'
+    );
+    expect(index).toContain(
+      'property="og:url" content="https://akbarnawasunda.my.id/"'
+    );
+    expect(sitemap).toContain("https://akbarnawasunda.my.id/music");
   });
 
   it("keeps the editorial brand system wired across public surfaces", () => {
