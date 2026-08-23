@@ -72,6 +72,16 @@ const trpcClient = trpc.createClient({
   ],
 });
 
+const analyticsEndpoint = import.meta.env.VITE_ANALYTICS_ENDPOINT;
+const analyticsWebsiteId = import.meta.env.VITE_ANALYTICS_WEBSITE_ID;
+if (analyticsEndpoint && analyticsWebsiteId) {
+  const analyticsScript = document.createElement("script");
+  analyticsScript.defer = true;
+  analyticsScript.src = `${analyticsEndpoint}/umami`;
+  analyticsScript.dataset.websiteId = analyticsWebsiteId;
+  document.head.appendChild(analyticsScript);
+}
+
 // The preserved legacy Lab has a service worker. Remove stale registrations in
 // development so it cannot serve cached modules after route or content changes.
 if (import.meta.env.DEV && "serviceWorker" in navigator) {

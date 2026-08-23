@@ -4,6 +4,7 @@ import {
   FolderOpen,
   Inbox,
   LayoutDashboard,
+  Mail,
   ShieldCheck,
   Users,
 } from "lucide-react";
@@ -112,7 +113,7 @@ function AdminContent() {
         </a>
       </section>
 
-      <section className="grid gap-5 md:grid-cols-2">
+      <section className="grid gap-5 md:grid-cols-3">
         <a
           className="group rounded-xl border bg-card p-6 transition-colors hover:bg-accent"
           href="/studio"
@@ -139,6 +140,20 @@ function AdminContent() {
           </p>
           <span className="mt-5 inline-flex items-center gap-2 text-sm underline">
             Review inquiries <ArrowUpRight size={15} />
+          </span>
+        </a>
+        <a
+          className="group rounded-xl border bg-card p-6 transition-colors hover:bg-accent"
+          href="/studio/broadcasts"
+        >
+          <Mail className="h-5 w-5 text-primary" />
+          <h2 className="mt-5 text-xl font-semibold">Broadcast Studio</h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            Buat draft dan kirim update ke subscriber Fan Signal dengan
+            konfirmasi owner.
+          </p>
+          <span className="mt-5 inline-flex items-center gap-2 text-sm underline">
+            Compose broadcast <ArrowUpRight size={15} />
           </span>
         </a>
       </section>

@@ -19,6 +19,7 @@ const Inquiry = lazy(() => import("./pages/Inquiry"));
 const Licensing = lazy(() => import("./pages/Licensing"));
 const InquiryStudio = lazy(() => import("./pages/InquiryStudio"));
 const Admin = lazy(() => import("./pages/Admin"));
+const BroadcastStudio = lazy(() => import("./pages/BroadcastStudio"));
 import LegacyDocument from "./components/LegacyDocument";
 import { ScrollProgress } from "./components/ScrollProgress";
 import { MotionOrchestrator } from "./components/MotionOrchestrator";
@@ -45,6 +46,7 @@ function Router() {
       <Route path={"/assets"} component={AssetLibrary} />
       <Route path={"/studio"} component={ContentStudio} />
       <Route path={"/studio/inquiries"} component={InquiryStudio} />
+      <Route path={"/studio/broadcasts"} component={BroadcastStudio} />
       <Route path={"/admin"} component={Admin} />
       <Route path={"/epk"} component={PressKit} />
       <Route

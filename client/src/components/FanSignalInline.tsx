@@ -17,11 +17,13 @@ export default function FanSignalInline({
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<SignalStatus>(null);
   const subscribe = trpc.fanSignal.subscribe.useMutation({
-    onSuccess: () => {
+    onSuccess: result => {
       setEmail("");
       setStatus({
         type: "success",
-        message: "Sinyal diterima. Update berikutnya akan dikirim ke email ini.",
+        message: result.delivery === "synced"
+          ? "Sinyal diterima. Update berikutnya akan dikirim ke email ini."
+          : "Sinyal tersimpan. Email akan ikut tersinkron saat kanal pengiriman siap.",
       });
     },
     onError: error => {

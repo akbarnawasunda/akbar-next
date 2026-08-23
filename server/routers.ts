@@ -2,8 +2,10 @@ import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
+import { TRPCError } from "@trpc/server";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
 import { createArtistInquiry, createFanSignal, createStoredAsset, listAllArtistContent, listArtistInquiries, listFanSignals, listPublishedArtistContent, listStoredAssets, updateArtistInquiryStatus, upsertArtistContent } from "./db";
+import { createResendBroadcast, getResendReadiness, sendResendBroadcast, syncFanSignalContact, ResendApiError } from "./resend";
 import { storagePut } from "./storage";
 
 const MAX_ASSET_BYTES = 10 * 1024 * 1024;
@@ -52,8 +54,56 @@ export const appRouter = router({
         email: z.string().trim().toLowerCase().email().max(320),
         source: z.enum(["home", "footer"]).default("home"),
       }))
-      .mutation(({ input }) => createFanSignal(input)),
+      .mutation(async ({ input }) => {
+        const stored = await createFanSignal(input);
+        try {
+          const sync = await syncFanSignalContact(input.email, input.source);
+          return {
+            ...stored,
+            delivery: sync.synced ? ("synced" as const) : ("pending" as const),
+          };
+        } catch (error) {
+          console.error("[FanSignal] Resend sync failed:", error);
+          return { ...stored, delivery: "pending" as const };
+        }
+      }),
     list: adminProcedure.query(() => listFanSignals()),
+    readiness: adminProcedure.query(() => getResendReadiness()),
+    createBroadcastDraft: adminProcedure
+      .input(z.object({
+        name: z.string().trim().min(2).max(120),
+        subject: z.string().trim().min(2).max(255),
+        html: z.string().trim().min(20).max(100_000),
+        text: z.string().trim().max(50_000).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        try {
+          return await createResendBroadcast(input);
+        } catch (error) {
+          if (error instanceof ResendApiError) {
+            throw new TRPCError({
+              code: error.status === 429 ? "TOO_MANY_REQUESTS" : "BAD_GATEWAY",
+              message: error.message,
+            });
+          }
+          throw error;
+        }
+      }),
+    sendBroadcast: adminProcedure
+      .input(z.object({ broadcastId: z.string().trim().min(1).max(128), confirm: z.literal(true) }))
+      .mutation(async ({ input }) => {
+        try {
+          return await sendResendBroadcast(input.broadcastId);
+        } catch (error) {
+          if (error instanceof ResendApiError) {
+            throw new TRPCError({
+              code: error.status === 429 ? "TOO_MANY_REQUESTS" : "BAD_GATEWAY",
+              message: error.message,
+            });
+          }
+          throw error;
+        }
+      }),
   }),
   inquiry: router({
     submit: publicProcedure
