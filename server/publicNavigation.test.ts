@@ -12,6 +12,7 @@ describe("public navigation", () => {
     const universe = projectFile("client/src/pages/Universe.tsx");
     const privacy = projectFile("client/src/pages/PrivacyPolicy.tsx");
     const privacyCss = projectFile("client/src/pages/PrivacyPolicy.css");
+    const contentQuery = projectFile("client/src/sanity/publicContent.ts");
 
     expect(router).not.toContain('path={"/lab"}');
     expect(homepage).not.toContain('href="/lab"');
@@ -25,6 +26,10 @@ describe("public navigation", () => {
     expect(privacy).toContain("No advertising, no tracking cookies, no selling data — ever.");
     expect(privacy).toContain("UU No. 27/2022");
     expect(privacyCss).toContain(".nf-page .an-privacy-reading");
+    expect(contentQuery).toContain('"siteSettings": *[_type == "siteSettings"]');
+    expect(contentQuery).toContain('"legal": *[_type == "legalDocument" && readyForPublic == true]');
+    expect(privacy).toContain("useSanityArtistContent");
+    expect(privacy).toContain("reviewedRights");
     expect(chrome).toContain('href: "/about"');
   });
 });

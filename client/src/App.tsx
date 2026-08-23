@@ -66,6 +66,41 @@ function Router() {
 //   to keep consistent foreground/background color across components
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
+function CmsMetadata() {
+  useEffect(() => {
+    let active = true;
+    import("./sanity/siteSettings")
+      .then(({ fetchSiteSettings }) => fetchSiteSettings())
+      .then((settings) => {
+        if (!active || !settings) return;
+        if (settings.siteTitle?.trim()) document.title = settings.siteTitle.trim();
+        const setMeta = (selector: string, attribute: string, value?: string) => {
+          if (!value?.trim()) return;
+          const existing = document.head.querySelector<HTMLMetaElement>(selector);
+          const meta = existing || document.head.appendChild(document.createElement("meta"));
+          meta.setAttribute(attribute, value.trim());
+        };
+        const setLink = (rel: string, href?: string) => {
+          if (!href?.trim()) return;
+          const existing = document.head.querySelector<HTMLLinkElement>(`link[rel="${rel}"]`);
+          const link = existing || document.head.appendChild(document.createElement("link"));
+          link.rel = rel;
+          link.href = href.trim();
+        };
+        setMeta('meta[name="description"]', "name", settings.metaDescription);
+        setMeta('meta[property="og:title"]', "property", settings.ogTitle || settings.siteTitle);
+        setMeta('meta[property="og:description"]', "property", settings.ogDescription || settings.metaDescription);
+        setMeta('meta[property="og:image"]', "property", settings.socialPreviewUrl);
+        setMeta('meta[property="og:url"]', "property", settings.canonicalUrl);
+        setLink("canonical", settings.canonicalUrl);
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
+
+  return null;
+}
+
 function RouteMotion() {
   const [location] = useLocation();
 
@@ -92,6 +127,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <ScrollProgress />
+          <CmsMetadata />
           <MotionOrchestrator />
           <RouteMotion />
         </TooltipProvider>

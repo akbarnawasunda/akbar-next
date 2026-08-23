@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { verifiedArtistProfile } from "@/content/artistPlatform";
+import { useSanityArtistContent } from "@/sanity/publicContent";
 import "./EcosystemPages.css";
 import "./PrivacyPolicy.css";
 
@@ -53,6 +54,15 @@ const sections = [
 
 export default function PrivacyPolicy() {
   const contactEmail = verifiedArtistProfile.bookingEmail;
+  const cms = useSanityArtistContent();
+  const legal = cms.data?.legal;
+  const legalSection = (key: string) => legal?.sections?.find(section => section.key === key);
+  const reviewedIntro = legal?.intro?.trim();
+  const reviewedShortVersion = legalSection("short-version")?.body?.trim();
+  const reviewedCollection = legalSection("collection")?.body?.trim();
+  const reviewedCookies = legalSection("cookies")?.body?.trim();
+  const reviewedServices = legalSection("services")?.body?.trim();
+  const reviewedRights = legalSection("rights")?.body?.trim();
 
   return (
     <div className="nf-page an-privacy-page">
@@ -63,8 +73,7 @@ export default function PrivacyPolicy() {
             <p className="nf-page-eyebrow">AKBAR NAWASUNDA / DATA NOTE</p>
             <h1>PRIVACY<br />POLICY.</h1>
             <p>
-              Penjelasan singkat dan terbuka tentang data yang diproses saat kamu
-              memakai situs resmi Akbar Nawasunda.
+              {reviewedIntro || "Penjelasan singkat dan terbuka tentang data yang diproses saat kamu memakai situs resmi Akbar Nawasunda."}
             </p>
           </div>
           <aside className="an-privacy-posture">
@@ -72,7 +81,7 @@ export default function PrivacyPolicy() {
             <span className="an-privacy-posture-label">DATA POSTURE</span>
             <strong>LIGHT<br />BY DEFAULT.</strong>
             <p>Tidak ada iklan, tracking cookies, atau penjualan data.</p>
-            <span className="an-privacy-updated">LAST UPDATED · 14 AUG 2026</span>
+            <span className="an-privacy-updated">LAST UPDATED · {legal?.effectiveDate ? new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(legal.effectiveDate)).toUpperCase() : "14 AUG 2026"}</span>
           </aside>
         </section>
 
@@ -97,18 +106,17 @@ export default function PrivacyPolicy() {
               <p className="an-privacy-block-label">01 / THE SHORT VERSION</p>
               <h2>LIGHT ON<br />YOUR DATA.</h2>
               <blockquote>
-                No advertising, no tracking cookies, no selling data — ever.
+                {reviewedShortVersion || "No advertising, no tracking cookies, no selling data — ever."}
               </blockquote>
               <p>
-                Situs ini dibuat seringan mungkin terhadap data kamu. Bagian di
-                bawah adalah daftar lengkap dan jujur tentang apa yang terjadi saat
-                kamu menggunakan situs ini.
+                {reviewedShortVersion ? "Bagian ini mencerminkan teks kebijakan yang sudah ditinjau dan dipublish dari Legal Document." : "Situs ini dibuat seringan mungkin terhadap data kamu. Bagian di bawah adalah daftar lengkap dan jujur tentang apa yang terjadi saat kamu menggunakan situs ini."}
               </p>
             </article>
 
             <article className="an-privacy-block" id="collection">
               <p className="an-privacy-block-label">02 / WHAT WE COLLECT</p>
               <h2>WHAT ENTERS<br />THE SYSTEM.</h2>
+              {reviewedCollection && <p>{reviewedCollection}</p>}
               <div className="an-privacy-collection-grid">
                 {collectionPoints.map(({ title, copy, icon: Icon }, index) => (
                   <div className="an-privacy-collection-card" key={title}>
@@ -130,9 +138,7 @@ export default function PrivacyPolicy() {
                 <h2>NO HIDDEN<br />TRACKING.</h2>
               </div>
               <p>
-                Kami tidak mengatur advertising atau tracking cookies. localStorage
-                terbatas dapat digunakan untuk preferensi interface dan data
-                pendukung autentikasi.
+                {reviewedCookies || "Kami tidak mengatur advertising atau tracking cookies. localStorage terbatas dapat digunakan untuk preferensi interface dan data pendukung autentikasi."}
               </p>
               <p>
                 Music player Spotify, YouTube, dan SoundCloud bersifat
@@ -145,6 +151,7 @@ export default function PrivacyPolicy() {
             <article className="an-privacy-block" id="services">
               <p className="an-privacy-block-label">04 / THIRD-PARTY SERVICES</p>
               <h2>WHO HELPS<br />RUN THE SITE.</h2>
+              {reviewedServices && <p>{reviewedServices}</p>}
               <div className="an-privacy-service-list">
                 {thirdParties.map(([name, purpose]) => (
                   <div className="an-privacy-service" key={name}>
@@ -160,9 +167,7 @@ export default function PrivacyPolicy() {
               <p className="an-privacy-block-label">05 / YOUR RIGHTS</p>
               <h2>YOUR DATA.<br />YOUR CALL.</h2>
               <p>
-                Kamu dapat meminta akses, koreksi, atau penghapusan data pribadi
-                yang kami simpan, seperti email Fan Signal atau inquiry, kapan saja
-                melalui kontak resmi.
+                {reviewedRights || "Kamu dapat meminta akses, koreksi, atau penghapusan data pribadi yang kami simpan, seperti email Fan Signal atau inquiry, kapan saja melalui kontak resmi."}
               </p>
               <p>
                 Permintaan ini mencakup hak berdasarkan Undang-Undang Pelindungan

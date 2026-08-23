@@ -1,4 +1,5 @@
 import { CalendarIcon } from "@sanity/icons/Calendar";
+import { CogIcon } from "@sanity/icons/Cog";
 import { DocumentTextIcon } from "@sanity/icons/DocumentText";
 import { ImageIcon } from "@sanity/icons/Image";
 import { PlayIcon } from "@sanity/icons/Play";
@@ -16,6 +17,37 @@ const akbarTheme = buildTheme({
   background: { dark: "#071419", light: "#f4ead7" },
   contrast: 94,
 });
+
+const siteSettings = {
+  type: "document", name: "siteSettings", title: "Site Settings / SEO", icon: CogIcon,
+  fields: [
+    { name: "siteTitle", title: "Site title", type: "string", initialValue: "Akbar Nawasunda — Night Frequency" },
+    { name: "metaDescription", title: "Meta description", type: "text", rows: 3 },
+    { name: "ogTitle", title: "Social preview title", type: "string" },
+    { name: "ogDescription", title: "Social preview description", type: "text", rows: 3 },
+    { name: "socialPreviewUrl", title: "Social preview image URL", type: "url" },
+    { name: "canonicalUrl", title: "Canonical URL", type: "url" },
+    { name: "contactEmail", title: "General contact email", type: "string" },
+    { name: "bookingEmail", title: "Booking email", type: "string" },
+    { name: "pressEmail", title: "Press email", type: "string" },
+  ],
+};
+
+const legalDocument = {
+  type: "document", name: "legalDocument", title: "Privacy Policy / Legal", icon: DocumentTextIcon,
+  fields: [
+    { name: "title", title: "Document title", type: "string", initialValue: "Privacy Policy" },
+    { name: "version", title: "Version", type: "string", description: "Example: 2026.08" },
+    { name: "effectiveDate", title: "Effective date", type: "date" },
+    { name: "intro", title: "Introduction", type: "text", rows: 4 },
+    { name: "readyForPublic", title: "Ready for public", type: "boolean", initialValue: false, description: "Keep off until every published section has been reviewed." },
+    { name: "sections", title: "Policy sections", type: "array", of: [{ type: "object", fields: [
+      { name: "key", title: "Section key", type: "string", options: { list: ["short-version", "collection", "cookies", "services", "rights"] } },
+      { name: "heading", title: "Heading", type: "string" },
+      { name: "body", title: "Reviewed policy text", type: "text", rows: 8 },
+    ] }] },
+  ],
+};
 
 const artistSite = {
   type: "document", name: "artistSite", title: "Artist Site", icon: SparklesIcon,
@@ -117,5 +149,5 @@ export default defineConfig({
   dataset: "production",
   theme: akbarTheme,
   plugins: [structureTool({ structure }), visionTool({ defaultApiVersion: "v2026-08-22", defaultDataset: "production" })],
-  schema: { types: [artistSite, artistProfile, pressKit, release, visual, liveSignal, event] },
+  schema: { types: [siteSettings, legalDocument, artistSite, artistProfile, pressKit, release, visual, liveSignal, event] },
 });

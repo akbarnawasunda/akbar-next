@@ -16,6 +16,8 @@ export const structure: StructureResolver = (S) =>
               documentList(S, "artistSite", "Artist Site"),
               documentList(S, "artistProfile", "Artist Biography"),
               documentList(S, "pressKit", "Press & Booking"),
+              documentList(S, "siteSettings", "Site Settings / SEO"),
+              documentList(S, "legalDocument", "Privacy Policy / Legal"),
             ]),
         ),
       S.divider(),
