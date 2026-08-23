@@ -60,6 +60,8 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain("hero-title-mask");
     expect(home).toContain("Garam & Madu × Backpacker");
     expect(home).toContain("/assets/akbar-night-frequency-hero.webp");
+    expect(home).toContain("/assets/akbar-night-frequency-stage.webp");
+    expect(home).not.toContain("MANAGED RELEASE");
     expect(source("client/src/components/MotionOrchestrator.tsx")).toContain(
       "const duration = 2000;"
     );

@@ -73,6 +73,12 @@ export default function Home() {
     value.toLowerCase() === "garam & madu × backpacker"
       ? "Garam & Madu × Backpacker"
       : value;
+  const managedVideoImage = (imageUrl: string | null | undefined) => {
+    if (!imageUrl) return officialBrand.socialPreview;
+    return /\/manus-storage\/[^/?#]*stage[^/?#]*/i.test(imageUrl)
+      ? "/assets/akbar-night-frequency-stage.webp"
+      : imageUrl;
+  };
   const activeRelease = managedRelease
     ? {
         ...currentRelease,
@@ -111,7 +117,7 @@ export default function Home() {
         title: item.title,
         label: item.label || "VISUAL",
         href: item.href || "https://www.youtube.com/@akbarnawasunda",
-        image: item.imageUrl || officialBrand.socialPreview,
+        image: managedVideoImage(item.imageUrl),
       }))
     : videos;
   const displayHeroTitle = (heroTitle || "AKBAR NAWASUNDA.").trim();
@@ -320,9 +326,7 @@ export default function Home() {
             </div>
             <div className="release-detail">
               <p className="mono-label">
-                {managedRelease?.label
-                  ? `MANAGED RELEASE · ${managedRelease.label}`
-                  : currentRelease.eyebrow}
+                {managedRelease?.label || currentRelease.eyebrow}
               </p>
               <h3>{activeRelease.title}</h3>
               <p>
