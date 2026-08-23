@@ -1,6 +1,6 @@
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { appRouter } from "../../server/routers";
-import { createContext } from "../../server/_core/context";
+import { appRouter } from "../server/routers";
+import { createContext } from "../server/_core/context";
 
 function appendCookie(res, value) {
   const existing = res.getHeader?.("Set-Cookie");
@@ -27,10 +27,14 @@ function serializeCookie(name, value, options = {}) {
 }
 
 function installVercelExpressCompatibility(req, res) {
-  const requestPath = new URL(req.url || "/", `https://${req.headers?.host || "localhost"}`).pathname;
-  if (typeof req.path !== "string") {
-    Object.defineProperty(req, "path", { configurable: true, value: requestPath });
-  }
+  const rawPath = req.query?.trpcPath;
+  const queryPath = Array.isArray(rawPath) ? rawPath[0] : rawPath;
+  const requestPath = queryPath
+    ? `/api/trpc/${decodeURIComponent(String(queryPath))}`
+    : new URL(req.url || "/", `https://${req.headers?.host || "localhost"}`).pathname;
+
+  Object.defineProperty(req, "path", { configurable: true, value: requestPath });
+
   if (typeof res.status !== "function") {
     res.status = code => {
       res.statusCode = code;

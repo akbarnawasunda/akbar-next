@@ -4,6 +4,11 @@
   "buildCommand": "pnpm build",
   "outputDirectory": "dist/public",
   "installCommand": "pnpm install --frozen-lockfile",
+  "functions": {
+    "api/trpc.js": {
+      "maxDuration": 30
+    }
+  },
   "redirects": [
     {
       "source": "/epk.html",
@@ -11,7 +16,11 @@
       "permanent": true
     }
   ],
-  "rewrites": [
+  "routes": [
+    {
+      "source": "/api/trpc(?:/(.*))?$",
+      "destination": "/api/trpc.js?trpcPath=$1"
+    },
     {
       "source": "/api/brand/rmx-mark",
       "destination": "https://akbarfolio-424qdvsv.manus.space/manus-storage/akbar-nawasunda-rmx-mark_d59968bf.jpg"
@@ -28,16 +37,22 @@
       "source": "/favicon.png",
       "destination": "/assets/akbar-favicon.jpg"
     },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "handle": "filesystem"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {
       "source": "/api/trpc",
-      "headers": [{ "key": "x-vercel-enable-rewrite-caching", "value": "0" }]
+      "headers": [{ "key": "cache-control", "value": "no-store" }]
     },
     {
       "source": "/api/trpc/:path*",
-      "headers": [{ "key": "x-vercel-enable-rewrite-caching", "value": "0" }]
+      "headers": [{ "key": "cache-control", "value": "no-store" }]
     }
   ]
 }
