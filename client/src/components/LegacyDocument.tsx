@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const homeScripts = ["translations.js", "audio.js", "jedag-run.js", "share-card.js?v=2", "app.js?v=16", "wav-export.js", "content-render.js?v=14", "fx.js?v=2", "particles.js?v=6", "previews.js?v=2", "embed-skin.js?v=3", "footer.js?v=2", "newsletter.js?v=1", "smart-collab.js?v=1", "seo-jsonld.js"];
 
-type Props = { source: string; scripts?: "home" };
+type Props = { source: string; scripts?: "home" | "none" };
 type RuntimeEntry = {
   refs: number;
   active: boolean;
@@ -25,7 +25,7 @@ export default function LegacyDocument({ source, scripts = "home" }: Props) {
       .then((html) => {
         if (!active) return;
         const parsed = new DOMParser().parseFromString(html, "text/html");
-        setMarkup(parsed.body.innerHTML.replace(/src="assets\//g, 'src="/assets/').replace(/href="assets\//g, 'href="/assets/').replace(/href="\/favicon\.png/g, 'href="/assets/media/favicon.png'));
+        setMarkup(parsed.body.innerHTML.replace(/src="assets\//g, 'src="/assets/').replace(/href="assets\//g, 'href="/assets/').replace(/href="\/favicon\.png/g, 'href="/assets/akbar-favicon.jpg'));
       })
       .catch((reason: unknown) => active && setError(reason instanceof Error ? reason.message : "Unable to load page"));
     return () => { active = false; };
@@ -51,7 +51,7 @@ export default function LegacyDocument({ source, scripts = "home" }: Props) {
     fontLink.rel = "stylesheet";
     fontLink.href = "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Bebas+Neue&family=Space+Grotesk:wght@500;700&family=Chakra+Petch:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Anton&family=JetBrains+Mono:wght@400;600&display=swap";
     document.head.appendChild(fontLink);
-    const sources = homeScripts.map((name) => `/assets/js/${name}`);
+    const sources = scripts === "home" ? homeScripts.map((name) => `/assets/js/${name}`) : [];
     const entry: RuntimeEntry = { refs: 1, active: true, tags: [], styleLinks, fontLink };
     runtimeEntries.set(runtimeKey, entry);
     const load = async () => {

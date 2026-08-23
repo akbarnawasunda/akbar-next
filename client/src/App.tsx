@@ -48,14 +48,14 @@ function Router() {
       <Route path={"/epk"} component={PressKit} />
       <Route
         path={"/privacy"}
-        component={() => <LegacyDocument source="/legacy/privacy.html" />}
+        component={() => <LegacyDocument source="/legacy/privacy.html" scripts="none" />}
       />
       <Route
         path={"/404"}
-        component={() => <LegacyDocument source="/legacy/404.html" />}
+        component={() => <LegacyDocument source="/legacy/404.html" scripts="none" />}
       />
       {/* Final fallback route */}
-      <Route component={() => <LegacyDocument source="/legacy/404.html" />} />
+      <Route component={() => <LegacyDocument source="/legacy/404.html" scripts="none" />} />
     </Switch>
   );
 }
