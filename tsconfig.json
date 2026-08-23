@@ -18,6 +18,6 @@
     "baseUrl": ".",
     "paths": { "@/*": ["client/src/*"], "@shared/*": ["shared/*"] }
   },
-  "include": ["client/src", "server", "shared", "drizzle", "vite.config.ts", "drizzle.config.ts"],
+  "include": ["client/src", "server", "shared", "drizzle", "api", "vite.config.ts", "drizzle.config.ts"],
   "exclude": ["node_modules", "legacy-vite-scaffold", "legacy-next", "dist"]
 }

@@ -3,17 +3,17 @@ import {
   ArrowUpRight,
   Disc3,
   Headphones,
-  Mail,
   Play,
   Radio,
   Sparkles,
   Ticket,
 } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { BrandMotionMark } from "@/components/BrandMotionMark";
+import FanSignalInline from "@/components/FanSignalInline";
 import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { SkeletonCard } from "@/components/SkeletonCard";
@@ -54,7 +54,6 @@ export default function Home() {
   const signalSectionRef = useScrollReveal<HTMLElement>();
   const primaryActionRef = useMagnetic<HTMLAnchorElement>();
   const liveActionRef = useMagnetic<HTMLAnchorElement>();
-  const [email, setEmail] = useState("");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
   const contentQuery = trpc.content.list.useQuery();
@@ -108,23 +107,6 @@ export default function Home() {
         image: item.imageUrl || officialBrand.socialPreview,
       }))
     : videos;
-  const subscribe = trpc.fanSignal.subscribe.useMutation({
-    onSuccess: () => {
-      setEmail("");
-      toast.success(
-        "Sinyal diterima. Kamu masuk jalur update Akbar Nawasunda."
-      );
-    },
-    onError: () =>
-      toast.error("Sinyal belum terkirim. Coba lagi dalam beberapa saat."),
-  });
-
-  const submitSignal = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!email.trim()) return;
-    subscribe.mutate({ email, source: "home" });
-  };
-
   return (
     <div className="an-site">
       <header className="an-nav">
@@ -492,29 +474,7 @@ export default function Home() {
             </h2>
             <p>Kabar rilisan, visual, dan jadwal dari kanal resmi.</p>
           </div>
-          <form onSubmit={submitSignal}>
-            <label htmlFor="fan-email">EMAIL ADDRESS</label>
-            <div className="signal-input">
-              <Mail size={18} />
-              <input
-                id="fan-email"
-                type="email"
-                value={email}
-                onChange={event => setEmail(event.target.value)}
-                placeholder="nama@kamu.com"
-                autoComplete="email"
-                required
-              />
-              <button type="submit" disabled={subscribe.isPending}>
-                {subscribe.isPending ? "SENDING" : "JOIN"}
-                <ArrowUpRight size={17} />
-              </button>
-            </div>
-            <small>
-              Dengan mendaftar, kamu setuju menerima update dari Akbar
-              Nawasunda. Berhenti kapan saja.
-            </small>
-          </form>
+          <FanSignalInline source="home" />
         </section>
       </main>
 

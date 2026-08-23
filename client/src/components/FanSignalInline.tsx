@@ -1,7 +1,11 @@
 import { ArrowUpRight, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
-import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+
+type SignalStatus =
+  | { type: "success"; message: string }
+  | { type: "error"; message: string }
+  | null;
 
 export default function FanSignalInline({
   source = "footer",
@@ -11,54 +15,66 @@ export default function FanSignalInline({
   compact?: boolean;
 }) {
   const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<SignalStatus>(null);
   const subscribe = trpc.fanSignal.subscribe.useMutation({
     onSuccess: () => {
       setEmail("");
-      toast.success("Sinyal diterima. Sampai di drop berikutnya.");
+      setStatus({
+        type: "success",
+        message: "Sinyal diterima. Update berikutnya akan dikirim ke email ini.",
+      });
     },
     onError: error => {
       console.error("FanSignal error:", error);
       const message = error.message.toLowerCase();
-      if (message.includes("unauthorized")) {
-        toast.error("Sesi berakhir. Silakan refresh halaman.");
-      } else if (message.includes("database") || message.includes("connect")) {
-        toast.error(
-          "Database sedang bermasalah. Coba lagi dalam beberapa saat."
-        );
-      } else if (message.includes("email")) {
-        toast.error("Format email tidak valid.");
-      } else {
-        toast.error("Sinyal belum terkirim. Silakan coba lagi.");
-      }
+      const friendlyMessage = message.includes("database") || message.includes("connect")
+        ? "Daftar update sedang bermasalah di server. Coba lagi beberapa saat."
+        : message.includes("invalid") || message.includes("email")
+          ? "Format email belum benar. Cek lagi alamatnya."
+          : "Sinyal belum terkirim. Coba lagi beberapa saat.";
+      setStatus({ type: "error", message: friendlyMessage });
     },
   });
+
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    subscribe.mutate({ email, source });
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail || subscribe.isPending) return;
+    setStatus(null);
+    subscribe.mutate({ email: normalizedEmail, source });
   };
+
   return (
     <form
       className={compact ? "nf-signal-form compact" : "nf-signal-form"}
       onSubmit={submit}
+      noValidate={false}
     >
-      <label htmlFor={`fan-email-${source}`}>FAN SIGNAL / EMAIL</label>
+      <label htmlFor={`fan-email-${source}`}>EMAIL ADDRESS</label>
       <div>
-        <Mail size={17} />
+        <Mail size={17} aria-hidden="true" />
         <input
           id={`fan-email-${source}`}
           type="email"
           required
           value={email}
-          onChange={event => setEmail(event.target.value)}
+          onChange={event => {
+            setEmail(event.target.value);
+            if (status) setStatus(null);
+          }}
           placeholder="nama@kamu.com"
           autoComplete="email"
+          aria-describedby={`fan-email-note-${source}`}
+          aria-invalid={status?.type === "error"}
         />
         <button type="submit" disabled={subscribe.isPending}>
           {subscribe.isPending ? "SENDING" : "JOIN"}
-          <ArrowUpRight size={16} />
+          <ArrowUpRight size={16} aria-hidden="true" />
         </button>
       </div>
-      <small>Rilisan, visual, dan kabar live. Berhenti kapan saja.</small>
+      <small id={`fan-email-note-${source}`} className={`nf-signal-note ${status ? `is-${status.type}` : ""}`} aria-live="polite">
+        {status?.message || "Rilisan, visual, dan kabar live. Berhenti kapan saja."}
+      </small>
     </form>
   );
 }
