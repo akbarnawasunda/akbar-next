@@ -15,18 +15,8 @@ app.use(
 );
 
 /**
- * Vercel mounts this catch-all function at /api/trpc/:trpc. The tRPC Express
- * adapter derives the procedure name from req.path, so remove the Vercel
- * function prefix before handing the request to Express.
+ * Vercel routes /api/trpc/:trpc here. The Express tRPC adapter uses the last
+ * path segment as the procedure name, so fanSignal.subscribe and the other
+ * batch paths are preserved without rewriting the request URL.
  */
-export default function handler(
-  req: express.Request,
-  res: express.Response
-) {
-  const prefix = "/api/trpc";
-  const originalUrl = req.url || "/";
-  req.url = originalUrl.startsWith(prefix)
-    ? originalUrl.slice(prefix.length) || "/"
-    : originalUrl;
-  return app(req, res);
-}
+export default app;
