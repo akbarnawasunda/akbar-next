@@ -14,9 +14,19 @@ type Particle = {
   phase: number;
   mobility: number;
   spark: boolean;
+  introAngle: number;
+  introRadius: number;
+  spin: number;
 };
 
 const easeOutCubic = (value: number) => 1 - Math.pow(1 - value, 3);
+const easeInOutCubic = (value: number) =>
+  value < 0.5
+    ? 4 * value * value * value
+    : 1 - Math.pow(-2 * value + 2, 3) / 2;
+const clamp = (value: number, min = 0, max = 1) =>
+  Math.min(max, Math.max(min, value));
+const roundHalf = (value: number) => Math.round(value * 2) / 2;
 const FALLBACK_RMX_MARK = "/assets/akbar-rmx-mark-fallback.jpg";
 
 export function BrandMotionMark({ src }: { src: string }) {
@@ -54,14 +64,20 @@ export function BrandMotionMark({ src }: { src: string }) {
     ).matches;
     visibleRef.current = true;
     const mobile = window.matchMedia("(max-width: 820px)").matches;
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2);
     const bounds = canvas.getBoundingClientRect();
+    const hostBounds = canvas.parentElement?.getBoundingClientRect() ?? bounds;
     const width = Math.max(1, Math.round(bounds.width));
     const height = Math.max(1, Math.round(bounds.height));
+    const hostWidth = Math.max(1, Math.round(hostBounds.width));
+    const hostHeight = Math.max(1, Math.round(hostBounds.height));
+    const paddingX = Math.max(0, (width - hostWidth) / 2);
+    const paddingY = Math.max(0, (height - hostHeight) / 2);
 
     canvas.width = Math.round(width * pixelRatio);
     canvas.height = Math.round(height * pixelRatio);
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    context.imageSmoothingEnabled = false;
 
     const sample = document.createElement("canvas");
     sample.width = canvas.width;
@@ -69,9 +85,16 @@ export function BrandMotionMark({ src }: { src: string }) {
     const sampleContext = sample.getContext("2d", { willReadFrequently: true });
     if (!sampleContext) return;
 
-    context.imageSmoothingEnabled = false;
     sampleContext.imageSmoothingEnabled = true;
-    sampleContext.drawImage(image, 0, 0, sample.width, sample.height);
+    sampleContext.clearRect(0, 0, sample.width, sample.height);
+    sampleContext.drawImage(
+      image,
+      paddingX * pixelRatio,
+      paddingY * pixelRatio,
+      hostWidth * pixelRatio,
+      hostHeight * pixelRatio
+    );
+
     let imageData: ImageData;
     try {
       imageData = sampleContext.getImageData(0, 0, sample.width, sample.height);
@@ -79,14 +102,15 @@ export function BrandMotionMark({ src }: { src: string }) {
       return;
     }
 
-    const particleCap = mobile ? 1200 : 2400;
-    const step = mobile ? 4 : 5;
+    const particleCap = mobile ? 1800 : 3000;
+    const step = mobile ? 3.6 : 4.2;
     const candidates: Particle[] = [];
     const centerX = width / 2;
     const centerY = height / 2;
+    const stageRadius = Math.max(hostWidth, hostHeight);
 
-    for (let y = 0; y < sample.height; y += step * pixelRatio) {
-      for (let x = 0; x < sample.width; x += step * pixelRatio) {
+    for (let y = paddingY * pixelRatio; y < (paddingY + hostHeight) * pixelRatio; y += step * pixelRatio) {
+      for (let x = paddingX * pixelRatio; x < (paddingX + hostWidth) * pixelRatio; x += step * pixelRatio) {
         const index = (Math.floor(y) * sample.width + Math.floor(x)) * 4;
         const red = imageData.data[index];
         const green = imageData.data[index + 1];
@@ -100,10 +124,8 @@ export function BrandMotionMark({ src }: { src: string }) {
         const targetX = x / pixelRatio;
         const targetY = y / pixelRatio;
         const angle = Math.random() * Math.PI * 2;
-        const introRadius =
-          Math.max(width, height) * (0.18 + Math.random() * 0.28);
-        const dissolveRadius =
-          Math.max(width, height) * (0.58 + Math.random() * 0.46);
+        const introRadius = stageRadius * (0.18 + Math.random() * 0.25);
+        const spreadRadius = stageRadius * (0.48 + Math.random() * 0.52);
         const blueParticle = isBlueAccent && blue > green + 8;
         const colorRoll = Math.random();
         const color = blueParticle
@@ -115,7 +137,7 @@ export function BrandMotionMark({ src }: { src: string }) {
             : colorRoll > 0.57
               ? "#ff9f6e"
               : colorRoll > 0.32
-                ? "#6ee7d8"
+                ? "#67e8f9"
                 : "#f7e6c6";
 
         candidates.push({
@@ -123,16 +145,19 @@ export function BrandMotionMark({ src }: { src: string }) {
           ty: targetY,
           sx: centerX + Math.cos(angle) * introRadius,
           sy: centerY + Math.sin(angle) * introRadius,
-          dx: Math.cos(angle) * dissolveRadius,
-          dy: Math.sin(angle) * dissolveRadius,
+          dx: Math.cos(angle) * spreadRadius,
+          dy: Math.sin(angle) * spreadRadius,
           color,
           size:
-            (mobile ? 1.2 : 1.35) +
-            (Math.random() > 0.82 ? 1.05 : Math.random() * 0.55),
-          alpha: 0.88 + Math.random() * 0.12,
+            (mobile ? 1.25 : 1.4) +
+            (Math.random() > 0.8 ? 1.1 : Math.random() * 0.62),
+          alpha: 0.9 + Math.random() * 0.1,
           phase: Math.random() * Math.PI * 2,
           mobility: 0.22 + Math.random() * 0.46,
-          spark: Math.random() > 0.84,
+          spark: Math.random() > 0.82,
+          introAngle: angle + (Math.random() - 0.5) * 0.8,
+          introRadius,
+          spin: 0.75 + Math.random() * 0.75,
         });
       }
     }
@@ -143,57 +168,7 @@ export function BrandMotionMark({ src }: { src: string }) {
       .slice(0, particleCap);
     canvas.dataset.particleCount = String(particles.length);
     canvas.dataset.particleMode = mobile ? "mobile" : "desktop";
-
-    const drawStatic = () => {
-      context.clearRect(0, 0, width, height);
-      context.globalCompositeOperation = "lighter";
-      particles.forEach(particle => {
-        context.globalAlpha = Math.min(1, particle.alpha * 0.3);
-        context.fillStyle = particle.color;
-        context.fillRect(
-          particle.tx - 0.7,
-          particle.ty - 0.7,
-          particle.size + 1.8,
-          particle.size + 1.8
-        );
-      });
-      context.globalCompositeOperation = "source-over";
-      particles.forEach(particle => {
-        context.globalAlpha = Math.min(1, particle.alpha * 0.96);
-        context.fillStyle = particle.color;
-        context.fillRect(
-          particle.tx,
-          particle.ty,
-          particle.size,
-          particle.size
-        );
-      });
-      context.globalAlpha = 1;
-    };
-
-    if (!particles.length || reducedMotion) {
-      drawStatic();
-      setIsIdle(false);
-      return;
-    }
-
-    runningRef.current = true;
-    setIsAnimating(true);
-    setIsIdle(false);
-    const initialFormation = sequence === 0;
-    const duration = initialFormation
-      ? mobile
-        ? 1180
-        : 1420
-      : mobile
-        ? 1320
-        : 1540;
-    let startedAt = 0;
-    let pausedAt: number | null = null;
-    let pausedDuration = 0;
-
-    let idleStartedAt: number | null = null;
-    let idleActive = false;
+    canvas.dataset.stage = "overscan-iris";
 
     const getIdleOffset = (
       particle: Particle,
@@ -221,39 +196,186 @@ export function BrandMotionMark({ src }: { src: string }) {
       };
     };
 
-    const drawIdle = (time: number) => {
-      if (idleStartedAt === null) idleStartedAt = time;
-      const idleTime = (time - idleStartedAt) * 0.001;
-      context.clearRect(0, 0, width, height);
+    const drawOrbitingLines = (time: number, energy = 1) => {
+      const seconds = time * 0.001;
+      const orbitLines = [
+        {
+          rx: hostWidth * 0.58,
+          ry: hostHeight * 0.22,
+          rotation: -0.26,
+          color: "#67e8f9",
+          speed: 120,
+          offset: 0.1,
+        },
+        {
+          rx: hostWidth * 0.48,
+          ry: hostHeight * 0.39,
+          rotation: 0.63,
+          color: "#d8ff65",
+          speed: -92,
+          offset: 2.2,
+        },
+        {
+          rx: hostWidth * 0.35,
+          ry: hostHeight * 0.54,
+          rotation: -0.84,
+          color: "#ff9f6e",
+          speed: 75,
+          offset: 4.4,
+        },
+      ];
+
+      context.save();
+      context.globalCompositeOperation = "lighter";
+      context.translate(centerX, centerY);
+      orbitLines.forEach((orbit, index) => {
+        context.save();
+        context.rotate(
+          orbit.rotation + Math.sin(seconds * 0.38 + orbit.offset) * 0.035
+        );
+        context.beginPath();
+        context.ellipse(
+          0,
+          0,
+          orbit.rx,
+          orbit.ry,
+          0,
+          orbit.offset + seconds * 0.12,
+          orbit.offset + Math.PI * (1.16 + index * 0.12) + seconds * 0.12
+        );
+        context.setLineDash([hostWidth * 0.08, hostWidth * 0.18]);
+        context.lineDashOffset = -seconds * orbit.speed;
+        context.strokeStyle = orbit.color;
+        context.globalAlpha = (0.34 + energy * 0.16) * (index === 1 ? 0.86 : 1);
+        context.lineWidth = mobile ? 0.85 : 1.15;
+        context.stroke();
+
+        const markerAngle = orbit.offset + seconds * (orbit.speed > 0 ? 0.82 : -0.68);
+        const markerX = Math.cos(markerAngle) * orbit.rx;
+        const markerY = Math.sin(markerAngle) * orbit.ry;
+        context.beginPath();
+        context.arc(markerX, markerY, mobile ? 1.35 : 1.8, 0, Math.PI * 2);
+        context.shadowColor = orbit.color;
+        context.shadowBlur = mobile ? 5 : 8;
+        context.fillStyle = orbit.color;
+        context.globalAlpha = 0.76 * energy;
+        context.fill();
+        context.shadowBlur = 0;
+        context.restore();
+      });
+      context.restore();
+    };
+
+    const drawParticles = (
+      getPosition: (particle: Particle) => { x: number; y: number; opacity: number }
+    ) => {
       context.globalCompositeOperation = "lighter";
       particles.forEach(particle => {
-        const offset = getIdleOffset(particle, idleTime, 1.12);
-        const pulse =
-          0.78 + (Math.sin(idleTime * 1.45 + particle.phase) + 1) * 0.16;
-        context.globalAlpha = Math.min(1, particle.alpha * pulse * 0.34);
+        const position = getPosition(particle);
+        context.globalAlpha = Math.min(1, position.opacity * 0.3);
         context.fillStyle = particle.color;
         context.fillRect(
-          particle.tx + offset.x - 0.9,
-          particle.ty + offset.y - 0.9,
+          roundHalf(position.x - 0.8),
+          roundHalf(position.y - 0.8),
           particle.size + 1.8,
           particle.size + 1.8
         );
       });
       context.globalCompositeOperation = "source-over";
       particles.forEach(particle => {
-        const offset = getIdleOffset(particle, idleTime, 0.72);
-        const pulse =
-          0.78 + (Math.sin(idleTime * 1.45 + particle.phase) + 1) * 0.16;
-        context.globalAlpha = Math.min(1, particle.alpha * pulse * 1.04);
+        const position = getPosition(particle);
+        context.globalAlpha = Math.min(1, position.opacity);
         context.fillStyle = particle.color;
         context.fillRect(
-          particle.tx + offset.x,
-          particle.ty + offset.y,
+          roundHalf(position.x),
+          roundHalf(position.y),
           particle.size,
           particle.size
         );
       });
       context.globalAlpha = 1;
+    };
+
+    const drawStatic = () => {
+      context.clearRect(0, 0, width, height);
+      drawOrbitingLines(0, 0.58);
+      drawParticles(particle => ({ x: particle.tx, y: particle.ty, opacity: particle.alpha }));
+    };
+
+    if (!particles.length || reducedMotion) {
+      drawStatic();
+      setIsIdle(false);
+      return;
+    }
+
+    runningRef.current = true;
+    setIsAnimating(true);
+    setIsIdle(false);
+    const initialFormation = sequence === 0;
+    const duration = initialFormation ? (mobile ? 3300 : 3600) : mobile ? 3500 : 3800;
+    let startedAt = 0;
+    let pausedAt: number | null = null;
+    let pausedDuration = 0;
+    let idleStartedAt: number | null = null;
+    let idleActive = false;
+
+    const getAnimatedPosition = (particle: Particle, progress: number, time: number) => {
+      if (initialFormation) {
+        const orbitProgress = clamp(progress / 0.48);
+        const orbitAngle =
+          particle.introAngle +
+          orbitProgress * Math.PI * 2.1 * particle.spin +
+          Math.sin(time * 0.0012 + particle.phase) * 0.08;
+        const orbitRadius = particle.introRadius * (1 - orbitProgress * 0.16);
+        const orbitX = centerX + Math.cos(orbitAngle) * orbitRadius;
+        const orbitY = centerY + Math.sin(orbitAngle) * orbitRadius;
+        const mergeProgress = easeInOutCubic(clamp((progress - 0.23) / 0.77));
+        return {
+          x: orbitX + (particle.tx - orbitX) * mergeProgress,
+          y: orbitY + (particle.ty - orbitY) * mergeProgress,
+          opacity: particle.alpha * (0.32 + mergeProgress * 0.68),
+        };
+      }
+
+      const scatterProgress = clamp(progress / 0.54);
+      const scatterEase = easeOutCubic(scatterProgress);
+      const vortexRotation =
+        Math.sin(scatterProgress * Math.PI) * particle.spin * 0.9;
+      const scatterX = particle.tx + particle.dx * scatterEase;
+      const scatterY = particle.ty + particle.dy * scatterEase;
+      const rotatedX =
+        centerX +
+        (scatterX - centerX) * Math.cos(vortexRotation) -
+        (scatterY - centerY) * Math.sin(vortexRotation);
+      const rotatedY =
+        centerY +
+        (scatterX - centerX) * Math.sin(vortexRotation) +
+        (scatterY - centerY) * Math.cos(vortexRotation);
+      const reformProgress = easeInOutCubic(clamp((progress - 0.54) / 0.46));
+      return {
+        x: rotatedX + (particle.tx - rotatedX) * reformProgress,
+        y: rotatedY + (particle.ty - rotatedY) * reformProgress,
+        opacity:
+          particle.alpha *
+          (progress < 0.54 ? 1 - scatterProgress * 0.34 : 0.66 + reformProgress * 0.34),
+      };
+    };
+
+    const drawIdle = (time: number) => {
+      if (idleStartedAt === null) idleStartedAt = time;
+      const idleTime = (time - idleStartedAt) * 0.001;
+      context.clearRect(0, 0, width, height);
+      drawOrbitingLines(time, 0.72);
+      drawParticles(particle => {
+        const offset = getIdleOffset(particle, idleTime, 1.12);
+        const pulse =
+          0.78 + (Math.sin(idleTime * 1.45 + particle.phase) + 1) * 0.16;
+        return {
+          x: particle.tx + offset.x,
+          y: particle.ty + offset.y,
+          opacity: particle.alpha * pulse,
+        };
+      });
       frameRef.current = visibleRef.current
         ? window.requestAnimationFrame(drawIdle)
         : null;
@@ -269,54 +391,10 @@ export function BrandMotionMark({ src }: { src: string }) {
         pausedDuration += time - pausedAt;
         pausedAt = null;
       }
-      const progress = Math.min(
-        1,
-        Math.max(0, (time - startedAt - pausedDuration) / duration)
-      );
+      const progress = clamp((time - startedAt - pausedDuration) / duration);
       context.clearRect(0, 0, width, height);
-
-      particles.forEach(particle => {
-        let x = particle.tx;
-        let y = particle.ty;
-        let opacity = particle.alpha;
-
-        if (initialFormation) {
-          const formation = easeOutCubic(progress);
-          x = particle.sx + (particle.tx - particle.sx) * formation;
-          y = particle.sy + (particle.ty - particle.sy) * formation;
-          opacity *= 0.22 + formation * 0.78;
-        } else if (progress < 0.42) {
-          const dissolve = easeOutCubic(progress / 0.42);
-          x = particle.tx + particle.dx * dissolve;
-          y = particle.ty + particle.dy * dissolve;
-          opacity *= 1 - dissolve * 0.28;
-        } else {
-          const reform = easeOutCubic((progress - 0.42) / 0.58);
-          x =
-            particle.tx +
-            particle.dx +
-            (particle.tx - (particle.tx + particle.dx)) * reform;
-          y =
-            particle.ty +
-            particle.dy +
-            (particle.ty - (particle.ty + particle.dy)) * reform;
-          opacity *= 0.78 + reform * 0.22;
-        }
-
-        context.globalAlpha = Math.min(1, opacity * 0.3);
-        context.globalCompositeOperation = "lighter";
-        context.fillStyle = particle.color;
-        context.fillRect(
-          x - 0.7,
-          y - 0.7,
-          particle.size + 1.8,
-          particle.size + 1.8
-        );
-        context.globalCompositeOperation = "source-over";
-        context.globalAlpha = Math.min(1, opacity);
-        context.fillRect(x, y, particle.size, particle.size);
-      });
-      context.globalAlpha = 1;
+      drawOrbitingLines(time, 0.78 + Math.sin(progress * Math.PI) * 0.62);
+      drawParticles(particle => getAnimatedPosition(particle, progress, time));
 
       if (progress < 1) {
         frameRef.current = window.requestAnimationFrame(draw);
@@ -344,15 +422,14 @@ export function BrandMotionMark({ src }: { src: string }) {
           );
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.05 }
     );
 
     observer.observe(canvas);
     frameRef.current = window.requestAnimationFrame(draw);
     return () => {
       observer.disconnect();
-      if (frameRef.current !== null)
-        window.cancelAnimationFrame(frameRef.current);
+      if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
       frameRef.current = null;
       runningRef.current = false;
       setIsAnimating(false);
@@ -388,7 +465,6 @@ export function BrandMotionMark({ src }: { src: string }) {
           if (imageSrc !== FALLBACK_RMX_MARK) setImageSrc(FALLBACK_RMX_MARK);
         }}
       />
-
       <canvas ref={canvasRef} aria-hidden="true" />
       <span className="an-rmx-particle-access">
         Ketuk untuk memecah dan membentuk ulang logo partikel.

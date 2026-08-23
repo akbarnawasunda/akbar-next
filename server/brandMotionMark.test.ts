@@ -48,8 +48,11 @@ describe("RMX brand motion mark", () => {
     const css = source("client/src/components/BrandMotionMark.css");
     expect(component).toContain("onClick={replay}");
     expect(component).toContain("requestAnimationFrame(draw)");
-    expect(component).toContain("particleCap = mobile ? 1200 : 2400");
-    expect(component).toContain("sampleContext.drawImage(image");
+    expect(component).toContain("particleCap = mobile ? 1800 : 3000");
+    expect(component).toContain("duration = initialFormation ? (mobile ? 3300 : 3600) : mobile ? 3500 : 3800");
+    expect(component).toContain("drawOrbitingLines");
+    expect(component).toContain('canvas.dataset.stage = "overscan-iris"');
+    expect(component).toContain("sampleContext.drawImage(");
     expect(component).toContain("isInk");
     expect(component).toContain("isBlueAccent");
     expect(component).toContain('"#74b9ff"');
