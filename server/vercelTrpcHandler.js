@@ -29,10 +29,20 @@ function serializeCookie(name, value, options = {}) {
 function installVercelExpressCompatibility(req, res) {
   const rawPath = req.query?.trpcPath;
   const queryPath = Array.isArray(rawPath) ? rawPath[0] : rawPath;
+  const requestUrl = new URL(req.url || "/", `https://${req.headers?.host || "localhost"}`);
   const requestPath = queryPath
     ? `/api/trpc/${decodeURIComponent(String(queryPath))}`
-    : new URL(req.url || "/", `https://${req.headers?.host || "localhost"}`).pathname;
+    : requestUrl.pathname;
 
+  // Vercel can expose an absolute URL to the function adapter. Express's
+  // parseurl dependency falls back to deprecated url.parse() for that shape.
+  // Keep the query string needed by tRPC, remove the routing-only rewrite
+  // parameter, and hand Express a conventional relative request URL.
+  requestUrl.searchParams.delete("trpcPath");
+  Object.defineProperty(req, "url", {
+    configurable: true,
+    value: `${requestPath}${requestUrl.search}`,
+  });
   Object.defineProperty(req, "path", { configurable: true, value: requestPath });
 
   if (typeof res.status !== "function") {

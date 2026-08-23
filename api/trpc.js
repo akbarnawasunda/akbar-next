@@ -394,13 +394,22 @@ function toArtistContentInput(input) {
 
 // server/db.ts
 var _db = null;
+function normalizeDatabaseUrl(raw) {
+  try {
+    const url = new URL(raw);
+    url.searchParams.delete("ssl-mode");
+    return url.toString();
+  } catch {
+    return raw;
+  }
+}
 async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
       const sslCa = process.env.DATABASE_SSL_CA?.replace(/\\n/g, "\n");
       _db = drizzle({
         connection: {
-          uri: process.env.DATABASE_URL,
+          uri: normalizeDatabaseUrl(process.env.DATABASE_URL),
           ssl: sslCa ? { ca: sslCa, rejectUnauthorized: true } : { rejectUnauthorized: false }
         }
       });
@@ -1339,7 +1348,13 @@ function serializeCookie(name, value, options = {}) {
 function installVercelExpressCompatibility(req, res) {
   const rawPath = req.query?.trpcPath;
   const queryPath = Array.isArray(rawPath) ? rawPath[0] : rawPath;
-  const requestPath = queryPath ? `/api/trpc/${decodeURIComponent(String(queryPath))}` : new URL(req.url || "/", `https://${req.headers?.host || "localhost"}`).pathname;
+  const requestUrl = new URL(req.url || "/", `https://${req.headers?.host || "localhost"}`);
+  const requestPath = queryPath ? `/api/trpc/${decodeURIComponent(String(queryPath))}` : requestUrl.pathname;
+  requestUrl.searchParams.delete("trpcPath");
+  Object.defineProperty(req, "url", {
+    configurable: true,
+    value: `${requestPath}${requestUrl.search}`
+  });
   Object.defineProperty(req, "path", { configurable: true, value: requestPath });
   if (typeof res.status !== "function") {
     res.status = (code) => {

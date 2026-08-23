@@ -17,6 +17,22 @@ import { toArtistContentInput, toCustomArtistDocuments, type CustomDocumentType,
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
+/**
+ * mysql2 does not accept Aiven's `ssl-mode` query option. Remove it before
+ * handing the URI to mysql2; TLS is configured explicitly in the connection
+ * options below. If the URI is malformed, preserve it so the normal database
+ * failure path remains visible instead of hiding a configuration problem.
+ */
+export function normalizeDatabaseUrl(raw: string): string {
+  try {
+    const url = new URL(raw);
+    url.searchParams.delete("ssl-mode");
+    return url.toString();
+  } catch {
+    return raw;
+  }
+}
+
 // Lazily create the drizzle instance so local tooling can run without a DB.
 // Aiven requires TLS; DATABASE_SSL_CA can be supplied for strict certificate
 // validation. The legacy fallback keeps existing deployments working while
@@ -27,7 +43,7 @@ export async function getDb() {
       const sslCa = process.env.DATABASE_SSL_CA?.replace(/\\n/g, "\n");
       _db = drizzle({
         connection: {
-          uri: process.env.DATABASE_URL,
+          uri: normalizeDatabaseUrl(process.env.DATABASE_URL),
           ssl: sslCa
             ? { ca: sslCa, rejectUnauthorized: true }
             : { rejectUnauthorized: false },
