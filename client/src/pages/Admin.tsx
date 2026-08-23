@@ -1,162 +1,206 @@
 import {
   ArrowUpRight,
-  FilePenLine,
+  CheckCircle2,
+  Code2,
+  Database,
+  ExternalLink,
   FolderOpen,
+  Globe2,
   Inbox,
   LayoutDashboard,
-  Mail,
   ShieldCheck,
-  Users,
 } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
+import "./Admin.css";
+
+const tools = [
+  {
+    icon: Database,
+    eyebrow: "PRIMARY CMS",
+    title: "Sanity Studio",
+    copy: "Edit hero, profile, EPK, releases, visuals, live signal, dan event tanpa redeploy.",
+    detail: "PROJECT 3T6L52ON · PRODUCTION",
+    href: "https://www.sanity.io/manage",
+    action: "OPEN SANITY MANAGE",
+    external: true,
+    tone: "mint",
+  },
+  {
+    icon: Inbox,
+    eyebrow: "INBOX",
+    title: "Inquiry Inbox",
+    copy: "Review booking, remix, collaboration, dan licensing request dari satu alur kerja.",
+    detail: "BOOKING · REMIX · COLLAB · LICENSING",
+    href: "/studio/inquiries",
+    action: "REVIEW INQUIRIES",
+    tone: "coral",
+  },
+  {
+    icon: FolderOpen,
+    eyebrow: "MEDIA",
+    title: "Asset Library",
+    copy: "Upload dan kelola gambar, audio, video, atau PDF untuk kebutuhan site.",
+    detail: "MAX 10 MB PER FILE",
+    href: "/assets",
+    action: "MANAGE ASSETS",
+    tone: "violet",
+  },
+  {
+    icon: Code2,
+    eyebrow: "SYSTEM",
+    title: "Code & Deploy",
+    copy: "Layout, font, warna, motion, route, dan fitur baru dikerjakan melalui source code.",
+    detail: "GITHUB → MAIN → VERCEL",
+    href: "https://github.com/akbarnawasunda/akbar-next",
+    action: "OPEN REPOSITORY",
+    external: true,
+    tone: "bone",
+  },
+  {
+    icon: Globe2,
+    eyebrow: "PUBLIC",
+    title: "Live Preview",
+    copy: "Buka website publik untuk mengecek hasil konten dan deployment terbaru.",
+    detail: "AKBARNAWASUNDA.MY.ID",
+    href: "/",
+    action: "VIEW PUBLIC SITE",
+    tone: "cyan",
+  },
+  {
+    icon: LayoutDashboard,
+    eyebrow: "DELIVERY",
+    title: "Vercel Dashboard",
+    copy: "Pantau build, deployment, domain, environment, dan rollback production.",
+    detail: "DEPLOYMENT MONITORING",
+    href: "https://vercel.com/dashboard",
+    action: "OPEN VERCEL",
+    external: true,
+    tone: "graphite",
+  },
+];
+
+function ControlRoomStats() {
+  const content = trpc.content.listAll.useQuery();
+  const inquiries = trpc.inquiry.list.useQuery();
+  const leads = trpc.fanSignal.list.useQuery();
+  const published = content.data?.filter(item => item.isPublished).length ?? 0;
+  const newInquiries = inquiries.data?.filter(item => item.status === "new").length ?? 0;
+
+  return (
+    <section className="an-control-room-stats" aria-label="Workspace status">
+      <article>
+        <span className="an-stat-icon"><LayoutDashboard size={17} /></span>
+        <strong>{content.isLoading ? "—" : published}</strong>
+        <small>PUBLISHED ENTRIES</small>
+      </article>
+      <article>
+        <span className="an-stat-icon"><Inbox size={17} /></span>
+        <strong>{inquiries.isLoading ? "—" : newInquiries}</strong>
+        <small>NEW INQUIRIES</small>
+      </article>
+      <article>
+        <span className="an-stat-icon"><ShieldCheck size={17} /></span>
+        <strong>{leads.isLoading ? "—" : (leads.data?.length ?? 0)}</strong>
+        <small>FAN SIGNAL LEADS</small>
+      </article>
+      <article>
+        <span className="an-stat-icon"><CheckCircle2 size={17} /></span>
+        <strong>LIVE</strong>
+        <small>CONTROL ROOM STATUS</small>
+      </article>
+    </section>
+  );
+}
+
+function ToolCard({ tool }: { tool: (typeof tools)[number] }) {
+  const Icon = tool.icon;
+  return (
+    <a
+      className={`an-control-tool an-control-tool-${tool.tone}`}
+      href={tool.href}
+      target={tool.external ? "_blank" : undefined}
+      rel={tool.external ? "noreferrer" : undefined}
+    >
+      <div className="an-control-tool-top">
+        <span className="an-control-tool-icon"><Icon size={18} /></span>
+        {tool.external ? <ExternalLink size={15} /> : <ArrowUpRight size={15} />}
+      </div>
+      <span className="an-control-tool-eyebrow">{tool.eyebrow}</span>
+      <h2>{tool.title}</h2>
+      <p>{tool.copy}</p>
+      <div className="an-control-tool-bottom">
+        <small>{tool.detail}</small>
+        <strong>{tool.action}</strong>
+      </div>
+    </a>
+  );
+}
 
 function AdminContent() {
   const { user } = useAuth();
-  const content = trpc.content.listAll.useQuery(undefined, {
-    enabled: user?.role === "admin",
-  });
-  const inquiries = trpc.inquiry.list.useQuery(undefined, {
-    enabled: user?.role === "admin",
-  });
-  const leads = trpc.fanSignal.list.useQuery(undefined, {
-    enabled: user?.role === "admin",
-  });
 
   if (user?.role !== "admin") {
     return (
-      <main className="grid min-h-[70vh] place-items-center p-6">
-        <section className="max-w-md text-center">
-          <ShieldCheck className="mx-auto mb-5 h-10 w-10 text-primary" />
-          <h1 className="text-3xl font-semibold tracking-tight">
-            Owner access required
-          </h1>
-          <p className="mt-3 text-muted-foreground">
-            Admin records are available only to the authenticated site owner.
-          </p>
-          <a
-            className="mt-7 inline-flex items-center gap-2 text-sm underline"
-            href="/"
-          >
-            Return to public site <ArrowUpRight size={15} />
-          </a>
+      <main className="an-control-access">
+        <section>
+          <ShieldCheck size={42} />
+          <p>AN // OWNER ACCESS</p>
+          <h1>Owner access required.</h1>
+          <span>Admin records are available only to the authenticated site owner.</span>
+          <a href="/">RETURN TO PUBLIC SITE <ArrowUpRight size={15} /></a>
         </section>
       </main>
     );
   }
 
-  const published = content.data?.filter(item => item.isPublished).length ?? 0;
-  const newInquiries =
-    inquiries.data?.filter(item => item.status === "new").length ?? 0;
-
   return (
-    <main className="mx-auto max-w-6xl space-y-8">
-      <header className="flex flex-wrap items-end justify-between gap-5">
+    <main className="an-control-room">
+      <header className="an-control-room-hero">
         <div>
-          <p className="text-xs font-mono tracking-[.16em] text-muted-foreground">
-            AN // ADMIN
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-            Owner control room
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Kelola konten publik, inbox inquiry, Fan Signal, dan asset melalui
-            session auth serta API internal.
+          <p className="an-control-room-kicker"><span /> AN // CONTROL ROOM</p>
+          <h1>MAKE THE SITE<br /><em>MOVE.</em></h1>
+          <p className="an-control-room-intro">
+            Satu pintu untuk mengelola konten, menerima inquiry, menyiapkan asset,
+            dan memeriksa delivery website Akbar Nawasunda.
           </p>
         </div>
-        <a
-          className="inline-flex items-center gap-2 text-sm underline"
-          href="/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Open public site <ArrowUpRight size={15} />
+        <a className="an-control-public-link" href="/" target="_blank" rel="noreferrer">
+          <Globe2 size={15} /> OPEN PUBLIC SITE <ArrowUpRight size={15} />
         </a>
       </header>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <article className="rounded-xl border bg-card p-5">
-          <LayoutDashboard className="h-5 w-5 text-primary" />
-          <p className="mt-5 text-3xl font-semibold">
-            {content.isLoading ? "—" : published}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Published entries
-          </p>
-        </article>
-        <article className="rounded-xl border bg-card p-5">
-          <Inbox className="h-5 w-5 text-primary" />
-          <p className="mt-5 text-3xl font-semibold">
-            {inquiries.isLoading ? "—" : newInquiries}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">New inquiries</p>
-        </article>
-        <article className="rounded-xl border bg-card p-5">
-          <Users className="h-5 w-5 text-primary" />
-          <p className="mt-5 text-3xl font-semibold">
-            {leads.isLoading ? "—" : (leads.data?.length ?? 0)}
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">Fan Signal leads</p>
-        </article>
-        <a
-          className="rounded-xl border bg-card p-5 transition-colors hover:bg-accent"
-          href="/assets"
-        >
-          <FolderOpen className="h-5 w-5 text-primary" />
-          <p className="mt-5 text-base font-semibold">
-            Asset Library <ArrowUpRight className="inline h-4 w-4" />
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Upload and reference managed media.
-          </p>
-        </a>
+      <ControlRoomStats />
+
+      <section className="an-control-section-heading">
+        <div>
+          <p className="an-control-room-kicker"><span /> WORKSPACE ROUTES</p>
+          <h2>EVERYTHING<br /><em>IN REACH.</em></h2>
+        </div>
+        <p>Gunakan jalur yang sesuai dengan jenis perubahan. Konten editorial masuk ke Sanity; sistem dan desain tetap melalui code.</p>
       </section>
 
-      <section className="grid gap-5 md:grid-cols-3">
-        <a
-          className="group rounded-xl border bg-card p-6 transition-colors hover:bg-accent"
-          href="/studio"
-        >
-          <FilePenLine className="h-5 w-5 text-primary" />
-          <h2 className="mt-5 text-xl font-semibold">Content Studio</h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Publish and update owner-managed entries rendered by the public
-            platform.
-          </p>
-          <span className="mt-5 inline-flex items-center gap-2 text-sm underline">
-            Manage content <ArrowUpRight size={15} />
-          </span>
-        </a>
-        <a
-          className="group rounded-xl border bg-card p-6 transition-colors hover:bg-accent"
-          href="/studio/inquiries"
-        >
-          <Inbox className="h-5 w-5 text-primary" />
-          <h2 className="mt-5 text-xl font-semibold">Inquiry Inbox</h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Review booking, remix, collaboration, and licensing requests, then
-            update their status.
-          </p>
-          <span className="mt-5 inline-flex items-center gap-2 text-sm underline">
-            Review inquiries <ArrowUpRight size={15} />
-          </span>
-        </a>
-        <a
-          className="group rounded-xl border bg-card p-6 transition-colors hover:bg-accent"
-          href="/studio/broadcasts"
-        >
-          <Mail className="h-5 w-5 text-primary" />
-          <h2 className="mt-5 text-xl font-semibold">Broadcast Studio</h2>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Buat draft dan kirim update ke subscriber Fan Signal dengan
-            konfirmasi owner.
-          </p>
-          <span className="mt-5 inline-flex items-center gap-2 text-sm underline">
-            Compose broadcast <ArrowUpRight size={15} />
-          </span>
-        </a>
+      <section className="an-control-tool-grid" aria-label="Workspace tools">
+        {tools.map(tool => <ToolCard key={tool.title} tool={tool} />)}
       </section>
+
+      <section className="an-control-workflow">
+        <div>
+          <p className="an-control-room-kicker"><span /> THE CLEAN WORKFLOW</p>
+          <h2>EDIT.<br />PUBLISH.<br /><em>VERIFY.</em></h2>
+        </div>
+        <ol>
+          <li><b>01</b><span><strong>EDIT IN SANITY</strong>Untuk hero, profile, EPK, release, visual, live signal, dan event.</span></li>
+          <li><b>02</b><span><strong>PUBLISH THE CHANGE</strong>Tekan Publish di Sanity; public site membaca data terbaru tanpa redeploy.</span></li>
+          <li><b>03</b><span><strong>VERIFY IN PREVIEW</strong>Buka public site dan cek mobile sebelum membagikan link.</span></li>
+        </ol>
+      </section>
+
+      <footer className="an-control-room-note">
+        <span><ShieldCheck size={15} /> NEWSLETTER / BROADCAST IS CURRENTLY PAUSED.</span>
+        <small>Jangan gunakan jalur broadcast sampai backend delivery dinyatakan stabil.</small>
+      </footer>
     </main>
   );
 }

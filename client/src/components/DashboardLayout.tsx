@@ -21,14 +21,16 @@ import {
 } from "@/components/ui/sidebar";
 import { startLogin } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { FolderOpen, Globe2, LayoutDashboard, LogOut, PanelLeft } from "lucide-react";
+import { FilePenLine, FolderOpen, Globe2, Inbox, LayoutDashboard, LogOut, PanelLeft } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Content Studio", path: "/studio" },
+  { icon: LayoutDashboard, label: "Control Room", path: "/admin" },
+  { icon: FilePenLine, label: "Content Studio", path: "/studio" },
+  { icon: Inbox, label: "Inquiry Inbox", path: "/studio/inquiries" },
   { icon: FolderOpen, label: "Asset Library", path: "/assets" },
   { icon: Globe2, label: "Public Site", path: "/" },
 ];
