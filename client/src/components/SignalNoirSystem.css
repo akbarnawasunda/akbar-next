@@ -1,0 +1,776 @@
+/* AN // SIGNAL NOIR
+   A visual system built around signal handoff, archival precision, and warm human imagery.
+   It is intentionally low-frequency: fewer effects, stronger rules. */
+
+:root {
+  --noir-00: #020608;
+  --noir-01: #071419;
+  --noir-02: #0b2025;
+  --noir-03: #102d31;
+  --noir-violet: #8e78ff;
+  --noir-mint: #79d6c7;
+  --noir-flare: #ee9470;
+  --noir-bone: #f3ead8;
+  --noir-ash: #a9b8b3;
+  --noir-dim: rgba(243, 234, 216, 0.12);
+  --noir-hairline: rgba(243, 234, 216, 0.2);
+  --noir-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --noir-snap: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.an-site,
+.nf-page {
+  --route-accent: var(--noir-mint);
+  --route-accent-rgb: 121, 214, 199;
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  background-color: var(--noir-00) !important;
+  color: var(--noir-bone) !important;
+  font-family: "Manrope", sans-serif;
+}
+
+.an-site::before,
+.nf-page::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0 49.95%, rgba(var(--route-accent-rgb), 0.06) 50%, transparent 50.05%),
+    repeating-linear-gradient(0deg, rgba(243, 234, 216, 0.018) 0 1px, transparent 1px 7px),
+    radial-gradient(circle at 75% 9%, rgba(var(--route-accent-rgb), 0.12), transparent 28%),
+    radial-gradient(circle at 12% 88%, rgba(142, 120, 255, 0.08), transparent 24%);
+  opacity: 0.9;
+}
+
+.an-site h1,
+.nf-page h1,
+.an-site h2,
+.nf-page h2 {
+  text-wrap: balance;
+}
+
+.an-site h1,
+.nf-page h1,
+.an-site .section h2,
+.an-site .signal-section h2,
+.nf-page .nf-page-hero h1,
+.nf-page .nf-epk-hero h1 {
+  font-family: "DM Serif Display", Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.065em !important;
+}
+
+.an-site h2,
+.nf-page .nf-section h2,
+.nf-page .nf-signal-block h2 {
+  font-family: "Space Grotesk", sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.075em !important;
+}
+
+.an-site h3,
+.nf-page h3 {
+  font-family: "Space Grotesk", sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.045em !important;
+}
+
+.an-site p,
+.nf-page p {
+  color: rgba(243, 234, 216, 0.72);
+}
+
+.an-site .eyebrow,
+.an-site .an-section-index,
+.an-site .mono-label,
+.an-site .release-number,
+.an-site .live-status span,
+.an-site .live-status small,
+.nf-page .nf-page-eyebrow,
+.nf-page .nf-meta,
+.nf-page .nf-text-button,
+.nf-page .nf-button,
+.nf-page .nf-footer-column > span {
+  font-family: "IBM Plex Mono", monospace !important;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* The frame is the signature: a fine route-colored edge plus a quiet split plane. */
+.an-site .an-nav,
+.nf-page .nf-nav,
+.nf-header {
+  border-bottom: 1px solid rgba(var(--route-accent-rgb), 0.22) !important;
+  background: linear-gradient(180deg, rgba(2, 6, 8, 0.96), rgba(2, 6, 8, 0.72)) !important;
+  box-shadow: 0 1px 0 rgba(243, 234, 216, 0.04), 0 14px 42px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(18px) saturate(120%);
+}
+
+.an-site .an-nav::after,
+.nf-page .nf-nav::after,
+.nf-header::after {
+  position: absolute;
+  right: clamp(20px, 5vw, 76px);
+  bottom: -1px;
+  left: clamp(20px, 5vw, 76px);
+  height: 1px;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(var(--route-accent-rgb), 0.66) 22%, transparent 78%);
+  opacity: 0.58;
+}
+
+.an-site .an-mark,
+.nf-page .nf-mark {
+  border-color: rgba(var(--route-accent-rgb), 0.72) !important;
+  background: rgba(var(--route-accent-rgb), 0.08) !important;
+  box-shadow: inset 0 0 0 1px rgba(243, 234, 216, 0.06), 0 0 24px rgba(var(--route-accent-rgb), 0.12);
+}
+
+.an-site .an-nav nav a,
+.nf-page .nf-nav nav a,
+.an-site .nav-signal,
+.nf-page .nf-signal {
+  color: rgba(243, 234, 216, 0.62) !important;
+  transition: color 220ms var(--noir-snap), letter-spacing 220ms var(--noir-snap);
+}
+
+.an-site .an-nav nav a:hover,
+.an-site .an-nav nav a:focus-visible,
+.nf-page .nf-nav nav a:hover,
+.nf-page .nf-nav nav a:focus-visible,
+.nf-page .nf-nav nav a.is-active,
+.an-site .nav-signal:hover,
+.nf-page .nf-signal:hover {
+  color: var(--route-accent) !important;
+  letter-spacing: 0.22em;
+}
+
+/* Hero: the origin frame is not a generic banner. It has a visible datum and a human image anchor. */
+.an-site .an-hero,
+.nf-page .nf-page-hero,
+.nf-page .nf-epk-hero {
+  border-bottom: 1px solid rgba(var(--route-accent-rgb), 0.25);
+  background-color: var(--noir-01) !important;
+}
+
+.an-site .an-hero::before,
+.nf-page .nf-page-hero::before,
+.nf-page .nf-epk-hero::before {
+  z-index: 0;
+  background:
+    linear-gradient(90deg, rgba(243, 234, 216, 0.08) 1px, transparent 1px) 0 0 / 25% 100%,
+    linear-gradient(0deg, rgba(243, 234, 216, 0.06) 1px, transparent 1px) 0 0 / 100% 25%,
+    radial-gradient(circle at 78% 26%, rgba(var(--route-accent-rgb), 0.18), transparent 24%),
+    radial-gradient(circle at 14% 70%, rgba(238, 148, 112, 0.1), transparent 20%);
+  mix-blend-mode: screen;
+  opacity: 0.42;
+}
+
+.an-site .an-hero::after,
+.nf-page .nf-page-hero::after,
+.nf-page .nf-epk-hero::after {
+  background:
+    linear-gradient(90deg, rgba(2, 6, 8, 0.95), rgba(2, 6, 8, 0.56) 48%, rgba(2, 6, 8, 0.16)),
+    linear-gradient(0deg, rgba(2, 6, 8, 0.94), transparent 58%) !important;
+}
+
+.an-site .an-hero h1,
+.nf-page .nf-page-hero h1,
+.nf-page .nf-epk-hero h1 {
+  max-width: 10ch;
+  font-size: clamp(58px, 9vw, 142px) !important;
+  line-height: 0.86 !important;
+}
+
+.an-site .hero-copy,
+.nf-page .nf-page-hero > div:first-child,
+.nf-page .nf-epk-hero > * {
+  position: relative;
+}
+
+.an-site .hero-copy::before,
+.nf-page .nf-page-hero > div:first-child::before,
+.nf-page .nf-epk-hero > div:first-child::before {
+  position: absolute;
+  top: -28px;
+  left: 0;
+  width: clamp(90px, 14vw, 210px);
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, var(--route-accent), transparent);
+  box-shadow: 0 0 20px rgba(var(--route-accent-rgb), 0.3);
+}
+
+.an-site .hero-status,
+.nf-page .nf-hero-note {
+  border: 1px solid rgba(var(--route-accent-rgb), 0.32) !important;
+  border-radius: 0 !important;
+  background: linear-gradient(135deg, rgba(243, 234, 216, 0.08), rgba(2, 6, 8, 0.7)) !important;
+  box-shadow: inset 0 1px 0 rgba(243, 234, 216, 0.08), 0 22px 55px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(18px) saturate(115%);
+}
+
+.an-site .hero-status::before,
+.nf-page .nf-hero-note::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 2px;
+  content: "";
+  background: var(--route-accent);
+  box-shadow: 0 0 16px rgba(var(--route-accent-rgb), 0.45);
+}
+
+.an-site .button-primary,
+.nf-page .nf-button {
+  border: 1px solid var(--route-accent) !important;
+  border-radius: 0 !important;
+  background: var(--route-accent) !important;
+  box-shadow: 10px 10px 0 rgba(var(--route-accent-rgb), 0.12);
+  transition: transform 220ms var(--noir-snap), box-shadow 220ms var(--noir-snap), background-color 220ms var(--noir-snap);
+}
+
+.an-site .button-primary:hover,
+.nf-page .nf-button:hover {
+  transform: translate(-3px, -3px) !important;
+  box-shadow: 13px 13px 0 rgba(var(--route-accent-rgb), 0.18);
+}
+
+.an-site .button-quiet,
+.an-site .text-link,
+.nf-page .nf-text-button {
+  position: relative;
+  color: var(--noir-bone) !important;
+  transition: color 220ms var(--noir-snap), transform 220ms var(--noir-snap);
+}
+
+.an-site .button-quiet::after,
+.an-site .text-link::after,
+.nf-page .nf-text-button::after {
+  position: absolute;
+  right: 0;
+  bottom: -5px;
+  left: 0;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, var(--route-accent), transparent);
+  transform: scaleX(0.28);
+  transform-origin: left;
+  transition: transform 300ms var(--noir-snap);
+}
+
+.an-site .button-quiet:hover,
+.an-site .text-link:hover,
+.nf-page .nf-text-button:hover {
+  color: var(--route-accent) !important;
+  transform: translateX(4px);
+}
+
+.an-site .button-quiet:hover::after,
+.an-site .text-link:hover::after,
+.nf-page .nf-text-button:hover::after {
+  transform: scaleX(1);
+}
+
+/* Sections become rooms with a distinct vertical datum and signal label. */
+.an-site main > section,
+.nf-page main > section {
+  border-top: 0 !important;
+  background-color: transparent !important;
+}
+
+.an-site main > section:not(.an-hero),
+.nf-page main > section:not(.nf-page-hero) {
+  position: relative;
+}
+
+.an-site main > section:not(.an-hero)::after,
+.nf-page main > section:not(.nf-page-hero)::after {
+  position: absolute;
+  top: 34px;
+  right: clamp(20px, 8vw, 120px);
+  width: 112px;
+  height: 1px;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(var(--route-accent-rgb), 0.7));
+  opacity: 0.45;
+}
+
+.an-site .section-heading,
+.an-site .home-signal-copy,
+.an-site .live-copy,
+.nf-page .nf-section-title,
+.nf-page .en-section-intro {
+  position: relative;
+}
+
+.an-site .section-heading::after,
+.an-site .home-signal-copy::after,
+.an-site .live-copy::after,
+.nf-page .nf-section-title::after,
+.nf-page .en-section-intro::after {
+  position: absolute;
+  right: 0;
+  bottom: -16px;
+  width: 68px;
+  height: 1px;
+  content: "";
+  background: var(--route-accent);
+  opacity: 0.54;
+}
+
+.an-site .section h2,
+.an-site .signal-section h2,
+.nf-page .nf-section-title h2,
+.nf-page .nf-signal-block h2 {
+  max-width: 9ch;
+  font-size: clamp(46px, 6.7vw, 92px) !important;
+  line-height: 0.86 !important;
+}
+
+/* Cards feel like catalog instruments: square, quiet, and activated by a single edge. */
+.an-site .home-platform-card,
+.an-site .release-card,
+.an-site .video-card,
+.an-site .home-live-event,
+.nf-page .nf-catalog-card,
+.nf-page .nf-visual-card,
+.nf-page .nf-event-card,
+.nf-page .nf-universe-card,
+.nf-page .an-epk-capability,
+.nf-page .an-epk-asset,
+.nf-page .an-epk-release,
+.nf-page .nf-official-media {
+  border: 1px solid rgba(var(--route-accent-rgb), 0.22) !important;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(135deg, rgba(var(--route-accent-rgb), 0.08), transparent 42%),
+    rgba(7, 20, 25, 0.78) !important;
+  box-shadow: inset 0 1px 0 rgba(243, 234, 216, 0.04), 0 18px 46px rgba(0, 0, 0, 0.12) !important;
+  transition: transform 360ms var(--noir-snap), border-color 240ms var(--noir-snap), background-color 240ms var(--noir-snap), box-shadow 360ms var(--noir-snap);
+}
+
+.an-site .home-platform-card:hover,
+.an-site .release-card:hover,
+.an-site .video-card:hover,
+.an-site .home-live-event:hover,
+.nf-page .nf-catalog-card:hover,
+.nf-page .nf-visual-card:hover,
+.nf-page .nf-event-card:hover,
+.nf-page .nf-universe-card:hover,
+.nf-page .an-epk-capability:hover,
+.nf-page .an-epk-asset:hover,
+.nf-page .an-epk-release:hover,
+.nf-page .nf-official-media:hover,
+.nf-page .nf-catalog-card:focus-within,
+.nf-page .nf-visual-card:focus-within,
+.nf-page .nf-event-card:focus-within {
+  border-color: rgba(var(--route-accent-rgb), 0.68) !important;
+  background:
+    linear-gradient(135deg, rgba(var(--route-accent-rgb), 0.15), transparent 46%),
+    rgba(7, 20, 25, 0.94) !important;
+  box-shadow: inset 0 1px 0 rgba(243, 234, 216, 0.08), 0 24px 60px rgba(0, 0, 0, 0.24) !important;
+  transform: translateY(-5px);
+}
+
+.an-site .home-platform-card::after,
+.an-site .release-card::after,
+.an-site .video-card::after,
+.an-site .home-live-event::after,
+.nf-page .nf-catalog-card::after,
+.nf-page .nf-visual-card::after,
+.nf-page .nf-event-card::after,
+.nf-page .nf-universe-card::after,
+.nf-page .nf-official-media::after {
+  right: auto !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 42px !important;
+  height: 2px !important;
+  background: var(--route-accent) !important;
+  opacity: 0.82 !important;
+  transform: scaleX(1) !important;
+  transform-origin: left !important;
+}
+
+.an-site .release-card-art,
+.an-site .video-card img,
+.nf-page .nf-catalog-art,
+.nf-page .nf-visual-card img,
+.nf-page .nf-official-media-art img,
+.nf-page .an-epk-release img {
+  filter: saturate(0.88) contrast(1.04);
+  transition: filter 500ms var(--noir-snap), transform 700ms var(--noir-snap);
+}
+
+.an-site .release-card:hover img,
+.an-site .video-card:hover img,
+.nf-page .nf-catalog-card:hover img,
+.nf-page .nf-visual-card:hover img,
+.nf-page .nf-official-media:hover img,
+.nf-page .an-epk-release:hover img {
+  filter: saturate(1.16) contrast(1.08);
+}
+
+/* Route personalities. The system stays related, but the rhythm changes by route. */
+.route-motion[data-route="/music"] .nf-page {
+  --route-accent: var(--noir-violet);
+  --route-accent-rgb: 142, 120, 255;
+}
+
+.route-motion[data-route="/music"] .nf-page .nf-page-hero {
+  grid-template-columns: minmax(0, 1.3fr) minmax(240px, 0.7fr);
+  min-height: 680px;
+  background-position: 62% center;
+}
+
+.route-motion[data-route="/music"] .nf-page .nf-platform-hub {
+  min-height: 560px;
+  padding-top: clamp(110px, 13vw, 180px);
+  background:
+    linear-gradient(90deg, rgba(2, 6, 8, 0.96), rgba(2, 6, 8, 0.72)),
+    radial-gradient(circle at 80% 20%, rgba(142, 120, 255, 0.22), transparent 34%) !important;
+}
+
+.route-motion[data-route="/music"] .nf-page .an-story-section {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(34px, 8vw, 120px);
+  align-items: center;
+  background: linear-gradient(135deg, rgba(142, 120, 255, 0.1), transparent 48%) !important;
+}
+
+.route-motion[data-route="/music"] .nf-page .an-story-art {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid rgba(142, 120, 255, 0.42);
+  box-shadow: 18px 18px 0 rgba(142, 120, 255, 0.1);
+}
+
+.route-motion[data-route="/music"] .nf-page .an-story-copy h2 {
+  max-width: 10ch;
+  font-size: clamp(42px, 5.8vw, 82px) !important;
+}
+
+.route-motion[data-route="/visuals"] .nf-page {
+  --route-accent: #68e5f4;
+  --route-accent-rgb: 104, 229, 244;
+}
+
+.route-motion[data-route="/visuals"] .nf-page .nf-page-hero {
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  min-height: 610px;
+  background-position: center 42%;
+}
+
+.route-motion[data-route="/visuals"] .nf-page .nf-visual-grid {
+  grid-template-columns: minmax(0, 1.35fr) repeat(2, minmax(0, 0.825fr));
+  gap: 0;
+  border: 1px solid rgba(104, 229, 244, 0.22);
+}
+
+.route-motion[data-route="/visuals"] .nf-page .nf-visual-card {
+  min-height: 300px;
+  border-width: 0 1px 1px 0 !important;
+}
+
+.route-motion[data-route="/visuals"] .nf-page .nf-visual-card:first-child {
+  min-height: 630px;
+}
+
+.route-motion[data-route="/visuals"] .nf-page .nf-visual-card::after {
+  width: 100% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, var(--route-accent), transparent) !important;
+}
+
+.route-motion[data-route="/live"] .nf-page {
+  --route-accent: var(--noir-flare);
+  --route-accent-rgb: 238, 148, 112;
+}
+
+.route-motion[data-route="/live"] .nf-page .nf-page-hero {
+  min-height: 520px;
+  background-position: center 55%;
+}
+
+.route-motion[data-route="/live"] .nf-page .nf-live-stage {
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  min-height: 660px;
+  border-top: 0;
+  background:
+    linear-gradient(90deg, rgba(2, 6, 8, 0.88), rgba(2, 6, 8, 0.48)),
+    linear-gradient(0deg, rgba(238, 148, 112, 0.12), transparent 46%),
+    url(/assets/akbar-night-frequency-stage.webp) center/cover !important;
+}
+
+.route-motion[data-route="/live"] .nf-page .nf-live-card {
+  border: 1px solid rgba(238, 148, 112, 0.45);
+  border-top: 0;
+  border-left: 3px solid var(--route-accent);
+  border-radius: 0;
+  box-shadow: 16px 16px 0 rgba(238, 148, 112, 0.1);
+}
+
+.route-motion[data-route="/universe"] .nf-page {
+  --route-accent: #d8ff65;
+  --route-accent-rgb: 216, 255, 101;
+}
+
+.route-motion[data-route="/universe"] .nf-page .nf-page-hero {
+  min-height: 590px;
+  background-image: linear-gradient(90deg, rgba(2, 6, 8, 0.96), rgba(2, 6, 8, 0.58)), var(--page-image) !important;
+}
+
+.route-motion[data-route="/universe"] .nf-page .nf-universe-grid {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid rgba(216, 255, 101, 0.25);
+  border-left: 1px solid rgba(216, 255, 101, 0.25);
+}
+
+.route-motion[data-route="/universe"] .nf-page .nf-universe-card {
+  grid-column: span 4;
+  min-height: 360px;
+  border-width: 0 1px 1px 0 !important;
+  background: linear-gradient(135deg, rgba(216, 255, 101, 0.12), transparent 50%), rgba(7, 20, 25, 0.82) !important;
+}
+
+.route-motion[data-route="/universe"] .nf-page .nf-universe-card:nth-child(2) {
+  grid-column: span 5;
+}
+
+.route-motion[data-route="/universe"] .nf-page .nf-universe-card:nth-child(3) {
+  grid-column: span 3;
+}
+
+.route-motion[data-route="/about"] .nf-page,
+.route-motion[data-route="/epk"] .nf-page {
+  --route-accent: var(--noir-bone);
+  --route-accent-rgb: 243, 234, 216;
+}
+
+.route-motion[data-route="/about"] .nf-page .nf-page-hero,
+.route-motion[data-route="/epk"] .nf-page .nf-epk-hero {
+  min-height: 640px;
+  background-position: center 38%;
+}
+
+.route-motion[data-route="/about"] .nf-page .nf-section,
+.route-motion[data-route="/epk"] .nf-page .nf-section {
+  background: linear-gradient(90deg, rgba(243, 234, 216, 0.04), transparent 60%) !important;
+}
+
+.route-motion[data-route="/about"] .nf-page .nf-section-title,
+.route-motion[data-route="/epk"] .nf-page .nf-section-title {
+  max-width: 1120px;
+}
+
+/* Home stays the origin: warmer, larger, less catalog-like than internal routes. */
+.an-site .an-hero {
+  min-height: 100svh;
+  background-color: var(--noir-01) !important;
+  background-image:
+    linear-gradient(90deg, rgba(2, 6, 8, 0.97), rgba(2, 6, 8, 0.72) 44%, rgba(2, 6, 8, 0.24)),
+    linear-gradient(0deg, rgba(2, 6, 8, 0.96), transparent 58%),
+    var(--hero-image) !important;
+}
+
+.an-site .hero-description {
+  max-width: 37ch;
+  color: rgba(243, 234, 216, 0.72);
+}
+
+.an-site .hero-footer {
+  color: rgba(243, 234, 216, 0.54);
+}
+
+.an-site .home-signal-deck,
+.an-site .section-current,
+.an-site .release-section,
+.an-site .visual-section,
+.an-site .live-section {
+  background-image: linear-gradient(90deg, rgba(var(--route-accent-rgb), 0.05), transparent 48%) !important;
+}
+
+.an-site .release-section,
+.an-site .signal-section {
+  border-top: 1px solid rgba(var(--route-accent-rgb), 0.2);
+}
+
+.an-site .signal-section {
+  background:
+    linear-gradient(135deg, rgba(243, 234, 216, 0.94), rgba(217, 232, 212, 0.96)) !important;
+}
+
+.an-site .signal-section h2,
+.an-site .signal-section p,
+.an-site .signal-section label,
+.an-site .signal-section small {
+  color: var(--noir-01) !important;
+}
+
+.an-site .an-footer,
+.nf-page .nf-footer {
+  position: relative;
+  background:
+    linear-gradient(90deg, rgba(var(--route-accent-rgb), 0.07), transparent 45%),
+    var(--noir-00) !important;
+  border-top: 1px solid rgba(var(--route-accent-rgb), 0.24) !important;
+}
+
+.an-site .an-footer::before,
+.nf-page .nf-footer::before {
+  position: absolute;
+  top: 0;
+  left: clamp(20px, 8vw, 120px);
+  width: min(220px, 36vw);
+  height: 1px;
+  content: "";
+  background: var(--route-accent);
+  box-shadow: 0 0 20px rgba(var(--route-accent-rgb), 0.38);
+}
+
+/* Mobile is a dedicated narrow instrument, not a squeezed desktop. */
+@media (max-width: 820px) {
+  .an-site::before,
+  .nf-page::before {
+    background:
+      repeating-linear-gradient(0deg, rgba(243, 234, 216, 0.018) 0 1px, transparent 1px 9px),
+      radial-gradient(circle at 70% 12%, rgba(var(--route-accent-rgb), 0.12), transparent 38%);
+  }
+
+  .an-site .an-hero,
+  .nf-page .nf-page-hero,
+  .nf-page .nf-epk-hero {
+    min-height: 82svh !important;
+    padding-top: 120px;
+    padding-bottom: 78px;
+    background-position: 58% center;
+  }
+
+  .an-site .an-hero::before,
+  .nf-page .nf-page-hero::before,
+  .nf-page .nf-epk-hero::before {
+    background-size: 50% 100%, 100% 25%, auto, auto;
+    opacity: 0.28;
+  }
+
+  .an-site .an-hero h1,
+  .nf-page .nf-page-hero h1,
+  .nf-page .nf-epk-hero h1 {
+    max-width: 8ch;
+    font-size: clamp(54px, 15vw, 86px) !important;
+  }
+
+  .an-site .hero-status,
+  .nf-page .nf-hero-note {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: min(100%, 330px);
+    margin-top: 38px;
+  }
+
+  .an-site main > section:not(.an-hero)::after,
+  .nf-page main > section:not(.nf-page-hero)::after {
+    top: 22px;
+    right: 20px;
+    width: 60px;
+  }
+
+  .an-site .section-heading::after,
+  .an-site .home-signal-copy::after,
+  .an-site .live-copy::after,
+  .nf-page .nf-section-title::after,
+  .nf-page .en-section-intro::after {
+    right: auto;
+    left: 0;
+    bottom: -14px;
+  }
+
+  .route-motion[data-route="/music"] .nf-page .nf-page-hero,
+  .route-motion[data-route="/visuals"] .nf-page .nf-page-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .route-motion[data-route="/music"] .nf-page .nf-platform-hub {
+    min-height: auto;
+    padding-top: 92px;
+  }
+
+  .route-motion[data-route="/music"] .nf-page .an-story-section {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+
+  .route-motion[data-route="/music"] .nf-page .an-story-art {
+    width: min(100%, 360px);
+  }
+
+  .route-motion[data-route="/visuals"] .nf-page .nf-visual-grid,
+  .route-motion[data-route="/universe"] .nf-page .nf-universe-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .route-motion[data-route="/visuals"] .nf-page .nf-visual-card,
+  .route-motion[data-route="/visuals"] .nf-page .nf-visual-card:first-child {
+    min-height: 360px;
+    border-width: 0 0 1px 0 !important;
+  }
+
+  .route-motion[data-route="/universe"] .nf-page .nf-universe-card,
+  .route-motion[data-route="/universe"] .nf-page .nf-universe-card:nth-child(2),
+  .route-motion[data-route="/universe"] .nf-page .nf-universe-card:nth-child(3) {
+    grid-column: auto;
+    min-height: 290px;
+  }
+
+  .route-motion[data-route="/live"] .nf-page .nf-live-stage {
+    grid-template-columns: 1fr;
+    min-height: 620px;
+    background-position: 66% center !important;
+  }
+
+  .route-motion[data-route="/live"] .nf-page .nf-live-card {
+    width: min(100%, 340px);
+    justify-self: start;
+  }
+
+  .an-site .section h2,
+  .an-site .signal-section h2,
+  .nf-page .nf-section-title h2,
+  .nf-page .nf-signal-block h2 {
+    font-size: clamp(42px, 13vw, 68px) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .an-nav nav a,
+  .nf-page .nf-nav nav a,
+  .an-site .nav-signal,
+  .nf-page .nf-signal,
+  .an-site .button-primary,
+  .nf-page .nf-button,
+  .an-site .button-quiet,
+  .an-site .text-link,
+  .nf-page .nf-text-button,
+  .an-site .home-platform-card,
+  .an-site .release-card,
+  .an-site .video-card,
+  .an-site .home-live-event,
+  .nf-page .nf-catalog-card,
+  .nf-page .nf-visual-card,
+  .nf-page .nf-event-card,
+  .nf-page .nf-universe-card {
+    transition: none;
+  }
+}

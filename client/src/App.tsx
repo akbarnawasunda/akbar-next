@@ -48,6 +48,7 @@ import "./components/RouteMotion.css";
 import "./components/BrandSystem.css";
 import "./components/InteractionSystem.css";
 import "./components/NightFrequencySignature.css";
+import "./components/SignalNoirSystem.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
