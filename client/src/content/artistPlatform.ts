@@ -9,6 +9,8 @@ export const officialBrand = {
   portraitFallback: "/assets/akbar-official-portrait.webp",
   favicon: "/assets/akbar-favicon.jpg",
   rmxMark: "/assets/akbar-rmx-mark.webp",
+  editorialPortrait: "/assets/akbar-future-red.webp",
+  archivePortrait: "/assets/akbar-future-yellow.webp",
 };
 
 export const platformLinks = [

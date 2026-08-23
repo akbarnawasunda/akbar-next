@@ -28,7 +28,7 @@ const externalProps = (href: string) => ({
 export default function PressKit() {
   const cms = useSanityArtistContent();
   const press = cms.data?.pressKit;
-  const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
+  const [portraitSrc, setPortraitSrc] = useState(officialBrand.editorialPortrait);
   const bookingEmail = press?.bookingEmail || verifiedArtistProfile.bookingEmail;
   const pressEmail = press?.pressEmail || bookingEmail;
   const selectedReleases = releases.slice(0, 3);
@@ -86,8 +86,8 @@ export default function PressKit() {
               <div className="an-epk-hero-image">
                 <img
                   src={portraitSrc}
-                  alt="Portrait resmi Akbar Nawasunda"
-                  width={800}
+                  alt="Editorial portrait artwork of Akbar Nawasunda"
+                  width={667}
                   height={1000}
                   fetchPriority="high"
                   decoding="async"
@@ -99,7 +99,7 @@ export default function PressKit() {
                 />
               </div>
               <div className="an-epk-hero-card-copy">
-                <span>BOOKING / PRESS</span>
+                <span>EDITORIAL / PRESS</span>
                 <strong>AKBAR<br />NAWASUNDA</strong>
                 <small>{verifiedArtistProfile.location} · {verifiedArtistProfile.aliases[0]}</small>
               </div>
