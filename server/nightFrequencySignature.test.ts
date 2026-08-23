@@ -9,8 +9,7 @@ describe("Night Frequency signature", () => {
     const component = source("client/src/components/NightFrequencySignature.tsx");
     expect(component).toContain('aria-label="Navigasi frekuensi halaman"');
     expect(component).toContain('aria-current={index === activeChapter ? "step" : undefined}');
-    expect(component).toContain('"00"');
-    expect(component).toContain('const isHero = element.matches(".an-hero, .nf-page-hero")');
+    expect(component).toContain('String(index).padStart(2, "0")');
     expect(component).toContain('scrollIntoView({ behavior: "smooth", block: "start" })');
   });
 

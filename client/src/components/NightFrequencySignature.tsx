@@ -27,10 +27,7 @@ function collectChapters(): Chapter[] {
           heading?.textContent ||
           indexText,
       );
-      const isHero = element.matches(".an-hero, .nf-page-hero");
-      const numericIndex = isHero
-        ? "00"
-        : indexText.match(/\d{1,2}/)?.[0] || String(index + 1).padStart(2, "0");
+      const numericIndex = String(index).padStart(2, "0");
       return { element, label, index: numericIndex };
     },
   );
