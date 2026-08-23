@@ -25,7 +25,7 @@ describe("artist content contract", () => {
 
     expect(pressKit).toContain("Request material");
     expect(pressKit).toContain("Aset yang tersedia secara resmi");
-    expect(live).toContain("BELUM ADA JADWAL.");
+    expect(live).toContain("BELUM ADA SHOW TERKONFIRMASI.");
   });
 
   it("preserves verified legacy artist identity and catalog in the public fallback", () => {

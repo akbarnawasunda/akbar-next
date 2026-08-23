@@ -2,6 +2,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { trpc } from "@/lib/trpc";
+import "./EcosystemPages.css";
 import "./Inquiry.css";
 
 type InquiryType = "booking" | "remix" | "collaboration" | "licensing";

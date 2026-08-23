@@ -24,7 +24,6 @@ import {
   currentRelease,
   officialBrand,
   platformLinks,
-  publicStorageAsset,
   releases,
   videos,
 } from "@/content/artistPlatform";
@@ -70,10 +69,14 @@ export default function Home() {
     rawManagedLive && !/no date announced|tba/i.test(rawManagedLive.title)
       ? rawManagedLive
       : undefined;
+  const normalizeManagedTitle = (value: string) =>
+    value.toLowerCase() === "garam & madu × backpacker"
+      ? "Garam & Madu × Backpacker"
+      : value;
   const activeRelease = managedRelease
     ? {
         ...currentRelease,
-        title: managedRelease.title,
+        title: normalizeManagedTitle(managedRelease.title),
         type: managedRelease.label || currentRelease.type,
         href: managedRelease.href || currentRelease.href,
         image:
@@ -449,7 +452,7 @@ export default function Home() {
           <div
             className="live-backdrop"
             style={{
-              backgroundImage: `url(${publicStorageAsset("/manus-storage/an-night-frequency-stage_113bf174.jpg")})`,
+              backgroundImage: "url(/assets/akbar-night-frequency-hero.webp)",
             }}
           />
           <div className="live-copy">

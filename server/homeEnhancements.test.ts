@@ -58,6 +58,8 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain('className="hero-title-editorial"');
     expect(home).toContain('data-no-scramble="true"');
     expect(home).toContain("hero-title-mask");
+    expect(home).toContain("Garam & Madu × Backpacker");
+    expect(home).toContain("/assets/akbar-night-frequency-hero.webp");
     expect(source("client/src/components/MotionOrchestrator.tsx")).toContain(
       "const duration = 2000;"
     );

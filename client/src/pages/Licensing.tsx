@@ -1,5 +1,6 @@
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { verifiedArtistProfile } from "@/content/artistPlatform";
+import "./EcosystemPages.css";
 import "./Inquiry.css";
 
 const routes = [
