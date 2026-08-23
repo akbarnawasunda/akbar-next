@@ -45,6 +45,15 @@ export default function AssetLibrary() {
     }
   }
 
+  async function handleCopy(url: string) {
+    try {
+      await navigator.clipboard.writeText(url);
+      setMessage("Asset URL copied to clipboard.");
+    } catch {
+      setMessage(`Copy unavailable. URL: ${url}`);
+    }
+  }
+
   if (loading) return <main className="container py-16">Loading account…</main>;
   if (!isAuthenticated) return <main className="container py-16"><Card><CardHeader><CardTitle>Asset Library</CardTitle></CardHeader><CardContent>Please sign in to manage stored assets.</CardContent></Card></main>;
 
@@ -56,7 +65,7 @@ export default function AssetLibrary() {
         <Input ref={inputRef} className="hidden" type="file" accept="image/*,audio/*,video/*,.pdf" onChange={(event) => void handleFile(event.target.files?.[0])} />
       </div>
       {message && <p className="mb-6 rounded-md border border-border bg-card px-4 py-3 text-sm" role="status">{message}</p>}
-      {assets.isLoading ? <p>Loading stored assets…</p> : assets.data?.length ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{assets.data.map((asset) => <Card key={asset.id} className="overflow-hidden"><div className="aspect-video bg-muted">{asset.mimeType.startsWith("image/") ? <img src={asset.url} alt={asset.fileName} className="h-full w-full object-cover" /> : <div className="grid h-full place-items-center p-4 text-center text-sm text-muted-foreground">{asset.mimeType}</div>}</div><CardContent className="p-4"><p className="truncate font-medium">{asset.fileName}</p><p className="mt-1 text-xs text-muted-foreground">{Math.ceil(asset.size / 1024)} KB · {new Date(asset.createdAt).toLocaleString()}</p><a className="mt-3 inline-block text-sm underline" href={asset.url} target="_blank" rel="noreferrer">Open stored file</a></CardContent></Card>)}</div> : <Card><CardContent className="p-8 text-center text-muted-foreground">No stored assets yet. Upload the first portfolio file.</CardContent></Card>}
+      {assets.isLoading ? <p>Loading stored assets…</p> : assets.data?.length ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{assets.data.map((asset) => <Card key={asset.id} className="overflow-hidden"><div className="aspect-video bg-muted">{asset.mimeType.startsWith("image/") ? <img src={asset.url} alt={asset.fileName} className="h-full w-full object-cover" /> : <div className="grid h-full place-items-center p-4 text-center text-sm text-muted-foreground">{asset.mimeType}</div>}</div><CardContent className="p-4"><p className="truncate font-medium">{asset.fileName}</p><p className="mt-1 text-xs text-muted-foreground">{Math.ceil(asset.size / 1024)} KB · {new Date(asset.createdAt).toLocaleString()}</p><div className="mt-3 flex flex-wrap items-center gap-3"><a className="text-sm underline" href={asset.url} target="_blank" rel="noreferrer">Open stored file</a><Button type="button" variant="outline" size="sm" onClick={() => void handleCopy(asset.url)}>Copy URL</Button></div></CardContent></Card>)}</div> : <Card><CardContent className="p-8 text-center text-muted-foreground">No stored assets yet. Upload the first portfolio file.</CardContent></Card>}
       <p className="mt-8 text-xs text-muted-foreground">Signed in as {user?.name || user?.email || "owner"}. Stored bytes are handled by File Storage; the database stores metadata and the storage key only.</p>
     </main>
   );
