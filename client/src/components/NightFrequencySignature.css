@@ -1,0 +1,402 @@
+/* Night Frequency signature: a restrained signal system, not decorative motion wallpaper. */
+:root {
+  --nf-carrier: #79d6c7;
+  --nf-carrier-rgb: 121, 214, 199;
+  --nf-lock-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.route-motion {
+  position: relative;
+  isolation: isolate;
+  animation: nf-route-lock 720ms var(--nf-lock-ease) both;
+}
+
+.route-motion::before {
+  position: fixed;
+  z-index: 120;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--route-accent, var(--nf-carrier)) 18%, rgba(var(--route-accent-rgb, var(--nf-carrier-rgb)), 0.08) 82%, transparent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: nf-carrier-scan 780ms var(--nf-lock-ease) 80ms both;
+}
+
+@keyframes nf-route-lock {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes nf-carrier-scan {
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  22% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.78;
+    transform: scaleX(1);
+  }
+}
+
+.nf-page main > section,
+.an-site main > section {
+  --nf-section-accent: var(--route-accent, var(--nf-carrier));
+  position: relative;
+  scroll-margin-top: 94px;
+}
+
+.nf-page main > section:not(.nf-page-hero)::before,
+.an-site main > section:not(.an-hero)::before {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: clamp(22px, 7vw, 110px);
+  left: clamp(22px, 7vw, 110px);
+  height: 1px;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(var(--route-accent-rgb, var(--nf-carrier-rgb)), 0.6) 18%, rgba(244, 234, 215, 0.12) 55%, transparent);
+  opacity: 0.2;
+  transform: scaleX(0.12);
+  transform-origin: left center;
+  transition: opacity 700ms var(--nf-lock-ease), transform 900ms var(--nf-lock-ease);
+}
+
+.nf-page main > section.is-motion-in-view:not(.nf-page-hero)::before,
+.an-site main > section.is-revealed:not(.an-hero)::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.nf-page main > section:not(.nf-page-hero) .nf-section-title,
+.nf-page main > section:not(.nf-page-hero) .en-section-intro,
+.an-site main > section:not(.an-hero) .section-heading,
+.an-site main > section:not(.an-hero) .home-signal-copy,
+.an-site main > section:not(.an-hero) .live-copy {
+  position: relative;
+}
+
+.nf-page main > section:not(.nf-page-hero) .nf-section-title::before,
+.nf-page main > section:not(.nf-page-hero) .en-section-intro::before,
+.an-site main > section:not(.an-hero) .section-heading::before,
+.an-site main > section:not(.an-hero) .home-signal-copy::before,
+.an-site main > section:not(.an-hero) .live-copy::before {
+  position: absolute;
+  top: 0.3em;
+  left: -18px;
+  width: 2px;
+  height: 0.82em;
+  content: "";
+  background: var(--nf-section-accent);
+  box-shadow: 0 0 18px rgba(var(--route-accent-rgb, var(--nf-carrier-rgb)), 0.32);
+  transform: scaleY(0.25);
+  transform-origin: top center;
+  transition: transform 720ms var(--nf-lock-ease);
+}
+
+.nf-page main > section.is-motion-in-view:not(.nf-page-hero) .nf-section-title::before,
+.nf-page main > section.is-motion-in-view:not(.nf-page-hero) .en-section-intro::before,
+.an-site main > section.is-revealed:not(.an-hero) .section-heading::before,
+.an-site main > section.is-revealed:not(.an-hero) .home-signal-copy::before,
+.an-site main > section.is-revealed:not(.an-hero) .live-copy::before {
+  transform: scaleY(1);
+}
+
+.nf-page .nf-page-eyebrow,
+.an-site .an-section-index,
+.an-site .eyebrow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  letter-spacing: 0.18em;
+}
+
+.nf-page .nf-page-eyebrow::after,
+.an-site .an-section-index::after,
+.an-site .eyebrow::after {
+  width: 34px;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, var(--nf-section-accent), transparent);
+  opacity: 0.72;
+}
+
+.nf-signature-rail {
+  position: fixed;
+  z-index: 80;
+  top: 50%;
+  right: 18px;
+  display: grid;
+  gap: 12px;
+  width: 142px;
+  padding: 14px 12px;
+  border: 1px solid rgba(var(--route-accent-rgb, var(--nf-carrier-rgb)), 0.24);
+  background: rgba(8, 8, 12, 0.66);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.18);
+  opacity: 0.48;
+  backdrop-filter: blur(14px);
+  transform: translate3d(0, -50%, 0);
+  transition: opacity 220ms var(--nf-lock-ease), border-color 220ms var(--nf-lock-ease), background-color 220ms var(--nf-lock-ease);
+}
+
+.nf-signature-rail:hover,
+.nf-signature-rail:focus-within {
+  border-color: rgba(var(--route-accent-rgb, var(--nf-carrier-rgb)), 0.58);
+  background: rgba(8, 8, 12, 0.9);
+  opacity: 1;
+}
+
+.nf-signature-rail-label,
+.nf-signature-rail-status {
+  color: rgba(244, 234, 215, 0.56);
+  font: 500 8px/1.2 "IBM Plex Mono", monospace;
+  letter-spacing: 0.16em;
+}
+
+.nf-signature-rail-status {
+  color: var(--route-accent, var(--nf-carrier));
+  text-align: right;
+}
+
+.nf-signature-rail ol {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nf-signature-rail li,
+.nf-signature-rail button {
+  min-width: 0;
+}
+
+.nf-signature-rail button {
+  display: grid;
+  grid-template-columns: 12px 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 5px 0;
+  border: 0;
+  color: rgba(244, 234, 215, 0.5);
+  background: transparent;
+  font: 500 8px/1.25 "IBM Plex Mono", monospace;
+  letter-spacing: 0.06em;
+  text-align: left;
+  transition: color 220ms var(--nf-lock-ease), transform 220ms var(--nf-lock-ease);
+}
+
+.nf-signature-rail button:hover,
+.nf-signature-rail button:focus-visible,
+.nf-signature-rail button.is-active {
+  color: var(--route-accent, var(--nf-carrier));
+  transform: translateX(-3px);
+}
+
+.nf-signature-rail-tick {
+  display: block;
+  width: 8px;
+  height: 1px;
+  background: currentColor;
+  box-shadow: 0 0 0 currentColor;
+  transition: width 220ms var(--nf-lock-ease), box-shadow 220ms var(--nf-lock-ease);
+}
+
+.nf-signature-rail button.is-active .nf-signature-rail-tick {
+  width: 12px;
+  box-shadow: 0 0 12px currentColor;
+}
+
+.nf-signature-rail-index {
+  opacity: 0.74;
+}
+
+.nf-signature-rail-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nf-page .nf-catalog-card,
+.nf-page .nf-visual-card,
+.nf-page .nf-event-card,
+.nf-page .nf-universe-card,
+.an-site .release-card,
+.an-site .video-card,
+.an-site .home-live-event {
+  position: relative;
+  isolation: isolate;
+}
+
+.nf-page .nf-catalog-card::after,
+.nf-page .nf-visual-card::after,
+.nf-page .nf-event-card::after,
+.nf-page .nf-universe-card::after,
+.an-site .release-card::after,
+.an-site .video-card::after,
+.an-site .home-live-event::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--nf-section-accent, var(--nf-carrier)), transparent);
+  opacity: 0;
+  transform: scaleX(0.18);
+  transform-origin: center;
+  transition: opacity 240ms var(--nf-lock-ease), transform 420ms var(--nf-lock-ease);
+}
+
+.nf-page .nf-catalog-card:hover::after,
+.nf-page .nf-catalog-card:focus-within::after,
+.nf-page .nf-visual-card:hover::after,
+.nf-page .nf-visual-card:focus-within::after,
+.nf-page .nf-event-card:hover::after,
+.nf-page .nf-event-card:focus-within::after,
+.nf-page .nf-universe-card:hover::after,
+.nf-page .nf-universe-card:focus-within::after,
+.an-site .release-card:hover::after,
+.an-site .release-card:focus-within::after,
+.an-site .video-card:hover::after,
+.an-site .video-card:focus-within::after,
+.an-site .home-live-event:hover::after,
+.an-site .home-live-event:focus-within::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.nf-page .nf-catalog-card:hover .nf-catalog-art img,
+.nf-page .nf-visual-card:hover img,
+.an-site .release-card:hover .release-card-art img,
+.an-site .video-card:hover img {
+  transform: scale(1.035);
+  transition: transform 720ms var(--nf-lock-ease);
+}
+
+@media (max-width: 1100px) {
+  .nf-signature-rail {
+    right: 12px;
+    width: 38px;
+    padding: 11px 9px;
+  }
+
+  .nf-signature-rail-label,
+  .nf-signature-rail-name {
+    display: none;
+  }
+
+  .nf-signature-rail button {
+    grid-template-columns: 12px 1fr;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 820px) {
+  .route-motion::before {
+    animation-duration: 520ms;
+  }
+
+  .nf-page main > section,
+  .an-site main > section {
+    scroll-margin-top: 76px;
+  }
+
+  .nf-page main > section:not(.nf-page-hero)::before,
+  .an-site main > section:not(.an-hero)::before {
+    right: 20px;
+    left: 20px;
+  }
+
+  .nf-page main > section:not(.nf-page-hero) .nf-section-title::before,
+  .nf-page main > section:not(.nf-page-hero) .en-section-intro::before,
+  .an-site main > section:not(.an-hero) .section-heading::before,
+  .an-site main > section:not(.an-hero) .home-signal-copy::before,
+  .an-site main > section:not(.an-hero) .live-copy::before {
+    left: -10px;
+  }
+
+  .nf-signature-rail {
+    top: auto;
+    right: 12px;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    width: auto;
+    padding: 8px 9px;
+    opacity: 0.72;
+    transform: none;
+  }
+
+  .nf-signature-rail ol {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nf-signature-rail button {
+    display: block;
+    width: 14px;
+    padding: 5px 1px;
+  }
+
+  .nf-signature-rail-tick {
+    width: 12px;
+    height: 2px;
+  }
+
+  .nf-signature-rail button.is-active .nf-signature-rail-tick {
+    width: 14px;
+  }
+
+  .nf-signature-rail-index,
+  .nf-signature-rail-status {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-motion,
+  .route-motion::before {
+    animation: none;
+  }
+
+  .nf-page main > section:not(.nf-page-hero)::before,
+  .an-site main > section:not(.an-hero)::before,
+  .nf-page main > section:not(.nf-page-hero) .nf-section-title::before,
+  .nf-page main > section:not(.nf-page-hero) .en-section-intro::before,
+  .an-site main > section:not(.an-hero) .section-heading::before,
+  .an-site main > section:not(.an-hero) .home-signal-copy::before,
+  .an-site main > section:not(.an-hero) .live-copy::before,
+  .nf-signature-rail button,
+  .nf-signature-rail-tick,
+  .nf-page .nf-catalog-card::after,
+  .nf-page .nf-visual-card::after,
+  .nf-page .nf-event-card::after,
+  .nf-page .nf-universe-card::after,
+  .an-site .release-card::after,
+  .an-site .video-card::after,
+  .an-site .home-live-event::after {
+    transition: none;
+  }
+
+  .nf-page .nf-catalog-card:hover .nf-catalog-art img,
+  .nf-page .nf-visual-card:hover img,
+  .an-site .release-card:hover .release-card-art img,
+  .an-site .video-card:hover img {
+    transform: none;
+  }
+}

@@ -38,6 +38,7 @@ const { EnglishHome, EnglishMusic, EnglishVisuals, EnglishLive, EnglishUniverse,
 import LegacyDocument from "./components/LegacyDocument";
 import { ScrollProgress } from "./components/ScrollProgress";
 import { MotionOrchestrator } from "./components/MotionOrchestrator";
+import { NightFrequencySignature } from "./components/NightFrequencySignature";
 import { trpc } from "./lib/trpc";
 import { customDocumentsToPublicContent } from "./content/publicContent";
 import "./components/PlasmaRefinement.css";
@@ -46,6 +47,7 @@ import "./components/MaturePalette.css";
 import "./components/RouteMotion.css";
 import "./components/BrandSystem.css";
 import "./components/InteractionSystem.css";
+import "./components/NightFrequencySignature.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -226,6 +228,7 @@ function App() {
           <Suspense fallback={null}><StructuredData /></Suspense>
           <MotionOrchestrator />
           <RouteMotion />
+          <NightFrequencySignature />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
