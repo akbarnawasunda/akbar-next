@@ -8,6 +8,7 @@ import { createArtistInquiry, createFanSignal, createStoredAsset, deleteCustomAr
 import { createResendBroadcast, getResendReadiness, sendResendBroadcast, syncFanSignalContact, ResendApiError } from "./resend";
 import { storagePut } from "./storage";
 import { customDocumentTypes } from "./customContent";
+import { loginWithDashboardPassword } from "./dashboardAuth";
 
 const MAX_ASSET_BYTES = 10 * 1024 * 1024;
 
@@ -20,6 +21,12 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+    dashboardLogin: publicProcedure
+      .input(z.object({
+        username: z.string().trim().min(1).max(64),
+        password: z.string().min(1).max(512),
+      }))
+      .mutation(({ ctx, input }) => loginWithDashboardPassword(ctx.req, ctx.res, input.username, input.password)),
   }),
   assets: router({
     list: protectedProcedure.query(({ ctx }) => listStoredAssets(ctx.user.id)),
