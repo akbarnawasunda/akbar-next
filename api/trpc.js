@@ -411,6 +411,24 @@ async function getDb() {
   }
   return _db;
 }
+async function readWithRetry(operation, fallback) {
+  let db = await getDb();
+  if (!db) return fallback;
+  try {
+    return await operation(db);
+  } catch (error) {
+    console.error("[Database] Read failed; reconnecting once:", error);
+    _db = null;
+    db = await getDb();
+    if (!db) return fallback;
+    try {
+      return await operation(db);
+    } catch (retryError) {
+      console.error("[Database] Read retry failed; using safe fallback:", retryError);
+      return fallback;
+    }
+  }
+}
 async function upsertUser(user) {
   if (!user.openId) {
     throw new Error("User openId is required for upsert");
@@ -460,13 +478,13 @@ async function upsertUser(user) {
   }
 }
 async function getUserByOpenId(openId) {
-  const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot get user: database not available");
-    return void 0;
-  }
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
-  return result.length > 0 ? result[0] : void 0;
+  return readWithRetry(
+    async (db) => {
+      const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+      return result.length > 0 ? result[0] : void 0;
+    },
+    void 0
+  );
 }
 function isDuplicateDatabaseError(error) {
   const dbError = error;
@@ -504,9 +522,10 @@ async function createStoredAsset(asset) {
   return { id: Number(result[0].insertId), ...asset };
 }
 async function listStoredAssets(ownerId) {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(storedAssets).where(eq(storedAssets.ownerId, ownerId));
+  return readWithRetry(
+    (db) => db.select().from(storedAssets).where(eq(storedAssets.ownerId, ownerId)),
+    []
+  );
 }
 async function createFanSignal(signal) {
   const db = await getDb();
@@ -517,19 +536,22 @@ async function createFanSignal(signal) {
   return { email: signal.email, source: signal.source ?? "home" };
 }
 async function listFanSignals() {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(fanSignals).orderBy(asc(fanSignals.createdAt));
+  return readWithRetry(
+    (db) => db.select().from(fanSignals).orderBy(asc(fanSignals.createdAt)),
+    []
+  );
 }
 async function listPublishedArtistContent() {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(artistContent).where(and(eq(artistContent.isPublished, true), notLike(artistContent.slug, "custom-%"))).orderBy(asc(artistContent.sortOrder));
+  return readWithRetry(
+    (db) => db.select().from(artistContent).where(and(eq(artistContent.isPublished, true), notLike(artistContent.slug, "custom-%"))).orderBy(asc(artistContent.sortOrder)),
+    []
+  );
 }
 async function listAllArtistContent() {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(artistContent).where(notLike(artistContent.slug, "custom-%")).orderBy(asc(artistContent.kind), asc(artistContent.sortOrder));
+  return readWithRetry(
+    (db) => db.select().from(artistContent).where(notLike(artistContent.slug, "custom-%")).orderBy(asc(artistContent.kind), asc(artistContent.sortOrder)),
+    []
+  );
 }
 async function upsertArtistContent(item) {
   const db = await getDb();
@@ -549,9 +571,10 @@ async function upsertArtistContent(item) {
   return { slug: item.slug };
 }
 async function listCustomArtistContent(publishedOnly = false) {
-  const db = await getDb();
-  if (!db) return [];
-  const rows = await db.select().from(artistContent).where(publishedOnly ? and(eq(artistContent.isPublished, true), like(artistContent.slug, "custom-%")) : like(artistContent.slug, "custom-%")).orderBy(asc(artistContent.sortOrder));
+  const rows = await readWithRetry(
+    (db) => db.select().from(artistContent).where(publishedOnly ? and(eq(artistContent.isPublished, true), like(artistContent.slug, "custom-%")) : like(artistContent.slug, "custom-%")).orderBy(asc(artistContent.sortOrder)),
+    []
+  );
   return toCustomArtistDocuments(rows);
 }
 async function upsertCustomArtistDocument(input) {
@@ -578,9 +601,10 @@ async function createArtistInquiry(inquiry) {
   };
 }
 async function listArtistInquiries() {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(artistInquiries).orderBy(asc(artistInquiries.status), asc(artistInquiries.createdAt));
+  return readWithRetry(
+    (db) => db.select().from(artistInquiries).orderBy(asc(artistInquiries.status), asc(artistInquiries.createdAt)),
+    []
+  );
 }
 async function updateArtistInquiryStatus(id, status) {
   const db = await getDb();

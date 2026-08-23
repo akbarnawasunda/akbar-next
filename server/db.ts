@@ -41,6 +41,29 @@ export async function getDb() {
   return _db;
 }
 
+type Database = Exclude<Awaited<ReturnType<typeof getDb>>, null>;
+
+async function readWithRetry<T>(operation: (db: Database) => Promise<T>, fallback: T): Promise<T> {
+  let db = await getDb();
+  if (!db) return fallback;
+
+  try {
+    return await operation(db);
+  } catch (error) {
+    console.error("[Database] Read failed; reconnecting once:", error);
+    _db = null;
+    db = await getDb();
+    if (!db) return fallback;
+
+    try {
+      return await operation(db);
+    } catch (retryError) {
+      console.error("[Database] Read retry failed; using safe fallback:", retryError);
+      return fallback;
+    }
+  }
+}
+
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) {
     throw new Error("User openId is required for upsert");
@@ -101,19 +124,17 @@ export async function upsertUser(user: InsertUser): Promise<void> {
 }
 
 export async function getUserByOpenId(openId: string) {
-  const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot get user: database not available");
-    return undefined;
-  }
-
-  const result = await db
-    .select()
-    .from(users)
-    .where(eq(users.openId, openId))
-    .limit(1);
-
-  return result.length > 0 ? result[0] : undefined;
+  return readWithRetry(
+    async db => {
+      const result = await db
+        .select()
+        .from(users)
+        .where(eq(users.openId, openId))
+        .limit(1);
+      return result.length > 0 ? result[0] : undefined;
+    },
+    undefined,
+  );
 }
 
 /**
@@ -165,12 +186,13 @@ export async function createStoredAsset(asset: InsertStoredAsset) {
 }
 
 export async function listStoredAssets(ownerId: number) {
-  const db = await getDb();
-  if (!db) return [];
-  return db
-    .select()
-    .from(storedAssets)
-    .where(eq(storedAssets.ownerId, ownerId));
+  return readWithRetry(
+    db => db
+      .select()
+      .from(storedAssets)
+      .where(eq(storedAssets.ownerId, ownerId)),
+    [],
+  );
 }
 
 export async function createFanSignal(signal: InsertFanSignal) {
@@ -186,29 +208,32 @@ export async function createFanSignal(signal: InsertFanSignal) {
 }
 
 export async function listFanSignals() {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(fanSignals).orderBy(asc(fanSignals.createdAt));
+  return readWithRetry(
+    db => db.select().from(fanSignals).orderBy(asc(fanSignals.createdAt)),
+    [],
+  );
 }
 
 export async function listPublishedArtistContent() {
-  const db = await getDb();
-  if (!db) return [];
-  return db
-    .select()
-    .from(artistContent)
-    .where(and(eq(artistContent.isPublished, true), notLike(artistContent.slug, "custom-%")))
-    .orderBy(asc(artistContent.sortOrder));
+  return readWithRetry(
+    db => db
+      .select()
+      .from(artistContent)
+      .where(and(eq(artistContent.isPublished, true), notLike(artistContent.slug, "custom-%")))
+      .orderBy(asc(artistContent.sortOrder)),
+    [],
+  );
 }
 
 export async function listAllArtistContent() {
-  const db = await getDb();
-  if (!db) return [];
-  return db
-    .select()
-    .from(artistContent)
-    .where(notLike(artistContent.slug, "custom-%"))
-    .orderBy(asc(artistContent.kind), asc(artistContent.sortOrder));
+  return readWithRetry(
+    db => db
+      .select()
+      .from(artistContent)
+      .where(notLike(artistContent.slug, "custom-%"))
+      .orderBy(asc(artistContent.kind), asc(artistContent.sortOrder)),
+    [],
+  );
 }
 
 export async function upsertArtistContent(item: InsertArtistContent) {
@@ -233,13 +258,14 @@ export async function upsertArtistContent(item: InsertArtistContent) {
 }
 
 export async function listCustomArtistContent(publishedOnly = false) {
-  const db = await getDb();
-  if (!db) return [];
-  const rows = await db
-    .select()
-    .from(artistContent)
-    .where(publishedOnly ? and(eq(artistContent.isPublished, true), like(artistContent.slug, "custom-%")) : like(artistContent.slug, "custom-%"))
-    .orderBy(asc(artistContent.sortOrder));
+  const rows = await readWithRetry(
+    db => db
+      .select()
+      .from(artistContent)
+      .where(publishedOnly ? and(eq(artistContent.isPublished, true), like(artistContent.slug, "custom-%")) : like(artistContent.slug, "custom-%"))
+      .orderBy(asc(artistContent.sortOrder)),
+    [],
+  );
   return toCustomArtistDocuments(rows);
 }
 
@@ -282,12 +308,13 @@ export async function createArtistInquiry(inquiry: InsertArtistInquiry) {
 }
 
 export async function listArtistInquiries() {
-  const db = await getDb();
-  if (!db) return [];
-  return db
-    .select()
-    .from(artistInquiries)
-    .orderBy(asc(artistInquiries.status), asc(artistInquiries.createdAt));
+  return readWithRetry(
+    db => db
+      .select()
+      .from(artistInquiries)
+      .orderBy(asc(artistInquiries.status), asc(artistInquiries.createdAt)),
+    [],
+  );
 }
 
 export async function updateArtistInquiryStatus(
