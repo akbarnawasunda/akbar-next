@@ -10,6 +10,8 @@
     "deploy": "sanity deploy"
   },
   "dependencies": {
+    "@sanity/icons": "^5.2.1",
+    "@sanity/themer": "^0.3.8",
     "@sanity/vision": "^4.18.0",
     "sanity": "^6.10.1",
     "styled-components": "^6.5.3"

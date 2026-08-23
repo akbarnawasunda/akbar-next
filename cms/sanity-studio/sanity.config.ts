@@ -1,9 +1,24 @@
+import { CalendarIcon } from "@sanity/icons/Calendar";
+import { DocumentTextIcon } from "@sanity/icons/DocumentText";
+import { ImageIcon } from "@sanity/icons/Image";
+import { PlayIcon } from "@sanity/icons/Play";
+import { SparklesIcon } from "@sanity/icons/Sparkles";
+import { UserIcon } from "@sanity/icons/User";
+import { buildTheme } from "@sanity/themer";
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
+import { structure } from "./structure";
+
+const akbarTheme = buildTheme({
+  accent: "#79d6c7",
+  text: "#28383d",
+  background: { dark: "#071419", light: "#f4ead7" },
+  contrast: 94,
+});
 
 const artistSite = {
-  type: "document", name: "artistSite", title: "Artist Site",
+  type: "document", name: "artistSite", title: "Artist Site", icon: SparklesIcon,
   fields: [
     { name: "heroTitle", title: "Hero title", type: "string" },
     { name: "heroKicker", title: "Hero kicker", type: "string" },
@@ -15,7 +30,7 @@ const artistSite = {
 };
 
 const artistProfile = {
-  type: "document", name: "artistProfile", title: "Artist Biography",
+  type: "document", name: "artistProfile", title: "Artist Biography", icon: UserIcon,
   fields: [
     { name: "shortBio", title: "Short bio", type: "text", rows: 4 },
     { name: "longBio", title: "Long biography", type: "text", rows: 10 },
@@ -27,7 +42,7 @@ const artistProfile = {
 };
 
 const pressKit = {
-  type: "document", name: "pressKit", title: "Press & Booking",
+  type: "document", name: "pressKit", title: "Press & Booking", icon: DocumentTextIcon,
   fields: [
     { name: "intro", title: "Press introduction", type: "text", rows: 4 },
     { name: "bookingEmail", title: "Booking email", type: "string" },
@@ -40,7 +55,7 @@ const pressKit = {
 };
 
 const release = {
-  type: "document", name: "release", title: "Release",
+  type: "document", name: "release", title: "Release", icon: PlayIcon,
   fields: [
     { name: "title", title: "Title", type: "string", validation: (Rule: any) => Rule.required() },
     { name: "year", title: "Year", type: "string" },
@@ -59,7 +74,7 @@ const release = {
 };
 
 const visual = {
-  type: "document", name: "visual", title: "Visual / Video",
+  type: "document", name: "visual", title: "Visual / Video", icon: ImageIcon,
   fields: [
     { name: "title", title: "Title", type: "string", validation: (Rule: any) => Rule.required() },
     { name: "label", title: "Label", type: "string", initialValue: "OFFICIAL VISUAL" },
@@ -71,7 +86,7 @@ const visual = {
 };
 
 const liveSignal = {
-  type: "document", name: "liveSignal", title: "Live Signal",
+  type: "document", name: "liveSignal", title: "Live Signal", icon: SparklesIcon,
   fields: [
     { name: "status", title: "Status label", type: "string", initialValue: "NO DATE ANNOUNCED" },
     { name: "message", title: "Public message", type: "text", rows: 3 },
@@ -80,7 +95,7 @@ const liveSignal = {
 };
 
 const event = {
-  type: "document", name: "event", title: "Live Event / Tour Date",
+  type: "document", name: "event", title: "Live Event / Tour Date", icon: CalendarIcon,
   fields: [
     { name: "title", title: "Event title", type: "string", validation: (Rule: any) => Rule.required() },
     { name: "date", title: "Date and time", type: "datetime", validation: (Rule: any) => Rule.required() },
@@ -94,7 +109,13 @@ const event = {
 };
 
 export default defineConfig({
-  name: "akbar-nawasunda-studio", title: "Akbar Nawasunda CMS", projectId: "3t6l52on", dataset: "production",
-  plugins: [structureTool(), visionTool()],
+  name: "akbar-nawasunda-studio",
+  title: "Akbar Nawasunda CMS",
+  subtitle: "EDITORIAL CONTROL ROOM",
+  icon: SparklesIcon,
+  projectId: "3t6l52on",
+  dataset: "production",
+  theme: akbarTheme,
+  plugins: [structureTool({ structure }), visionTool({ defaultApiVersion: "v2026-08-22", defaultDataset: "production" })],
   schema: { types: [artistSite, artistProfile, pressKit, release, visual, liveSignal, event] },
 });
