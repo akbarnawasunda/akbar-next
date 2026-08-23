@@ -207,6 +207,11 @@ export default function Home() {
               </a>
             </div>
           </div>
+          <div className="home-hero-atmosphere" aria-hidden="true">
+            <span className="home-hero-atmosphere-cloud home-hero-atmosphere-cloud-a" />
+            <span className="home-hero-atmosphere-cloud home-hero-atmosphere-cloud-b" />
+            <span className="home-hero-atmosphere-cloud home-hero-atmosphere-cloud-c" />
+          </div>
           <BrandMotionMark src={officialBrand.rmxMark} />
         </section>
 

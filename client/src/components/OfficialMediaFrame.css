@@ -1,1 +1,97 @@
 .an-official-media{overflow:hidden;border:1px solid rgba(173,212,255,.2);background:linear-gradient(145deg,#0d1023,#090915);box-shadow:0 22px 68px rgba(0,0,0,.2)}.an-official-media-art{position:relative;display:block;aspect-ratio:16/8.5;overflow:hidden;background:#070812}.an-official-media-art img{width:100%;height:100%;object-fit:cover;opacity:.78;transition:transform .38s cubic-bezier(.23,1,.32,1),opacity .38s}.an-official-media:hover .an-official-media-art img{transform:scale(1.035);opacity:1}.an-official-media-art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(5,5,14,.76),transparent 56%)}.an-official-media-art span{position:absolute;z-index:1;left:13px;bottom:12px;color:#bff8ff;font:600 9px/1 "IBM Plex Mono",monospace;letter-spacing:.14em}.an-official-media-art i{position:absolute;z-index:1;right:13px;bottom:10px;display:grid;place-items:center;width:33px;height:33px;border:1px solid rgba(191,248,255,.72);border-radius:50%;color:#dffcff;font-style:normal}.an-official-media-copy{padding:17px 17px 3px}.an-official-media-copy p{margin:0;color:#76efff;font:600 9px/1 "IBM Plex Mono",monospace;letter-spacing:.12em}.an-official-media-copy h3{margin:9px 0 0;color:#f6f4ff;font:600 clamp(17px,2vw,25px)/1.02 "Space Grotesk",sans-serif;letter-spacing:-.045em}.an-official-media-copy small{display:block;margin-top:9px;color:#a9a5bd;font:13px/1.5 "Space Grotesk",sans-serif}.an-official-media-actions{display:flex;gap:9px;padding:16px 17px 18px}.an-official-media-actions a,.an-official-media-actions button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;border:1px solid rgba(191,248,255,.36);padding:0 11px;background:transparent;color:#dffcff;font:600 9px/1 "IBM Plex Mono",monospace;letter-spacing:.07em;text-decoration:none}.an-official-media-actions a{background:#76efff;color:#061018;border-color:#76efff}.an-official-media-actions button:hover{border-color:#76efff;color:#76efff}.an-official-player{position:relative;border-top:1px solid rgba(191,248,255,.18);background:#060711}.an-official-player iframe{display:block;width:100%;height:174px;border:0}.an-official-player>span{position:absolute;inset:0;display:grid;place-items:center;color:#bff8ff;font:600 10px "IBM Plex Mono",monospace;letter-spacing:.1em;pointer-events:none}.an-official-player.is-loaded>span{display:none}.an-official-player p{margin:0;padding:12px 16px;color:#b8b4c8;font:12px/1.5 "Space Grotesk",sans-serif}.an-official-player p strong{color:#bff8ff;font-family:"IBM Plex Mono",monospace;font-size:10px}@media(max-width:520px){.an-official-media-actions{flex-direction:column}.an-official-media-actions a,.an-official-media-actions button{width:100%}.an-official-player iframe{height:156px}}
+
+/* Modern provider-aware media chrome. */
+.an-official-media {
+  position: relative;
+  isolation: isolate;
+  border-color: color-mix(in srgb, var(--media-accent, #76efff) 28%, transparent);
+  background: linear-gradient(145deg, rgba(15, 20, 39, 0.94), rgba(7, 8, 19, 0.98));
+  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1), border-color 220ms ease, box-shadow 220ms ease;
+}
+.an-official-media::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--media-accent, #76efff) 15%, transparent), transparent 36%);
+  pointer-events: none;
+}
+.an-official-media:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--media-accent, #76efff) 58%, transparent);
+  box-shadow: 0 30px 88px rgba(0, 0, 0, 0.34), 0 0 0 1px color-mix(in srgb, var(--media-accent, #76efff) 18%, transparent);
+}
+.an-official-media-art {
+  aspect-ratio: 16 / 9;
+}
+.an-official-media-art::after {
+  background: linear-gradient(0deg, rgba(5, 5, 14, 0.88), rgba(5, 5, 14, 0.04) 66%);
+}
+.an-official-media-art span,
+.an-official-media-copy p,
+.an-official-player > span,
+.an-official-player p strong {
+  color: var(--media-accent, #bff8ff);
+}
+.an-official-media-art i {
+  width: 42px;
+  height: 42px;
+  border-color: color-mix(in srgb, var(--media-accent, #bff8ff) 72%, transparent);
+  background: rgba(5, 8, 20, 0.52);
+  backdrop-filter: blur(10px);
+  transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1), background 180ms ease;
+}
+.an-official-media:hover .an-official-media-art i {
+  transform: scale(1.08);
+  background: var(--media-accent, #76efff);
+  color: #061018;
+}
+.an-official-media-actions a,
+.an-official-media-actions button {
+  min-height: 42px;
+  border-radius: 2px;
+  transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.an-official-media-actions a {
+  background: var(--media-accent, #76efff);
+  border-color: var(--media-accent, #76efff);
+}
+.an-official-media-actions button:hover {
+  border-color: var(--media-accent, #76efff);
+  color: var(--media-accent, #76efff);
+  transform: translateY(-2px);
+}
+.an-official-media-actions a:active,
+.an-official-media-actions button:active {
+  transform: scale(0.97);
+}
+.an-official-player {
+  border-top-color: color-mix(in srgb, var(--media-accent, #bff8ff) 28%, transparent);
+}
+.an-official-player iframe {
+  background: #05060e;
+}
+.an-official-player > span::after {
+  content: "";
+  width: 84px;
+  height: 2px;
+  position: absolute;
+  bottom: 22px;
+  background: linear-gradient(90deg, transparent, var(--media-accent, #76efff), transparent);
+  animation: an-media-loading 1.15s ease-in-out infinite;
+}
+.an-official-media-provider-youtube { --media-accent: #ff0033; }
+.an-official-media-provider-soundcloud { --media-accent: #ff5500; }
+@keyframes an-media-loading {
+  0%, 100% { opacity: 0.28; transform: scaleX(0.55); }
+  50% { opacity: 1; transform: scaleX(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .an-official-media,
+  .an-official-media:hover,
+  .an-official-media:hover .an-official-media-art i,
+  .an-official-media-actions a:active,
+  .an-official-media-actions button:active { transform: none; transition: none; }
+  .an-official-player > span::after { animation: none; }
+}

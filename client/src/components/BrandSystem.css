@@ -175,14 +175,11 @@
   color: var(--an-bone) !important;
 }
 
-.an-site .home-platform-rack a:hover span,
-.an-site .home-platform-rack a span {
+.an-site .home-platform-rack a:hover .home-platform-copy,
+.an-site .home-platform-rack a .home-platform-copy {
   color: var(--an-stone) !important;
 }
 
-.an-site .home-platform-rack .an-platform-icon,
-.an-site .release-card .an-platform-icon,
-.an-platform-icon,
 .an-site .eyebrow,
 .nf-page-eyebrow,
 .an-site .release-number {
