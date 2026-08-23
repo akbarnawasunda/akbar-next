@@ -27,6 +27,7 @@ import "./components/EditorialSimplification.css";
 import "./components/MaturePalette.css";
 import "./components/RouteMotion.css";
 import "./components/BrandSystem.css";
+import "./components/InteractionSystem.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
