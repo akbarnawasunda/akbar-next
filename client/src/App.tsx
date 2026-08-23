@@ -1,24 +1,24 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import ContentStudio from "./pages/ContentStudio";
-import Music from "./pages/Music";
-import Visuals from "./pages/Visuals";
-import Live from "./pages/Live";
-import Universe from "./pages/Universe";
-import PressKit from "./pages/PressKit";
-import AssetLibrary from "./pages/AssetLibrary";
-import About from "./pages/About";
-import ReleaseDetail from "./pages/ReleaseDetail";
-import Inquiry from "./pages/Inquiry";
-import Licensing from "./pages/Licensing";
-import InquiryStudio from "./pages/InquiryStudio";
-import Admin from "./pages/Admin";
+const Home = lazy(() => import("./pages/Home"));
+const ContentStudio = lazy(() => import("./pages/ContentStudio"));
+const Music = lazy(() => import("./pages/Music"));
+const Visuals = lazy(() => import("./pages/Visuals"));
+const Live = lazy(() => import("./pages/Live"));
+const Universe = lazy(() => import("./pages/Universe"));
+const PressKit = lazy(() => import("./pages/PressKit"));
+const AssetLibrary = lazy(() => import("./pages/AssetLibrary"));
+const About = lazy(() => import("./pages/About"));
+const ReleaseDetail = lazy(() => import("./pages/ReleaseDetail"));
+const Inquiry = lazy(() => import("./pages/Inquiry"));
+const Licensing = lazy(() => import("./pages/Licensing"));
+const InquiryStudio = lazy(() => import("./pages/InquiryStudio"));
+const Admin = lazy(() => import("./pages/Admin"));
 import LegacyDocument from "./components/LegacyDocument";
 import { ScrollProgress } from "./components/ScrollProgress";
 import { MotionOrchestrator } from "./components/MotionOrchestrator";
@@ -75,7 +75,9 @@ function RouteMotion() {
 
   return (
     <div className="route-motion" key={location} data-route={location}>
+      <Suspense fallback={<div className="route-loading" role="status">MEMUAT HALAMAN…</div>}>
       <Router />
+    </Suspense>
     </div>
   );
 }

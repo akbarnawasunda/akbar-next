@@ -99,7 +99,10 @@ export default function Home() {
     "Produser dan remixer asal Bandung Barat.";
   const heroActionUrl =
     cmsHero?.primaryActionUrl || managedHero?.href || activeRelease.href;
-  const heroActionLabel = cmsHero?.primaryActionLabel || "DENGAR SEKARANG";
+  const heroActionIsVisual = /youtube\.com|youtu\.be/i.test(heroActionUrl);
+  const heroActionLabel =
+    cmsHero?.primaryActionLabel ||
+    (heroActionIsVisual ? "TONTON VISUAL" : "DENGAR SEKARANG");
   const activeVideos = managedVideos.length
     ? managedVideos.map(item => ({
         title: item.title,
@@ -203,8 +206,11 @@ export default function Home() {
                 <Play size={15} fill="currentColor" />
                 <span>{heroActionLabel}</span>
               </a>
-              <a className="button-quiet" href="#signal">
-                MASUK FAN SIGNAL <ArrowDownRight size={16} />
+              <Link className="button-quiet" href="/visuals">
+                LIHAT VISUALS <ArrowUpRight size={16} />
+              </Link>
+              <a className="hero-signal-link" href="#signal">
+                FAN SIGNAL <ArrowDownRight size={14} />
               </a>
             </div>
           </div>

@@ -114,32 +114,53 @@ function useScrambleInteraction() {
 
 function usePublicSectionReveal(location: string) {
   useEffect(() => {
-    const sections = Array.from(
-      document.querySelectorAll<HTMLElement>(".nf-page main > section")
-    );
-    if (!sections.length) return;
+    let cancelled = false;
+    let retryId: number | undefined;
+    let observer: IntersectionObserver | undefined;
 
-    const reducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (reducedMotion || !("IntersectionObserver" in window)) {
-      sections.forEach(section => section.classList.add("is-motion-in-view"));
-      return;
-    }
+    const setup = () => {
+      if (cancelled) return;
 
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-motion-in-view");
-          observer.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -8%" }
-    );
+      const sections = Array.from(
+        document.querySelectorAll<HTMLElement>(".nf-page main > section")
+      );
 
-    sections.forEach(section => observer.observe(section));
-    return () => observer.disconnect();
+      // Lazy-loaded route modules can render after this effect's first pass.
+      // Retry briefly so the reveal system attaches to the actual page sections.
+      if (!sections.length) {
+        retryId = window.setTimeout(setup, 50);
+        return;
+      }
+
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      if (reducedMotion || !("IntersectionObserver" in window)) {
+        sections.forEach(section => section.classList.add("is-motion-in-view"));
+        return;
+      }
+
+      observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-motion-in-view");
+            observer?.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -8%" }
+      );
+
+      sections.forEach(section => observer?.observe(section));
+    };
+
+    setup();
+
+    return () => {
+      cancelled = true;
+      if (retryId !== undefined) window.clearTimeout(retryId);
+      observer?.disconnect();
+    };
   }, [location]);
 }
 
