@@ -131,6 +131,24 @@
 .an-epk-contact-panel .nf-page-eyebrow {
   color: #141412;
 }
+.nf-page .an-epk-contact-panel {
+  background: #d8ff65 !important;
+  color: #141412 !important;
+}
+.nf-page .an-epk-contact-panel .an-booking-grid h2,
+.nf-page .an-epk-contact-panel .an-booking-grid p,
+.nf-page .an-epk-contact-panel .nf-page-eyebrow {
+  color: #141412 !important;
+}
+.nf-page .an-epk-contact-panel .an-booking-actions a {
+  border-color: rgba(20, 20, 18, 0.42);
+  color: #141412 !important;
+}
+.nf-page .an-epk-contact-panel .an-booking-actions a:hover {
+  background: #141412 !important;
+  border-color: #141412 !important;
+  color: #d8ff65 !important;
+}
 .nf-signal-note.is-success { color: #1c5d40; }
 .nf-signal-note.is-error { color: #8b3028; }
 

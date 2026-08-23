@@ -25,6 +25,7 @@ describe("official media fallback and online EPK", () => {
     const epk = source("client/src/pages/PressKit.tsx");
     const shell = source("client/src/pages/EcosystemPages.css");
     const overrides = source("client/src/pages/VercelAssetOverrides.css");
+    const epkStyles = source("client/src/pages/EpkReady.css");
     const live = source("client/src/pages/Live.tsx");
     expect(epk).toContain("SAVE / PRINT EPK");
     expect(epk).toContain("ASET RESMI");
@@ -34,6 +35,9 @@ describe("official media fallback and online EPK", () => {
     expect(overrides).toContain("/assets/akbar-night-frequency-stage.webp");
     expect(shell).not.toContain("an-night-frequency-stage_113bf174.jpg");
     expect(overrides).not.toContain("an-night-frequency-stage_113bf174.jpg");
+    expect(epkStyles).toContain(".nf-page .an-epk-contact-panel");
+    expect(epkStyles).toContain("background: #d8ff65 !important");
+    expect(epkStyles).toContain("color: #141412 !important");
     expect(live).toContain("BELUM ADA SHOW TERKONFIRMASI.");
   });
 });
