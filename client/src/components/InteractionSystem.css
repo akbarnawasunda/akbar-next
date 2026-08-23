@@ -42,7 +42,7 @@
   .nf-page main > section.is-motion-in-view > .an-release-detail-grid,
   .nf-page main > section.is-motion-in-view > .an-archive-origin,
   .nf-page main > section.is-motion-in-view > .an-archive-route-list {
-    animation: ui-content-rise 520ms var(--ui-spring) both;
+    animation: ui-content-rise 2200ms var(--ui-spring) both;
   }
 
   .nf-page main > section.is-motion-in-view > .nf-catalog,

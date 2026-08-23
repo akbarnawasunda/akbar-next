@@ -39,7 +39,7 @@ function scrambleElement(element: HTMLElement) {
   const previousAriaLabel = element.getAttribute("aria-label");
   const accessibleText = finals.join(" ").replace(/\s+/g, " ").trim();
   const start = performance.now();
-  const duration = 420;
+  const duration = 2000;
   let frame = 0;
 
   element.dataset.scrambleRunning = "true";

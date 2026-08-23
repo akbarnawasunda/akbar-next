@@ -58,6 +58,15 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain('className="hero-title-editorial"');
     expect(home).toContain('data-no-scramble="true"');
     expect(home).toContain("hero-title-mask");
+    expect(source("client/src/components/MotionOrchestrator.tsx")).toContain(
+      "const duration = 2000;"
+    );
+    expect(source("client/src/pages/HomeLayoutRefinement.css")).toContain(
+      "hero-title-tracking-settle 2300ms"
+    );
+    expect(source("client/src/components/InteractionSystem.css")).toContain(
+      "ui-content-rise 2200ms"
+    );
   });
 
   it("keeps the portfolio-inspired homepage patterns wired", () => {
