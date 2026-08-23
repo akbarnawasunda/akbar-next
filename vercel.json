@@ -6,6 +6,14 @@
   "installCommand": "pnpm install --frozen-lockfile",
   "rewrites": [
     {
+      "source": "/api/trpc",
+      "destination": "https://akbarfolio-424qdvsv.manus.space/api/trpc"
+    },
+    {
+      "source": "/api/trpc/:path*",
+      "destination": "https://akbarfolio-424qdvsv.manus.space/api/trpc/:path*"
+    },
+    {
       "source": "/api/brand/rmx-mark",
       "destination": "https://akbarfolio-424qdvsv.manus.space/manus-storage/akbar-nawasunda-rmx-mark_d59968bf.jpg"
     },
@@ -14,5 +22,15 @@
       "destination": "https://akbarfolio-424qdvsv.manus.space/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"
     },
     { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/api/trpc",
+      "headers": [{ "key": "x-vercel-enable-rewrite-caching", "value": "0" }]
+    },
+    {
+      "source": "/api/trpc/:path*",
+      "headers": [{ "key": "x-vercel-enable-rewrite-caching", "value": "0" }]
+    }
   ]
 }
