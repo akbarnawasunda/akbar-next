@@ -42,5 +42,9 @@ export const structure: StructureResolver = (S) =>
       S.divider(),
       S.listItem()
         .title("All documents")
-        .child(S.documentTypeListItems()),
+        .child(
+          S.list()
+            .title("All documents")
+            .items(S.documentTypeListItems()),
+        ),
     ]);
