@@ -20,10 +20,8 @@ import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import { TiltCard } from "@/components/TiltCard";
 import {
-  allPlatformLinks,
   currentRelease,
   officialBrand,
-  platformLinks,
   releases,
   videos,
 } from "@/content/artistPlatform";
@@ -31,7 +29,7 @@ import { trpc } from "@/lib/trpc";
 import { useMagnetic } from "@/hooks/useMagnetic";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { usePublicArtistContent } from "@/content/publicContent";
+import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
 import "./HomeStates.css";
@@ -58,6 +56,9 @@ export default function Home() {
   const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
   const contentQuery = trpc.content.list.useQuery();
   const publicContent = usePublicArtistContent();
+  const editablePlatformLinks = publicPlatformLinks(publicContent.data);
+  const cmsEvents = publicContent.data?.events ?? [];
+  const featuredEvent = cmsEvents.find(event => event.isFeatured) || cmsEvents[0];
   const managedContent = contentQuery.data ?? [];
   const managedHero = managedContent.find(item => item.kind === "hero");
   const managedRelease = managedContent.find(item => item.kind === "release");
@@ -73,6 +74,10 @@ export default function Home() {
     value.toLowerCase() === "garam & madu × backpacker"
       ? "Garam & Madu × Backpacker"
       : value;
+  const formatHomeEventDate = (date: string) => {
+    const parsed = new Date(date);
+    return Number.isNaN(parsed.getTime()) ? date : new Intl.DateTimeFormat("id-ID", { day: "2-digit", month: "short", year: "numeric" }).format(parsed).toUpperCase();
+  };
   const managedVideoImage = (imageUrl: string | null | undefined) => {
     if (!imageUrl) return officialBrand.socialPreview;
     return /\/manus-storage\/[^/?#]*stage[^/?#]*/i.test(imageUrl)
@@ -308,7 +313,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="home-platform-rack">
-            {allPlatformLinks.map((platform, index) => (
+            {editablePlatformLinks.map((platform, index) => (
               <a
                 className={`home-platform-card platform-${platform.label.toLowerCase().replace(/\s+/g, "-")}`}
                 key={platform.label}
@@ -329,7 +334,7 @@ export default function Home() {
               </a>
             ))}
           </div>
-          <PlatformMarquee />
+          <PlatformMarquee links={editablePlatformLinks} />
         </section>
 
         <section
@@ -405,7 +410,7 @@ export default function Home() {
             </div>
             <a
               className="text-link"
-              href="https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw"
+              href={editablePlatformLinks.find(link => link.label === "Spotify")?.href || "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw"}
               target="_blank"
               rel="noreferrer"
             >
@@ -508,25 +513,25 @@ export default function Home() {
               PERTUNJUKAN.
             </h2>
             <p>
-              {managedLive?.subtitle ||
-                "Jadwal akan tampil setelah diumumkan secara resmi."}
+              {publicContent.data?.live?.message ||
+                managedLive?.subtitle ||
+                (featuredEvent ? "Tanggal, venue, dan rute resmi pertunjukan." : "Jadwal akan tampil setelah diumumkan secara resmi.")}
             </p>
             <a
               ref={liveActionRef}
               className="button-primary"
-              href={managedLive?.href || "#signal"}
-
-              target={managedLive?.href ? "_blank" : undefined}
-              rel={managedLive?.href ? "noreferrer" : undefined}
+              href={featuredEvent?.ticketUrl || featuredEvent?.rsvpUrl || managedLive?.href || "#signal"}
+              target={featuredEvent?.ticketUrl || featuredEvent?.rsvpUrl || managedLive?.href ? "_blank" : undefined}
+              rel={featuredEvent?.ticketUrl || featuredEvent?.rsvpUrl || managedLive?.href ? "noreferrer" : undefined}
             >
               <Ticket size={16} />
-              <span>DAPATKAN UPDATE</span>
+              <span>{featuredEvent?.ticketUrl ? "TIKET SHOW" : featuredEvent?.rsvpUrl ? "RSVP SHOW" : "DAPATKAN UPDATE"}</span>
             </a>
           </div>
           <div className="live-status">
-            <span>{managedLive?.label || "JADWAL"}</span>
+            <span>{featuredEvent ? "SHOW BERIKUTNYA" : managedLive?.label || "JADWAL"}</span>
             <strong>
-              {managedLive?.title || (
+              {featuredEvent?.title || managedLive?.title || (
                 <>
                   BELUM ADA
                   <br />
@@ -534,8 +539,19 @@ export default function Home() {
                 </>
               )}
             </strong>
-            <small>{managedLive ? "UPDATE RESMI" : "AKAN DIUMUMKAN"}</small>
+            <small>{featuredEvent ? formatHomeEventDate(featuredEvent.date) : managedLive ? "UPDATE RESMI" : "AKAN DIUMUMKAN"}</small>
           </div>
+          {cmsEvents.length ? <div className="home-live-events" aria-label="Jadwal pertunjukan">
+            {cmsEvents.slice(0, 3).map(event => {
+              const eventHref = event.ticketUrl || event.rsvpUrl || "#signal";
+              return <a className="home-live-event" href={eventHref} target={eventHref.startsWith("http") ? "_blank" : undefined} rel={eventHref.startsWith("http") ? "noreferrer" : undefined} key={event._id}>
+                <span>{formatHomeEventDate(event.date)}</span>
+                <strong>{event.title}</strong>
+                <small>{[event.venue, event.city, event.country].filter(Boolean).join(", ") || "Detail venue menyusul"}</small>
+                <ArrowUpRight size={14} />
+              </a>;
+            })}
+          </div> : null}
         </section>
 
         <section
@@ -567,7 +583,7 @@ export default function Home() {
         </div>
         <div className="footer-links">
           <span>CONNECT</span>
-          {platformLinks.map(link => (
+          {editablePlatformLinks.slice(0, 4).map(link => (
             <a
               key={link.label}
               href={link.href}

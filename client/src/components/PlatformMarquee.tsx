@@ -1,17 +1,14 @@
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { allPlatformLinks } from "@/content/artistPlatform";
+import type { CmsPlatformLink } from "@/content/publicContent";
 
-const splitAt = Math.ceil(allPlatformLinks.length / 2);
-const rows = [
-  allPlatformLinks.slice(0, splitAt),
-  allPlatformLinks.slice(splitAt),
-];
+type PlatformLink = CmsPlatformLink;
 
 function MarqueeRow({
   links,
   reverse,
 }: {
-  links: typeof allPlatformLinks;
+  links: PlatformLink[];
   reverse?: boolean;
 }) {
   return (
@@ -47,7 +44,9 @@ function MarqueeRow({
   );
 }
 
-export function PlatformMarquee() {
+export function PlatformMarquee({ links = allPlatformLinks }: { links?: PlatformLink[] }) {
+  const splitAt = Math.ceil(links.length / 2);
+  const rows = [links.slice(0, splitAt), links.slice(splitAt)];
   return (
     <div className="an-platform-marquee" aria-label="Platform musik resmi">
       <div className="an-platform-marquee-heading">

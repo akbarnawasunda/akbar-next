@@ -5,12 +5,11 @@ import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import {
-  allPlatformLinks,
   officialBrand,
   releases,
   verifiedArtistProfile,
 } from "@/content/artistPlatform";
-import { usePublicArtistContent } from "@/content/publicContent";
+import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./VercelAssetOverrides.css";
 import "./ArtistModules.css";
@@ -31,7 +30,11 @@ export default function PressKit() {
   const [portraitSrc, setPortraitSrc] = useState(officialBrand.editorialPortrait);
   const bookingEmail = press?.bookingEmail || verifiedArtistProfile.bookingEmail;
   const pressEmail = press?.pressEmail || bookingEmail;
-  const selectedReleases = releases.slice(0, 3);
+  const selectedReleases = cms.data?.releases?.length ? cms.data.releases.map(item => {
+    const fallback = releases.find(release => release.title.trim().toLowerCase() === item.title.trim().toLowerCase());
+    return { title: item.title, format: item.format || fallback?.format || "Release", year: item.year || fallback?.year || "—", platform: item.platform || fallback?.platform || "Official link", href: item.url || fallback?.href || "https://soundcloud.com/akbarnawasunda", image: item.artworkUrl || fallback?.image || officialBrand.socialPreview };
+  }).slice(0, 3) : releases.slice(0, 3);
+  const editablePlatformLinks = publicPlatformLinks(cms.data);
 
   const coreAssets = [
     {
@@ -194,7 +197,7 @@ export default function PressKit() {
           <div className="nf-section-title">
             <div><p className="nf-page-eyebrow">KANAL RESMI</p><h2>PLATFORM<br />RESMI.</h2></div>
             <div className="an-epk-genre-row">
-              {allPlatformLinks.slice(0, 5).map(link => <a className="nf-text-button" href={link.href} target="_blank" rel="noreferrer" key={link.label}><PlatformIcon label={link.label} />{link.label}<ArrowUpRight size={14} /></a>)}
+              {editablePlatformLinks.slice(0, 5).map(link => <a className="nf-text-button" href={link.href} target="_blank" rel="noreferrer" key={link.label}><PlatformIcon label={link.label} />{link.label}<ArrowUpRight size={14} /></a>)}
             </div>
           </div>
         </section>

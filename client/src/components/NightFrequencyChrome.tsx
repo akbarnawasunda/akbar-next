@@ -1,7 +1,7 @@
 import { ArrowUpRight, Menu, Radio, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
-import { platformLinks } from "@/content/artistPlatform";
+import { usePublicArtistContent, publicPlatformLinks } from "@/content/publicContent";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import "./NightFrequencyChrome.css";
 import "./OfficialBrand.css";
@@ -110,6 +110,8 @@ export function NightHeader({ active }: { active?: string }) {
 }
 
 export function NightFooter() {
+  const cms = usePublicArtistContent();
+  const links = publicPlatformLinks(cms.data);
   return (
     <footer className="nf-footer">
       <div className="nf-footer-brand">
@@ -140,7 +142,7 @@ export function NightFooter() {
       </div>
       <div className="nf-footer-column">
         <span>CONNECT</span>
-        {platformLinks.map(link => (
+        {links.map(link => (
           <a key={link.label} href={link.href} target="_blank" rel="noreferrer">
             {link.label} <ArrowUpRight size={13} />
           </a>

@@ -32,4 +32,19 @@ describe("custom content codec", () => {
     expect(document?.payload).toMatchObject({ year: "2025", platform: "SoundCloud", isCurrent: true });
     expect(toCustomArtistDocument(baseRow({ slug: "legacy-release" }))).toBeNull();
   });
+
+  it("preserves per-release platform links and creates independent event slugs", () => {
+    const release = toArtistContentInput({
+      documentType: "release",
+      slug: "masih-mencintainya",
+      payload: { title: "Masih Mencintainya — Papinka", platformLinks: [{ label: "SoundCloud", href: "https://soundcloud.com/example" }] },
+      sortOrder: 0,
+      isPublished: true,
+    });
+    expect(JSON.parse(release.subtitle)).toEqual({ schemaVersion: 1, data: { title: "Masih Mencintainya — Papinka", platformLinks: [{ label: "SoundCloud", href: "https://soundcloud.com/example" }] } });
+
+    const event = toArtistContentInput({ documentType: "event", slug: "bandung-night", payload: { title: "Bandung Night", date: "2026-09-01", ticketUrl: "https://tickets.example" }, sortOrder: 1, isPublished: true });
+    expect(event.slug).toBe("custom-event-bandung-night");
+    expect(JSON.parse(event.subtitle).data).toMatchObject({ title: "Bandung Night", date: "2026-09-01" });
+  });
 });

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { officialBrand, platformLinks, releases, verifiedArtistProfile } from "@/content/artistPlatform";
-import { usePublicArtistContent } from "@/content/publicContent";
+import { officialBrand, releases, verifiedArtistProfile } from "@/content/artistPlatform";
+import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
 
 const siteOrigin = "https://akbarnawasunda.my.id";
 const releaseSlug = (value: string) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -10,7 +10,7 @@ function absoluteUrl(path: string) {
   return path.startsWith("http") ? path : `${siteOrigin}${path === "/" ? "/" : path}`;
 }
 
-function artistEntity() {
+function artistEntity(platforms: Array<{ href: string }>) {
   return {
     "@type": "MusicGroup",
     "@id": `${siteOrigin}/#artist`,
@@ -20,7 +20,7 @@ function artistEntity() {
     image: [absoluteUrl(officialBrand.socialPreview)],
     logo: absoluteUrl(officialBrand.logo),
     genre: verifiedArtistProfile.genres,
-    sameAs: platformLinks.map(link => link.href),
+    sameAs: platforms.map(link => link.href),
     location: {
       "@type": "Place",
       name: verifiedArtistProfile.location,
@@ -36,11 +36,12 @@ function artistEntity() {
 export function StructuredData() {
   const [location] = useLocation();
   const cms = usePublicArtistContent();
+  const editablePlatformLinks = publicPlatformLinks(cms.data);
 
   useEffect(() => {
     const isEnglish = location === "/en" || location.startsWith("/en/");
     const pathWithoutLanguage = location.replace(/^\/en(?=\/|$)/, "") || "/";
-    const graph: Record<string, unknown>[] = [artistEntity()];
+    const graph: Record<string, unknown>[] = [artistEntity(editablePlatformLinks)];
     const releaseMatch = pathWithoutLanguage.match(/^\/music\/([a-z0-9-]+)$/i);
 
     if (releaseMatch) {
@@ -56,7 +57,7 @@ export function StructuredData() {
           "@id": `${siteOrigin}${location}#recording`,
           name: title,
           url: absoluteUrl(location),
-          sameAs: [href],
+          sameAs: [href, ...(cmsRelease?.platformLinks?.map(link => link.href) || [])],
           byArtist: { "@id": `${siteOrigin}/#artist` },
           ...(year ? { datePublished: year } : {}),
         });

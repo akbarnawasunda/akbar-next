@@ -1,10 +1,12 @@
 import { trpc } from "@/lib/trpc";
+import { allPlatformLinks } from "@/content/artistPlatform";
 
-export type CmsRelease = { _id: string; title: string; year?: string; format?: string; platform?: string; url: string; embedUrl?: string; artworkUrl?: string; story?: string; credits?: string; spotifyUrl?: string; appleMusicUrl?: string; isCurrent?: boolean; order?: number };
+export type CmsPlatformLink = { label: string; href: string };
+export type CmsRelease = { _id: string; title: string; year?: string; format?: string; platform?: string; url: string; embedUrl?: string; artworkUrl?: string; story?: string; credits?: string; spotifyUrl?: string; appleMusicUrl?: string; platformLinks?: CmsPlatformLink[]; isCurrent?: boolean; order?: number };
 export type CmsVisual = { _id: string; title: string; label?: string; youtubeId?: string; url?: string; imageUrl?: string; order?: number };
-export type CmsEvent = { _id: string; title: string; date: string; city?: string; venue?: string; country?: string; posterUrl?: string; ticketUrl?: string; rsvpUrl?: string; status?: "announced" | "sold out" | "cancelled" | "past"; isFeatured?: boolean };
+export type CmsEvent = { _id: string; title: string; date: string; time?: string; city?: string; venue?: string; country?: string; posterUrl?: string; ticketUrl?: string; rsvpUrl?: string; status?: "announced" | "sold out" | "cancelled" | "past"; isFeatured?: boolean };
 export type CmsLegalSection = { key?: "short-version" | "collection" | "cookies" | "services" | "rights"; heading?: string; body?: string };
-export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; releases: CmsRelease[]; visuals: CmsVisual[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
+export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string; platformLinks?: CmsPlatformLink[] }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; releases: CmsRelease[]; visuals: CmsVisual[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
 
 type CustomDocument = {
   id: number;
@@ -31,6 +33,15 @@ function stringArray(value: unknown): string[] | undefined {
 
 function payloadOf(document: CustomDocument | undefined) {
   return document?.payload ?? {};
+}
+
+function platformLinksValue(value: unknown): CmsPlatformLink[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const links = value
+    .filter((link): link is Record<string, unknown> => Boolean(link && typeof link === "object" && !Array.isArray(link)))
+    .map(link => ({ label: stringValue(link.label), href: stringValue(link.href) }))
+    .filter((link): link is CmsPlatformLink => Boolean(link.label && link.href));
+  return links.length ? links : undefined;
 }
 
 function legalSections(value: unknown): CmsLegalSection[] | undefined {
@@ -92,6 +103,7 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       contactEmail: stringValue(payloadOf(siteSettings).contactEmail),
       bookingEmail: stringValue(payloadOf(siteSettings).bookingEmail),
       pressEmail: stringValue(payloadOf(siteSettings).pressEmail),
+      platformLinks: platformLinksValue(payloadOf(siteSettings).platformLinks),
     } : undefined,
     legal: legal ? {
       title: stringValue(payloadOf(legal).title),
@@ -114,6 +126,7 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       credits: stringValue(payloadOf(document).credits),
       spotifyUrl: stringValue(payloadOf(document).spotifyUrl),
       appleMusicUrl: stringValue(payloadOf(document).appleMusicUrl),
+      platformLinks: platformLinksValue(payloadOf(document).platformLinks),
       isCurrent: booleanValue(payloadOf(document).isCurrent),
       order: document.sortOrder,
     })),
@@ -135,6 +148,7 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       _id: `custom-${document.id}`,
       title: stringValue(payloadOf(document).title) || document.slug,
       date: stringValue(payloadOf(document).date) || "",
+      time: stringValue(payloadOf(document).time),
       city: stringValue(payloadOf(document).city),
       venue: stringValue(payloadOf(document).venue),
       country: stringValue(payloadOf(document).country),
@@ -145,6 +159,11 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       isFeatured: booleanValue(payloadOf(document).isFeatured),
     })),
   };
+}
+
+export function publicPlatformLinks(content: CmsArtistContent | null | undefined): CmsPlatformLink[] {
+  const overrides = new Map((content?.siteSettings?.platformLinks ?? []).map(link => [link.label.trim().toLowerCase(), link.href]));
+  return allPlatformLinks.map(link => ({ ...link, href: overrides.get(link.label.toLowerCase()) || link.href }));
 }
 
 export function usePublicArtistContent() {

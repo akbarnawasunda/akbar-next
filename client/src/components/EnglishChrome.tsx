@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
-import { platformLinks } from "@/content/artistPlatform";
+import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
 import "./NightFrequencyChrome.css";
 import "./OfficialBrand.css";
 import "./EcosystemRefinement.css";
@@ -106,6 +106,8 @@ export function EnglishHeader({ active }: { active?: string }) {
 }
 
 export function EnglishFooter() {
+  const cms = usePublicArtistContent();
+  const links = publicPlatformLinks(cms.data);
   return (
     <footer className="nf-footer en-footer">
       <div className="nf-footer-brand">
@@ -121,7 +123,7 @@ export function EnglishFooter() {
       </div>
       <div className="nf-footer-column">
         <span>CONNECT</span>
-        {platformLinks.map(link => (
+        {links.map(link => (
           <a key={link.label} href={link.href} target="_blank" rel="noreferrer">{link.label} <ArrowUpRight size={13} /></a>
         ))}
         <Link href="/en/epk">EPK / Booking <ArrowUpRight size={13} /></Link>
@@ -140,9 +142,11 @@ export function EnglishLink({ href, children, className = "nf-text-button" }: { 
 }
 
 export function EnglishChannelLinks() {
+  const cms = usePublicArtistContent();
+  const links = publicPlatformLinks(cms.data);
   return (
     <div className="en-channel-links">
-      {platformLinks.map(link => (
+      {links.map(link => (
         <a key={link.label} href={link.href} target="_blank" rel="noreferrer"><Radio size={13} /> {link.label} <ArrowUpRight size={13} /></a>
       ))}
     </div>
