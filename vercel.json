@@ -4,6 +4,13 @@
   "buildCommand": "pnpm build",
   "outputDirectory": "dist/public",
   "installCommand": "pnpm install --frozen-lockfile",
+  "redirects": [
+    {
+      "source": "/epk.html",
+      "destination": "/epk",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/trpc",
