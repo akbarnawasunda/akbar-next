@@ -120,6 +120,19 @@ function languagePair(pathname: string) {
   return null;
 }
 
+const idTitles: Record<string, string> = {
+  "/": "Akbar Nawasunda | Official Website",
+  "/music": "Music Archive | Akbar Nawasunda",
+  "/visuals": "Visual Archive | Akbar Nawasunda",
+  "/live": "Live Signal | Akbar Nawasunda",
+  "/universe": "AN Archive | Akbar Nawasunda",
+  "/about": "About the Artist | Akbar Nawasunda",
+  "/epk": "Press & Booking EPK | Akbar Nawasunda",
+  "/inquire": "Inquire | Akbar Nawasunda",
+  "/licensing": "Music Licensing | Akbar Nawasunda",
+  "/privacy": "Privacy Policy | Akbar Nawasunda",
+};
+
 const englishTitles: Record<string, string> = {
   "/en": "Akbar Nawasunda | Official Website",
   "/en/music": "Music Archive | Akbar Nawasunda",
@@ -143,12 +156,12 @@ function CmsMetadata() {
     const siteOrigin = (settings?.canonicalUrl || "https://akbarnawasunda.my.id").replace(/\/$/, "");
     const pathname = location || "/";
     const pair = languagePair(pathname);
-    const releaseTitleFromPath = pathname.startsWith("/en/music/")
+    const releaseTitleFromPath = pathname.startsWith("/en/music/") || pathname.startsWith("/music/")
       ? pathname.split("/").pop()?.split("-").map(word => word ? word[0].toUpperCase() + word.slice(1) : word).join(" ")
       : undefined;
     const defaultTitle = isEnglish
       ? englishTitles[pathname] || (releaseTitleFromPath ? `${releaseTitleFromPath} | Akbar Nawasunda` : "Akbar Nawasunda | Official Website")
-      : pathname === "/" ? "Akbar Nawasunda | Official Website" : "Akbar Nawasunda | Official Site";
+      : idTitles[pathname] || (pathname.startsWith("/music/") ? `${releaseTitleFromPath || "Release"} | Akbar Nawasunda` : "Akbar Nawasunda | Official Website");
     const defaultDescription = isEnglish
       ? "Akbar Nawasunda is a producer, remixer, and electronic bass artist from Bandung Barat, Indonesia."
       : "Website resmi Akbar Nawasunda — producer, remixer, dan electronic bass artist dari Bandung Barat, Indonesia.";
