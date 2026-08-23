@@ -1,4 +1,4 @@
-import { ArrowUpRight, Check, Database, FilePenLine, FolderOpen, LayoutList, Radio, Save, ShieldCheck, Sparkles, Trash2 } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Check, ChevronDown, Database, Disc3, FilePenLine, FolderOpen, LayoutList, Link2, Plus, Radio, Save, ShieldCheck, Sparkles, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -25,7 +25,14 @@ const documentTypes = [
 type DocumentType = (typeof documentTypes)[number]["value"];
 type EditorPayload = Record<string, unknown>;
 type EditorDocument = { id: number; documentType: DocumentType; slug: string; payload: EditorPayload; sortOrder: number; isPublished: boolean };
-type FieldSpec = { key: string; label: string; placeholder?: string; multiline?: boolean; media?: boolean; type?: "text" | "url" | "email" | "date" | "select"; options?: string[] };
+type FieldSpec = { key: string; label: string; placeholder?: string; hint?: string; multiline?: boolean; media?: boolean; type?: "text" | "url" | "email" | "date" | "select"; options?: string[] };
+
+const primaryWorkflowTypes: DocumentType[] = ["release", "event", "siteSettings"];
+const primaryWorkflows = [
+  { type: "release" as const, eyebrow: "01", title: "Rilisan lagu", description: "Judul, cover, dan semua link streaming.", icon: Disc3, action: "Tambah rilisan" },
+  { type: "event" as const, eyebrow: "02", title: "Jadwal pertunjukan", description: "Tambah banyak show dengan tiket dan RSVP.", icon: CalendarDays, action: "Tambah jadwal" },
+  { type: "siteSettings" as const, eyebrow: "03", title: "Tautan resmi", description: "Atur link Spotify, YouTube, dan kanal lain.", icon: Link2, action: "Edit tautan" },
+];
 
 const fieldsByType: Record<DocumentType, FieldSpec[]> = {
   hero: [
@@ -54,16 +61,16 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
     { key: "technicalRiderUrl", label: "Technical rider URL", type: "url", media: true },
   ],
   siteSettings: [
-    { key: "siteTitle", label: "Site title" },
-    { key: "metaDescription", label: "Meta description", multiline: true },
-    { key: "ogTitle", label: "Social title" },
-    { key: "ogDescription", label: "Social description", multiline: true },
-    { key: "socialPreviewUrl", label: "Social preview URL", type: "url", media: true },
-    { key: "canonicalUrl", label: "Canonical URL", type: "url" },
-    { key: "contactEmail", label: "Contact email", type: "email" },
-    { key: "bookingEmail", label: "Booking email", type: "email" },
-    { key: "pressEmail", label: "Press email", type: "email" },
-    { key: "platformLinksText", label: "Official platform links", multiline: true, placeholder: "Spotify | https://...\nYouTube | https://...\nSoundCloud | https://..." },
+    { key: "siteTitle", label: "Judul situs" },
+    { key: "metaDescription", label: "Deskripsi SEO", multiline: true },
+    { key: "ogTitle", label: "Judul saat dibagikan" },
+    { key: "ogDescription", label: "Deskripsi saat dibagikan", multiline: true },
+    { key: "socialPreviewUrl", label: "Gambar preview sosial", type: "url", media: true },
+    { key: "canonicalUrl", label: "URL canonical", type: "url" },
+    { key: "contactEmail", label: "Email kontak", type: "email" },
+    { key: "bookingEmail", label: "Email booking", type: "email" },
+    { key: "pressEmail", label: "Email pers", type: "email" },
+    { key: "platformLinksText", label: "Tautan platform resmi", hint: "Satu baris untuk satu link: Nama platform | URL", multiline: true, placeholder: "Spotify | https://...\nYouTube | https://...\nSoundCloud | https://..." },
   ],
   legal: [
     { key: "title", label: "Document title" },
@@ -73,18 +80,18 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
     { key: "sectionsText", label: "Sections", multiline: true, placeholder: "key | Heading | Body\ncollection | Information we collect | ..." },
   ],
   release: [
-    { key: "title", label: "Release title" },
-    { key: "year", label: "Year" },
+    { key: "title", label: "Judul rilisan" },
+    { key: "year", label: "Tahun" },
     { key: "format", label: "Format", placeholder: "Single / Remix / Bootleg" },
-    { key: "platform", label: "Primary platform" },
-    { key: "url", label: "Official release URL", type: "url" },
-    { key: "embedUrl", label: "Embed URL", type: "url" },
-    { key: "artworkUrl", label: "Artwork URL", type: "url", media: true },
-    { key: "story", label: "Release story", multiline: true },
-    { key: "credits", label: "Credits", multiline: true },
-    { key: "spotifyUrl", label: "Spotify URL", type: "url" },
-    { key: "appleMusicUrl", label: "Apple Music URL", type: "url" },
-    { key: "platformLinksText", label: "Release platform links", multiline: true, placeholder: "SoundCloud | https://...\nSpotify | https://...\nApple Music | https://..." },
+    { key: "platform", label: "Platform utama" },
+    { key: "url", label: "Link rilisan utama", hint: "Ini yang dipakai tombol Dengar Sekarang / Open Release.", type: "url" },
+    { key: "embedUrl", label: "Link embed (opsional)", type: "url" },
+    { key: "artworkUrl", label: "Cover rilisan", type: "url", media: true },
+    { key: "story", label: "Cerita rilisan (opsional)", multiline: true },
+    { key: "credits", label: "Kredit (opsional)", multiline: true },
+    { key: "spotifyUrl", label: "Link Spotify (opsional)", type: "url" },
+    { key: "appleMusicUrl", label: "Link Apple Music (opsional)", type: "url" },
+    { key: "platformLinksText", label: "Link platform lain", hint: "Satu baris untuk satu link: Nama platform | URL", multiline: true, placeholder: "SoundCloud | https://...\nSpotify | https://...\nApple Music | https://..." },
   ],
   visual: [
     { key: "title", label: "Visual title" },
@@ -99,15 +106,15 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
     { key: "actionUrl", label: "Action URL", type: "url" },
   ],
   event: [
-    { key: "title", label: "Event title" },
-    { key: "date", label: "Date", type: "date" },
-    { key: "time", label: "Local time", placeholder: "21:00 WIB" },
-    { key: "city", label: "City" },
+    { key: "title", label: "Nama pertunjukan", hint: "Satu dokumen = satu jadwal. Klik Tambah jadwal untuk event berikutnya." },
+    { key: "date", label: "Tanggal", type: "date" },
+    { key: "time", label: "Jam lokal", placeholder: "21:00 WIB" },
+    { key: "city", label: "Kota" },
     { key: "venue", label: "Venue" },
-    { key: "country", label: "Country" },
-    { key: "posterUrl", label: "Poster URL", type: "url", media: true },
-    { key: "ticketUrl", label: "Ticket URL", type: "url" },
-    { key: "rsvpUrl", label: "RSVP URL", type: "url" },
+    { key: "country", label: "Negara" },
+    { key: "posterUrl", label: "Poster pertunjukan", type: "url", media: true },
+    { key: "ticketUrl", label: "Link tiket", type: "url" },
+    { key: "rsvpUrl", label: "Link RSVP", type: "url" },
     { key: "status", label: "Status", type: "select", options: ["announced", "sold out", "cancelled", "past"] },
   ],
 };
@@ -205,7 +212,8 @@ function StudioField({ field, payload, updateField }: { field: FieldSpec; payloa
   return (
     <div className={field.multiline ? "space-y-2 sm:col-span-2" : "space-y-2"}>
       <div className="flex items-center justify-between gap-3"><label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">{field.label}</label>{field.media ? <span className="rounded-full border border-cyan-200/15 bg-cyan-200/[0.06] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-cyan-100/70">Managed media</span> : null}</div>
-      {field.type === "select" ? <select value={textValue(payload, field.key)} onChange={event => updateField(field.key, event.target.value)} className="h-11 w-full rounded-xl border border-white/10 bg-black/20 px-3 text-sm text-white outline-none transition focus:border-cyan-200/50 focus:ring-2 focus:ring-cyan-200/10">{field.options?.map(option => <option value={option} key={option} className="bg-[#12141a]">{option}</option>)}</select> : field.media ? <AssetPicker value={textValue(payload, field.key)} onChange={value => updateField(field.key, value)} /> : field.multiline ? <Textarea value={textValue(payload, field.key)} onChange={event => updateField(field.key, event.target.value)} placeholder={field.placeholder} rows={4} className="min-h-28 rounded-xl border-white/10 bg-black/20 text-white placeholder:text-white/25 focus:border-cyan-200/50 focus:ring-cyan-200/10" /> : <Input type={field.type || "text"} value={textValue(payload, field.key)} onChange={event => updateField(field.key, event.target.value)} placeholder={field.placeholder} className="h-11 rounded-xl border-white/10 bg-black/20 text-white placeholder:text-white/25 focus:border-cyan-200/50 focus:ring-cyan-200/10" />}
+      {field.type === "select" ? <select value={textValue(payload, field.key)} onChange={event => updateField(field.key, event.target.value)} className="h-11 w-full rounded-xl border border-white/10 bg-black/20 px-3 text-sm text-white outline-none transition focus:border-cyan-200/50 focus:ring-2 focus:ring-cyan-200/10">{field.options?.map(option => <option value={option} key={option} className="bg-[#12141a]">{option}</option>)}</select> : field.media ? <AssetPicker value={textValue(payload, field.key)} onChange={value => updateField(field.key, value)} /> : field.multiline ? <Textarea value={textValue(payload, field.key)} onChange={event => updateField(field.key, event.target.value)} placeholder={field.placeholder} rows={4} className="min-h-28 rounded-xl border-white/10 bg-black/20 text-white placeholder:text-white/25 focus:border-cyan-200/50 focus:ring-2 focus:ring-cyan-200/10" /> : <Input type={field.type || "text"} value={textValue(payload, field.key)} onChange={event => updateField(field.key, event.target.value)} placeholder={field.placeholder} className="h-11 rounded-xl border-white/10 bg-black/20 text-white placeholder:text-white/25 focus:border-cyan-200/50 focus:ring-2 focus:ring-cyan-200/10" />}
+      {field.hint ? <p className="text-[10px] leading-4 text-white/35">{field.hint}</p> : null}
     </div>
   );
 }
@@ -219,6 +227,7 @@ export default function ContentStudio() {
   const [sortOrder, setSortOrder] = useState(0);
   const [isPublished, setIsPublished] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const documents = trpc.content.documentsAll.useQuery(undefined, { enabled: user?.role === "admin" });
   const save = trpc.content.saveDocument.useMutation({
     onSuccess: async () => { toast.success(isPublished ? "Document published." : "Draft saved."); await utils.content.documentsAll.invalidate(); await utils.content.documents.invalidate(); },
@@ -230,12 +239,20 @@ export default function ContentStudio() {
   });
   const fields = useMemo(() => fieldsByType[documentType], [documentType]);
   const selectedType = documentTypes.find(type => type.value === documentType);
+  const currentWorkflow = primaryWorkflows.find(workflow => workflow.type === documentType);
+  const isPrimaryDocument = primaryWorkflowTypes.includes(documentType);
+  const visibleFields = useMemo(() => {
+    if (showAdvanced || !isPrimaryDocument) return fields;
+    if (documentType === "release") return fields.filter(field => ["title", "year", "format", "platform", "url", "artworkUrl", "platformLinksText"].includes(field.key));
+    if (documentType === "siteSettings") return fields.filter(field => field.key === "platformLinksText");
+    return fields;
+  }, [documentType, fields, isPrimaryDocument, showAdvanced]);
 
   function resetEditor(nextType: DocumentType = documentType) {
-    setDocumentType(nextType); setSlug("default"); setPayload(emptyPayload(nextType)); setSortOrder(0); setIsPublished(true); setEditingId(null);
+    setDocumentType(nextType); setSlug("default"); setPayload(emptyPayload(nextType)); setSortOrder(0); setIsPublished(true); setEditingId(null); setShowAdvanced(!primaryWorkflowTypes.includes(nextType));
   }
   function loadDocument(document: EditorDocument) {
-    setDocumentType(document.documentType); setSlug(document.slug); setPayload(displayPayload(document)); setSortOrder(document.sortOrder); setIsPublished(document.isPublished); setEditingId(document.id);
+    setDocumentType(document.documentType); setSlug(document.slug); setPayload(displayPayload(document)); setSortOrder(document.sortOrder); setIsPublished(document.isPublished); setEditingId(document.id); setShowAdvanced(!primaryWorkflowTypes.includes(document.documentType));
   }
   function updateField(key: string, value: string | boolean) { setPayload(current => ({ ...current, [key]: value })); }
   function submit(event: React.FormEvent<HTMLFormElement>) {
@@ -262,19 +279,24 @@ export default function ContentStudio() {
 
         <StudioOperations />
 
+        <section className="overflow-hidden rounded-2xl border border-cyan-200/10 bg-cyan-200/[0.035] p-5 shadow-2xl shadow-black/10 sm:p-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-200/70">Quick actions</p><h2 className="mt-2 text-2xl font-semibold tracking-tight text-white">Mau update apa hari ini?</h2></div><p className="max-w-md text-xs leading-5 text-white/45">Pilih alur utama di bawah. Dashboard akan mengurus tipe dokumen dan slug secara otomatis.</p></div>
+          <div className="mt-5 grid gap-3 md:grid-cols-3">{primaryWorkflows.map(workflow => { const Icon = workflow.icon; const active = documentType === workflow.type && !editingId; return <button type="button" key={workflow.type} onClick={() => resetEditor(workflow.type)} className={`group rounded-xl border p-4 text-left transition ${active ? "border-cyan-200/45 bg-cyan-200/[0.1]" : "border-white/[0.09] bg-black/[0.12] hover:border-cyan-200/25 hover:bg-white/[0.04]"}`}><div className="flex items-start justify-between gap-3"><span className={`grid h-9 w-9 place-items-center rounded-lg ${active ? "bg-cyan-200 text-[#071014]" : "bg-white/[0.07] text-cyan-100/70"}`}><Icon size={17} /></span><Plus size={15} className="text-white/25 transition group-hover:text-cyan-100/70" /></div><p className="mt-5 font-mono text-[9px] uppercase tracking-[0.18em] text-cyan-100/45">{workflow.eyebrow} / workflow</p><h3 className="mt-1 text-sm font-semibold text-white">{workflow.title}</h3><p className="mt-1 text-xs leading-5 text-white/40">{workflow.description}</p><span className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-100/70">{workflow.action} <ArrowUpRight size={12} /></span></button>; })}</div>
+        </section>
+
         <div className="grid items-start gap-5 2xl:grid-cols-[minmax(0,1.08fr)_minmax(390px,0.92fr)]">
           <section className="overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.03] shadow-2xl shadow-black/20">
-            <div className="border-b border-white/[0.08] bg-white/[0.025] px-5 py-5 sm:px-7"><div className="flex flex-wrap items-start justify-between gap-4"><div><div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-200/70"><FilePenLine size={13} />01 // Compose</div><h2 className="mt-2 text-xl font-semibold tracking-tight text-white">{editingId ? "Refine document" : "Start a new document"}</h2><p className="mt-1 text-xs text-white/40">{selectedType?.description}</p>{documentType === "release" || documentType === "event" ? <p className="mt-2 text-[10px] uppercase tracking-[0.12em] text-cyan-100/45">Slug auto-generated from title when left as default</p> : null}</div>{editingId ? <Button type="button" variant="outline" onClick={() => resetEditor()} className="h-9 rounded-lg border-white/10 bg-white/[0.03] text-xs text-white/65 hover:bg-white/[0.08] hover:text-white">New document</Button> : <span className="flex items-center gap-2 rounded-full border border-white/10 bg-black/15 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-white/35"><Sparkles size={11} className="text-cyan-200/70" /> Draft first</span>}</div></div>
+            <div className="border-b border-white/[0.08] bg-white/[0.025] px-5 py-5 sm:px-7"><div className="flex flex-wrap items-start justify-between gap-4"><div><div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-200/70"><FilePenLine size={13} />01 // Compose</div><h2 className="mt-2 text-xl font-semibold tracking-tight text-white">{editingId ? "Edit existing content" : currentWorkflow?.title || "Start a new document"}</h2><p className="mt-1 text-xs text-white/40">{currentWorkflow?.description || selectedType?.description}</p>{documentType === "release" || documentType === "event" ? <p className="mt-2 text-[10px] uppercase tracking-[0.12em] text-cyan-100/45">Slug auto-generated from title when left as default</p> : null}</div>{editingId ? <Button type="button" variant="outline" onClick={() => resetEditor()} className="h-9 rounded-lg border-white/10 bg-white/[0.03] text-xs text-white/65 hover:bg-white/[0.08] hover:text-white">New document</Button> : <span className="flex items-center gap-2 rounded-full border border-white/10 bg-black/15 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-white/35"><Sparkles size={11} className="text-cyan-200/70" /> Draft first</span>}</div></div>
             <form onSubmit={submit} className="space-y-6 p-5 sm:p-7">
-              <div className="grid gap-4 sm:grid-cols-[1.1fr_0.9fr]"><div className="space-y-2"><label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">Document type</label><select value={documentType} onChange={event => resetEditor(event.target.value as DocumentType)} className="h-12 w-full rounded-xl border border-cyan-200/20 bg-cyan-200/[0.06] px-3 text-sm font-medium text-white outline-none transition focus:border-cyan-200/60 focus:ring-2 focus:ring-cyan-200/10">{documentTypes.map(type => <option value={type.value} key={type.value} className="bg-[#12141a]">{type.eyebrow} / {type.label}</option>)}</select></div><div className="space-y-2"><label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">Document slug</label><Input value={slug} onChange={event => setSlug(event.target.value)} placeholder="default or release-slug" className="h-12 rounded-xl border-white/10 bg-black/20 text-white placeholder:text-white/25 focus:border-cyan-200/50 focus:ring-cyan-200/10" /></div></div>
+              {isPrimaryDocument && !showAdvanced ? <div className="flex flex-col gap-4 rounded-xl border border-cyan-200/15 bg-cyan-200/[0.055] p-4 sm:flex-row sm:items-center sm:justify-between"><div><p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cyan-100/55">Workflow aktif</p><p className="mt-1 text-sm font-semibold text-white">{currentWorkflow?.title}</p><p className="mt-1 text-xs text-white/45">{currentWorkflow?.description}</p></div><Button type="button" variant="outline" onClick={() => setShowAdvanced(true)} className="h-9 shrink-0 rounded-lg border-cyan-200/20 bg-black/15 text-xs text-cyan-100/80 hover:bg-cyan-200/[0.08]">Pengaturan lanjutan <ChevronDown size={13} /></Button></div> : <div className="grid gap-4 sm:grid-cols-[1.1fr_0.9fr]"><div className="space-y-2"><label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">Document type</label><select value={documentType} onChange={event => resetEditor(event.target.value as DocumentType)} className="h-12 w-full rounded-xl border border-cyan-200/20 bg-cyan-200/[0.06] px-3 text-sm font-medium text-white outline-none transition focus:border-cyan-200/60 focus:ring-2 focus:ring-cyan-200/10">{documentTypes.map(type => <option value={type.value} key={type.value} className="bg-[#12141a]">{type.eyebrow} / {type.label}</option>)}</select></div><div className="space-y-2"><div className="flex items-center justify-between gap-2"><label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">Slug internal</label><span className="text-[9px] uppercase tracking-[0.12em] text-white/30">Opsional</span></div><Input value={slug} onChange={event => setSlug(event.target.value)} placeholder="Otomatis dari judul" className="h-12 rounded-xl border-white/10 bg-black/20 text-white placeholder:text-white/25 focus:border-cyan-200/50 focus:ring-cyan-200/10" /></div></div>}
               <div className="h-px bg-white/[0.07]" />
-              <div className="grid gap-x-4 gap-y-5 sm:grid-cols-2">{fields.map(field => <StudioField field={field} payload={payload} updateField={updateField} key={field.key} />)}</div>
-              {documentType === "release" ? <label className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-black/15 px-4 py-3 text-xs text-white/65"><input type="checkbox" className="h-4 w-4 accent-cyan-300" checked={Boolean(payload.isCurrent)} onChange={event => updateField("isCurrent", event.target.checked)} /> Mark as current release</label> : null}
-              {documentType === "legal" ? <label className="flex items-center gap-3 rounded-xl border border-amber-200/10 bg-amber-200/[0.04] px-4 py-3 text-xs text-amber-100/70"><input type="checkbox" className="h-4 w-4 accent-amber-300" checked={Boolean(payload.readyForPublic)} onChange={event => updateField("readyForPublic", event.target.checked)} /> Mark legal document ready for public</label> : null}
-              {documentType === "event" ? <label className="flex items-center gap-3 rounded-xl border border-cyan-200/10 bg-cyan-200/[0.04] px-4 py-3 text-xs text-cyan-100/70"><input type="checkbox" className="h-4 w-4 accent-cyan-300" checked={Boolean(payload.isFeatured)} onChange={event => updateField("isFeatured", event.target.checked)} /> Mark as the featured / next show</label> : null}
-              <div className="grid gap-4 border-t border-white/[0.08] pt-5 sm:grid-cols-[0.8fr_1.2fr]"><div className="space-y-2"><label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">Sort order</label><Input type="number" min="0" value={sortOrder} onChange={event => setSortOrder(Number(event.target.value))} className="h-11 rounded-xl border-white/10 bg-black/20 text-white focus:border-cyan-200/50 focus:ring-cyan-200/10" /></div><label className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-xs transition ${isPublished ? "border-emerald-200/20 bg-emerald-200/[0.06] text-emerald-100/80" : "border-white/10 bg-black/15 text-white/50"}`}><span><span className="block font-medium">{isPublished ? "Publish immediately" : "Save as draft"}</span><span className="mt-1 block text-[10px] opacity-60">{isPublished ? "Visible on the public route after save" : "Keep hidden until reviewed"}</span></span><input type="checkbox" className="h-4 w-4 accent-emerald-300" checked={isPublished} onChange={event => setIsPublished(event.target.checked)} /></label></div>
-              <div className="rounded-xl border border-cyan-200/10 bg-cyan-200/[0.035] px-4 py-3 text-xs leading-5 text-white/45"><span className="font-medium text-cyan-100/75">Media workflow:</span> upload images, audio, video, or PDFs in Asset Library, then choose them from the media picker or paste the managed URL.</div>
-              <Button className="h-12 w-full rounded-xl bg-cyan-300 text-sm font-semibold text-[#071014] shadow-lg shadow-cyan-300/10 transition hover:bg-cyan-200 active:scale-[0.99]" disabled={save.isPending}>{save.isPending ? "Saving…" : isPublished ? "Save & publish" : "Save draft"}</Button>
+              <div className="grid gap-x-4 gap-y-5 sm:grid-cols-2">{visibleFields.map(field => <StudioField field={field} payload={payload} updateField={updateField} key={field.key} />)}</div>
+              {documentType === "release" ? <label className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-black/15 px-4 py-3 text-xs text-white/65"><input type="checkbox" className="h-4 w-4 accent-cyan-300" checked={Boolean(payload.isCurrent)} onChange={event => updateField("isCurrent", event.target.checked)} /> Jadikan rilisan terbaru di homepage</label> : null}
+              {documentType === "legal" ? <label className="flex items-center gap-3 rounded-xl border border-amber-200/10 bg-amber-200/[0.04] px-4 py-3 text-xs text-amber-100/70"><input type="checkbox" className="h-4 w-4 accent-amber-300" checked={Boolean(payload.readyForPublic)} onChange={event => updateField("readyForPublic", event.target.checked)} /> Tampilkan dokumen legal ke publik</label> : null}
+              {documentType === "event" ? <label className="flex items-center gap-3 rounded-xl border border-cyan-200/10 bg-cyan-200/[0.04] px-4 py-3 text-xs text-cyan-100/70"><input type="checkbox" className="h-4 w-4 accent-cyan-300" checked={Boolean(payload.isFeatured)} onChange={event => updateField("isFeatured", event.target.checked)} /> Jadikan jadwal utama / show berikutnya</label> : null}
+              <div className="grid gap-4 border-t border-white/[0.08] pt-5 sm:grid-cols-[0.8fr_1.2fr]"><div className="space-y-2"><label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">Urutan tampil</label><Input type="number" min="0" value={sortOrder} onChange={event => setSortOrder(Number(event.target.value))} className="h-11 rounded-xl border-white/10 bg-black/20 text-white focus:border-cyan-200/50 focus:ring-cyan-200/10" /></div><label className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-xs transition ${isPublished ? "border-emerald-200/20 bg-emerald-200/[0.06] text-emerald-100/80" : "border-white/10 bg-black/15 text-white/50"}`}><span><span className="block font-medium">{isPublished ? "Tampilkan ke publik" : "Simpan sebagai draft"}</span><span className="mt-1 block text-[10px] opacity-60">{isPublished ? "Perubahan terlihat di website setelah disimpan" : "Belum terlihat publik sampai siap"}</span></span><input type="checkbox" className="h-4 w-4 accent-emerald-300" checked={isPublished} onChange={event => setIsPublished(event.target.checked)} /></label></div>
+              <div className="rounded-xl border border-cyan-200/10 bg-cyan-200/[0.035] px-4 py-3 text-xs leading-5 text-white/45"><span className="font-medium text-cyan-100/75">Media:</span> upload gambar, audio, video, atau PDF di Asset Library, lalu pilih dari picker di field media.</div>
+              <Button className="h-12 w-full rounded-xl bg-cyan-300 text-sm font-semibold text-[#071014] shadow-lg shadow-cyan-300/10 transition hover:bg-cyan-200 active:scale-[0.99]" disabled={save.isPending}>{save.isPending ? "Menyimpan…" : isPublished ? "Simpan & tampilkan" : "Simpan sebagai draft"}</Button>
             </form>
           </section>
 
