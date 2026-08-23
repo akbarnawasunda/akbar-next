@@ -149,18 +149,6 @@ export async function ensureDashboardUser(user: InsertUser): Promise<void> {
     lastSignedIn,
   };
   const internalNameValues = { ...updateValues, name: user.openId };
-  const existing = await db.select().from(users).where(eq(users.openId, user.openId)).limit(1);
-
-  if (existing[0]) {
-    try {
-      await db.update(users).set(updateValues).where(eq(users.id, existing[0].id));
-    } catch (error) {
-      if (!isDuplicateDatabaseError(error) || !user.name || user.name === user.openId) throw error;
-      await db.update(users).set(internalNameValues).where(eq(users.id, existing[0].id));
-    }
-    return;
-  }
-
   try {
     await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateValues });
   } catch (error) {

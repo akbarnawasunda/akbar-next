@@ -287,7 +287,18 @@ class SDKServer {
 
     const sessionUserId = session.openId;
     const signedInAt = new Date();
-    let user = await db.getUserByOpenId(sessionUserId);
+    let user: AuthenticatedUser | undefined;
+    try {
+      user = await db.getUserByOpenId(sessionUserId);
+    } catch (error) {
+      if (sessionUserId !== "dashboard-owner") throw error;
+      console.warn("[Auth] Dashboard owner row lookup failed; using signed session identity", String(error));
+      return buildDashboardUser(session);
+    }
+
+    if (!user && sessionUserId === "dashboard-owner") {
+      return buildDashboardUser(session);
+    }
 
     // If user not in DB, sync from OAuth server automatically
     if (!user) {
@@ -327,6 +338,21 @@ export type AuthenticatedUser = User & {
   taskUid?: string;
   isCron?: boolean;
 };
+
+function buildDashboardUser(session: SessionPayload): AuthenticatedUser {
+  const now = new Date();
+  return {
+    id: -1,
+    openId: session.openId,
+    name: session.name,
+    email: null,
+    loginMethod: "dashboard",
+    role: "admin",
+    createdAt: now,
+    updatedAt: now,
+    lastSignedIn: now,
+  };
+}
 
 function buildCronUser(
   userInfo: GetUserInfoWithJwtResponse

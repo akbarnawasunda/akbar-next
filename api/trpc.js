@@ -490,16 +490,6 @@ async function ensureDashboardUser(user) {
     lastSignedIn
   };
   const internalNameValues = { ...updateValues, name: user.openId };
-  const existing = await db.select().from(users).where(eq(users.openId, user.openId)).limit(1);
-  if (existing[0]) {
-    try {
-      await db.update(users).set(updateValues).where(eq(users.id, existing[0].id));
-    } catch (error) {
-      if (!isDuplicateDatabaseError(error) || !user.name || user.name === user.openId) throw error;
-      await db.update(users).set(internalNameValues).where(eq(users.id, existing[0].id));
-    }
-    return;
-  }
   try {
     await db.insert(users).values(values).onDuplicateKeyUpdate({ set: updateValues });
   } catch (error) {
@@ -995,7 +985,17 @@ var SDKServer = class {
     }
     const sessionUserId = session.openId;
     const signedInAt = /* @__PURE__ */ new Date();
-    let user = await getUserByOpenId(sessionUserId);
+    let user;
+    try {
+      user = await getUserByOpenId(sessionUserId);
+    } catch (error) {
+      if (sessionUserId !== "dashboard-owner") throw error;
+      console.warn("[Auth] Dashboard owner row lookup failed; using signed session identity", String(error));
+      return buildDashboardUser(session);
+    }
+    if (!user && sessionUserId === "dashboard-owner") {
+      return buildDashboardUser(session);
+    }
     if (!user) {
       try {
         const userInfo = await this.getUserInfoWithJwt(sessionToken ?? "");
@@ -1023,6 +1023,20 @@ var SDKServer = class {
   }
 };
 var CRON_OPEN_ID_PREFIX = "cron_";
+function buildDashboardUser(session) {
+  const now = /* @__PURE__ */ new Date();
+  return {
+    id: -1,
+    openId: session.openId,
+    name: session.name,
+    email: null,
+    loginMethod: "dashboard",
+    role: "admin",
+    createdAt: now,
+    updatedAt: now,
+    lastSignedIn: now
+  };
+}
 function buildCronUser(userInfo) {
   const now = /* @__PURE__ */ new Date();
   return {
@@ -1114,10 +1128,6 @@ async function loginWithDashboardPassword(req, res, username, password) {
     role: "admin",
     lastSignedIn: /* @__PURE__ */ new Date()
   });
-  const user = await getUserByOpenId(DASHBOARD_OPEN_ID);
-  if (!user) {
-    throw new TRPCError3({ code: "INTERNAL_SERVER_ERROR", message: "Owner account could not be created." });
-  }
   const token = await sdk.signSession(
     { openId: DASHBOARD_OPEN_ID, appId: "dashboard", name: ownerName },
     { expiresInMs: ONE_YEAR_MS }

@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { sdk } from "./_core/sdk";
-import { ensureDashboardUser, getDb, getUserByOpenId } from "./db";
+import { ensureDashboardUser, getDb } from "./db";
 
 const DASHBOARD_OPEN_ID = "dashboard-owner";
 const MAX_ATTEMPTS = 5;
@@ -104,11 +104,6 @@ export async function loginWithDashboardPassword(
     role: "admin",
     lastSignedIn: new Date(),
   });
-  const user = await getUserByOpenId(DASHBOARD_OPEN_ID);
-  if (!user) {
-    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Owner account could not be created." });
-  }
-
   const token = await sdk.signSession(
     { openId: DASHBOARD_OPEN_ID, appId: "dashboard", name: ownerName },
     { expiresInMs: ONE_YEAR_MS },
