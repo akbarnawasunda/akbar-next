@@ -54,6 +54,10 @@ describe("homepage enhancement contract", () => {
     expect(particle).toContain('"#9c7cff"');
     expect(particle).toContain("imageSmoothingEnabled = false");
     expect(particle).toContain("idleTime * 0.62");
+    expect(particle).toContain("drawIrisReactor");
+    expect(home).toContain('className="hero-title-editorial"');
+    expect(home).toContain('data-no-scramble="true"');
+    expect(home).toContain("hero-title-mask");
   });
 
   it("keeps the portfolio-inspired homepage patterns wired", () => {

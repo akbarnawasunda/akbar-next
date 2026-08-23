@@ -196,6 +196,57 @@ export function BrandMotionMark({ src }: { src: string }) {
       };
     };
 
+    const drawIrisReactor = (time: number, energy = 1) => {
+      const seconds = time * 0.001;
+      const radius = Math.min(hostWidth, hostHeight) * (mobile ? 0.24 : 0.22);
+      const spokeCount = mobile ? 12 : 16;
+      const palette = ["#67e8f9", "#d8ff65", "#ff9f6e", "#9c7cff"];
+
+      context.save();
+      context.translate(centerX, centerY);
+      context.rotate(seconds * 0.18);
+      context.globalCompositeOperation = "lighter";
+      context.lineCap = "round";
+
+      for (let ring = 0; ring < 2; ring += 1) {
+        context.beginPath();
+        context.arc(
+          0,
+          0,
+          radius * (0.76 + ring * 0.24) + Math.sin(seconds * 0.9 + ring) * 1.5,
+          0,
+          Math.PI * 2
+        );
+        context.setLineDash(ring === 0 ? [radius * 0.12, radius * 0.2] : [radius * 0.04, radius * 0.14]);
+        context.lineDashOffset = -seconds * (ring === 0 ? 18 : 28);
+        context.strokeStyle = palette[ring + 1];
+        context.globalAlpha = (0.12 + energy * 0.2) * (ring === 0 ? 1 : 0.72);
+        context.lineWidth = mobile ? 0.7 : 0.95;
+        context.stroke();
+      }
+
+      for (let index = 0; index < spokeCount; index += 1) {
+        const angle = (index / spokeCount) * Math.PI * 2;
+        const pulse = 0.86 + Math.sin(seconds * 1.35 + index * 0.7) * 0.1;
+        const inner = radius * 0.78;
+        const outer = radius * (1.08 + pulse * 0.12);
+        context.beginPath();
+        context.moveTo(Math.cos(angle) * inner, Math.sin(angle) * inner);
+        context.lineTo(Math.cos(angle) * outer, Math.sin(angle) * outer);
+        context.strokeStyle = palette[index % palette.length];
+        context.globalAlpha = (0.09 + energy * 0.17) * pulse;
+        context.lineWidth = mobile ? 0.55 : 0.8;
+        context.stroke();
+      }
+
+      context.beginPath();
+      context.arc(0, 0, radius * 0.2, 0, Math.PI * 2);
+      context.fillStyle = "rgba(4, 10, 15, 0.42)";
+      context.globalAlpha = 0.7 * energy;
+      context.fill();
+      context.restore();
+    };
+
     const drawOrbitingLines = (time: number, energy = 1) => {
       const seconds = time * 0.001;
       const orbitLines = [
@@ -298,6 +349,7 @@ export function BrandMotionMark({ src }: { src: string }) {
 
     const drawStatic = () => {
       context.clearRect(0, 0, width, height);
+      drawIrisReactor(0, 0.38);
       drawOrbitingLines(0, 0.58);
       drawParticles(particle => ({ x: particle.tx, y: particle.ty, opacity: particle.alpha }));
     };
@@ -365,6 +417,7 @@ export function BrandMotionMark({ src }: { src: string }) {
       if (idleStartedAt === null) idleStartedAt = time;
       const idleTime = (time - idleStartedAt) * 0.001;
       context.clearRect(0, 0, width, height);
+      drawIrisReactor(time, 0.48);
       drawOrbitingLines(time, 0.72);
       drawParticles(particle => {
         const offset = getIdleOffset(particle, idleTime, 1.12);
@@ -393,6 +446,7 @@ export function BrandMotionMark({ src }: { src: string }) {
       }
       const progress = clamp((time - startedAt - pausedDuration) / duration);
       context.clearRect(0, 0, width, height);
+      drawIrisReactor(time, 0.48 + Math.sin(progress * Math.PI) * 0.52);
       drawOrbitingLines(time, 0.78 + Math.sin(progress * Math.PI) * 0.62);
       drawParticles(particle => getAnimatedPosition(particle, progress, time));
 

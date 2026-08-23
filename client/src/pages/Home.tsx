@@ -8,7 +8,7 @@ import {
   Sparkles,
   Ticket,
 } from "lucide-react";
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { PlatformIcon } from "@/components/PlatformIcon";
@@ -111,6 +111,8 @@ export default function Home() {
         image: item.imageUrl || officialBrand.socialPreview,
       }))
     : videos;
+  const displayHeroTitle = (heroTitle || "AKBAR NAWASUNDA.").trim();
+  const heroTitleWords = displayHeroTitle.split(/\s+/);
   return (
     <div className="an-site">
       <header className="an-nav">
@@ -193,7 +195,24 @@ export default function Home() {
             <p className="eyebrow">
               <span /> {heroKicker}
             </p>
-            <h1>{heroTitle || "AKBAR NAWASUNDA."}</h1>
+            <h1
+              className="hero-title-editorial"
+              data-no-scramble="true"
+              aria-label={displayHeroTitle}
+            >
+              <span aria-hidden="true">
+                {heroTitleWords.map((word, index) => (
+                  <span
+                    className="hero-title-mask"
+                    key={`${word}-${index}`}
+                    style={{ "--hero-word-index": index } as CSSProperties}
+                  >
+                    <span className="hero-title-word">{word}</span>
+                    {index < heroTitleWords.length - 1 ? " " : null}
+                  </span>
+                ))}
+              </span>
+            </h1>
             <p className="hero-description">{heroBody}</p>
             <div className="hero-actions">
               <a
