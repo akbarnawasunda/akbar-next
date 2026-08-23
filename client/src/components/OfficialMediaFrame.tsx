@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Play } from "lucide-react";
+import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import "./OfficialMediaFrame.css";
 
 type OfficialMediaFrameProps = {
@@ -8,10 +9,11 @@ type OfficialMediaFrameProps = {
   sourceUrl: string;
   embedUrl: string;
   artwork: string;
+  backupArtwork?: string;
   description?: string;
 };
 
-export function OfficialMediaFrame({ title, provider, sourceUrl, embedUrl, artwork, description }: OfficialMediaFrameProps) {
+export function OfficialMediaFrame({ title, provider, sourceUrl, embedUrl, artwork, backupArtwork, description }: OfficialMediaFrameProps) {
   const [playerRequested, setPlayerRequested] = useState(false);
   const [playerLoaded, setPlayerLoaded] = useState(false);
   const [slowPlayer, setSlowPlayer] = useState(false);
@@ -32,7 +34,7 @@ export function OfficialMediaFrame({ title, provider, sourceUrl, embedUrl, artwo
 
   return <article className={`an-official-media an-official-media-provider-${providerClass}${playerRequested ? " is-player-open" : ""}`}>
     <a className="an-official-media-art" href={sourceUrl} target="_blank" rel="noreferrer">
-      <img src={artwork} alt={`Artwork resmi untuk ${title}`} loading="lazy" decoding="async" onError={event => { event.currentTarget.src = "/favicon.ico"; }} />
+      <ResilientArtworkImage src={artwork} backupSrc={backupArtwork} alt={`Artwork resmi untuk ${title}`} />
       <span>OFFICIAL {provider.toUpperCase()}</span>
       <i><Play size={18} fill="currentColor" /></i>
     </a>

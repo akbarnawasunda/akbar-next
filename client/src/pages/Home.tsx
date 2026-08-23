@@ -16,6 +16,7 @@ import { BrandMotionMark } from "@/components/BrandMotionMark";
 import FanSignalInline from "@/components/FanSignalInline";
 import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
+import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import { TiltCard } from "@/components/TiltCard";
 import {
@@ -282,11 +283,10 @@ export default function Home() {
           ) : null}
           <div className="feature-release">
             <div className="release-cover">
-              <img
+              <ResilientArtworkImage
                 src={activeRelease.image}
+                backupSrc={officialBrand.socialPreview}
                 alt="Abstract visual for current release"
-                loading="lazy"
-                decoding="async"
               />
               <span className="cover-orbit" />
             </div>
@@ -353,11 +353,10 @@ export default function Home() {
                   >
                     {release.image && (
                       <div className="release-card-art">
-                        <img
+                        <ResilientArtworkImage
                           src={release.image}
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
+                          backupSrc={officialBrand.socialPreview}
+                          alt={`Artwork ${release.title}`}
                         />
                       </div>
                     )}
@@ -398,7 +397,11 @@ export default function Home() {
                 target="_blank"
                 rel="noreferrer"
               >
-                <img src={video.image} alt="" loading="lazy" decoding="async" />
+                <ResilientArtworkImage
+                  src={video.image}
+                  backupSrc={officialBrand.socialPreview}
+                  alt={`${video.title} — official visual artwork`}
+                />
                 <div className="video-overlay" />
                 <div className="video-content">
                   <span>{video.label}</span>

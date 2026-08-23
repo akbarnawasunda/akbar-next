@@ -3,6 +3,7 @@ import { ArrowUpRight, Download, Mail, Printer } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
+import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import {
   allPlatformLinks,
   officialBrand,
@@ -167,7 +168,7 @@ export default function PressKit() {
           <div className="an-epk-release-list">
             {selectedReleases.map(release => (
               <a className="an-epk-release" key={release.title} href={release.href} target="_blank" rel="noreferrer">
-                <img src={release.image} alt={`Artwork ${release.title}`} loading="lazy" decoding="async" />
+                <ResilientArtworkImage src={release.image} backupSrc={officialBrand.socialPreview} alt={`Artwork ${release.title}`} />
                 <div><span>{release.platform} · {release.year}</span><h3>{release.title}</h3><p>{release.format} <ArrowUpRight size={12} /></p></div>
               </a>
             ))}
