@@ -20,6 +20,7 @@ import Licensing from "./pages/Licensing";
 import InquiryStudio from "./pages/InquiryStudio";
 import Admin from "./pages/Admin";
 import LegacyDocument from "./components/LegacyDocument";
+import { ScrollProgress } from "./components/ScrollProgress";
 import "./components/PlasmaRefinement.css";
 import "./components/EditorialSimplification.css";
 import "./components/MaturePalette.css";
@@ -86,6 +87,7 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
+          <ScrollProgress />
           <RouteMotion />
         </TooltipProvider>
       </ThemeProvider>

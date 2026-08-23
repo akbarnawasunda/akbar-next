@@ -180,3 +180,13 @@ Browser desktop mengonfirmasi font aktual: hero title `Bebas Neue`, section head
 ## Brand refresh mobile audit — 2026-08-23
 
 Screenshot mobile 390px setelah asset termuat menunjukkan portrait hero tampil penuh, title `Bebas Neue` terbaca tegas, CTA coral tetap kontras, dan tidak ada clipping/overflow pada hero. Screenshot pertama sebelum asset selesai hanya memperlihatkan fase loading browser, bukan kegagalan asset final.
+
+
+## Portofolio adoption visual audit — 2026-08-23
+
+Homepage lokal setelah adopsi menampilkan foto `akbar-night-frequency-hero.webp` sebagai atmospheric layer di belakang portrait, dengan logo particle tetap terbaca dan tidak kembali membentuk kotak. Section index `01 OFFICIAL NETWORK` dan `02 CURRENT RELEASE` tampil. Platform marquee dua baris ikut muncul dengan arah gerak berlawanan, sementara current release tetap tersusun dalam grid terpisah.
+
+
+## Final portfolio adoption verification — 2026-08-23
+
+Browser reload normal menunjukkan logo header memakai `/assets/akbar-logo-fallback.webp` dengan `naturalWidth=1000` dan visibility visible saat remote logo tidak tersedia. Hero memakai foto pengguna `/assets/akbar-night-frequency-hero.webp` pada opacity `0.48`. Homepage memiliki 6 section index, 2 marquee track, dan scroll progress global; overflow horizontal tetap aman (`scrollWidth - innerWidth = -20`).

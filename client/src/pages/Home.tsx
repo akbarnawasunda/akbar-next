@@ -14,6 +14,8 @@ import { Link } from "wouter";
 import { toast } from "sonner";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { BrandMotionMark } from "@/components/BrandMotionMark";
+import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
+import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import { TiltCard } from "@/components/TiltCard";
 import {
@@ -40,6 +42,7 @@ import "./HomePortraitRefinement.css";
 import "./HomePlatformCards.css";
 import "./HomeLayoutRefinement.css";
 import "./HomeMotionRefinement.css";
+import "./HomePortfolioPatterns.css";
 
 export default function Home() {
   usePerformanceMonitor();
@@ -130,7 +133,7 @@ export default function Home() {
           href="#top"
           aria-label="Akbar Nawasunda home"
         >
-          <img className="an-brand-logo" src={officialBrand.logo} alt="" />
+          <ResilientBrandImage className="an-brand-logo" alt="" />
           <span>AKBAR NAWASUNDA</span>
         </a>
         <nav aria-label="Navigasi utama">
@@ -230,6 +233,7 @@ export default function Home() {
           className="home-signal-deck reveal-target"
           aria-labelledby="signal-deck-title"
         >
+          <SectionIndex number="01" label="OFFICIAL NETWORK" />
           <div className="home-signal-copy">
             <p className="eyebrow">
               <span /> PLATFORM RESMI
@@ -265,6 +269,7 @@ export default function Home() {
               </a>
             ))}
           </div>
+          <PlatformMarquee />
         </section>
 
         <section
@@ -272,6 +277,7 @@ export default function Home() {
           className="section section-current reveal-target"
           id="music"
         >
+          <SectionIndex number="02" label="CURRENT RELEASE" />
           <div className="section-heading">
             <p className="eyebrow">RILISAN TERBARU</p>
             <h2>
@@ -327,6 +333,7 @@ export default function Home() {
           ref={releaseSectionRef}
           className="section release-section reveal-target"
         >
+          <SectionIndex number="03" label="DISCOGRAPHY" />
           <div className="section-inline">
             <div>
               <p className="eyebrow">DISKOGRAFI</p>
@@ -386,6 +393,7 @@ export default function Home() {
           className="section visual-section reveal-target"
           id="visuals"
         >
+          <SectionIndex number="04" label="OFFICIAL VISUALS" />
           <div className="section-heading">
             <p className="eyebrow">VISUAL</p>
             <h2>
@@ -422,6 +430,7 @@ export default function Home() {
           className="section live-section reveal-target"
           id="live"
         >
+          <SectionIndex number="05" label="LIVE SIGNAL" />
           <div
             className="live-backdrop"
             style={{
@@ -471,6 +480,7 @@ export default function Home() {
           className="signal-section reveal-target"
           id="signal"
         >
+          <SectionIndex number="06" label="FAN SIGNAL" />
           <div>
             <p className="eyebrow">
               <Sparkles size={14} /> FAN SIGNAL

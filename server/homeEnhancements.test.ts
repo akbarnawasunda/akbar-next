@@ -56,6 +56,38 @@ describe("homepage enhancement contract", () => {
     expect(particle).toContain("idleTime * 0.62");
   });
 
+  it("keeps the portfolio-inspired homepage patterns wired", () => {
+    const app = source("client/src/App.tsx");
+    const home = source("client/src/pages/Home.tsx");
+    const marquee = source("client/src/components/PlatformMarquee.tsx");
+    const progress = source("client/src/components/ScrollProgress.tsx");
+    const patterns = source("client/src/pages/HomePortfolioPatterns.css");
+
+    expect(app).toContain(
+      'import { ScrollProgress } from "./components/ScrollProgress";'
+    );
+    expect(app).toContain("<ScrollProgress />");
+    expect(home).toContain(
+      'import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";'
+    );
+    expect(home).toContain('import "./HomePortfolioPatterns.css";');
+    expect(home).toContain("<PlatformMarquee />");
+    expect(home).toContain(
+      '<SectionIndex number="01" label="OFFICIAL NETWORK" />'
+    );
+    expect(marquee).toContain("an-platform-marquee-track");
+    expect(progress).toContain("requestAnimationFrame");
+    expect(patterns).toContain("akbar-night-frequency-hero.webp");
+    expect(patterns).toContain("an-section-index");
+    expect(home).toContain("ResilientBrandImage");
+    expect(source("client/src/content/artistPlatform.ts")).toContain(
+      'logoFallback: "/assets/akbar-logo-fallback.webp"'
+    );
+    expect(source("client/src/components/NightFrequencyChrome.tsx")).toContain(
+      "ResilientBrandImage"
+    );
+  });
+
   it("keeps the editorial brand system wired across public surfaces", () => {
     const app = source("client/src/App.tsx");
     const index = source("client/index.html");
