@@ -9,15 +9,15 @@
   "theme_color": "#050508",
   "icons": [
     {
-      "src": "/assets/media/favicon.png",
+      "src": "/assets/akbar-favicon.jpg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/media/logo-an.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "src": "/assets/akbar-favicon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
       "purpose": "any"
     }
   ]

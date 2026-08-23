@@ -21,6 +21,14 @@
       "source": "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg",
       "destination": "https://akbarfolio-424qdvsv.manus.space/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg"
     },
+    {
+      "source": "/favicon.ico",
+      "destination": "/assets/akbar-favicon.jpg"
+    },
+    {
+      "source": "/favicon.png",
+      "destination": "/assets/akbar-favicon.jpg"
+    },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
