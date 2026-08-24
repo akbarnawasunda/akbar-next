@@ -21,7 +21,6 @@ const InquiryStudio = lazy(() => import("./pages/InquiryStudio"));
 const Admin = lazy(() => import("./pages/Admin"));
 const BroadcastStudio = lazy(() => import("./pages/BroadcastStudio"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
-const StructuredData = lazy(() => import("./components/StructuredData").then(module => ({ default: module.StructuredData })));
 const { EnglishHome, EnglishMusic, EnglishVisuals, EnglishLive, EnglishUniverse, EnglishAbout, EnglishEpk, EnglishInquiry, EnglishLicensing, EnglishPrivacy, EnglishReleaseDetail } = {
   EnglishHome: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishHome }))),
   EnglishMusic: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishMusic }))),
@@ -39,6 +38,7 @@ import LegacyDocument from "./components/LegacyDocument";
 import { ScrollProgress } from "./components/ScrollProgress";
 import { MotionOrchestrator } from "./components/MotionOrchestrator";
 import { NightFrequencySignature } from "./components/NightFrequencySignature";
+import { StructuredData } from "./components/StructuredData";
 import { trpc } from "./lib/trpc";
 import { customDocumentsToPublicContent } from "./content/publicContent";
 import "./components/PlasmaRefinement.css";
@@ -243,7 +243,7 @@ function App() {
           <Toaster />
           <ScrollProgress />
           <CmsMetadata />
-          <Suspense fallback={null}><StructuredData /></Suspense>
+          <StructuredData />
           <MotionOrchestrator />
           <RouteMotion />
           <NightFrequencySignature />

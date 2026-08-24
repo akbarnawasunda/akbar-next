@@ -713,3 +713,75 @@
     animation: none !important;
   }
 }
+
+/* Contrast recovery for contact panels: readable paper surface, dark copy, and clear actions. */
+.nf-page .an-epk-contact-panel,
+.nf-page .en-contact-panel {
+  background: var(--human-paper) !important;
+  background-image: none !important;
+  color: var(--human-ink) !important;
+  border-top-color: var(--human-rust) !important;
+}
+
+.nf-page .an-epk-contact-panel .nf-page-eyebrow,
+.nf-page .an-epk-contact-panel .an-booking-grid h2,
+.nf-page .an-epk-contact-panel .an-booking-grid p,
+.nf-page .en-contact-panel .nf-page-eyebrow,
+.nf-page .en-contact-panel h2,
+.nf-page .en-contact-panel p {
+  color: var(--human-ink) !important;
+}
+
+.nf-page .an-epk-contact-panel .nf-page-eyebrow::before,
+.nf-page .en-contact-panel .nf-page-eyebrow::before {
+  background: var(--human-rust) !important;
+}
+
+.nf-page .an-epk-contact-panel .an-booking-actions a {
+  border-color: rgba(23, 21, 19, 0.34) !important;
+  color: var(--human-ink) !important;
+}
+
+.nf-page .an-epk-contact-panel .an-booking-actions a:hover {
+  background: var(--human-ink) !important;
+  border-color: var(--human-ink) !important;
+  color: var(--human-paper) !important;
+}
+
+.nf-page .en-contact-panel .nf-button {
+  color: var(--human-paper) !important;
+}
+
+/* High-specificity contrast guard: section-level background rules must not overpower readable copy. */
+.an-site main > section.signal-section,
+.nf-page main > section.nf-signal-block {
+  background: var(--human-paper) !important;
+  background-image: none !important;
+  color: var(--human-ink) !important;
+}
+
+.an-site main > section.signal-section h2,
+.an-site main > section.signal-section p,
+.an-site main > section.signal-section label,
+.an-site main > section.signal-section small,
+.nf-page main > section.nf-signal-block h2,
+.nf-page main > section.nf-signal-block p,
+.nf-page main > section.nf-signal-block .nf-page-eyebrow {
+  color: var(--human-ink) !important;
+}
+
+.route-motion[data-route="/epk"] .nf-page main > section.an-epk-contact-panel,
+.route-motion[data-route="/en/epk"] .nf-page main > section.en-contact-panel {
+  background: var(--human-paper) !important;
+  background-image: none !important;
+  color: var(--human-ink) !important;
+}
+
+.route-motion[data-route="/epk"] .nf-page main > section.an-epk-contact-panel h2,
+.route-motion[data-route="/epk"] .nf-page main > section.an-epk-contact-panel p,
+.route-motion[data-route="/epk"] .nf-page main > section.an-epk-contact-panel .nf-page-eyebrow,
+.route-motion[data-route="/en/epk"] .nf-page main > section.en-contact-panel h2,
+.route-motion[data-route="/en/epk"] .nf-page main > section.en-contact-panel p,
+.route-motion[data-route="/en/epk"] .nf-page main > section.en-contact-panel .nf-page-eyebrow {
+  color: var(--human-ink) !important;
+}
