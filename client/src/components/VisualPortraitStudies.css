@@ -175,3 +175,34 @@
     mix-blend-mode: normal;
   }
 }
+
+/* Keep the art layer above route-wide pseudo decorations that share ::before/::after. */
+.an-portrait-studies::before,
+.an-portrait-studies::after {
+  display: none !important;
+}
+
+.an-portrait-studies-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(90deg, rgba(18, 17, 17, 0.98) 0%, rgba(18, 17, 17, 0.88) 34%, rgba(18, 17, 17, 0.38) 72%, rgba(18, 17, 17, 0.72) 100%),
+    var(--portrait-study-image) 76% 42% / min(47rem, 58vw) auto no-repeat;
+  opacity: 0.94;
+  pointer-events: none;
+}
+
+.an-portrait-studies > .an-portrait-studies-heading,
+.an-portrait-studies > .an-portrait-studies-surface {
+  z-index: 1;
+}
+
+@media (max-width: 820px) {
+  .an-portrait-studies-art {
+    background:
+      linear-gradient(180deg, rgba(18, 17, 17, 0.94) 0%, rgba(18, 17, 17, 0.74) 48%, rgba(18, 17, 17, 0.92) 100%),
+      var(--portrait-study-image) 50% 28% / 100% auto no-repeat;
+    opacity: 0.92;
+  }
+}

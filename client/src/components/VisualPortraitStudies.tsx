@@ -15,6 +15,7 @@ export default function VisualPortraitStudies({ english = false }: VisualPortrai
       aria-labelledby={english ? "portrait-studies-title-en" : "portrait-studies-title-id"}
       style={{ "--portrait-study-image": `url(${study.src})` } as React.CSSProperties}
     >
+      <div className="an-portrait-studies-art" aria-hidden="true" />
       <div className="an-portrait-studies-heading">
         <div>
           <p className="nf-page-eyebrow">{english ? "PORTRAIT STUDIES" : "STUDI POTRET"}</p>
