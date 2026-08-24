@@ -13,6 +13,33 @@ export const officialBrand = {
   archivePortrait: "/assets/akbar-future-yellow.webp",
 };
 
+export const portraitStudies = [
+  {
+    id: "neon-portrait",
+    src: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663907101550/qdnFVUsmqPWcPbsv.jpg",
+    width: 3016,
+    height: 4032,
+    titleId: "Potret Neon",
+    titleEn: "Neon Portrait",
+    copyId: "Potret dekat dengan cahaya warna dan bingkai yang lebih hening.",
+    copyEn: "A close portrait study shaped by colour, light, and a quieter frame.",
+    altId: "Potret Akbar Nawasunda dengan cahaya magenta dan biru",
+    altEn: "Akbar Nawasunda portrait with magenta and blue light",
+  },
+  {
+    id: "kx07-portrait",
+    src: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663907101550/zMxYKACXxuHdtyVJ.jpg",
+    width: 1055,
+    height: 1491,
+    titleId: "Studi KX-07",
+    titleEn: "KX-07 Study",
+    copyId: "Potongan visual yang lebih keras: kontras, tanda, dan wajah yang ditahan.",
+    copyEn: "A harder visual cut: contrast, markings, and a face held just out of reach.",
+    altId: "Potret editorial Akbar Nawasunda dengan masker dan elemen grafis kuning magenta",
+    altEn: "Editorial Akbar Nawasunda portrait with a mask and yellow magenta graphics",
+  },
+] as const;
+
 export const platformLinks = [
   { label: "Spotify", href: "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw" },
   { label: "YouTube", href: "https://www.youtube.com/@akbarnawasunda" },
