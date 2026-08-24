@@ -99,7 +99,7 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain('import "./HomePortfolioPatterns.css";');
     expect(home).toContain("<PlatformMarquee links={editablePlatformLinks} />");
     expect(home).toContain(
-      '<SectionIndex number="01" label="OFFICIAL NETWORK" />'
+      '<SectionIndex number="01" label="PLATFORM RESMI" />'
     );
     expect(marquee).toContain("an-platform-marquee-track");
     expect(progress).toContain("requestAnimationFrame");

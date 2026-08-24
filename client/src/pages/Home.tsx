@@ -188,7 +188,7 @@ export default function Home() {
           <Link href="/about">ABOUT</Link>
         </nav>
         <a className="nav-signal" href="#signal">
-          <Radio size={14} /> FAN SIGNAL
+          <Radio size={14} /> KABAR TERBARU
         </a>
         <button
           className="an-menu-toggle"
@@ -225,7 +225,7 @@ export default function Home() {
             href="#signal"
             onClick={() => setMobileNavOpen(false)}
           >
-            JOIN FAN SIGNAL
+            KABAR TERBARU
           </a>
         </div>
       </header>
@@ -285,7 +285,7 @@ export default function Home() {
                 LIHAT VISUALS <ArrowUpRight size={16} />
               </Link>
               <a className="hero-signal-link" href="#signal">
-                FAN SIGNAL <ArrowDownRight size={14} />
+                KABAR TERBARU <ArrowDownRight size={14} />
               </a>
             </div>
           </div>
@@ -302,15 +302,15 @@ export default function Home() {
           className="home-signal-deck reveal-target"
           aria-labelledby="signal-deck-title"
         >
-          <SectionIndex number="01" label="OFFICIAL NETWORK" />
+          <SectionIndex number="01" label="PLATFORM RESMI" />
           <div className="home-signal-copy">
             <p className="eyebrow">
-              <span /> PLATFORM RESMI
+              <span /> MUSIK ONLINE
             </p>
             <h2 id="signal-deck-title">
               DENGAR
               <br />
-              DI PLATFORM PILIHAN.
+              DI MANA SAJA.
             </h2>
             <Link className="home-deck-cta" href="/music">
               LIHAT MUSIK <ArrowUpRight size={15} />
@@ -332,7 +332,6 @@ export default function Home() {
                 </span>
                 <span className="home-platform-copy">
                   <strong>{platform.label}</strong>
-                  <small>PLATFORM RESMI</small>
                 </span>
                 <ArrowUpRight className="home-platform-arrow" size={15} />
               </a>
@@ -346,7 +345,7 @@ export default function Home() {
           className="section section-current reveal-target"
           id="music"
         >
-          <SectionIndex number="02" label="CURRENT RELEASE" />
+          <SectionIndex number="02" label="RILISAN TERBARU" />
           <div className="section-heading">
             <p className="eyebrow">RILISAN TERBARU</p>
             <h2>
@@ -390,7 +389,7 @@ export default function Home() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  OPEN RELEASE <ArrowUpRight size={16} />
+                  BUKA RILISAN <ArrowUpRight size={16} />
                 </a>
                 <span>{activeRelease.type}</span>
               </div>
@@ -402,10 +401,10 @@ export default function Home() {
           ref={releaseSectionRef}
           className="section release-section reveal-target"
         >
-          <SectionIndex number="03" label="DISCOGRAPHY" />
+          <SectionIndex number="03" label="SEMUA RILISAN" />
           <div className="section-inline">
             <div>
-              <p className="eyebrow">DISKOGRAFI</p>
+              <p className="eyebrow">KATALOG RILISAN</p>
               <h2>
                 SEMUA
                 <br />
@@ -461,7 +460,7 @@ export default function Home() {
           className="section visual-section reveal-target"
           id="visuals"
         >
-          <SectionIndex number="04" label="OFFICIAL VISUALS" />
+          <SectionIndex number="04" label="VIDEO" />
           <div className="section-heading">
             <p className="eyebrow">VISUAL</p>
             <h2>
@@ -502,7 +501,7 @@ export default function Home() {
           className="section live-section reveal-target"
           id="live"
         >
-          <SectionIndex number="05" label="LIVE SIGNAL" />
+          <SectionIndex number="05" label="JADWAL MANGGUNG" />
           <div
             className="live-backdrop"
             style={{
@@ -529,11 +528,11 @@ export default function Home() {
               rel={featuredEvent?.ticketUrl || featuredEvent?.rsvpUrl || managedLive?.href ? "noreferrer" : undefined}
             >
               <Ticket size={16} />
-              <span>{featuredEvent?.ticketUrl ? "TIKET SHOW" : featuredEvent?.rsvpUrl ? "RSVP SHOW" : "DAPATKAN UPDATE"}</span>
+              <span>{featuredEvent?.ticketUrl ? "TIKET SHOW" : featuredEvent?.rsvpUrl ? "RSVP SHOW" : "BERI TAHU SAYA"}</span>
             </a>
           </div>
           <div className="live-status">
-            <span>{featuredEvent ? "SHOW BERIKUTNYA" : managedLive?.label || "JADWAL"}</span>
+            <span>{featuredEvent ? "SHOW BERIKUTNYA" : managedLive?.label || "INFO JADWAL"}</span>
             <strong>
               {featuredEvent?.title || managedLive?.title || (
                 <>
@@ -563,10 +562,10 @@ export default function Home() {
           className="signal-section reveal-target"
           id="signal"
         >
-          <SectionIndex number="06" label="FAN SIGNAL" />
+          <SectionIndex number="06" label="KABAR TERBARU" />
           <div>
             <p className="eyebrow">
-              <Sparkles size={14} /> FAN SIGNAL
+              <Sparkles size={14} /> KABAR TERBARU
             </p>
             <h2>
               UPDATE
@@ -612,7 +611,7 @@ export default function Home() {
           </Link>
         </div>
         <p className="footer-bottom">
-          © {new Date().getFullYear()} AKBAR NAWASUNDA · ALL SIGNALS RESERVED
+          © {new Date().getFullYear()} AKBAR NAWASUNDA · ALL RIGHTS RESERVED
         </p>
       </footer>
     </div>

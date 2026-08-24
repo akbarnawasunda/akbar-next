@@ -42,7 +42,7 @@ export const verifiedArtistProfile = {
 };
 
 export const currentRelease = {
-  eyebrow: "CURRENT FREQUENCY · 2025",
+  eyebrow: "RILISAN TERBARU · 2025",
   title: "MASIH MENCINTAINYA — PAPINKA",
   type: "DJ AKBAR REMIX",
   href: "https://soundcloud.com/akbarnawasunda/masih-mencintainya-papinka-2025-akbar-nawasunda",

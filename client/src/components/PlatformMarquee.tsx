@@ -50,8 +50,8 @@ export function PlatformMarquee({ links = allPlatformLinks }: { links?: Platform
   return (
     <div className="an-platform-marquee" aria-label="Platform musik resmi">
       <div className="an-platform-marquee-heading">
-        <span>OFFICIAL NETWORK</span>
-        <span>SWIPE / HOVER TO HOLD</span>
+        <span>PLATFORM RESMI</span>
+        <span>GESER UNTUK LIHAT</span>
       </div>
       <MarqueeRow links={rows[0]} reverse />
       <MarqueeRow links={rows[1]} />

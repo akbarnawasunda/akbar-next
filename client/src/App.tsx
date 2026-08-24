@@ -52,6 +52,7 @@ import "./components/SignalNoirSystem.css";
 import "./components/ResponsiveRepair.css";
 import "./components/ScrollReplay.css";
 import "./components/SignalTuningMotion.css";
+import "./components/HumanEditorialSystem.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -126,10 +127,10 @@ function languagePair(pathname: string) {
 
 const idTitles: Record<string, string> = {
   "/": "Akbar Nawasunda | Official Website",
-  "/music": "Music Archive | Akbar Nawasunda",
-  "/visuals": "Visual Archive | Akbar Nawasunda",
-  "/live": "Live Signal | Akbar Nawasunda",
-  "/universe": "AN Archive | Akbar Nawasunda",
+  "/music": "Music by Akbar Nawasunda",
+  "/visuals": "Videos by Akbar Nawasunda",
+  "/live": "Live Dates | Akbar Nawasunda",
+  "/universe": "About the Work | Akbar Nawasunda",
   "/about": "About the Artist | Akbar Nawasunda",
   "/epk": "Press & Booking EPK | Akbar Nawasunda",
   "/inquire": "Inquire | Akbar Nawasunda",
@@ -139,10 +140,10 @@ const idTitles: Record<string, string> = {
 
 const englishTitles: Record<string, string> = {
   "/en": "Akbar Nawasunda | Official Website",
-  "/en/music": "Music Archive | Akbar Nawasunda",
-  "/en/visuals": "Visual Archive | Akbar Nawasunda",
-  "/en/live": "Live Signal | Akbar Nawasunda",
-  "/en/universe": "The Universe | Akbar Nawasunda",
+  "/en/music": "Music by Akbar Nawasunda",
+  "/en/visuals": "Videos by Akbar Nawasunda",
+  "/en/live": "Live Dates | Akbar Nawasunda",
+  "/en/universe": "About the Work | Akbar Nawasunda",
   "/en/about": "About the Artist | Akbar Nawasunda",
   "/en/epk": "Press & Booking EPK | Akbar Nawasunda",
   "/en/inquire": "Inquire | Akbar Nawasunda",

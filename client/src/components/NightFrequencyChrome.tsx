@@ -66,7 +66,7 @@ export function NightHeader({ active }: { active?: string }) {
         <Link href={englishPath}>EN</Link>
       </div>
       <a className="nf-signal" href="#signal">
-        <Radio size={14} /> FAN SIGNAL
+        <Radio size={14} /> KABAR TERBARU
       </a>
       <button
         ref={triggerRef}
@@ -85,7 +85,7 @@ export function NightHeader({ active }: { active?: string }) {
         aria-hidden={!isOpen}
       >
         <div className="nf-mobile-menu-inner">
-          <span className="nf-mobile-eyebrow">AKBAR NAWASUNDA // EXPLORE</span>
+          <span className="nf-mobile-eyebrow">AKBAR NAWASUNDA / MENU</span>
           {navItems.map(item => (
             <Link
               key={item.href}
@@ -100,7 +100,7 @@ export function NightHeader({ active }: { active?: string }) {
             EPK / BOOKING
           </Link>
           <a href="#signal" onClick={close}>
-            <Radio size={14} /> JOIN FAN SIGNAL
+            <Radio size={14} /> KABAR TERBARU
           </a>
           <div className="en-mobile-language"><span>LANGUAGE</span><div className="an-language-switcher"><Link className="is-active" href={pathname}>ID</Link><span aria-hidden="true">/</span><Link href={englishPath}>EN</Link></div></div>
         </div>
@@ -123,7 +123,7 @@ export function NightFooter() {
         <p>PRODUCER / REMIXER / INDONESIA</p>
       </div>
       <div className="nf-footer-column">
-        <span>DISCOVER</span>
+        <span>LIHAT-LIHAT</span>
         <Link href="/music">
           Music <ArrowUpRight size={13} />
         </Link>
@@ -134,14 +134,14 @@ export function NightFooter() {
           Live <ArrowUpRight size={13} />
         </Link>
         <Link href="/universe">
-          AN Archive <ArrowUpRight size={13} />
+          Archive <ArrowUpRight size={13} />
         </Link>
         <Link href="/about">
           About <ArrowUpRight size={13} />
         </Link>
       </div>
       <div className="nf-footer-column">
-        <span>CONNECT</span>
+        <span>HUBUNGI</span>
         {links.map(link => (
           <a key={link.label} href={link.href} target="_blank" rel="noreferrer">
             {link.label} <ArrowUpRight size={13} />

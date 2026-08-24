@@ -18,5 +18,6 @@ const iconMarkup: Record<string, string> = {
 
 export function PlatformIcon({ label, className = "" }: { label: string; className?: string }) {
   const markup = iconMarkup[label.toLowerCase()] || musicNote;
-  return <span className={`an-platform-icon an-platform-${label.toLowerCase().replace(/\s+/g, "-")} ${className}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: markup }} />;
+  const cleanMarkup = markup.replace(/<title[^>]*>.*?<\/title>/gi, "");
+  return <span className={`an-platform-icon an-platform-${label.toLowerCase().replace(/\s+/g, "-")} ${className}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: cleanMarkup }} />;
 }
