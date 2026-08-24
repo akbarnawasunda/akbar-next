@@ -57,11 +57,14 @@ describe("artist content contract", () => {
     const editor = source("client/src/pages/ContentStudio.tsx");
     const picker = source("client/src/components/AssetPicker.tsx");
     const preview = source("client/src/components/StudioDocumentPreview.tsx");
+    const archive = source("client/src/components/StudioVisualArchive.tsx");
     const previewAssets = source("client/src/components/StudioAssetPreview.tsx");
     const home = source("client/src/pages/Home.tsx");
     const pressKit = source("client/src/pages/PressKit.tsx");
 
     expect(editor).toContain("StudioDocumentPreview");
+    expect(editor).toContain("StudioVisualArchive");
+    expect(editor).toContain("fallbackPayload");
     expect(editor).toContain("StudioLinkListPreview");
     expect(picker).toContain("Upload baru");
     expect(picker).toContain("StudioAssetPreview");
@@ -70,6 +73,8 @@ describe("artist content contract", () => {
     expect(preview).toContain("Yang akan terlihat di publik");
     expect(preview).toContain("mediaLabels");
     expect(preview).toContain("Foto hero");
+    expect(archive).toContain("Fallback publik");
+    expect(archive).toContain("Impor & edit");
     expect(previewAssets).toContain("StudioLinkPreview");
     expect(home).toContain("configuredPortrait");
     expect(pressKit).toContain("const portrait = profile?.portraitImage");

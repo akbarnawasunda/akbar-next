@@ -1,10 +1,11 @@
-import { ArrowUpRight, CalendarDays, Check, ChevronDown, Database, Disc3, FilePenLine, FolderOpen, LayoutList, Link2, MapPin, Plus, Radio, Save, ShieldCheck, Sparkles, Trash2 } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Check, ChevronDown, Database, Disc3, FilePenLine, FolderOpen, Image as ImageIcon, LayoutList, Link2, MapPin, Plus, Radio, Save, ShieldCheck, Sparkles, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 import AssetPicker from "@/components/AssetPicker";
 import { StudioLinkListPreview, StudioLinkPreview } from "@/components/StudioAssetPreview";
 import StudioDocumentPreview from "@/components/StudioDocumentPreview";
+import StudioVisualArchive from "@/components/StudioVisualArchive";
 import StudioSiteMap from "@/pages/StudioSiteMap";
 import OwnerLoginCard from "@/components/OwnerLoginCard";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
+import { allPlatformLinks, currentRelease, officialBrand, verifiedArtistProfile, videos } from "@/content/artistPlatform";
 
 const documentTypes = [
   { value: "hero", label: "Homepage hero", eyebrow: "01", description: "First impression and primary action" },
@@ -20,7 +22,7 @@ const documentTypes = [
   { value: "siteSettings", label: "Site settings / SEO", eyebrow: "04", description: "Metadata and search presentation" },
   { value: "legal", label: "Privacy / legal", eyebrow: "05", description: "Reviewed public policy documents" },
   { value: "release", label: "Release", eyebrow: "06", description: "Music, artwork, platforms, credits" },
-  { value: "visual", label: "Visual / video", eyebrow: "07", description: "Video metadata and thumbnail" },
+  { value: "visual", label: "Visual archive item", eyebrow: "07", description: "Thumbnail, YouTube ID, URL, and archive card" },
   { value: "live", label: "Live signal", eyebrow: "08", description: "Standby, announced, or active" },
   { value: "event", label: "Live event", eyebrow: "09", description: "Date, venue, ticket, poster" },
 ] as const;
@@ -72,12 +74,13 @@ function usageForField(documentType: DocumentType, key: string) {
   return fieldUsage[`${documentType}.${key}`] || `Dokumen ${documentType} → dipakai oleh halaman publik yang terkait`;
 }
 
-const primaryWorkflowTypes: DocumentType[] = ["release", "event", "siteSettings", "profile"];
+const primaryWorkflowTypes: DocumentType[] = ["release", "event", "siteSettings", "profile", "visual"];
 const primaryWorkflows = [
   { type: "release" as const, eyebrow: "01", title: "Rilisan lagu", description: "Judul, cover, dan semua link streaming.", icon: Disc3, action: "Tambah rilisan" },
   { type: "event" as const, eyebrow: "02", title: "Jadwal pertunjukan", description: "Tambah banyak show dengan tiket dan RSVP.", icon: CalendarDays, action: "Tambah jadwal" },
   { type: "siteSettings" as const, eyebrow: "03", title: "Tautan resmi", description: "Atur link Spotify, YouTube, dan kanal lain.", icon: Link2, action: "Edit tautan" },
   { type: "profile" as const, eyebrow: "04", title: "Profil & lokasi", description: "Bio, genre, portrait, dan link Google Maps.", icon: MapPin, action: "Edit profil" },
+  { type: "visual" as const, eyebrow: "05", title: "Visual Archive", description: "Tambah banyak thumbnail video dan kartu visual.", icon: ImageIcon, action: "Kelola archive" },
 ];
 
 const fieldsByType: Record<DocumentType, FieldSpec[]> = {
@@ -167,8 +170,24 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
   ],
 };
 
+function fallbackPayload(type: DocumentType): EditorPayload {
+  const platformLinksText = allPlatformLinks.map(link => `${link.label} | ${link.href}`).join("\n");
+  if (type === "hero") return { heroKicker: "AKBAR NAWASUNDA", heroTitle: "AKBAR NAWASUNDA.", heroBody: "Produser dan remixer asal Bandung Barat.", heroImage: officialBrand.portrait, primaryActionLabel: "DENGAR SEKARANG", primaryActionUrl: currentRelease.href };
+  if (type === "profile") return { shortBio: verifiedArtistProfile.shortBio, longBio: verifiedArtistProfile.longBio, location: verifiedArtistProfile.location, genresText: verifiedArtistProfile.genres.join(", "), portraitImage: officialBrand.portrait };
+  if (type === "pressKit") return { intro: "Informasi untuk promoter, media, playlist editor, dan kolaborator.", bookingEmail: verifiedArtistProfile.bookingEmail, pressEmail: verifiedArtistProfile.bookingEmail };
+  if (type === "siteSettings") return { siteTitle: "Akbar Nawasunda | Official Website", metaDescription: "Website resmi Akbar Nawasunda — produser, remixer, dan musisi independen asal Bandung Barat.", ogTitle: "Akbar Nawasunda | Official Website", ogDescription: "Website resmi Akbar Nawasunda.", socialPreviewUrl: officialBrand.socialPreview, canonicalUrl: "https://akbarnawasunda.my.id/", contactEmail: verifiedArtistProfile.bookingEmail, bookingEmail: verifiedArtistProfile.bookingEmail, pressEmail: verifiedArtistProfile.bookingEmail, platformLinksText };
+  if (type === "release") return { title: currentRelease.title, year: "2025", format: "Remix", platform: "SoundCloud", url: currentRelease.href, artworkUrl: currentRelease.image, isCurrent: true, platformLinksText };
+  if (type === "visual") {
+    const visual = videos[0];
+    return { title: visual.title, label: visual.label, url: visual.href, youtubeId: visual.href.split("/").pop() || "", imageUrl: visual.image };
+  }
+  if (type === "legal") return { title: "Privacy Policy", version: "1.0", effectiveDate: "2026-08-14", intro: "Penjelasan singkat dan terbuka tentang data yang diproses saat kamu memakai situs resmi Akbar Nawasunda.", sectionsText: ["short-version | Short version | No advertising, no tracking cookies, no selling data — ever.", "collection | What we collect | Nama, email, konteks project, pesan, dan data subscriber hanya diproses untuk kebutuhan layanan situs.", "cookies | Cookies & storage | Kami tidak mengatur advertising atau tracking cookies. localStorage terbatas dapat digunakan untuk preferensi interface dan data pendukung autentikasi.", "services | Third-party services | Vercel, Google Fonts, Umami, database situs, Spotify, YouTube, SoundCloud, dan Apple iTunes Search.", "rights | Your rights | Kamu dapat meminta akses, koreksi, atau penghapusan data pribadi melalui kontak resmi."] .join("\n"), readyForPublic: false };
+  if (type === "event") return { status: "announced" };
+  return { status: "standby", message: "Belum ada jadwal pertunjukan yang diumumkan." };
+}
+
 function emptyPayload(type: DocumentType): EditorPayload {
-  return type === "live" ? { status: "standby" } : type === "event" ? { status: "announced" } : type === "legal" ? { version: "1.0", sectionsText: "" } : {};
+  return fallbackPayload(type);
 }
 
 function textValue(payload: EditorPayload, key: string) {
@@ -198,7 +217,7 @@ function preparedPayload(type: DocumentType, payload: EditorPayload) {
     delete next.genresText;
   }
   if (type === "legal") {
-    next.sections = textValue(next, "sectionsText").split("\\n").map(line => line.trim()).filter(Boolean).map(line => {
+    next.sections = textValue(next, "sectionsText").split(/\\r?\\n/).map(line => line.trim()).filter(Boolean).map(line => {
       const [key, heading, ...bodyParts] = line.split("|").map(value => value.trim());
       return { key, heading, body: bodyParts.join(" | ") };
     });
@@ -345,9 +364,32 @@ export default function ContentStudio() {
           <div className="mt-5 grid gap-3 md:grid-cols-3">{primaryWorkflows.map(workflow => { const Icon = workflow.icon; const active = documentType === workflow.type && !editingId; return <button type="button" key={workflow.type} onClick={() => resetEditor(workflow.type)} className={`group rounded-xl border p-4 text-left transition ${active ? "border-cyan-200/45 bg-cyan-200/[0.1]" : "border-white/[0.09] bg-black/[0.12] hover:border-cyan-200/25 hover:bg-white/[0.04]"}`}><div className="flex items-start justify-between gap-3"><span className={`grid h-9 w-9 place-items-center rounded-lg ${active ? "bg-cyan-200 text-[#071014]" : "bg-white/[0.07] text-cyan-100/70"}`}><Icon size={17} /></span><Plus size={15} className="text-white/25 transition group-hover:text-cyan-100/70" /></div><p className="mt-5 font-mono text-[9px] uppercase tracking-[0.18em] text-cyan-100/45">{workflow.eyebrow} / workflow</p><h3 className="mt-1 text-sm font-semibold text-white">{workflow.title}</h3><p className="mt-1 text-xs leading-5 text-white/40">{workflow.description}</p><span className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-100/70">{workflow.action} <ArrowUpRight size={12} /></span></button>; })}</div>
         </section>
 
+        <StudioVisualArchive
+          documents={(documents.data ?? []).filter(document => document.documentType === "visual").map(document => ({ ...document, documentType: "visual" as const }))}
+          fallbacks={videos.map((visual, index) => ({ id: `fallback-${index}`, title: visual.title, label: visual.label, href: visual.href, image: visual.image }))}
+          onAdd={() => {
+            resetEditor("visual");
+            window.requestAnimationFrame(() => document.getElementById("studio-compose")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+          }}
+          onEdit={visualDocument => {
+            loadDocument(visualDocument);
+            window.requestAnimationFrame(() => document.getElementById("studio-compose")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+          }}
+          onImportFallback={visual => {
+            setDocumentType("visual");
+            setSlug(slugify(visual.title));
+            setPayload({ title: visual.title, label: visual.label, youtubeId: visual.href.split("/").pop() || "", url: visual.href, imageUrl: visual.image });
+            setSortOrder(0);
+            setIsPublished(true);
+            setEditingId(null);
+            setShowAdvanced(false);
+            window.requestAnimationFrame(() => document.getElementById("studio-compose")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+          }}
+        />
+
         <div className="grid items-start gap-5 2xl:grid-cols-[minmax(0,1.08fr)_minmax(390px,0.92fr)]">
           <section id="studio-compose" className="overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.03] shadow-2xl shadow-black/20">
-            <div className="border-b border-white/[0.08] bg-white/[0.025] px-5 py-5 sm:px-7"><div className="flex flex-wrap items-start justify-between gap-4"><div><div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-200/70"><FilePenLine size={13} />01 // Compose</div><h2 className="mt-2 text-xl font-semibold tracking-tight text-white">{editingId ? "Edit existing content" : currentWorkflow?.title || "Start a new document"}</h2><p className="mt-1 text-xs text-white/40">{currentWorkflow?.description || selectedType?.description}</p>{documentType === "release" || documentType === "event" ? <p className="mt-2 text-[10px] uppercase tracking-[0.12em] text-cyan-100/45">Slug auto-generated from title when left as default</p> : null}</div>{editingId ? <Button type="button" variant="outline" onClick={() => resetEditor()} className="h-9 rounded-lg border-white/10 bg-white/[0.03] text-xs text-white/65 hover:bg-white/[0.08] hover:text-white">New document</Button> : <span className="flex items-center gap-2 rounded-full border border-white/10 bg-black/15 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-white/35"><Sparkles size={11} className="text-cyan-200/70" /> Draft first</span>}</div></div>
+            <div className="border-b border-white/[0.08] bg-white/[0.025] px-5 py-5 sm:px-7">              <div className="flex flex-wrap items-start justify-between gap-4"><div><div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-200/70"><FilePenLine size={13} />01 // Compose</div><h2 className="mt-2 text-xl font-semibold tracking-tight text-white">{editingId ? "Edit existing content" : currentWorkflow?.title || "Start a new document"}</h2><p className="mt-1 text-xs text-white/40">{currentWorkflow?.description || selectedType?.description}</p><p className="mt-2 inline-flex rounded-full border border-amber-200/15 bg-amber-200/[0.05] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-amber-100/65">{editingId ? "Sumber: CMS tersimpan" : "Sumber: isi publik / fallback terverifikasi"}</p>{documentType === "release" || documentType === "event" ? <p className="mt-2 text-[10px] uppercase tracking-[0.12em] text-cyan-100/45">Slug auto-generated from title when left as default</p> : null}</div>{editingId ? <Button type="button" variant="outline" onClick={() => resetEditor()} className="h-9 rounded-lg border-white/10 bg-white/[0.03] text-xs text-white/65 hover:bg-white/[0.08] hover:text-white">New document</Button> : <span className="flex items-center gap-2 rounded-full border border-white/10 bg-black/15 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-white/35"><Sparkles size={11} className="text-cyan-200/70" /> Draft first</span>}</div></div>
             <form onSubmit={submit} className="space-y-6 p-5 sm:p-7">
               {isPrimaryDocument && !showAdvanced ? <div className="flex flex-col gap-4 rounded-xl border border-cyan-200/15 bg-cyan-200/[0.055] p-4 sm:flex-row sm:items-center sm:justify-between"><div><p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cyan-100/55">Workflow aktif</p><p className="mt-1 text-sm font-semibold text-white">{currentWorkflow?.title}</p><p className="mt-1 text-xs text-white/45">{currentWorkflow?.description}</p></div><Button type="button" variant="outline" onClick={() => setShowAdvanced(true)} className="h-9 shrink-0 rounded-lg border-cyan-200/20 bg-black/15 text-xs text-cyan-100/80 hover:bg-cyan-200/[0.08]">Pengaturan lanjutan <ChevronDown size={13} /></Button></div> : <div className="grid gap-4 sm:grid-cols-[1.1fr_0.9fr]"><div className="space-y-2"><label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">Document type</label><select value={documentType} onChange={event => resetEditor(event.target.value as DocumentType)} className="h-12 w-full rounded-xl border border-cyan-200/20 bg-cyan-200/[0.06] px-3 text-sm font-medium text-white outline-none transition focus:border-cyan-200/60 focus:ring-2 focus:ring-cyan-200/10">{documentTypes.map(type => <option value={type.value} key={type.value} className="bg-[#12141a]">{type.eyebrow} / {type.label}</option>)}</select></div><div className="space-y-2"><div className="flex items-center justify-between gap-2"><label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">Slug internal</label><span className="text-[9px] uppercase tracking-[0.12em] text-white/30">Opsional</span></div><Input value={slug} onChange={event => setSlug(event.target.value)} placeholder="Otomatis dari judul" className="h-12 rounded-xl border-white/10 bg-black/20 text-white placeholder:text-white/25 focus:border-cyan-200/50 focus:ring-cyan-200/10" /></div></div>}
               <div className="h-px bg-white/[0.07]" />
