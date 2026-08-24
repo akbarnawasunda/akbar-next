@@ -25,33 +25,20 @@
   font-family: var(--human-sans) !important;
 }
 
-/* Remove the telltale generator treatment: no grid, no permanent glow, no glass haze. */
+/* Keep the signature grid quiet, but allow authored route markers and atmospheric overlays to remain visible. */
 .an-site::before,
-.nf-page::before,
-.an-site .an-hero::before,
-.nf-page .nf-page-hero::before,
-.nf-page .nf-epk-hero::before,
-.an-site main > section:not(.an-hero)::after,
-.nf-page main > section:not(.nf-page-hero)::after,
-.an-site .section-heading::after,
-.an-site .home-signal-copy::after,
-.an-site .live-copy::after,
-.nf-page .nf-section-title::after,
-.nf-page .en-section-intro::after {
+.nf-page::before {
   background: none !important;
   box-shadow: none !important;
   opacity: 0 !important;
 }
 
-.an-site .hero-grain,
-.an-site .cover-orbit,
-.nf-page .nf-hero-note::before,
-.an-site .hero-status::before,
-.en-content::before {
-  display: none !important;
+.an-site .hero-grain {
+  opacity: 0.2 !important;
 }
 
 .en-content::before {
+  display: none !important;
   content: none !important;
 }
 
@@ -67,7 +54,8 @@
 .an-site .an-nav::after,
 .nf-page .nf-nav::after,
 .nf-header::after {
-  display: none !important;
+  display: block !important;
+  opacity: 0.55;
 }
 
 .an-site .an-nav nav a,
@@ -195,8 +183,7 @@
 
 .an-site main > section:not(.an-hero),
 .nf-page main > section:not(.nf-page-hero) {
-  background: var(--human-ink) !important;
-  background-image: none !important;
+  background-color: var(--human-ink) !important;
   border-top: 1px solid var(--human-line) !important;
 }
 
@@ -448,8 +435,7 @@
 }
 
 .nf-page .nf-platform-hub {
-  background: var(--human-ink) !important;
-  background-image: none !important;
+  background-color: var(--human-ink) !important;
 }
 
 .nf-page .nf-platform-grid {
@@ -545,7 +531,7 @@
 
 .an-site .an-footer::before,
 .nf-page .nf-footer::before {
-  display: none !important;
+  opacity: 0.42 !important;
 }
 
 @media (min-width: 821px) {
@@ -642,5 +628,88 @@
   .nf-page .nf-event-card,
   .nf-page .nf-universe-card {
     transition: none !important;
+  }
+}
+
+/* Restore authored visual anchors that should not disappear during the editorial pass. */
+.an-site .home-hero-orbit,
+.an-site .cover-orbit,
+.nf-page .an-about-motion,
+.an-site .hero-grain {
+  display: block !important;
+  pointer-events: none;
+}
+
+.an-site .home-hero-orbit {
+  opacity: 0.68 !important;
+}
+
+.an-site .cover-orbit {
+  opacity: 0.5 !important;
+}
+
+.nf-page .an-about-motion {
+  opacity: 0.42 !important;
+}
+
+.an-site .hero-grain {
+  opacity: 0.16 !important;
+}
+
+.an-site .home-signal-deck::before,
+.an-site .signal-section::before,
+.nf-page .an-motion-band::after {
+  content: "" !important;
+  opacity: 0.18 !important;
+}
+
+/* Re-introduce the visual anchors of the existing artist artwork without restoring the old neon grid. */
+.an-site .home-signal-deck {
+  background-image:
+    linear-gradient(90deg, rgba(23, 21, 19, 0.94), rgba(23, 21, 19, 0.74) 50%, rgba(23, 21, 19, 0.84)),
+    url("/assets/akbar-night-frequency-hero.webp") !important;
+  background-position: center;
+  background-size: cover;
+}
+
+.an-site .section-current {
+  background-image:
+    linear-gradient(120deg, rgba(23, 21, 19, 0.96), rgba(23, 21, 19, 0.78)),
+    url("/assets/akbar-night-frequency-stage.webp") !important;
+  background-position: center;
+  background-size: cover;
+}
+
+.an-site .release-section {
+  background-image:
+    linear-gradient(135deg, rgba(23, 21, 19, 0.96), rgba(23, 21, 19, 0.82)),
+    url("/assets/akbar-night-frequency-hero.webp") !important;
+  background-position: center;
+  background-size: cover;
+}
+
+.an-site .visual-section {
+  background-image:
+    linear-gradient(135deg, rgba(23, 21, 19, 0.94), rgba(23, 21, 19, 0.78)),
+    url("/assets/akbar-social-preview.webp") !important;
+  background-position: center;
+  background-size: cover;
+}
+
+.nf-page .nf-section:not(.dark-panel),
+.nf-page .an-motion-band:not(.dark-panel) {
+  background-image:
+    linear-gradient(135deg, rgba(23, 21, 19, 0.95), rgba(23, 21, 19, 0.82)),
+    url("/assets/akbar-night-frequency-stage.webp") !important;
+  background-position: center;
+  background-size: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .home-hero-orbit,
+  .an-site .cover-orbit,
+  .nf-page .an-about-motion,
+  .an-site .hero-grain {
+    animation: none !important;
   }
 }
