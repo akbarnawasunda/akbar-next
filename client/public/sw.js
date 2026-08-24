@@ -1,7 +1,7 @@
-/* AN SW v3 — direct asset paths — navigasi network-first, asset stale-while-revalidate */
-var CACHE='an-shell-v3';
+/* AN SW v4 — direct asset paths — navigasi network-first, asset stale-while-revalidate */
+var CACHE='an-shell-v4';
 self.addEventListener('install',function(e){
-e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(['/','/manifest.webmanifest','/assets/media/favicon.png'])}));
+e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(['/','/manifest.webmanifest','/assets/akbar-favicon.jpg'])}));
 self.skipWaiting();
 });
 self.addEventListener('activate',function(e){
