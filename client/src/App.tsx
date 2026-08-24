@@ -170,10 +170,12 @@ function CmsMetadata() {
     const defaultDescription = isEnglish
       ? "Akbar Nawasunda is a producer, remixer, and electronic bass artist from Bandung Barat, Indonesia."
       : "Website resmi Akbar Nawasunda — producer, remixer, dan electronic bass artist dari Bandung Barat, Indonesia.";
-    const setMeta = (selector: string, attribute: string, value: string) => {
+    const setMeta = (selector: string, value: string) => {
       const existing = document.head.querySelector<HTMLMetaElement>(selector);
       const meta = existing || document.head.appendChild(document.createElement("meta"));
-      meta.setAttribute(attribute, value);
+      const identity = selector.match(/meta\[(name|property)=["']([^"']+)["']\]/);
+      if (identity) meta.setAttribute(identity[1], identity[2]);
+      meta.setAttribute("content", value);
     };
     const setLink = (rel: string, href: string, attributes: Record<string, string> = {}) => {
       const selector = `link[rel="${rel}"]${attributes.hreflang ? `[hreflang="${attributes.hreflang}"]` : ""}`;
@@ -186,11 +188,11 @@ function CmsMetadata() {
 
     document.documentElement.lang = isEnglish ? "en" : "id";
     document.title = (isEnglish ? defaultTitle : settings?.siteTitle?.trim() || defaultTitle);
-    setMeta('meta[name="description"]', "name", isEnglish ? defaultDescription : settings?.metaDescription?.trim() || defaultDescription);
-    setMeta('meta[property="og:title"]', "property", isEnglish ? defaultTitle : settings?.ogTitle?.trim() || settings?.siteTitle?.trim() || defaultTitle);
-    setMeta('meta[property="og:description"]', "property", isEnglish ? defaultDescription : settings?.ogDescription?.trim() || settings?.metaDescription?.trim() || defaultDescription);
-    setMeta('meta[property="og:image"]', "property", settings?.socialPreviewUrl?.trim() || `${siteOrigin}/assets/akbar-social-preview.webp`);
-    setMeta('meta[property="og:url"]', "property", `${siteOrigin}${pathname === "/" ? "/" : pathname}`);
+    setMeta('meta[name="description"]', isEnglish ? defaultDescription : settings?.metaDescription?.trim() || defaultDescription);
+    setMeta('meta[property="og:title"]', isEnglish ? defaultTitle : settings?.ogTitle?.trim() || settings?.siteTitle?.trim() || defaultTitle);
+    setMeta('meta[property="og:description"]', isEnglish ? defaultDescription : settings?.ogDescription?.trim() || settings?.metaDescription?.trim() || defaultDescription);
+    setMeta('meta[property="og:image"]', settings?.socialPreviewUrl?.trim() || `${siteOrigin}/assets/akbar-social-preview.webp`);
+    setMeta('meta[property="og:url"]', `${siteOrigin}${pathname === "/" ? "/" : pathname}`);
     setLink("canonical", `${siteOrigin}${pathname === "/" ? "/" : pathname}`);
 
     document.head.querySelectorAll('link[data-language-link="true"]').forEach(link => link.remove());

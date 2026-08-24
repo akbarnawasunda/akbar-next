@@ -36,9 +36,14 @@ describe("international artist layer", () => {
     const robots = source("client/public/robots.txt");
     const sitemap = source("client/public/sitemap.xml");
     expect(app).toContain('document.documentElement.lang = isEnglish ? "en" : "id"');
+    expect(app).toContain('meta.setAttribute("content", value)');
+    expect(app).toContain('setMeta(\'meta[property="og:image"]\'');
     expect(app).toContain('link.dataset.languageLink = "true"');
     expect(html).toContain('hreflang="id"');
     expect(html).toContain('hreflang="en"');
+    expect(html).toContain('name="twitter:card" content="summary_large_image"');
+    expect(html).toContain('name="twitter:image"');
+    expect(html).toContain('rel="apple-touch-icon"');
     expect(robots).toContain("Sitemap: https://akbarnawasunda.my.id/sitemap.xml");
     expect(robots).toContain("Disallow: /studio");
     expect(sitemap).toContain("https://akbarnawasunda.my.id/en/music");
