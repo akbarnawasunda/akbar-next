@@ -8,7 +8,7 @@ import {
   Sparkles,
   Ticket,
 } from "lucide-react";
-import { type CSSProperties, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { PlatformIcon } from "@/components/PlatformIcon";
@@ -140,6 +140,11 @@ export default function Home() {
         }
       : currentRelease;
   const cmsHero = publicContent.data?.hero;
+  const cmsProfile = publicContent.data?.profile;
+  const configuredPortrait = cmsHero?.heroImage || cmsProfile?.portraitImage || officialBrand.portrait;
+  useEffect(() => {
+    setPortraitSrc(configuredPortrait);
+  }, [configuredPortrait]);
   const hasCmsHero = Boolean(
     cmsHero?.heroTitle || cmsHero?.heroBody || cmsHero?.primaryActionUrl
   );

@@ -53,6 +53,24 @@ describe("artist content contract", () => {
     expect(musicPage).toContain("releases.filter(legacy => !cmsCatalog.some");
   });
 
+  it("keeps Studio media and link previews connected to the editor workflow", () => {
+    const editor = source("client/src/pages/ContentStudio.tsx");
+    const picker = source("client/src/components/AssetPicker.tsx");
+    const preview = source("client/src/components/StudioDocumentPreview.tsx");
+    const previewAssets = source("client/src/components/StudioAssetPreview.tsx");
+    const home = source("client/src/pages/Home.tsx");
+    const pressKit = source("client/src/pages/PressKit.tsx");
+
+    expect(editor).toContain("StudioDocumentPreview");
+    expect(editor).toContain("StudioLinkListPreview");
+    expect(picker).toContain("Upload baru");
+    expect(picker).toContain("StudioAssetPreview");
+    expect(preview).toContain("Yang akan terlihat di publik");
+    expect(previewAssets).toContain("StudioLinkPreview");
+    expect(home).toContain("configuredPortrait");
+    expect(pressKit).toContain("const portrait = profile?.portraitImage");
+  });
+
   it("uses platform SVGs and available per-release artwork in music discovery modules", () => {
     const icon = source("client/src/components/PlatformIcon.tsx");
     const home = source("client/src/pages/Home.tsx");

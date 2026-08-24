@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowUpRight, Download, Mail, Printer } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { PlatformIcon } from "@/components/PlatformIcon";
@@ -27,7 +27,8 @@ const externalProps = (href: string) => ({
 export default function PressKit() {
   const cms = usePublicArtistContent();
   const press = cms.data?.pressKit;
-  const [portraitSrc, setPortraitSrc] = useState(officialBrand.editorialPortrait);
+  const profile = cms.data?.profile;
+  const [portraitSrc, setPortraitSrc] = useState(profile?.portraitImage || officialBrand.editorialPortrait);
   const bookingEmail = press?.bookingEmail || verifiedArtistProfile.bookingEmail;
   const pressEmail = press?.pressEmail || bookingEmail;
   const selectedReleases = cms.data?.releases?.length ? cms.data.releases.map(item => {
@@ -35,6 +36,15 @@ export default function PressKit() {
     return { title: item.title, format: item.format || fallback?.format || "Release", year: item.year || fallback?.year || "—", platform: item.platform || fallback?.platform || "Official link", href: item.url || fallback?.href || "https://soundcloud.com/akbarnawasunda", image: item.artworkUrl || fallback?.image || officialBrand.socialPreview };
   }).slice(0, 3) : releases.slice(0, 3);
   const editablePlatformLinks = publicPlatformLinks(cms.data);
+  const portrait = profile?.portraitImage || officialBrand.editorialPortrait;
+  const bio = profile?.longBio || verifiedArtistProfile.longBio;
+  const location = profile?.location || verifiedArtistProfile.location;
+  const genres = profile?.genres?.length ? profile.genres : verifiedArtistProfile.genres;
+  const alias = verifiedArtistProfile.aliases.join(" / ");
+
+  useEffect(() => {
+    setPortraitSrc(portrait);
+  }, [portrait]);
 
   const coreAssets = [
     {
@@ -104,7 +114,7 @@ export default function PressKit() {
               <div className="an-epk-hero-card-copy">
                 <span>EDITORIAL / PRESS</span>
                 <strong>AKBAR<br />NAWASUNDA</strong>
-                <small>{verifiedArtistProfile.location} · {verifiedArtistProfile.aliases[0]}</small>
+                <small>{location} · {alias}</small>
               </div>
             </aside>
           </div>
@@ -115,14 +125,14 @@ export default function PressKit() {
             <div>
               <p className="nf-page-eyebrow">ARTIST SNAPSHOT</p>
               <h2>AKBAR NAWASUNDA.</h2>
-              <p>{verifiedArtistProfile.longBio}</p>
+              <p>{bio}</p>
               <div className="an-epk-genre-row">
-                {verifiedArtistProfile.genres.map(genre => <span key={genre}>{genre}</span>)}
+                {genres.map(genre => <span key={genre}>{genre}</span>)}
               </div>
             </div>
             <aside className="an-epk-facts">
-              <div><span>BASED IN</span><b>{verifiedArtistProfile.location}</b></div>
-              <div><span>ALIAS</span><b>{verifiedArtistProfile.aliases.join(" / ")}</b></div>
+              <div><span>BASED IN</span><b>{location}</b></div>
+              <div><span>ALIAS</span><b>{alias}</b></div>
               <div><span>WORK</span><b>Producer / Remixer</b></div>
               <div><span>CONTACT</span><b>{pressEmail}</b></div>
             </aside>
