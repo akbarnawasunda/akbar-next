@@ -65,7 +65,11 @@ describe("artist content contract", () => {
     expect(editor).toContain("StudioLinkListPreview");
     expect(picker).toContain("Upload baru");
     expect(picker).toContain("StudioAssetPreview");
+    expect(picker).toContain("Foto tersedia di Studio");
+    expect(picker).toContain("Gunakan ${asset.fileName}");
     expect(preview).toContain("Yang akan terlihat di publik");
+    expect(preview).toContain("mediaLabels");
+    expect(preview).toContain("Foto hero");
     expect(previewAssets).toContain("StudioLinkPreview");
     expect(home).toContain("configuredPortrait");
     expect(pressKit).toContain("const portrait = profile?.portraitImage");

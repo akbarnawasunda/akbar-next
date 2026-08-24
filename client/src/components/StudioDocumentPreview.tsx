@@ -26,10 +26,23 @@ function value(payload: Payload, key: string) {
   return typeof payload[key] === "string" ? payload[key].trim() : "";
 }
 
-function imageValue(payload: Payload) {
-  return ["heroImage", "portraitImage", "artworkUrl", "imageUrl", "posterUrl", "socialPreviewUrl", "oneSheetUrl", "photoPackUrl", "logoPackUrl", "technicalRiderUrl"]
-    .map(key => value(payload, key))
-    .find(Boolean) || "";
+const mediaLabels: Record<string, string> = {
+  heroImage: "Foto hero",
+  portraitImage: "Portrait artis",
+  artworkUrl: "Cover rilisan",
+  imageUrl: "Thumbnail visual",
+  posterUrl: "Poster pertunjukan",
+  socialPreviewUrl: "Social preview / OG image",
+  oneSheetUrl: "One sheet",
+  photoPackUrl: "Photo pack",
+  logoPackUrl: "Logo pack",
+  technicalRiderUrl: "Technical rider",
+};
+
+function mediaValues(payload: Payload) {
+  return Object.entries(mediaLabels)
+    .map(([key, label]) => ({ key, label, url: value(payload, key) }))
+    .filter(media => media.url);
 }
 
 function linkValues(payload: Payload) {
@@ -55,7 +68,7 @@ function textValue(payload: Payload) {
 export default function StudioDocumentPreview({ documentType, payload, slug }: StudioDocumentPreviewProps) {
   const route = publicRoutes[documentType];
   const title = value(payload, "heroTitle") || value(payload, "siteTitle") || value(payload, "title") || value(payload, "shortBio") || `${documentType} preview`;
-  const image = imageValue(payload);
+  const media = mediaValues(payload);
   const links = linkValues(payload);
   return (
     <section className="mt-5 overflow-hidden rounded-2xl border border-violet-200/15 bg-violet-200/[0.035]" aria-label="Live document preview">
@@ -71,7 +84,7 @@ export default function StudioDocumentPreview({ documentType, payload, slug }: S
           {value(payload, "location") ? <p className="mt-4 flex items-center gap-2 text-xs text-white/65"><span className="text-cyan-100/60">Location</span>{value(payload, "location")}</p> : null}
         </div>
         <div className="min-w-0">
-          {image ? <StudioAssetPreview value={image} label="Visual attached to this document" /> : <div className="flex items-center gap-3 rounded-xl border border-dashed border-white/10 px-4 py-5 text-xs text-white/35"><ImageIcon size={17} />Belum ada media terpasang.</div>}
+          {media.length ? <div className="grid gap-3 sm:grid-cols-2">{media.map(item => <StudioAssetPreview key={item.key} value={item.url} label={item.label} />)}</div> : <div className="flex items-center gap-3 rounded-xl border border-dashed border-white/10 px-4 py-5 text-xs text-white/35"><ImageIcon size={17} />Belum ada media terpasang.</div>}
           {links.length ? <div className="mt-4 space-y-2"><p className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.15em] text-white/40"><Link2 size={12} />Link preview</p>{links.map(link => <StudioLinkPreview key={`${link.label}-${link.href}`} value={link.href} label={link.label} />)}</div> : <p className="mt-4 text-xs text-white/35">Belum ada link pada dokumen ini.</p>}
         </div>
       </div>
