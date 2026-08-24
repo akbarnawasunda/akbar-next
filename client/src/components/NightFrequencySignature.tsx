@@ -11,7 +11,7 @@ type Chapter = {
 const PUBLIC_SECTION_SELECTOR = ".route-motion .nf-page main > section, .route-motion .an-site main > section";
 
 function cleanLabel(value: string | null | undefined) {
-  return value?.replace(/\s+/g, " ").trim() || "SIGNAL";
+  return value?.replace(/\s+/g, " ").trim() || "SECTION";
 }
 
 function collectChapters(): Chapter[] {
@@ -82,8 +82,8 @@ export function NightFrequencySignature() {
   if (chapters.length < 2) return null;
 
   return (
-    <aside className="nf-signature-rail" aria-label="Navigasi frekuensi halaman">
-      <span className="nf-signature-rail-label">TUNE</span>
+    <aside className="nf-signature-rail" aria-label="Indeks bagian halaman">
+      <span className="nf-signature-rail-label">INDEX</span>
       <ol>
         {chapters.map((chapter, index) => (
           <li key={`${location}-${chapter.index}-${index}`}>

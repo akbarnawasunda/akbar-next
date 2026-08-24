@@ -302,7 +302,7 @@ export default function Home() {
           className="home-signal-deck reveal-target"
           aria-labelledby="signal-deck-title"
         >
-          <SectionIndex number="01" label="PLATFORM RESMI" />
+          <SectionIndex number="01" label="LINKS MUSIK" />
           <div className="home-signal-copy">
             <p className="eyebrow">
               <span /> MUSIK ONLINE
@@ -345,7 +345,7 @@ export default function Home() {
           className="section section-current reveal-target"
           id="music"
         >
-          <SectionIndex number="02" label="RILISAN TERBARU" />
+          <SectionIndex number="02" label="RILISAN UTAMA" />
           <div className="section-heading">
             <p className="eyebrow">RILISAN TERBARU</p>
             <h2>
@@ -401,7 +401,7 @@ export default function Home() {
           ref={releaseSectionRef}
           className="section release-section reveal-target"
         >
-          <SectionIndex number="03" label="SEMUA RILISAN" />
+          <SectionIndex number="03" label="KATALOG" />
           <div className="section-inline">
             <div>
               <p className="eyebrow">KATALOG RILISAN</p>
@@ -460,7 +460,7 @@ export default function Home() {
           className="section visual-section reveal-target"
           id="visuals"
         >
-          <SectionIndex number="04" label="VIDEO" />
+          <SectionIndex number="04" label="KARYA VIDEO" />
           <div className="section-heading">
             <p className="eyebrow">VISUAL</p>
             <h2>
@@ -501,7 +501,7 @@ export default function Home() {
           className="section live-section reveal-target"
           id="live"
         >
-          <SectionIndex number="05" label="JADWAL MANGGUNG" />
+          <SectionIndex number="05" label="LIVE" />
           <div
             className="live-backdrop"
             style={{
@@ -562,7 +562,7 @@ export default function Home() {
           className="signal-section reveal-target"
           id="signal"
         >
-          <SectionIndex number="06" label="KABAR TERBARU" />
+          <SectionIndex number="06" label="NEWS" />
           <div>
             <p className="eyebrow">
               <Sparkles size={14} /> KABAR TERBARU

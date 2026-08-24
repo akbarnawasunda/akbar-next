@@ -22,8 +22,8 @@ export default function FanSignalInline({
       setStatus({
         type: "success",
         message: result.delivery === "synced"
-          ? "Sinyal diterima. Update berikutnya akan dikirim ke email ini."
-          : "Sinyal tersimpan. Email akan ikut tersinkron saat kanal pengiriman siap.",
+          ? "Alamatmu sudah terdaftar. Kabar berikutnya akan dikirim ke email ini."
+          : "Alamatmu sudah tersimpan. Pengiriman akan aktif saat kanal email siap.",
       });
     },
     onError: error => {
@@ -33,7 +33,7 @@ export default function FanSignalInline({
         ? "Daftar update sedang bermasalah di server. Coba lagi beberapa saat."
         : message.includes("invalid") || message.includes("email")
           ? "Format email belum benar. Cek lagi alamatnya."
-          : "Sinyal belum terkirim. Coba lagi beberapa saat.";
+          : "Belum berhasil mendaftarkan alamat ini. Coba lagi beberapa saat.";
       setStatus({ type: "error", message: friendlyMessage });
     },
   });
@@ -52,7 +52,7 @@ export default function FanSignalInline({
       onSubmit={submit}
       noValidate={false}
     >
-      <label htmlFor={`fan-email-${source}`}>EMAIL ADDRESS</label>
+      <label htmlFor={`fan-email-${source}`}>EMAIL</label>
       <div>
         <Mail size={17} aria-hidden="true" />
         <input
@@ -70,12 +70,12 @@ export default function FanSignalInline({
           aria-invalid={status?.type === "error"}
         />
         <button type="submit" disabled={subscribe.isPending}>
-          {subscribe.isPending ? "SENDING" : "JOIN"}
+          {subscribe.isPending ? "MENGIRIM" : "DAFTAR"}
           <ArrowUpRight size={16} aria-hidden="true" />
         </button>
       </div>
       <small id={`fan-email-note-${source}`} className={`nf-signal-note ${status ? `is-${status.type}` : ""}`} aria-live="polite">
-        {status?.message || "Rilisan, visual, dan kabar live. Berhenti kapan saja."}
+        {status?.message || "Kabar musik, video, dan jadwal. Berhenti kapan saja."}
       </small>
     </form>
   );
