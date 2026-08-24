@@ -30,11 +30,10 @@ describe("scroll replay and studio site map contracts", () => {
     expect(english).toContain("ref={platformSectionRef}");
     expect(english).toContain("ref={signalSectionRef}");
     expect(app).toContain('import "./components/ScrollReplay.css";');
-    expect(replayCss).toContain(".an-site .hero-copy .hero-title-editorial");
-    expect(replayCss).toContain("animation: none !important");
     expect(replayCss).toContain(".nf-page .nf-page-hero .nf-hero-note");
-    expect(replayCss).toContain("clip-path: none !important");
-    expect(replayCss).toContain(".nf-page .nf-page-hero h1");
+    expect(replayCss).toContain("justify-self: stretch !important");
+    expect(replayCss).toContain(".nf-page .nf-epk-hero .nf-hero-note");
+    expect(replayCss).not.toContain(".nf-page .nf-page-hero h1,");
   });
 
   it("maps the public pages and their editable sources in Control Room", () => {
