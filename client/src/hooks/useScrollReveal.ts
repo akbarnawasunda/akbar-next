@@ -15,6 +15,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLElement>(
       "(prefers-reduced-motion: reduce)"
     ).matches;
     if (reducedMotion || !("IntersectionObserver" in window)) {
+      element.dataset.revealPhase = "locked";
       element.classList.add("is-revealed");
       return;
     }
@@ -28,7 +29,15 @@ export function useScrollReveal<T extends HTMLElement = HTMLElement>(
         const direction = previousTop === undefined || top < previousTop ? "down" : "up";
         previousTop = top;
         element.dataset.revealDirection = direction;
+        element.dataset.revealPhase = entry.isIntersecting ? "acquiring" : "released";
         element.classList.toggle("is-revealed", entry.isIntersecting);
+        if (entry.isIntersecting) {
+          window.requestAnimationFrame(() => {
+            if (element.isConnected && element.classList.contains("is-revealed")) {
+              element.dataset.revealPhase = "locked";
+            }
+          });
+        }
       },
       {
         threshold: [0, threshold],

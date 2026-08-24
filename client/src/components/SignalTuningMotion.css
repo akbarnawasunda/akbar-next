@@ -1,0 +1,645 @@
+/* AN // SIGNAL TUNING — motion v2
+   Sections remain readable; their interior layers acquire, lock, hold, and release. */
+
+:root {
+  --signal-tuning-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --signal-tuning-snap: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Never use a full-section opacity trap for replay. Interior layers carry the motion. */
+.nf-page main > section[data-motion-replay="true"],
+.an-site main > section.reveal-target.reveal-ready {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nf-page main > section[data-motion-replay="true"]:not(.nf-page-hero)::before,
+  .an-site main > section.reveal-target:not(.an-hero)::before {
+    transform: scaleX(0.08);
+    transform-origin: left center;
+    transition: opacity 260ms var(--signal-tuning-snap), transform 820ms var(--signal-tuning-ease);
+  }
+
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view:not(.nf-page-hero)::before,
+  .an-site main > section.reveal-target.is-revealed:not(.an-hero)::before {
+    opacity: 1;
+    transform: scaleX(1);
+    animation: signal-tuning-carrier 820ms var(--signal-tuning-ease) both;
+  }
+
+  .nf-page main > section[data-motion-replay="true"][data-motion-direction="up"].is-motion-in-view:not(.nf-page-hero)::before,
+  .an-site main > section.reveal-target[data-reveal-direction="up"].is-revealed:not(.an-hero)::before {
+    transform-origin: right center;
+  }
+
+  .nf-page main > section[data-motion-replay="true"] .nf-section-title::after,
+  .nf-page main > section[data-motion-replay="true"] .en-section-intro::after,
+  .an-site main > section.reveal-target .section-heading::after,
+  .an-site main > section.reveal-target .home-signal-copy::after,
+  .an-site main > section.reveal-target .live-copy::after {
+    transform-origin: left center;
+  }
+
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view .nf-section-title::after,
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view .en-section-intro::after,
+  .an-site main > section.reveal-target.is-revealed .section-heading::after,
+  .an-site main > section.reveal-target.is-revealed .home-signal-copy::after,
+  .an-site main > section.reveal-target.is-revealed .live-copy::after {
+    animation: signal-tuning-line-lock 720ms var(--signal-tuning-ease) both;
+  }
+
+  .nf-page main > section[data-motion-replay="true"][data-motion-direction="up"].is-motion-in-view .nf-section-title::after,
+  .nf-page main > section[data-motion-replay="true"][data-motion-direction="up"].is-motion-in-view .en-section-intro::after,
+  .an-site main > section.reveal-target[data-reveal-direction="up"].is-revealed .section-heading::after,
+  .an-site main > section.reveal-target[data-reveal-direction="up"].is-revealed .home-signal-copy::after,
+  .an-site main > section.reveal-target[data-reveal-direction="up"].is-revealed .live-copy::after {
+    transform-origin: right center;
+  }
+
+  /* Internal routes: index/heading acquire first, then the content panel locks in. */
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view > :is(
+      .nf-section-title,
+      .nf-platform-hub-copy,
+      .nf-epk-hero-grid,
+      .an-booking-grid,
+      .an-release-detail-grid,
+      .an-archive-origin,
+      .an-archive-route-list,
+      .an-event-head
+    ) {
+    animation: signal-tuning-heading-lock 760ms var(--signal-tuning-ease) both;
+  }
+
+  .nf-page main > section[data-motion-replay="true"][data-motion-direction="up"].is-motion-in-view > :is(
+      .nf-section-title,
+      .nf-platform-hub-copy,
+      .nf-epk-hero-grid,
+      .an-booking-grid,
+      .an-release-detail-grid,
+      .an-archive-origin,
+      .an-archive-route-list,
+      .an-event-head
+    ) {
+    animation-name: signal-tuning-heading-lock-up;
+  }
+
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view :is(
+      .nf-platform-grid,
+      .nf-catalog,
+      .nf-visual-grid,
+      .nf-video-embed-grid,
+      .nf-embed-grid,
+      .nf-universe-grid,
+      .nf-event-grid,
+      .an-epk-capability-grid,
+      .an-epk-assets,
+      .an-epk-release-list,
+      .an-release-links,
+      .nf-signal-form,
+      .nf-signal-block
+    ) {
+    animation: signal-tuning-panel-lock 700ms var(--signal-tuning-ease) 90ms both;
+  }
+
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view :is(
+      .nf-catalog-card,
+      .nf-visual-card,
+      .nf-event-card,
+      .nf-universe-card,
+      .an-epk-capability,
+      .an-epk-asset,
+      .an-epk-release,
+      .an-release-links > *,
+      .nf-official-media
+    ) {
+    animation: signal-tuning-card-lock 560ms var(--signal-tuning-snap) both;
+  }
+
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view :is(
+      .nf-catalog-card:nth-child(2),
+      .nf-visual-card:nth-child(2),
+      .nf-event-card:nth-child(2),
+      .nf-universe-card:nth-child(2),
+      .an-epk-capability:nth-child(2),
+      .an-epk-asset:nth-child(2),
+      .an-epk-release:nth-child(2),
+      .nf-official-media:nth-child(2)
+    ) {
+    animation-delay: 70ms;
+  }
+
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view :is(
+      .nf-catalog-card:nth-child(3),
+      .nf-visual-card:nth-child(3),
+      .nf-event-card:nth-child(3),
+      .nf-universe-card:nth-child(3),
+      .an-epk-capability:nth-child(3),
+      .an-epk-asset:nth-child(3),
+      .an-epk-release:nth-child(3),
+      .nf-official-media:nth-child(3)
+    ) {
+    animation-delay: 140ms;
+  }
+
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view :is(
+      .nf-catalog-card:nth-child(4),
+      .nf-visual-card:nth-child(4),
+      .nf-event-card:nth-child(4),
+      .nf-universe-card:nth-child(4),
+      .an-epk-capability:nth-child(4),
+      .an-epk-asset:nth-child(4),
+      .an-epk-release:nth-child(4)
+    ) {
+    animation-delay: 210ms;
+  }
+
+  /* The homepage is a broadcast open: copy and media arrive on different clocks. */
+  .an-site main > section.reveal-target.is-revealed > :is(
+      .section-heading,
+      .section-inline,
+      .home-signal-copy,
+      .live-copy,
+      .live-status,
+      .feature-release,
+      .home-platform-rack,
+      .release-grid,
+      .video-grid,
+      form
+    ) {
+    animation: signal-tuning-home-lock 720ms var(--signal-tuning-ease) both;
+  }
+
+  .an-site main > section.reveal-target[data-reveal-direction="up"].is-revealed > :is(
+      .section-heading,
+      .section-inline,
+      .home-signal-copy,
+      .live-copy,
+      .live-status,
+      .feature-release,
+      .home-platform-rack,
+      .release-grid,
+      .video-grid,
+      form
+    ) {
+    animation-name: signal-tuning-home-lock-up;
+  }
+
+  .an-site main > section.reveal-target.is-revealed :is(
+      .home-platform-card,
+      .release-card,
+      .video-card
+    ) {
+    animation: signal-tuning-card-lock 560ms var(--signal-tuning-snap) both;
+  }
+
+  .an-site main > section.reveal-target.is-revealed :is(
+      .home-platform-card:nth-child(2),
+      .release-card:nth-child(2),
+      .video-card:nth-child(2)
+    ) {
+    animation-delay: 70ms;
+  }
+
+  .an-site main > section.reveal-target.is-revealed :is(
+      .home-platform-card:nth-child(3),
+      .release-card:nth-child(3),
+      .video-card:nth-child(3)
+    ) {
+    animation-delay: 140ms;
+  }
+
+  .an-site main > section.reveal-target.is-revealed :is(
+      .home-platform-card:nth-child(4),
+      .release-card:nth-child(4),
+      .video-card:nth-child(4)
+    ) {
+    animation-delay: 210ms;
+  }
+
+  /* Media settles inside its frame, so the card itself never jumps around. */
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view :is(
+      .nf-catalog-art,
+      .nf-visual-card img,
+      .nf-official-media-art img,
+      .an-epk-release img,
+      .an-story-art
+    ),
+  .an-site main > section.reveal-target.is-revealed :is(
+      .release-card-art img,
+      .video-card > img,
+      .release-cover img
+    ) {
+    animation: signal-tuning-media-settle 680ms var(--signal-tuning-ease) 110ms both;
+  }
+
+  /* Route-specific rhythm: same grammar, different gesture. */
+  .route-motion[data-route="/music"] .nf-page main > section.is-motion-in-view .nf-catalog-card {
+    animation-name: signal-tuning-tune-card;
+  }
+
+  .route-motion[data-route="/visuals"] .nf-page main > section.is-motion-in-view .nf-visual-card {
+    animation-name: signal-tuning-film-frame;
+  }
+
+  .route-motion[data-route="/live"] .nf-page main > section.is-motion-in-view .nf-event-card,
+  .route-motion[data-route="/live"] .nf-page main > section.is-motion-in-view .nf-event-empty {
+    animation-name: signal-tuning-radar-lock;
+  }
+
+  .route-motion[data-route="/universe"] .nf-page main > section.is-motion-in-view .nf-universe-card {
+    animation-name: signal-tuning-memory-scan;
+  }
+
+  /* Interaction should feel like a signal crossing an edge, not a generic lift. */
+  .nf-page .nf-button,
+  .nf-page .nf-text-button,
+  .an-site .button-primary,
+  .an-site .button-quiet,
+  .an-site .home-deck-cta,
+  .an-site .text-link {
+    transition:
+      transform 180ms var(--signal-tuning-snap),
+      color 180ms var(--signal-tuning-snap),
+      border-color 180ms var(--signal-tuning-snap),
+      box-shadow 180ms var(--signal-tuning-snap),
+      background-position 260ms var(--signal-tuning-snap);
+    background-image: linear-gradient(90deg, rgba(var(--route-accent-rgb, 121, 214, 199), 0.16), transparent 38%);
+    background-repeat: no-repeat;
+    background-size: 0 100%;
+    background-position: left center;
+  }
+
+  .nf-page .nf-button:hover,
+  .nf-page .nf-button:focus-visible,
+  .nf-page .nf-text-button:hover,
+  .nf-page .nf-text-button:focus-visible,
+  .an-site .button-primary:hover,
+  .an-site .button-primary:focus-visible,
+  .an-site .button-quiet:hover,
+  .an-site .button-quiet:focus-visible,
+  .an-site .home-deck-cta:hover,
+  .an-site .home-deck-cta:focus-visible,
+  .an-site .text-link:hover,
+  .an-site .text-link:focus-visible {
+    background-size: 100% 100%;
+    box-shadow: inset 3px 0 0 var(--route-accent, var(--noir-mint));
+  }
+}
+
+@keyframes signal-tuning-carrier {
+  0% { opacity: 0.2; transform: scaleX(0.08); }
+  65% { opacity: 1; transform: scaleX(1.04); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+
+@keyframes signal-tuning-line-lock {
+  0% { opacity: 0.2; transform: scaleX(0.16); }
+  70% { opacity: 1; transform: scaleX(1.08); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+
+@keyframes signal-tuning-heading-lock {
+  0% { opacity: 0; transform: translate3d(0, 18px, 0); clip-path: inset(0 0 24% 0); }
+  62% { opacity: 1; transform: translate3d(0, -2px, 0); clip-path: inset(0 0 0 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); clip-path: inset(0); }
+}
+
+@keyframes signal-tuning-heading-lock-up {
+  0% { opacity: 0; transform: translate3d(0, -18px, 0); clip-path: inset(24% 0 0 0); }
+  62% { opacity: 1; transform: translate3d(0, 2px, 0); clip-path: inset(0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes signal-tuning-panel-lock {
+  0% { opacity: 0; transform: translate3d(0, 24px, 0) scale(0.985); filter: saturate(0.76); }
+  68% { opacity: 1; transform: translate3d(0, -3px, 0) scale(1.004); filter: saturate(1.04); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: saturate(1); }
+}
+
+@keyframes signal-tuning-home-lock {
+  0% { opacity: 0; transform: translate3d(0, 20px, 0); }
+  70% { opacity: 1; transform: translate3d(0, -2px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes signal-tuning-home-lock-up {
+  0% { opacity: 0; transform: translate3d(0, -20px, 0); }
+  70% { opacity: 1; transform: translate3d(0, 2px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes signal-tuning-card-lock {
+  0% { opacity: 0; transform: translate3d(0, 16px, 0) scale(0.975); }
+  72% { opacity: 1; transform: translate3d(0, -3px, 0) scale(1.006); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes signal-tuning-media-settle {
+  0% { opacity: 0.38; transform: scale(1.055); filter: saturate(0.72) contrast(0.98); }
+  75% { opacity: 1; transform: scale(1.006); filter: saturate(1.06) contrast(1.02); }
+  100% { opacity: 1; transform: scale(1); filter: saturate(1) contrast(1); }
+}
+
+@keyframes signal-tuning-tune-card {
+  0% { opacity: 0; transform: translate3d(18px, 8px, 0) scale(0.975); clip-path: inset(0 0 0 12%); }
+  68% { opacity: 1; transform: translate3d(-2px, -2px, 0) scale(1.006); clip-path: inset(0); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes signal-tuning-film-frame {
+  0% { opacity: 0; transform: translate3d(0, 16px, 0); clip-path: inset(0 0 100% 0); }
+  64% { opacity: 1; transform: translate3d(0, -2px, 0); clip-path: inset(0 0 0 0); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes signal-tuning-radar-lock {
+  0% { opacity: 0; transform: translate3d(-16px, 0, 0); clip-path: inset(0 100% 0 0); }
+  64% { opacity: 1; transform: translate3d(2px, 0, 0); clip-path: inset(0); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes signal-tuning-memory-scan {
+  0% { opacity: 0; transform: translate3d(0, 12px, 0) rotate(-0.8deg); clip-path: inset(0 10% 0 0); }
+  70% { opacity: 1; transform: translate3d(0, -2px, 0) rotate(0.15deg); clip-path: inset(0); }
+  100% { opacity: 1; transform: none; }
+}
+
+@media (max-width: 820px) {
+  .nf-page main > section[data-motion-replay="true"] .nf-section-title::after,
+  .an-site main > section.reveal-target .section-heading::after,
+  .an-site main > section.reveal-target .home-signal-copy::after,
+  .an-site main > section.reveal-target .live-copy::after {
+    animation-duration: 560ms;
+  }
+
+  .nf-page main > section[data-motion-replay="true"] .nf-catalog-card,
+  .nf-page main > section[data-motion-replay="true"] .nf-visual-card,
+  .nf-page main > section[data-motion-replay="true"] .nf-event-card,
+  .nf-page main > section[data-motion-replay="true"] .nf-universe-card,
+  .an-site main > section.reveal-target :is(.home-platform-card, .release-card, .video-card) {
+    animation-duration: 460ms;
+  }
+
+  .nf-page main > section[data-motion-replay="true"] :is(.nf-catalog-card, .nf-visual-card, .nf-event-card, .nf-universe-card),
+  .an-site main > section.reveal-target :is(.home-platform-card, .release-card, .video-card) {
+    animation-delay: 30ms;
+  }
+
+  .nf-page main > section[data-motion-replay="true"] .nf-catalog-card:nth-child(n + 4),
+  .nf-page main > section[data-motion-replay="true"] .nf-visual-card:nth-child(n + 4),
+  .nf-page main > section[data-motion-replay="true"] .nf-event-card:nth-child(n + 4),
+  .nf-page main > section[data-motion-replay="true"] .nf-universe-card:nth-child(n + 4),
+  .an-site main > section.reveal-target :is(.home-platform-card:nth-child(n + 4), .release-card:nth-child(n + 4), .video-card:nth-child(n + 4)) {
+    animation-delay: 80ms;
+  }
+
+  .nf-page main > section[data-motion-replay="true"] :is(.nf-catalog-card, .nf-visual-card, .nf-event-card, .nf-universe-card),
+  .an-site main > section.reveal-target :is(.home-platform-card, .release-card, .video-card) {
+    animation-name: signal-tuning-card-lock;
+  }
+
+  .route-motion[data-route="/music"] .nf-page main > section.is-motion-in-view .nf-catalog-card {
+    animation-name: signal-tuning-tune-card;
+  }
+
+  .route-motion[data-route="/visuals"] .nf-page main > section.is-motion-in-view .nf-visual-card {
+    animation-name: signal-tuning-film-frame;
+  }
+
+  .route-motion[data-route="/live"] .nf-page main > section.is-motion-in-view .nf-event-card,
+  .route-motion[data-route="/live"] .nf-page main > section.is-motion-in-view .nf-event-empty {
+    animation-name: signal-tuning-radar-lock;
+  }
+
+  .route-motion[data-route="/universe"] .nf-page main > section.is-motion-in-view .nf-universe-card {
+    animation-name: signal-tuning-memory-scan;
+  }
+
+  .nf-page .nf-button:hover,
+  .nf-page .nf-button:focus-visible,
+  .nf-page .nf-text-button:hover,
+  .nf-page .nf-text-button:focus-visible,
+  .an-site .button-primary:hover,
+  .an-site .button-primary:focus-visible,
+  .an-site .button-quiet:hover,
+  .an-site .button-quiet:focus-visible,
+  .an-site .home-deck-cta:hover,
+  .an-site .home-deck-cta:focus-visible,
+  .an-site .text-link:hover,
+  .an-site .text-link:focus-visible {
+    background-size: 0 100%;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nf-page main > section[data-motion-replay="true"][data-motion-direction="up"].is-motion-in-view :is(
+      .nf-platform-grid,
+      .nf-catalog,
+      .nf-visual-grid,
+      .nf-video-embed-grid,
+      .nf-embed-grid,
+      .nf-universe-grid,
+      .nf-event-grid,
+      .an-epk-capability-grid,
+      .an-epk-assets,
+      .an-epk-release-list,
+      .an-release-links,
+      .nf-signal-form,
+      .nf-signal-block
+    ) {
+    animation-name: signal-tuning-panel-lock-up;
+  }
+
+  .nf-page main > section[data-motion-replay="true"][data-motion-direction="up"].is-motion-in-view :is(
+      .nf-catalog-card,
+      .nf-visual-card,
+      .nf-event-card,
+      .nf-universe-card,
+      .an-epk-capability,
+      .an-epk-asset,
+      .an-epk-release,
+      .an-release-links > *,
+      .nf-official-media
+    ) {
+    animation-name: signal-tuning-card-lock-up;
+  }
+
+  .an-site main > section.reveal-target[data-reveal-direction="up"].is-revealed :is(
+      .home-platform-card,
+      .release-card,
+      .video-card
+    ) {
+    animation-name: signal-tuning-card-lock-up;
+  }
+
+  .route-motion[data-route="/music"] .nf-page main > section[data-motion-direction="up"].is-motion-in-view .nf-catalog-card {
+    animation-name: signal-tuning-tune-card-up;
+  }
+
+  .route-motion[data-route="/visuals"] .nf-page main > section[data-motion-direction="up"].is-motion-in-view .nf-visual-card {
+    animation-name: signal-tuning-film-frame-up;
+  }
+
+  .route-motion[data-route="/live"] .nf-page main > section[data-motion-direction="up"].is-motion-in-view :is(.nf-event-card, .nf-event-empty) {
+    animation-name: signal-tuning-radar-lock-up;
+  }
+
+  .route-motion[data-route="/universe"] .nf-page main > section[data-motion-direction="up"].is-motion-in-view .nf-universe-card {
+    animation-name: signal-tuning-memory-scan-up;
+  }
+}
+
+@keyframes signal-tuning-panel-lock-up {
+  0% { opacity: 0; transform: translate3d(0, -24px, 0) scale(0.985); filter: saturate(0.76); }
+  68% { opacity: 1; transform: translate3d(0, 3px, 0) scale(1.004); filter: saturate(1.04); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: saturate(1); }
+}
+
+@keyframes signal-tuning-card-lock-up {
+  0% { opacity: 0; transform: translate3d(0, -16px, 0) scale(0.975); }
+  72% { opacity: 1; transform: translate3d(0, 3px, 0) scale(1.006); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes signal-tuning-tune-card-up {
+  0% { opacity: 0; transform: translate3d(-18px, -8px, 0) scale(0.975); clip-path: inset(0 12% 0 0); }
+  68% { opacity: 1; transform: translate3d(2px, 2px, 0) scale(1.006); clip-path: inset(0); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes signal-tuning-film-frame-up {
+  0% { opacity: 0; transform: translate3d(0, -16px, 0); clip-path: inset(100% 0 0 0); }
+  64% { opacity: 1; transform: translate3d(0, 2px, 0); clip-path: inset(0); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes signal-tuning-radar-lock-up {
+  0% { opacity: 0; transform: translate3d(16px, 0, 0); clip-path: inset(0 0 0 100%); }
+  64% { opacity: 1; transform: translate3d(-2px, 0, 0); clip-path: inset(0); }
+  100% { opacity: 1; transform: none; }
+}
+
+@keyframes signal-tuning-memory-scan-up {
+  0% { opacity: 0; transform: translate3d(0, -12px, 0) rotate(0.8deg); clip-path: inset(0 0 0 10%); }
+  70% { opacity: 1; transform: translate3d(0, 2px, 0) rotate(-0.15deg); clip-path: inset(0); }
+  100% { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-page main > section[data-motion-replay="true"],
+  .an-site main > section.reveal-target.reveal-ready,
+  .nf-page main > section[data-motion-replay="true"] > *,
+  .an-site main > section.reveal-target.reveal-ready > * {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+    filter: none;
+    animation: none;
+    transition: none;
+    will-change: auto;
+  }
+
+  .nf-page .nf-button,
+  .nf-page .nf-text-button,
+  .an-site .button-primary,
+  .an-site .button-quiet,
+  .an-site .home-deck-cta,
+  .an-site .text-link {
+    background-image: none;
+    box-shadow: none;
+    transition: none;
+  }
+}
+
+
+/* Route handoff: a short channel sweep, never a blocking page overlay. */
+.route-motion[data-route="/music"],
+.route-motion[data-route="/en/music"] {
+  --signal-route-accent: #8e78ff;
+  --signal-route-accent-rgb: 142, 120, 255;
+}
+
+.route-motion[data-route="/visuals"],
+.route-motion[data-route="/en/visuals"] {
+  --signal-route-accent: #68e5f4;
+  --signal-route-accent-rgb: 104, 229, 244;
+}
+
+.route-motion[data-route="/live"],
+.route-motion[data-route="/en/live"] {
+  --signal-route-accent: #ee9470;
+  --signal-route-accent-rgb: 238, 148, 112;
+}
+
+.route-motion[data-route="/universe"],
+.route-motion[data-route="/en/universe"] {
+  --signal-route-accent: #d8ff65;
+  --signal-route-accent-rgb: 216, 255, 101;
+}
+
+.route-motion[data-route="/about"],
+.route-motion[data-route="/en/about"],
+.route-motion[data-route="/epk"],
+.route-motion[data-route="/en/epk"] {
+  --signal-route-accent: #f3ead8;
+  --signal-route-accent-rgb: 243, 234, 216;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .route-motion::after {
+    position: fixed;
+    z-index: 119;
+    inset: 0;
+    content: "";
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(var(--signal-route-accent-rgb, 121, 214, 199), 0.14) 48%,
+      transparent 100%
+    );
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+    animation: signal-route-handoff 760ms var(--signal-tuning-ease) both;
+  }
+}
+
+@keyframes signal-route-handoff {
+  0% { opacity: 0; transform: translate3d(-100%, 0, 0); }
+  26% { opacity: 0.68; }
+  72% { opacity: 0.18; }
+  100% { opacity: 0; transform: translate3d(100%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-motion::after {
+    display: none;
+  }
+}
+
+
+/* Moving tracks stay inside their frame; the document itself never becomes wider. */
+.an-site,
+.nf-page {
+  overflow-x: clip;
+}
+
+@supports not (overflow: clip) {
+  .an-site,
+  .nf-page {
+    overflow-x: hidden;
+  }
+}
+
+.route-motion {
+  overflow-x: clip;
+}
+
+@supports not (overflow: clip) {
+  .route-motion {
+    overflow-x: hidden;
+  }
+}

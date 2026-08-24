@@ -366,6 +366,36 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
       context.globalAlpha = 1;
     };
 
+    const drawSignalTicks = (time: number, energy = 1) => {
+      const seconds = time * 0.001;
+      const tickCount = constrainedDevice ? 4 : mobile ? 6 : 8;
+      const radius = Math.min(hostWidth, hostHeight) * (mobile ? 0.31 : 0.29);
+      const palette = ["#67e8f9", "#d8ff65", "#ff9f6e", "#9c7cff"];
+
+      context.save();
+      context.globalCompositeOperation = "lighter";
+      context.translate(centerX, centerY);
+      context.rotate(-seconds * 0.11);
+      context.lineCap = "round";
+      context.lineWidth = mobile ? 0.62 : 0.86;
+
+      for (let index = 0; index < tickCount; index += 1) {
+        const angle = (index / tickCount) * Math.PI * 2;
+        const pulse = 0.76 + (Math.sin(seconds * 1.1 + index * 0.9) + 1) * 0.12;
+        const inner = radius * (0.88 + pulse * 0.05);
+        const outer = inner + (mobile ? 4 : 7) * pulse;
+        context.globalAlpha = Math.min(0.3, energy * (0.1 + pulse * 0.12));
+        context.strokeStyle = palette[index % palette.length];
+        context.beginPath();
+        context.moveTo(Math.cos(angle) * inner, Math.sin(angle) * inner);
+        context.lineTo(Math.cos(angle) * outer, Math.sin(angle) * outer);
+        context.stroke();
+      }
+
+      context.restore();
+      context.globalAlpha = 1;
+    };
+
     const drawSignalSparks = (time: number, energy = 1) => {
       const seconds = time * 0.001;
       context.save();
@@ -398,6 +428,7 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
       context.clearRect(0, 0, width, height);
       drawIrisReactor(0, 0.38);
       drawOrbitingLines(0, 0.58);
+      drawSignalTicks(0, 0.44);
       drawParticles(particle => ({ x: particle.tx, y: particle.ty, opacity: particle.alpha }));
       drawSignalSparks(0, 0.42);
     };
@@ -476,6 +507,7 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
       context.clearRect(0, 0, width, height);
       drawIrisReactor(time, 0.48);
       drawOrbitingLines(time, 0.72);
+      drawSignalTicks(time, 0.68);
       drawParticles(particle => {
         const offset = getIdleOffset(particle, idleTime, 1.12);
         const pulse =
@@ -511,6 +543,7 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
       context.clearRect(0, 0, width, height);
       drawIrisReactor(time, 0.48 + Math.sin(progress * Math.PI) * 0.52);
       drawOrbitingLines(time, 0.78 + Math.sin(progress * Math.PI) * 0.62);
+      drawSignalTicks(time, 0.56 + Math.sin(progress * Math.PI) * 0.34);
       drawParticles(particle => getAnimatedPosition(particle, progress, time));
       drawSignalSparks(time, 0.72 + Math.sin(progress * Math.PI) * 0.28);
 

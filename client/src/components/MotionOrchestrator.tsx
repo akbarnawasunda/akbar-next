@@ -142,9 +142,24 @@ function usePublicSectionReveal(location: string) {
       });
 
       if (reducedMotion || !("IntersectionObserver" in window)) {
-        sections.forEach(section => section.classList.add("is-motion-in-view"));
+        sections.forEach(section => {
+          section.dataset.motionPhase = "locked";
+          section.classList.add("is-motion-in-view");
+        });
         return;
       }
+
+      const setMotionState = (section: HTMLElement, isVisible: boolean) => {
+        section.dataset.motionPhase = isVisible ? "acquiring" : "released";
+        section.classList.toggle("is-motion-in-view", isVisible);
+        if (!isVisible) return;
+
+        window.requestAnimationFrame(() => {
+          if (!cancelled && section.isConnected && section.classList.contains("is-motion-in-view")) {
+            section.dataset.motionPhase = "locked";
+          }
+        });
+      };
 
       observer = new IntersectionObserver(
         entries => {
@@ -156,7 +171,7 @@ function usePublicSectionReveal(location: string) {
 
             lastPositions.set(section, top);
             section.dataset.motionDirection = direction;
-            section.classList.toggle("is-motion-in-view", entry.isIntersecting);
+            setMotionState(section, entry.isIntersecting);
           });
         },
         { threshold: [0, 0.12], rootMargin: "0px 0px -8%" }
