@@ -122,11 +122,11 @@ function usePublicSectionReveal(location: string) {
       if (cancelled) return;
 
       const sections = Array.from(
-        document.querySelectorAll<HTMLElement>(".nf-page main > section")
+        document.querySelectorAll<HTMLElement>(".nf-page main > section:not(.reveal-target)")
       );
 
       // Lazy-loaded route modules can render after this effect's first pass.
-      // Retry briefly so the reveal system attaches to the actual page sections.
+      // Retry briefly so the replay observer attaches to the actual page sections.
       if (!sections.length) {
         retryId = window.setTimeout(setup, 50);
         return;
@@ -135,6 +135,12 @@ function usePublicSectionReveal(location: string) {
       const reducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
       ).matches;
+      const lastPositions = new Map<Element, number>();
+
+      sections.forEach(section => {
+        section.dataset.motionReplay = "true";
+      });
+
       if (reducedMotion || !("IntersectionObserver" in window)) {
         sections.forEach(section => section.classList.add("is-motion-in-view"));
         return;
@@ -143,12 +149,17 @@ function usePublicSectionReveal(location: string) {
       observer = new IntersectionObserver(
         entries => {
           entries.forEach(entry => {
-            if (!entry.isIntersecting) return;
-            entry.target.classList.add("is-motion-in-view");
-            observer?.unobserve(entry.target);
+            const section = entry.target as HTMLElement;
+            const top = entry.boundingClientRect.top;
+            const previousTop = lastPositions.get(section);
+            const direction = previousTop === undefined || top < previousTop ? "down" : "up";
+
+            lastPositions.set(section, top);
+            section.dataset.motionDirection = direction;
+            section.classList.toggle("is-motion-in-view", entry.isIntersecting);
           });
         },
-        { threshold: 0.12, rootMargin: "0px 0px -8%" }
+        { threshold: [0, 0.12], rootMargin: "0px 0px -8%" }
       );
 
       sections.forEach(section => observer?.observe(section));

@@ -10,6 +10,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLElement>(
     if (!element) return;
 
     element.classList.add("reveal-ready");
+    element.dataset.revealReplay = "true";
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
@@ -18,14 +19,19 @@ export function useScrollReveal<T extends HTMLElement = HTMLElement>(
       return;
     }
 
+    let previousTop: number | undefined;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry?.isIntersecting) return;
-        element.classList.add("is-revealed");
-        observer.disconnect();
+        if (!entry) return;
+
+        const top = entry.boundingClientRect.top;
+        const direction = previousTop === undefined || top < previousTop ? "down" : "up";
+        previousTop = top;
+        element.dataset.revealDirection = direction;
+        element.classList.toggle("is-revealed", entry.isIntersecting);
       },
       {
-        threshold,
+        threshold: [0, threshold],
         rootMargin: "0px 0px -8% 0px",
       }
     );

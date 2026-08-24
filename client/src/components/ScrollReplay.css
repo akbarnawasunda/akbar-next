@@ -1,0 +1,76 @@
+/* Bidirectional viewport replay: sections reset when they leave the viewport and replay on re-entry. */
+
+.nf-page main > section[data-motion-replay="true"] {
+  --nf-replay-duration: 680ms;
+  transition:
+    opacity var(--nf-replay-duration) cubic-bezier(0.23, 1, 0.32, 1),
+    transform var(--nf-replay-duration) cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: opacity, transform;
+}
+
+.nf-page main > section[data-motion-replay="true"]:not(.is-motion-in-view):not(.nf-page-hero):not(.nf-epk-hero) {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0) scale(0.992);
+}
+
+.nf-page main > section[data-motion-replay="true"][data-motion-direction="up"]:not(.is-motion-in-view):not(.nf-page-hero):not(.nf-epk-hero) {
+  transform: translate3d(0, -24px, 0) scale(0.992);
+}
+
+.nf-page main > section[data-motion-replay="true"].is-motion-in-view {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+.an-site main > section.reveal-target.reveal-ready:not(.is-revealed) {
+  opacity: 0;
+  transform: translate3d(0, 26px, 0) scale(0.985);
+  will-change: opacity, transform;
+}
+
+.an-site main > section.reveal-target.reveal-ready[data-reveal-direction="up"]:not(.is-revealed) {
+  transform: translate3d(0, -26px, 0) scale(0.985);
+}
+
+.an-site main > section.reveal-target.is-revealed {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-page main > section[data-motion-replay="true"],
+  .nf-page main > section[data-motion-replay="true"]:not(.is-motion-in-view),
+  .nf-page main > section[data-motion-replay="true"][data-motion-direction="up"]:not(.is-motion-in-view),
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view,
+  .an-site main > section.reveal-target.reveal-ready:not(.is-revealed),
+  .an-site main > section.reveal-target.reveal-ready[data-reveal-direction="up"]:not(.is-revealed),
+  .an-site main > section.reveal-target.is-revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+}
+
+
+/* The homepage hero is the first readable signal on a phone; do not let compositor timing hide it. */
+@media (max-width: 820px) {
+  .an-site .hero-copy .hero-title-editorial,
+  .an-site .hero-copy .hero-title-mask,
+  .an-site .hero-copy .hero-title-word,
+  .an-site .hero-copy .eyebrow,
+  .an-site .hero-copy .hero-description,
+  .an-site .hero-copy .hero-actions {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    will-change: auto;
+  }
+
+  .an-site .hero-copy .hero-title-mask {
+    overflow: visible;
+    clip-path: none;
+  }
+}

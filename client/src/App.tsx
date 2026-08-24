@@ -50,6 +50,7 @@ import "./components/InteractionSystem.css";
 import "./components/NightFrequencySignature.css";
 import "./components/SignalNoirSystem.css";
 import "./components/ResponsiveRepair.css";
+import "./components/ScrollReplay.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes

@@ -53,6 +53,7 @@ describe("RMX brand motion mark", () => {
     expect(component).toContain("navigator.hardwareConcurrency");
     expect(component).toContain("duration = initialFormation ? (mobile ? 3300 : 3600) : mobile ? 3500 : 3800");
     expect(component).toContain("drawOrbitingLines");
+    expect(component).toContain("drawSignalSparks");
     expect(component).toContain('canvas.dataset.stage = "overscan-iris"');
     expect(component).toContain("sampleContext.drawImage(");
     expect(component).toContain("isInk");

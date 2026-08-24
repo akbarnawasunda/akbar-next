@@ -366,11 +366,40 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
       context.globalAlpha = 1;
     };
 
+    const drawSignalSparks = (time: number, energy = 1) => {
+      const seconds = time * 0.001;
+      context.save();
+      context.globalCompositeOperation = "lighter";
+      context.lineCap = "round";
+      context.lineWidth = mobile ? 0.55 : 0.78;
+
+      particles.forEach((particle, index) => {
+        if (!particle.spark || particleOpacity[index] < 0.45) return;
+        const twinkle = (Math.sin(seconds * 2.1 + particle.phase) + 1) / 2;
+        if (twinkle < 0.82) return;
+
+        const length = (mobile ? 2.4 : 4.6) * (twinkle - 0.78) * 4;
+        const angle = particle.phase + seconds * 0.22;
+        const x = particleX[index];
+        const y = particleY[index];
+        context.globalAlpha = Math.min(0.44, energy * (twinkle - 0.8) * 1.8);
+        context.strokeStyle = particle.color;
+        context.beginPath();
+        context.moveTo(x - Math.cos(angle) * length, y - Math.sin(angle) * length);
+        context.lineTo(x + Math.cos(angle) * length, y + Math.sin(angle) * length);
+        context.stroke();
+      });
+
+      context.restore();
+      context.globalAlpha = 1;
+    };
+
     const drawStatic = () => {
       context.clearRect(0, 0, width, height);
       drawIrisReactor(0, 0.38);
       drawOrbitingLines(0, 0.58);
       drawParticles(particle => ({ x: particle.tx, y: particle.ty, opacity: particle.alpha }));
+      drawSignalSparks(0, 0.42);
     };
 
     if (!particles.length || reducedMotion) {
@@ -457,6 +486,7 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
           opacity: particle.alpha * pulse,
         };
       });
+      drawSignalSparks(time, 0.78);
       frameRef.current = visibleRef.current
         ? window.requestAnimationFrame(drawIdle)
         : null;
@@ -482,6 +512,7 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
       drawIrisReactor(time, 0.48 + Math.sin(progress * Math.PI) * 0.52);
       drawOrbitingLines(time, 0.78 + Math.sin(progress * Math.PI) * 0.62);
       drawParticles(particle => getAnimatedPosition(particle, progress, time));
+      drawSignalSparks(time, 0.72 + Math.sin(progress * Math.PI) * 0.28);
 
       if (progress < 1) {
         frameRef.current = window.requestAnimationFrame(draw);
