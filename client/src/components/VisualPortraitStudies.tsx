@@ -25,7 +25,7 @@ export default function VisualPortraitStudies({ english = false }: VisualPortrai
         </div>
         <div className="an-portrait-studies-note">
           <span>{english ? "UNRELEASED VISUAL STUDY" : "STUDI VISUAL · BELUM DIRILIS"}</span>
-          <strong>01 / 01</strong>
+          <strong>01 / 02</strong>
         </div>
       </div>
       <div className="an-portrait-studies-surface">
@@ -38,6 +38,18 @@ export default function VisualPortraitStudies({ english = false }: VisualPortrai
           </a>
         </div>
         <span className="an-portrait-study-index" aria-hidden="true">02</span>
+      </div>
+      <div className="an-portrait-study-indexes" aria-label={english ? "Portrait study images" : "Daftar foto studi potret"}>
+        {portraitStudies.map((item, index) => (
+          <a className="an-portrait-study-index-link" href={item.src} target="_blank" rel="noreferrer" key={item.id}>
+            <span>0{index + 1}</span>
+            <div>
+              <small>{english ? "PORTRAIT STUDY" : "STUDI POTRET"}</small>
+              <strong>{english ? item.titleEn : item.titleId}</strong>
+            </div>
+            <ArrowUpRight size={14} />
+          </a>
+        ))}
       </div>
     </section>
   );
