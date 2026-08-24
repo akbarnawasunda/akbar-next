@@ -10,6 +10,17 @@ function absoluteUrl(path: string) {
   return path.startsWith("http") ? path : `${siteOrigin}${path === "/" ? "/" : path}`;
 }
 
+function websiteEntity() {
+  return {
+    "@type": "WebSite",
+    "@id": `${siteOrigin}/#website`,
+    url: `${siteOrigin}/`,
+    name: "Akbar Nawasunda",
+    alternateName: "Akbar Nawasunda | Official Website",
+    publisher: { "@id": `${siteOrigin}/#artist` },
+  };
+}
+
 function artistEntity(platforms: Array<{ href: string }>) {
   return {
     "@type": "MusicGroup",
@@ -41,7 +52,7 @@ export function StructuredData() {
   useEffect(() => {
     const isEnglish = location === "/en" || location.startsWith("/en/");
     const pathWithoutLanguage = location.replace(/^\/en(?=\/|$)/, "") || "/";
-    const graph: Record<string, unknown>[] = [artistEntity(editablePlatformLinks)];
+    const graph: Record<string, unknown>[] = [websiteEntity(), artistEntity(editablePlatformLinks)];
     const releaseMatch = pathWithoutLanguage.match(/^\/music\/([a-z0-9-]+)$/i);
 
     if (releaseMatch) {

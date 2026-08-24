@@ -51,6 +51,9 @@ describe("international artist layer", () => {
     expect(robots).toContain("Disallow: /studio");
     expect(sitemap).toContain("https://akbarnawasunda.my.id/en/music");
     expect(sitemap).toContain('hreflang="en"');
+    expect(schema).toContain('"@type": "WebSite"');
+    expect(schema).toContain('name: "Akbar Nawasunda"');
+    expect(schema).toContain('alternateName: "Akbar Nawasunda | Official Website"');
     expect(schema).toContain('"@type": "MusicGroup"');
     expect(schema).toContain('"@type": "MusicRecording"');
     expect(schema).toContain('"@type": "MusicEvent"');
