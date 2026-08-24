@@ -959,7 +959,7 @@
 .an-site .hero-copy h1,
 .nf-page .nf-page-hero h1,
 .nf-page .nf-epk-hero h1 {
-  font-size: clamp(44px, 5.8vw, 88px) !important;
+  font-size: clamp(42px, 5vw, 76px) !important;
   max-width: min(100%, 18ch) !important;
   line-height: 0.94 !important;
   overflow-wrap: normal !important;
@@ -970,8 +970,12 @@
 .an-site main > section h2,
 .nf-page main > section h2,
 .nf-page .en-contact-panel h2,
-.nf-page .en-legal-block h2 {
-  font-size: clamp(34px, 4.2vw, 62px) !important;
+.nf-page .en-legal-block h2,
+.an-site .section h2,
+.an-site .signal-section h2,
+.nf-page .nf-section h2,
+.nf-page .nf-signal-block h2 {
+  font-size: clamp(30px, 3.6vw, 56px) !important;
   max-width: min(100%, 18ch) !important;
   line-height: 0.96 !important;
   overflow-wrap: normal !important;
@@ -983,7 +987,7 @@
   .an-site .hero-copy h1,
   .nf-page .nf-page-hero h1,
   .nf-page .nf-epk-hero h1 {
-    font-size: clamp(40px, 11vw, 66px) !important;
+    font-size: clamp(38px, 10vw, 60px) !important;
     max-width: 100% !important;
     line-height: 0.94 !important;
   }
@@ -991,8 +995,12 @@
   .an-site main > section h2,
   .nf-page main > section h2,
   .nf-page .en-contact-panel h2,
-  .nf-page .en-legal-block h2 {
-    font-size: clamp(30px, 8.8vw, 48px) !important;
+  .nf-page .en-legal-block h2,
+  .an-site .section h2,
+  .an-site .signal-section h2,
+  .nf-page .nf-section h2,
+  .nf-page .nf-signal-block h2 {
+    font-size: clamp(28px, 8vw, 46px) !important;
     max-width: 100% !important;
     line-height: 0.98 !important;
   }
