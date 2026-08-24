@@ -1005,3 +1005,23 @@
     line-height: 0.98 !important;
   }
 }
+
+/* Hero-specific guard: the Homepage choreography stylesheet must not re-expand the masthead. */
+body .an-site .hero-copy h1.hero-title-editorial,
+body .nf-page .nf-page-hero h1,
+body .nf-page .nf-epk-hero h1 {
+  font-size: clamp(40px, 5.2vw, 80px) !important;
+  max-width: min(100%, 18ch) !important;
+  line-height: 0.94 !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+@media (max-width: 820px) {
+  body .an-site .hero-copy h1.hero-title-editorial,
+  body .nf-page .nf-page-hero h1,
+  body .nf-page .nf-epk-hero h1 {
+    font-size: clamp(36px, 10.5vw, 58px) !important;
+    max-width: 100% !important;
+  }
+}
