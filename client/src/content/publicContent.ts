@@ -4,9 +4,9 @@ import { allPlatformLinks } from "@/content/artistPlatform";
 export type CmsPlatformLink = { label: string; href: string };
 export type CmsRelease = { _id: string; title: string; year?: string; format?: string; platform?: string; url: string; embedUrl?: string; artworkUrl?: string; story?: string; credits?: string; spotifyUrl?: string; appleMusicUrl?: string; platformLinks?: CmsPlatformLink[]; isCurrent?: boolean; order?: number };
 export type CmsVisual = { _id: string; title: string; label?: string; youtubeId?: string; url?: string; imageUrl?: string; order?: number };
-export type CmsEvent = { _id: string; title: string; date: string; time?: string; city?: string; venue?: string; country?: string; posterUrl?: string; ticketUrl?: string; rsvpUrl?: string; status?: "announced" | "sold out" | "cancelled" | "past"; isFeatured?: boolean };
+export type CmsEvent = { _id: string; title: string; date: string; time?: string; city?: string; venue?: string; country?: string; mapsUrl?: string; posterUrl?: string; ticketUrl?: string; rsvpUrl?: string; status?: "announced" | "sold out" | "cancelled" | "past"; isFeatured?: boolean };
 export type CmsLegalSection = { key?: "short-version" | "collection" | "cookies" | "services" | "rights"; heading?: string; body?: string };
-export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string; platformLinks?: CmsPlatformLink[] }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; releases: CmsRelease[]; visuals: CmsVisual[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
+export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; locationUrl?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string; platformLinks?: CmsPlatformLink[] }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; releases: CmsRelease[]; visuals: CmsVisual[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
 
 type CustomDocument = {
   id: number;
@@ -19,6 +19,17 @@ type CustomDocument = {
 
 function stringValue(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+export function safeExternalUrl(value: unknown): string | undefined {
+  const candidate = stringValue(value);
+  if (!candidate) return undefined;
+  try {
+    const parsed = new URL(candidate);
+    return parsed.protocol === "https:" || parsed.protocol === "http:" ? parsed.toString() : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function booleanValue(value: unknown): boolean | undefined {
@@ -80,6 +91,7 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       shortBio: stringValue(payloadOf(profile).shortBio),
       longBio: stringValue(payloadOf(profile).longBio) || stringValue(payloadOf(profile).body),
       location: stringValue(payloadOf(profile).location),
+      locationUrl: safeExternalUrl(payloadOf(profile).locationUrl),
       genres: stringArray(payloadOf(profile).genres),
       portraitImage: stringValue(payloadOf(profile).portraitImage) || stringValue(payloadOf(profile).imageUrl),
       artistStatement: stringValue(payloadOf(profile).artistStatement),
@@ -152,6 +164,7 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       city: stringValue(payloadOf(document).city),
       venue: stringValue(payloadOf(document).venue),
       country: stringValue(payloadOf(document).country),
+      mapsUrl: safeExternalUrl(payloadOf(document).mapsUrl),
       posterUrl: stringValue(payloadOf(document).posterUrl) || stringValue(payloadOf(document).imageUrl),
       ticketUrl: stringValue(payloadOf(document).ticketUrl),
       rsvpUrl: stringValue(payloadOf(document).rsvpUrl),

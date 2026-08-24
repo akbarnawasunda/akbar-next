@@ -15,11 +15,15 @@ describe("artist content contract", () => {
     expect(editor).toContain('value: "pressKit"');
     expect(editor).toContain('value: "event"');
     expect(editor).toContain('key: "story"');
+    expect(editor).toContain('key: "locationUrl"');
+    expect(editor).toContain('key: "mapsUrl"');
     expect(codec).toContain('"profile"');
     expect(codec).toContain('"pressKit"');
     expect(publicContent).toContain("profile?:");
     expect(publicContent).toContain("pressKit?:");
     expect(publicContent).toContain("events: CmsEvent[]");
+    expect(publicContent).toContain("locationUrl?: string");
+    expect(publicContent).toContain("mapsUrl?: string");
   });
 
   it("keeps public modules honest when official material is not published", () => {
@@ -29,6 +33,7 @@ describe("artist content contract", () => {
     expect(pressKit).toContain("Request material");
     expect(pressKit).toContain("Aset yang tersedia secara resmi");
     expect(live).toContain("BELUM ADA SHOW TERKONFIRMASI.");
+    expect(live).toContain("an-event-location-link");
   });
 
   it("preserves verified legacy artist identity and catalog in the public fallback", () => {

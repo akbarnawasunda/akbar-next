@@ -547,12 +547,15 @@ export default function Home() {
           {cmsEvents.length ? <div className="home-live-events" aria-label="Jadwal pertunjukan">
             {cmsEvents.slice(0, 3).map(event => {
               const eventHref = event.ticketUrl || event.rsvpUrl || "#signal";
-              return <a className="home-live-event" href={eventHref} target={eventHref.startsWith("http") ? "_blank" : undefined} rel={eventHref.startsWith("http") ? "noreferrer" : undefined} key={event._id}>
+              const locationLabel = [event.venue, event.city, event.country].filter(Boolean).join(", ") || "Detail venue menyusul";
+              return <article className="home-live-event" key={event._id}>
                 <span>{formatHomeEventDate(event.date)}</span>
                 <strong>{event.title}</strong>
-                <small>{[event.venue, event.city, event.country].filter(Boolean).join(", ") || "Detail venue menyusul"}</small>
-                <ArrowUpRight size={14} />
-              </a>;
+                <small>{event.mapsUrl ? <a className="an-event-location-link" href={event.mapsUrl} target="_blank" rel="noreferrer">{locationLabel} <ArrowUpRight size={12} /></a> : locationLabel}</small>
+                <a className="home-live-event-source" href={eventHref} target={eventHref.startsWith("http") ? "_blank" : undefined} rel={eventHref.startsWith("http") ? "noreferrer" : undefined} aria-label={`${event.title} — buka sumber resmi`}>
+                  {event.ticketUrl ? "TIKET" : event.rsvpUrl ? "RSVP" : "LIHAT JADWAL"} <ArrowUpRight size={14} />
+                </a>
+              </article>;
             })}
           </div> : null}
         </section>
