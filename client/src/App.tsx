@@ -187,12 +187,18 @@ function CmsMetadata() {
     };
 
     document.documentElement.lang = isEnglish ? "en" : "id";
+    const resolvedTitle = isEnglish ? defaultTitle : settings?.ogTitle?.trim() || settings?.siteTitle?.trim() || defaultTitle;
+    const resolvedDescription = isEnglish ? defaultDescription : settings?.ogDescription?.trim() || settings?.metaDescription?.trim() || defaultDescription;
+    const resolvedImage = settings?.socialPreviewUrl?.trim() || `${siteOrigin}/assets/akbar-social-preview.webp`;
     document.title = (isEnglish ? defaultTitle : settings?.siteTitle?.trim() || defaultTitle);
     setMeta('meta[name="description"]', isEnglish ? defaultDescription : settings?.metaDescription?.trim() || defaultDescription);
-    setMeta('meta[property="og:title"]', isEnglish ? defaultTitle : settings?.ogTitle?.trim() || settings?.siteTitle?.trim() || defaultTitle);
-    setMeta('meta[property="og:description"]', isEnglish ? defaultDescription : settings?.ogDescription?.trim() || settings?.metaDescription?.trim() || defaultDescription);
-    setMeta('meta[property="og:image"]', settings?.socialPreviewUrl?.trim() || `${siteOrigin}/assets/akbar-social-preview.webp`);
+    setMeta('meta[property="og:title"]', resolvedTitle);
+    setMeta('meta[property="og:description"]', resolvedDescription);
+    setMeta('meta[property="og:image"]', resolvedImage);
     setMeta('meta[property="og:url"]', `${siteOrigin}${pathname === "/" ? "/" : pathname}`);
+    setMeta('meta[name="twitter:title"]', resolvedTitle);
+    setMeta('meta[name="twitter:description"]', resolvedDescription);
+    setMeta('meta[name="twitter:image"]', resolvedImage);
     setLink("canonical", `${siteOrigin}${pathname === "/" ? "/" : pathname}`);
 
     document.head.querySelectorAll('link[data-language-link="true"]').forEach(link => link.remove());

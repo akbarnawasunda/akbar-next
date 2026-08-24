@@ -38,6 +38,9 @@ describe("international artist layer", () => {
     expect(app).toContain('document.documentElement.lang = isEnglish ? "en" : "id"');
     expect(app).toContain('meta.setAttribute("content", value)');
     expect(app).toContain('setMeta(\'meta[property="og:image"]\'');
+    expect(app).toContain('setMeta(\'meta[name="twitter:title"]\', resolvedTitle)');
+    expect(app).toContain('setMeta(\'meta[name="twitter:description"]\', resolvedDescription)');
+    expect(app).toContain('setMeta(\'meta[name="twitter:image"]\', resolvedImage)');
     expect(app).toContain('link.dataset.languageLink = "true"');
     expect(html).toContain('hreflang="id"');
     expect(html).toContain('hreflang="en"');
