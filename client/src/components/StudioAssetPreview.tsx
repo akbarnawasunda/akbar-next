@@ -45,7 +45,7 @@ export function StudioAssetPreview({ value, label = "Preview", mimeType, compact
         <span className="flex min-w-0 items-center gap-2 font-mono text-[9px] uppercase tracking-[0.13em] text-cyan-100/60"><Icon kind={kind} />{label}</span>
         <a href={url} target="_blank" rel="noreferrer" className="inline-flex shrink-0 items-center gap-1 text-[10px] text-white/45 transition hover:text-cyan-100">Open <ArrowUpRight size={12} /></a>
       </div>
-      {kind === "image" ? <div className={compact ? "flex min-h-40 items-center justify-center bg-black/20 p-2" : "flex min-h-52 items-center justify-center bg-black/20 p-3"}><img src={url} alt="Preview asset" className="max-h-80 w-full object-contain" loading="lazy" /></div> : null}
+      {kind === "image" ? <div className={compact ? "flex min-h-40 items-center justify-center bg-black/20 p-2" : "flex min-h-52 items-center justify-center bg-black/20 p-3"}><img src={url} alt={label} className="max-h-80 w-full object-contain" loading="lazy" /></div> : null}
       {kind === "audio" ? <div className="p-3"><audio className="w-full" controls preload="metadata" src={url}>Audio preview unavailable.</audio></div> : null}
       {kind === "video" ? <video className="aspect-video w-full bg-black object-cover" controls preload="metadata" src={url}>Video preview unavailable.</video> : null}
       {kind === "pdf" ? <div className="flex items-center gap-3 px-3 py-4 text-xs text-white/55"><FileText size={20} className="text-amber-200/70" /><span className="min-w-0 truncate">PDF / dokumen siap dibuka di tab baru.</span></div> : null}
