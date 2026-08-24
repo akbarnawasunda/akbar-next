@@ -32,6 +32,9 @@ describe("scroll replay and studio site map contracts", () => {
     expect(app).toContain('import "./components/ScrollReplay.css";');
     expect(replayCss).toContain(".an-site .hero-copy .hero-title-editorial");
     expect(replayCss).toContain("animation: none !important");
+    expect(replayCss).toContain(".nf-page .nf-page-hero .nf-hero-note");
+    expect(replayCss).toContain("clip-path: none !important");
+    expect(replayCss).toContain(".nf-page .nf-page-hero h1");
   });
 
   it("maps the public pages and their editable sources in Control Room", () => {

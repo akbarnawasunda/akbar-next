@@ -74,3 +74,38 @@
     clip-path: none;
   }
 }
+
+
+@media (max-width: 820px) {
+  /* Hero cards are essential content; compositor timing must never leave their panel half-clipped. */
+  .nf-page .nf-page-hero .nf-hero-note,
+  .nf-page .nf-epk-hero .nf-hero-note {
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-self: stretch !important;
+    align-self: start;
+    margin-inline: 0 !important;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}
+
+
+@media (max-width: 820px) {
+  /* Internal route heroes are static-readable on first paint; lower sections retain replay choreography. */
+  .nf-page .nf-page-hero .nf-page-eyebrow,
+  .nf-page .nf-page-hero h1,
+  .nf-page .nf-page-hero > div:first-child > p:not(.nf-page-eyebrow),
+  .nf-page .nf-epk-hero .nf-page-eyebrow,
+  .nf-page .nf-epk-hero h1,
+  .nf-page .nf-epk-hero > div:first-child > p:not(.nf-page-eyebrow) {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+    filter: none !important;
+    will-change: auto;
+  }
+}
