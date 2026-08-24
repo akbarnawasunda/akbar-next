@@ -1,4 +1,4 @@
-import { ArrowUpRight, CalendarDays, Check, ChevronDown, Database, Disc3, FilePenLine, FolderOpen, LayoutList, Link2, Plus, Radio, Save, ShieldCheck, Sparkles, Trash2 } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Check, ChevronDown, Database, Disc3, FilePenLine, FolderOpen, LayoutList, Link2, MapPin, Plus, Radio, Save, ShieldCheck, Sparkles, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -28,11 +28,12 @@ type EditorPayload = Record<string, unknown>;
 type EditorDocument = { id: number; documentType: DocumentType; slug: string; payload: EditorPayload; sortOrder: number; isPublished: boolean };
 type FieldSpec = { key: string; label: string; placeholder?: string; hint?: string; multiline?: boolean; media?: boolean; type?: "text" | "url" | "email" | "date" | "select"; options?: string[] };
 
-const primaryWorkflowTypes: DocumentType[] = ["release", "event", "siteSettings"];
+const primaryWorkflowTypes: DocumentType[] = ["release", "event", "siteSettings", "profile"];
 const primaryWorkflows = [
   { type: "release" as const, eyebrow: "01", title: "Rilisan lagu", description: "Judul, cover, dan semua link streaming.", icon: Disc3, action: "Tambah rilisan" },
   { type: "event" as const, eyebrow: "02", title: "Jadwal pertunjukan", description: "Tambah banyak show dengan tiket dan RSVP.", icon: CalendarDays, action: "Tambah jadwal" },
   { type: "siteSettings" as const, eyebrow: "03", title: "Tautan resmi", description: "Atur link Spotify, YouTube, dan kanal lain.", icon: Link2, action: "Edit tautan" },
+  { type: "profile" as const, eyebrow: "04", title: "Profil & lokasi", description: "Bio, genre, portrait, dan link Google Maps.", icon: MapPin, action: "Edit profil" },
 ];
 
 const fieldsByType: Record<DocumentType, FieldSpec[]> = {
@@ -48,7 +49,7 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
     { key: "shortBio", label: "Short bio", multiline: true },
     { key: "longBio", label: "Long bio", multiline: true },
     { key: "location", label: "Location", placeholder: "Bandung Barat, Indonesia" },
-    { key: "locationUrl", label: "Google Maps location URL", type: "url", hint: "Paste the share link from Google Maps. The public location label will become clickable when this is filled.", placeholder: "https://maps.google.com/..." },
+    { key: "locationUrl", label: "Link Google Maps lokasi", type: "url", hint: "Tempel link dari Google Maps > Bagikan > Salin link. Lokasi publik akan menjadi clickable setelah diisi.", placeholder: "https://maps.google.com/..." },
     { key: "genresText", label: "Genres", placeholder: "Breakbeat, Indo Bass, Jedag Jedug" },
     { key: "portraitImage", label: "Portrait image URL", type: "url", media: true },
     { key: "artistStatement", label: "Artist statement", multiline: true },

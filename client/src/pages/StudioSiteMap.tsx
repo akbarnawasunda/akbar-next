@@ -1,4 +1,4 @@
-import { ArrowUpRight, CalendarDays, CheckCircle2, CircleDashed, Disc3, ExternalLink, FileText, Image, Link2, Mail, Music2, Pencil, Radio, UserRound, Video } from "lucide-react";
+import { ArrowUpRight, CalendarDays, CheckCircle2, CircleDashed, Disc3, ExternalLink, FileText, Image, Link2, Mail, MapPin, Music2, Pencil, Radio, UserRound, Video } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type StudioDocumentSummary = {
@@ -93,7 +93,7 @@ const sitePages: SitePage[] = [
     summary: "Konteks perjalanan, artwork release, dan jalur resmi untuk musik, remix, booking, dan licensing.",
     accent: "violet",
     sections: [
-      { label: "Origin & perjalanan", detail: "Bio panjang, alias, lokasi, dan genre terverifikasi.", icon: UserRound, editType: "profile" },
+      { label: "Origin & perjalanan", detail: "Bio panjang, alias, lokasi, genre, dan link Google Maps terverifikasi.", icon: UserRound, editType: "profile" },
       { label: "Artwork rilisan", detail: "Pilihan artwork yang ditarik dari katalog release.", icon: Disc3, editType: "release" },
       { label: "Jalur kontak resmi", detail: "Link inquiry musik, remix, booking, dan licensing.", icon: ArrowUpRight, editType: "pressKit" },
       { label: "Fan Signal", detail: "Form update email dari sistem newsletter.", icon: Mail, fixed: true },
@@ -106,7 +106,8 @@ const sitePages: SitePage[] = [
     summary: "Profil publik artis dengan portrait, bio, lokasi, genre, statement, dan jalur musik/kontak.",
     accent: "bone",
     sections: [
-      { label: "Portrait & profile hero", detail: "Foto profil, short bio, dan lokasi asal.", icon: Image, editType: "profile" },
+      { label: "Portrait & profile hero", detail: "Foto profil, short bio, lokasi asal, dan link Google Maps.", icon: Image, editType: "profile" },
+      { label: "Lokasi / Google Maps", detail: "Atur titik lokasi yang bisa dibuka pengunjung dari halaman About.", icon: MapPin, editType: "profile" },
       { label: "Perjalanan musik", detail: "Long bio, artist statement, alias, dan genre.", icon: UserRound, editType: "profile" },
       { label: "Music & contact CTA", detail: "Arah ke Music dan Press & Booking.", icon: Link2, editType: "pressKit" },
     ],
@@ -119,7 +120,7 @@ const sitePages: SitePage[] = [
     accent: "bone",
     sections: [
       { label: "EPK intro & contacts", detail: "Intro, email booking, email press, dan portrait editorial.", icon: FileText, editType: "pressKit" },
-      { label: "Artist snapshot", detail: "Bio panjang, lokasi, alias, work, dan kontak.", icon: UserRound, editType: "profile" },
+      { label: "Artist snapshot", detail: "Bio panjang, lokasi, link Google Maps, alias, work, dan kontak.", icon: UserRound, editType: "profile" },
       { label: "Capabilities & licensing", detail: "Layanan remix, arrangement, collaboration, dan licensing note.", icon: Radio, editType: "profile" },
       { label: "Official assets", detail: "One sheet, photo pack, logo package, dan technical rider.", icon: Image, editType: "pressKit" },
       { label: "Selected releases", detail: "Tiga rilisan pilihan untuk press dan booking.", icon: Disc3, editType: "release" },
