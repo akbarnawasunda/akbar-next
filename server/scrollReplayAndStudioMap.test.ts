@@ -62,6 +62,7 @@ describe("scroll replay and studio site map contracts", () => {
 
   it("maps the public pages and their editable sources in Control Room", () => {
     const map = source("client/src/pages/StudioSiteMap.tsx");
+    const mirror = source("client/src/components/StudioPageMirror.tsx");
     const studio = source("client/src/pages/ContentStudio.tsx");
 
     for (const route of [
@@ -90,7 +91,13 @@ describe("scroll replay and studio site map contracts", () => {
       expect(map).toContain(label);
     }
     expect(map).toContain("VERIFIED FALLBACK");
-    expect(studio).toContain("<StudioSiteMap");
+    expect(studio).toContain("<StudioPageMirror");
+    for (const route of ["/", "/music", "/visuals", "/visuals/portraits", "/live", "/universe", "/about", "/epk", "/inquire", "/licensing", "/privacy", "/game/jedag-run"]) {
+      expect(mirror).toContain(`route: "${route}"`);
+    }
+    expect(mirror).toContain("Navigasi, CTA & footer routes");
+    expect(mirror).toContain("Foto editorial / Press card");
+    expect(mirror).toContain("Event cards & location links");
     expect(studio).toContain('id="studio-compose"');
     expect(studio).toContain('id="studio-document-library"');
   });

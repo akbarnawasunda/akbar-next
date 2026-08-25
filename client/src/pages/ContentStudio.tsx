@@ -32,7 +32,7 @@ import StudioVisualArchive from "@/components/StudioVisualArchive";
 import StudioPortraitArchive from "@/components/StudioPortraitArchive";
 import { StudioPublishChecklist, StudioWorkspaceNav } from "@/components/StudioWorkspaceChrome";
 import StudioGalleryAnalytics from "@/components/StudioGalleryAnalytics";
-import StudioSiteMap from "@/pages/StudioSiteMap";
+import StudioPageMirror from "@/components/StudioPageMirror";
 import OwnerLoginCard from "@/components/OwnerLoginCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -1026,6 +1026,17 @@ export default function ContentStudio() {
     setShowAdvanced(!primaryWorkflowTypes.includes(document.documentType));
     setIsDirty(false);
   }
+  function openEditorForType(type: DocumentType) {
+    const existing = documents.data?.find(document => document.documentType === type);
+    if (existing) loadDocument(existing);
+    else resetEditor(type);
+    window.requestAnimationFrame(() =>
+      document
+        .getElementById("studio-compose")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" })
+    );
+  }
+
   function updateField(key: string, value: string | boolean) {
     setPayload(current => ({ ...current, [key]: value }));
     setIsDirty(true);
@@ -1137,21 +1148,9 @@ export default function ContentStudio() {
 
         <StudioGalleryAnalytics />
 
-        <StudioSiteMap
+        <StudioPageMirror
           documents={documents.data ?? []}
-          onEditType={type => {
-            resetEditor(type as DocumentType);
-            window.requestAnimationFrame(() =>
-              document
-                .getElementById("studio-compose")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" })
-            );
-          }}
-          onOpenLibrary={() =>
-            document
-              .getElementById("studio-document-library")
-              ?.scrollIntoView({ behavior: "smooth", block: "start" })
-          }
+          onEditType={type => openEditorForType(type as DocumentType)}
         />
 
         <section
