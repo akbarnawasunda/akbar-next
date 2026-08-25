@@ -206,11 +206,12 @@ var systemRouter = router({
 import { TRPCError as TRPCError4 } from "@trpc/server";
 
 // server/db.ts
-import { and, asc, eq, like, notLike } from "drizzle-orm";
+import { createHash } from "node:crypto";
+import { and, asc, count, countDistinct, eq, gte, like, notLike, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 
 // drizzle/schema.ts
-import { boolean, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, index, int, mysqlEnum, mysqlTable, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
 var users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
   openId: varchar("openId", { length: 64 }).notNull().unique(),
@@ -238,6 +239,16 @@ var fanSignals = mysqlTable("fanSignals", {
   source: varchar("source", { length: 64 }).notNull().default("home"),
   createdAt: timestamp("createdAt").defaultNow().notNull()
 });
+var galleryAnalytics = mysqlTable("galleryAnalytics", {
+  id: int("id").autoincrement().primaryKey(),
+  gallery: varchar("gallery", { length: 64 }).notNull(),
+  visitorHash: varchar("visitorHash", { length: 64 }).notNull(),
+  visitDay: varchar("visitDay", { length: 10 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull()
+}, (table) => ({
+  visitorDayUnique: uniqueIndex("galleryAnalytics_visitor_day_unique").on(table.gallery, table.visitorHash, table.visitDay),
+  galleryDayIndex: index("galleryAnalytics_gallery_day_idx").on(table.gallery, table.visitDay)
+}));
 var artistContent = mysqlTable("artistContent", {
   id: int("id").autoincrement().primaryKey(),
   kind: mysqlEnum("kind", ["hero", "release", "video", "live"]).notNull(),
@@ -625,6 +636,69 @@ async function updateArtistInquiryStatus(id, status) {
   await db.update(artistInquiries).set({ status }).where(eq(artistInquiries.id, id));
   return { id, status };
 }
+var GALLERY_ANALYTICS_SALT = process.env.SESSION_SECRET || process.env.JWT_SECRET || "akbar-gallery-analytics-v1";
+var galleryAnalyticsTableReady = null;
+async function ensureGalleryAnalyticsTable(db) {
+  if (!galleryAnalyticsTableReady) {
+    galleryAnalyticsTableReady = db.execute(sql`CREATE TABLE IF NOT EXISTS galleryAnalytics (
+      id int AUTO_INCREMENT NOT NULL,
+      gallery varchar(64) NOT NULL,
+      visitorHash varchar(64) NOT NULL,
+      visitDay varchar(10) NOT NULL,
+      createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      CONSTRAINT galleryAnalytics_id PRIMARY KEY (id),
+      UNIQUE KEY galleryAnalytics_visitor_day_unique (gallery, visitorHash, visitDay),
+      KEY galleryAnalytics_gallery_day_idx (gallery, visitDay)
+    )`).then(() => void 0).catch((error) => {
+      galleryAnalyticsTableReady = null;
+      throw error;
+    });
+  }
+  return galleryAnalyticsTableReady;
+}
+function analyticsDay(date = /* @__PURE__ */ new Date()) {
+  return date.toISOString().slice(0, 10);
+}
+function analyticsVisitorHash(visitorKey) {
+  return createHash("sha256").update(`${GALLERY_ANALYTICS_SALT}:${visitorKey}`).digest("hex");
+}
+async function recordGalleryVisit(input) {
+  const db = await getDb();
+  if (!db) return { recorded: false };
+  await ensureGalleryAnalyticsTable(db);
+  const visitDay = analyticsDay();
+  const visitorHash = analyticsVisitorHash(input.visitorKey);
+  await db.insert(galleryAnalytics).values({ gallery: input.gallery, visitorHash, visitDay }).onDuplicateKeyUpdate({
+    set: { visitDay }
+  });
+  return { recorded: true };
+}
+async function getGalleryAnalytics(gallery) {
+  return readWithRetry(async (db) => {
+    await ensureGalleryAnalyticsTable(db);
+    const today = analyticsDay();
+    const since = analyticsDay(new Date(Date.now() - 6 * 24 * 60 * 60 * 1e3));
+    const [allTime] = await db.select({ visitors: countDistinct(galleryAnalytics.visitorHash), visits: count() }).from(galleryAnalytics).where(eq(galleryAnalytics.gallery, gallery));
+    const [last7Days] = await db.select({ visitors: countDistinct(galleryAnalytics.visitorHash), visits: count() }).from(galleryAnalytics).where(and(eq(galleryAnalytics.gallery, gallery), gte(galleryAnalytics.visitDay, since)));
+    const [todayStats] = await db.select({ visitors: countDistinct(galleryAnalytics.visitorHash), visits: count() }).from(galleryAnalytics).where(and(eq(galleryAnalytics.gallery, gallery), eq(galleryAnalytics.visitDay, today)));
+    const daily = await db.select({ day: galleryAnalytics.visitDay, visitors: countDistinct(galleryAnalytics.visitorHash), visits: count() }).from(galleryAnalytics).where(and(eq(galleryAnalytics.gallery, gallery), gte(galleryAnalytics.visitDay, since))).groupBy(galleryAnalytics.visitDay).orderBy(asc(galleryAnalytics.visitDay));
+    return {
+      gallery,
+      today,
+      allTime: { visitors: Number(allTime?.visitors ?? 0), visits: Number(allTime?.visits ?? 0) },
+      last7Days: { visitors: Number(last7Days?.visitors ?? 0), visits: Number(last7Days?.visits ?? 0) },
+      todayStats: { visitors: Number(todayStats?.visitors ?? 0), visits: Number(todayStats?.visits ?? 0) },
+      daily: daily.map((item) => ({ day: item.day, visitors: Number(item.visitors), visits: Number(item.visits) }))
+    };
+  }, {
+    gallery,
+    today: analyticsDay(),
+    allTime: { visitors: 0, visits: 0 },
+    last7Days: { visitors: 0, visits: 0 },
+    todayStats: { visitors: 0, visits: 0 },
+    daily: []
+  });
+}
 
 // server/resend.ts
 var RESEND_API_URL = "https://api.resend.com";
@@ -808,7 +882,7 @@ async function storagePut(relKey, data, contentType = "application/octet-stream"
 }
 
 // server/dashboardAuth.ts
-import { createHash, timingSafeEqual } from "node:crypto";
+import { createHash as createHash2, timingSafeEqual } from "node:crypto";
 import { TRPCError as TRPCError3 } from "@trpc/server";
 
 // shared/_core/errors.ts
@@ -1111,7 +1185,7 @@ function isConfigured() {
   return password.length >= 16;
 }
 function digest(value) {
-  return createHash("sha256").update(value).digest();
+  return createHash2("sha256").update(value).digest();
 }
 function isMatch(actual, expected) {
   return timingSafeEqual(digest(actual), digest(expected));
@@ -1213,6 +1287,13 @@ function sanitizePublicDocuments(documents) {
 var MAX_ASSET_BYTES = 10 * 1024 * 1024;
 var appRouter = router({
   system: systemRouter,
+  analytics: router({
+    recordGalleryVisit: publicProcedure.input(z2.object({
+      gallery: z2.literal("portrait-gallery"),
+      visitorKey: z2.string().trim().regex(/^[A-Za-z0-9_-]{16,128}$/)
+    })).mutation(({ input }) => recordGalleryVisit(input)),
+    portraitGallery: adminProcedure.query(() => getGalleryAnalytics("portrait-gallery"))
+  }),
   auth: router({
     me: publicProcedure.query((opts) => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
