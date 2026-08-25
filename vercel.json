@@ -52,6 +52,10 @@
       "destination": "/assets/akbar-favicon.jpg"
     },
     {
+      "source": "/",
+      "destination": "/api/ssr.js"
+    },
+    {
       "source": "/(?:en|music|visuals|live|universe|about|inquire|licensing|epk|privacy)(?:/(.*))?$",
       "destination": "/api/ssr.js"
     },
