@@ -1,5 +1,4 @@
 import { ArrowUpRight, Play } from "lucide-react";
-import FanSignalInline from "@/components/FanSignalInline";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { officialBrand, videos } from "@/content/artistPlatform";
@@ -33,6 +32,5 @@ export default function Visuals() {
     <section className="nf-section"><div className="nf-section-title"><div><p className="nf-page-eyebrow">PILIHAN VIDEO</p><h2>LIHAT<br/>KARYANYA.</h2></div><p>Tekan play untuk memuat player, atau buka YouTube langsung.</p></div><div className="nf-video-embed-grid">{players.map(video => <OfficialMediaFrame key={video.id} title={video.title} provider="YouTube" sourceUrl={`https://youtu.be/${video.id}`} embedUrl={`https://www.youtube-nocookie.com/embed/${video.id}`} artwork={thumbnailFor(video.id)} backupArtwork={officialBrand.socialPreview} description="Video dari channel resmi Akbar Nawasunda." />)}</div></section>
     <VisualPortraitStudies studies={portraitContent} />
     <section className="nf-section dark-panel"><div className="nf-section-title"><div><p className="nf-page-eyebrow">ARSIP VIDEO</p><h2>SEMUA<br/>VIDEO.</h2></div><p>{cmsVisuals.length ? "Arsip dari CMS Akbar Nawasunda." : "Video dari channel resmi."}</p></div><div className="nf-visual-grid">{archive.map(video => <a key={video.title} className="nf-visual-card" href={video.href} target="_blank" rel="noreferrer"><ResilientArtworkImage src={video.image} backupSrc={video.backupImage} alt={`${video.title} — official visual artwork`} /><div><span>{video.label}</span><h3>{video.title}</h3><p className="nf-text-button">BUKA VIDEO <Play size={14} fill="currentColor" /></p></div></a>)}</div></section>
-    <section className="nf-signal-block" id="signal"><div><p className="nf-page-eyebrow">KABAR TERBARU</p><h2>VIDEO<br/>BARU.</h2><p>Kabar video dan DJ set dari kanal resmi.</p></div><FanSignalInline /></section>
   </main><NightFooter /></div>;
 }

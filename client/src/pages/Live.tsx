@@ -6,6 +6,7 @@ import { publicUpcomingEvents, usePublicArtistContent } from "@/content/publicCo
 import "./EcosystemPages.css";
 import "./VercelAssetOverrides.css";
 import "./ArtistModules.css";
+import "./Live.css";
 
 const formatDate = (value: string, time?: string) => {
   const parsed = new Date(value);

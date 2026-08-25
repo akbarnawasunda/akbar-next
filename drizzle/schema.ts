@@ -43,6 +43,16 @@ export const galleryAnalytics = mysqlTable("galleryAnalytics", {
   galleryDayIndex: index("galleryAnalytics_gallery_day_idx").on(table.gallery, table.visitDay),
 }));
 
+/** Public display names and scores for the JEDAG RUN global board. */
+export const gameLeaderboard = mysqlTable("gameLeaderboard", {
+  id: int("id").autoincrement().primaryKey(),
+  username: varchar("username", { length: 80 }).notNull(),
+  score: int("score").notNull().default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, table => ({
+  scoreIndex: index("gameLeaderboard_score_idx").on(table.score, table.createdAt),
+}));
+
 export const artistContent = mysqlTable("artistContent", {
   id: int("id").autoincrement().primaryKey(),
   kind: mysqlEnum("kind", ["hero", "release", "video", "live"]).notNull(),
@@ -84,6 +94,8 @@ export type FanSignal = typeof fanSignals.$inferSelect;
 export type InsertFanSignal = typeof fanSignals.$inferInsert;
 export type GalleryAnalytics = typeof galleryAnalytics.$inferSelect;
 export type InsertGalleryAnalytics = typeof galleryAnalytics.$inferInsert;
+export type GameLeaderboard = typeof gameLeaderboard.$inferSelect;
+export type InsertGameLeaderboard = typeof gameLeaderboard.$inferInsert;
 export type ArtistContent = typeof artistContent.$inferSelect;
 export type InsertArtistContent = typeof artistContent.$inferInsert;
 export type ArtistInquiry = typeof artistInquiries.$inferSelect;

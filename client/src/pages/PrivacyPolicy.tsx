@@ -5,6 +5,7 @@ import {
   Database,
   Mail,
   ShieldCheck,
+  Trophy,
 } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { verifiedArtistProfile } from "@/content/artistPlatform";
@@ -27,6 +28,11 @@ const collectionPoints = [
     title: "Analytics",
     copy: "Gallery foto mencatat kunjungan secara agregat dengan penanda anonim browser. Sistem tidak menyimpan IP, email, atau user-agent dan tidak memakai cookie iklan.",
     icon: CheckCircle2,
+  },
+  {
+    title: "JEDAG RUN leaderboard",
+    copy: "Saat bermain JEDAG RUN, kamu dapat memasukkan username publik. Jika skor dikirim, username dan skor dapat tampil di Top 10. Sistem tidak meminta login dan tidak menyimpan email, IP, user-agent, atau identifier perangkat untuk leaderboard.",
+    icon: Trophy,
   },
   {
     title: "Browser storage",
@@ -81,7 +87,7 @@ export default function PrivacyPolicy() {
             <span className="an-privacy-posture-label">DATA POSTURE</span>
             <strong>LIGHT<br />BY DEFAULT.</strong>
             <p>Tidak ada iklan, tracking cookies, atau penjualan data. Gallery foto hanya mencatat hitungan agregat anonim.</p>
-            <span className="an-privacy-updated">LAST UPDATED · {legal?.effectiveDate ? new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(legal.effectiveDate)).toUpperCase() : "14 AUG 2026"}</span>
+            <span className="an-privacy-updated">LAST UPDATED · {legal?.effectiveDate ? new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(legal.effectiveDate)).toUpperCase() : "25 AUG 2026"}</span>
           </aside>
         </section>
 
@@ -138,7 +144,7 @@ export default function PrivacyPolicy() {
                 <h2>NO HIDDEN<br />TRACKING.</h2>
               </div>
               <p>
-                {reviewedCookies || "Kami tidak mengatur advertising atau tracking cookies. localStorage terbatas dapat digunakan untuk preferensi interface, data pendukung autentikasi, atau penanda anonim gallery foto. Sistem analytics tidak menyimpan IP, email, atau user-agent."}
+                {reviewedCookies || "Kami tidak mengatur advertising atau tracking cookies. localStorage terbatas dapat digunakan untuk preferensi interface, data pendukung autentikasi, atau penanda anonim gallery foto. Sistem analytics tidak menyimpan IP, email, atau user-agent. Leaderboard JEDAG RUN hanya menyimpan username publik dan skor yang dikirim pemain."}
               </p>
               <p>
                 Music player Spotify, YouTube, dan SoundCloud bersifat
@@ -167,7 +173,7 @@ export default function PrivacyPolicy() {
               <p className="an-privacy-block-label">05 / YOUR RIGHTS</p>
               <h2>YOUR DATA.<br />YOUR CALL.</h2>
               <p>
-                {reviewedRights || "Kamu dapat meminta akses, koreksi, atau penghapusan data pribadi yang kami simpan, seperti email Fan Signal atau inquiry, kapan saja melalui kontak resmi."}
+                {reviewedRights ||                 "Kamu dapat meminta akses, koreksi, atau penghapusan data pribadi yang kami simpan, seperti email Fan Signal, inquiry, atau username leaderboard, kapan saja melalui kontak resmi."}
               </p>
               <p>
                 Permintaan ini mencakup hak berdasarkan Undang-Undang Pelindungan

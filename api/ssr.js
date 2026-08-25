@@ -208,8 +208,8 @@ var systemRouter = router({
 import { TRPCError as TRPCError4 } from "@trpc/server";
 
 // server/db.ts
-import { createHash } from "node:crypto";
-import { and, asc, count, countDistinct, eq, gte, like, notLike, sql } from "drizzle-orm";
+import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { and, asc, count, countDistinct, desc, eq, gte, like, notLike, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 
 // drizzle/schema.ts
@@ -250,6 +250,14 @@ var galleryAnalytics = mysqlTable("galleryAnalytics", {
 }, (table) => ({
   visitorDayUnique: uniqueIndex("galleryAnalytics_visitor_day_unique").on(table.gallery, table.visitorHash, table.visitDay),
   galleryDayIndex: index("galleryAnalytics_gallery_day_idx").on(table.gallery, table.visitDay)
+}));
+var gameLeaderboard = mysqlTable("gameLeaderboard", {
+  id: int("id").autoincrement().primaryKey(),
+  username: varchar("username", { length: 80 }).notNull(),
+  score: int("score").notNull().default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull()
+}, (table) => ({
+  scoreIndex: index("gameLeaderboard_score_idx").on(table.score, table.createdAt)
 }));
 var artistContent = mysqlTable("artistContent", {
   id: int("id").autoincrement().primaryKey(),
@@ -412,6 +420,34 @@ function toArtistContentInput(input) {
     sortOrder: input.sortOrder,
     isPublished: input.isPublished
   };
+}
+
+// shared/gameLeaderboard.ts
+var LEADERBOARD_LIMIT = 10;
+var LEADERBOARD_MAX_SCORE = 999999;
+var LEADERBOARD_USERNAME_MIN = 2;
+var LEADERBOARD_USERNAME_MAX = 20;
+var allowedUsernamePattern = /^[\p{L}\p{N} _-]+$/u;
+function normalizeLeaderboardUsername(value) {
+  const normalized = value.trim().replace(/\s+/g, " ");
+  if (normalized.length < LEADERBOARD_USERNAME_MIN) {
+    return { value: "", error: "Username minimal 2 karakter." };
+  }
+  if (normalized.length > LEADERBOARD_USERNAME_MAX) {
+    return { value: "", error: `Username maksimal ${LEADERBOARD_USERNAME_MAX} karakter.` };
+  }
+  if (!allowedUsernamePattern.test(normalized)) {
+    return { value: "", error: "Username hanya boleh berisi huruf, angka, spasi, garis bawah, atau tanda hubung." };
+  }
+  if (normalized.includes("@") || normalized.includes("//") || normalized.includes("..")) {
+    return { value: "", error: "Gunakan username publik, bukan email atau URL." };
+  }
+  return { value: normalized, error: "" };
+}
+function normalizeLeaderboardScore(value) {
+  if (!Number.isFinite(value) || !Number.isInteger(value) || value < 0) return null;
+  if (value > LEADERBOARD_MAX_SCORE) return null;
+  return value;
 }
 
 // server/db.ts
@@ -680,6 +716,79 @@ async function recordGalleryVisit(input) {
   });
   return { recorded: true };
 }
+var LEADERBOARD_TOKEN_SECRET = process.env.SESSION_SECRET || process.env.JWT_SECRET || "akbar-jedag-leaderboard-v1";
+var LEADERBOARD_TOKEN_TTL_MS = 2 * 60 * 60 * 1e3;
+var LEADERBOARD_SUBMIT_COOLDOWN_MS = 15e3;
+var gameLeaderboardTableReady = null;
+var consumedLeaderboardTokens = /* @__PURE__ */ new Map();
+var recentLeaderboardSubmissions = /* @__PURE__ */ new Map();
+async function ensureGameLeaderboardTable(db) {
+  if (!gameLeaderboardTableReady) {
+    gameLeaderboardTableReady = db.execute(sql`CREATE TABLE IF NOT EXISTS gameLeaderboard (
+      id int AUTO_INCREMENT NOT NULL,
+      username varchar(80) NOT NULL,
+      score int NOT NULL DEFAULT 0,
+      createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      CONSTRAINT gameLeaderboard_id PRIMARY KEY (id),
+      KEY gameLeaderboard_score_idx (score, createdAt)
+    )`).then(() => void 0).catch((error) => {
+      gameLeaderboardTableReady = null;
+      throw error;
+    });
+  }
+  return gameLeaderboardTableReady;
+}
+function leaderboardTokenSignature(payload) {
+  return createHmac("sha256", LEADERBOARD_TOKEN_SECRET).update(payload).digest("base64url");
+}
+function issueLeaderboardRunToken(username) {
+  const payload = Buffer.from(JSON.stringify({ username, issuedAt: Date.now(), nonce: randomBytes(12).toString("hex") })).toString("base64url");
+  return `${payload}.${leaderboardTokenSignature(payload)}`;
+}
+function consumeLeaderboardRunToken(token, username) {
+  const [payload, signature] = token.split(".");
+  if (!payload || !signature) return false;
+  const expected = leaderboardTokenSignature(payload);
+  const providedBuffer = Buffer.from(signature);
+  const expectedBuffer = Buffer.from(expected);
+  if (providedBuffer.length !== expectedBuffer.length || !timingSafeEqual(providedBuffer, expectedBuffer)) return false;
+  try {
+    const decoded = JSON.parse(Buffer.from(payload, "base64url").toString("utf8"));
+    if (decoded.username !== username || !decoded.nonce || !decoded.issuedAt || Date.now() - decoded.issuedAt > LEADERBOARD_TOKEN_TTL_MS || Date.now() - decoded.issuedAt < 0) return false;
+    const now = Date.now();
+    for (const [key, expiresAt] of consumedLeaderboardTokens) if (expiresAt <= now) consumedLeaderboardTokens.delete(key);
+    if (consumedLeaderboardTokens.has(token)) return false;
+    consumedLeaderboardTokens.set(token, decoded.issuedAt + LEADERBOARD_TOKEN_TTL_MS);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function leaderboardSubmissionAllowed(username) {
+  const key = username.toLowerCase();
+  const now = Date.now();
+  for (const [candidate, timestamp2] of recentLeaderboardSubmissions) if (now - timestamp2 > LEADERBOARD_SUBMIT_COOLDOWN_MS) recentLeaderboardSubmissions.delete(candidate);
+  const previous = recentLeaderboardSubmissions.get(key);
+  if (previous && now - previous < LEADERBOARD_SUBMIT_COOLDOWN_MS) return false;
+  recentLeaderboardSubmissions.set(key, now);
+  return true;
+}
+async function listGameLeaderboard() {
+  return readWithRetry(async (db) => {
+    await ensureGameLeaderboardTable(db);
+    return db.select({ id: gameLeaderboard.id, username: gameLeaderboard.username, score: gameLeaderboard.score, createdAt: gameLeaderboard.createdAt }).from(gameLeaderboard).orderBy(desc(gameLeaderboard.score), asc(gameLeaderboard.createdAt), asc(gameLeaderboard.id)).limit(LEADERBOARD_LIMIT);
+  }, []);
+}
+async function submitGameScore(input) {
+  const db = await getDb();
+  if (!db) return { submitted: false, reason: "unavailable" };
+  const normalizedUsername = normalizeLeaderboardUsername(input.username);
+  const normalizedScore = normalizeLeaderboardScore(input.score);
+  if (!normalizedUsername.value || normalizedScore === null) return { submitted: false, reason: "invalid" };
+  await ensureGameLeaderboardTable(db);
+  await db.insert(gameLeaderboard).values({ username: normalizedUsername.value, score: normalizedScore });
+  return { submitted: true, score: normalizedScore };
+}
 async function getGalleryAnalytics(gallery) {
   return readWithRetry(async (db) => {
     await ensureGalleryAnalyticsTable(db);
@@ -889,7 +998,7 @@ async function storagePut(relKey, data, contentType = "application/octet-stream"
 }
 
 // server/dashboardAuth.ts
-import { createHash as createHash2, timingSafeEqual } from "node:crypto";
+import { createHash as createHash2, timingSafeEqual as timingSafeEqual2 } from "node:crypto";
 import { TRPCError as TRPCError3 } from "@trpc/server";
 
 // shared/_core/errors.ts
@@ -1195,7 +1304,7 @@ function digest(value) {
   return createHash2("sha256").update(value).digest();
 }
 function isMatch(actual, expected) {
-  return timingSafeEqual(digest(actual), digest(expected));
+  return timingSafeEqual2(digest(actual), digest(expected));
 }
 function checkAttemptLimit(key) {
   const now = Date.now();
@@ -1300,6 +1409,33 @@ var appRouter = router({
       visitorKey: z2.string().trim().regex(/^[A-Za-z0-9_-]{16,128}$/)
     })).mutation(({ input }) => recordGalleryVisit(input)),
     portraitGallery: adminProcedure.query(() => getGalleryAnalytics("portrait-gallery"))
+  }),
+  leaderboard: router({
+    top: publicProcedure.query(async () => {
+      const rows = await listGameLeaderboard();
+      return rows.map((row, index2) => ({ rank: index2 + 1, username: row.username, score: Number(row.score) }));
+    }),
+    start: publicProcedure.input(z2.object({ username: z2.string().trim().min(1).max(80) })).mutation(({ input }) => {
+      const normalized = normalizeLeaderboardUsername(input.username);
+      if (!normalized.value) throw new TRPCError4({ code: "BAD_REQUEST", message: normalized.error });
+      return { username: normalized.value, runToken: issueLeaderboardRunToken(normalized.value) };
+    }),
+    submit: publicProcedure.input(z2.object({
+      username: z2.string().trim().min(1).max(80),
+      score: z2.number().int().min(0).max(LEADERBOARD_MAX_SCORE),
+      runToken: z2.string().trim().min(32).max(2048)
+    })).mutation(async ({ input }) => {
+      const normalized = normalizeLeaderboardUsername(input.username);
+      if (!normalized.value) throw new TRPCError4({ code: "BAD_REQUEST", message: normalized.error });
+      if (!consumeLeaderboardRunToken(input.runToken, normalized.value)) {
+        throw new TRPCError4({ code: "FORBIDDEN", message: "Run token tidak valid atau sudah kedaluwarsa." });
+      }
+      if (!leaderboardSubmissionAllowed(normalized.value)) {
+        throw new TRPCError4({ code: "TOO_MANY_REQUESTS", message: "Tunggu sebentar sebelum mengirim skor lagi." });
+      }
+      const result = await submitGameScore({ username: normalized.value, score: input.score });
+      return { ...result, username: normalized.value };
+    })
   }),
   auth: router({
     me: publicProcedure.query((opts) => opts.ctx.user),

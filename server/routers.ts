@@ -4,11 +4,12 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { TRPCError } from "@trpc/server";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
-import { createArtistInquiry, createFanSignal, createStoredAsset, deleteCustomArtistDocument, getGalleryAnalytics, listAllArtistContent, listArtistInquiries, listCustomArtistContent, listFanSignals, listPublishedArtistContent, listStoredAssets, recordGalleryVisit, updateArtistInquiryStatus, upsertArtistContent, upsertCustomArtistDocument } from "./db";
+import { consumeLeaderboardRunToken, createArtistInquiry, createFanSignal, createStoredAsset, deleteCustomArtistDocument, getGalleryAnalytics, issueLeaderboardRunToken, leaderboardSubmissionAllowed, listAllArtistContent, listArtistInquiries, listCustomArtistContent, listFanSignals, listGameLeaderboard, listPublishedArtistContent, listStoredAssets, recordGalleryVisit, submitGameScore, updateArtistInquiryStatus, upsertArtistContent, upsertCustomArtistDocument } from "./db";
 import { createResendBroadcast, getResendReadiness, sendResendBroadcast, syncFanSignalContact, ResendApiError } from "./resend";
 import { storagePut } from "./storage";
 import { customDocumentTypes } from "./customContent";
 import { loginWithDashboardPassword } from "./dashboardAuth";
+import { LEADERBOARD_MAX_SCORE, normalizeLeaderboardUsername } from "../shared/gameLeaderboard";
 import { sanitizePublicDocuments, whiteLabelMediaUrl } from "./publicMediaPolicy";
 
 const MAX_ASSET_BYTES = 10 * 1024 * 1024;
@@ -23,6 +24,37 @@ export const appRouter = router({
       }))
       .mutation(({ input }) => recordGalleryVisit(input)),
     portraitGallery: adminProcedure.query(() => getGalleryAnalytics("portrait-gallery")),
+  }),
+  leaderboard: router({
+    top: publicProcedure.query(async () => {
+      const rows = await listGameLeaderboard();
+      return rows.map((row, index) => ({ rank: index + 1, username: row.username, score: Number(row.score) }));
+    }),
+    start: publicProcedure
+      .input(z.object({ username: z.string().trim().min(1).max(80) }))
+      .mutation(({ input }) => {
+        const normalized = normalizeLeaderboardUsername(input.username);
+        if (!normalized.value) throw new TRPCError({ code: "BAD_REQUEST", message: normalized.error });
+        return { username: normalized.value, runToken: issueLeaderboardRunToken(normalized.value) };
+      }),
+    submit: publicProcedure
+      .input(z.object({
+        username: z.string().trim().min(1).max(80),
+        score: z.number().int().min(0).max(LEADERBOARD_MAX_SCORE),
+        runToken: z.string().trim().min(32).max(2048),
+      }))
+      .mutation(async ({ input }) => {
+        const normalized = normalizeLeaderboardUsername(input.username);
+        if (!normalized.value) throw new TRPCError({ code: "BAD_REQUEST", message: normalized.error });
+        if (!consumeLeaderboardRunToken(input.runToken, normalized.value)) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Run token tidak valid atau sudah kedaluwarsa." });
+        }
+        if (!leaderboardSubmissionAllowed(normalized.value)) {
+          throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "Tunggu sebentar sebelum mengirim skor lagi." });
+        }
+        const result = await submitGameScore({ username: normalized.value, score: input.score });
+        return { ...result, username: normalized.value };
+      }),
   }),
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),

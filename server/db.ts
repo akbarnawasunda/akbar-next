@@ -1,10 +1,11 @@
-import { createHash } from "node:crypto";
-import { and, asc, count, countDistinct, eq, gte, like, notLike, sql } from "drizzle-orm";
+import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { and, asc, count, countDistinct, desc, eq, gte, like, notLike, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   artistContent,
   artistInquiries,
   galleryAnalytics,
+  gameLeaderboard,
   fanSignals,
   InsertArtistContent,
   InsertArtistInquiry,
@@ -16,7 +17,7 @@ import {
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 import { toArtistContentInput, toCustomArtistDocuments, type CustomDocumentType, type DocumentPayload } from "./customContent";
-
+import { LEADERBOARD_LIMIT, normalizeLeaderboardScore, normalizeLeaderboardUsername } from "../shared/gameLeaderboard";
 let _db: ReturnType<typeof drizzle> | null = null;
 
 /**
@@ -388,6 +389,90 @@ export async function recordGalleryVisit(input: { gallery: string; visitorKey: s
     set: { visitDay },
   });
   return { recorded: true as const };
+}
+
+const LEADERBOARD_TOKEN_SECRET = process.env.SESSION_SECRET || process.env.JWT_SECRET || "akbar-jedag-leaderboard-v1";
+const LEADERBOARD_TOKEN_TTL_MS = 2 * 60 * 60 * 1000;
+const LEADERBOARD_SUBMIT_COOLDOWN_MS = 15_000;
+let gameLeaderboardTableReady: Promise<void> | null = null;
+const consumedLeaderboardTokens = new Map<string, number>();
+const recentLeaderboardSubmissions = new Map<string, number>();
+
+async function ensureGameLeaderboardTable(db: Database) {
+  if (!gameLeaderboardTableReady) {
+    gameLeaderboardTableReady = db.execute(sql`CREATE TABLE IF NOT EXISTS gameLeaderboard (
+      id int AUTO_INCREMENT NOT NULL,
+      username varchar(80) NOT NULL,
+      score int NOT NULL DEFAULT 0,
+      createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      CONSTRAINT gameLeaderboard_id PRIMARY KEY (id),
+      KEY gameLeaderboard_score_idx (score, createdAt)
+    )`).then(() => undefined).catch(error => {
+      gameLeaderboardTableReady = null;
+      throw error;
+    });
+  }
+  return gameLeaderboardTableReady;
+}
+
+function leaderboardTokenSignature(payload: string) {
+  return createHmac("sha256", LEADERBOARD_TOKEN_SECRET).update(payload).digest("base64url");
+}
+
+export function issueLeaderboardRunToken(username: string) {
+  const payload = Buffer.from(JSON.stringify({ username, issuedAt: Date.now(), nonce: randomBytes(12).toString("hex") })).toString("base64url");
+  return `${payload}.${leaderboardTokenSignature(payload)}`;
+}
+
+export function consumeLeaderboardRunToken(token: string, username: string) {
+  const [payload, signature] = token.split(".");
+  if (!payload || !signature) return false;
+  const expected = leaderboardTokenSignature(payload);
+  const providedBuffer = Buffer.from(signature);
+  const expectedBuffer = Buffer.from(expected);
+  if (providedBuffer.length !== expectedBuffer.length || !timingSafeEqual(providedBuffer, expectedBuffer)) return false;
+  try {
+    const decoded = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as { username?: string; issuedAt?: number; nonce?: string };
+    if (decoded.username !== username || !decoded.nonce || !decoded.issuedAt || Date.now() - decoded.issuedAt > LEADERBOARD_TOKEN_TTL_MS || Date.now() - decoded.issuedAt < 0) return false;
+    const now = Date.now();
+    for (const [key, expiresAt] of consumedLeaderboardTokens) if (expiresAt <= now) consumedLeaderboardTokens.delete(key);
+    if (consumedLeaderboardTokens.has(token)) return false;
+    consumedLeaderboardTokens.set(token, decoded.issuedAt + LEADERBOARD_TOKEN_TTL_MS);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function leaderboardSubmissionAllowed(username: string) {
+  const key = username.toLowerCase();
+  const now = Date.now();
+  for (const [candidate, timestamp] of recentLeaderboardSubmissions) if (now - timestamp > LEADERBOARD_SUBMIT_COOLDOWN_MS) recentLeaderboardSubmissions.delete(candidate);
+  const previous = recentLeaderboardSubmissions.get(key);
+  if (previous && now - previous < LEADERBOARD_SUBMIT_COOLDOWN_MS) return false;
+  recentLeaderboardSubmissions.set(key, now);
+  return true;
+}
+
+export async function listGameLeaderboard() {
+  return readWithRetry(async db => {
+    await ensureGameLeaderboardTable(db);
+    return db.select({ id: gameLeaderboard.id, username: gameLeaderboard.username, score: gameLeaderboard.score, createdAt: gameLeaderboard.createdAt })
+      .from(gameLeaderboard)
+      .orderBy(desc(gameLeaderboard.score), asc(gameLeaderboard.createdAt), asc(gameLeaderboard.id))
+      .limit(LEADERBOARD_LIMIT);
+  }, []);
+}
+
+export async function submitGameScore(input: { username: string; score: number }) {
+  const db = await getDb();
+  if (!db) return { submitted: false as const, reason: "unavailable" as const };
+  const normalizedUsername = normalizeLeaderboardUsername(input.username);
+  const normalizedScore = normalizeLeaderboardScore(input.score);
+  if (!normalizedUsername.value || normalizedScore === null) return { submitted: false as const, reason: "invalid" as const };
+  await ensureGameLeaderboardTable(db);
+  await db.insert(gameLeaderboard).values({ username: normalizedUsername.value, score: normalizedScore });
+  return { submitted: true as const, score: normalizedScore };
 }
 
 export async function getGalleryAnalytics(gallery: string) {

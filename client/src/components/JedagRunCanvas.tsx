@@ -8,6 +8,8 @@ import "./JedagRunCanvas.css";
 
 type JedagRunCanvasProps = {
   config: PublicGameConfig;
+  onGameOver?: (score: number) => void;
+  onRestart?: () => void;
 };
 
 const initialSnapshot: GameSnapshot = {
@@ -28,7 +30,7 @@ function modeLabel(mode: GameMode) {
   return "READY TO RUN";
 }
 
-export default function JedagRunCanvas({ config }: JedagRunCanvasProps) {
+export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagRunCanvasProps) {
   const stageRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const worldRef = useRef<JedagRunWorld | null>(null);
@@ -48,7 +50,10 @@ export default function JedagRunCanvas({ config }: JedagRunCanvasProps) {
     const world = new JedagRunWorld({
       demo: query?.get("demo") === "1" || query?.has("demo"),
       onEvent: event => {
-        if (event.type === "game-over") audioRef.current?.stopBgm();
+        if (event.type === "game-over") {
+          audioRef.current?.stopBgm();
+          onGameOver?.(event.value ?? 0);
+        }
         audioRef.current?.playEvent(event);
       },
     });
@@ -132,6 +137,10 @@ export default function JedagRunCanvas({ config }: JedagRunCanvasProps) {
     const world = worldRef.current;
     const audio = audioRef.current;
     if (!world || !audio) return;
+    if (world.currentMode === "game-over" && onRestart) {
+      onRestart();
+      return;
+    }
     void audio.unlock();
     if (world.currentMode === "paused") world.resume();
     else world.start();
