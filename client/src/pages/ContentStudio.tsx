@@ -32,6 +32,7 @@ import StudioVisualArchive from "@/components/StudioVisualArchive";
 import StudioPortraitArchive from "@/components/StudioPortraitArchive";
 import { StudioPublishChecklist, StudioWorkspaceNav } from "@/components/StudioWorkspaceChrome";
 import StudioGalleryAnalytics from "@/components/StudioGalleryAnalytics";
+import StudioLeaderboardManager from "@/components/StudioLeaderboardManager";
 import StudioPageMirror from "@/components/StudioPageMirror";
 import OwnerLoginCard from "@/components/OwnerLoginCard";
 import { Button } from "@/components/ui/button";
@@ -1147,6 +1148,8 @@ export default function ContentStudio() {
         />
 
         <StudioGalleryAnalytics />
+
+        <StudioLeaderboardManager />
 
         <StudioPageMirror
           documents={documents.data ?? []}

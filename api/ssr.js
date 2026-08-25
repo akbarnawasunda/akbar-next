@@ -779,6 +779,40 @@ async function listGameLeaderboard() {
     return db.select({ id: gameLeaderboard.id, username: gameLeaderboard.username, score: gameLeaderboard.score, createdAt: gameLeaderboard.createdAt }).from(gameLeaderboard).orderBy(desc(gameLeaderboard.score), asc(gameLeaderboard.createdAt), asc(gameLeaderboard.id)).limit(LEADERBOARD_LIMIT);
   }, []);
 }
+async function listAllGameLeaderboard() {
+  return readWithRetry(async (db) => {
+    await ensureGameLeaderboardTable(db);
+    return db.select({ id: gameLeaderboard.id, username: gameLeaderboard.username, score: gameLeaderboard.score, createdAt: gameLeaderboard.createdAt }).from(gameLeaderboard).orderBy(desc(gameLeaderboard.score), asc(gameLeaderboard.createdAt), asc(gameLeaderboard.id));
+  }, []);
+}
+async function addGameLeaderboardEntry(input) {
+  const db = await getDb();
+  if (!db) return { added: false, reason: "unavailable" };
+  const normalizedUsername = normalizeLeaderboardUsername(input.username);
+  const normalizedScore = normalizeLeaderboardScore(input.score);
+  if (!normalizedUsername.value || normalizedScore === null) return { added: false, reason: "invalid" };
+  await ensureGameLeaderboardTable(db);
+  await db.insert(gameLeaderboard).values({ username: normalizedUsername.value, score: normalizedScore });
+  return { added: true, username: normalizedUsername.value, score: normalizedScore };
+}
+async function deleteGameLeaderboardEntry(id) {
+  const db = await getDb();
+  if (!db) return { deleted: false, reason: "unavailable" };
+  await ensureGameLeaderboardTable(db);
+  const existing = await db.select({ id: gameLeaderboard.id }).from(gameLeaderboard).where(eq(gameLeaderboard.id, id)).limit(1);
+  if (!existing.length) return { deleted: false, reason: "not_found" };
+  await db.delete(gameLeaderboard).where(eq(gameLeaderboard.id, id));
+  return { deleted: true, id };
+}
+async function clearGameLeaderboard() {
+  const db = await getDb();
+  if (!db) return { deleted: 0, reason: "unavailable" };
+  await ensureGameLeaderboardTable(db);
+  const existing = await db.select({ id: gameLeaderboard.id }).from(gameLeaderboard);
+  if (!existing.length) return { deleted: 0 };
+  await db.delete(gameLeaderboard);
+  return { deleted: existing.length };
+}
 async function submitGameScore(input) {
   const db = await getDb();
   if (!db) return { submitted: false, reason: "unavailable" };
@@ -1435,6 +1469,33 @@ var appRouter = router({
       }
       const result = await submitGameScore({ username: normalized.value, score: input.score });
       return { ...result, username: normalized.value };
+    }),
+    adminList: adminProcedure.query(() => listAllGameLeaderboard()),
+    adminAdd: adminProcedure.input(z2.object({
+      username: z2.string().trim().min(1).max(80),
+      score: z2.number().int().min(0).max(LEADERBOARD_MAX_SCORE)
+    })).mutation(async ({ input }) => {
+      const normalized = normalizeLeaderboardUsername(input.username);
+      if (!normalized.value) throw new TRPCError4({ code: "BAD_REQUEST", message: normalized.error });
+      const result = await addGameLeaderboardEntry({ username: normalized.value, score: input.score });
+      if (!result.added) {
+        throw new TRPCError4({ code: "INTERNAL_SERVER_ERROR", message: "Entry leaderboard belum bisa ditambahkan." });
+      }
+      return result;
+    }),
+    adminDelete: adminProcedure.input(z2.object({ id: z2.number().int().positive() })).mutation(async ({ input }) => {
+      const result = await deleteGameLeaderboardEntry(input.id);
+      if (!result.deleted) {
+        throw new TRPCError4({ code: result.reason === "not_found" ? "NOT_FOUND" : "INTERNAL_SERVER_ERROR", message: result.reason === "not_found" ? "Entry leaderboard tidak ditemukan." : "Entry leaderboard belum bisa dihapus." });
+      }
+      return result;
+    }),
+    adminClear: adminProcedure.mutation(async () => {
+      const result = await clearGameLeaderboard();
+      if (result.reason === "unavailable") {
+        throw new TRPCError4({ code: "INTERNAL_SERVER_ERROR", message: "Leaderboard belum bisa dikosongkan." });
+      }
+      return result;
     })
   }),
   auth: router({

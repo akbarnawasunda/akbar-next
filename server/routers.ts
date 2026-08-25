@@ -4,7 +4,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { TRPCError } from "@trpc/server";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
-import { consumeLeaderboardRunToken, createArtistInquiry, createFanSignal, createStoredAsset, deleteCustomArtistDocument, getGalleryAnalytics, issueLeaderboardRunToken, leaderboardSubmissionAllowed, listAllArtistContent, listArtistInquiries, listCustomArtistContent, listFanSignals, listGameLeaderboard, listPublishedArtistContent, listStoredAssets, recordGalleryVisit, submitGameScore, updateArtistInquiryStatus, upsertArtistContent, upsertCustomArtistDocument } from "./db";
+import { addGameLeaderboardEntry, clearGameLeaderboard, consumeLeaderboardRunToken, createArtistInquiry, createFanSignal, createStoredAsset, deleteCustomArtistDocument, deleteGameLeaderboardEntry, getGalleryAnalytics, issueLeaderboardRunToken, leaderboardSubmissionAllowed, listAllArtistContent, listAllGameLeaderboard, listArtistInquiries, listCustomArtistContent, listFanSignals, listGameLeaderboard, listPublishedArtistContent, listStoredAssets, recordGalleryVisit, submitGameScore, updateArtistInquiryStatus, upsertArtistContent, upsertCustomArtistDocument } from "./db";
 import { createResendBroadcast, getResendReadiness, sendResendBroadcast, syncFanSignalContact, ResendApiError } from "./resend";
 import { storagePut } from "./storage";
 import { customDocumentTypes } from "./customContent";
@@ -55,6 +55,37 @@ export const appRouter = router({
         const result = await submitGameScore({ username: normalized.value, score: input.score });
         return { ...result, username: normalized.value };
       }),
+    adminList: adminProcedure.query(() => listAllGameLeaderboard()),
+    adminAdd: adminProcedure
+      .input(z.object({
+        username: z.string().trim().min(1).max(80),
+        score: z.number().int().min(0).max(LEADERBOARD_MAX_SCORE),
+      }))
+      .mutation(async ({ input }) => {
+        const normalized = normalizeLeaderboardUsername(input.username);
+        if (!normalized.value) throw new TRPCError({ code: "BAD_REQUEST", message: normalized.error });
+        const result = await addGameLeaderboardEntry({ username: normalized.value, score: input.score });
+        if (!result.added) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Entry leaderboard belum bisa ditambahkan." });
+        }
+        return result;
+      }),
+    adminDelete: adminProcedure
+      .input(z.object({ id: z.number().int().positive() }))
+      .mutation(async ({ input }) => {
+        const result = await deleteGameLeaderboardEntry(input.id);
+        if (!result.deleted) {
+          throw new TRPCError({ code: result.reason === "not_found" ? "NOT_FOUND" : "INTERNAL_SERVER_ERROR", message: result.reason === "not_found" ? "Entry leaderboard tidak ditemukan." : "Entry leaderboard belum bisa dihapus." });
+        }
+        return result;
+      }),
+    adminClear: adminProcedure.mutation(async () => {
+      const result = await clearGameLeaderboard();
+      if (result.reason === "unavailable") {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Leaderboard belum bisa dikosongkan." });
+      }
+      return result;
+    }),
   }),
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),

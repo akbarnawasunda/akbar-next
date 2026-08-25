@@ -464,6 +464,47 @@ export async function listGameLeaderboard() {
   }, []);
 }
 
+/** Full owner-facing leaderboard view; the public board remains capped at Top 10. */
+export async function listAllGameLeaderboard() {
+  return readWithRetry(async db => {
+    await ensureGameLeaderboardTable(db);
+    return db.select({ id: gameLeaderboard.id, username: gameLeaderboard.username, score: gameLeaderboard.score, createdAt: gameLeaderboard.createdAt })
+      .from(gameLeaderboard)
+      .orderBy(desc(gameLeaderboard.score), asc(gameLeaderboard.createdAt), asc(gameLeaderboard.id));
+  }, []);
+}
+
+export async function addGameLeaderboardEntry(input: { username: string; score: number }) {
+  const db = await getDb();
+  if (!db) return { added: false as const, reason: "unavailable" as const };
+  const normalizedUsername = normalizeLeaderboardUsername(input.username);
+  const normalizedScore = normalizeLeaderboardScore(input.score);
+  if (!normalizedUsername.value || normalizedScore === null) return { added: false as const, reason: "invalid" as const };
+  await ensureGameLeaderboardTable(db);
+  await db.insert(gameLeaderboard).values({ username: normalizedUsername.value, score: normalizedScore });
+  return { added: true as const, username: normalizedUsername.value, score: normalizedScore };
+}
+
+export async function deleteGameLeaderboardEntry(id: number) {
+  const db = await getDb();
+  if (!db) return { deleted: false as const, reason: "unavailable" as const };
+  await ensureGameLeaderboardTable(db);
+  const existing = await db.select({ id: gameLeaderboard.id }).from(gameLeaderboard).where(eq(gameLeaderboard.id, id)).limit(1);
+  if (!existing.length) return { deleted: false as const, reason: "not_found" as const };
+  await db.delete(gameLeaderboard).where(eq(gameLeaderboard.id, id));
+  return { deleted: true as const, id };
+}
+
+export async function clearGameLeaderboard() {
+  const db = await getDb();
+  if (!db) return { deleted: 0, reason: "unavailable" as const };
+  await ensureGameLeaderboardTable(db);
+  const existing = await db.select({ id: gameLeaderboard.id }).from(gameLeaderboard);
+  if (!existing.length) return { deleted: 0 };
+  await db.delete(gameLeaderboard);
+  return { deleted: existing.length };
+}
+
 export async function submitGameScore(input: { username: string; score: number }) {
   const db = await getDb();
   if (!db) return { submitted: false as const, reason: "unavailable" as const };

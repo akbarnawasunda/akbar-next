@@ -8,6 +8,7 @@ type WorkspaceNavProps = {
 
 const navItems = [
   { id: "studio-page-mirror", label: "Page mirror", short: "Pages" },
+  { id: "studio-jedag-leaderboard", label: "JEDAG RUN leaderboard", short: "Scores" },
   { id: "studio-quick-actions", label: "Quick actions", short: "Start" },
   { id: "studio-visual-archive", label: "Visual archive", short: "Videos" },
   { id: "studio-portrait-archive", label: "Portrait studies", short: "Portraits" },
