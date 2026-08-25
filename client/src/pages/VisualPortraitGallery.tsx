@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Link } from "wouter";
 import { EnglishFooter, EnglishHeader } from "@/components/EnglishChrome";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { officialBrand } from "@/content/artistPlatform";
+import { trpc } from "@/lib/trpc";
 import { publicPortraitStudies, usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./VisualPortraitGallery.css";
@@ -11,8 +13,31 @@ type VisualPortraitGalleryProps = {
   english?: boolean;
 };
 
+function galleryVisitorKey() {
+  if (typeof window === "undefined") return null;
+  const storageKey = "an_portrait_gallery_visitor";
+  try {
+    const existing = window.localStorage.getItem(storageKey);
+    if (existing && /^[A-Za-z0-9_-]{16,128}$/.test(existing)) return existing;
+    const generated = typeof window.crypto?.randomUUID === "function"
+      ? window.crypto.randomUUID().replace(/-/g, "")
+      : `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}${Math.random().toString(36).slice(2)}`;
+    const visitorKey = generated.slice(0, 96);
+    window.localStorage.setItem(storageKey, visitorKey);
+    return visitorKey;
+  } catch {
+    return null;
+  }
+}
+
 function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
   const cms = usePublicArtistContent();
+  const recordVisit = trpc.analytics.recordGalleryVisit.useMutation();
+  useEffect(() => {
+    const visitorKey = galleryVisitorKey();
+    if (!visitorKey) return;
+    recordVisit.mutate({ gallery: "portrait-gallery", visitorKey });
+  }, []);
   const studies = publicPortraitStudies(cms.data);
   return (
     <main className={english ? "en-content" : undefined}>

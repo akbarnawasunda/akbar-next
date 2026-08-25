@@ -1,8 +1,10 @@
-import { and, asc, eq, like, notLike } from "drizzle-orm";
+import { createHash } from "node:crypto";
+import { and, asc, count, countDistinct, eq, gte, like, notLike, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   artistContent,
   artistInquiries,
+  galleryAnalytics,
   fanSignals,
   InsertArtistContent,
   InsertArtistInquiry,
@@ -344,4 +346,73 @@ export async function updateArtistInquiryStatus(
     .set({ status })
     .where(eq(artistInquiries.id, id));
   return { id, status };
+}
+
+const GALLERY_ANALYTICS_SALT = process.env.SESSION_SECRET || process.env.JWT_SECRET || "akbar-gallery-analytics-v1";
+let galleryAnalyticsTableReady: Promise<void> | null = null;
+
+async function ensureGalleryAnalyticsTable(db: Database) {
+  if (!galleryAnalyticsTableReady) {
+    galleryAnalyticsTableReady = db.execute(sql`CREATE TABLE IF NOT EXISTS galleryAnalytics (
+      id int AUTO_INCREMENT NOT NULL,
+      gallery varchar(64) NOT NULL,
+      visitorHash varchar(64) NOT NULL,
+      visitDay varchar(10) NOT NULL,
+      createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      CONSTRAINT galleryAnalytics_id PRIMARY KEY (id),
+      UNIQUE KEY galleryAnalytics_visitor_day_unique (gallery, visitorHash, visitDay),
+      KEY galleryAnalytics_gallery_day_idx (gallery, visitDay)
+    )`).then(() => undefined).catch(error => {
+      galleryAnalyticsTableReady = null;
+      throw error;
+    });
+  }
+  return galleryAnalyticsTableReady;
+}
+
+function analyticsDay(date = new Date()) {
+  return date.toISOString().slice(0, 10);
+}
+
+function analyticsVisitorHash(visitorKey: string) {
+  return createHash("sha256").update(`${GALLERY_ANALYTICS_SALT}:${visitorKey}`).digest("hex");
+}
+
+export async function recordGalleryVisit(input: { gallery: string; visitorKey: string }) {
+  const db = await getDb();
+  if (!db) return { recorded: false as const };
+  await ensureGalleryAnalyticsTable(db);
+  const visitDay = analyticsDay();
+  const visitorHash = analyticsVisitorHash(input.visitorKey);
+  await db.insert(galleryAnalytics).values({ gallery: input.gallery, visitorHash, visitDay }).onDuplicateKeyUpdate({
+    set: { visitDay },
+  });
+  return { recorded: true as const };
+}
+
+export async function getGalleryAnalytics(gallery: string) {
+  return readWithRetry(async db => {
+    await ensureGalleryAnalyticsTable(db);
+    const today = analyticsDay();
+    const since = analyticsDay(new Date(Date.now() - 6 * 24 * 60 * 60 * 1000));
+    const [allTime] = await db.select({ visitors: countDistinct(galleryAnalytics.visitorHash), visits: count() }).from(galleryAnalytics).where(eq(galleryAnalytics.gallery, gallery));
+    const [last7Days] = await db.select({ visitors: countDistinct(galleryAnalytics.visitorHash), visits: count() }).from(galleryAnalytics).where(and(eq(galleryAnalytics.gallery, gallery), gte(galleryAnalytics.visitDay, since)));
+    const [todayStats] = await db.select({ visitors: countDistinct(galleryAnalytics.visitorHash), visits: count() }).from(galleryAnalytics).where(and(eq(galleryAnalytics.gallery, gallery), eq(galleryAnalytics.visitDay, today)));
+    const daily = await db.select({ day: galleryAnalytics.visitDay, visitors: countDistinct(galleryAnalytics.visitorHash), visits: count() }).from(galleryAnalytics).where(and(eq(galleryAnalytics.gallery, gallery), gte(galleryAnalytics.visitDay, since))).groupBy(galleryAnalytics.visitDay).orderBy(asc(galleryAnalytics.visitDay));
+    return {
+      gallery,
+      today,
+      allTime: { visitors: Number(allTime?.visitors ?? 0), visits: Number(allTime?.visits ?? 0) },
+      last7Days: { visitors: Number(last7Days?.visitors ?? 0), visits: Number(last7Days?.visits ?? 0) },
+      todayStats: { visitors: Number(todayStats?.visitors ?? 0), visits: Number(todayStats?.visits ?? 0) },
+      daily: daily.map(item => ({ day: item.day, visitors: Number(item.visitors), visits: Number(item.visits) })),
+    };
+  }, {
+    gallery,
+    today: analyticsDay(),
+    allTime: { visitors: 0, visits: 0 },
+    last7Days: { visitors: 0, visits: 0 },
+    todayStats: { visitors: 0, visits: 0 },
+    daily: [],
+  });
 }

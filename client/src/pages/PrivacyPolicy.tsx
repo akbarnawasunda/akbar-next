@@ -25,12 +25,12 @@ const collectionPoints = [
   },
   {
     title: "Analytics",
-    copy: "Script analytics yang privacy-friendly dapat dimuat ketika dikonfigurasi oleh pemilik situs. Tujuannya menghitung kunjungan secara agregat tanpa cookie iklan.",
+    copy: "Gallery foto mencatat kunjungan secara agregat dengan penanda anonim browser. Sistem tidak menyimpan IP, email, atau user-agent dan tidak memakai cookie iklan.",
     icon: CheckCircle2,
   },
   {
     title: "Browser storage",
-    copy: "Situs dapat menyimpan preferensi interface terbatas atau data pendukung autentikasi di localStorage browser. Data ini tidak digunakan untuk iklan.",
+    copy: "Situs dapat menyimpan preferensi interface terbatas, data pendukung autentikasi, atau penanda anonim untuk menghitung akses gallery foto secara agregat. Data ini tidak digunakan untuk iklan.",
     icon: ShieldCheck,
   },
 ];
@@ -38,7 +38,7 @@ const collectionPoints = [
 const thirdParties = [
   ["Vercel", "hosting & delivery"],
   ["Google Fonts", "typefaces"],
-  ["Umami", "cookieless analytics"],
+  ["First-party gallery counter", "anonymous aggregate access"],
   ["Site backend and database", "subscriber dan inquiry storage"],
   ["Spotify / YouTube / SoundCloud", "embedded players setelah klik"],
   ["Apple iTunes Search", "cover art dan 30s previews"],
@@ -80,7 +80,7 @@ export default function PrivacyPolicy() {
             <span className="an-privacy-posture-icon"><ShieldCheck size={19} /></span>
             <span className="an-privacy-posture-label">DATA POSTURE</span>
             <strong>LIGHT<br />BY DEFAULT.</strong>
-            <p>Tidak ada iklan, tracking cookies, atau penjualan data.</p>
+            <p>Tidak ada iklan, tracking cookies, atau penjualan data. Gallery foto hanya mencatat hitungan agregat anonim.</p>
             <span className="an-privacy-updated">LAST UPDATED · {legal?.effectiveDate ? new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", year: "numeric" }).format(new Date(legal.effectiveDate)).toUpperCase() : "14 AUG 2026"}</span>
           </aside>
         </section>
@@ -138,7 +138,7 @@ export default function PrivacyPolicy() {
                 <h2>NO HIDDEN<br />TRACKING.</h2>
               </div>
               <p>
-                {reviewedCookies || "Kami tidak mengatur advertising atau tracking cookies. localStorage terbatas dapat digunakan untuk preferensi interface dan data pendukung autentikasi."}
+                {reviewedCookies || "Kami tidak mengatur advertising atau tracking cookies. localStorage terbatas dapat digunakan untuk preferensi interface, data pendukung autentikasi, atau penanda anonim gallery foto. Sistem analytics tidak menyimpan IP, email, atau user-agent."}
               </p>
               <p>
                 Music player Spotify, YouTube, dan SoundCloud bersifat

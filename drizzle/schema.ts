@@ -1,4 +1,4 @@
-import { boolean, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, index, int, mysqlEnum, mysqlTable, text, timestamp, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
@@ -32,6 +32,17 @@ export const fanSignals = mysqlTable("fanSignals", {
 });
 
 /** Owner-managed entries rendered in the public artist platform. */
+export const galleryAnalytics = mysqlTable("galleryAnalytics", {
+  id: int("id").autoincrement().primaryKey(),
+  gallery: varchar("gallery", { length: 64 }).notNull(),
+  visitorHash: varchar("visitorHash", { length: 64 }).notNull(),
+  visitDay: varchar("visitDay", { length: 10 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, table => ({
+  visitorDayUnique: uniqueIndex("galleryAnalytics_visitor_day_unique").on(table.gallery, table.visitorHash, table.visitDay),
+  galleryDayIndex: index("galleryAnalytics_gallery_day_idx").on(table.gallery, table.visitDay),
+}));
+
 export const artistContent = mysqlTable("artistContent", {
   id: int("id").autoincrement().primaryKey(),
   kind: mysqlEnum("kind", ["hero", "release", "video", "live"]).notNull(),
@@ -71,6 +82,8 @@ export type StoredAsset = typeof storedAssets.$inferSelect;
 export type InsertStoredAsset = typeof storedAssets.$inferInsert;
 export type FanSignal = typeof fanSignals.$inferSelect;
 export type InsertFanSignal = typeof fanSignals.$inferInsert;
+export type GalleryAnalytics = typeof galleryAnalytics.$inferSelect;
+export type InsertGalleryAnalytics = typeof galleryAnalytics.$inferInsert;
 export type ArtistContent = typeof artistContent.$inferSelect;
 export type InsertArtistContent = typeof artistContent.$inferInsert;
 export type ArtistInquiry = typeof artistInquiries.$inferSelect;

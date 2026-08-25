@@ -30,6 +30,7 @@ import StudioDocumentPreview from "@/components/StudioDocumentPreview";
 import StudioVisualArchive from "@/components/StudioVisualArchive";
 import StudioPortraitArchive from "@/components/StudioPortraitArchive";
 import { StudioPublishChecklist, StudioWorkspaceNav } from "@/components/StudioWorkspaceChrome";
+import StudioGalleryAnalytics from "@/components/StudioGalleryAnalytics";
 import StudioSiteMap from "@/pages/StudioSiteMap";
 import OwnerLoginCard from "@/components/OwnerLoginCard";
 import { Button } from "@/components/ui/button";
@@ -991,6 +992,8 @@ export default function ContentStudio() {
           visualCount={(documents.data ?? []).filter(document => document.documentType === "visual").length}
           portraitCount={(documents.data ?? []).filter(document => document.documentType === "portrait").length}
         />
+
+        <StudioGalleryAnalytics />
 
         <StudioSiteMap
           documents={documents.data ?? []}

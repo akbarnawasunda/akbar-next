@@ -4,7 +4,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { TRPCError } from "@trpc/server";
 import { adminProcedure, protectedProcedure, publicProcedure, router } from "./_core/trpc";
-import { createArtistInquiry, createFanSignal, createStoredAsset, deleteCustomArtistDocument, listAllArtistContent, listArtistInquiries, listCustomArtistContent, listFanSignals, listPublishedArtistContent, listStoredAssets, updateArtistInquiryStatus, upsertArtistContent, upsertCustomArtistDocument } from "./db";
+import { createArtistInquiry, createFanSignal, createStoredAsset, deleteCustomArtistDocument, getGalleryAnalytics, listAllArtistContent, listArtistInquiries, listCustomArtistContent, listFanSignals, listPublishedArtistContent, listStoredAssets, recordGalleryVisit, updateArtistInquiryStatus, upsertArtistContent, upsertCustomArtistDocument } from "./db";
 import { createResendBroadcast, getResendReadiness, sendResendBroadcast, syncFanSignalContact, ResendApiError } from "./resend";
 import { storagePut } from "./storage";
 import { customDocumentTypes } from "./customContent";
@@ -15,6 +15,15 @@ const MAX_ASSET_BYTES = 10 * 1024 * 1024;
 
 export const appRouter = router({
   system: systemRouter,
+  analytics: router({
+    recordGalleryVisit: publicProcedure
+      .input(z.object({
+        gallery: z.literal("portrait-gallery"),
+        visitorKey: z.string().trim().regex(/^[A-Za-z0-9_-]{16,128}$/),
+      }))
+      .mutation(({ input }) => recordGalleryVisit(input)),
+    portraitGallery: adminProcedure.query(() => getGalleryAnalytics("portrait-gallery")),
+  }),
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
