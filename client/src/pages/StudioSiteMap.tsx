@@ -332,24 +332,24 @@ const sitePages: SitePage[] = [
     accent: "bone",
     sections: [
       {
-        label: "EPK intro & contacts",
-        detail: "Intro, email booking, email press, dan portrait editorial.",
+        label: "Foto editorial, intro & contacts",
+        detail: "Foto kartu Editorial / Press, intro, email booking, dan email press.",
         icon: FileText,
         editType: "pressKit",
       },
       {
-        label: "Artist snapshot",
+        label: "Artist snapshot EPK",
         detail:
-          "Bio panjang, lokasi, link Google Maps, alias, work, dan kontak.",
+          "Bio, lokasi, genre, dan alias khusus yang tampil pada EPK.",
         icon: UserRound,
-        editType: "profile",
+        editType: "pressKit",
       },
       {
         label: "Capabilities & licensing",
         detail:
-          "Layanan remix, arrangement, collaboration, dan licensing note.",
+          "Pengantar layanan dan licensing note yang tampil pada EPK.",
         icon: Radio,
-        editType: "profile",
+        editType: "pressKit",
       },
       {
         label: "Official assets",
@@ -365,7 +365,7 @@ const sitePages: SitePage[] = [
       },
       {
         label: "Project contact",
-        detail: "Booking, remix/collaboration, dan press contact.",
+        detail: "Booking, remix/collaboration, dan press contact dari EPK.",
         icon: Mail,
         editType: "pressKit",
       },

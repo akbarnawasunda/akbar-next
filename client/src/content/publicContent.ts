@@ -21,7 +21,7 @@ export type CmsGameConfig = {
   isEnabled: boolean;
   shareLabel: string;
 };
-export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; locationUrl?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string; platformLinks?: CmsPlatformLink[] }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; game?: CmsGameConfig; releases: CmsRelease[]; visuals: CmsVisual[]; portraitStudies: CmsPortraitStudy[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
+export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; locationUrl?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; editorialImage?: string; snapshotBio?: string; snapshotLocation?: string; snapshotGenres?: string[]; snapshotAlias?: string; capabilitiesIntro?: string; licensingNote?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string; platformLinks?: CmsPlatformLink[] }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; game?: CmsGameConfig; releases: CmsRelease[]; visuals: CmsVisual[]; portraitStudies: CmsPortraitStudy[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
 
 function normalizePublicRoleCopy(value: string | undefined) {
   return value?.replace(/^Produser dan remixer asal Bandung Barat\./i, "Produser, remixer, dan DJ asal Bandung Barat.") || "";
@@ -132,6 +132,13 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
     } : undefined,
     pressKit: pressKit ? {
       intro: stringValue(payloadOf(pressKit).intro) || stringValue(payloadOf(pressKit).body),
+      editorialImage: publicMediaUrl(stringValue(payloadOf(pressKit).editorialImage) || stringValue(payloadOf(pressKit).editorialPortrait)),
+      snapshotBio: stringValue(payloadOf(pressKit).snapshotBio),
+      snapshotLocation: stringValue(payloadOf(pressKit).snapshotLocation),
+      snapshotGenres: stringArray(payloadOf(pressKit).snapshotGenres),
+      snapshotAlias: stringValue(payloadOf(pressKit).snapshotAlias),
+      capabilitiesIntro: stringValue(payloadOf(pressKit).capabilitiesIntro),
+      licensingNote: stringValue(payloadOf(pressKit).licensingNote),
       bookingEmail: stringValue(payloadOf(pressKit).bookingEmail),
       pressEmail: stringValue(payloadOf(pressKit).pressEmail),
       oneSheetUrl: publicMediaUrl(stringValue(payloadOf(pressKit).oneSheetUrl)),

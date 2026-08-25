@@ -89,6 +89,8 @@ describe("artist content contract", () => {
     expect(editor).toContain("StudioDocumentPreview");
     expect(editor).toContain("StudioVisualArchive");
     expect(editor).toContain("fallbackPayload");
+    expect(editor).toContain('key: "editorialImage"');
+    expect(editor).toContain("Foto editorial / Press card");
     expect(editor).toContain("StudioLinkListPreview");
     expect(picker).toContain("Upload baru");
     expect(picker).toContain("StudioAssetPreview");
@@ -101,7 +103,9 @@ describe("artist content contract", () => {
     expect(archive).toContain("Impor & edit");
     expect(previewAssets).toContain("StudioLinkPreview");
     expect(home).toContain("configuredPortrait");
-    expect(pressKit).toContain("const portrait = profile?.portraitImage");
+    expect(pressKit).toContain("const portrait = press?.editorialImage || profile?.portraitImage");
+    expect(pressKit).toContain("const bio = press?.snapshotBio || profile?.longBio");
+    expect(source("client/src/content/publicContent.ts")).toContain("editorialImage:");
   });
 
   it("uses platform SVGs and available per-release artwork in music discovery modules", () => {

@@ -147,17 +147,24 @@ const fieldUsage: Record<string, string> = {
     "Homepage → foto hero; halaman publik saat ini memakai portrait brand sebagai fallback",
   "hero.primaryActionLabel": "Homepage → tombol aksi utama",
   "hero.primaryActionUrl": "Homepage → tujuan tombol aksi utama",
-  "profile.shortBio": "About + EPK → bio singkat",
-  "profile.longBio": "About + Universe + EPK → perjalanan musik",
-  "profile.location": "About + Universe + EPK → lokasi/asal",
+  "profile.shortBio": "About → bio singkat",
+  "profile.longBio": "About + Universe → perjalanan musik; EPK memakai snapshot EPK sendiri",
+  "profile.location": "About + Universe → lokasi/asal; EPK memakai lokasi snapshot sendiri",
   "profile.locationUrl": "About + Universe → link Google Maps lokasi",
-  "profile.genresText": "About + EPK → daftar genre",
+  "profile.genresText": "About + Universe → daftar genre; EPK memakai genre snapshot sendiri",
   "profile.portraitImage":
-    "About → background portrait; EPK masih memakai fallback portrait editorial",
+    "About + Universe → portrait profile; bukan foto utama kartu Editorial / Press EPK",
   "profile.artistStatement": "About → kutipan artist statement",
   "pressKit.intro": "EPK → pembuka press & booking",
   "pressKit.bookingEmail": "EPK → kontak booking",
   "pressKit.pressEmail": "EPK → kontak pers",
+  "pressKit.editorialImage": "EPK → foto pada kartu Editorial / Press",
+  "pressKit.snapshotBio": "EPK → paragraf Artist Snapshot",
+  "pressKit.snapshotLocation": "EPK → lokasi pada kartu dan Artist Snapshot",
+  "pressKit.snapshotGenresText": "EPK → genre pada Artist Snapshot",
+  "pressKit.snapshotAlias": "EPK → alias pada kartu dan Artist Snapshot",
+  "pressKit.capabilitiesIntro": "EPK → pengantar Capabilities",
+  "pressKit.licensingNote": "EPK → catatan Licensing",
   "pressKit.oneSheetUrl": "EPK → aset one sheet",
   "pressKit.photoPackUrl": "EPK → paket foto",
   "pressKit.logoPackUrl": "EPK → paket logo",
@@ -207,6 +214,7 @@ function usageForField(documentType: DocumentType, key: string) {
 const primaryWorkflowTypes: DocumentType[] = [
   "release",
   "event",
+  "pressKit",
   "siteSettings",
   "profile",
   "visual",
@@ -239,8 +247,16 @@ const primaryWorkflows = [
     action: "Edit tautan",
   },
   {
-    type: "profile" as const,
+    type: "pressKit" as const,
     eyebrow: "04",
+    title: "Press & Booking / EPK",
+    description: "Foto editorial, snapshot, kontak, dan aset press.",
+    icon: FilePenLine,
+    action: "Edit EPK",
+  },
+  {
+    type: "profile" as const,
+    eyebrow: "05",
     title: "Profil & lokasi",
     description: "Bio, genre, portrait, dan link Google Maps.",
     icon: MapPin,
@@ -248,7 +264,7 @@ const primaryWorkflows = [
   },
   {
     type: "visual" as const,
-    eyebrow: "05",
+    eyebrow: "06",
     title: "Visual Archive",
     description: "Tambah banyak thumbnail video dan kartu visual.",
     icon: ImageIcon,
@@ -256,7 +272,7 @@ const primaryWorkflows = [
   },
   {
     type: "portrait" as const,
-    eyebrow: "06",
+    eyebrow: "07",
     title: "Studi foto & portrait",
     description: "Ganti foto, caption, alt text, dan urutan portrait study.",
     icon: ImageIcon,
@@ -264,7 +280,7 @@ const primaryWorkflows = [
   },
   {
     type: "game" as const,
-    eyebrow: "07",
+    eyebrow: "08",
     title: "JEDAG RUN / Night Frequency",
     description: "Atur copy game, BGM, SFX, dan status tayang.",
     icon: Gamepad2,
@@ -335,6 +351,19 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
   ],
   pressKit: [
     { key: "intro", label: "EPK intro", multiline: true },
+    {
+      key: "editorialImage",
+      label: "Foto editorial / Press card",
+      type: "url",
+      media: true,
+      hint: "Foto ini tampil di kartu EDITORIAL / PRESS pada bagian atas halaman EPK. Jika kosong, EPK memakai Portrait image URL dari Profil sebagai fallback.",
+    },
+    { key: "snapshotBio", label: "Artist Snapshot bio", multiline: true },
+    { key: "snapshotLocation", label: "Artist Snapshot location" },
+    { key: "snapshotGenresText", label: "Artist Snapshot genres", placeholder: "Breakbeat, Remix, Production" },
+    { key: "snapshotAlias", label: "Artist Snapshot alias" },
+    { key: "capabilitiesIntro", label: "Capabilities intro", multiline: true },
+    { key: "licensingNote", label: "Licensing note", multiline: true },
     { key: "bookingEmail", label: "Booking email", type: "email" },
     { key: "pressEmail", label: "Press email", type: "email" },
     { key: "oneSheetUrl", label: "One sheet URL", type: "url", media: true },
@@ -557,6 +586,13 @@ function fallbackPayload(type: DocumentType): EditorPayload {
     return {
       intro:
         "Informasi untuk promoter, media, playlist editor, dan kolaborator.",
+      editorialImage: officialBrand.editorialPortrait,
+      snapshotBio: verifiedArtistProfile.longBio,
+      snapshotLocation: verifiedArtistProfile.location,
+      snapshotGenresText: verifiedArtistProfile.genres.join(", "),
+      snapshotAlias: verifiedArtistProfile.aliases.join(" / "),
+      capabilitiesIntro: "Format kerja yang tersedia untuk performance, produksi, kolaborasi, dan penggunaan musik.",
+      licensingNote: verifiedArtistProfile.licensing,
       bookingEmail: verifiedArtistProfile.bookingEmail,
       pressEmail: verifiedArtistProfile.bookingEmail,
     };
@@ -679,6 +715,13 @@ function preparedPayload(type: DocumentType, payload: EditorPayload) {
       .filter(Boolean);
     delete next.genresText;
   }
+  if (type === "pressKit") {
+    next.snapshotGenres = textValue(next, "snapshotGenresText")
+      .split(",")
+      .map(value => value.trim())
+      .filter(Boolean);
+    delete next.snapshotGenresText;
+  }
   if (type === "legal") {
     next.sections = textValue(next, "sectionsText")
       .split(/\\r?\\n/)
@@ -710,9 +753,13 @@ function preparedPayload(type: DocumentType, payload: EditorPayload) {
 }
 
 function displayPayload(document: EditorDocument): EditorPayload {
-  const next = { ...document.payload };
+  const next = document.documentType === "pressKit"
+    ? { ...fallbackPayload("pressKit"), ...document.payload }
+    : { ...document.payload };
   if (document.documentType === "profile" && Array.isArray(next.genres))
     next.genresText = next.genres.join(", ");
+  if (document.documentType === "pressKit" && Array.isArray(next.snapshotGenres))
+    next.snapshotGenresText = next.snapshotGenres.join(", ");
   if (document.documentType === "legal" && Array.isArray(next.sections))
     next.sectionsText = next.sections
       .map(

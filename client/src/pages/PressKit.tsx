@@ -28,7 +28,7 @@ export default function PressKit() {
   const cms = usePublicArtistContent();
   const press = cms.data?.pressKit;
   const profile = cms.data?.profile;
-  const [portraitSrc, setPortraitSrc] = useState(profile?.portraitImage || officialBrand.editorialPortrait);
+  const [portraitSrc, setPortraitSrc] = useState(press?.editorialImage || profile?.portraitImage || officialBrand.editorialPortrait);
   const bookingEmail = press?.bookingEmail || verifiedArtistProfile.bookingEmail;
   const pressEmail = press?.pressEmail || bookingEmail;
   const selectedReleases = cms.data?.releases?.length ? cms.data.releases.map(item => {
@@ -36,11 +36,13 @@ export default function PressKit() {
     return { title: item.title, format: item.format || fallback?.format || "Release", year: item.year || fallback?.year || "—", platform: item.platform || fallback?.platform || "Official link", href: item.url || fallback?.href || "https://soundcloud.com/akbarnawasunda", image: item.artworkUrl || fallback?.image || officialBrand.socialPreview };
   }).slice(0, 3) : releases.slice(0, 3);
   const editablePlatformLinks = publicPlatformLinks(cms.data);
-  const portrait = profile?.portraitImage || officialBrand.editorialPortrait;
-  const bio = profile?.longBio || verifiedArtistProfile.longBio;
-  const location = profile?.location || verifiedArtistProfile.location;
-  const genres = profile?.genres?.length ? profile.genres : verifiedArtistProfile.genres;
-  const alias = verifiedArtistProfile.aliases.join(" / ");
+  const portrait = press?.editorialImage || profile?.portraitImage || officialBrand.editorialPortrait;
+  const bio = press?.snapshotBio || profile?.longBio || verifiedArtistProfile.longBio;
+  const location = press?.snapshotLocation || profile?.location || verifiedArtistProfile.location;
+  const genres = press?.snapshotGenres?.length ? press.snapshotGenres : profile?.genres?.length ? profile.genres : verifiedArtistProfile.genres;
+  const alias = press?.snapshotAlias || verifiedArtistProfile.aliases.join(" / ");
+  const capabilitiesIntro = press?.capabilitiesIntro || "Format kerja yang tersedia untuk performance, produksi, kolaborasi, dan penggunaan musik.";
+  const licensingNote = press?.licensingNote || verifiedArtistProfile.licensing;
 
   useEffect(() => {
     setPortraitSrc(portrait);
@@ -142,7 +144,7 @@ export default function PressKit() {
         <section className="nf-section dark-panel an-epk-capabilities">
           <div className="nf-section-title">
             <div><p className="nf-page-eyebrow">CAPABILITIES</p><h2>BUILT FOR<br />THE DROP.</h2></div>
-            <p>Format kerja yang tersedia untuk performance, produksi, kolaborasi, dan penggunaan musik.</p>
+            <p>{capabilitiesIntro}</p>
           </div>
           <div className="an-epk-capability-grid">
             {verifiedArtistProfile.services.map((service, index) => (
@@ -153,7 +155,7 @@ export default function PressKit() {
               </article>
             ))}
           </div>
-          <p className="an-epk-licensing-note"><strong>LICENSING NOTE</strong>{verifiedArtistProfile.licensing}</p>
+          <p className="an-epk-licensing-note"><strong>LICENSING NOTE</strong>{licensingNote}</p>
         </section>
 
         <section className="nf-section">
