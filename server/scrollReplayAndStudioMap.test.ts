@@ -2,17 +2,22 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
+const source = (path: string) =>
+  readFileSync(resolve(process.cwd(), path), "utf8");
 
 describe("scroll replay and studio site map contracts", () => {
   it("keeps internal route sections observed for both enter and exit transitions", () => {
     const motion = source("client/src/components/MotionOrchestrator.tsx");
     const replayCss = source("client/src/components/ScrollReplay.css");
 
-    expect(motion).toContain('threshold: [0, 0.12]');
-    expect(motion).toContain('section.classList.toggle("is-motion-in-view", isVisible)');
-    expect(motion).toContain('section.dataset.motionDirection = direction');
-    expect(motion).toContain('section.dataset.motionPhase = isVisible ? "acquiring" : "released"');
+    expect(motion).toContain("threshold: [0, 0.12]");
+    expect(motion).toContain(
+      'section.classList.toggle("is-motion-in-view", isVisible)'
+    );
+    expect(motion).toContain("section.dataset.motionDirection = direction");
+    expect(motion).toContain(
+      'section.dataset.motionPhase = isVisible ? "acquiring" : "released"'
+    );
     expect(motion).not.toContain("observer?.unobserve(entry.target)");
     expect(replayCss).toContain('data-motion-direction="up"');
     expect(replayCss).toContain("prefers-reduced-motion: reduce");
@@ -25,10 +30,16 @@ describe("scroll replay and studio site map contracts", () => {
     const replayCss = source("client/src/components/ScrollReplay.css");
 
     expect(hook).toContain('element.dataset.revealReplay = "true"');
-    expect(hook).toContain('element.classList.toggle("is-revealed", entry.isIntersecting)');
-    expect(hook).toContain('element.dataset.revealPhase = entry.isIntersecting ? "acquiring" : "released"');
-    expect(hook).toContain('threshold: [0, threshold]');
-    expect(english).toContain('import { useScrollReveal } from "@/hooks/useScrollReveal";');
+    expect(hook).toContain(
+      'element.classList.toggle("is-revealed", entry.isIntersecting)'
+    );
+    expect(hook).toContain(
+      'element.dataset.revealPhase = entry.isIntersecting ? "acquiring" : "released"'
+    );
+    expect(hook).toContain("threshold: [0, threshold]");
+    expect(english).toContain(
+      'import { useScrollReveal } from "@/hooks/useScrollReveal";'
+    );
     expect(english).toContain("ref={platformSectionRef}");
     expect(english).toContain("ref={signalSectionRef}");
     expect(app).toContain('import "./components/ScrollReplay.css";');
@@ -53,15 +64,50 @@ describe("scroll replay and studio site map contracts", () => {
     const map = source("client/src/pages/StudioSiteMap.tsx");
     const studio = source("client/src/pages/ContentStudio.tsx");
 
-    for (const route of ["/", "/music", "/visuals", "/live", "/universe", "/about", "/epk", "/inquire", "/licensing", "/privacy"]) {
+    for (const route of [
+      "/",
+      "/music",
+      "/visuals",
+      "/live",
+      "/universe",
+      "/about",
+      "/epk",
+      "/inquire",
+      "/licensing",
+      "/privacy",
+    ]) {
       expect(map).toContain(`route: "${route}"`);
     }
-    for (const label of ["Foto & hero utama", "Platform resmi", "Diskografi", "Visual archive", "Jadwal pertunjukan", "Official assets", "Fan Signal"]) {
+    for (const label of [
+      "Foto & hero utama",
+      "Platform resmi",
+      "Diskografi",
+      "Visual archive",
+      "Jadwal pertunjukan",
+      "Official assets",
+      "Fan Signal",
+    ]) {
       expect(map).toContain(label);
     }
     expect(map).toContain("VERIFIED FALLBACK");
     expect(studio).toContain("<StudioSiteMap");
     expect(studio).toContain('id="studio-compose"');
     expect(studio).toContain('id="studio-document-library"');
+  });
+
+  it("keeps Studio publishing actions separate from asset browsing", () => {
+    const studio = source("client/src/pages/ContentStudio.tsx");
+    const picker = source("client/src/components/AssetPicker.tsx");
+    const preview = source("client/src/components/StudioDocumentPreview.tsx");
+    const map = source("client/src/pages/StudioSiteMap.tsx");
+
+    expect(studio).toContain('id="studio-editor-form"');
+    expect(studio).toContain('form="studio-editor-form"');
+    expect(studio).toContain('type="submit"');
+    expect(studio).toContain("Simpan & tampilkan");
+    expect(picker).toContain("inlineGallery = false");
+    expect(picker).toContain('type="button"');
+    expect(preview).toContain("Lihat preview");
+    expect(map).toContain("<details");
   });
 });

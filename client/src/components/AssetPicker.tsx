@@ -1,8 +1,24 @@
 import { useMemo, useRef, useState } from "react";
-import { Check, FileAudio, FileText, FileVideo, Image as ImageIcon, Loader2, Search, Trash2, UploadCloud } from "lucide-react";
+import {
+  Check,
+  FileAudio,
+  FileText,
+  FileVideo,
+  Image as ImageIcon,
+  Loader2,
+  Search,
+  Trash2,
+  UploadCloud,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { trpc } from "@/lib/trpc";
 import { StudioAssetPreview } from "./StudioAssetPreview";
@@ -11,6 +27,7 @@ type AssetPickerProps = {
   value: string;
   onChange: (value: string) => void;
   label?: string;
+  inlineGallery?: boolean;
 };
 
 type VisualAsset = {
@@ -25,24 +42,102 @@ type VisualAsset = {
 const MAX_BYTES = 10 * 1024 * 1024;
 
 const websiteVisualAssets: VisualAsset[] = [
-  { id: "site-logo", url: "/assets/akbar-logo.webp", fileName: "Akbar logo", mimeType: "image/webp", size: 0, source: "website" },
-  { id: "site-hero", url: "/assets/akbar-night-frequency-hero.webp", fileName: "Night Frequency hero", mimeType: "image/webp", size: 0, source: "website" },
-  { id: "site-hero-mobile", url: "/assets/akbar-night-frequency-hero-mobile.webp", fileName: "Night Frequency hero mobile", mimeType: "image/webp", size: 0, source: "website" },
-  { id: "site-stage", url: "/assets/akbar-night-frequency-stage.webp", fileName: "Night Frequency stage", mimeType: "image/webp", size: 0, source: "website" },
-  { id: "site-portrait", url: "/assets/akbar-official-portrait.webp", fileName: "Official portrait", mimeType: "image/webp", size: 0, source: "website" },
-  { id: "site-rmx", url: "/assets/akbar-rmx-mark.webp", fileName: "RMX mark", mimeType: "image/webp", size: 0, source: "website" },
-  { id: "site-social", url: "/assets/akbar-social-preview.webp", fileName: "Social preview", mimeType: "image/webp", size: 0, source: "website" },
-  { id: "site-editorial-red", url: "/assets/akbar-future-red.webp", fileName: "Editorial portrait red", mimeType: "image/webp", size: 0, source: "website" },
-  { id: "site-editorial-yellow", url: "/assets/akbar-future-yellow.webp", fileName: "Archive portrait yellow", mimeType: "image/webp", size: 0, source: "website" },
-  { id: "site-logo-fallback", url: "/assets/akbar-logo-fallback.webp", fileName: "Logo fallback", mimeType: "image/webp", size: 0, source: "website" },
-  { id: "site-rmx-fallback", url: "/assets/akbar-rmx-mark-fallback.jpg", fileName: "RMX mark fallback", mimeType: "image/jpeg", size: 0, source: "website" },
+  {
+    id: "site-logo",
+    url: "/assets/akbar-logo.webp",
+    fileName: "Akbar logo",
+    mimeType: "image/webp",
+    size: 0,
+    source: "website",
+  },
+  {
+    id: "site-hero",
+    url: "/assets/akbar-night-frequency-hero.webp",
+    fileName: "Night Frequency hero",
+    mimeType: "image/webp",
+    size: 0,
+    source: "website",
+  },
+  {
+    id: "site-hero-mobile",
+    url: "/assets/akbar-night-frequency-hero-mobile.webp",
+    fileName: "Night Frequency hero mobile",
+    mimeType: "image/webp",
+    size: 0,
+    source: "website",
+  },
+  {
+    id: "site-stage",
+    url: "/assets/akbar-night-frequency-stage.webp",
+    fileName: "Night Frequency stage",
+    mimeType: "image/webp",
+    size: 0,
+    source: "website",
+  },
+  {
+    id: "site-portrait",
+    url: "/assets/akbar-official-portrait.webp",
+    fileName: "Official portrait",
+    mimeType: "image/webp",
+    size: 0,
+    source: "website",
+  },
+  {
+    id: "site-rmx",
+    url: "/assets/akbar-rmx-mark.webp",
+    fileName: "RMX mark",
+    mimeType: "image/webp",
+    size: 0,
+    source: "website",
+  },
+  {
+    id: "site-social",
+    url: "/assets/akbar-social-preview.webp",
+    fileName: "Social preview",
+    mimeType: "image/webp",
+    size: 0,
+    source: "website",
+  },
+  {
+    id: "site-editorial-red",
+    url: "/assets/akbar-future-red.webp",
+    fileName: "Editorial portrait red",
+    mimeType: "image/webp",
+    size: 0,
+    source: "website",
+  },
+  {
+    id: "site-editorial-yellow",
+    url: "/assets/akbar-future-yellow.webp",
+    fileName: "Archive portrait yellow",
+    mimeType: "image/webp",
+    size: 0,
+    source: "website",
+  },
+  {
+    id: "site-logo-fallback",
+    url: "/assets/akbar-logo-fallback.webp",
+    fileName: "Logo fallback",
+    mimeType: "image/webp",
+    size: 0,
+    source: "website",
+  },
+  {
+    id: "site-rmx-fallback",
+    url: "/assets/akbar-rmx-mark-fallback.jpg",
+    fileName: "RMX mark fallback",
+    mimeType: "image/jpeg",
+    size: 0,
+    source: "website",
+  },
 ];
 
 function readAsBase64(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(String(reader.result).split(",")[1] ?? "");
-    reader.onerror = () => reject(reader.error ?? new Error("Unable to read file"));
+    reader.onerror = () =>
+      reject(reader.error ?? new Error("Unable to read file"));
     reader.readAsDataURL(file);
   });
 }
@@ -59,7 +154,12 @@ function fileTypeLabel(mimeType: string) {
   return (subtype || "file").toUpperCase();
 }
 
-export default function AssetPicker({ value, onChange, label = "Choose from Asset Library" }: AssetPickerProps) {
+export default function AssetPicker({
+  value,
+  onChange,
+  label = "Pilih dari Asset Library",
+  inlineGallery = false,
+}: AssetPickerProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [message, setMessage] = useState("");
@@ -74,14 +174,27 @@ export default function AssetPicker({ value, onChange, label = "Choose from Asse
     },
     onError: error => setMessage(error.message || "Upload failed."),
   });
-  const managedAssets = useMemo<VisualAsset[]>(() => (assets.data ?? []).map(asset => ({ ...asset, source: "managed" })), [assets.data]);
-  const allAssets = useMemo(() => [...websiteVisualAssets, ...managedAssets], [managedAssets]);
+  const managedAssets = useMemo<VisualAsset[]>(
+    () => (assets.data ?? []).map(asset => ({ ...asset, source: "managed" })),
+    [assets.data]
+  );
+  const allAssets = useMemo(
+    () => [...websiteVisualAssets, ...managedAssets],
+    [managedAssets]
+  );
   const filteredAssets = useMemo(() => {
     const query = search.trim().toLowerCase();
     if (!query) return allAssets;
-    return allAssets.filter(asset => `${asset.fileName} ${asset.mimeType} ${asset.url} ${asset.source}`.toLowerCase().includes(query));
+    return allAssets.filter(asset =>
+      `${asset.fileName} ${asset.mimeType} ${asset.url} ${asset.source}`
+        .toLowerCase()
+        .includes(query)
+    );
   }, [allAssets, search]);
-  const imageAssets = useMemo(() => filteredAssets.filter(asset => asset.mimeType.startsWith("image/")), [filteredAssets]);
+  const imageAssets = useMemo(
+    () => filteredAssets.filter(asset => asset.mimeType.startsWith("image/")),
+    [filteredAssets]
+  );
   const selectedAsset = allAssets.find(asset => asset.url === value);
 
   function selectAsset(url: string) {
@@ -100,7 +213,12 @@ export default function AssetPicker({ value, onChange, label = "Choose from Asse
     setMessage("Uploading…");
     try {
       const base64 = await readAsBase64(file);
-      await upload.mutateAsync({ fileName: file.name, mimeType: file.type || "application/octet-stream", size: file.size, base64 });
+      await upload.mutateAsync({
+        fileName: file.name,
+        mimeType: file.type || "application/octet-stream",
+        size: file.size,
+        base64,
+      });
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Upload failed.");
     } finally {
@@ -111,23 +229,219 @@ export default function AssetPicker({ value, onChange, label = "Choose from Asse
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
-        <Input value={value} onChange={event => onChange(event.target.value)} type="url" placeholder="/manus-storage/... atau https://..." aria-label={label} className="min-w-[220px] flex-1" />
-        <Button type="button" variant="outline" onClick={() => setOpen(true)} className="shrink-0"><Search size={14} />{label}</Button>
-        <Button type="button" variant="outline" onClick={() => inputRef.current?.click()} disabled={upload.isPending} className="shrink-0 border-cyan-200/20 bg-cyan-200/[0.05] text-cyan-100/80 hover:bg-cyan-200/[0.12]">{upload.isPending ? <Loader2 size={14} className="animate-spin" /> : <UploadCloud size={14} />}Upload baru</Button>
-        {value ? <Button type="button" variant="ghost" onClick={() => { onChange(""); setMessage(""); }} className="shrink-0 text-white/45 hover:bg-red-200/10 hover:text-red-100" aria-label="Clear media"><Trash2 size={14} />Clear</Button> : null}
+        <Input
+          value={value}
+          onChange={event => onChange(event.target.value)}
+          type="url"
+          placeholder="/manus-storage/... atau https://..."
+          aria-label={label}
+          className="min-w-[220px] flex-1"
+        />
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setOpen(true)}
+          className="shrink-0"
+        >
+          <Search size={14} />
+          {label}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => inputRef.current?.click()}
+          disabled={upload.isPending}
+          className="shrink-0 border-cyan-200/20 bg-cyan-200/[0.05] text-cyan-100/80 hover:bg-cyan-200/[0.12]"
+        >
+          {upload.isPending ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            <UploadCloud size={14} />
+          )}
+          Upload baru
+        </Button>
+        {value ? (
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              onChange("");
+              setMessage("");
+            }}
+            className="shrink-0 text-white/45 hover:bg-red-200/10 hover:text-red-100"
+            aria-label="Clear media"
+          >
+            <Trash2 size={14} />
+            Clear
+          </Button>
+        ) : null}
       </div>
-      <Input ref={inputRef} className="hidden" type="file" accept="image/*,audio/*,video/*,.pdf" onChange={event => { void handleUpload(event.target.files?.[0]); }} />
-      {message ? <p className={`text-[10px] ${message.includes("failed") || message.includes("maksimal") ? "text-red-200/75" : "text-cyan-100/60"}`}>{message}</p> : null}
-      {value ? <StudioAssetPreview value={value} label={selectedAsset ? `${selectedAsset.fileName} · foto terpilih` : "Media saat ini"} mimeType={selectedAsset?.mimeType} /> : null}
-      {imageAssets.length ? <section className="rounded-xl border border-cyan-200/10 bg-cyan-200/[0.025] p-3" aria-label="Visual asset browser"><div className="mb-3 flex items-center justify-between gap-3"><div><p className="font-mono text-[9px] uppercase tracking-[0.16em] text-cyan-100/65">Foto website & Asset Library</p><p className="mt-1 text-[10px] text-white/35">Pilih foto dari website atau upload baru. Klik thumbnail untuk langsung memasangnya ke field ini.</p></div><span className="rounded-full border border-white/10 px-2 py-1 font-mono text-[9px] text-white/40">{imageAssets.length} foto</span></div><div className="grid max-h-80 grid-cols-3 gap-2 overflow-y-auto pr-1 sm:grid-cols-4">{imageAssets.map(asset => <button type="button" key={asset.id} onClick={() => selectAsset(asset.url)} aria-label={`Gunakan ${asset.fileName}`} className={`group overflow-hidden rounded-lg border text-left transition hover:border-cyan-200/45 hover:bg-cyan-200/[0.06] focus:outline-none focus:ring-2 focus:ring-cyan-200/40 ${value === asset.url ? "border-cyan-200/70 bg-cyan-200/[0.1]" : "border-white/[0.09] bg-black/20"}`}><div className="relative aspect-square bg-[#0b0c10]"><img src={asset.url} alt={asset.fileName} className="h-full w-full object-contain p-1 transition duration-200 group-hover:scale-[1.03]" loading="lazy" />{value === asset.url ? <span className="absolute right-1.5 top-1.5 grid h-5 w-5 place-items-center rounded-full bg-cyan-200 text-[#071014]"><Check size={12} /></span> : null}</div><div className="px-2 py-1.5"><p className="truncate text-[10px] font-medium text-white/80" title={asset.fileName}>{asset.fileName}</p><p className={`mt-0.5 font-mono text-[8px] uppercase tracking-[0.1em] ${asset.source === "website" ? "text-violet-200/60" : "text-cyan-100/50"}`}>{asset.source === "website" ? "Website" : "Managed"} · {fileTypeLabel(asset.mimeType)}</p></div></button>)}</div></section> : null}
+      <Input
+        ref={inputRef}
+        className="hidden"
+        type="file"
+        accept="image/*,audio/*,video/*,.pdf"
+        onChange={event => {
+          void handleUpload(event.target.files?.[0]);
+        }}
+      />
+      {message ? (
+        <p
+          className={`text-[10px] ${message.includes("failed") || message.includes("maksimal") ? "text-red-200/75" : "text-cyan-100/60"}`}
+        >
+          {message}
+        </p>
+      ) : null}
+      {value ? (
+        <StudioAssetPreview
+          value={value}
+          label={
+            selectedAsset
+              ? `${selectedAsset.fileName} · foto terpilih`
+              : "Media saat ini"
+          }
+          mimeType={selectedAsset?.mimeType}
+        />
+      ) : null}
+      {inlineGallery && imageAssets.length ? (
+        <section
+          className="rounded-xl border border-cyan-200/10 bg-cyan-200/[0.025] p-3"
+          aria-label="Visual asset browser"
+        >
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-cyan-100/65">
+                Foto website & Asset Library
+              </p>
+              <p className="mt-1 text-[10px] text-white/35">
+                Pilih foto dari website atau upload baru. Klik thumbnail untuk
+                langsung memasangnya ke field ini.
+              </p>
+            </div>
+            <span className="rounded-full border border-white/10 px-2 py-1 font-mono text-[9px] text-white/40">
+              {imageAssets.length} foto
+            </span>
+          </div>
+          <div className="grid max-h-80 grid-cols-3 gap-2 overflow-y-auto pr-1 sm:grid-cols-4">
+            {imageAssets.map(asset => (
+              <button
+                type="button"
+                key={asset.id}
+                onClick={() => selectAsset(asset.url)}
+                aria-label={`Gunakan ${asset.fileName}`}
+                className={`group overflow-hidden rounded-lg border text-left transition hover:border-cyan-200/45 hover:bg-cyan-200/[0.06] focus:outline-none focus:ring-2 focus:ring-cyan-200/40 ${value === asset.url ? "border-cyan-200/70 bg-cyan-200/[0.1]" : "border-white/[0.09] bg-black/20"}`}
+              >
+                <div className="relative aspect-square bg-[#0b0c10]">
+                  <img
+                    src={asset.url}
+                    alt={asset.fileName}
+                    className="h-full w-full object-contain p-1 transition duration-200 group-hover:scale-[1.03]"
+                    loading="lazy"
+                  />
+                  {value === asset.url ? (
+                    <span className="absolute right-1.5 top-1.5 grid h-5 w-5 place-items-center rounded-full bg-cyan-200 text-[#071014]">
+                      <Check size={12} />
+                    </span>
+                  ) : null}
+                </div>
+                <div className="px-2 py-1.5">
+                  <p
+                    className="truncate text-[10px] font-medium text-white/80"
+                    title={asset.fileName}
+                  >
+                    {asset.fileName}
+                  </p>
+                  <p
+                    className={`mt-0.5 font-mono text-[8px] uppercase tracking-[0.1em] ${asset.source === "website" ? "text-violet-200/60" : "text-cyan-100/50"}`}
+                  >
+                    {asset.source === "website" ? "Website" : "Managed"} ·{" "}
+                    {fileTypeLabel(asset.mimeType)}
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+      ) : null}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Choose managed media</DialogTitle>
-            <DialogDescription>Semua foto bawaan website dan asset hasil upload tampil sebagai thumbnail. Klik foto untuk memilihnya; audio, video, dan PDF tersedia di daftar lengkap.</DialogDescription>
+            <DialogTitle>Pilih media terkelola</DialogTitle>
+            <DialogDescription>
+              Semua media bawaan website dan hasil upload tersedia di sini. Klik
+              item untuk memasangnya ke field ini.
+            </DialogDescription>
           </DialogHeader>
-          <div className="relative"><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" /><Input value={search} onChange={event => setSearch(event.target.value)} placeholder="Cari nama foto, tipe, atau URL" className="pl-9" autoFocus /></div>
-          {assets.isLoading ? <p className="text-sm text-muted-foreground">Loading managed assets…</p> : assets.isError ? <p className="text-sm text-destructive">Could not load managed assets.</p> : filteredAssets.length ? <div className="grid gap-3 sm:grid-cols-2">{filteredAssets.map(asset => <Card key={asset.id} className="overflow-hidden"><button type="button" className="block w-full text-left transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring" onClick={() => selectAsset(asset.url)}><div className="aspect-video bg-muted">{asset.mimeType.startsWith("image/") ? <img src={asset.url} alt={asset.fileName} className="h-full w-full object-contain p-2" loading="lazy" /> : <div className="grid h-full place-items-center text-muted-foreground"><AssetTypeIcon mimeType={asset.mimeType} /></div>}</div><CardContent className="p-3"><div className="flex items-start justify-between gap-3"><div className="min-w-0"><p className="truncate text-sm font-medium">{asset.fileName}</p><p className="mt-1 text-xs text-muted-foreground">{asset.source === "website" ? "Website asset" : `${Math.ceil(asset.size / 1024)} KB · ${asset.mimeType}`}</p></div>{value === asset.url ? <Check className="h-4 w-4 shrink-0 text-primary" /> : null}</div><p className="mt-2 truncate text-xs text-muted-foreground">{asset.url}</p></CardContent></button></Card>)}</div> : <div className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">No asset matches your search.</div>}
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              value={search}
+              onChange={event => setSearch(event.target.value)}
+              placeholder="Cari nama foto, tipe, atau URL"
+              className="pl-9"
+              autoFocus
+            />
+          </div>
+          {assets.isLoading ? (
+            <p className="text-sm text-muted-foreground">
+              Loading managed assets…
+            </p>
+          ) : assets.isError ? (
+            <p className="text-sm text-destructive">
+              Could not load managed assets.
+            </p>
+          ) : filteredAssets.length ? (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {filteredAssets.map(asset => (
+                <Card key={asset.id} className="overflow-hidden">
+                  <button
+                    type="button"
+                    className="block w-full text-left transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring"
+                    onClick={() => selectAsset(asset.url)}
+                  >
+                    <div className="aspect-video bg-muted">
+                      {asset.mimeType.startsWith("image/") ? (
+                        <img
+                          src={asset.url}
+                          alt={asset.fileName}
+                          className="h-full w-full object-contain p-2"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="grid h-full place-items-center text-muted-foreground">
+                          <AssetTypeIcon mimeType={asset.mimeType} />
+                        </div>
+                      )}
+                    </div>
+                    <CardContent className="p-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium">
+                            {asset.fileName}
+                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            {asset.source === "website"
+                              ? "Website asset"
+                              : `${Math.ceil(asset.size / 1024)} KB · ${asset.mimeType}`}
+                          </p>
+                        </div>
+                        {value === asset.url ? (
+                          <Check className="h-4 w-4 shrink-0 text-primary" />
+                        ) : null}
+                      </div>
+                      <p className="mt-2 truncate text-xs text-muted-foreground">
+                        {asset.url}
+                      </p>
+                    </CardContent>
+                  </button>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">
+              No asset matches your search.
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
