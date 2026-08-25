@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { officialBrand, releases, verifiedArtistProfile } from "@/content/artistPlatform";
-import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
+import { publicPlatformLinks, publicUpcomingEvents, usePublicArtistContent } from "@/content/publicContent";
 
 const siteOrigin = "https://akbarnawasunda.my.id";
 const releaseSlug = (value: string) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -21,17 +21,21 @@ function websiteEntity() {
   };
 }
 
-function artistEntity(platforms: Array<{ href: string }>) {
+function artistEntity(platforms: Array<{ label?: string; href: string }>) {
+  const artistLinks = platforms.filter(link =>
+    ["Spotify", "YouTube", "SoundCloud", "Instagram"].includes(link.label || ""),
+  );
   return {
     "@type": "MusicGroup",
     "@id": `${siteOrigin}/#artist`,
     name: "Akbar Nawasunda",
     alternateName: verifiedArtistProfile.aliases,
     url: `${siteOrigin}/`,
+    description: verifiedArtistProfile.shortBio,
     image: [absoluteUrl(officialBrand.socialPreview)],
     logo: absoluteUrl(officialBrand.logo),
     genre: verifiedArtistProfile.genres,
-    sameAs: platforms.map(link => link.href),
+    sameAs: artistLinks.map(link => link.href),
     location: {
       "@type": "Place",
       name: verifiedArtistProfile.location,
@@ -52,6 +56,7 @@ export function StructuredData() {
   useEffect(() => {
     const isEnglish = location === "/en" || location.startsWith("/en/");
     const pathWithoutLanguage = location.replace(/^\/en(?=\/|$)/, "") || "/";
+    const events = publicUpcomingEvents(cms.data);
     const graph: Record<string, unknown>[] = [websiteEntity(), artistEntity(editablePlatformLinks)];
     const releaseMatch = pathWithoutLanguage.match(/^\/music\/([a-z0-9-]+)$/i);
 
@@ -75,8 +80,8 @@ export function StructuredData() {
       }
     }
 
-    if (pathWithoutLanguage === "/live" && cms.data?.events.length) {
-      cms.data.events.forEach(event => {
+    if (pathWithoutLanguage === "/live" && events.length) {
+      events.forEach(event => {
         const eventLocation = [event.venue, event.city, event.country].filter(Boolean).join(", ") || "Indonesia";
         graph.push({
           "@type": "MusicEvent",

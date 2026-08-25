@@ -32,7 +32,8 @@ describe("international artist layer", () => {
   it("emits route-aware canonical, language alternates, and only factual schema types", () => {
     const app = source("client/src/App.tsx");
     const schema = source("client/src/components/StructuredData.tsx");
-    const html = source("client/index.html");
+    const index = source("client/index.html");
+    const ssr = source("server/_core/ssrHtml.ts");
     const robots = source("client/public/robots.txt");
     const sitemap = source("client/public/sitemap.xml");
     expect(app).toContain('document.documentElement.lang = isEnglish ? "en" : "id"');
@@ -42,11 +43,11 @@ describe("international artist layer", () => {
     expect(app).toContain('setMeta(\'meta[name="twitter:description"]\', resolvedDescription)');
     expect(app).toContain('setMeta(\'meta[name="twitter:image"]\', resolvedImage)');
     expect(app).toContain('link.dataset.languageLink = "true"');
-    expect(html).toContain('hreflang="id"');
-    expect(html).toContain('hreflang="en"');
-    expect(html).toContain('name="twitter:card" content="summary_large_image"');
-    expect(html).toContain('name="twitter:image"');
-    expect(html).toContain('rel="apple-touch-icon"');
+    expect(ssr).toContain('<html lang="${language}">');
+    expect(ssr).toContain('hreflang="${language}"');
+    expect(ssr).toContain('name="twitter:card"');
+    expect(ssr).toContain('name="twitter:image"');
+    expect(index).toContain('rel="apple-touch-icon"');
     expect(robots).toContain("Sitemap: https://akbarnawasunda.my.id/sitemap.xml");
     expect(robots).toContain("Disallow: /studio");
     expect(sitemap).toContain("https://akbarnawasunda.my.id/en/music");
@@ -58,7 +59,7 @@ describe("international artist layer", () => {
     expect(schema).toContain('"@type": "MusicRecording"');
     expect(schema).toContain('"@type": "MusicEvent"');
     expect(schema).toContain('pathWithoutLanguage === "/live"');
-    expect(schema).toContain('cms.data?.events.length');
+    expect(schema).toContain('publicUpcomingEvents(cms.data)');
   });
 
   it("shares one public custom-content query between page data and metadata", () => {

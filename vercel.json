@@ -7,12 +7,26 @@
   "functions": {
     "api/trpc.js": {
       "maxDuration": 30
+    },
+    "api/ssr.js": {
+      "maxDuration": 30,
+      "includeFiles": ["dist/server-ssr/**", "dist/public/index.html"]
     }
   },
   "redirects": [
     {
       "source": "/epk.html",
       "destination": "/epk",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/archive",
+      "destination": "/universe",
       "permanent": true
     }
   ],
@@ -38,11 +52,15 @@
       "destination": "/assets/akbar-favicon.jpg"
     },
     {
+      "source": "/(?:en|music|visuals|live|universe|about|inquire|licensing|epk|privacy)(?:/(.*))?$",
+      "destination": "/api/ssr.js"
+    },
+    {
       "handle": "filesystem"
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/api/ssr.js"
     }
   ],
   "headers": [

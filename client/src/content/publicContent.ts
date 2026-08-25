@@ -8,6 +8,20 @@ export type CmsEvent = { _id: string; title: string; date: string; time?: string
 export type CmsLegalSection = { key?: "short-version" | "collection" | "cookies" | "services" | "rights"; heading?: string; body?: string };
 export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; locationUrl?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string; platformLinks?: CmsPlatformLink[] }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; releases: CmsRelease[]; visuals: CmsVisual[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
 
+/** Keep upcoming/live surfaces truthful: past and cancelled events are not current public dates. */
+export function isUpcomingPublicEvent(event: CmsEvent): boolean {
+  if (event.status === "past" || event.status === "cancelled") return false;
+  const parsed = new Date(event.date);
+  if (Number.isNaN(parsed.getTime())) return true;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return parsed >= today;
+}
+
+export function publicUpcomingEvents(content: CmsArtistContent | null | undefined): CmsEvent[] {
+  return (content?.events ?? []).filter(isUpcomingPublicEvent);
+}
+
 type CustomDocument = {
   id: number;
   documentType: string;

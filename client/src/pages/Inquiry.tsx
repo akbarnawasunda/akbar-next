@@ -2,6 +2,7 @@ import { FormEvent, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { trpc } from "@/lib/trpc";
+import { useSearch } from "wouter";
 import "./EcosystemPages.css";
 import "./Inquiry.css";
 
@@ -49,7 +50,8 @@ const labels: Record<
 };
 
 export default function Inquiry() {
-  const params = useMemo(() => new URLSearchParams(window.location.search), []);
+  const search = useSearch();
+  const params = useMemo(() => new URLSearchParams(search), [search]);
   const initialType = validTypes.includes(params.get("type") as InquiryType)
     ? (params.get("type") as InquiryType)
     : "booking";

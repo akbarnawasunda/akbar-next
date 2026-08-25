@@ -1,39 +1,94 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { lazy, Suspense, useEffect, useMemo } from "react";
+import { createElement, lazy, Suspense, useEffect, useMemo } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-const Home = lazy(() => import("./pages/Home"));
+type PreloadableComponent<T extends React.ComponentType<any>> = T & {
+  preload: () => Promise<{ default: T }>;
+};
+
+function lazyWithPreload<T extends React.ComponentType<any>>(
+  loader: () => Promise<{ default: T }>,
+): PreloadableComponent<T> {
+  let loaded: T | null = null;
+  let promise: Promise<{ default: T }> | null = null;
+  const load = () => {
+    promise ||= loader().then(module => {
+      loaded = module.default;
+      return module;
+    });
+    return promise;
+  };
+  const component = ((props: React.ComponentProps<T>) => {
+    const Loaded = loaded;
+    if (!Loaded) throw load();
+    return createElement(Loaded, props);
+  }) as PreloadableComponent<T>;
+  component.preload = load;
+  return component;
+}
+
+const Home = lazyWithPreload(() => import("./pages/Home"));
+const Music = lazyWithPreload(() => import("./pages/Music"));
+const Visuals = lazyWithPreload(() => import("./pages/Visuals"));
+const Live = lazyWithPreload(() => import("./pages/Live"));
+const Universe = lazyWithPreload(() => import("./pages/Universe"));
+const PressKit = lazyWithPreload(() => import("./pages/PressKit"));
+const About = lazyWithPreload(() => import("./pages/About"));
+const ReleaseDetail = lazyWithPreload(() => import("./pages/ReleaseDetail"));
+const Inquiry = lazyWithPreload(() => import("./pages/Inquiry"));
+const Licensing = lazyWithPreload(() => import("./pages/Licensing"));
+const PrivacyPolicy = lazyWithPreload(() => import("./pages/PrivacyPolicy"));
+const EnglishPages = () => import("./pages/EnglishPages");
+const EnglishHome = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishHome })));
+const EnglishMusic = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishMusic })));
+const EnglishVisuals = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishVisuals })));
+const EnglishLive = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishLive })));
+const EnglishUniverse = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishUniverse })));
+const EnglishAbout = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishAbout })));
+const EnglishEpk = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishEpk })));
+const EnglishInquiry = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishInquiry })));
+const EnglishLicensing = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishLicensing })));
+const EnglishPrivacy = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishPrivacy })));
+const EnglishReleaseDetail = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishReleaseDetail })));
+
+// Auth-gated routes stay code-split and are explicitly noindex in the SSR head.
 const ContentStudio = lazy(() => import("./pages/ContentStudio"));
-const Music = lazy(() => import("./pages/Music"));
-const Visuals = lazy(() => import("./pages/Visuals"));
-const Live = lazy(() => import("./pages/Live"));
-const Universe = lazy(() => import("./pages/Universe"));
-const PressKit = lazy(() => import("./pages/PressKit"));
 const AssetLibrary = lazy(() => import("./pages/AssetLibrary"));
-const About = lazy(() => import("./pages/About"));
-const ReleaseDetail = lazy(() => import("./pages/ReleaseDetail"));
-const Inquiry = lazy(() => import("./pages/Inquiry"));
-const Licensing = lazy(() => import("./pages/Licensing"));
 const InquiryStudio = lazy(() => import("./pages/InquiryStudio"));
 const Admin = lazy(() => import("./pages/Admin"));
 const BroadcastStudio = lazy(() => import("./pages/BroadcastStudio"));
-const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
-const { EnglishHome, EnglishMusic, EnglishVisuals, EnglishLive, EnglishUniverse, EnglishAbout, EnglishEpk, EnglishInquiry, EnglishLicensing, EnglishPrivacy, EnglishReleaseDetail } = {
-  EnglishHome: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishHome }))),
-  EnglishMusic: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishMusic }))),
-  EnglishVisuals: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishVisuals }))),
-  EnglishLive: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishLive }))),
-  EnglishUniverse: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishUniverse }))),
-  EnglishAbout: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishAbout }))),
-  EnglishEpk: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishEpk }))),
-  EnglishInquiry: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishInquiry }))),
-  EnglishLicensing: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishLicensing }))),
-  EnglishPrivacy: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishPrivacy }))),
-  EnglishReleaseDetail: lazy(() => import("./pages/EnglishPages").then(module => ({ default: module.EnglishReleaseDetail }))),
-};
+
+export async function preloadPublicRoute(pathname: string) {
+  const path = pathname.split("?")[0] || "/";
+  const jobs: Promise<unknown>[] = [];
+  const add = (component: PreloadableComponent<React.ComponentType<any>>) => jobs.push(component.preload());
+  if (path === "/") add(Home);
+  else if (path === "/music") add(Music);
+  else if (path.startsWith("/music/")) add(ReleaseDetail);
+  else if (path === "/visuals") add(Visuals);
+  else if (path === "/live") add(Live);
+  else if (path === "/universe") add(Universe);
+  else if (path === "/about") add(About);
+  else if (path === "/inquire") add(Inquiry);
+  else if (path === "/licensing") add(Licensing);
+  else if (path === "/epk") add(PressKit);
+  else if (path === "/privacy") add(PrivacyPolicy);
+  else if (path === "/en") add(EnglishHome);
+  else if (path === "/en/music") add(EnglishMusic);
+  else if (path.startsWith("/en/music/")) add(EnglishReleaseDetail);
+  else if (path === "/en/visuals") add(EnglishVisuals);
+  else if (path === "/en/live") add(EnglishLive);
+  else if (path === "/en/universe") add(EnglishUniverse);
+  else if (path === "/en/about") add(EnglishAbout);
+  else if (path === "/en/epk") add(EnglishEpk);
+  else if (path === "/en/inquire") add(EnglishInquiry);
+  else if (path === "/en/licensing") add(EnglishLicensing);
+  else if (path === "/en/privacy") add(EnglishPrivacy);
+  await Promise.all(jobs);
+}
 import LegacyDocument from "./components/LegacyDocument";
 import { ScrollProgress } from "./components/ScrollProgress";
 import { MotionOrchestrator } from "./components/MotionOrchestrator";
@@ -187,11 +242,12 @@ function CmsMetadata() {
     };
 
     document.documentElement.lang = isEnglish ? "en" : "id";
-    const resolvedTitle = isEnglish ? defaultTitle : settings?.ogTitle?.trim() || settings?.siteTitle?.trim() || defaultTitle;
+    const isHome = pathname === "/" || pathname === "/en";
+    const resolvedTitle = isEnglish ? defaultTitle : (isHome ? settings?.ogTitle?.trim() || settings?.siteTitle?.trim() : undefined) || defaultTitle;
     const resolvedDescription = isEnglish ? defaultDescription : settings?.ogDescription?.trim() || settings?.metaDescription?.trim() || defaultDescription;
     const resolvedImage = settings?.socialPreviewUrl?.trim() || `${siteOrigin}/assets/akbar-social-preview.webp`;
-    document.title = (isEnglish ? defaultTitle : settings?.siteTitle?.trim() || defaultTitle);
-    setMeta('meta[name="description"]', isEnglish ? defaultDescription : settings?.metaDescription?.trim() || defaultDescription);
+    document.title = resolvedTitle;
+    setMeta('meta[name="description"]', resolvedDescription);
     setMeta('meta[property="og:title"]', resolvedTitle);
     setMeta('meta[property="og:description"]', resolvedDescription);
     setMeta('meta[property="og:image"]', resolvedImage);
@@ -201,6 +257,8 @@ function CmsMetadata() {
     setMeta('meta[name="twitter:image"]', resolvedImage);
     setLink("canonical", `${siteOrigin}${pathname === "/" ? "/" : pathname}`);
 
+    const robots = document.head.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    if (robots && isSupportedLanguagePath(pathname)) robots.remove();
     document.head.querySelectorAll('link[data-language-link="true"]').forEach(link => link.remove());
     if (pair) {
       const idUrl = `${siteOrigin}${pair.id === "/" ? "/" : pair.id}`;

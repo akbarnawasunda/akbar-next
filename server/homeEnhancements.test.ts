@@ -116,16 +116,14 @@ describe("homepage enhancement contract", () => {
       "ResilientBrandImage"
     );
     const index = source("client/index.html");
+    const ssr = source("server/_core/ssrHtml.ts");
     const sitemap = source("client/public/sitemap.xml");
     expect(index).toContain('<html lang="id">');
-    expect(index).toContain('<title>Akbar Nawasunda | Official Website</title>');
-    expect(index).toContain('akbar-night-frequency-hero-mobile.webp');
-    expect(index).toContain(
-      'rel="canonical" href="https://akbarnawasunda.my.id/"'
-    );
-    expect(index).toContain(
-      'property="og:url" content="https://akbarnawasunda.my.id/"'
-    );
+    expect(index).toContain("<!--app-head-->");
+    expect(index).toContain('src="/src/entry-client.tsx"');
+    expect(ssr).toContain("function buildHeadTags");
+    expect(ssr).toContain('rel="canonical"');
+    expect(ssr).toContain('property="og:url"');
     expect(sitemap).toContain("https://akbarnawasunda.my.id/music");
   });
 
