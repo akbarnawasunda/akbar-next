@@ -96,6 +96,7 @@ import { NightFrequencySignature } from "./components/NightFrequencySignature";
 import { StructuredData } from "./components/StructuredData";
 import { trpc } from "./lib/trpc";
 import { customDocumentsToPublicContent } from "./content/publicContent";
+import { publicMediaUrl } from "./lib/publicMedia";
 import "./components/PlasmaRefinement.css";
 import "./components/EditorialSimplification.css";
 import "./components/MaturePalette.css";
@@ -245,7 +246,7 @@ function CmsMetadata() {
     const isHome = pathname === "/" || pathname === "/en";
     const resolvedTitle = isEnglish ? defaultTitle : (isHome ? settings?.ogTitle?.trim() || settings?.siteTitle?.trim() : undefined) || defaultTitle;
     const resolvedDescription = isEnglish ? defaultDescription : settings?.ogDescription?.trim() || settings?.metaDescription?.trim() || defaultDescription;
-    const resolvedImage = settings?.socialPreviewUrl?.trim() || `${siteOrigin}/assets/akbar-social-preview.webp`;
+    const resolvedImage = publicMediaUrl(settings?.socialPreviewUrl) || `${siteOrigin}/assets/akbar-social-preview.webp`;
     document.title = resolvedTitle;
     setMeta('meta[name="description"]', resolvedDescription);
     setMeta('meta[property="og:title"]', resolvedTitle);

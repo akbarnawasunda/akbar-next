@@ -33,22 +33,22 @@ export default function VisualPortraitStudies({ english = false }: VisualPortrai
           <span className="an-portrait-study-kicker">{english ? "PORTRAIT STUDY / KX-07" : "STUDI POTRET / KX-07"}</span>
           <strong>{english ? study.titleEn : study.titleId}</strong>
           <p>{english ? study.copyEn : study.copyId}</p>
-          <a className="nf-text-button" href={study.src} target="_blank" rel="noreferrer">
-            {english ? "OPEN IMAGE" : "BUKA FOTO"} <ArrowUpRight size={13} />
-          </a>
+          <span className="nf-text-button" aria-label={english ? "Portrait study shown on this page" : "Studi potret ditampilkan di halaman ini"}>
+            {english ? "ON THIS PAGE" : "TAMPIL DI SINI"} <ArrowUpRight size={13} aria-hidden="true" />
+          </span>
         </div>
         <span className="an-portrait-study-index" aria-hidden="true">02</span>
       </div>
       <div className="an-portrait-study-indexes" aria-label={english ? "Portrait study images" : "Daftar foto studi potret"}>
         {portraitStudies.map((item, index) => (
-          <a className="an-portrait-study-index-link" href={item.src} target="_blank" rel="noreferrer" key={item.id}>
+          <div className="an-portrait-study-index-link" role="listitem" key={item.id}>
             <span>0{index + 1}</span>
             <div>
               <small>{english ? "PORTRAIT STUDY" : "STUDI POTRET"}</small>
               <strong>{english ? item.titleEn : item.titleId}</strong>
             </div>
-            <ArrowUpRight size={14} />
-          </a>
+            <ArrowUpRight size={14} aria-hidden="true" />
+          </div>
         ))}
       </div>
     </section>

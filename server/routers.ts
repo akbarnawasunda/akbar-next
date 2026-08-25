@@ -9,6 +9,7 @@ import { createResendBroadcast, getResendReadiness, sendResendBroadcast, syncFan
 import { storagePut } from "./storage";
 import { customDocumentTypes } from "./customContent";
 import { loginWithDashboardPassword } from "./dashboardAuth";
+import { sanitizePublicDocuments, whiteLabelMediaUrl } from "./publicMediaPolicy";
 
 const MAX_ASSET_BYTES = 10 * 1024 * 1024;
 
@@ -140,9 +141,12 @@ export const appRouter = router({
       .mutation(({ input }) => updateArtistInquiryStatus(input.id, input.status)),
   }),
   content: router({
-    list: publicProcedure.query(() => listPublishedArtistContent()),
+    list: publicProcedure.query(async () => (await listPublishedArtistContent()).map(item => ({
+      ...item,
+      imageUrl: String(whiteLabelMediaUrl(item.imageUrl) || ""),
+    }))),
     listAll: adminProcedure.query(() => listAllArtistContent()),
-    documents: publicProcedure.query(() => listCustomArtistContent(true)),
+    documents: publicProcedure.query(async () => sanitizePublicDocuments(await listCustomArtistContent(true))),
     documentsAll: adminProcedure.query(() => listCustomArtistContent(false)),
     saveDocument: adminProcedure
       .input(z.object({

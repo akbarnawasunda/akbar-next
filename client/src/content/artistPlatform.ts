@@ -16,7 +16,7 @@ export const officialBrand = {
 export const portraitStudies = [
   {
     id: "neon-portrait",
-    src: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663907101550/qdnFVUsmqPWcPbsv.jpg",
+    src: "/media/portrait/neon-portrait.jpg",
     width: 3016,
     height: 4032,
     titleId: "Potret Neon",
@@ -28,7 +28,7 @@ export const portraitStudies = [
   },
   {
     id: "kx07-portrait",
-    src: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663907101550/zMxYKACXxuHdtyVJ.jpg",
+    src: "/media/portrait/kx07-portrait.jpg",
     width: 1055,
     height: 1491,
     titleId: "Studi KX-07",

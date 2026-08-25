@@ -1169,6 +1169,42 @@ async function loginWithDashboardPassword(req, res, username, password) {
   return { success: true, user: { name: ownerName, email: ownerEmail, role: "admin" } };
 }
 
+// server/publicMediaPolicy.ts
+var WHITE_LABEL_MEDIA = {
+  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663907101550/qdnFVUsmqPWcPbsv.jpg": "/media/portrait/neon-portrait.jpg",
+  "https://files.manuscdn.com/user_upload_by_module/session_file/310519663907101550/zMxYKACXxuHdtyVJ.jpg": "/media/portrait/kx07-portrait.jpg",
+  "https://akbarfolio-424qdvsv.manus.space/manus-storage/akbar-nawasunda-rmx-mark_d59968bf.jpg": "/media/brand/rmx-mark.jpg",
+  "https://akbarfolio-424qdvsv.manus.space/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg": "/media/portrait/official-portrait.jpg",
+  "/manus-storage/akbar-nawasunda-rmx-mark_d59968bf.jpg": "/media/brand/rmx-mark.jpg",
+  "/manus-storage/akbar-nawasunda-official-portrait_2c39f68f.jpg": "/media/portrait/official-portrait.jpg"
+};
+var MEDIA_KEYS = [
+  "heroImage",
+  "portraitImage",
+  "oneSheetUrl",
+  "photoPackUrl",
+  "logoPackUrl",
+  "technicalRiderUrl",
+  "socialPreviewUrl",
+  "imageUrl",
+  "artworkUrl",
+  "posterUrl"
+];
+function whiteLabelMediaUrl(value) {
+  if (typeof value !== "string") return value;
+  const candidate = value.trim();
+  return WHITE_LABEL_MEDIA[candidate] || candidate;
+}
+function sanitizePublicDocuments(documents) {
+  return documents.map((document) => {
+    const payload = { ...document.payload };
+    for (const key of MEDIA_KEYS) {
+      if (key in payload) payload[key] = whiteLabelMediaUrl(payload[key]);
+    }
+    return { ...document, payload };
+  });
+}
+
 // server/routers.ts
 var MAX_ASSET_BYTES = 10 * 1024 * 1024;
 var appRouter = router({
@@ -1285,9 +1321,12 @@ var appRouter = router({
     updateStatus: adminProcedure.input(z2.object({ id: z2.number().int().positive(), status: z2.enum(["new", "reviewed", "closed"]) })).mutation(({ input }) => updateArtistInquiryStatus(input.id, input.status))
   }),
   content: router({
-    list: publicProcedure.query(() => listPublishedArtistContent()),
+    list: publicProcedure.query(async () => (await listPublishedArtistContent()).map((item) => ({
+      ...item,
+      imageUrl: String(whiteLabelMediaUrl(item.imageUrl) || "")
+    }))),
     listAll: adminProcedure.query(() => listAllArtistContent()),
-    documents: publicProcedure.query(() => listCustomArtistContent(true)),
+    documents: publicProcedure.query(async () => sanitizePublicDocuments(await listCustomArtistContent(true))),
     documentsAll: adminProcedure.query(() => listCustomArtistContent(false)),
     saveDocument: adminProcedure.input(z2.object({
       documentType: z2.enum(customDocumentTypes),

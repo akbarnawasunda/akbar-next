@@ -5,6 +5,7 @@ import type { AppRouter } from "../../../server/routers";
 import { trpc } from "@/lib/trpc";
 import { customDocumentsToPublicContent, publicPlatformLinks, publicUpcomingEvents } from "@/content/publicContent";
 import { officialBrand, releases, verifiedArtistProfile } from "@/content/artistPlatform";
+import { publicMediaUrl } from "@/lib/publicMedia";
 
 export type HeadMeta = {
   title: string;
@@ -67,8 +68,10 @@ const slugify = (value: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
-const absoluteUrl = (value: string) =>
-  value.startsWith("http") ? value : `${SITE_ORIGIN}${value === "/" ? "/" : value}`;
+const absoluteUrl = (value: string) => {
+  const normalized = publicMediaUrl(value) || value;
+  return normalized.startsWith("http") ? normalized : `${SITE_ORIGIN}${normalized === "/" ? "/" : normalized}`;
+};
 
 function decodedPath(url: string) {
   let path = url.split("?")[0] || "/";
@@ -207,7 +210,7 @@ export async function prefetchForPath(
     title,
     description,
     ogType: "website",
-    ogImage: content?.siteSettings?.socialPreviewUrl || officialBrand.socialPreview,
+    ogImage: publicMediaUrl(content?.siteSettings?.socialPreviewUrl) || officialBrand.socialPreview,
     ogImageWidth: 1000,
     ogImageHeight: 1000,
     ogImageAlt: "Akbar Nawasunda official website artwork",
@@ -228,7 +231,7 @@ export async function prefetchForPath(
       title: `${releaseTitle} | Akbar Nawasunda`,
       description: cmsRelease?.story || `${releaseTitle} — official release by Akbar Nawasunda.`,
       ogType: "article",
-      ogImage: cmsRelease?.artworkUrl || fallbackRelease?.image || base.ogImage,
+      ogImage: publicMediaUrl(cmsRelease?.artworkUrl) || publicMediaUrl(fallbackRelease?.image) || base.ogImage,
       ogImageAlt: `Artwork for ${releaseTitle}`,
     };
   }

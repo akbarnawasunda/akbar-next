@@ -1,5 +1,6 @@
 import { trpc } from "@/lib/trpc";
 import { allPlatformLinks } from "@/content/artistPlatform";
+import { publicMediaUrl } from "@/lib/publicMedia";
 
 export type CmsPlatformLink = { label: string; href: string };
 export type CmsRelease = { _id: string; title: string; year?: string; format?: string; platform?: string; url: string; embedUrl?: string; artworkUrl?: string; story?: string; credits?: string; spotifyUrl?: string; appleMusicUrl?: string; platformLinks?: CmsPlatformLink[]; isCurrent?: boolean; order?: number };
@@ -97,7 +98,7 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       heroTitle: stringValue(payloadOf(hero).heroTitle) || stringValue(payloadOf(hero).title),
       heroKicker: stringValue(payloadOf(hero).heroKicker) || stringValue(payloadOf(hero).kicker),
       heroBody: stringValue(payloadOf(hero).heroBody) || stringValue(payloadOf(hero).body) || stringValue(payloadOf(hero).subtitle),
-      heroImage: stringValue(payloadOf(hero).heroImage) || stringValue(payloadOf(hero).imageUrl),
+      heroImage: publicMediaUrl(stringValue(payloadOf(hero).heroImage) || stringValue(payloadOf(hero).imageUrl)),
       primaryActionUrl: stringValue(payloadOf(hero).primaryActionUrl) || stringValue(payloadOf(hero).href),
       primaryActionLabel: stringValue(payloadOf(hero).primaryActionLabel),
     } : undefined,
@@ -107,24 +108,24 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       location: stringValue(payloadOf(profile).location),
       locationUrl: safeExternalUrl(payloadOf(profile).locationUrl),
       genres: stringArray(payloadOf(profile).genres),
-      portraitImage: stringValue(payloadOf(profile).portraitImage) || stringValue(payloadOf(profile).imageUrl),
+      portraitImage: publicMediaUrl(stringValue(payloadOf(profile).portraitImage) || stringValue(payloadOf(profile).imageUrl)),
       artistStatement: stringValue(payloadOf(profile).artistStatement),
     } : undefined,
     pressKit: pressKit ? {
       intro: stringValue(payloadOf(pressKit).intro) || stringValue(payloadOf(pressKit).body),
       bookingEmail: stringValue(payloadOf(pressKit).bookingEmail),
       pressEmail: stringValue(payloadOf(pressKit).pressEmail),
-      oneSheetUrl: stringValue(payloadOf(pressKit).oneSheetUrl),
-      photoPackUrl: stringValue(payloadOf(pressKit).photoPackUrl),
-      logoPackUrl: stringValue(payloadOf(pressKit).logoPackUrl),
-      technicalRiderUrl: stringValue(payloadOf(pressKit).technicalRiderUrl),
+      oneSheetUrl: publicMediaUrl(stringValue(payloadOf(pressKit).oneSheetUrl)),
+      photoPackUrl: publicMediaUrl(stringValue(payloadOf(pressKit).photoPackUrl)),
+      logoPackUrl: publicMediaUrl(stringValue(payloadOf(pressKit).logoPackUrl)),
+      technicalRiderUrl: publicMediaUrl(stringValue(payloadOf(pressKit).technicalRiderUrl)),
     } : undefined,
     siteSettings: siteSettings ? {
       siteTitle: stringValue(payloadOf(siteSettings).siteTitle) || stringValue(payloadOf(siteSettings).title),
       metaDescription: stringValue(payloadOf(siteSettings).metaDescription),
       ogTitle: stringValue(payloadOf(siteSettings).ogTitle),
       ogDescription: stringValue(payloadOf(siteSettings).ogDescription),
-      socialPreviewUrl: stringValue(payloadOf(siteSettings).socialPreviewUrl) || stringValue(payloadOf(siteSettings).imageUrl),
+      socialPreviewUrl: publicMediaUrl(stringValue(payloadOf(siteSettings).socialPreviewUrl) || stringValue(payloadOf(siteSettings).imageUrl)),
       canonicalUrl: stringValue(payloadOf(siteSettings).canonicalUrl),
       contactEmail: stringValue(payloadOf(siteSettings).contactEmail),
       bookingEmail: stringValue(payloadOf(siteSettings).bookingEmail),
@@ -147,7 +148,7 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       platform: stringValue(payloadOf(document).platform),
       url: stringValue(payloadOf(document).url) || stringValue(payloadOf(document).href) || "",
       embedUrl: stringValue(payloadOf(document).embedUrl),
-      artworkUrl: stringValue(payloadOf(document).artworkUrl) || stringValue(payloadOf(document).imageUrl),
+      artworkUrl: publicMediaUrl(stringValue(payloadOf(document).artworkUrl) || stringValue(payloadOf(document).imageUrl)),
       story: stringValue(payloadOf(document).story) || stringValue(payloadOf(document).body),
       credits: stringValue(payloadOf(document).credits),
       spotifyUrl: stringValue(payloadOf(document).spotifyUrl),
@@ -162,7 +163,7 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       label: stringValue(payloadOf(document).label),
       youtubeId: stringValue(payloadOf(document).youtubeId),
       url: stringValue(payloadOf(document).url) || stringValue(payloadOf(document).href),
-      imageUrl: stringValue(payloadOf(document).imageUrl),
+      imageUrl: publicMediaUrl(stringValue(payloadOf(document).imageUrl)),
       order: document.sortOrder,
     })),
     live: live ? {
@@ -179,7 +180,7 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       venue: stringValue(payloadOf(document).venue),
       country: stringValue(payloadOf(document).country),
       mapsUrl: safeExternalUrl(payloadOf(document).mapsUrl),
-      posterUrl: stringValue(payloadOf(document).posterUrl) || stringValue(payloadOf(document).imageUrl),
+      posterUrl: publicMediaUrl(stringValue(payloadOf(document).posterUrl) || stringValue(payloadOf(document).imageUrl)),
       ticketUrl: stringValue(payloadOf(document).ticketUrl),
       rsvpUrl: stringValue(payloadOf(document).rsvpUrl),
       status: stringValue(payloadOf(document).status) as CmsEvent["status"],
