@@ -29,7 +29,7 @@ import { trpc } from "@/lib/trpc";
 import { useMagnetic } from "@/hooks/useMagnetic";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
+import { publicPlatformLinks, publicUpcomingEvents, usePublicArtistContent } from "@/content/publicContent";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
 import "./HomeStates.css";
@@ -59,7 +59,7 @@ export default function Home() {
     enabled: publicContent.isError,
   });
   const editablePlatformLinks = publicPlatformLinks(publicContent.data);
-  const cmsEvents = publicContent.data?.events ?? [];
+  const cmsEvents = publicUpcomingEvents(publicContent.data);
   const featuredEvent = cmsEvents.find(event => event.isFeatured) || cmsEvents[0];
   const managedContent = contentQuery.data ?? [];
   const contentIsLoading = publicContent.isLoading || contentQuery.isLoading;
