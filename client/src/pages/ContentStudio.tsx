@@ -29,6 +29,7 @@ import {
 import StudioDocumentPreview from "@/components/StudioDocumentPreview";
 import StudioVisualArchive from "@/components/StudioVisualArchive";
 import StudioPortraitArchive from "@/components/StudioPortraitArchive";
+import { StudioPublishChecklist, StudioWorkspaceNav } from "@/components/StudioWorkspaceChrome";
 import StudioSiteMap from "@/pages/StudioSiteMap";
 import OwnerLoginCard from "@/components/OwnerLoginCard";
 import { Button } from "@/components/ui/button";
@@ -985,6 +986,12 @@ export default function ContentStudio() {
 
         <StudioOperations />
 
+        <StudioWorkspaceNav
+          documentCount={documents.data?.length ?? 0}
+          visualCount={(documents.data ?? []).filter(document => document.documentType === "visual").length}
+          portraitCount={(documents.data ?? []).filter(document => document.documentType === "portrait").length}
+        />
+
         <StudioSiteMap
           documents={documents.data ?? []}
           onEditType={type => {
@@ -1248,6 +1255,7 @@ export default function ContentStudio() {
               onSubmit={submit}
               className="space-y-6 p-5 sm:p-7"
             >
+              <StudioPublishChecklist documentType={documentType} payload={payload} isPublished={isPublished} />
               {isPrimaryDocument && !showAdvanced ? (
                 <div className="flex flex-col gap-4 rounded-xl border border-cyan-200/15 bg-cyan-200/[0.055] p-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
@@ -1428,14 +1436,14 @@ export default function ContentStudio() {
                     : "Simpan sebagai draft"}
               </Button>
             </form>
-            <div className="px-5 pb-5 sm:px-7 sm:pb-7">
-              <StudioDocumentPreview
-                documentType={documentType}
-                payload={payload}
-                slug={slug}
-              />
-            </div>
           </section>
+
+          <aside className="space-y-5 2xl:sticky 2xl:top-6">
+            <StudioDocumentPreview
+              documentType={documentType}
+              payload={payload}
+              slug={slug}
+            />
 
           <section
             id="studio-document-library"
@@ -1521,7 +1529,9 @@ export default function ContentStudio() {
                                   ? "EPK"
                                   : document.documentType === "visual"
                                     ? "Visuals + Homepage"
-                                    : document.documentType === "legal"
+                                    : document.documentType === "portrait"
+                                      ? "Visuals → Portrait gallery"
+                                      : document.documentType === "legal"
                                       ? "Privacy / Legal"
                                       : "Homepage + metadata"}
                         </p>
@@ -1553,6 +1563,7 @@ export default function ContentStudio() {
               )}
             </div>
           </section>
+          </aside>
         </div>
       </div>
     </DashboardLayout>
