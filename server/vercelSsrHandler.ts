@@ -39,6 +39,26 @@ function templatePath() {
   return path.resolve(process.cwd(), "dist/public/index.html");
 }
 
+function redirect(res: any, location: string) {
+  res.statusCode = 301;
+  res.setHeader("Location", location);
+  res.end();
+}
+
+function canonicalRedirect(url: string): string | undefined {
+  const queryIndex = url.indexOf("?");
+  const pathname = queryIndex === -1 ? url : url.slice(0, queryIndex);
+  const query = queryIndex === -1 ? "" : url.slice(queryIndex);
+  if (pathname === "/index.html") return `/${query}`;
+  if (pathname === "/archive" || pathname.startsWith("/archive/")) {
+    return `/universe${pathname.slice("/archive".length)}${query}`;
+  }
+  if (pathname !== "/" && /\/$/.test(pathname)) {
+    return `${pathname.replace(/\/+$/, "") || "/"}${query}`;
+  }
+  return undefined;
+}
+
 export default async function handler(req: any, res: any) {
   if (req.method !== "GET" && req.method !== "HEAD") {
     res.statusCode = 405;
@@ -49,6 +69,11 @@ export default async function handler(req: any, res: any) {
 
   const url = req.url || "/";
   req.originalUrl ||= url;
+  const redirectTarget = canonicalRedirect(url);
+  if (redirectTarget) {
+    redirect(res, redirectTarget);
+    return;
+  }
   try {
     const ctx = await createContext({ req, res });
     const caller = appRouter.createCaller(ctx);

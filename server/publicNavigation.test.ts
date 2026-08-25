@@ -13,6 +13,7 @@ describe("public navigation", () => {
     const privacy = projectFile("client/src/pages/PrivacyPolicy.tsx");
     const privacyCss = projectFile("client/src/pages/PrivacyPolicy.css");
     const contentQuery = projectFile("client/src/content/publicContent.ts");
+    const vercelSsr = projectFile("server/vercelSsrHandler.ts");
 
     expect(router).not.toContain('path={"/lab"}');
     expect(homepage).not.toContain('href="/lab"');
@@ -32,5 +33,7 @@ describe("public navigation", () => {
     expect(privacy).toContain("usePublicArtistContent");
     expect(privacy).toContain("reviewedRights");
     expect(chrome).toContain('href: "/about"');
+    expect(vercelSsr).toContain('pathname === "/index.html"');
+    expect(vercelSsr).toContain('pathname === "/archive"');
   });
 });
