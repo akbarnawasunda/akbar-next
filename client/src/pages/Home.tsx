@@ -244,7 +244,8 @@ export default function Home() {
       </header>
 
       <main id="top">
-        <section className="an-hero" data-scroll-scene="hero">
+        <div className="an-scroll-scene an-scroll-scene-hero" data-scroll-scene="hero" data-scroll-pin="true">
+          <section className="an-hero">
           <div className="home-hero-portrait">
             <img
               src={portraitSrc}
@@ -307,13 +308,14 @@ export default function Home() {
             <span className="home-hero-atmosphere-cloud home-hero-atmosphere-cloud-b" />
             <span className="home-hero-atmosphere-cloud home-hero-atmosphere-cloud-c" />
           </div>
-          <BrandMotionMark src={officialBrand.rmxMark} />
-        </section>
+            <BrandMotionMark src={officialBrand.rmxMark} />
+          </section>
+        </div>
 
+        <div className="an-scroll-scene an-scroll-scene-platforms" data-scroll-scene="platforms" data-scroll-pin="true">
         <section
           ref={platformSectionRef}
           className="home-signal-deck reveal-target"
-          data-scroll-scene="platforms"
           aria-labelledby="signal-deck-title"
         >
           <SectionIndex number="01" label="LINKS MUSIK" />
@@ -353,11 +355,12 @@ export default function Home() {
           </div>
           <PlatformMarquee links={editablePlatformLinks} />
         </section>
+        </div>
 
+        <div className="an-scroll-scene an-scroll-scene-current" data-scroll-scene="current-release">
         <section
           ref={currentSectionRef}
           className="section section-current reveal-target"
-          data-scroll-scene="current-release"
           id="music"
         >
           <SectionIndex number="02" label="RILISAN UTAMA" />
@@ -411,11 +414,12 @@ export default function Home() {
             </div>
           </div>
         </section>
+        </div>
 
+        <div className="an-scroll-scene an-scroll-scene-catalog" data-scroll-scene="catalog" data-scroll-pin="true">
         <section
           ref={releaseSectionRef}
           className="section release-section reveal-target"
-          data-scroll-scene="catalog"
         >
           <SectionIndex number="03" label="KATALOG" />
           <div className="section-inline">
@@ -437,7 +441,7 @@ export default function Home() {
               <ArrowUpRight size={16} />
             </a>
           </div>
-          <div className="release-grid" aria-busy={contentIsLoading}>
+          <div className="release-grid" data-scroll-horizontal-track="true" aria-busy={contentIsLoading}>
             {contentIsLoading
               ? [1, 2, 3, 4].map(index => <SkeletonCard key={index} />)
               : displayReleases.map((release, index) => (
@@ -470,11 +474,12 @@ export default function Home() {
                 ))}
           </div>
         </section>
+        </div>
 
+        <div className="an-scroll-scene an-scroll-scene-visuals" data-scroll-scene="visuals">
         <section
           ref={visualSectionRef}
           className="section visual-section reveal-target"
-          data-scroll-scene="visuals"
           id="visuals"
         >
           <SectionIndex number="04" label="KARYA VIDEO" />
@@ -512,11 +517,12 @@ export default function Home() {
             ))}
           </div>
         </section>
+        </div>
 
+        <div className="an-scroll-scene an-scroll-scene-live" data-scroll-scene="live">
         <section
           ref={liveSectionRef}
           className="section live-section reveal-target"
-          data-scroll-scene="live"
           id="live"
         >
           <SectionIndex number="05" label="LIVE" />
@@ -577,12 +583,13 @@ export default function Home() {
             })}
           </div> : null}
         </section>
+        </div>
 
         {gameEnabled ? (
+        <div className="an-scroll-scene an-scroll-scene-game" data-scroll-scene="game">
           <section
             ref={gameSectionRef}
             className="section game-teaser-section reveal-target"
-            data-scroll-scene="game"
             id="game"
             aria-labelledby="game-teaser-title"
           >
@@ -608,12 +615,13 @@ export default function Home() {
               </Link>
             </div>
           </section>
+        </div>
         ) : null}
 
+        <div className="an-scroll-scene an-scroll-scene-signal" data-scroll-scene="signal">
         <section
           ref={signalSectionRef}
           className="signal-section reveal-target"
-          data-scroll-scene="signal"
           id="signal"
         >
           <SectionIndex number="07" label="NEWS" />
@@ -630,6 +638,7 @@ export default function Home() {
           </div>
           <FanSignalInline source="home" />
         </section>
+        </div>
       </main>
 
       <footer className="an-footer">

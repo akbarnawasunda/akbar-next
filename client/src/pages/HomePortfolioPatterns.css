@@ -606,18 +606,18 @@
     opacity: calc(0.64 + (var(--scroll-progress) * 0.18));
   }
 
-  .an-site[data-scroll-ready="true"] [data-scroll-scene] > .an-section-index {
+  .an-site[data-scroll-ready="true"] [data-scroll-scene] > section > .an-section-index {
     opacity: 0.58;
     transform: translate3d(0, 0, 0);
     transition: opacity 220ms var(--motion-ease), transform 220ms var(--motion-ease);
   }
 
-  .an-site[data-scroll-ready="true"] [data-scroll-scene][data-scroll-active="true"] > .an-section-index {
+  .an-site[data-scroll-ready="true"] [data-scroll-scene][data-scroll-active="true"] > section > .an-section-index {
     opacity: 1;
     transform: translate3d(4px, 0, 0);
   }
 
-  .an-site[data-scroll-ready="true"] [data-scroll-scene][data-scroll-active="true"] > .an-section-index > span:first-child {
+  .an-site[data-scroll-ready="true"] [data-scroll-scene][data-scroll-active="true"] > section > .an-section-index > span:first-child {
     text-shadow: 0 0 16px rgba(121, 214, 199, 0.42);
   }
 
@@ -631,10 +631,185 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .an-site [data-scroll-scene] > .an-section-index,
-  .an-site [data-scroll-scene] > .an-section-index:first-child {
+  .an-site [data-scroll-scene] > section > .an-section-index,
+  .an-site [data-scroll-scene] > section > .an-section-index:first-child {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+/* Cinematic scenes: the document provides the scroll distance, while the inner scene stays pinned. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 960px) {
+  .an-site[data-scroll-ready="true"] .an-scroll-scene {
+    position: relative;
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene[data-scroll-pin="true"] {
+    min-height: 168svh;
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene[data-scroll-pin="true"] > section {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    min-height: 100svh;
+    box-sizing: border-box;
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-hero {
+    min-height: 174svh;
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-hero > .an-hero,
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-platforms > .home-signal-deck {
+    min-height: 100svh;
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog {
+    min-height: 206svh;
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog > .release-section {
+    display: flex;
+    flex-direction: column;
+    height: 100svh;
+    min-height: 100svh;
+    padding-block: clamp(38px, 5vw, 72px);
+    overflow: hidden;
+    justify-content: center;
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog .section-inline {
+    flex: none;
+    margin-bottom: clamp(26px, 3vw, 44px);
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog .release-grid {
+    display: flex;
+    flex: none;
+    width: max-content;
+    min-width: 100%;
+    margin-inline: 0;
+    gap: 14px;
+    border: 0;
+    transform: translate3d(calc(var(--scroll-horizontal-distance, 0px) * -1), var(--scroll-background-distance), 0);
+    will-change: transform;
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog .release-grid > .release-card {
+    flex: 0 0 clamp(240px, 23vw, 330px);
+    min-height: 310px;
+    border: 1px solid var(--line);
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog .release-grid > .release-card:nth-child(2n),
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog .release-grid > .release-card:nth-child(n + 5) {
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog .release-card[data-scroll-focus="true"] {
+    background: rgba(216, 255, 101, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(216, 255, 101, 0.3), 0 20px 42px rgba(0, 0, 0, 0.22);
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-platforms .home-platform-card {
+    opacity: calc(0.56 + (var(--card-scroll-progress, 0) * 0.44));
+    transform: translate3d(0, calc((1 - var(--card-scroll-progress, 0)) * 18px), 0);
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-platforms .home-platform-card[data-scroll-focus="true"] {
+    border-color: rgba(216, 255, 101, 0.56);
+    box-shadow: inset 0 0 0 1px rgba(216, 255, 101, 0.18), 0 16px 38px rgba(0, 0, 0, 0.22);
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (max-width: 959px) {
+  .an-site .an-scroll-scene[data-scroll-pin="true"] {
+    min-height: 0;
+  }
+
+  .an-site .an-scroll-scene[data-scroll-pin="true"] > section {
+    position: relative;
+    top: auto;
+    min-height: 0;
+  }
+
+  .an-site .an-scroll-scene-catalog .release-grid {
+    transform: none;
+  }
+
+  .an-site .an-scroll-scene-platforms .home-platform-card {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Scene timelines: stronger editorial movement while preserving the original composition. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 960px) {
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-hero .hero-copy {
+    transform: translate3d(0, calc(var(--scroll-scene-progress, 0) * -64px), 0) scale(calc(1 - (var(--scroll-scene-progress, 0) * 0.08)));
+    opacity: calc(1 - (var(--scroll-scene-progress, 0) * 0.42));
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-hero .home-hero-portrait {
+    transform: translate3d(0, calc(var(--scroll-scene-progress, 0) * -82px), 0) scale(calc(1 + (var(--scroll-scene-progress, 0) * 0.055)));
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-hero .an-rmx-particle-hero {
+    transform: translate3d(calc(var(--scroll-scene-progress, 0) * 22px), calc(var(--scroll-scene-progress, 0) * 66px), 0) scale(calc(1 - (var(--scroll-scene-progress, 0) * 0.06)));
+    opacity: calc(1 - (var(--scroll-scene-progress, 0) * 0.34));
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-platforms .home-signal-copy {
+    transform: translate3d(calc(var(--scroll-scene-progress, 0) * -38px), calc(var(--scroll-scene-progress, 0) * -28px), 0) scale(calc(1 - (var(--scroll-scene-progress, 0) * 0.05)));
+    opacity: calc(1 - (var(--scroll-scene-progress, 0) * 0.32));
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-platforms .home-platform-rack {
+    transform: translate3d(calc((1 - var(--scroll-scene-progress, 0)) * 110px), calc((1 - var(--scroll-scene-progress, 0)) * 26px), 0);
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog > .release-section {
+    opacity: calc(0.82 + (var(--scroll-scene-progress, 0) * 0.18));
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog .section-inline {
+    transform: translate3d(0, calc((1 - var(--scroll-scene-progress, 0)) * 32px), 0);
+    opacity: calc(0.5 + (var(--scroll-scene-progress, 0) * 0.5));
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog .release-grid {
+    transform: translate3d(calc(var(--scroll-horizontal-distance, 0px) * -1), calc(var(--scroll-scene-progress, 0) * -18px), 0);
+  }
+
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog > .release-section > .an-section-index i {
+    background: linear-gradient(90deg, var(--an-mint, #79d6c7) calc(var(--scroll-scene-progress, 0) * 100%), rgba(121, 214, 199, 0.16) 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (max-width: 959px) {
+  .an-site .an-scroll-scene-hero .hero-copy,
+  .an-site .an-scroll-scene-hero .home-hero-portrait,
+  .an-site .an-scroll-scene-hero .an-rmx-particle-hero,
+  .an-site .an-scroll-scene-platforms .home-signal-copy,
+  .an-site .an-scroll-scene-platforms .home-platform-rack,
+  .an-site .an-scroll-scene-catalog .section-inline,
+  .an-site .an-scroll-scene-catalog .release-grid {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 960px) {
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-hero .hero-copy,
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-platforms .home-signal-copy,
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-catalog .section-inline,
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-visuals .section-heading,
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-live .live-copy,
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-game .game-teaser-copy,
+  .an-site[data-scroll-ready="true"] .an-scroll-scene-signal > section > div:nth-of-type(2) {
+    animation: none;
   }
 }

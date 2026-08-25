@@ -1,7 +1,8 @@
 .an-site {
   --home-gutter: clamp(20px, 6vw, 96px);
   --home-max: 1320px;
-  overflow-x: clip;
+  /* Keep the homepage wrapper out of the sticky containing-block chain. */
+  overflow: visible;
 }
 
 .an-site .an-nav {
