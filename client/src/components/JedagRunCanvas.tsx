@@ -22,7 +22,28 @@ const initialSnapshot: GameSnapshot = {
   level: 0,
   dropMeter: 0,
   dropActive: false,
+  phase: "signal",
+  shieldTime: 0,
+  slowTime: 0,
+  doubleScoreTime: 0,
+  notesCollected: 0,
+  nearMisses: 0,
+  highestCombo: 0,
 };
+
+const TUTORIAL_STORAGE_KEY = "an_jedag_run_tutorial_seen";
+
+function hasSeenTutorial() {
+  if (typeof window === "undefined") return false;
+  return window.localStorage.getItem(TUTORIAL_STORAGE_KEY) === "1";
+}
+
+function phaseLabel(phase: GameSnapshot["phase"]) {
+  if (phase === "drop") return "DROP MODE";
+  if (phase === "finale") return "FINAL FREQUENCY";
+  if (phase === "rising") return "RISING NOISE";
+  return "INTRO SIGNAL";
+}
 
 function modeLabel(mode: GameMode) {
   if (mode === "paused") return "PAUSED";
@@ -40,6 +61,7 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
   const frameRef = useRef<number | null>(null);
   const [snapshot, setSnapshot] = useState<GameSnapshot>(initialSnapshot);
   const [muted, setMuted] = useState(false);
+  const [tutorialSeen, setTutorialSeen] = useState(hasSeenTutorial);
   const reducedMotion = useMemo(() => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches, []);
 
   useEffect(() => {
@@ -158,6 +180,11 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
     setSnapshot(world.snapshot);
   };
 
+  const dismissTutorial = () => {
+    window.localStorage.setItem(TUTORIAL_STORAGE_KEY, "1");
+    setTutorialSeen(true);
+  };
+
   const toggleMute = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -199,12 +226,16 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
           <span className="jedag-run-hud-label">MULTI <b>{snapshot.multiplier > 1 ? `×${snapshot.multiplier}` : "—"}</b></span>
           <span className="jedag-run-hud-label">LV <b>{String(snapshot.level + 1).padStart(2, "0")}</b></span>
           <span className="jedag-run-lives" aria-label={`${snapshot.lives} lives remaining`}>{lives || "×"}</span>
+          <span className={`jedag-run-phase phase-${snapshot.phase}`}>{phaseLabel(snapshot.phase)}</span>
         </div>
         <div className="jedag-run-drop" aria-label={`${Math.round(snapshot.dropMeter * 100)} percent drop meter`}>
           <span>DROP METER</span>
           <div><i style={{ width: `${snapshot.dropMeter * 100}%` }} /></div>
         </div>
         <div className="jedag-run-hud-right">
+          <span className="jedag-run-active-powerups" aria-label="Active power-ups">
+            {snapshot.shieldTime > 0 ? "S" : ""}{snapshot.slowTime > 0 ? "◒" : ""}{snapshot.doubleScoreTime > 0 ? "×2" : ""}
+          </span>
           <span className="jedag-run-mode">{modeLabel(snapshot.mode)}</span>
           <button type="button" onClick={toggleMute} aria-label={muted ? "Unmute game audio" : "Mute game audio"} className="jedag-run-icon-button">
             {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}
@@ -220,6 +251,22 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
           <span className="jedag-run-overlay-kicker">{config.kicker}</span>
           <h2>{isGameOver ? `SIGNAL ENDED / ${snapshot.score}` : isPaused ? "SIGNAL PAUSED" : config.title}</h2>
           <p>{isGameOver ? `Best score: ${snapshot.best}. Run again and chase a cleaner drop.` : isPaused ? "Tekan continue untuk kembali ke signal." : config.intro}</p>
+          {isGameOver ? (
+            <div className="jedag-run-run-summary" aria-label="Run summary">
+              <span><b>{snapshot.highestCombo}</b> BEST CHAIN</span>
+              <span><b>{snapshot.notesCollected}</b> NOTES</span>
+              <span><b>{snapshot.nearMisses}</b> NEAR-MISS</span>
+            </div>
+          ) : null}
+          {isIdle && !tutorialSeen ? (
+            <div className="jedag-run-tutorial">
+              <strong>HOW TO CATCH THE SIGNAL</strong>
+              <span><b>SPACE / TAP</b> lompat · bisa double jump</span>
+              <span>Ambil note untuk CHAIN dan isi DROP METER</span>
+              <span>Orb <b>S</b>, <b>◒</b>, <b>×2</b> memberi power-up sementara</span>
+              <button type="button" className="jedag-run-tutorial-dismiss" onClick={dismissTutorial}>GOT IT</button>
+            </div>
+          ) : null}
           <div className="jedag-run-overlay-actions">
             <button type="button" className="jedag-run-primary-button" onClick={startOrResume}>
               {isPaused ? <Play size={15} fill="currentColor" /> : isGameOver ? <RotateCcw size={15} /> : <Play size={15} fill="currentColor" />}

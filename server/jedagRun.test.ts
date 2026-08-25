@@ -62,6 +62,38 @@ describe("JEDAG RUN world", () => {
     expect(audioSource).toContain('event.type === "level-up" ? "level-up"');
   });
 
+  it("tracks phase stats and collects a shield power-up without browser APIs", () => {
+    const world = new JedagRunWorld({ demo: true });
+    expect(world.snapshot.phase).toBe("signal");
+    expect(world.snapshot.notesCollected).toBe(0);
+    expect(world.snapshot.highestCombo).toBe(0);
+    world.start();
+    world.powerUps.push({
+      kind: "shield",
+      x: world.player.x + 18,
+      y: world.player.y - world.player.height / 2,
+      radius: 17,
+      phase: 0,
+      collected: false,
+    });
+    world.update(1 / 60);
+    expect(world.snapshot.shieldTime).toBeGreaterThan(0);
+    expect(world.powerUps[0]?.collected).toBe(true);
+    world.notes.push({
+      x: world.player.x + 18,
+      y: world.player.y - world.player.height / 2,
+      radius: 15,
+      phase: 0,
+      collected: false,
+    });
+    world.update(1 / 60);
+    expect(world.snapshot.notesCollected).toBe(1);
+    expect(world.snapshot.highestCombo).toBe(1);
+    const rendererSource = readFileSync(resolve(process.cwd(), "client/src/game/jedagRun/JedagRunRenderer.ts"), "utf8");
+    expect(rendererSource).toContain("drawPowerUps");
+    expect(rendererSource).toContain('powerUpLabels = { shield: "S", slow: "◒", double: "×2" }');
+  });
+
   it("starts from a clean signal and advances score without browser APIs", () => {
     const world = new JedagRunWorld({ demo: true });
     expect(world.snapshot.mode).toBe("idle");

@@ -1,4 +1,6 @@
 export type GameMode = "idle" | "running" | "paused" | "game-over";
+export type SignalPhase = "signal" | "rising" | "drop" | "finale";
+export type PowerUpKind = "shield" | "slow" | "double";
 
 export type GameInput = "jump" | "pause";
 
@@ -94,6 +96,15 @@ export type GameNote = {
   collected: boolean;
 };
 
+export type GamePowerUp = {
+  kind: PowerUpKind;
+  x: number;
+  y: number;
+  radius: number;
+  phase: number;
+  collected: boolean;
+};
+
 export type GameRenderState = {
   mode: GameMode;
   frame: number;
@@ -105,14 +116,22 @@ export type GameRenderState = {
   level: number;
   dropMeter: number;
   dropActive: boolean;
+  phase: SignalPhase;
+  shieldTime: number;
+  slowTime: number;
+  doubleScoreTime: number;
+  notesCollected: number;
+  nearMisses: number;
+  highestCombo: number;
   player: GamePlayerState;
   obstacles: GameObstacle[];
   notes: GameNote[];
+  powerUps: GamePowerUp[];
   particles: GameParticle[];
   popups: GamePopup[];
 };
 
 export type GameSnapshot = Pick<
   GameRenderState,
-  "mode" | "score" | "best" | "lives" | "combo" | "multiplier" | "level" | "dropMeter" | "dropActive"
+  "mode" | "score" | "best" | "lives" | "combo" | "multiplier" | "level" | "dropMeter" | "dropActive" | "phase" | "shieldTime" | "slowTime" | "doubleScoreTime" | "notesCollected" | "nearMisses" | "highestCombo"
 >;

@@ -87,6 +87,32 @@
   letter-spacing: 0.16em;
 }
 
+.jedag-run-phase {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.25rem;
+  padding: 0.24rem 0.45rem;
+  border: 1px solid rgba(112, 240, 255, 0.35);
+  border-radius: 999px;
+  color: #70f0ff;
+  background: rgba(112, 240, 255, 0.08);
+  font-size: clamp(0.46rem, 1vw, 0.56rem);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.jedag-run-phase.phase-drop {
+  border-color: rgba(255, 88, 201, 0.65);
+  color: #ff58c9;
+  background: rgba(255, 88, 201, 0.12);
+}
+
+.jedag-run-phase.phase-finale {
+  border-color: rgba(255, 207, 90, 0.65);
+  color: #ffcf5a;
+  background: rgba(255, 207, 90, 0.12);
+}
+
 .jedag-run-drop {
   display: grid;
   width: min(34%, 20rem);
@@ -118,6 +144,16 @@
 .jedag-run-hud-right {
   justify-content: flex-end;
   pointer-events: auto;
+}
+
+.jedag-run-active-powerups {
+  min-width: 2rem;
+  color: #ffcf5a;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: right;
+  text-shadow: 0 0 12px rgba(255, 207, 90, 0.65);
 }
 
 .jedag-run-mode {
@@ -245,6 +281,61 @@
   transform: scale(0.97);
 }
 
+.jedag-run-run-summary {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem 1rem;
+  color: rgba(238, 235, 249, 0.58);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.59rem;
+  letter-spacing: 0.1em;
+}
+
+.jedag-run-run-summary b {
+  color: #ffcf5a;
+  font-size: 0.78rem;
+}
+
+.jedag-run-tutorial {
+  display: grid;
+  gap: 0.32rem;
+  width: min(100%, 29rem);
+  padding: 0.72rem 0.9rem;
+  border: 1px solid rgba(112, 240, 255, 0.2);
+  border-radius: 0.8rem;
+  color: rgba(238, 235, 249, 0.64);
+  background: rgba(112, 240, 255, 0.06);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.59rem;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+}
+
+.jedag-run-tutorial strong {
+  color: #70f0ff;
+  font-size: 0.63rem;
+  letter-spacing: 0.12em;
+}
+
+.jedag-run-tutorial b {
+  color: #ffcf5a;
+}
+
+.jedag-run-tutorial-dismiss {
+  justify-self: center;
+  margin-top: 0.18rem;
+  padding: 0.28rem 0.5rem;
+  border: 1px solid rgba(112, 240, 255, 0.35);
+  border-radius: 0.45rem;
+  color: #70f0ff;
+  background: transparent;
+  font: inherit;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+
 .jedag-run-hint {
   margin-top: 0.7rem;
   color: rgba(112, 240, 255, 0.58);
@@ -311,6 +402,16 @@
 
   .jedag-run-mode {
     display: none;
+  }
+
+  .jedag-run-phase {
+    max-width: 5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .jedag-run-active-powerups {
+    font-size: 0.58rem;
   }
 
   .jedag-run-icon-button {

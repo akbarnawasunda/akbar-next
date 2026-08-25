@@ -68,8 +68,9 @@ export class JedagRunRenderer {
     this.drawRoad(state, colors);
     this.drawSignalRibbons(state, colors, reducedMotion);
     this.drawNotes(state, colors, reducedMotion);
+    this.drawPowerUps(state, colors, reducedMotion);
     this.drawObstacles(state, colors, reducedMotion);
-    this.drawPlayer(state, colors);
+    this.drawPlayer(state, colors, reducedMotion);
     this.drawParticles(state, reducedMotion);
     this.drawPopups(state, reducedMotion);
     this.drawDamageFlash(state);
@@ -229,6 +230,40 @@ export class JedagRunRenderer {
     }
   }
 
+  private drawPowerUps(state: GameRenderState, colors: (typeof palette)[number], reducedMotion: boolean) {
+    const ctx = this.context;
+    const powerUpColors = { shield: colors.cyan, slow: "#bf7bff", double: colors.amber };
+    const powerUpLabels = { shield: "S", slow: "◒", double: "×2" };
+    for (const powerUp of state.powerUps) {
+      const y = powerUp.y + (reducedMotion ? 0 : Math.sin(powerUp.phase) * 6);
+      const color = powerUpColors[powerUp.kind];
+      ctx.save();
+      ctx.translate(powerUp.x, y);
+      ctx.globalAlpha = 0.24;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(0, 0, powerUp.radius + 8 + (reducedMotion ? 0 : Math.sin(powerUp.phase) * 2), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = reducedMotion ? 6 : 15;
+      ctx.fillStyle = "#111020";
+      ctx.beginPath();
+      ctx.arc(0, 0, powerUp.radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = color;
+      ctx.font = powerUp.kind === "double" ? "12px 'IBM Plex Mono', monospace" : "15px 'IBM Plex Mono', monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(powerUpLabels[powerUp.kind], 0, 1);
+      ctx.restore();
+    }
+  }
+
   private drawObstacles(state: GameRenderState, colors: (typeof palette)[number], reducedMotion: boolean) {
     const ctx = this.context;
     for (const obstacle of state.obstacles) {
@@ -253,7 +288,7 @@ export class JedagRunRenderer {
     }
   }
 
-  private drawPlayer(state: GameRenderState, colors: (typeof palette)[number]) {
+  private drawPlayer(state: GameRenderState, colors: (typeof palette)[number], reducedMotion: boolean) {
     const ctx = this.context;
     const player = state.player;
     if (player.invulnerable > 0 && Math.floor(state.frame / 5) % 2 === 0) return;
@@ -268,6 +303,16 @@ export class JedagRunRenderer {
     ctx.save();
     ctx.translate(baseX, baseY + bob);
     ctx.rotate(tilt);
+    if (state.shieldTime > 0 || state.doubleScoreTime > 0 || state.slowTime > 0) {
+      const activeColor = state.shieldTime > 0 ? colors.cyan : state.doubleScoreTime > 0 ? colors.amber : "#bf7bff";
+      ctx.globalAlpha = 0.28;
+      ctx.strokeStyle = activeColor;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, -28, 31 + (reducedMotion ? 0 : Math.sin(state.frame * 0.12) * 2), 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
     ctx.scale(1 + (1 - stretch) * 0.45, stretch);
     ctx.shadowColor = colors.cyan;
     ctx.shadowBlur = expression === "drop" ? 22 : 12;

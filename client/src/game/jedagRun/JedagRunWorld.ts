@@ -5,9 +5,11 @@ import type {
   GameNote,
   GameObstacle,
   GameParticle,
+  GamePowerUp,
   GamePopup,
   GameRenderState,
   PlayerExpression,
+  SignalPhase,
   GameSnapshot,
 } from "./types";
 
@@ -69,6 +71,13 @@ export class JedagRunWorld {
   private hitFlash = 0;
   private shake = 0;
   private expressionTimer = 0;
+  private shieldTime = 0;
+  private slowTime = 0;
+  private doubleScoreTime = 0;
+  private powerUpTimer = 7.5;
+  private notesCollected = 0;
+  private nearMisses = 0;
+  private highestCombo = 0;
 
   readonly player = {
     x: PLAYER_X,
@@ -85,6 +94,7 @@ export class JedagRunWorld {
 
   readonly obstacles: GameObstacle[] = [];
   readonly notes: GameNote[] = [];
+  readonly powerUps: GamePowerUp[] = [];
   readonly particles: GameParticle[] = [];
   readonly popups: GamePopup[] = [];
 
@@ -104,6 +114,13 @@ export class JedagRunWorld {
       level: this.level,
       dropMeter: this.dropMeter,
       dropActive: this.dropTime > 0,
+      phase: this.currentPhase,
+      shieldTime: this.shieldTime,
+      slowTime: this.slowTime,
+      doubleScoreTime: this.doubleScoreTime,
+      notesCollected: this.notesCollected,
+      nearMisses: this.nearMisses,
+      highestCombo: this.highestCombo,
     };
   }
 
@@ -133,6 +150,7 @@ export class JedagRunWorld {
       player: { ...this.player },
       obstacles: this.obstacles.map(item => ({ ...item })),
       notes: this.notes.map(item => ({ ...item })),
+      powerUps: this.powerUps.map(item => ({ ...item })),
       particles: this.particles.map(item => ({ ...item })),
       popups: this.popups.map(item => ({ ...item })),
     };
@@ -190,6 +208,9 @@ export class JedagRunWorld {
     this.hitFlash = Math.max(0, this.hitFlash - dt);
     this.shake = Math.max(0, this.shake - dt * 18);
     this.expressionTimer = Math.max(0, this.expressionTimer - dt);
+    this.shieldTime = Math.max(0, this.shieldTime - dt);
+    this.slowTime = Math.max(0, this.slowTime - dt);
+    this.doubleScoreTime = Math.max(0, this.doubleScoreTime - dt);
     if (this.expressionTimer === 0 && this.player.expression !== "running") {
       this.player.expression = this.player.onGround ? "running" : "jump";
     }
@@ -223,7 +244,8 @@ export class JedagRunWorld {
   }
 
   get speed() {
-    return 315 + this.level * 24 + Math.min(115, this.distance * 0.018);
+    const baseSpeed = 315 + this.level * 24 + Math.min(115, this.distance * 0.018);
+    return this.slowTime > 0 ? baseSpeed * 0.62 : baseSpeed;
   }
 
   get paletteIndex() {
@@ -232,6 +254,13 @@ export class JedagRunWorld {
 
   get screenShake() {
     return this.shake;
+  }
+
+  get currentPhase(): SignalPhase {
+    if (this.dropTime > 0) return "drop";
+    if (this.score >= 1600) return "finale";
+    if (this.score >= 700) return "rising";
+    return "signal";
   }
 
   get damageFlash() {
@@ -249,6 +278,13 @@ export class JedagRunWorld {
     this.previousLevel = 0;
     this.dropMeter = 0;
     this.dropTime = 0;
+    this.shieldTime = 0;
+    this.slowTime = 0;
+    this.doubleScoreTime = 0;
+    this.powerUpTimer = 7.5;
+    this.notesCollected = 0;
+    this.nearMisses = 0;
+    this.highestCombo = 0;
     this.nextLifeAt = 1200;
     this.obstacleTimer = 0.9;
     this.noteTimer = 0.65;
@@ -260,6 +296,7 @@ export class JedagRunWorld {
     this.seed = this.demo ? 73 : (Date.now() ^ 0x9e3779b9) >>> 0;
     this.obstacles.length = 0;
     this.notes.length = 0;
+    this.powerUps.length = 0;
     this.particles.length = 0;
     this.popups.length = 0;
     this.player.x = PLAYER_X;
@@ -311,6 +348,7 @@ export class JedagRunWorld {
   private spawnAndMove(dt: number) {
     this.obstacleTimer -= dt;
     this.noteTimer -= dt;
+    this.powerUpTimer -= dt;
     if (this.obstacleTimer <= 0) {
       this.spawnObstacle();
       const difficulty = Math.min(0.24, this.level * 0.022);
@@ -320,14 +358,23 @@ export class JedagRunWorld {
       this.spawnNoteArc();
       this.noteTimer = 1.08 + this.random() * 0.78 - Math.min(0.18, this.level * 0.015);
     }
+    if (this.powerUpTimer <= 0 && this.score >= 450) {
+      this.spawnPowerUp();
+      this.powerUpTimer = 8.5 + this.random() * 7;
+    }
 
     for (const obstacle of this.obstacles) obstacle.x -= this.speed * dt;
     for (const note of this.notes) {
       note.x -= this.speed * dt;
       note.phase += dt * 4.6;
     }
+    for (const powerUp of this.powerUps) {
+      powerUp.x -= this.speed * dt;
+      powerUp.phase += dt * 3.5;
+    }
     this.obstacles.splice(0, this.obstacles.length, ...this.obstacles.filter(item => item.x + item.width > -80));
     this.notes.splice(0, this.notes.length, ...this.notes.filter(item => item.x + item.radius > -60 && !item.collected));
+    this.powerUps.splice(0, this.powerUps.length, ...this.powerUps.filter(item => item.x + item.radius > -60 && !item.collected));
   }
 
   private spawnObstacle() {
@@ -342,6 +389,18 @@ export class JedagRunWorld {
       height,
       variant,
       counted: false,
+    });
+  }
+
+  private spawnPowerUp() {
+    const kinds = ["shield", "slow", "double"] as const;
+    this.powerUps.push({
+      kind: kinds[Math.floor(this.random() * kinds.length)],
+      x: WIDTH + 90,
+      y: GROUND - 104 - this.random() * 72,
+      radius: 17,
+      phase: this.random() * Math.PI * 2,
+      collected: false,
     });
   }
 
@@ -377,7 +436,8 @@ export class JedagRunWorld {
         obstacle.counted = true;
         const close = this.player.y < obstacleTop + 34;
         if (close) {
-          this.bonus += 22;
+          this.bonus += 22 * (this.doubleScoreTime > 0 ? 2 : 1);
+          this.nearMisses += 1;
           this.dropMeter = Math.min(1, this.dropMeter + 0.08);
           this.addPopup("NEAR MISS +22", this.player.x + 34, this.player.y - 88, "#70f0ff");
           this.burst(this.player.x + 22, this.player.y - 28, "#70f0ff", 8);
@@ -395,7 +455,9 @@ export class JedagRunWorld {
       if (Math.abs(dx) < 27 && Math.abs(dy) < 42) {
         note.collected = true;
         this.combo += 1;
-        const points = 28 * this.multiplier;
+        this.highestCombo = Math.max(this.highestCombo, this.combo);
+        this.notesCollected += 1;
+        const points = 28 * this.multiplier * (this.doubleScoreTime > 0 ? 2 : 1);
         this.bonus += points;
         this.dropMeter = Math.min(1, this.dropMeter + 0.12);
         this.addPopup(`+${points}${this.multiplier > 1 ? ` ×${this.multiplier}` : ""}`, note.x, noteY - 22, "#ffcf5a");
@@ -412,9 +474,41 @@ export class JedagRunWorld {
         }
       }
     }
+
+    for (const powerUp of this.powerUps) {
+      if (powerUp.collected) continue;
+      const powerUpY = powerUp.y + Math.sin(powerUp.phase) * 6;
+      const dx = powerUp.x - (this.player.x + this.player.width / 2);
+      const dy = powerUpY - (this.player.y - this.player.height / 2);
+      if (Math.abs(dx) < 32 && Math.abs(dy) < 48) {
+        powerUp.collected = true;
+        this.activatePowerUp(powerUp.kind);
+      }
+    }
+  }
+
+  private activatePowerUp(kind: GamePowerUp["kind"]) {
+    const labels = { shield: "SHIELD", slow: "SLOW PULSE", double: "DOUBLE SCORE" };
+    const colors = { shield: "#70f0ff", slow: "#bf7bff", double: "#ffcf5a" };
+    if (kind === "shield") this.shieldTime = 5;
+    if (kind === "slow") this.slowTime = 4;
+    if (kind === "double") this.doubleScoreTime = 6;
+    this.addPopup(labels[kind], this.player.x + 32, this.player.y - 102, colors[kind]);
+    this.burst(this.player.x + 18, this.player.y - 38, colors[kind], 18);
+    this.setExpression("collect", 0.5);
+    this.emit({ type: "collect", value: kind === "double" ? 2 : 1 });
   }
 
   private hitObstacle() {
+    if (this.shieldTime > 0) {
+      this.shieldTime = 0;
+      this.player.invulnerable = 0.8;
+      this.shake = 4;
+      this.addPopup("SHIELD SAVE", this.player.x + 24, this.player.y - 94, "#70f0ff");
+      this.burst(this.player.x + 18, this.player.y - 32, "#70f0ff", 24);
+      this.setExpression("near-miss", 0.56);
+      return;
+    }
     this.lives -= 1;
     this.combo = 0;
     this.dropMeter = Math.max(0, this.dropMeter - 0.22);
