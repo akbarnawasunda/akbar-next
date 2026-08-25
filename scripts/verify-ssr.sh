@@ -182,9 +182,17 @@ check() {
     fi
     if [[ ",$flags," == *",state,"* ]]; then
       printf '%s' "$HTML" | grep -qF '__RQ_STATE__' || { ok=0; why="$why state-missing"; }
+      # The client contract is a quoted JSON string. If this becomes an object
+      # assignment again, JSON.parse() aborts before route preload/hydration and
+      # lazy route CSS never loads. Keep this assertion close to the state checks
+      # so a raw SSR regression fails before it reaches production.
+      printf '%s' "$HTML" | grep -qE 'window\.__RQ_STATE__ = "' || { ok=0; why="$why state-not-json-string"; }
+      printf '%s' "$HTML" | grep -qE 'window\.__RQ_STATE__ = \{' && { ok=0; why="$why state-object-assignment"; }
       # superjson.serialize keeps the plain JSON shape, so >=1 dehydrated query
       # always serializes as `"queries":[{` — an empty state has `"queries":[]`.
-      printf '%s' "$HTML" | grep -q '"queries":\[{' || { ok=0; why="$why state-empty"; }
+      # Quotes inside the JSON string are escaped in raw HTML; normalize only
+      # those escapes before checking that at least one query was dehydrated.
+      printf '%s' "$HTML" | sed 's/\\"/"/g' | grep -q '"queries":\[{' || { ok=0; why="$why state-empty"; }
     fi
     if [[ ",$flags," == *",ogimage,"* ]]; then
       # scrapers ignore relative og:image — the URL must be absolute

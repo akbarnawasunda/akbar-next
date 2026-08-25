@@ -1,4 +1,9 @@
-import { HydrationBoundary, QueryClient, QueryClientProvider, type DehydratedState } from "@tanstack/react-query";
+import {
+  HydrationBoundary,
+  QueryClient,
+  QueryClientProvider,
+  type DehydratedState,
+} from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { hydrateRoot } from "react-dom/client";
 import { Router } from "wouter";
@@ -38,7 +43,9 @@ const trpcClient = trpc.createClient({
           const raw = sessionStorage.getItem("manus-cookie");
           if (raw) {
             const prefix = `${COOKIE_NAME}=`;
-            const pair = raw.split(";").find(value => value.trim().startsWith(prefix));
+            const pair = raw
+              .split(";")
+              .find(value => value.trim().startsWith(prefix));
             const token = pair?.trim().slice(prefix.length);
             if (token) return { Authorization: `Bearer ${token}` };
           }
@@ -70,11 +77,14 @@ if (analyticsEndpoint && analyticsWebsiteId) {
 if (import.meta.env.DEV && "serviceWorker" in navigator) {
   navigator.serviceWorker
     .getRegistrations()
-    .then(registrations => registrations.forEach(registration => void registration.unregister()))
+    .then(registrations =>
+      registrations.forEach(registration => void registration.unregister())
+    )
     .catch(() => undefined);
 }
 
-const rawState = (window as Window & { __RQ_STATE__?: string | unknown }).__RQ_STATE__;
+const rawState = (window as Window & { __RQ_STATE__?: string | unknown })
+  .__RQ_STATE__;
 const parsedState = rawState
   ? typeof rawState === "string"
     ? JSON.parse(rawState)
@@ -96,10 +106,12 @@ const mount = () => {
           </Router>
         </HydrationBoundary>
       </QueryClientProvider>
-    </trpc.Provider>,
+    </trpc.Provider>
   );
 };
 
-void preloadPublicRoute(initialRoute).catch(error => {
-  console.error("[Hydration] public route preload failed", error);
-}).finally(mount);
+void preloadPublicRoute(initialRoute)
+  .catch(error => {
+    console.error("[Hydration] public route preload failed", error);
+  })
+  .finally(mount);

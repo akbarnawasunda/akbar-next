@@ -1361,12 +1361,23 @@ function buildHeadTags(head) {
   if (image) {
     tags.push(`<meta property="og:image" content="${escapeHtml(image)}" />`);
     tags.push(`<meta name="twitter:image" content="${escapeHtml(image)}" />`);
-    if (head.ogImageWidth) tags.push(`<meta property="og:image:width" content="${head.ogImageWidth}" />`);
-    if (head.ogImageHeight) tags.push(`<meta property="og:image:height" content="${head.ogImageHeight}" />`);
-    if (head.ogImageAlt) tags.push(`<meta property="og:image:alt" content="${escapeHtml(head.ogImageAlt)}" />`);
+    if (head.ogImageWidth)
+      tags.push(
+        `<meta property="og:image:width" content="${head.ogImageWidth}" />`
+      );
+    if (head.ogImageHeight)
+      tags.push(
+        `<meta property="og:image:height" content="${head.ogImageHeight}" />`
+      );
+    if (head.ogImageAlt)
+      tags.push(
+        `<meta property="og:image:alt" content="${escapeHtml(head.ogImageAlt)}" />`
+      );
   }
   if (canonicalUrl) {
-    tags.push(`<meta property="og:url" content="${escapeHtml(canonicalUrl)}" />`);
+    tags.push(
+      `<meta property="og:url" content="${escapeHtml(canonicalUrl)}" />`
+    );
     tags.push(`<link rel="canonical" href="${escapeHtml(canonicalUrl)}" />`);
     if (!head.noindex && !head.notFound) {
       const canonicalPath = head.canonicalPath || "/";
@@ -1379,11 +1390,14 @@ function buildHeadTags(head) {
         ["x-default", `${CANONICAL_ORIGIN}${idPath}`]
       ];
       languageLinks.forEach(([language, href]) => {
-        tags.push(`<link data-language-link="true" rel="alternate" hreflang="${language}" href="${escapeHtml(href)}" />`);
+        tags.push(
+          `<link data-language-link="true" rel="alternate" hreflang="${language}" href="${escapeHtml(href)}" />`
+        );
       });
     }
   }
-  if (head.noindex || head.notFound) tags.push(`<meta name="robots" content="noindex, follow" />`);
+  if (head.noindex || head.notFound)
+    tags.push(`<meta name="robots" content="noindex, follow" />`);
   return tags.join("\n");
 }
 function structuredDataScript(value) {
@@ -1391,7 +1405,9 @@ function structuredDataScript(value) {
   return `<script id="akbar-structured-data" type="application/ld+json">${serialized}</script>`;
 }
 function composeHtml(template, appHtml, head, dehydratedState) {
-  const serializedState = JSON.stringify(superjson2.serialize(dehydratedState)).replace(/</g, "\\u003c");
+  const serializedState = JSON.stringify(
+    superjson2.serialize(dehydratedState)
+  ).replace(/</g, "\\u003c");
   const stateScript = `<script>window.__RQ_STATE__ = ${JSON.stringify(serializedState)}</script>`;
   const structuredData = head.structuredData ? structuredDataScript(head.structuredData) : "";
   const language = head.locale?.startsWith("en") ? "en" : "id";

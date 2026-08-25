@@ -1,0 +1,66 @@
+name: Website quality gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate SSR, hydration, and public routes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Unit and integration tests
+        run: pnpm test -- --run
+
+      - name: Build client, SSR, and serverless artifacts
+        run: pnpm build
+
+      - name: Start production SSR server
+        run: |
+          CANONICAL_ORIGIN=http://localhost:4101 \
+          SITE_NAME="Akbar Nawasunda | Official Website" \
+          PORT=4101 NODE_ENV=production \
+          node dist/index.js > /tmp/akbar-ssr-ci.log 2>&1 &
+          echo $! > /tmp/akbar-ssr-ci.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error http://localhost:4101/robots.txt >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/akbar-ssr-ci.log
+          exit 1
+
+      - name: Verify crawler-visible SSR and redirects
+        run: BASE=http://localhost:4101 bash scripts/verify-ssr.sh
+
+      - name: Stop production SSR server
+        if: always()
+        run: |
+          if [ -f /tmp/akbar-ssr-ci.pid ]; then
+            kill "$(cat /tmp/akbar-ssr-ci.pid)" 2>/dev/null || true
+          fi
