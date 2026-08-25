@@ -195,7 +195,9 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
         <div className="jedag-run-hud-left">
           <span className="jedag-run-hud-label">SCORE</span>
           <strong>{String(snapshot.score).padStart(5, "0")}</strong>
-          <span className="jedag-run-hud-label">COMBO <b>{snapshot.multiplier > 1 ? `×${snapshot.multiplier}` : "—"}</b></span>
+          <span className="jedag-run-hud-label">CHAIN <b>{snapshot.combo > 0 ? snapshot.combo : "—"}</b></span>
+          <span className="jedag-run-hud-label">MULTI <b>{snapshot.multiplier > 1 ? `×${snapshot.multiplier}` : "—"}</b></span>
+          <span className="jedag-run-hud-label">LV <b>{String(snapshot.level + 1).padStart(2, "0")}</b></span>
           <span className="jedag-run-lives" aria-label={`${snapshot.lives} lives remaining`}>{lives || "×"}</span>
         </div>
         <div className="jedag-run-drop" aria-label={`${Math.round(snapshot.dropMeter * 100)} percent drop meter`}>

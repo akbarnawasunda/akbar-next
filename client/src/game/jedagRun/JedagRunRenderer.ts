@@ -66,6 +66,7 @@ export class JedagRunRenderer {
     this.drawBackground(state, colors, reducedMotion);
     if (state.dropActive) this.drawDropPulse(state, colors, reducedMotion);
     this.drawRoad(state, colors);
+    this.drawSignalRibbons(state, colors, reducedMotion);
     this.drawNotes(state, colors, reducedMotion);
     this.drawObstacles(state, colors, reducedMotion);
     this.drawPlayer(state, colors);
@@ -148,6 +149,24 @@ export class JedagRunRenderer {
     ctx.strokeStyle = colors.amber;
     ctx.lineWidth = 3;
     ctx.strokeRect(14, 14, this.logicalWidth - 28, this.logicalHeight - 28);
+    ctx.restore();
+  }
+
+  private drawSignalRibbons(state: GameRenderState, colors: (typeof palette)[number], reducedMotion: boolean) {
+    const ctx = this.context;
+    const phase = reducedMotion ? 0 : state.frame * 0.08;
+    ctx.save();
+    ctx.globalAlpha = 0.13;
+    ctx.lineWidth = 1;
+    for (let index = 0; index < 4; index += 1) {
+      const y = 230 + index * 34 + Math.sin(phase + index * 1.7) * (reducedMotion ? 0 : 7);
+      const length = 110 + ((state.frame * (index + 1) * 0.7) % 90);
+      ctx.strokeStyle = index % 2 ? colors.magenta : colors.cyan;
+      ctx.beginPath();
+      ctx.moveTo(520 - length / 2, y);
+      ctx.lineTo(520 + length / 2, y);
+      ctx.stroke();
+    }
     ctx.restore();
   }
 
@@ -243,8 +262,12 @@ export class JedagRunRenderer {
     const stretch = player.squash;
     const expression = player.expression;
     const glow = expressionGlow[expression];
+    const runPhase = Math.sin(state.frame * 0.22);
+    const bob = player.onGround ? runPhase * 1.8 : 0;
+    const tilt = Math.max(-0.16, Math.min(0.16, player.vy / 5200));
     ctx.save();
-    ctx.translate(baseX, baseY);
+    ctx.translate(baseX, baseY + bob);
+    ctx.rotate(tilt);
     ctx.scale(1 + (1 - stretch) * 0.45, stretch);
     ctx.shadowColor = colors.cyan;
     ctx.shadowBlur = expression === "drop" ? 22 : 12;
@@ -291,6 +314,14 @@ export class JedagRunRenderer {
     ctx.fillRect(3, -7, 11, 5);
     ctx.fillStyle = colors.cyan;
     ctx.fillRect(-9, -35, 18, 2);
+    ctx.fillStyle = colors.magenta;
+    const stride = player.onGround ? runPhase * 4 : 0;
+    ctx.fillRect(-11 - stride, -1, 7, 5);
+    ctx.fillRect(4 + stride, -1, 7, 5);
+    ctx.globalAlpha = 0.24;
+    ctx.fillStyle = glow;
+    ctx.fillRect(-25 - stride, -25, 14, 2);
+    ctx.fillRect(-30 - stride * 0.6, -18, 10, 1);
     ctx.restore();
   }
 

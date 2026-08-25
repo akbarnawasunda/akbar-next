@@ -23,6 +23,11 @@ describe("JEDAG RUN world", () => {
     world.update(1 / 60);
     expect(world.getRenderState().player.expression).toBe("jump");
 
+    const trailWorld = new JedagRunWorld({ demo: true });
+    trailWorld.start();
+    for (let frame = 0; frame < 12; frame += 1) trailWorld.update(1 / 60);
+    expect(trailWorld.particles.length).toBeGreaterThan(0);
+
     for (let frame = 0; frame < 36; frame += 1) world.update(1 / 60);
     world.notes.push({
       x: world.player.x + 18,
@@ -49,6 +54,12 @@ describe("JEDAG RUN world", () => {
     expect(rendererSource).toContain('collect: "🤩"');
     expect(rendererSource).toContain('hit: "😨"');
     expect(rendererSource).toContain('"game-over": "😵"');
+    expect(rendererSource).toContain("drawSignalRibbons");
+    expect(rendererSource).toContain("const tilt");
+
+    const audioSource = readFileSync(resolve(process.cwd(), "client/src/game/jedagRun/JedagRunAudio.ts"), "utf8");
+    expect(audioSource).toContain('event.type === "near-miss" ? "near-miss"');
+    expect(audioSource).toContain('event.type === "level-up" ? "level-up"');
   });
 
   it("starts from a clean signal and advances score without browser APIs", () => {

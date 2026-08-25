@@ -1,6 +1,6 @@
 import type { GameAudioConfig, GameEvent } from "./types";
 
-type SoundName = "jump" | "collect" | "hit" | "drop" | "game-over";
+type SoundName = "jump" | "collect" | "near-miss" | "hit" | "drop" | "level-up" | "game-over";
 
 function canUseAudio() {
   return typeof window !== "undefined" && typeof Audio !== "undefined";
@@ -85,7 +85,7 @@ export class JedagRunAudio {
 
   playEvent(event: GameEvent) {
     if (this.muted) return;
-    const name: SoundName | null = event.type === "double-jump" ? "jump" : event.type === "collect" ? "collect" : event.type === "hit" ? "hit" : event.type === "drop" ? "drop" : event.type === "game-over" ? "game-over" : event.type === "near-miss" ? "collect" : null;
+    const name: SoundName | null = event.type === "double-jump" ? "jump" : event.type === "collect" ? "collect" : event.type === "near-miss" ? "near-miss" : event.type === "hit" ? "hit" : event.type === "drop" ? "drop" : event.type === "level-up" ? "level-up" : event.type === "game-over" ? "game-over" : null;
     if (!name) return;
     void this.play(name);
   }
@@ -121,7 +121,8 @@ export class JedagRunAudio {
     if (name === "collect") return this.config.collectSfxUrl;
     if (name === "hit") return this.config.hitSfxUrl;
     if (name === "drop") return this.config.dropSfxUrl;
-    return this.config.gameOverSfxUrl;
+    if (name === "game-over") return this.config.gameOverSfxUrl;
+    return undefined;
   }
 
   private startFallbackBgm() {
@@ -140,6 +141,12 @@ export class JedagRunAudio {
       this.tone(320, 0.08, "triangle", 0.11, 620);
     } else if (name === "collect") {
       this.tone(620, 0.07, "sine", 0.1, 920);
+    } else if (name === "near-miss") {
+      this.tone(430, 0.08, "triangle", 0.08, 760);
+      window.setTimeout(() => this.tone(760, 0.06, "sine", 0.06, 980), 38);
+    } else if (name === "level-up") {
+      this.tone(260, 0.12, "triangle", 0.08, 520);
+      window.setTimeout(() => this.tone(520, 0.15, "sine", 0.08, 1040), 70);
     } else if (name === "hit") {
       this.tone(110, 0.16, "sawtooth", 0.12, 55);
     } else if (name === "drop") {

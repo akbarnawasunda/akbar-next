@@ -206,6 +206,7 @@ export class JedagRunWorld {
     }
 
     this.updatePlayer(dt);
+    if (this.player.onGround && this.frame % 4 === 0) this.addRunTrail();
     this.spawnAndMove(dt);
     this.resolveCollisions();
     this.updateEffects(dt);
@@ -461,6 +462,7 @@ export class JedagRunWorld {
       popup.life -= dt;
     }
     this.particles.splice(0, this.particles.length, ...this.particles.filter(item => item.life > 0));
+    if (this.particles.length > 180) this.particles.splice(0, this.particles.length - 180);
     this.popups.splice(0, this.popups.length, ...this.popups.filter(item => item.life > 0));
   }
 
@@ -469,6 +471,20 @@ export class JedagRunWorld {
     if (imminent && this.player.onGround) this.jumpBuffer = 0.12;
     const note = this.notes.find(item => item.x > this.player.x + 32 && item.x < this.player.x + 112);
     if (note && this.player.onGround && note.y < this.player.y - 115) this.jumpBuffer = 0.12;
+  }
+
+  private addRunTrail() {
+    const maxLife = 0.18 + this.random() * 0.1;
+    this.particles.push({
+      x: this.player.x - 3,
+      y: this.player.y - 8 - this.random() * 5,
+      vx: -24 - this.random() * 36,
+      vy: -8 - this.random() * 16,
+      life: maxLife,
+      maxLife,
+      color: this.dropTime > 0 ? (this.frame % 2 ? "#ff58c9" : "#ffcf5a") : (this.frame % 2 ? "#70f0ff" : "#bf7bff"),
+      size: 1.5 + this.random() * 2.5,
+    });
   }
 
   private burst(x: number, y: number, color: string, count: number) {
