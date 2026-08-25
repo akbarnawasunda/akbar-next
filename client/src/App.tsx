@@ -5,8 +5,6 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import "./components/JedagRunCanvas.css";
-import "./pages/GameJedagRun.css";
 type PreloadableComponent<T extends React.ComponentType<any>> = T & {
   preload: () => Promise<{ default: T }>;
 };

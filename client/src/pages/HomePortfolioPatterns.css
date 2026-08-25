@@ -153,6 +153,10 @@
   will-change: transform;
 }
 
+.an-platform-marquee.is-offscreen .an-platform-marquee-track {
+  animation-play-state: paused;
+}
+
 .an-platform-marquee-row.is-reverse .an-platform-marquee-track {
   animation-name: an-platform-marquee-reverse;
   animation-duration: 38s;

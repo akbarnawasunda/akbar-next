@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { allPlatformLinks } from "@/content/artistPlatform";
 import type { CmsPlatformLink } from "@/content/publicContent";
@@ -45,10 +46,29 @@ function MarqueeRow({
 }
 
 export function PlatformMarquee({ links = allPlatformLinks }: { links?: PlatformLink[] }) {
+  const marqueeRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const element = marqueeRef.current;
+    if (!element || !("IntersectionObserver" in window)) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry?.isIntersecting ?? true),
+      { threshold: 0, rootMargin: "160px 0px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
   const splitAt = Math.ceil(links.length / 2);
   const rows = [links.slice(0, splitAt), links.slice(splitAt)];
   return (
-    <div className="an-platform-marquee" aria-label="Platform musik resmi">
+    <div
+      ref={marqueeRef}
+      className={`an-platform-marquee${isVisible ? "" : " is-offscreen"}`}
+      aria-label="Platform musik resmi"
+    >
       <div className="an-platform-marquee-heading">
         <span>PLATFORM RESMI</span>
         <span>GESER UNTUK LIHAT</span>
