@@ -157,7 +157,7 @@ export default function Home() {
   const heroBody =
     cmsHero?.heroBody ||
     managedHero?.subtitle ||
-    "Produser dan remixer asal Bandung Barat.";
+    "Produser, remixer, dan DJ asal Bandung Barat.";
   const heroActionUrl =
     cmsHero?.primaryActionUrl || managedHero?.href || activeRelease.href;
   const heroActionIsVisual = /youtube\.com|youtu\.be/i.test(heroActionUrl);

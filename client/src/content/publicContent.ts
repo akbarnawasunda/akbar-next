@@ -10,6 +10,10 @@ export type CmsEvent = { _id: string; title: string; date: string; time?: string
 export type CmsLegalSection = { key?: "short-version" | "collection" | "cookies" | "services" | "rights"; heading?: string; body?: string };
 export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; locationUrl?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string; platformLinks?: CmsPlatformLink[] }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; releases: CmsRelease[]; visuals: CmsVisual[]; portraitStudies: CmsPortraitStudy[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
 
+function normalizePublicRoleCopy(value: string | undefined) {
+  return value?.replace(/^Produser dan remixer asal Bandung Barat\./i, "Produser, remixer, dan DJ asal Bandung Barat.") || "";
+}
+
 /** Keep upcoming/live surfaces truthful: past and cancelled events are not current public dates. */
 export function isUpcomingPublicEvent(event: CmsEvent): boolean {
   if (event.status === "past" || event.status === "cancelled") return false;
@@ -98,13 +102,13 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
     hero: hero ? {
       heroTitle: stringValue(payloadOf(hero).heroTitle) || stringValue(payloadOf(hero).title),
       heroKicker: stringValue(payloadOf(hero).heroKicker) || stringValue(payloadOf(hero).kicker),
-      heroBody: stringValue(payloadOf(hero).heroBody) || stringValue(payloadOf(hero).body) || stringValue(payloadOf(hero).subtitle),
+      heroBody: normalizePublicRoleCopy(stringValue(payloadOf(hero).heroBody) || stringValue(payloadOf(hero).body) || stringValue(payloadOf(hero).subtitle)),
       heroImage: publicMediaUrl(stringValue(payloadOf(hero).heroImage) || stringValue(payloadOf(hero).imageUrl)),
       primaryActionUrl: stringValue(payloadOf(hero).primaryActionUrl) || stringValue(payloadOf(hero).href),
       primaryActionLabel: stringValue(payloadOf(hero).primaryActionLabel),
     } : undefined,
     profile: profile ? {
-      shortBio: stringValue(payloadOf(profile).shortBio),
+      shortBio: normalizePublicRoleCopy(stringValue(payloadOf(profile).shortBio)),
       longBio: stringValue(payloadOf(profile).longBio) || stringValue(payloadOf(profile).body),
       location: stringValue(payloadOf(profile).location),
       locationUrl: safeExternalUrl(payloadOf(profile).locationUrl),

@@ -198,7 +198,7 @@ export function EnglishUniverse() {
 export function EnglishAbout() {
   const cms = usePublicArtistContent();
   const profile = cms.data?.profile;
-  const shortBio = "Producer and remixer from Bandung Barat. Since 2020, he has released original work as Akbar Nawasunda across digital music platforms.";
+  const shortBio = "Music producer, remixer, and DJ from Bandung Barat. Since 2020, he has released original work as Akbar Nawasunda across digital music platforms.";
   const longBio = englishLongBio;
   const location = profile?.location || verifiedArtistProfile.location;
   const locationUrl = profile?.locationUrl;

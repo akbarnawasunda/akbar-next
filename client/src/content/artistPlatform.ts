@@ -60,7 +60,7 @@ export const allPlatformLinks = [
 export const verifiedArtistProfile = {
   aliases: ["DJ Akbar Remix"],
   location: "Bandung Barat, Indonesia",
-  shortBio: "Produser dan remixer asal Bandung Barat. Mulai berkarya pada 2020 sebagai DJ Akbar Remix, kini merilis karya orisinal sebagai Akbar Nawasunda di platform musik digital.",
+  shortBio: "Produser, remixer, dan DJ asal Bandung Barat. Mulai berkarya pada 2020 sebagai DJ Akbar Remix, kini merilis karya orisinal sebagai Akbar Nawasunda di platform musik digital.",
   longBio: "Perjalanan musik Akbar Nawasunda dimulai pada 2020 sebagai bedroom producer independen dengan nama DJ Akbar Remix. Eksperimennya membawa lagu-lagu populer ke wilayah Breakbeat, Jedag Jedug, dan Jungle Dutch bergaya Bandung. Kini, di bawah nama Akbar Nawasunda, ia merilis karya orisinal yang memadukan melodi pop, electronic bass, dan energi remix untuk platform musik digital global.",
   genres: ["Breakbeat", "Indo Bass", "Jedag Jedug", "Jungle Dutch", "Kendang Chops"],
   bookingEmail: "akbarnawasunda@gmail.com",
