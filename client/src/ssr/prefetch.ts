@@ -31,6 +31,15 @@ export type SsrPrefetch = {
 
 const SITE_NAME = "Akbar Nawasunda | Official Website";
 const SITE_ORIGIN = "https://akbarnawasunda.my.id";
+const VERIFIED_IDENTITY_LINKS = [
+  "https://open.spotify.com/artist/7KOQuIQLuxyklLox0RDMMw",
+  "https://www.youtube.com/channel/UCS-UDttyS3sruwkEPlGjuDg",
+  "https://soundcloud.com/akbarnawasunda",
+  "https://www.instagram.com/akbarnawasunda",
+  "https://music.apple.com/id/artist/akbar-nawasunda/1816312738?l=id",
+  "https://musicbrainz.org/artist/bb843d35-fc0a-4d3b-b445-390b9b299812",
+  "https://www.wikidata.org/wiki/Q141049199",
+] as const;
 const ID_DESCRIPTION = "Website resmi Akbar Nawasunda — produser, remixer, dan DJ asal Bandung Barat, Indonesia.";
 const EN_DESCRIPTION = "Official website of Akbar Nawasunda — Indonesian music artist, producer, remixer, and DJ from West Bandung.";
 
@@ -99,7 +108,10 @@ function publicArtistGraph(content: ReturnType<typeof customDocumentsToPublicCon
     image: [absoluteUrl(content?.siteSettings?.socialPreviewUrl || officialBrand.socialPreview)],
     logo: absoluteUrl(officialBrand.logo),
     genre: content?.profile?.genres?.length ? content.profile.genres : verifiedArtistProfile.genres,
-    sameAs: artistLinks.map(link => link.href),
+    sameAs: Array.from(new Set([
+      ...artistLinks.map(link => link.href),
+      ...VERIFIED_IDENTITY_LINKS,
+    ])),
     location: {
       "@type": "Place",
       name: content?.profile?.location || verifiedArtistProfile.location,
