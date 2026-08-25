@@ -1,0 +1,226 @@
+.game-page {
+  min-height: 100vh;
+  padding: clamp(1rem, 3vw, 2rem) clamp(1rem, 4vw, 4.5rem) 1.5rem;
+  color: #f4f0ff;
+  background: #080910;
+}
+
+.game-page-header,
+.game-page-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.game-page-header {
+  min-height: 3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.game-page-brand,
+.game-page-header-links a,
+.game-page-status,
+.game-page-footer {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.game-page-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: rgba(244, 240, 255, 0.84);
+  font-weight: 700;
+}
+
+.game-page-brand-mark {
+  display: grid;
+  width: 1.7rem;
+  height: 1.7rem;
+  place-items: center;
+  border: 1px solid rgba(112, 240, 255, 0.5);
+  border-radius: 50%;
+  color: #70f0ff;
+  font-size: 0.55rem;
+}
+
+.game-page-header-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.65rem, 2vw, 1.4rem);
+}
+
+.game-page-header-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  color: rgba(244, 240, 255, 0.55);
+  transition: color 160ms ease-out;
+}
+
+.game-page-header-links a:hover,
+.game-page-header-links a:focus-visible {
+  color: #70f0ff;
+}
+
+.game-page-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(255, 207, 90, 0.72);
+}
+
+.game-page-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, 0.32fr);
+  gap: clamp(2rem, 8vw, 8rem);
+  align-items: end;
+  max-width: 1240px;
+  margin: clamp(4.5rem, 10vw, 8.5rem) auto clamp(2rem, 5vw, 4rem);
+}
+
+.game-page-copy {
+  max-width: 46rem;
+}
+
+.game-page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  color: #70f0ff;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+}
+
+.game-page-copy h1 {
+  max-width: 11ch;
+  margin: 0.7rem 0 1.2rem;
+  color: #f4f0ff;
+  font-family: "DM Serif Display", Georgia, serif;
+  font-size: clamp(3.7rem, 11vw, 9.2rem);
+  font-weight: 400;
+  letter-spacing: -0.07em;
+  line-height: 0.84;
+}
+
+.game-page-body {
+  max-width: 36rem;
+  margin: 0;
+  color: rgba(244, 240, 255, 0.62);
+  font-size: clamp(0.92rem, 1.7vw, 1.1rem);
+  line-height: 1.75;
+}
+
+.game-page-note {
+  max-width: 28rem;
+  margin: 1rem 0 0;
+  color: rgba(112, 240, 255, 0.58);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.66rem;
+  line-height: 1.7;
+}
+
+.game-page-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+}
+
+.game-page-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.68rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0.65rem;
+  color: rgba(244, 240, 255, 0.7);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: border-color 160ms ease-out, color 160ms ease-out, background 160ms ease-out;
+}
+
+.game-page-links a:hover,
+.game-page-links a:focus-visible {
+  border-color: rgba(112, 240, 255, 0.45);
+  color: #70f0ff;
+  background: rgba(112, 240, 255, 0.06);
+}
+
+.game-page-side-note {
+  padding: 0 0 0.65rem;
+  border-left: 1px solid rgba(255, 88, 201, 0.55);
+  padding-left: 1rem;
+}
+
+.game-page-side-note span {
+  color: rgba(255, 88, 201, 0.78);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+}
+
+.game-page-side-note p {
+  max-width: 15rem;
+  margin: 0.75rem 0 0;
+  color: rgba(244, 240, 255, 0.48);
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+.game-page-stage {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.game-page-footer {
+  padding-top: 1.4rem;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+@media (max-width: 760px) {
+  .game-page-intro {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 4.5rem;
+  }
+
+  .game-page-side-note {
+    max-width: 24rem;
+  }
+
+  .game-page-header-links .game-page-status {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .game-page {
+    padding-inline: 0.8rem;
+  }
+
+  .game-page-brand {
+    font-size: 0.52rem;
+  }
+
+  .game-page-header-links a {
+    font-size: 0.52rem;
+  }
+
+  .game-page-copy h1 {
+    font-size: clamp(3.25rem, 18vw, 5.5rem);
+  }
+
+  .game-page-footer {
+    font-size: 0.48rem;
+  }
+}

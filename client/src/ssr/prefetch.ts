@@ -54,6 +54,7 @@ const idTitles: Record<string, string> = {
   "/epk": "Press & Booking EPK | Akbar Nawasunda",
   "/inquire": "Inquire | Akbar Nawasunda",
   "/licensing": "Music Licensing | Akbar Nawasunda",
+  "/game/jedag-run": "JEDAG RUN — Night Frequency | Akbar Nawasunda",
   "/privacy": "Privacy Policy | Akbar Nawasunda",
 };
 
@@ -68,6 +69,7 @@ const enTitles: Record<string, string> = {
   "/epk": "Press & Booking EPK | Akbar Nawasunda",
   "/inquire": "Inquire | Akbar Nawasunda",
   "/licensing": "Music Licensing | Akbar Nawasunda",
+  "/game/jedag-run": "JEDAG RUN — Night Frequency | Akbar Nawasunda",
   "/privacy": "Privacy Policy | Akbar Nawasunda",
 };
 
@@ -195,7 +197,7 @@ export async function prefetchForPath(
   const isEnglish = path === "/en" || path.startsWith("/en/");
   const pathWithoutLanguage = path.replace(/^\/en(?=\/|$)/, "") || "/";
   const publicRoute = path === "/" || path === "/en" || [
-    "/music", "/visuals", "/visuals/portraits", "/live", "/universe", "/about", "/inquire", "/licensing", "/epk", "/privacy",
+    "/music", "/visuals", "/visuals/portraits", "/live", "/universe", "/about", "/inquire", "/licensing", "/game/jedag-run", "/epk", "/privacy",
   ].includes(pathWithoutLanguage);
 
   if (path === "/studio" || path.startsWith("/studio/") || path === "/assets" || path === "/admin") {
@@ -215,10 +217,13 @@ export async function prefetchForPath(
   const content = customDocumentsToPublicContent(documents as Parameters<typeof customDocumentsToPublicContent>[0]);
   const siteTitle = !isEnglish ? content?.siteSettings?.siteTitle || undefined : undefined;
   const defaultTitle = (isEnglish ? enTitles[pathWithoutLanguage] : idTitles[pathWithoutLanguage]) || SITE_NAME;
-  const title = siteTitle && pathWithoutLanguage === "/" ? siteTitle : defaultTitle;
-  const description = isEnglish
-    ? EN_DESCRIPTION
-    : content?.siteSettings?.metaDescription || ID_DESCRIPTION;
+  const gameTitle = content?.game?.title ? `${content.game.title} | Akbar Nawasunda` : defaultTitle;
+  const title = siteTitle && pathWithoutLanguage === "/" ? siteTitle : pathWithoutLanguage === "/game/jedag-run" ? gameTitle : defaultTitle;
+  const description = pathWithoutLanguage === "/game/jedag-run"
+    ? content?.game?.intro || (isEnglish ? "Play JEDAG RUN — NIGHT FREQUENCY, an original browser game by Akbar Nawasunda." : "Mainkan JEDAG RUN — NIGHT FREQUENCY, game browser orisinal dari Akbar Nawasunda.")
+    : isEnglish
+      ? EN_DESCRIPTION
+      : content?.siteSettings?.metaDescription || ID_DESCRIPTION;
   const structuredData = buildStructuredData(path, isEnglish, content);
   const base: HeadMeta = {
     title,

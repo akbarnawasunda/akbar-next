@@ -14,6 +14,7 @@ The public experience is organized around a small set of clear destinations:
 - **Archive** — the artist’s creative timeline, selected artwork, and official project routes.
 - **About** — artist profile, musical journey, public identity, and contact routes.
 - **Press & Booking** — an online EPK for promoters, media, playlist editors, collaborators, licensing inquiries, and booking requests.
+- **JEDAG RUN** — a lightweight playable Night Frequency signal with score, combo, Drop Meter, and local best score.
 - **Privacy** — a plain-language explanation of the site’s data posture and third-party services.
 
 Original work is presented under the **Akbar Nawasunda** name. Earlier remix work is also associated with the historical alias **DJ Akbar Remix**.
@@ -27,6 +28,7 @@ The repository includes a protected editorial Studio for managing the public web
 - real media thumbnails and an asset library;
 - Visual Archive references and import-to-content workflows;
 - document previews for the main public sections;
+- JEDAG RUN game configuration with replaceable BGM and SFX fields;
 - controlled owner access for editorial changes and inquiries.
 
 The public site keeps official links and media references visible even when an embedded player is not required.
@@ -81,10 +83,11 @@ The main Indonesian routes are:
 /epk
 /inquire
 /licensing
+/game/jedag-run
 /privacy
 ```
 
-English versions are available under `/en`, including the corresponding music, visuals, live, archive, profile, EPK, inquiry, licensing, and privacy routes.
+English versions are available under `/en`, including the corresponding music, visuals, live, archive, profile, EPK, inquiry, licensing, game, and privacy routes.
 
 ## Project principles
 

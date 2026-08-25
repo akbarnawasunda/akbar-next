@@ -2,6 +2,7 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   Disc3,
+  Gamepad2,
   Headphones,
   Play,
   Radio,
@@ -41,6 +42,7 @@ import "./HomePlatformCards.css";
 import "./HomeLayoutRefinement.css";
 import "./HomeMotionRefinement.css";
 import "./HomePortfolioPatterns.css";
+import "./HomeGameTeaser.css";
 
 export default function Home() {
   usePerformanceMonitor();
@@ -50,6 +52,7 @@ export default function Home() {
   const platformSectionRef = useScrollReveal<HTMLElement>();
   const liveSectionRef = useScrollReveal<HTMLElement>();
   const signalSectionRef = useScrollReveal<HTMLElement>();
+  const gameSectionRef = useScrollReveal<HTMLElement>();
   const primaryActionRef = useMagnetic<HTMLAnchorElement>();
   const liveActionRef = useMagnetic<HTMLAnchorElement>();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -141,6 +144,8 @@ export default function Home() {
       : currentRelease;
   const cmsHero = publicContent.data?.hero;
   const cmsProfile = publicContent.data?.profile;
+  const gameConfig = publicContent.data?.game;
+  const gameEnabled = gameConfig?.isEnabled !== false;
   const configuredPortrait = cmsHero?.heroImage || cmsProfile?.portraitImage || officialBrand.portrait;
   useEffect(() => {
     setPortraitSrc(configuredPortrait);
@@ -565,12 +570,43 @@ export default function Home() {
           </div> : null}
         </section>
 
+        {gameEnabled ? (
+          <section
+            ref={gameSectionRef}
+            className="section game-teaser-section reveal-target"
+            id="game"
+            aria-labelledby="game-teaser-title"
+          >
+            <SectionIndex number="06" label="PLAYABLE SIGNAL" />
+            <div className="game-teaser-art" aria-hidden="true">
+              <div className="game-teaser-scanline" />
+              <span className="game-teaser-sun" />
+              <span className="game-teaser-mountain game-teaser-mountain-a" />
+              <span className="game-teaser-mountain game-teaser-mountain-b" />
+              <span className="game-teaser-runner">AN</span>
+              <span className="game-teaser-note game-teaser-note-a" />
+              <span className="game-teaser-note game-teaser-note-b" />
+              <span className="game-teaser-gate" />
+              <span className="game-teaser-signal-line" />
+              <span className="game-teaser-score">DROP  /  01</span>
+            </div>
+            <div className="game-teaser-copy">
+              <p className="eyebrow"><Gamepad2 size={14} /> {gameConfig?.kicker || "PLAYABLE SIGNAL"}</p>
+              <h2 id="game-teaser-title">ENTER THE<br />FREQUENCY.</h2>
+              <p>{gameConfig?.intro || "Run the signal, collect the notes, and chase the drop."}</p>
+              <Link className="button-primary" href="/game/jedag-run">
+                MAIN JEDAG RUN <ArrowUpRight size={15} />
+              </Link>
+            </div>
+          </section>
+        ) : null}
+
         <section
           ref={signalSectionRef}
           className="signal-section reveal-target"
           id="signal"
         >
-          <SectionIndex number="06" label="NEWS" />
+          <SectionIndex number="07" label="NEWS" />
           <div>
             <p className="eyebrow">
               <Sparkles size={14} /> KABAR TERBARU

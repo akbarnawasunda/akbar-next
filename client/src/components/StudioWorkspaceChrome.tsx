@@ -57,6 +57,7 @@ function destinationFor(documentType: string) {
   if (documentType === "visual") return "/visuals";
   if (documentType === "portrait") return "/visuals/portraits";
   if (documentType === "event" || documentType === "live") return "/live";
+  if (documentType === "game") return "/game/jedag-run + homepage teaser";
   return "Public site";
 }
 
@@ -64,11 +65,13 @@ export function StudioPublishChecklist({ documentType, payload, isPublished }: P
   const titleReady = Boolean(text(payload, "title") || text(payload, "heroTitle") || text(payload, "siteTitle"));
   const mediaReady = documentType === "siteSettings" || documentType === "live" || documentType === "event"
     ? true
-    : Boolean(text(payload, "imageUrl") || text(payload, "artworkUrl") || text(payload, "portraitImage") || text(payload, "heroImage") || text(payload, "socialPreviewUrl"));
+    : documentType === "game"
+      ? true
+      : Boolean(text(payload, "imageUrl") || text(payload, "artworkUrl") || text(payload, "portraitImage") || text(payload, "heroImage") || text(payload, "socialPreviewUrl"));
   const routeReady = Boolean(destinationFor(documentType));
   const checks = [
     { label: "Judul / identitas terisi", ready: titleReady },
-    { label: "Media utama tersedia", ready: mediaReady },
+    { label: documentType === "game" ? "Audio opsional / fallback siap" : "Media utama tersedia", ready: mediaReady },
     { label: "Halaman tujuan jelas", ready: routeReady },
   ];
   const passed = checks.filter(check => check.ready).length;

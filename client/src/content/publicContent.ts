@@ -8,7 +8,20 @@ export type CmsVisual = { _id: string; title: string; label?: string; youtubeId?
 export type CmsPortraitStudy = { _id: string; title: string; titleEn?: string; label?: string; imageUrl: string; copyId?: string; copyEn?: string; altId?: string; altEn?: string; order?: number };
 export type CmsEvent = { _id: string; title: string; date: string; time?: string; city?: string; venue?: string; country?: string; mapsUrl?: string; posterUrl?: string; ticketUrl?: string; rsvpUrl?: string; status?: "announced" | "sold out" | "cancelled" | "past"; isFeatured?: boolean };
 export type CmsLegalSection = { key?: "short-version" | "collection" | "cookies" | "services" | "rights"; heading?: string; body?: string };
-export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; locationUrl?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string; platformLinks?: CmsPlatformLink[] }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; releases: CmsRelease[]; visuals: CmsVisual[]; portraitStudies: CmsPortraitStudy[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
+export type CmsGameConfig = {
+  title: string;
+  kicker: string;
+  intro: string;
+  bgmUrl?: string;
+  jumpSfxUrl?: string;
+  collectSfxUrl?: string;
+  hitSfxUrl?: string;
+  dropSfxUrl?: string;
+  gameOverSfxUrl?: string;
+  isEnabled: boolean;
+  shareLabel: string;
+};
+export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; locationUrl?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string; platformLinks?: CmsPlatformLink[] }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; game?: CmsGameConfig; releases: CmsRelease[]; visuals: CmsVisual[]; portraitStudies: CmsPortraitStudy[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
 
 function normalizePublicRoleCopy(value: string | undefined) {
   return value?.replace(/^Produser dan remixer asal Bandung Barat\./i, "Produser, remixer, dan DJ asal Bandung Barat.") || "";
@@ -97,6 +110,7 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
   const siteSettings = first("siteSettings");
   const legal = first("legal");
   const live = first("live");
+  const game = first("game");
 
   return {
     hero: hero ? {
@@ -187,6 +201,19 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       status: stringValue(payloadOf(live).status) || stringValue(payloadOf(live).label),
       message: stringValue(payloadOf(live).message) || stringValue(payloadOf(live).body),
       actionUrl: stringValue(payloadOf(live).actionUrl) || stringValue(payloadOf(live).href),
+    } : undefined,
+    game: game ? {
+      title: stringValue(payloadOf(game).title) || "JEDAG RUN — NIGHT FREQUENCY",
+      kicker: stringValue(payloadOf(game).kicker) || "PLAYABLE SIGNAL",
+      intro: stringValue(payloadOf(game).intro) || stringValue(payloadOf(game).body) || "Run the signal, collect the notes, and chase the drop.",
+      bgmUrl: publicMediaUrl(stringValue(payloadOf(game).bgmUrl)),
+      jumpSfxUrl: publicMediaUrl(stringValue(payloadOf(game).jumpSfxUrl)),
+      collectSfxUrl: publicMediaUrl(stringValue(payloadOf(game).collectSfxUrl)),
+      hitSfxUrl: publicMediaUrl(stringValue(payloadOf(game).hitSfxUrl)),
+      dropSfxUrl: publicMediaUrl(stringValue(payloadOf(game).dropSfxUrl)),
+      gameOverSfxUrl: publicMediaUrl(stringValue(payloadOf(game).gameOverSfxUrl)),
+      isEnabled: booleanValue(payloadOf(game).isEnabled) ?? true,
+      shareLabel: stringValue(payloadOf(game).shareLabel) || "SHARE SCORE",
     } : undefined,
     events: byType("event").map(document => ({
       _id: `custom-${document.id}`,

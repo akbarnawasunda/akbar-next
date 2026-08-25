@@ -11,6 +11,7 @@ export const customDocumentTypes = [
   "portrait",
   "live",
   "event",
+  "game",
 ] as const;
 
 export type CustomDocumentType = (typeof customDocumentTypes)[number];
@@ -40,6 +41,7 @@ const prefixes: Record<CustomDocumentType, string> = {
   portrait: "custom-portrait",
   live: "custom-live-signal",
   event: "custom-event",
+  game: "custom-game",
 };
 
 const singletonTypes = new Set<CustomDocumentType>([
@@ -49,6 +51,7 @@ const singletonTypes = new Set<CustomDocumentType>([
   "siteSettings",
   "legal",
   "live",
+  "game",
 ]);
 
 function stringValue(value: unknown, fallback: string): string {
@@ -67,6 +70,7 @@ function documentTitle(type: CustomDocumentType, payload: DocumentPayload): stri
     portrait: "Untitled portrait study",
     live: "Live signal",
     event: "Untitled event",
+    game: "JEDAG RUN — NIGHT FREQUENCY",
   };
   return stringValue(payload.title, stringValue(payload.siteTitle, defaults[type]));
 }
@@ -77,6 +81,7 @@ function documentLabel(type: CustomDocumentType, payload: DocumentPayload): stri
   if (type === "visual") return "Official visual";
   if (type === "portrait") return "Portrait study";
   if (type === "event") return stringValue(payload.status, "announced");
+  if (type === "game") return "Game + audio";
   return type;
 }
 

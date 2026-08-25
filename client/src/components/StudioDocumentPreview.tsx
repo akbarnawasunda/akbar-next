@@ -20,7 +20,8 @@ type DocumentType =
   | "visual"
   | "portrait"
   | "live"
-  | "event";
+  | "event"
+  | "game";
 type Payload = Record<string, unknown>;
 
 type StudioDocumentPreviewProps = {
@@ -40,6 +41,7 @@ const publicRoutes: Record<DocumentType, { route: string; surface: string }> = {
   portrait: { route: "/visuals/portraits", surface: "Visual Studies gallery" },
   live: { route: "/live", surface: "Live + homepage" },
   event: { route: "/live", surface: "Live + homepage" },
+  game: { route: "/game/jedag-run", surface: "JEDAG RUN + homepage teaser" },
 };
 
 function value(payload: Payload, key: string) {
@@ -57,6 +59,12 @@ const mediaLabels: Record<string, string> = {
   photoPackUrl: "Photo pack",
   logoPackUrl: "Logo pack",
   technicalRiderUrl: "Technical rider",
+  bgmUrl: "Game BGM",
+  jumpSfxUrl: "SFX lompat",
+  collectSfxUrl: "SFX collect note",
+  hitSfxUrl: "SFX kena obstacle",
+  dropSfxUrl: "SFX drop",
+  gameOverSfxUrl: "SFX game over",
 };
 
 function mediaValues(payload: Payload) {
@@ -180,6 +188,7 @@ export default function StudioDocumentPreview({
           </span>
           <span>{media.length} media terpasang</span>
           <span>{links.length} link terdeteksi</span>
+          {documentType === "game" ? <span>{media.length} audio terpasang</span> : null}
           <span className="text-amber-100/55">
             Draft preview · belum live sampai disimpan
           </span>

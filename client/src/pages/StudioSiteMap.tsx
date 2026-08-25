@@ -7,6 +7,7 @@ import {
   Disc3,
   ExternalLink,
   FileText,
+  Gamepad2,
   Image,
   Link2,
   Mail,
@@ -86,6 +87,12 @@ const sitePages: SitePage[] = [
         detail: "Kartu video dan thumbnail visual resmi.",
         icon: Video,
         editType: "visual",
+      },
+      {
+        label: "JEDAG RUN teaser",
+        detail: "Teaser homepage menuju game penuh dan konfigurasi audio game.",
+        icon: Gamepad2,
+        editType: "game",
       },
       {
         label: "Jadwal pertunjukan",
@@ -250,6 +257,34 @@ const sitePages: SitePage[] = [
         detail: "Form update email dari sistem newsletter.",
         icon: Mail,
         fixed: true,
+      },
+    ],
+  },
+  {
+    route: "/game/jedag-run",
+    marker: "PLAYABLE SIGNAL",
+    title: "JEDAG RUN",
+    summary:
+      "Game browser Night Frequency dengan BGM, SFX, score, combo, dan Drop Meter.",
+    accent: "cyan",
+    sections: [
+      {
+        label: "Game runtime",
+        detail: "Gameplay, score, lives, combo, obstacle, note, dan Drop Meter.",
+        icon: Gamepad2,
+        editType: "game",
+      },
+      {
+        label: "Game audio",
+        detail: "BGM dan SFX opsional yang bisa diganti dari Studio melalui managed media.",
+        icon: Music2,
+        editType: "game",
+      },
+      {
+        label: "Homepage teaser",
+        detail: "Panel pengantar ringan yang mengarahkan pengunjung ke route game.",
+        icon: ArrowUpRight,
+        editType: "game",
       },
     ],
   },

@@ -5,6 +5,8 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import "./components/JedagRunCanvas.css";
+import "./pages/GameJedagRun.css";
 type PreloadableComponent<T extends React.ComponentType<any>> = T & {
   preload: () => Promise<{ default: T }>;
 };
@@ -41,6 +43,10 @@ const About = lazyWithPreload(() => import("./pages/About"));
 const ReleaseDetail = lazyWithPreload(() => import("./pages/ReleaseDetail"));
 const Inquiry = lazyWithPreload(() => import("./pages/Inquiry"));
 const Licensing = lazyWithPreload(() => import("./pages/Licensing"));
+const GameJedagRun = lazyWithPreload(() => import("./pages/GameJedagRun"));
+const EnglishGameJedagRun = lazyWithPreload(() => import("./pages/GameJedagRun").then(module => ({ default: module.EnglishGameJedagRun })));
+const GameJedagRunRoute = () => <GameJedagRun />;
+const EnglishGameJedagRunRoute = () => <EnglishGameJedagRun />;
 const PrivacyPolicy = lazyWithPreload(() => import("./pages/PrivacyPolicy"));
 const EnglishPages = () => import("./pages/EnglishPages");
 const EnglishHome = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishHome })));
@@ -77,6 +83,7 @@ export async function preloadPublicRoute(pathname: string) {
   else if (path === "/about") add(About);
   else if (path === "/inquire") add(Inquiry);
   else if (path === "/licensing") add(Licensing);
+  else if (path === "/game/jedag-run") add(GameJedagRun);
   else if (path === "/epk") add(PressKit);
   else if (path === "/privacy") add(PrivacyPolicy);
   else if (path === "/en") add(EnglishHome);
@@ -90,6 +97,7 @@ export async function preloadPublicRoute(pathname: string) {
   else if (path === "/en/epk") add(EnglishEpk);
   else if (path === "/en/inquire") add(EnglishInquiry);
   else if (path === "/en/licensing") add(EnglishLicensing);
+  else if (path === "/en/game/jedag-run") add(EnglishGameJedagRun);
   else if (path === "/en/privacy") add(EnglishPrivacy);
   await Promise.all(jobs);
 }
@@ -128,6 +136,7 @@ function Router() {
       <Route path={"/about"} component={About} />
       <Route path={"/inquire"} component={Inquiry} />
       <Route path={"/licensing"} component={Licensing} />
+      <Route path={"/game/jedag-run"} component={GameJedagRunRoute} />
       <Route path={"/assets"} component={AssetLibrary} />
       <Route path={"/studio"} component={ContentStudio} />
       <Route path={"/studio/inquiries"} component={InquiryStudio} />
@@ -145,6 +154,7 @@ function Router() {
       <Route path={"/en/about"} component={EnglishAbout} />
       <Route path={"/en/inquire"} component={EnglishInquiry} />
       <Route path={"/en/licensing"} component={EnglishLicensing} />
+      <Route path={"/en/game/jedag-run"} component={EnglishGameJedagRunRoute} />
       <Route path={"/en/epk"} component={EnglishEpk} />
       <Route path={"/en/privacy"} component={EnglishPrivacy} />
       <Route
@@ -172,6 +182,7 @@ const supportedLanguagePaths = [
   "/about",
   "/inquire",
   "/licensing",
+  "/game/jedag-run",
   "/epk",
   "/privacy",
 ];
@@ -199,6 +210,7 @@ const idTitles: Record<string, string> = {
   "/epk": "Press & Booking EPK | Akbar Nawasunda",
   "/inquire": "Inquire | Akbar Nawasunda",
   "/licensing": "Music Licensing | Akbar Nawasunda",
+  "/game/jedag-run": "JEDAG RUN — Night Frequency | Akbar Nawasunda",
   "/privacy": "Privacy Policy | Akbar Nawasunda",
 };
 
@@ -213,6 +225,7 @@ const englishTitles: Record<string, string> = {
   "/en/epk": "Press & Booking EPK | Akbar Nawasunda",
   "/en/inquire": "Inquire | Akbar Nawasunda",
   "/en/licensing": "Music Licensing | Akbar Nawasunda",
+  "/en/game/jedag-run": "JEDAG RUN — Night Frequency | Akbar Nawasunda",
   "/en/privacy": "Privacy Policy | Akbar Nawasunda",
 };
 

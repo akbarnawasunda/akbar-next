@@ -7,6 +7,7 @@ import {
   Disc3,
   FilePenLine,
   FolderOpen,
+  Gamepad2,
   Image as ImageIcon,
   LayoutList,
   Link2,
@@ -109,6 +110,12 @@ const documentTypes = [
     eyebrow: "10",
     description: "Date, venue, ticket, poster",
   },
+  {
+    value: "game",
+    label: "JEDAG RUN game",
+    eyebrow: "11",
+    description: "Game route, copy, BGM, and SFX",
+  },
 ] as const;
 
 type DocumentType = (typeof documentTypes)[number]["value"];
@@ -178,6 +185,16 @@ const fieldUsage: Record<string, string> = {
   "event.posterUrl": "Live + Homepage → poster event",
   "event.ticketUrl": "Live + Homepage → tombol tiket",
   "event.rsvpUrl": "Live + Homepage → tombol RSVP",
+  "game.title": "Game page → title dan browser metadata",
+  "game.kicker": "Game page → label pembuka",
+  "game.intro": "Homepage teaser + game page → copy pengantar",
+  "game.bgmUrl": "Game page → background music setelah user menekan Start",
+  "game.jumpSfxUrl": "Game page → suara lompat",
+  "game.collectSfxUrl": "Game page → suara mengambil frequency note",
+  "game.hitSfxUrl": "Game page → suara terkena noise gate",
+  "game.dropSfxUrl": "Game page → suara Drop Meter penuh",
+  "game.gameOverSfxUrl": "Game page → suara game over",
+  "game.shareLabel": "Game page → label tombol share score",
 };
 
 function usageForField(documentType: DocumentType, key: string) {
@@ -194,6 +211,7 @@ const primaryWorkflowTypes: DocumentType[] = [
   "profile",
   "visual",
   "portrait",
+  "game",
 ];
 const primaryWorkflows = [
   {
@@ -243,6 +261,14 @@ const primaryWorkflows = [
     description: "Ganti foto, caption, alt text, dan urutan portrait study.",
     icon: ImageIcon,
     action: "Kelola portrait",
+  },
+  {
+    type: "game" as const,
+    eyebrow: "07",
+    title: "JEDAG RUN / Night Frequency",
+    description: "Atur copy game, BGM, SFX, dan status tayang.",
+    icon: Gamepad2,
+    action: "Edit game & audio",
   },
 ];
 
@@ -443,6 +469,67 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
       options: ["announced", "sold out", "cancelled", "past"],
     },
   ],
+  game: [
+    {
+      key: "title",
+      label: "Judul game",
+      placeholder: "JEDAG RUN — NIGHT FREQUENCY",
+    },
+    {
+      key: "kicker",
+      label: "Kicker",
+      placeholder: "PLAYABLE SIGNAL",
+    },
+    {
+      key: "intro",
+      label: "Intro game",
+      multiline: true,
+      placeholder: "Run the signal, collect the notes, and chase the drop.",
+    },
+    {
+      key: "bgmUrl",
+      label: "Background music / BGM",
+      type: "url",
+      media: true,
+      hint: "Opsional. Upload audio dari AssetPicker. Audio mulai setelah user menekan Start.",
+    },
+    {
+      key: "jumpSfxUrl",
+      label: "SFX lompat",
+      type: "url",
+      media: true,
+      hint: "Opsional. Jika kosong, game memakai fallback Web Audio.",
+    },
+    {
+      key: "collectSfxUrl",
+      label: "SFX collect note",
+      type: "url",
+      media: true,
+    },
+    {
+      key: "hitSfxUrl",
+      label: "SFX kena obstacle",
+      type: "url",
+      media: true,
+    },
+    {
+      key: "dropSfxUrl",
+      label: "SFX drop",
+      type: "url",
+      media: true,
+    },
+    {
+      key: "gameOverSfxUrl",
+      label: "SFX game over",
+      type: "url",
+      media: true,
+    },
+    {
+      key: "shareLabel",
+      label: "Label tombol share",
+      placeholder: "SHARE SCORE",
+    },
+  ],
 };
 
 function fallbackPayload(type: DocumentType): EditorPayload {
@@ -538,6 +625,14 @@ function fallbackPayload(type: DocumentType): EditorPayload {
       readyForPublic: false,
     };
   if (type === "event") return { status: "announced" };
+  if (type === "game")
+    return {
+      title: "JEDAG RUN — NIGHT FREQUENCY",
+      kicker: "PLAYABLE SIGNAL",
+      intro: "Run the signal, collect the notes, and chase the drop.",
+      isEnabled: true,
+      shareLabel: "SHARE SCORE",
+    };
   return {
     status: "standby",
     message: "Belum ada jadwal pertunjukan yang diumumkan.",
@@ -1375,6 +1470,17 @@ export default function ContentStudio() {
                     }
                   />{" "}
                   Jadikan jadwal utama / show berikutnya
+                </label>
+              ) : null}
+              {documentType === "game" ? (
+                <label className="flex items-center gap-3 rounded-xl border border-cyan-200/10 bg-cyan-200/[0.04] px-4 py-3 text-xs text-cyan-100/70">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 accent-cyan-300"
+                    checked={payload.isEnabled !== false}
+                    onChange={event => updateField("isEnabled", event.target.checked)}
+                  />{" "}
+                  Aktifkan route game dan teaser homepage
                 </label>
               ) : null}
               <div className="grid gap-4 border-t border-white/[0.08] pt-5 sm:grid-cols-[0.8fr_1.2fr]">

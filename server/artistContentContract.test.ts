@@ -53,6 +53,30 @@ describe("artist content contract", () => {
     expect(musicPage).toContain("releases.filter(legacy => !cmsCatalog.some");
   });
 
+  it("keeps the JEDAG RUN game and editable audio connected across public and Studio surfaces", () => {
+    const editor = source("client/src/pages/ContentStudio.tsx");
+    const codec = source("server/customContent.ts");
+    const publicContent = source("client/src/content/publicContent.ts");
+    const app = source("client/src/App.tsx");
+    const gamePage = source("client/src/pages/GameJedagRun.tsx");
+    const canvas = source("client/src/components/JedagRunCanvas.tsx");
+    const preview = source("client/src/components/StudioDocumentPreview.tsx");
+    const checklist = source("client/src/components/StudioWorkspaceChrome.tsx");
+
+    expect(editor).toContain('value: "game"');
+    expect(editor).toContain('key: "bgmUrl"');
+    expect(editor).toContain('key: "gameOverSfxUrl"');
+    expect(codec).toContain('"game"');
+    expect(publicContent).toContain("game?: CmsGameConfig");
+    expect(publicContent).toContain("bgmUrl: publicMediaUrl");
+    expect(app).toContain('path={"/game/jedag-run"}');
+    expect(app).toContain('path={"/en/game/jedag-run"}');
+    expect(gamePage).toContain("JEDAG RUN — NIGHT FREQUENCY");
+    expect(canvas).toContain("new JedagRunAudio(config)");
+    expect(preview).toContain('game: { route: "/game/jedag-run"');
+    expect(checklist).toContain('documentType === "game"');
+  });
+
   it("keeps Studio media and link previews connected to the editor workflow", () => {
     const editor = source("client/src/pages/ContentStudio.tsx");
     const picker = source("client/src/components/AssetPicker.tsx");

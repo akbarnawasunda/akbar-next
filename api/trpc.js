@@ -291,7 +291,8 @@ var customDocumentTypes = [
   "visual",
   "portrait",
   "live",
-  "event"
+  "event",
+  "game"
 ];
 var prefixes = {
   hero: "custom-hero",
@@ -303,7 +304,8 @@ var prefixes = {
   visual: "custom-visual",
   portrait: "custom-portrait",
   live: "custom-live-signal",
-  event: "custom-event"
+  event: "custom-event",
+  game: "custom-game"
 };
 var singletonTypes = /* @__PURE__ */ new Set([
   "hero",
@@ -311,7 +313,8 @@ var singletonTypes = /* @__PURE__ */ new Set([
   "pressKit",
   "siteSettings",
   "legal",
-  "live"
+  "live",
+  "game"
 ]);
 function stringValue(value, fallback) {
   return typeof value === "string" && value.trim() ? value.trim() : fallback;
@@ -327,7 +330,8 @@ function documentTitle(type, payload) {
     visual: "Untitled visual",
     portrait: "Untitled portrait study",
     live: "Live signal",
-    event: "Untitled event"
+    event: "Untitled event",
+    game: "JEDAG RUN \u2014 NIGHT FREQUENCY"
   };
   return stringValue(payload.title, stringValue(payload.siteTitle, defaults[type]));
 }
@@ -337,6 +341,7 @@ function documentLabel(type, payload) {
   if (type === "visual") return "Official visual";
   if (type === "portrait") return "Portrait study";
   if (type === "event") return stringValue(payload.status, "announced");
+  if (type === "game") return "Game + audio";
   return type;
 }
 function documentHref(payload) {
