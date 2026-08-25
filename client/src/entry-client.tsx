@@ -74,8 +74,12 @@ if (import.meta.env.DEV && "serviceWorker" in navigator) {
     .catch(() => undefined);
 }
 
-const rawState = (window as Window & { __RQ_STATE__?: string }).__RQ_STATE__;
-const parsedState = rawState ? JSON.parse(rawState) : undefined;
+const rawState = (window as Window & { __RQ_STATE__?: string | unknown }).__RQ_STATE__;
+const parsedState = rawState
+  ? typeof rawState === "string"
+    ? JSON.parse(rawState)
+    : rawState
+  : undefined;
 const dehydratedState = parsedState
   ? (superjson.deserialize(parsedState) as DehydratedState)
   : undefined;

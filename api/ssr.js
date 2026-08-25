@@ -1392,7 +1392,7 @@ function structuredDataScript(value) {
 }
 function composeHtml(template, appHtml, head, dehydratedState) {
   const serializedState = JSON.stringify(superjson2.serialize(dehydratedState)).replace(/</g, "\\u003c");
-  const stateScript = `<script>window.__RQ_STATE__ = ${serializedState}</script>`;
+  const stateScript = `<script>window.__RQ_STATE__ = ${JSON.stringify(serializedState)}</script>`;
   const structuredData = head.structuredData ? structuredDataScript(head.structuredData) : "";
   const language = head.locale?.startsWith("en") ? "en" : "id";
   return template.replace('<html lang="id">', `<html lang="${language}">`).replace("</body>", () => `${stateScript}</body>`).replace("<!--app-head-->", () => `${buildHeadTags(head)}${structuredData}`).replace("<!--app-html-->", () => appHtml);

@@ -78,8 +78,12 @@ export function structuredDataScript(value: unknown): string {
 }
 
 export function composeHtml(template: string, appHtml: string, head: HeadMeta, dehydratedState: unknown) {
+  // Keep the client contract stable: entry-client reads __RQ_STATE__ as a JSON string
+  // and parses it before passing the SuperJSON payload to HydrationBoundary. The
+  // extra JSON.stringify wraps the serialized payload as a JS string; assigning the
+  // object directly makes JSON.parse(object) throw and aborts hydration/preload.
   const serializedState = JSON.stringify(superjson.serialize(dehydratedState)).replace(/</g, "\\u003c");
-  const stateScript = `<script>window.__RQ_STATE__ = ${serializedState}</script>`;
+  const stateScript = `<script>window.__RQ_STATE__ = ${JSON.stringify(serializedState)}</script>`;
   const structuredData = head.structuredData ? structuredDataScript(head.structuredData) : "";
   const language = head.locale?.startsWith("en") ? "en" : "id";
   return template
