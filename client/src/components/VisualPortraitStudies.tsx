@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+import { formatPublicIndex } from "@/content/artistPlatform";
 import type { CmsPortraitStudy } from "@/content/publicContent";
 import { publicPortraitStudies } from "@/content/publicContent";
 import "./VisualPortraitStudies.css";
@@ -47,7 +48,7 @@ export default function VisualPortraitStudies({ english = false, studies = publi
       <div className="an-portrait-study-indexes" aria-label={english ? "Portrait study images" : "Daftar foto studi potret"}>
         {studies.map((item, index) => (
           <a className="an-portrait-study-index-link" href={`${galleryRoute}#${item._id}`} key={item._id}>
-            <span>0{index + 1}</span>
+            <span>{formatPublicIndex(index)}</span>
             <div>
               <small>{item.label || (english ? "PORTRAIT STUDY" : "STUDI POTRET")}</small>
               <strong>{english ? item.titleEn || item.title : item.title}</strong>

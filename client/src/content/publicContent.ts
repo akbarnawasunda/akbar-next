@@ -27,8 +27,10 @@ function normalizePublicRoleCopy(value: string | undefined) {
   return value?.replace(/^Produser dan remixer asal Bandung Barat\./i, "Produser, remixer, dan DJ asal Bandung Barat.") || "";
 }
 
-/** Keep upcoming/live surfaces truthful: past and cancelled events are not current public dates. */
+/** Keep upcoming/live surfaces truthful: past, cancelled, and known placeholder events are not public dates. */
 export function isUpcomingPublicEvent(event: CmsEvent): boolean {
+  const eventIdentity = `${event.title} ${event.venue || ""} ${event.city || ""}`.trim();
+  if (/^malas-malasan aja\b/i.test(event.title.trim()) || /ololololololo|bandoeng multiverse/i.test(eventIdentity)) return false;
   if (event.status === "past" || event.status === "cancelled") return false;
   const parsed = new Date(event.date);
   if (Number.isNaN(parsed.getTime())) return true;

@@ -8,7 +8,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
-import { verifiedArtistProfile } from "@/content/artistPlatform";
+import { formatPublicIndex, verifiedArtistProfile } from "@/content/artistPlatform";
 import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./PrivacyPolicy.css";
@@ -97,7 +97,7 @@ export default function PrivacyPolicy() {
             <nav aria-label="Privacy Policy sections">
               {sections.map(([id, label], index) => (
                 <a href={`#${id}`} key={id}>
-                  <span>0{index + 1}</span>{label}
+                  <span>{formatPublicIndex(index)}</span>{label}
                 </a>
               ))}
             </nav>
@@ -127,7 +127,7 @@ export default function PrivacyPolicy() {
                 {collectionPoints.map(({ title, copy, icon: Icon }, index) => (
                   <div className="an-privacy-collection-card" key={title}>
                     <div className="an-privacy-card-top">
-                      <span>0{index + 1}</span>
+                      <span>{formatPublicIndex(index)}</span>
                       <Icon size={17} />
                     </div>
                     <h3>{title}</h3>

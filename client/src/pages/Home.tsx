@@ -22,6 +22,7 @@ import { SkeletonCard } from "@/components/SkeletonCard";
 import { TiltCard } from "@/components/TiltCard";
 import {
   currentRelease,
+  formatPublicIndex,
   officialBrand,
   releases,
   videos,
@@ -336,7 +337,7 @@ export default function Home() {
                 rel="noreferrer"
                 aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
               >
-                <span className="home-platform-number">0{index + 1}</span>
+                <span className="home-platform-number">{formatPublicIndex(index)}</span>
                 <span className="home-platform-icon-shell">
                   <PlatformIcon label={platform.label} />
                 </span>
@@ -451,7 +452,7 @@ export default function Home() {
                         />
                       </div>
                     )}
-                    <span className="release-number">0{index + 1}</span>
+                    <span className="release-number">{formatPublicIndex(index)}</span>
                     <PlatformIcon label={release.platform} />
                     <p>
                       {release.format} · {release.year}

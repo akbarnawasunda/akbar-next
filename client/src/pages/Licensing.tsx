@@ -1,5 +1,5 @@
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
-import { verifiedArtistProfile } from "@/content/artistPlatform";
+import { formatPublicIndex, verifiedArtistProfile } from "@/content/artistPlatform";
 import "./EcosystemPages.css";
 import "./Inquiry.css";
 
@@ -10,5 +10,5 @@ const routes = [
 ];
 
 export default function Licensing() {
-  return <div className="nf-page an-licensing-page"><NightHeader /><main><section className="an-inquiry-hero"><p className="nf-page-eyebrow">PENGGUNAAN MUSIK</p><h1>MUSIC<br/>LICENSING.</h1><p>{verifiedArtistProfile.licensing}</p><div className="an-inquiry-signal"><span>LANGKAH PERTAMA</span><strong>KIRIM DETAILNYA</strong></div></section><section className="an-license-grid">{routes.map(([title, copy], index) => <article key={title}><span>0{index + 1}</span><h2>{title}</h2><p>{copy}</p></article>)}</section><section className="an-license-terms"><div><p className="nf-page-eyebrow">SEBELUM MENGAJUKAN</p><h2>JELASKAN<br/>KEBUTUHAN.</h2><p>Hak, persetujuan, biaya, eksklusivitas, dan deliverable dibicarakan berdasarkan kebutuhan proyek. Halaman ini adalah jalur awal inquiry, bukan pemberian izin otomatis.</p></div><a className="an-inquiry-submit" href="/inquire?type=licensing&source=licensing">KIRIM PERMINTAAN</a></section></main><NightFooter /></div>;
+  return <div className="nf-page an-licensing-page"><NightHeader /><main><section className="an-inquiry-hero"><p className="nf-page-eyebrow">PENGGUNAAN MUSIK</p><h1>MUSIC<br/>LICENSING.</h1><p>{verifiedArtistProfile.licensing}</p><div className="an-inquiry-signal"><span>LANGKAH PERTAMA</span><strong>KIRIM DETAILNYA</strong></div></section><section className="an-license-grid">{routes.map(([title, copy], index) => <article key={title}><span>{formatPublicIndex(index)}</span><h2>{title}</h2><p>{copy}</p></article>)}</section><section className="an-license-terms"><div><p className="nf-page-eyebrow">SEBELUM MENGAJUKAN</p><h2>JELASKAN<br/>KEBUTUHAN.</h2><p>Hak, persetujuan, biaya, eksklusivitas, dan deliverable dibicarakan berdasarkan kebutuhan proyek. Halaman ini adalah jalur awal inquiry, bukan pemberian izin otomatis.</p></div><a className="an-inquiry-submit" href="/inquire?type=licensing&source=licensing">KIRIM PERMINTAAN</a></section></main><NightFooter /></div>;
 }

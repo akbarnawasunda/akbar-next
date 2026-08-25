@@ -40,6 +40,8 @@ export const portraitStudies = [
   },
 ] as const;
 
+export const formatPublicIndex = (index: number) => String(index + 1).padStart(2, "0");
+
 export const platformLinks = [
   { label: "Spotify", href: "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw" },
   { label: "YouTube", href: "https://www.youtube.com/@akbarnawasunda" },

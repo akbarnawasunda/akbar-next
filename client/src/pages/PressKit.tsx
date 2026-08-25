@@ -5,6 +5,7 @@ import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import {
+  formatPublicIndex,
   officialBrand,
   releases,
   verifiedArtistProfile,
@@ -149,7 +150,7 @@ export default function PressKit() {
           <div className="an-epk-capability-grid">
             {verifiedArtistProfile.services.map((service, index) => (
               <article key={service} className="an-epk-capability">
-                <span>0{index + 1}</span>
+                <span>{formatPublicIndex(index)}</span>
                 <h3>{service}</h3>
                 <p>{index === 0 ? "Request remix dengan brief, referensi, dan target rilis yang jelas." : index === 1 ? "Aransemen khusus untuk memperkuat karakter lagu dan kebutuhan konten." : index === 2 ? "Bangun karya bersama dari ide awal sampai materi siap dipublikasikan." : "Lisensi musik untuk kebutuhan konten, partner, dan penggunaan komersial."}</p>
               </article>
