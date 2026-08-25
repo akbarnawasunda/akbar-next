@@ -31,6 +31,7 @@ import { trpc } from "@/lib/trpc";
 import { useMagnetic } from "@/hooks/useMagnetic";
 import { usePerformanceMonitor } from "@/hooks/usePerformanceMonitor";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useScrollChoreography } from "@/hooks/useScrollChoreography";
 import { publicPlatformLinks, publicUpcomingEvents, usePublicArtistContent } from "@/content/publicContent";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
@@ -54,6 +55,7 @@ export default function Home() {
   const liveSectionRef = useScrollReveal<HTMLElement>();
   const signalSectionRef = useScrollReveal<HTMLElement>();
   const gameSectionRef = useScrollReveal<HTMLElement>();
+  const choreographyRef = useScrollChoreography<HTMLDivElement>();
   const primaryActionRef = useMagnetic<HTMLAnchorElement>();
   const liveActionRef = useMagnetic<HTMLAnchorElement>();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -181,7 +183,7 @@ export default function Home() {
   const displayHeroTitle = (heroTitle || "AKBAR NAWASUNDA.").trim();
   const heroTitleWords = displayHeroTitle.split(/\s+/);
   return (
-    <div className="an-site">
+    <div ref={choreographyRef} className="an-site">
       <header className="an-nav">
         <a
           className="an-wordmark"
@@ -242,7 +244,7 @@ export default function Home() {
       </header>
 
       <main id="top">
-        <section className="an-hero">
+        <section className="an-hero" data-scroll-scene="hero">
           <div className="home-hero-portrait">
             <img
               src={portraitSrc}
@@ -311,6 +313,7 @@ export default function Home() {
         <section
           ref={platformSectionRef}
           className="home-signal-deck reveal-target"
+          data-scroll-scene="platforms"
           aria-labelledby="signal-deck-title"
         >
           <SectionIndex number="01" label="LINKS MUSIK" />
@@ -354,6 +357,7 @@ export default function Home() {
         <section
           ref={currentSectionRef}
           className="section section-current reveal-target"
+          data-scroll-scene="current-release"
           id="music"
         >
           <SectionIndex number="02" label="RILISAN UTAMA" />
@@ -411,6 +415,7 @@ export default function Home() {
         <section
           ref={releaseSectionRef}
           className="section release-section reveal-target"
+          data-scroll-scene="catalog"
         >
           <SectionIndex number="03" label="KATALOG" />
           <div className="section-inline">
@@ -469,6 +474,7 @@ export default function Home() {
         <section
           ref={visualSectionRef}
           className="section visual-section reveal-target"
+          data-scroll-scene="visuals"
           id="visuals"
         >
           <SectionIndex number="04" label="KARYA VIDEO" />
@@ -510,6 +516,7 @@ export default function Home() {
         <section
           ref={liveSectionRef}
           className="section live-section reveal-target"
+          data-scroll-scene="live"
           id="live"
         >
           <SectionIndex number="05" label="LIVE" />
@@ -575,6 +582,7 @@ export default function Home() {
           <section
             ref={gameSectionRef}
             className="section game-teaser-section reveal-target"
+            data-scroll-scene="game"
             id="game"
             aria-labelledby="game-teaser-title"
           >
@@ -605,6 +613,7 @@ export default function Home() {
         <section
           ref={signalSectionRef}
           className="signal-section reveal-target"
+          data-scroll-scene="signal"
           id="signal"
         >
           <SectionIndex number="07" label="NEWS" />
