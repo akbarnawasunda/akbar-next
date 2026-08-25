@@ -4,6 +4,15 @@ import { officialBrand, releases, verifiedArtistProfile } from "@/content/artist
 import { publicPlatformLinks, publicUpcomingEvents, usePublicArtistContent } from "@/content/publicContent";
 
 const siteOrigin = "https://akbarnawasunda.my.id";
+const verifiedIdentityLinks = [
+  "https://open.spotify.com/artist/7KOQuIQLuxyklLox0RDMMw",
+  "https://www.youtube.com/channel/UCS-UDttyS3sruwkEPlGjuDg",
+  "https://soundcloud.com/akbarnawasunda",
+  "https://www.instagram.com/akbarnawasunda",
+  "https://music.apple.com/id/artist/akbar-nawasunda/1816312738?l=id",
+  "https://musicbrainz.org/artist/bb843d35-fc0a-4d3b-b445-390b9b299812",
+  "https://www.wikidata.org/wiki/Q141049199",
+] as const;
 const releaseSlug = (value: string) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 function absoluteUrl(path: string) {
@@ -35,7 +44,10 @@ function artistEntity(platforms: Array<{ label?: string; href: string }>) {
     image: [absoluteUrl(officialBrand.socialPreview)],
     logo: absoluteUrl(officialBrand.logo),
     genre: verifiedArtistProfile.genres,
-    sameAs: artistLinks.map(link => link.href),
+    sameAs: Array.from(new Set([
+      ...artistLinks.map(link => link.href),
+      ...verifiedIdentityLinks,
+    ])),
     location: {
       "@type": "Place",
       name: verifiedArtistProfile.location,
