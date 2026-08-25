@@ -2,6 +2,18 @@ export type GameMode = "idle" | "running" | "paused" | "game-over";
 
 export type GameInput = "jump" | "pause";
 
+export type PlayerExpression =
+  | "neutral"
+  | "running"
+  | "jump"
+  | "collect"
+  | "near-miss"
+  | "hit"
+  | "drop"
+  | "level-up"
+  | "paused"
+  | "game-over";
+
 export type GameEventType =
   | "jump"
   | "double-jump"
@@ -63,6 +75,7 @@ export type GamePlayerState = {
   jumps: number;
   invulnerable: number;
   squash: number;
+  expression: PlayerExpression;
 };
 
 export type GameObstacle = {
@@ -91,6 +104,7 @@ export type GameRenderState = {
   multiplier: number;
   level: number;
   dropMeter: number;
+  dropActive: boolean;
   player: GamePlayerState;
   obstacles: GameObstacle[];
   notes: GameNote[];
@@ -100,5 +114,5 @@ export type GameRenderState = {
 
 export type GameSnapshot = Pick<
   GameRenderState,
-  "mode" | "score" | "best" | "lives" | "combo" | "multiplier" | "level" | "dropMeter"
+  "mode" | "score" | "best" | "lives" | "combo" | "multiplier" | "level" | "dropMeter" | "dropActive"
 >;

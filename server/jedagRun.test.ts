@@ -12,6 +12,45 @@ describe("JEDAG RUN world", () => {
     expect(source).toContain("window.localStorage.removeItem(GAME_USERNAME_STORAGE_KEY)");
     expect(source).toContain("GANTI USERNAME");
   });
+  it("drives expressive avatar states from gameplay events", () => {
+    const world = new JedagRunWorld({ demo: true });
+    expect(world.getRenderState().player.expression).toBe("neutral");
+
+    world.start();
+    expect(world.getRenderState().player.expression).toBe("running");
+
+    world.input("jump");
+    world.update(1 / 60);
+    expect(world.getRenderState().player.expression).toBe("jump");
+
+    for (let frame = 0; frame < 36; frame += 1) world.update(1 / 60);
+    world.notes.push({
+      x: world.player.x + 18,
+      y: world.player.y - world.player.height / 2,
+      radius: 15,
+      phase: 0,
+      collected: false,
+    });
+    world.update(1 / 60);
+    expect(world.getRenderState().player.expression).toBe("collect");
+
+    for (let frame = 0; frame < 30; frame += 1) world.update(1 / 60);
+    world.obstacles.push({
+      x: world.player.x,
+      width: 48,
+      height: 62,
+      variant: 0,
+      counted: false,
+    });
+    world.update(1 / 60);
+    expect(world.getRenderState().player.expression).toBe("hit");
+
+    const rendererSource = readFileSync(resolve(process.cwd(), "client/src/game/jedagRun/JedagRunRenderer.ts"), "utf8");
+    expect(rendererSource).toContain('collect: "🤩"');
+    expect(rendererSource).toContain('hit: "😨"');
+    expect(rendererSource).toContain('"game-over": "😵"');
+  });
+
   it("starts from a clean signal and advances score without browser APIs", () => {
     const world = new JedagRunWorld({ demo: true });
     expect(world.snapshot.mode).toBe("idle");

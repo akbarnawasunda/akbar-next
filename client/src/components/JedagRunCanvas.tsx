@@ -21,6 +21,7 @@ const initialSnapshot: GameSnapshot = {
   multiplier: 1,
   level: 0,
   dropMeter: 0,
+  dropActive: false,
 };
 
 function modeLabel(mode: GameMode) {

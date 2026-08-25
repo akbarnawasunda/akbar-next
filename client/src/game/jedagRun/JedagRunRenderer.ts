@@ -1,10 +1,36 @@
-import type { GameRenderState } from "./types";
+import type { GameRenderState, PlayerExpression } from "./types";
 
 const palette = [
   { cyan: "#70f0ff", magenta: "#ff58c9", amber: "#ffcf5a", sky: "#0b1021", road: "#120d24" },
   { cyan: "#85ffe0", magenta: "#bf7bff", amber: "#ffd36e", sky: "#100c25", road: "#170c2e" },
   { cyan: "#ffe36e", magenta: "#ff6f91", amber: "#ffffff", sky: "#211025", road: "#220e26" },
 ];
+
+const expressionEmoji: Record<PlayerExpression, string> = {
+  neutral: "😐",
+  running: "😏",
+  jump: "😮",
+  collect: "🤩",
+  "near-miss": "😎",
+  hit: "😨",
+  drop: "🤯",
+  "level-up": "🥳",
+  paused: "😶‍🌫️",
+  "game-over": "😵",
+};
+
+const expressionGlow: Record<PlayerExpression, string> = {
+  neutral: "#70f0ff",
+  running: "#70f0ff",
+  jump: "#85ffe0",
+  collect: "#ffcf5a",
+  "near-miss": "#70f0ff",
+  hit: "#ff5c82",
+  drop: "#ff58c9",
+  "level-up": "#ffcf5a",
+  paused: "#a8a7b9",
+  "game-over": "#ff5c82",
+};
 
 export class JedagRunRenderer {
   private readonly canvas: HTMLCanvasElement;
@@ -38,6 +64,7 @@ export class JedagRunRenderer {
     ctx.save();
     if (shake && state.mode === "running") ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
     this.drawBackground(state, colors, reducedMotion);
+    if (state.dropActive) this.drawDropPulse(state, colors, reducedMotion);
     this.drawRoad(state, colors);
     this.drawNotes(state, colors, reducedMotion);
     this.drawObstacles(state, colors, reducedMotion);
@@ -108,6 +135,20 @@ export class JedagRunRenderer {
       }
       ctx.globalAlpha = 1;
     }
+  }
+
+  private drawDropPulse(state: GameRenderState, colors: (typeof palette)[number], reducedMotion: boolean) {
+    const ctx = this.context;
+    const pulse = reducedMotion ? 0.1 : 0.07 + Math.abs(Math.sin(state.frame * 0.18)) * 0.06;
+    ctx.save();
+    ctx.globalAlpha = pulse;
+    ctx.fillStyle = colors.magenta;
+    ctx.fillRect(0, 0, this.logicalWidth, this.logicalHeight);
+    ctx.globalAlpha = reducedMotion ? 0.35 : 0.5 + Math.abs(Math.sin(state.frame * 0.16)) * 0.2;
+    ctx.strokeStyle = colors.amber;
+    ctx.lineWidth = 3;
+    ctx.strokeRect(14, 14, this.logicalWidth - 28, this.logicalHeight - 28);
+    ctx.restore();
   }
 
   private drawRoad(state: GameRenderState, colors: (typeof palette)[number]) {
@@ -200,11 +241,13 @@ export class JedagRunRenderer {
     const baseX = player.x + player.width / 2;
     const baseY = player.y;
     const stretch = player.squash;
+    const expression = player.expression;
+    const glow = expressionGlow[expression];
     ctx.save();
     ctx.translate(baseX, baseY);
     ctx.scale(1 + (1 - stretch) * 0.45, stretch);
     ctx.shadowColor = colors.cyan;
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = expression === "drop" ? 22 : 12;
     ctx.fillStyle = "#edf8ff";
     ctx.beginPath();
     ctx.roundRect(-16, -48, 32, 39, 6);
@@ -214,14 +257,35 @@ export class JedagRunRenderer {
     ctx.fillRect(-16, -48, 32, 5);
     ctx.fillStyle = "#101020";
     ctx.fillRect(-10, -37, 20, 8);
-    ctx.fillStyle = "#d5a98b";
+
+    if (expression === "drop" || expression === "level-up") {
+      const pulse = 19 + Math.sin(state.frame * 0.16) * 3;
+      ctx.globalAlpha = 0.56;
+      ctx.strokeStyle = glow;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, -59, pulse, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    ctx.shadowColor = glow;
+    ctx.shadowBlur = expression === "hit" || expression === "game-over" ? 18 : 12;
+    ctx.fillStyle = "#151321";
     ctx.beginPath();
-    ctx.arc(0, -59, 12, 0, Math.PI * 2);
+    ctx.arc(0, -59, 16, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#101020";
-    ctx.fillRect(-12, -68, 24, 6);
-    ctx.fillStyle = colors.amber;
-    ctx.fillRect(-8, -61, 16, 2);
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = glow;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.font = "27px 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(expressionEmoji[expression], 0, -59);
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
+
     ctx.fillStyle = "#101020";
     ctx.fillRect(-13, -7, 10, 5);
     ctx.fillRect(3, -7, 11, 5);

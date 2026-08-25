@@ -7,6 +7,7 @@ import type {
   GameParticle,
   GamePopup,
   GameRenderState,
+  PlayerExpression,
   GameSnapshot,
 } from "./types";
 
@@ -67,6 +68,7 @@ export class JedagRunWorld {
   private seed = 73;
   private hitFlash = 0;
   private shake = 0;
+  private expressionTimer = 0;
 
   readonly player = {
     x: PLAYER_X,
@@ -78,6 +80,7 @@ export class JedagRunWorld {
     jumps: 0,
     invulnerable: 0,
     squash: 1,
+    expression: "neutral" as PlayerExpression,
   };
 
   readonly obstacles: GameObstacle[] = [];
@@ -100,6 +103,7 @@ export class JedagRunWorld {
       multiplier: this.multiplier,
       level: this.level,
       dropMeter: this.dropMeter,
+      dropActive: this.dropTime > 0,
     };
   }
 
@@ -137,14 +141,21 @@ export class JedagRunWorld {
   start() {
     this.reset();
     this.mode = "running";
+    this.setExpression("running", 0.25);
   }
 
   pause() {
-    if (this.mode === "running") this.mode = "paused";
+    if (this.mode === "running") {
+      this.mode = "paused";
+      this.setExpression("paused", 0);
+    }
   }
 
   resume() {
-    if (this.mode === "paused") this.mode = "running";
+    if (this.mode === "paused") {
+      this.mode = "running";
+      this.setExpression("running", 0.25);
+    }
   }
 
   togglePause() {
@@ -178,12 +189,17 @@ export class JedagRunWorld {
     this.jumpBuffer = Math.max(0, this.jumpBuffer - dt);
     this.hitFlash = Math.max(0, this.hitFlash - dt);
     this.shake = Math.max(0, this.shake - dt * 18);
+    this.expressionTimer = Math.max(0, this.expressionTimer - dt);
+    if (this.expressionTimer === 0 && this.player.expression !== "running") {
+      this.player.expression = this.player.onGround ? "running" : "jump";
+    }
     this.player.invulnerable = Math.max(0, this.player.invulnerable - dt);
     this.dropTime = Math.max(0, this.dropTime - dt);
 
     this.level = Math.floor(this.score / 500);
     if (this.level > this.previousLevel) {
       this.previousLevel = this.level;
+      this.setExpression("level-up", 0.78);
       this.emit({ type: "level-up", value: this.level });
       this.addPopup("SIGNAL SHIFT", WIDTH * 0.55, 116, "#70f0ff");
       this.burst(WIDTH * 0.55, 142, "#ff58c9", 16);
@@ -239,6 +255,7 @@ export class JedagRunWorld {
     this.jumpBuffer = 0;
     this.hitFlash = 0;
     this.shake = 0;
+    this.expressionTimer = 0;
     this.seed = this.demo ? 73 : (Date.now() ^ 0x9e3779b9) >>> 0;
     this.obstacles.length = 0;
     this.notes.length = 0;
@@ -251,6 +268,7 @@ export class JedagRunWorld {
     this.player.jumps = 0;
     this.player.invulnerable = 0;
     this.player.squash = 1;
+    this.player.expression = "neutral";
   }
 
   private jump() {
@@ -260,6 +278,7 @@ export class JedagRunWorld {
     this.player.onGround = false;
     this.player.jumps += 1;
     this.player.squash = 1.16;
+    this.setExpression("jump", 0.3);
     this.coyoteTime = 0;
     this.jumpBuffer = 0;
     this.burst(this.player.x + this.player.width / 2, this.player.y, "#70f0ff", isDouble ? 10 : 7);
@@ -361,6 +380,7 @@ export class JedagRunWorld {
           this.dropMeter = Math.min(1, this.dropMeter + 0.08);
           this.addPopup("NEAR MISS +22", this.player.x + 34, this.player.y - 88, "#70f0ff");
           this.burst(this.player.x + 22, this.player.y - 28, "#70f0ff", 8);
+          this.setExpression("near-miss", 0.56);
           this.emit({ type: "near-miss", value: 22 });
         }
       }
@@ -379,6 +399,7 @@ export class JedagRunWorld {
         this.dropMeter = Math.min(1, this.dropMeter + 0.12);
         this.addPopup(`+${points}${this.multiplier > 1 ? ` ×${this.multiplier}` : ""}`, note.x, noteY - 22, "#ffcf5a");
         this.burst(note.x, noteY, "#ffcf5a", 13);
+        this.setExpression("collect", 0.36);
         this.emit({ type: "collect", value: points });
         if (this.dropMeter >= 1) this.activateDrop();
       }
@@ -402,6 +423,7 @@ export class JedagRunWorld {
     this.shake = 10;
     this.burst(this.player.x + 18, this.player.y - 32, "#ff5c82", 20);
     this.addPopup("-1 LIFE", this.player.x + 18, this.player.y - 94, "#ff5c82");
+    this.setExpression("hit", 0.72);
     this.emit({ type: "hit", value: this.lives });
     if (this.lives <= 0) this.gameOver();
   }
@@ -412,11 +434,13 @@ export class JedagRunWorld {
     this.bonus += 80;
     this.addPopup("DROP", WIDTH * 0.52, 170, "#ff58c9");
     this.burst(WIDTH * 0.52, 190, "#ff58c9", 28);
+    this.setExpression("drop", 1.05);
     this.emit({ type: "drop" });
   }
 
   private gameOver() {
     this.mode = "game-over";
+    this.setExpression("game-over", 0);
     const finalScore = this.score;
     if (finalScore > this.best) {
       this.best = finalScore;
@@ -467,6 +491,11 @@ export class JedagRunWorld {
 
   private addPopup(text: string, x: number, y: number, color: string) {
     this.popups.push({ text, x, y, life: 0.78, color });
+  }
+
+  private setExpression(expression: PlayerExpression, duration: number) {
+    this.player.expression = expression;
+    this.expressionTimer = duration;
   }
 
   private random() {
