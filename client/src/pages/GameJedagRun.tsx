@@ -1,5 +1,5 @@
 import { ArrowLeft, ArrowUpRight, Gamepad2, Loader2, Radio, ShieldCheck, Trophy } from "lucide-react";
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import JedagRunCanvas from "@/components/JedagRunCanvas";
 import type { PublicGameConfig } from "@/game/jedagRun/types";
@@ -7,6 +7,34 @@ import { usePublicArtistContent } from "@/content/publicContent";
 import { trpc } from "@/lib/trpc";
 import { normalizeLeaderboardUsername } from "@shared/gameLeaderboard";
 import "./GameJedagRun.css";
+
+const GAME_USERNAME_STORAGE_KEY = "an_jedag_run_username";
+
+function readSavedUsername() {
+  if (typeof window === "undefined") return "";
+  try {
+    const saved = window.localStorage.getItem(GAME_USERNAME_STORAGE_KEY) || "";
+    return normalizeLeaderboardUsername(saved).value;
+  } catch {
+    return "";
+  }
+}
+
+function saveUsername(username: string) {
+  try {
+    window.localStorage.setItem(GAME_USERNAME_STORAGE_KEY, username);
+  } catch {
+    // Private browsing or blocked storage should not prevent playing.
+  }
+}
+
+function clearSavedUsername() {
+  try {
+    window.localStorage.removeItem(GAME_USERNAME_STORAGE_KEY);
+  } catch {
+    // Private browsing or blocked storage should not prevent playing.
+  }
+}
 
 const fallbackGameConfig: PublicGameConfig = {
   title: "JEDAG RUN — NIGHT FREQUENCY",
@@ -25,12 +53,15 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
   const topScores = trpc.leaderboard.top.useQuery(undefined, { staleTime: 30_000 });
   const startRun = trpc.leaderboard.start.useMutation();
   const submitScore = trpc.leaderboard.submit.useMutation();
-  const [username, setUsername] = useState("");
+  const initialUsername = readSavedUsername();
+  const [username, setUsername] = useState(initialUsername);
+  const [savedUsername, setSavedUsername] = useState(initialUsername);
   const [activeUsername, setActiveUsername] = useState("");
   const [runToken, setRunToken] = useState("");
   const [gateMessage, setGateMessage] = useState("");
-  const [showUsernameGate, setShowUsernameGate] = useState(true);
+  const [showUsernameGate, setShowUsernameGate] = useState(!initialUsername);
   const [runKey, setRunKey] = useState(0);
+  const autoStartAttempted = useRef(false);
   const [lastSubmittedScore, setLastSubmittedScore] = useState<number | null>(null);
 
   const copy = english
@@ -55,6 +86,7 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
         refresh: "REFRESH",
         submitted: "Score submitted to the global board.",
         unavailable: "Score saved locally, but the global board is temporarily unavailable.",
+        changeUsername: "CHANGE USERNAME",
       }
     : {
         back: "Kembali ke archive",
@@ -77,7 +109,28 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
         refresh: "SEGARKAN",
         submitted: "Skor berhasil masuk ke papan global.",
         unavailable: "Skor tersimpan lokal, tetapi papan global sedang tidak tersedia.",
+        changeUsername: "GANTI USERNAME",
       };
+
+  const activateRun = (result: { username: string; runToken: string }) => {
+    saveUsername(result.username);
+    setSavedUsername(result.username);
+    setActiveUsername(result.username);
+    setUsername(result.username);
+    setRunToken(result.runToken);
+    setLastSubmittedScore(null);
+    setRunKey(value => value + 1);
+    setShowUsernameGate(false);
+  };
+
+  useEffect(() => {
+    if (!config.isEnabled || !savedUsername || autoStartAttempted.current) return;
+    autoStartAttempted.current = true;
+    startRun.mutate({ username: savedUsername }, {
+      onSuccess: activateRun,
+      onError: error => setGateMessage(error.message || "Username belum bisa dipakai. Coba nama lain."),
+    });
+  }, [config.isEnabled, savedUsername]);
 
   const beginRun = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -87,15 +140,9 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
       return;
     }
     setGateMessage("");
+    autoStartAttempted.current = true;
     startRun.mutate({ username: normalized.value }, {
-      onSuccess: result => {
-        setActiveUsername(result.username);
-        setUsername(result.username);
-        setRunToken(result.runToken);
-        setLastSubmittedScore(null);
-        setRunKey(value => value + 1);
-        setShowUsernameGate(false);
-      },
+      onSuccess: activateRun,
       onError: error => setGateMessage(error.message || "Username belum bisa dipakai. Coba nama lain."),
     });
   };
@@ -113,6 +160,17 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
   };
 
   const handleRestart = () => {
+    setGateMessage("");
+    setShowUsernameGate(true);
+    setUsername(savedUsername || activeUsername);
+  };
+
+  const handleChangeUsername = () => {
+    clearSavedUsername();
+    setSavedUsername("");
+    setUsername("");
+    setActiveUsername("");
+    setRunToken("");
     setGateMessage("");
     setShowUsernameGate(true);
   };
@@ -149,6 +207,7 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
           <div className="game-page-links">
             <Link href={english ? "/en/music" : "/music"}>{copy.music} <ArrowUpRight size={14} /></Link>
             <Link href={english ? "/en" : "/"}>{copy.home} <ArrowUpRight size={14} /></Link>
+            {activeUsername ? <button type="button" className="game-change-username" onClick={handleChangeUsername}>{copy.changeUsername}</button> : null}
           </div>
         </div>
         <div className="game-page-side-note">
@@ -187,6 +246,7 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
                 {copy.begin}
               </button>
               <small id="game-username-help">2–20 karakter · huruf, angka, spasi, `_`, atau `-`</small>
+              {savedUsername ? <small className="game-username-saved">Tersimpan di browser ini. Edit nama di atas bila ingin menggantinya.</small> : null}
               {gateMessage ? <p className="game-leaderboard-message" role="status">{gateMessage}</p> : null}
             </form>
           </div>

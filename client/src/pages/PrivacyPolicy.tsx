@@ -36,7 +36,7 @@ const collectionPoints = [
   },
   {
     title: "Browser storage",
-    copy: "Situs dapat menyimpan preferensi interface terbatas, data pendukung autentikasi, atau penanda anonim untuk menghitung akses gallery foto secara agregat. Data ini tidak digunakan untuk iklan.",
+    copy: "Situs dapat menyimpan preferensi interface terbatas, data pendukung autentikasi, username JEDAG RUN agar tidak perlu diisi berulang, atau penanda anonim untuk menghitung akses gallery foto secara agregat. Username game dapat dihapus melalui tombol Ganti Username; data ini tidak digunakan untuk iklan.",
     icon: ShieldCheck,
   },
 ];

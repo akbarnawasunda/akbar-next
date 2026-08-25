@@ -1,7 +1,17 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { JedagRunWorld } from "../client/src/game/jedagRun/JedagRunWorld";
 
 describe("JEDAG RUN world", () => {
+  it("persists the public username in the browser and supports changing it", () => {
+    const source = readFileSync(resolve(process.cwd(), "client/src/pages/GameJedagRun.tsx"), "utf8");
+    expect(source).toContain('const GAME_USERNAME_STORAGE_KEY = "an_jedag_run_username"');
+    expect(source).toContain("window.localStorage.getItem(GAME_USERNAME_STORAGE_KEY)");
+    expect(source).toContain("window.localStorage.setItem(GAME_USERNAME_STORAGE_KEY, username)");
+    expect(source).toContain("window.localStorage.removeItem(GAME_USERNAME_STORAGE_KEY)");
+    expect(source).toContain("GANTI USERNAME");
+  });
   it("starts from a clean signal and advances score without browser APIs", () => {
     const world = new JedagRunWorld({ demo: true });
     expect(world.snapshot.mode).toBe("idle");
