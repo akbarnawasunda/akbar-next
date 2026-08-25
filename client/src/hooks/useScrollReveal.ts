@@ -16,7 +16,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLElement>(
     ).matches;
     if (reducedMotion || !("IntersectionObserver" in window)) {
       element.dataset.revealPhase = "locked";
-      element.classList.add("is-revealed");
+      element.classList.add("is-revealed", "reveal-background-ready");
       return;
     }
 
@@ -32,6 +32,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLElement>(
         element.dataset.revealPhase = entry.isIntersecting ? "acquiring" : "released";
         element.classList.toggle("is-revealed", entry.isIntersecting);
         if (entry.isIntersecting) {
+          element.classList.add("reveal-background-ready");
           window.requestAnimationFrame(() => {
             if (element.isConnected && element.classList.contains("is-revealed")) {
               element.dataset.revealPhase = "locked";
