@@ -1,19 +1,24 @@
 import { ArrowUpRight } from "lucide-react";
-import { portraitStudies } from "@/content/artistPlatform";
+import type { CmsPortraitStudy } from "@/content/publicContent";
+import { publicPortraitStudies } from "@/content/publicContent";
 import "./VisualPortraitStudies.css";
 
 type VisualPortraitStudiesProps = {
   english?: boolean;
+  studies?: CmsPortraitStudy[];
 };
 
-export default function VisualPortraitStudies({ english = false }: VisualPortraitStudiesProps) {
-  const study = portraitStudies[1];
+export default function VisualPortraitStudies({ english = false, studies = publicPortraitStudies(null) }: VisualPortraitStudiesProps) {
+  const study = studies[1] || studies[0];
+  const galleryRoute = english ? "/en/visuals/portraits" : "/visuals/portraits";
+  if (!study) return null;
+  const localizedTitle = english ? study.titleEn || study.title : study.title;
 
   return (
     <section
       className="nf-section an-portrait-studies"
       aria-labelledby={english ? "portrait-studies-title-en" : "portrait-studies-title-id"}
-      style={{ "--portrait-study-image": `url(${study.src})` } as React.CSSProperties}
+      style={{ "--portrait-study-image": `url(${study.imageUrl})` } as React.CSSProperties}
     >
       <div className="an-portrait-studies-art" aria-hidden="true" />
       <div className="an-portrait-studies-heading">
@@ -31,24 +36,24 @@ export default function VisualPortraitStudies({ english = false }: VisualPortrai
       <div className="an-portrait-studies-surface">
         <div className="an-portrait-studies-copy">
           <span className="an-portrait-study-kicker">{english ? "PORTRAIT STUDY / KX-07" : "STUDI POTRET / KX-07"}</span>
-          <strong>{english ? study.titleEn : study.titleId}</strong>
-          <p>{english ? study.copyEn : study.copyId}</p>
-          <span className="nf-text-button" aria-label={english ? "Portrait study shown on this page" : "Studi potret ditampilkan di halaman ini"}>
-            {english ? "ON THIS PAGE" : "TAMPIL DI SINI"} <ArrowUpRight size={13} aria-hidden="true" />
-          </span>
+          <strong>{localizedTitle}</strong>
+          <p>{english ? study.copyEn || study.copyId : study.copyId || study.copyEn}</p>
+          <a className="nf-text-button" href={`${galleryRoute}#${study._id}`}>
+            {english ? "VIEW PHOTO STUDY" : "LIHAT STUDI FOTO"} <ArrowUpRight size={13} />
+          </a>
         </div>
         <span className="an-portrait-study-index" aria-hidden="true">02</span>
       </div>
       <div className="an-portrait-study-indexes" aria-label={english ? "Portrait study images" : "Daftar foto studi potret"}>
-        {portraitStudies.map((item, index) => (
-          <div className="an-portrait-study-index-link" role="listitem" key={item.id}>
+        {studies.map((item, index) => (
+          <a className="an-portrait-study-index-link" href={`${galleryRoute}#${item._id}`} key={item._id}>
             <span>0{index + 1}</span>
             <div>
-              <small>{english ? "PORTRAIT STUDY" : "STUDI POTRET"}</small>
-              <strong>{english ? item.titleEn : item.titleId}</strong>
+              <small>{item.label || (english ? "PORTRAIT STUDY" : "STUDI POTRET")}</small>
+              <strong>{english ? item.titleEn || item.title : item.title}</strong>
             </div>
-            <ArrowUpRight size={14} aria-hidden="true" />
-          </div>
+            <ArrowUpRight size={14} />
+          </a>
         ))}
       </div>
     </section>

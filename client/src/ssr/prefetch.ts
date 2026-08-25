@@ -38,6 +38,7 @@ const idTitles: Record<string, string> = {
   "/": SITE_NAME,
   "/music": "Music by Akbar Nawasunda",
   "/visuals": "Videos by Akbar Nawasunda",
+  "/visuals/portraits": "Portrait Studies | Akbar Nawasunda",
   "/live": "Live Dates | Akbar Nawasunda",
   "/universe": "About the Work | Akbar Nawasunda",
   "/about": "About the Artist | Akbar Nawasunda",
@@ -51,6 +52,7 @@ const enTitles: Record<string, string> = {
   "/": SITE_NAME,
   "/music": "Music by Akbar Nawasunda",
   "/visuals": "Videos by Akbar Nawasunda",
+  "/visuals/portraits": "Portrait Studies | Akbar Nawasunda",
   "/live": "Live Dates | Akbar Nawasunda",
   "/universe": "About the Work | Akbar Nawasunda",
   "/about": "About the Artist | Akbar Nawasunda",
@@ -181,7 +183,7 @@ export async function prefetchForPath(
   const isEnglish = path === "/en" || path.startsWith("/en/");
   const pathWithoutLanguage = path.replace(/^\/en(?=\/|$)/, "") || "/";
   const publicRoute = path === "/" || path === "/en" || [
-    "/music", "/visuals", "/live", "/universe", "/about", "/inquire", "/licensing", "/epk", "/privacy",
+    "/music", "/visuals", "/visuals/portraits", "/live", "/universe", "/about", "/inquire", "/licensing", "/epk", "/privacy",
   ].includes(pathWithoutLanguage);
 
   if (path === "/studio" || path.startsWith("/studio/") || path === "/assets" || path === "/admin") {

@@ -1,13 +1,14 @@
 import { trpc } from "@/lib/trpc";
-import { allPlatformLinks } from "@/content/artistPlatform";
+import { allPlatformLinks, portraitStudies } from "@/content/artistPlatform";
 import { publicMediaUrl } from "@/lib/publicMedia";
 
 export type CmsPlatformLink = { label: string; href: string };
 export type CmsRelease = { _id: string; title: string; year?: string; format?: string; platform?: string; url: string; embedUrl?: string; artworkUrl?: string; story?: string; credits?: string; spotifyUrl?: string; appleMusicUrl?: string; platformLinks?: CmsPlatformLink[]; isCurrent?: boolean; order?: number };
 export type CmsVisual = { _id: string; title: string; label?: string; youtubeId?: string; url?: string; imageUrl?: string; order?: number };
+export type CmsPortraitStudy = { _id: string; title: string; titleEn?: string; label?: string; imageUrl: string; copyId?: string; copyEn?: string; altId?: string; altEn?: string; order?: number };
 export type CmsEvent = { _id: string; title: string; date: string; time?: string; city?: string; venue?: string; country?: string; mapsUrl?: string; posterUrl?: string; ticketUrl?: string; rsvpUrl?: string; status?: "announced" | "sold out" | "cancelled" | "past"; isFeatured?: boolean };
 export type CmsLegalSection = { key?: "short-version" | "collection" | "cookies" | "services" | "rights"; heading?: string; body?: string };
-export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; locationUrl?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string; platformLinks?: CmsPlatformLink[] }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; releases: CmsRelease[]; visuals: CmsVisual[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
+export type CmsArtistContent = { hero?: { heroTitle?: string; heroKicker?: string; heroBody?: string; heroImage?: string; primaryActionUrl?: string; primaryActionLabel?: string }; profile?: { shortBio?: string; longBio?: string; location?: string; locationUrl?: string; genres?: string[]; portraitImage?: string; artistStatement?: string }; pressKit?: { intro?: string; bookingEmail?: string; pressEmail?: string; oneSheetUrl?: string; photoPackUrl?: string; logoPackUrl?: string; technicalRiderUrl?: string }; siteSettings?: { siteTitle?: string; metaDescription?: string; ogTitle?: string; ogDescription?: string; socialPreviewUrl?: string; canonicalUrl?: string; contactEmail?: string; bookingEmail?: string; pressEmail?: string; platformLinks?: CmsPlatformLink[] }; legal?: { title?: string; version?: string; effectiveDate?: string; intro?: string; readyForPublic?: boolean; sections?: CmsLegalSection[] }; releases: CmsRelease[]; visuals: CmsVisual[]; portraitStudies: CmsPortraitStudy[]; live?: { status?: string; message?: string; actionUrl?: string }; events: CmsEvent[] };
 
 /** Keep upcoming/live surfaces truthful: past and cancelled events are not current public dates. */
 export function isUpcomingPublicEvent(event: CmsEvent): boolean {
@@ -166,6 +167,18 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
       imageUrl: publicMediaUrl(stringValue(payloadOf(document).imageUrl)),
       order: document.sortOrder,
     })),
+    portraitStudies: byType("portrait").map(document => ({
+      _id: `custom-${document.id}`,
+      title: stringValue(payloadOf(document).title) || document.slug,
+      titleEn: stringValue(payloadOf(document).titleEn),
+      label: stringValue(payloadOf(document).label),
+      imageUrl: publicMediaUrl(stringValue(payloadOf(document).imageUrl)) || "",
+      copyId: stringValue(payloadOf(document).copyId),
+      copyEn: stringValue(payloadOf(document).copyEn),
+      altId: stringValue(payloadOf(document).altId),
+      altEn: stringValue(payloadOf(document).altEn),
+      order: document.sortOrder,
+    })).filter(study => study.imageUrl),
     live: live ? {
       status: stringValue(payloadOf(live).status) || stringValue(payloadOf(live).label),
       message: stringValue(payloadOf(live).message) || stringValue(payloadOf(live).body),
@@ -192,6 +205,25 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
 export function publicPlatformLinks(content: CmsArtistContent | null | undefined): CmsPlatformLink[] {
   const overrides = new Map((content?.siteSettings?.platformLinks ?? []).map(link => [link.label.trim().toLowerCase(), link.href]));
   return allPlatformLinks.map(link => ({ ...link, href: overrides.get(link.label.toLowerCase()) || link.href }));
+}
+
+export function publicPortraitStudies(content: CmsArtistContent | null | undefined): CmsPortraitStudy[] {
+  const managed = (content?.portraitStudies ?? []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const fallback = portraitStudies.map((study, index) => ({
+    _id: `fallback-${study.id}`,
+    title: study.titleId,
+    titleEn: study.titleEn,
+    label: "STUDI POTRET",
+    imageUrl: study.src,
+    copyId: study.copyId,
+    copyEn: study.copyEn,
+    altId: study.altId,
+    altEn: study.altEn,
+    order: index,
+  }));
+  if (!managed.length) return fallback;
+  const managedTitles = new Set(managed.map(study => study.title.toLowerCase()));
+  return [...managed, ...fallback.filter(study => !managedTitles.has(study.title.toLowerCase()))];
 }
 
 export function usePublicArtistContent() {

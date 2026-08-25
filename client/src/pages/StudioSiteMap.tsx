@@ -175,6 +175,12 @@ const sitePages: SitePage[] = [
         editType: "visual",
       },
       {
+        label: "Portrait Studies",
+        detail: "Foto studi, caption, alt text, dan urutan portrait yang tampil di gallery.",
+        icon: Image,
+        editType: "portrait",
+      },
+      {
         label: "Fan Signal",
         detail: "Form update email dari sistem newsletter.",
         icon: Mail,

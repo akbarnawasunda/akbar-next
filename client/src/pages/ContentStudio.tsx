@@ -28,6 +28,7 @@ import {
 } from "@/components/StudioAssetPreview";
 import StudioDocumentPreview from "@/components/StudioDocumentPreview";
 import StudioVisualArchive from "@/components/StudioVisualArchive";
+import StudioPortraitArchive from "@/components/StudioPortraitArchive";
 import StudioSiteMap from "@/pages/StudioSiteMap";
 import OwnerLoginCard from "@/components/OwnerLoginCard";
 import { Button } from "@/components/ui/button";
@@ -40,8 +41,10 @@ import {
   currentRelease,
   officialBrand,
   verifiedArtistProfile,
+  portraitStudies,
   videos,
 } from "@/content/artistPlatform";
+import { publicPortraitStudies } from "@/content/publicContent";
 
 const documentTypes = [
   {
@@ -87,15 +90,21 @@ const documentTypes = [
     description: "Thumbnail, YouTube ID, URL, and archive card",
   },
   {
+    value: "portrait",
+    label: "Portrait study",
+    eyebrow: "08",
+    description: "Foto, caption, alt text, dan urutan tampil",
+  },
+  {
     value: "live",
     label: "Live signal",
-    eyebrow: "08",
+    eyebrow: "09",
     description: "Standby, announced, or active",
   },
   {
     value: "event",
     label: "Live event",
-    eyebrow: "09",
+    eyebrow: "10",
     description: "Date, venue, ticket, poster",
   },
 ] as const;
@@ -155,6 +164,14 @@ const fieldUsage: Record<string, string> = {
   "release.platformLinksText": "Detail rilisan → link platform lain",
   "visual.url": "Visuals + Homepage → link visual resmi",
   "visual.imageUrl": "Visuals + Homepage → thumbnail visual",
+  "portrait.title": "Visuals → judul studi portrait Indonesia",
+  "portrait.titleEn": "Visuals → judul studi portrait English",
+  "portrait.label": "Visuals → label studi portrait",
+  "portrait.imageUrl": "Visuals → foto portrait yang tampil di studi foto",
+  "portrait.copyId": "Visuals → caption foto pada halaman Indonesia",
+  "portrait.copyEn": "Visuals → caption foto pada halaman English",
+  "portrait.altId": "Visuals → alt text foto pada halaman Indonesia",
+  "portrait.altEn": "Visuals → alt text foto pada halaman English",
   "event.mapsUrl": "Live + Homepage → lokasi Google Maps",
   "event.posterUrl": "Live + Homepage → poster event",
   "event.ticketUrl": "Live + Homepage → tombol tiket",
@@ -174,6 +191,7 @@ const primaryWorkflowTypes: DocumentType[] = [
   "siteSettings",
   "profile",
   "visual",
+  "portrait",
 ];
 const primaryWorkflows = [
   {
@@ -215,6 +233,14 @@ const primaryWorkflows = [
     description: "Tambah banyak thumbnail video dan kartu visual.",
     icon: ImageIcon,
     action: "Kelola archive",
+  },
+  {
+    type: "portrait" as const,
+    eyebrow: "06",
+    title: "Studi foto & portrait",
+    description: "Ganti foto, caption, alt text, dan urutan portrait study.",
+    icon: ImageIcon,
+    action: "Kelola portrait",
   },
 ];
 
@@ -367,6 +393,16 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
     { key: "url", label: "Official visual URL", type: "url" },
     { key: "imageUrl", label: "Thumbnail URL", type: "url", media: true },
   ],
+  portrait: [
+    { key: "title", label: "Judul studi Indonesia" },
+    { key: "titleEn", label: "Judul studi English" },
+    { key: "label", label: "Label", placeholder: "STUDI POTRET" },
+    { key: "imageUrl", label: "Foto portrait", type: "url", media: true },
+    { key: "copyId", label: "Caption Indonesia", multiline: true, placeholder: "Deskripsi singkat foto ini." },
+    { key: "copyEn", label: "Caption English", multiline: true, placeholder: "A short description for the English page." },
+    { key: "altId", label: "Alt text Indonesia", placeholder: "Deskripsi foto untuk aksesibilitas" },
+    { key: "altEn", label: "Alt text English", placeholder: "Accessible image description" },
+  ],
   live: [
     {
       key: "status",
@@ -468,6 +504,19 @@ function fallbackPayload(type: DocumentType): EditorPayload {
       url: visual.href,
       youtubeId: visual.href.split("/").pop() || "",
       imageUrl: visual.image,
+    };
+  }
+  if (type === "portrait") {
+    const study = portraitStudies[0];
+    return {
+      title: study.titleId,
+      titleEn: study.titleEn,
+      label: "STUDI POTRET",
+      imageUrl: study.src,
+      copyId: study.copyId,
+      copyEn: study.copyEn,
+      altId: study.altId,
+      altEn: study.altEn,
     };
   }
   if (type === "legal")
@@ -1055,6 +1104,56 @@ export default function ContentStudio() {
             setIsPublished(true);
             setEditingId(null);
             setShowAdvanced(false);
+            setIsDirty(true);
+            window.requestAnimationFrame(() =>
+              document
+                .getElementById("studio-compose")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" })
+            );
+          }}
+        />
+
+        <StudioPortraitArchive
+          documents={(documents.data ?? [])
+            .filter(document => document.documentType === "portrait")
+            .map(document => ({
+              ...document,
+              documentType: "portrait" as const,
+            }))}
+          fallbacks={publicPortraitStudies(null)}
+          onAdd={() => {
+            resetEditor("portrait");
+            window.requestAnimationFrame(() =>
+              document
+                .getElementById("studio-compose")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" })
+            );
+          }}
+          onEdit={portraitDocument => {
+            loadDocument(portraitDocument);
+            window.requestAnimationFrame(() =>
+              document
+                .getElementById("studio-compose")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" })
+            );
+          }}
+          onImportFallback={study => {
+            setDocumentType("portrait");
+            setSlug(slugify(study.title));
+            setPayload({
+              title: study.title,
+              titleEn: study.titleEn || "",
+              label: study.label || "STUDI POTRET",
+              imageUrl: study.imageUrl,
+              copyId: study.copyId || "",
+              copyEn: study.copyEn || "",
+              altId: study.altId || "",
+              altEn: study.altEn || "",
+            });
+            setSortOrder(study.order || 0);
+            setIsPublished(true);
+            setEditingId(null);
+            setShowAdvanced(true);
             setIsDirty(true);
             window.requestAnimationFrame(() =>
               document

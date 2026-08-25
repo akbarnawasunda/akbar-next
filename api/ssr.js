@@ -280,6 +280,7 @@ var customDocumentTypes = [
   "legal",
   "release",
   "visual",
+  "portrait",
   "live",
   "event"
 ];
@@ -291,6 +292,7 @@ var prefixes = {
   legal: "custom-legal",
   release: "custom-release",
   visual: "custom-visual",
+  portrait: "custom-portrait",
   live: "custom-live-signal",
   event: "custom-event"
 };
@@ -314,6 +316,7 @@ function documentTitle(type, payload) {
     legal: "Privacy policy",
     release: "Untitled release",
     visual: "Untitled visual",
+    portrait: "Untitled portrait study",
     live: "Live signal",
     event: "Untitled event"
   };
@@ -323,6 +326,7 @@ function documentLabel(type, payload) {
   if (typeof payload.label === "string") return payload.label;
   if (type === "release") return stringValue(payload.format, "Release");
   if (type === "visual") return "Official visual";
+  if (type === "portrait") return "Portrait study";
   if (type === "event") return stringValue(payload.status, "announced");
   return type;
 }

@@ -8,6 +8,7 @@ export const customDocumentTypes = [
   "legal",
   "release",
   "visual",
+  "portrait",
   "live",
   "event",
 ] as const;
@@ -36,6 +37,7 @@ const prefixes: Record<CustomDocumentType, string> = {
   legal: "custom-legal",
   release: "custom-release",
   visual: "custom-visual",
+  portrait: "custom-portrait",
   live: "custom-live-signal",
   event: "custom-event",
 };
@@ -62,6 +64,7 @@ function documentTitle(type: CustomDocumentType, payload: DocumentPayload): stri
     legal: "Privacy policy",
     release: "Untitled release",
     visual: "Untitled visual",
+    portrait: "Untitled portrait study",
     live: "Live signal",
     event: "Untitled event",
   };
@@ -72,6 +75,7 @@ function documentLabel(type: CustomDocumentType, payload: DocumentPayload): stri
   if (typeof payload.label === "string") return payload.label;
   if (type === "release") return stringValue(payload.format, "Release");
   if (type === "visual") return "Official visual";
+  if (type === "portrait") return "Portrait study";
   if (type === "event") return stringValue(payload.status, "announced");
   return type;
 }
