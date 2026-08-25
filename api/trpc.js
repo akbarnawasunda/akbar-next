@@ -1421,8 +1421,16 @@ function whiteLabelMediaUrl(value) {
   const candidate = value.trim();
   return WHITE_LABEL_MEDIA[candidate] || candidate;
 }
+function isPublicPlaceholderDocument(document) {
+  const documentType = String(document.documentType || "").toLowerCase();
+  if (documentType !== "event" && documentType !== "live") return false;
+  const payload = document.payload;
+  const title = String(payload.title || "").trim();
+  const identity = `${title} ${String(payload.venue || "")} ${String(payload.city || "")}`.trim();
+  return /^malas-malasan aja\b/i.test(title) || /ololololololo|bandoeng multiverse/i.test(identity);
+}
 function sanitizePublicDocuments(documents) {
-  return documents.map((document) => {
+  return documents.filter((document) => !isPublicPlaceholderDocument(document)).map((document) => {
     const payload = { ...document.payload };
     for (const key of MEDIA_KEYS) {
       if (key in payload) payload[key] = whiteLabelMediaUrl(payload[key]);

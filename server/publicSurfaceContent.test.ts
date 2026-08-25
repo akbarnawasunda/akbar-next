@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { formatPublicIndex } from "../client/src/content/artistPlatform";
 import { isUpcomingPublicEvent, publicUpcomingEvents } from "../client/src/content/publicContent";
 import type { CmsArtistContent, CmsEvent } from "../client/src/content/publicContent";
+import { sanitizePublicDocuments } from "./publicMediaPolicy";
 
 const contentWithEvents = (events: CmsEvent[]): CmsArtistContent => ({ releases: [], visuals: [], portraitStudies: [], events });
 
@@ -24,6 +25,15 @@ describe("public content safety", () => {
     };
     expect(isUpcomingPublicEvent(placeholder)).toBe(false);
     expect(publicUpcomingEvents(contentWithEvents([placeholder]))).toEqual([]);
+  });
+
+  it("removes the placeholder from public CMS payloads", () => {
+    const documents = sanitizePublicDocuments([
+      { documentType: "event", payload: { title: "MALAS-MALASAN AJA", venue: "Ololololololo Huh Huh", city: "Bandoeng Multiverse" } },
+      { documentType: "event", payload: { title: "Verified Show", venue: "Verified Venue", city: "Bandung" } },
+    ]);
+    expect(documents).toHaveLength(1);
+    expect(documents[0].payload.title).toBe("Verified Show");
   });
 
   it("keeps a real future event eligible for public display", () => {

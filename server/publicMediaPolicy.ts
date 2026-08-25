@@ -35,8 +35,17 @@ export function whiteLabelMediaUrl(value: unknown): unknown {
  * Redacts known upstream storage references from public CMS responses while
  * leaving the admin response untouched for Studio editing.
  */
+function isPublicPlaceholderDocument(document: PublicDocument): boolean {
+  const documentType = String(document.documentType || "").toLowerCase();
+  if (documentType !== "event" && documentType !== "live") return false;
+  const payload = document.payload;
+  const title = String(payload.title || "").trim();
+  const identity = `${title} ${String(payload.venue || "")} ${String(payload.city || "")}`.trim();
+  return /^malas-malasan aja\b/i.test(title) || /ololololololo|bandoeng multiverse/i.test(identity);
+}
+
 export function sanitizePublicDocuments<T extends PublicDocument>(documents: T[]): T[] {
-  return documents.map(document => {
+  return documents.filter(document => !isPublicPlaceholderDocument(document)).map(document => {
     const payload = { ...document.payload };
     for (const key of MEDIA_KEYS) {
       if (key in payload) payload[key] = whiteLabelMediaUrl(payload[key]);
