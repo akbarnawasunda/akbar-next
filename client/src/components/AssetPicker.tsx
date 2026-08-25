@@ -232,7 +232,8 @@ export default function AssetPicker({
         <Input
           value={value}
           onChange={event => onChange(event.target.value)}
-          type="url"
+          type="text"
+          inputMode="url"
           placeholder="/manus-storage/... atau https://..."
           aria-label={label}
           className="min-w-[220px] flex-1"
@@ -292,6 +293,9 @@ export default function AssetPicker({
           {message}
         </p>
       ) : null}
+      <p className="text-[10px] leading-4 text-white/35">
+        Path internal <code>/assets/...</code> dan <code>/manus-storage/...</code> juga valid. Field ini tidak memaksa URL harus diawali <code>https://</code>.
+      </p>
       {value ? (
         <StudioAssetPreview
           value={value}

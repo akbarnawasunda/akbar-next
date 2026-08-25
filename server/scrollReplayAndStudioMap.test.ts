@@ -106,6 +106,9 @@ describe("scroll replay and studio site map contracts", () => {
     expect(studio).toContain('type="submit"');
     expect(studio).toContain("Simpan & tampilkan");
     expect(picker).toContain("inlineGallery = false");
+    expect(picker).toContain('type="text"');
+    expect(picker).toContain('inputMode="url"');
+    expect(picker).toContain("Path internal");
     expect(picker).toContain('type="button"');
     expect(preview).toContain("Lihat preview");
     expect(map).toContain("<details");
