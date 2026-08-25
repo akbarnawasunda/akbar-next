@@ -515,7 +515,7 @@
   background:
     linear-gradient(90deg, rgba(2, 6, 8, 0.88), rgba(2, 6, 8, 0.48)),
     linear-gradient(0deg, rgba(238, 148, 112, 0.12), transparent 46%),
-    url(/assets/akbar-night-frequency-stage.webp) center/cover !important;
+    url(/assets/akbar-night-frequency-stage-optimized.webp) center/cover !important;
 }
 
 .route-motion[data-route="/live"] .nf-page .nf-live-card {

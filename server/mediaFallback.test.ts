@@ -31,8 +31,8 @@ describe("official media fallback and online EPK", () => {
     expect(epk).toContain("ASET RESMI");
     expect(epk).not.toContain("PHOTO PACK");
     expect(epk).not.toContain("TECH RIDER");
-    expect(shell).toContain("/assets/akbar-night-frequency-stage.webp");
-    expect(overrides).toContain("/assets/akbar-night-frequency-stage.webp");
+    expect(shell).toContain("/assets/akbar-night-frequency-stage-optimized.webp");
+    expect(overrides).toContain("/assets/akbar-night-frequency-stage-optimized.webp");
     expect(shell).not.toContain("an-night-frequency-stage_113bf174.jpg");
     expect(overrides).not.toContain("an-night-frequency-stage_113bf174.jpg");
     expect(epkStyles).toContain(".nf-page .an-epk-contact-panel");

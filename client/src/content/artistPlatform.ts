@@ -4,9 +4,9 @@ export type Video = { title: string; label: string; href: string; image: string 
 export const officialBrand = {
   logo: "/assets/akbar-logo.webp",
   logoFallback: "/assets/akbar-logo-fallback.webp",
-  socialPreview: "/assets/akbar-social-preview.webp",
-  portrait: "/assets/akbar-official-portrait.webp",
-  portraitFallback: "/assets/akbar-official-portrait.webp",
+  socialPreview: "/assets/akbar-social-preview-optimized.webp",
+  portrait: "/assets/akbar-official-portrait-optimized.webp",
+  portraitFallback: "/assets/akbar-official-portrait-optimized.webp",
   favicon: "/assets/akbar-favicon.jpg",
   rmxMark: "/assets/akbar-rmx-mark.webp",
   editorialPortrait: "/assets/akbar-future-red.webp",

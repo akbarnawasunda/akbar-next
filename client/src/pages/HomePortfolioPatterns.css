@@ -48,7 +48,7 @@
       rgba(7, 20, 25, 0.52) 74%,
       rgba(7, 20, 25, 0.78)
     ),
-    url("/assets/akbar-night-frequency-hero.webp");
+    url("/assets/akbar-night-frequency-hero-optimized.webp");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -241,7 +241,7 @@
         rgba(7, 20, 25, 0.52) 74%,
         rgba(7, 20, 25, 0.78)
       ),
-      url("/assets/akbar-night-frequency-hero-mobile.webp");
+      url("/assets/akbar-night-frequency-hero-mobile-optimized.webp");
   }
 
   .an-section-index {
@@ -533,7 +533,7 @@
   }
 
   .an-site .live-backdrop {
-    background-image: url("/assets/akbar-night-frequency-hero-mobile.webp") !important;
+    background-image: url("/assets/akbar-night-frequency-hero-mobile-optimized.webp") !important;
   }
 }
 @media (prefers-reduced-motion: reduce) {

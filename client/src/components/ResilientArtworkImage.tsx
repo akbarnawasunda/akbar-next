@@ -9,6 +9,7 @@ type ResilientArtworkImageProps = {
   className?: string;
   loading?: "eager" | "lazy";
   decoding?: "async" | "sync" | "auto";
+  fetchPriority?: "high" | "low" | "auto";
 };
 
 const LOCAL_FALLBACK = officialBrand.logoFallback;
@@ -20,6 +21,7 @@ export function ResilientArtworkImage({
   className = "",
   loading = "lazy",
   decoding = "async",
+  fetchPriority = "low",
 }: ResilientArtworkImageProps) {
   const initialSource = src || backupSrc || LOCAL_FALLBACK;
   const [source, setSource] = useState(initialSource);
@@ -40,6 +42,7 @@ export function ResilientArtworkImage({
       alt={alt}
       loading={loading}
       decoding={decoding}
+      fetchPriority={fetchPriority}
       data-image-state={fallbackMode}
       onError={() => {
         if (fallbackMode === "none" && backupSrc && source !== backupSrc) {

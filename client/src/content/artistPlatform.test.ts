@@ -18,6 +18,6 @@ describe("artist platform content", () => {
     expect(allPlatformLinks.length).toBeGreaterThanOrEqual(5);
     expect(new Set(allPlatformLinks.map(link => link.label)).size).toBe(allPlatformLinks.length);
     expect(allPlatformLinks.every(link => link.href.startsWith("https://"))).toBe(true);
-    expect(officialBrand.socialPreview).toBe("/assets/akbar-social-preview.webp");
+    expect(officialBrand.socialPreview).toBe("/assets/akbar-social-preview-optimized.webp");
   });
 });

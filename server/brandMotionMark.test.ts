@@ -35,7 +35,7 @@ describe("RMX brand motion mark", () => {
     const home = source("client/src/pages/Home.tsx");
     const heroCss = source("client/src/pages/HomeArtistUpgrade.css");
     expect(brand).toContain(
-      'portrait: "/assets/akbar-official-portrait.webp"'
+      'portrait: "/assets/akbar-official-portrait-optimized.webp"'
     );
     expect(home).toContain("home-hero-portrait");
     expect(home).toContain("Portrait resmi Akbar Nawasunda");

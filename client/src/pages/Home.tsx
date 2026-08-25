@@ -88,7 +88,7 @@ export default function Home() {
   const managedVideoImage = (imageUrl: string | null | undefined) => {
     if (!imageUrl) return officialBrand.socialPreview;
     return /\/manus-storage\/[^/?#]*stage[^/?#]*/i.test(imageUrl)
-      ? "/assets/akbar-night-frequency-stage.webp"
+      ? "/assets/akbar-night-frequency-stage-optimized.webp"
       : imageUrl;
   };
   const cmsReleases = publicContent.data?.releases ?? [];
@@ -515,7 +515,7 @@ export default function Home() {
           <div
             className="live-backdrop"
             style={{
-              backgroundImage: "url(/assets/akbar-night-frequency-hero.webp)",
+              backgroundImage: "url(/assets/akbar-night-frequency-hero-optimized.webp)",
             }}
           />
           <div className="live-copy">

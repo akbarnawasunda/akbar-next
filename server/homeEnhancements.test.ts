@@ -63,8 +63,8 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain("const cmsCurrentRelease");
     expect(home).toContain("const displayReleases");
     expect(home).toContain("const activeRelease = cmsCurrentRelease");
-    expect(home).toContain("/assets/akbar-night-frequency-hero.webp");
-    expect(home).toContain("/assets/akbar-night-frequency-stage.webp");
+    expect(home).toContain("/assets/akbar-night-frequency-hero-optimized.webp");
+    expect(home).toContain("/assets/akbar-night-frequency-stage-optimized.webp");
     expect(home).not.toContain("MANAGED RELEASE");
     expect(source("client/src/components/MotionOrchestrator.tsx")).toContain(
       "const duration = 2000;"
@@ -103,7 +103,7 @@ describe("homepage enhancement contract", () => {
     );
     expect(marquee).toContain("an-platform-marquee-track");
     expect(progress).toContain("requestAnimationFrame");
-    expect(patterns).toContain("akbar-night-frequency-hero.webp");
+    expect(patterns).toContain("akbar-night-frequency-hero-optimized.webp");
     expect(patterns).toContain("an-section-index");
     expect(orchestrator).toContain("SCRAMBLE_CHARS");
     expect(orchestrator).toContain(".nf-page main > section");

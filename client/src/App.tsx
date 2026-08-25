@@ -266,7 +266,7 @@ function CmsMetadata() {
     const isHome = pathname === "/" || pathname === "/en";
     const resolvedTitle = isEnglish ? defaultTitle : (isHome ? settings?.ogTitle?.trim() || settings?.siteTitle?.trim() : undefined) || defaultTitle;
     const resolvedDescription = isEnglish ? defaultDescription : settings?.ogDescription?.trim() || settings?.metaDescription?.trim() || defaultDescription;
-    const resolvedImage = publicMediaUrl(settings?.socialPreviewUrl) || `${siteOrigin}/assets/akbar-social-preview.webp`;
+    const resolvedImage = publicMediaUrl(settings?.socialPreviewUrl) || `${siteOrigin}/assets/akbar-social-preview-optimized.webp`;
     document.title = resolvedTitle;
     setMeta('meta[name="description"]', resolvedDescription);
     setMeta('meta[property="og:title"]', resolvedTitle);
