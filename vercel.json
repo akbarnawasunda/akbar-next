@@ -10,7 +10,7 @@
     },
     "api/ssr.js": {
       "maxDuration": 30,
-      "includeFiles": ["dist/server-ssr/**", "dist/public/index.html"]
+      "includeFiles": "dist/**"
     }
   },
   "redirects": [
