@@ -440,3 +440,476 @@
   .an-site .release-card,
   .an-site .release-card-art img { transition: none !important; }
 }
+
+/* Single-surface hero redesign: a framed artist portrait + signal panel.
+   This intentionally stops at .an-hero; catalog and below-fold sections are untouched. */
+@media (min-width: 821px) {
+  .an-site .an-hero {
+    min-height: clamp(820px, 100svh, 980px);
+    padding-inline: clamp(24px, 7vw, 112px);
+    padding-bottom: clamp(48px, 6vh, 72px);
+    background-image:
+      linear-gradient(90deg, rgba(5, 7, 11, 0.86) 0%, rgba(5, 7, 11, 0.5) 38%, rgba(5, 7, 11, 0.18) 70%, rgba(5, 7, 11, 0.62) 100%),
+      linear-gradient(0deg, rgba(5, 7, 11, 0.94) 0%, rgba(5, 7, 11, 0.1) 46%, rgba(5, 7, 11, 0.46) 100%),
+      var(--hero-image);
+    background-position: center;
+    background-size: cover;
+  }
+
+  .an-site .an-hero::after {
+    background-image:
+      linear-gradient(rgba(139, 232, 219, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139, 232, 219, 0.055) 1px, transparent 1px),
+      radial-gradient(circle at 72% 30%, rgba(158, 123, 255, 0.22), transparent 25%),
+      linear-gradient(115deg, transparent 16%, rgba(216, 255, 101, 0.06) 16.1%, transparent 16.2%);
+    background-size: 48px 48px, 48px 48px, auto, auto;
+    mask-image: linear-gradient(90deg, black 0%, black 72%, transparent 100%);
+    opacity: 0.82;
+  }
+
+  .an-site .home-hero-portrait {
+    top: clamp(92px, 12vh, 132px) !important;
+    right: auto !important;
+    bottom: clamp(48px, 6vh, 72px) !important;
+    left: clamp(24px, 7vw, 112px) !important;
+    width: min(39vw, 580px) !important;
+    height: auto !important;
+    border: 1px solid rgba(139, 232, 219, 0.38);
+    border-right-color: rgba(216, 255, 101, 0.42);
+    box-shadow: 26px 26px 0 rgba(216, 255, 101, 0.08), 0 34px 90px rgba(0, 0, 0, 0.42);
+    clip-path: polygon(0 0, 100% 0, 100% 94%, 96% 100%, 0 100%);
+  }
+
+  .an-site .home-hero-portrait::before {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 4;
+    width: 3.75rem;
+    height: 3.75rem;
+    border-top: 1px solid var(--home-acid);
+    border-right: 1px solid var(--home-acid);
+    content: "";
+    opacity: 0.82;
+  }
+
+  .an-site .home-hero-portrait::after {
+    background:
+      linear-gradient(90deg, rgba(5, 7, 11, 0.64) 0%, transparent 48%, rgba(5, 7, 11, 0.36) 100%),
+      linear-gradient(0deg, rgba(5, 7, 11, 0.82), transparent 42%, rgba(5, 7, 11, 0.12));
+  }
+
+  .an-site .home-hero-portrait img {
+    filter: saturate(0.86) contrast(1.16) brightness(0.9);
+  }
+
+  .an-site .hero-copy {
+    position: relative;
+    z-index: 4;
+    align-self: center;
+    width: min(100%, 630px);
+    margin-top: 6vh;
+    margin-right: clamp(0px, 1vw, 18px);
+    padding: clamp(1.2rem, 2.5vw, 2.2rem) clamp(1.2rem, 3vw, 3rem) clamp(1.5rem, 3.5vw, 3rem);
+    border: 1px solid rgba(139, 232, 219, 0.32);
+    border-left: 2px solid var(--home-acid);
+    background: linear-gradient(135deg, rgba(5, 7, 11, 0.78), rgba(13, 20, 25, 0.5));
+    box-shadow: 0 26px 80px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(12px) saturate(1.1);
+  }
+
+  .an-site .hero-copy::before {
+    position: absolute;
+    top: -1px;
+    right: 1.5rem;
+    width: 7rem;
+    height: 2px;
+    background: var(--home-mint);
+    content: "";
+  }
+
+  .an-site .hero-copy::after {
+    position: absolute;
+    right: 1.4rem;
+    bottom: 1.4rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-right: 1px solid rgba(216, 255, 101, 0.64);
+    border-bottom: 1px solid rgba(216, 255, 101, 0.64);
+    content: "";
+    opacity: 0.8;
+  }
+
+  .an-site .hero-copy .eyebrow {
+    background: rgba(139, 232, 219, 0.04);
+  }
+
+  .an-site .hero-title-editorial {
+    max-width: 7.2ch;
+    margin-top: 1.25rem;
+    font-size: clamp(4.4rem, 7.2vw, 8rem);
+    line-height: 0.82;
+    letter-spacing: -0.055em;
+  }
+
+  .an-site .hero-description {
+    max-width: 30ch;
+    color: rgba(242, 238, 231, 0.78);
+  }
+
+  .an-site .hero-actions {
+    margin-top: 2.2rem;
+  }
+
+  .an-site .hero-signal-link {
+    margin-left: 0.35rem;
+  }
+}
+
+@media (max-width: 820px) {
+  .an-site .an-hero {
+    background-image:
+      linear-gradient(180deg, rgba(5, 7, 11, 0.58), rgba(5, 7, 11, 0.08) 34%, rgba(5, 7, 11, 0.94) 100%),
+      var(--hero-image);
+    background-position: center;
+  }
+
+  .an-site .an-hero::after {
+    background-size: 36px 36px;
+    mask-image: linear-gradient(180deg, black, transparent 86%);
+  }
+
+  .an-site .home-hero-portrait {
+    border: 1px solid rgba(139, 232, 219, 0.3);
+    border-bottom-color: rgba(216, 255, 101, 0.38);
+    box-shadow: 12px 14px 0 rgba(216, 255, 101, 0.06);
+    clip-path: polygon(0 0, 100% 0, 100% 97%, 97% 100%, 0 100%);
+  }
+
+  .an-site .hero-copy {
+    border-left: 2px solid var(--home-acid);
+    background: linear-gradient(135deg, rgba(5, 7, 11, 0.72), rgba(13, 20, 25, 0.34));
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(8px);
+  }
+
+  .an-site .hero-copy::after {
+    right: 0.8rem;
+    bottom: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .home-hero-portrait,
+  .an-site .hero-copy { backdrop-filter: none; }
+}
+
+
+/*
+ * HYBRID HERO PASS — focus + play from the legacy portfolio, framing from akbar-next.
+ * Scope is intentionally limited to .an-hero and its direct visual children.
+ * No section, catalog, scroll choreography, CMS data, or artwork contract is changed.
+ */
+@media (min-width: 821px) {
+  .an-site .an-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.04fr) minmax(320px, 0.86fr);
+    align-items: center;
+    gap: clamp(1.5rem, 4.5vw, 5rem);
+    min-height: clamp(760px, calc(100svh - 76px), 920px);
+    padding: clamp(4.75rem, 9vh, 7rem) clamp(1.5rem, 7vw, 7rem) clamp(3rem, 6vh, 5rem);
+    background-image:
+      linear-gradient(90deg, rgba(5, 7, 11, 0.88) 0%, rgba(5, 7, 11, 0.58) 42%, rgba(5, 7, 11, 0.2) 78%, rgba(5, 7, 11, 0.66) 100%),
+      linear-gradient(0deg, rgba(5, 7, 11, 0.9), rgba(5, 7, 11, 0.08) 52%, rgba(5, 7, 11, 0.46)),
+      var(--hero-image);
+    background-position: center;
+  }
+
+  .an-site .an-hero::after {
+    background-size: 56px 56px;
+    mask-image: linear-gradient(90deg, transparent 0%, black 48%, black 82%, transparent 100%);
+    opacity: 0.5;
+  }
+
+  .an-site .hero-copy {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    width: min(100%, 560px);
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .an-site .hero-copy::before,
+  .an-site .hero-copy::after {
+    display: none;
+  }
+
+  .an-site .hero-copy .eyebrow {
+    position: relative;
+    padding: 0.55rem 0.75rem 0.55rem 1.9rem;
+    border-color: rgba(216, 255, 101, 0.42);
+    background: rgba(5, 7, 11, 0.44);
+    color: var(--home-mint);
+    box-shadow: 0 0 24px rgba(216, 255, 101, 0.08);
+  }
+
+  .an-site .hero-copy .eyebrow::before {
+    position: absolute;
+    left: 0.72rem;
+    width: 0.48rem;
+    height: 0.48rem;
+    border-radius: 50%;
+    background: var(--home-acid);
+    box-shadow: 0 0 0 4px rgba(216, 255, 101, 0.08), 0 0 14px rgba(216, 255, 101, 0.5);
+    content: "";
+  }
+
+  .an-site .hero-title-editorial {
+    max-width: 9ch;
+    margin-top: 1.35rem;
+    font-size: clamp(4.8rem, 8.4vw, 9rem);
+    line-height: 0.82;
+    letter-spacing: -0.067em;
+  }
+
+  .an-site .hero-title-editorial .hero-title-mask:nth-child(2) .hero-title-word {
+    color: var(--home-paper);
+    text-shadow: 0 18px 48px rgba(0, 0, 0, 0.44), 0 0 28px rgba(139, 232, 219, 0.12);
+  }
+
+  .an-site .hero-description {
+    max-width: 34ch;
+    margin-top: 1.75rem;
+    color: rgba(242, 238, 231, 0.82);
+  }
+
+  .an-site .hero-actions {
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 1.8rem;
+  }
+
+  .an-site .hero-actions .button-primary {
+    min-height: 46px;
+    padding-inline: 1.05rem;
+    box-shadow: 0 12px 32px rgba(216, 255, 101, 0.16);
+  }
+
+  .an-site .hero-actions .button-quiet {
+    padding: 0.72rem 0.3rem;
+    border-bottom: 1px solid rgba(139, 232, 219, 0.55);
+  }
+
+  .an-site .hero-signal-link {
+    margin-left: 0;
+    padding: 0.72rem 0.3rem;
+    color: var(--home-mint);
+  }
+
+  .an-site .home-hero-portrait {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    width: min(100%, 520px) !important;
+    height: min(72svh, 650px) !important;
+    margin-top: 0;
+    border: 1px solid rgba(139, 232, 219, 0.46);
+    border-right-color: rgba(216, 255, 101, 0.62);
+    box-shadow: 18px 18px 0 rgba(216, 255, 101, 0.08), 0 30px 70px rgba(0, 0, 0, 0.38);
+    clip-path: polygon(0 0, 100% 0, 100% 96%, 96% 100%, 0 100%);
+  }
+
+  .an-site .home-hero-portrait::before {
+    top: 1rem;
+    right: 1rem;
+    width: 3rem;
+    height: 3rem;
+    border-top-color: var(--home-mint);
+    border-right-color: var(--home-mint);
+  }
+
+  .an-site .home-hero-portrait::after {
+    background:
+      linear-gradient(90deg, rgba(5, 7, 11, 0.48), transparent 52%, rgba(5, 7, 11, 0.24)),
+      linear-gradient(0deg, rgba(5, 7, 11, 0.64), transparent 48%, rgba(5, 7, 11, 0.08));
+  }
+
+  .an-site .home-hero-portrait img {
+    filter: saturate(0.98) contrast(1.12) brightness(0.94);
+  }
+
+  .an-site .home-hero-atmosphere {
+    z-index: 1;
+    right: auto;
+    bottom: clamp(5.2rem, 9vh, 7rem);
+    left: clamp(1.5rem, 7vw, 7rem);
+    width: min(30vw, 260px);
+    height: 2.8rem;
+    opacity: 0.72;
+    pointer-events: none;
+  }
+
+  .an-site .home-hero-atmosphere-cloud {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--home-acid), rgba(139, 232, 219, 0.12), transparent);
+    transform-origin: left;
+    animation: akbar-signal-drift 4.8s ease-in-out infinite;
+  }
+
+  .an-site .home-hero-atmosphere-cloud-a { top: 0; width: 64%; }
+  .an-site .home-hero-atmosphere-cloud-b { top: 1.15rem; width: 92%; animation-delay: 0.7s; }
+  .an-site .home-hero-atmosphere-cloud-c { top: 2.3rem; width: 42%; animation-delay: 1.3s; }
+
+  .an-site .home-hero-atmosphere::after {
+    position: absolute;
+    top: -0.18rem;
+    left: 64%;
+    width: 0.38rem;
+    height: 0.38rem;
+    border-radius: 50%;
+    background: var(--home-acid);
+    box-shadow: 0 0 12px var(--home-acid);
+    content: "";
+  }
+
+  .an-site .hero-scroll-cue {
+    right: clamp(1.5rem, 3vw, 3.5rem);
+    bottom: clamp(1.5rem, 3vh, 2.5rem);
+  }
+}
+
+@media (max-width: 820px) {
+  .an-site .an-hero {
+    min-height: auto;
+    padding-top: 7.6rem;
+    padding-bottom: 5.8rem;
+    background-image:
+      linear-gradient(180deg, rgba(5, 7, 11, 0.42), rgba(5, 7, 11, 0.06) 30%, rgba(5, 7, 11, 0.96) 100%),
+      var(--hero-image);
+    background-position: center top;
+  }
+
+  .an-site .an-hero::after {
+    background-size: 34px 34px;
+    mask-image: linear-gradient(180deg, black, transparent 78%);
+    opacity: 0.42;
+  }
+
+  .an-site .home-hero-portrait {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: min(100%, 520px) !important;
+    height: min(66svh, 610px) !important;
+    margin: 0 auto;
+    border: 1px solid rgba(139, 232, 219, 0.38);
+    border-bottom-color: rgba(216, 255, 101, 0.52);
+    box-shadow: 12px 14px 0 rgba(216, 255, 101, 0.07), 0 24px 55px rgba(0, 0, 0, 0.32);
+    clip-path: polygon(0 0, 100% 0, 100% 97%, 97% 100%, 0 100%);
+  }
+
+  .an-site .home-hero-portrait::before {
+    top: 0.8rem;
+    right: 0.8rem;
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .an-site .home-hero-portrait img {
+    filter: saturate(0.98) contrast(1.1) brightness(0.94);
+  }
+
+  .an-site .hero-copy {
+    width: 100%;
+    max-width: none;
+    margin: 0 !important;
+    padding: 2.4rem 0 2rem !important;
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+
+  .an-site .hero-copy::before,
+  .an-site .hero-copy::after {
+    display: none;
+  }
+
+  .an-site .hero-copy .eyebrow {
+    padding-left: 1.75rem;
+    border-color: rgba(216, 255, 101, 0.4);
+    background: rgba(5, 7, 11, 0.48);
+  }
+
+  .an-site .hero-title-editorial {
+    max-width: 8ch;
+    margin-top: 1.15rem;
+    font-size: clamp(4.15rem, 18vw, 6.7rem);
+    line-height: 0.84;
+    letter-spacing: -0.065em;
+  }
+
+  .an-site .hero-description {
+    max-width: 32ch;
+    margin-top: 1.45rem;
+    font-size: 0.92rem;
+  }
+
+  .an-site .hero-actions {
+    align-items: flex-start;
+    gap: 0.7rem;
+    margin-top: 1.65rem;
+  }
+
+  .an-site .hero-actions .button-primary {
+    min-height: 44px;
+  }
+
+  .an-site .hero-actions .button-quiet,
+  .an-site .hero-signal-link {
+    padding: 0.65rem 0.2rem;
+  }
+
+  .an-site .home-hero-atmosphere {
+    right: 1.25rem;
+    bottom: 4.4rem;
+    left: auto;
+    width: min(42vw, 150px);
+    height: 2.3rem;
+    opacity: 0.58;
+  }
+
+  .an-site .home-hero-atmosphere-cloud-b { top: 0.95rem; }
+  .an-site .home-hero-atmosphere-cloud-c { top: 1.9rem; }
+
+  .an-site .hero-scroll-cue {
+    right: 1.15rem;
+    bottom: 1.35rem;
+  }
+}
+
+@keyframes akbar-signal-drift {
+  0%, 100% { opacity: 0.42; transform: scaleX(0.82); }
+  50% { opacity: 0.96; transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .home-hero-atmosphere-cloud {
+    animation: none;
+  }
+}
