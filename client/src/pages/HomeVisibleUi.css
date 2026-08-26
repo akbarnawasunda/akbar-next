@@ -1,0 +1,442 @@
+/* Visible UI pass: stronger editorial hierarchy without taking over scrolling. */
+
+.an-site {
+  --home-line-strong: rgba(139, 232, 219, 0.34);
+  --home-line-soft: rgba(139, 232, 219, 0.16);
+  --home-panel: rgba(13, 18, 24, 0.86);
+  --home-panel-raised: rgba(20, 28, 34, 0.9);
+}
+
+.an-site .an-nav {
+  min-height: 76px;
+  border-bottom: 1px solid var(--home-line-soft) !important;
+  background: rgba(5, 7, 11, 0.82) !important;
+  backdrop-filter: blur(18px) saturate(1.15);
+}
+
+.an-site .an-wordmark {
+  gap: 0.7rem;
+}
+
+.an-site .an-wordmark span {
+  color: rgba(242, 238, 231, 0.86);
+  font: 600 0.62rem/1 "IBM Plex Mono", monospace;
+  letter-spacing: 0.16em;
+}
+
+.an-site .an-brand-logo {
+  width: 32px;
+  height: 32px;
+}
+
+.an-site .an-nav nav {
+  gap: clamp(1rem, 2.2vw, 2.2rem);
+}
+
+.an-site .an-nav nav a {
+  position: relative;
+  padding: 0.55rem 0;
+  color: rgba(242, 238, 231, 0.62);
+  font: 500 0.6rem/1 "IBM Plex Mono", monospace;
+  letter-spacing: 0.16em;
+}
+
+.an-site .an-nav nav a::after {
+  position: absolute;
+  right: 0;
+  bottom: 0.1rem;
+  left: 0;
+  height: 1px;
+  background: var(--home-acid);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.an-site .an-nav nav a:hover,
+.an-site .an-nav nav a:focus-visible {
+  color: var(--home-paper);
+}
+
+.an-site .an-nav nav a:hover::after,
+.an-site .an-nav nav a:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.an-site .nav-signal {
+  min-height: 34px;
+  padding: 0.6rem 0.72rem;
+  border: 1px solid rgba(216, 255, 101, 0.34);
+  background: rgba(216, 255, 101, 0.06);
+  color: var(--home-acid);
+  font: 500 0.57rem/1 "IBM Plex Mono", monospace;
+  letter-spacing: 0.12em;
+}
+
+.an-site .nav-signal:hover,
+.an-site .nav-signal:focus-visible {
+  background: var(--home-acid);
+  color: #11140d;
+}
+
+.an-site .an-hero {
+  isolation: isolate;
+  border-bottom: 1px solid var(--home-line-soft);
+}
+
+.an-site .an-hero::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(139, 232, 219, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 232, 219, 0.045) 1px, transparent 1px);
+  background-size: 52px 52px;
+  content: "";
+  mask-image: linear-gradient(90deg, transparent 0%, black 54%, transparent 100%);
+}
+
+.an-site .an-hero > * {
+  z-index: 1;
+}
+
+.an-site .hero-copy {
+  padding: clamp(5.5rem, 12vh, 9rem) 0 clamp(3rem, 8vh, 6rem);
+}
+
+.an-site .hero-copy .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid rgba(139, 232, 219, 0.26);
+  background: rgba(5, 7, 11, 0.38);
+}
+
+.an-site .hero-title-editorial {
+  max-width: 8ch;
+  margin-top: 1.2rem;
+  font-size: clamp(4.9rem, 9.4vw, 10rem);
+  line-height: 0.78;
+  letter-spacing: -0.078em;
+}
+
+.an-site .hero-title-editorial .hero-title-word {
+  text-shadow: 0 18px 48px rgba(0, 0, 0, 0.4);
+}
+
+.an-site .hero-description {
+  margin-top: 2rem;
+  max-width: 31ch;
+  color: rgba(242, 238, 231, 0.72);
+  font-size: clamp(0.9rem, 1.15vw, 1.05rem);
+  line-height: 1.65;
+}
+
+.an-site .hero-actions {
+  margin-top: 2rem;
+}
+
+.an-site .home-signal-deck {
+  padding-top: clamp(5.5rem, 11vw, 10rem);
+  padding-bottom: clamp(5.5rem, 11vw, 10rem);
+}
+
+.an-site .home-signal-copy {
+  max-width: 46rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.an-site .home-signal-copy h2 {
+  max-width: 7ch;
+  font-size: clamp(4rem, 8vw, 8rem);
+  line-height: 0.8;
+}
+
+.an-site .home-signal-copy h2::after {
+  width: 5.2rem;
+  height: 3px;
+  margin-top: 2rem;
+  background: var(--home-acid);
+}
+
+.an-site .home-deck-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.8rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--home-mint);
+  color: var(--home-mint);
+}
+
+.an-site .home-platform-rack {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--home-line-strong);
+  background: rgba(5, 7, 11, 0.66);
+}
+
+.an-site .home-platform-card {
+  position: relative;
+  min-height: 112px;
+  border-right: 1px solid var(--home-line-soft);
+  border-bottom: 1px solid var(--home-line-soft);
+  background: linear-gradient(145deg, rgba(20, 29, 34, 0.9), rgba(5, 7, 11, 0.44));
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.an-site .home-platform-card:nth-child(5n) {
+  border-right: 0;
+}
+
+.an-site .home-platform-card:nth-last-child(-n + 5) {
+  border-bottom: 0;
+}
+
+.an-site .home-platform-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: var(--home-mint);
+  content: "";
+  opacity: 0.28;
+  transform: scaleX(0.22);
+  transform-origin: left;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.an-site .home-platform-card:hover::before,
+.an-site .home-platform-card:focus-visible::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.an-site .home-platform-number {
+  color: rgba(242, 238, 231, 0.42);
+}
+
+.an-site .home-platform-copy strong {
+  font: 600 0.72rem/1.2 "Space Grotesk", sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.an-site .section-current,
+.an-site .release-section,
+.an-site .visual-section,
+.an-site .live-section {
+  padding-top: clamp(5.5rem, 10vw, 9rem);
+  padding-bottom: clamp(5.5rem, 10vw, 9rem);
+}
+
+.an-site .section-heading h2,
+.an-site .section-inline h2 {
+  max-width: 8ch;
+  font-size: clamp(4rem, 7vw, 7.6rem);
+  line-height: 0.8;
+}
+
+.an-site .section-heading,
+.an-site .section-inline {
+  margin-bottom: clamp(2rem, 4vw, 3.5rem);
+}
+
+.an-site .feature-release {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.72fr) minmax(280px, 1fr);
+  gap: clamp(1.4rem, 4vw, 4.5rem);
+  align-items: end;
+  padding: clamp(1rem, 2vw, 1.6rem);
+  border: 1px solid var(--home-line-strong);
+  background: linear-gradient(125deg, rgba(25, 34, 39, 0.84), rgba(6, 9, 13, 0.7));
+}
+
+.an-site .release-cover {
+  min-width: 0;
+  padding: 0.55rem;
+  border-color: var(--home-line-strong);
+  background: rgba(5, 7, 11, 0.54);
+}
+
+.an-site .release-cover img {
+  display: block;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.an-site .release-detail {
+  padding: clamp(1rem, 2vw, 2rem) 0;
+}
+
+.an-site .release-detail h3 {
+  max-width: 11ch;
+  margin: 0.8rem 0 1.4rem;
+  font-size: clamp(2.7rem, 5vw, 5.8rem);
+  line-height: 0.84;
+}
+
+.an-site .release-detail > p:not(.mono-label) {
+  max-width: 34ch;
+  color: rgba(242, 238, 231, 0.66);
+  line-height: 1.65;
+}
+
+.an-site .release-detail-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.an-site .release-detail-actions > span {
+  color: var(--home-mint);
+  font: 500 0.62rem/1 "IBM Plex Mono", monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Editorial mosaic: the first release is the anchor, remaining releases form a calm grid. */
+.an-site .release-grid {
+  display: grid !important;
+  grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+  border: 0 !important;
+}
+
+.an-site .release-grid > .release-card {
+  grid-column: span 3;
+  min-height: 372px;
+  padding: 0 1rem 1.25rem;
+  border: 1px solid var(--home-line-soft);
+  border-radius: 0;
+  background: linear-gradient(145deg, rgba(18, 27, 32, 0.94), rgba(7, 10, 14, 0.94));
+  transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.an-site .release-grid > .release-card:first-child {
+  grid-column: span 6;
+  grid-row: auto;
+  min-height: 610px;
+  background: linear-gradient(145deg, rgba(27, 40, 43, 0.96), rgba(8, 12, 16, 0.96));
+}
+
+.an-site .release-grid > .release-card:nth-child(2),
+.an-site .release-grid > .release-card:nth-child(3) {
+  grid-column: span 3;
+}
+
+.an-site .release-card-art {
+  width: calc(100% + 2rem);
+  aspect-ratio: 1.12;
+  margin: 0 -1rem 1rem;
+  background: #111a20;
+}
+
+.an-site .release-grid > .release-card:first-child .release-card-art {
+  aspect-ratio: 1.42;
+}
+
+.an-site .release-card-art img {
+  filter: saturate(0.86) contrast(1.08) brightness(0.9);
+}
+
+.an-site .release-grid > .release-card:first-child .release-card-art img {
+  filter: saturate(0.98) contrast(1.08) brightness(0.95);
+}
+
+.an-site .release-card:hover,
+.an-site .release-card:focus-visible {
+  border-color: var(--home-acid);
+  background: var(--home-panel-raised);
+  box-shadow: inset 0 0 0 1px rgba(216, 255, 101, 0.1), 0 18px 40px rgba(0, 0, 0, 0.22);
+}
+
+.an-site .release-card h3 {
+  max-width: 14ch;
+  margin-top: 0.35rem;
+  font-size: clamp(1.55rem, 2.25vw, 2.65rem);
+  line-height: 0.9;
+}
+
+.an-site .release-grid > .release-card:first-child h3 {
+  max-width: 12ch;
+  font-size: clamp(2.4rem, 4.6vw, 5.2rem);
+}
+
+.an-site .release-platform-line {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(139, 232, 219, 0.16);
+}
+
+.an-site .video-grid {
+  gap: 12px;
+}
+
+.an-site .video-card {
+  border-color: var(--home-line-soft);
+  background: var(--home-panel);
+}
+
+.an-site .video-content {
+  padding: 1.2rem;
+}
+
+.an-site .signal-section {
+  padding-top: clamp(4rem, 8vw, 7rem);
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+@media (max-width: 900px) {
+  .an-site .an-nav nav { gap: 0.85rem; }
+  .an-site .home-platform-rack { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .an-site .home-platform-card:nth-child(5n) { border-right: 1px solid var(--home-line-soft); }
+  .an-site .home-platform-card:nth-child(2n) { border-right: 0; }
+  .an-site .home-platform-card:nth-last-child(-n + 5) { border-bottom: 1px solid var(--home-line-soft); }
+  .an-site .home-platform-card:nth-last-child(-n + 2) { border-bottom: 0; }
+  .an-site .feature-release { grid-template-columns: minmax(200px, 0.8fr) minmax(240px, 1fr); }
+  .an-site .release-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .an-site .release-grid > .release-card,
+  .an-site .release-grid > .release-card:first-child,
+  .an-site .release-grid > .release-card:nth-child(2),
+  .an-site .release-grid > .release-card:nth-child(3) {
+    grid-column: auto;
+    grid-row: auto;
+    min-height: 0;
+  }
+  .an-site .release-grid > .release-card:first-child .release-card-art,
+  .an-site .release-card-art { aspect-ratio: 1.08; }
+  .an-site .release-grid > .release-card:first-child h3,
+  .an-site .release-card h3 { font-size: clamp(1.45rem, 3.4vw, 2.4rem); }
+}
+
+@media (max-width: 620px) {
+  .an-site .an-nav { min-height: 64px; }
+  .an-site .an-wordmark span { font-size: 0.52rem; letter-spacing: 0.1em; }
+  .an-site .an-brand-logo { width: 28px; height: 28px; }
+  .an-site .nav-signal { display: none; }
+  .an-site .hero-copy { padding-top: 5rem; }
+  .an-site .hero-title-editorial { font-size: clamp(4.4rem, 19vw, 7rem); }
+  .an-site .hero-actions { align-items: flex-start; flex-direction: column; }
+  .an-site .feature-release { grid-template-columns: 1fr; }
+  .an-site .release-cover { width: min(100%, 420px); }
+  .an-site .release-detail { padding-bottom: 0.75rem; }
+  .an-site .release-detail h3 { font-size: clamp(2.4rem, 13vw, 4.5rem); }
+  .an-site .release-grid { grid-template-columns: 1fr !important; }
+  .an-site .release-grid > .release-card,
+  .an-site .release-grid > .release-card:first-child { min-height: 0; }
+  .an-site .release-card-art,
+  .an-site .release-grid > .release-card:first-child .release-card-art { aspect-ratio: 1.12; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .an-nav nav a::after,
+  .an-site .home-platform-card::before { transition: none; }
+  .an-site .release-card,
+  .an-site .release-card-art img { transition: none !important; }
+}

@@ -1,0 +1,138 @@
+/* Scroll motion contract: reveal local copy, never own page geometry. */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Homepage: use the existing useScrollReveal state on copy-only surfaces. */
+  .an-site .reveal-ready > :is(.section-heading, .section-inline),
+  .an-site .reveal-ready > .home-signal-copy,
+  .an-site .reveal-ready .release-detail,
+  .an-site .reveal-ready .live-copy,
+  .an-site .reveal-ready .game-teaser-copy,
+  .an-site .reveal-ready .signal-copy {
+    opacity: 0.01;
+    transform: translate3d(0, 22px, 0);
+    transition: opacity 620ms cubic-bezier(0.23, 1, 0.32, 1), transform 620ms cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: opacity, transform;
+  }
+
+  .an-site .reveal-ready.is-revealed > :is(.section-heading, .section-inline),
+  .an-site .reveal-ready.is-revealed > .home-signal-copy,
+  .an-site .reveal-ready.is-revealed .release-detail,
+  .an-site .reveal-ready.is-revealed .live-copy,
+  .an-site .reveal-ready.is-revealed .game-teaser-copy,
+  .an-site .reveal-ready.is-revealed .signal-copy {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  .an-site .reveal-ready .home-platform-rack {
+    opacity: 0.72;
+    transition: opacity 700ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .an-site .reveal-ready.is-revealed .home-platform-rack {
+    opacity: 1;
+  }
+
+  .an-site .reveal-ready .home-platform-card {
+    opacity: 0.4;
+    transform: translate3d(0, 12px, 0);
+    transition: opacity 420ms cubic-bezier(0.23, 1, 0.32, 1), transform 420ms cubic-bezier(0.23, 1, 0.32, 1), background 180ms ease;
+  }
+
+  .an-site .reveal-ready.is-revealed .home-platform-card {
+    opacity: 1;
+    transform: none;
+  }
+
+  .an-site .reveal-ready.is-revealed .home-platform-card:nth-child(2) { transition-delay: 45ms; }
+  .an-site .reveal-ready.is-revealed .home-platform-card:nth-child(3) { transition-delay: 90ms; }
+  .an-site .reveal-ready.is-revealed .home-platform-card:nth-child(4) { transition-delay: 135ms; }
+  .an-site .reveal-ready.is-revealed .home-platform-card:nth-child(5) { transition-delay: 180ms; }
+  .an-site .reveal-ready.is-revealed .home-platform-card:nth-child(6) { transition-delay: 225ms; }
+  .an-site .reveal-ready.is-revealed .home-platform-card:nth-child(7) { transition-delay: 270ms; }
+  .an-site .reveal-ready.is-revealed .home-platform-card:nth-child(8) { transition-delay: 315ms; }
+  .an-site .reveal-ready.is-revealed .home-platform-card:nth-child(9) { transition-delay: 360ms; }
+  .an-site .reveal-ready.is-revealed .home-platform-card:nth-child(10) { transition-delay: 405ms; }
+
+  /* Catalog cards always remain visible; only their local edge signal reveals. */
+  .an-site .release-section.reveal-ready .release-card {
+    box-shadow: inset 0 0 0 1px rgba(139, 232, 219, 0.02);
+    transition: border-color 360ms ease, background 360ms ease, box-shadow 620ms ease;
+  }
+
+  .an-site .release-section.reveal-ready.is-revealed .release-card {
+    box-shadow: inset 0 0 0 1px rgba(139, 232, 219, 0.11);
+  }
+
+  .an-site .release-section.reveal-ready.is-revealed .release-card:nth-child(2) { transition-delay: 55ms; }
+  .an-site .release-section.reveal-ready.is-revealed .release-card:nth-child(3) { transition-delay: 110ms; }
+  .an-site .release-section.reveal-ready.is-revealed .release-card:nth-child(4) { transition-delay: 165ms; }
+  .an-site .release-section.reveal-ready.is-revealed .release-card:nth-child(5) { transition-delay: 220ms; }
+
+  /* Internal routes: move only copy blocks, never the media grid or parent section. */
+  .nf-page main > section[data-motion-replay="true"]:not(.nf-page-hero):not(.nf-epk-hero) > :is(
+    .nf-section-title,
+    .nf-platform-hub-copy,
+    .an-booking-grid,
+    .an-release-detail-grid,
+    .an-archive-origin,
+    .an-archive-route-list,
+    .an-event-head
+  ),
+  .en-content main > section[data-motion-replay="true"] > :is(.en-section-intro, .en-signal-strip, .en-two-column) {
+    opacity: 0.01;
+    transform: translate3d(0, 20px, 0);
+    transition: opacity 620ms cubic-bezier(0.23, 1, 0.32, 1), transform 620ms cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: opacity, transform;
+  }
+
+  .nf-page main > section[data-motion-replay="true"].is-motion-in-view:not(.nf-page-hero):not(.nf-epk-hero) > :is(
+    .nf-section-title,
+    .nf-platform-hub-copy,
+    .an-booking-grid,
+    .an-release-detail-grid,
+    .an-archive-origin,
+    .an-archive-route-list,
+    .an-event-head
+  ),
+  .en-content main > section[data-motion-replay="true"].is-motion-in-view > :is(.en-section-intro, .en-signal-strip, .en-two-column) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: opacity 620ms cubic-bezier(0.23, 1, 0.32, 1), transform 620ms cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: auto;
+  }
+
+  .nf-page .artist-editorial-section.reveal-ready .artist-editorial-heading,
+  .nf-page .artist-editorial-section.reveal-ready .artist-journey-aside {
+    opacity: 0.01 !important;
+    transform: translate3d(0, 20px, 0) !important;
+    transition: opacity 620ms cubic-bezier(0.23, 1, 0.32, 1), transform 620ms cubic-bezier(0.23, 1, 0.32, 1) !important;
+  }
+
+  .nf-page .artist-editorial-section.reveal-ready.is-revealed .artist-editorial-heading,
+  .nf-page .artist-editorial-section.reveal-ready.is-revealed .artist-journey-aside {
+    opacity: 1 !important;
+    transform: none !important;
+    will-change: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .reveal-ready > :is(.section-heading, .section-inline),
+  .an-site .reveal-ready > .home-signal-copy,
+  .an-site .reveal-ready .release-detail,
+  .an-site .reveal-ready .home-platform-rack,
+  .an-site .reveal-ready .home-platform-card,
+  .an-site .release-section.reveal-ready .release-card,
+  .nf-page main > section[data-motion-replay="true"] > *,
+  .en-content main > section[data-motion-replay="true"] > *,
+  .nf-page .artist-editorial-section .artist-editorial-heading,
+  .nf-page .artist-editorial-section .artist-journey-aside {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+    will-change: auto !important;
+  }
+}
