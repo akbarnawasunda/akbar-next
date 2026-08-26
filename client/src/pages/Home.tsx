@@ -10,6 +10,7 @@ import {
   Ticket,
 } from "lucide-react";
 import { type CSSProperties, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { PlatformIcon } from "@/components/PlatformIcon";
@@ -49,6 +50,32 @@ import "./HomePortfolioPatterns.css";
 import "./HomeGameTeaser.css";
 import "./HomeArtDirection.css";
 import "./HomeVisibleUi.css";
+import "./HomeChapterInteraction.css";
+
+function HomeMenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
+  if (!open || typeof document === "undefined") return null;
+
+  return createPortal(
+    <div
+      id="an-mobile-navigation"
+      className="an-mobile-navigation is-open"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Navigasi utama"
+      onKeyDown={event => {
+        if (event.key === "Escape") onClose();
+      }}
+    >
+      <Link href="/music" onClick={onClose}>MUSIC</Link>
+      <Link href="/visuals" onClick={onClose}>VISUALS</Link>
+      <Link href="/live" onClick={onClose}>LIVE</Link>
+      <Link href="/universe" onClick={onClose}>ARCHIVE</Link>
+      <Link href="/about" onClick={onClose}>ABOUT</Link>
+      <a className="mobile-signal" href="#signal" onClick={onClose}>KABAR TERBARU</a>
+    </div>,
+    document.body,
+  );
+}
 
 export default function Home() {
   usePerformanceMonitor();
@@ -159,6 +186,28 @@ export default function Home() {
   useEffect(() => {
     setPortraitSrc(configuredPortrait);
   }, [configuredPortrait]);
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const previousHtmlOverflow = html.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
+    if (mobileNavOpen) {
+      html.style.overflow = "hidden";
+      body.style.overflow = "hidden";
+    }
+    return () => {
+      html.style.overflow = previousHtmlOverflow;
+      body.style.overflow = previousBodyOverflow;
+    };
+  }, [mobileNavOpen]);
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileNavOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [mobileNavOpen]);
   const hasCmsHero = Boolean(
     cmsHero?.heroTitle || cmsHero?.heroBody || cmsHero?.primaryActionUrl
   );
@@ -189,7 +238,8 @@ export default function Home() {
   const displayHeroTitle = (heroTitle || "AKBAR NAWASUNDA.").trim();
   const heroTitleWords = displayHeroTitle.split(/\s+/);
   return (
-    <div ref={choreographyRef} className="an-site">
+    <>
+      <div ref={choreographyRef} className="an-site">
       <header className="an-nav">
         <a
           className="an-wordmark"
@@ -219,34 +269,6 @@ export default function Home() {
         >
           {mobileNavOpen ? "CLOSE" : "MENU"}
         </button>
-        <div
-          id="an-mobile-navigation"
-          className={`an-mobile-navigation${mobileNavOpen ? " is-open" : ""}`}
-          aria-hidden={!mobileNavOpen}
-        >
-          <Link href="/music" onClick={() => setMobileNavOpen(false)}>
-            MUSIC
-          </Link>
-          <Link href="/visuals" onClick={() => setMobileNavOpen(false)}>
-            VISUALS
-          </Link>
-          <Link href="/live" onClick={() => setMobileNavOpen(false)}>
-            LIVE
-          </Link>
-          <Link href="/universe" onClick={() => setMobileNavOpen(false)}>
-            ARCHIVE
-          </Link>
-          <Link href="/about" onClick={() => setMobileNavOpen(false)}>
-            ABOUT
-          </Link>
-          <a
-            className="mobile-signal"
-            href="#signal"
-            onClick={() => setMobileNavOpen(false)}
-          >
-            KABAR TERBARU
-          </a>
-        </div>
       </header>
 
       <main id="top">
@@ -691,6 +713,11 @@ export default function Home() {
           © {new Date().getFullYear()} AKBAR NAWASUNDA · ALL RIGHTS RESERVED
         </p>
       </footer>
-    </div>
+      </div>
+      <HomeMenuOverlay
+        open={mobileNavOpen}
+        onClose={() => setMobileNavOpen(false)}
+      />
+    </>
   );
 }
