@@ -95,3 +95,92 @@
   .an-official-media-actions button:active { transform: none; transition: none; }
   .an-official-player > span::after { animation: none; }
 }
+
+/* Artist-specific embed chrome: an official source card with a visible signal signature. */
+.an-official-media {
+  --media-line: color-mix(in srgb, var(--media-accent, #76efff) 35%, transparent);
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.an-official-media-art {
+  isolation: isolate;
+}
+
+.an-official-media-art::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  border: 1px solid var(--media-line);
+  mix-blend-mode: screen;
+}
+
+.an-official-media-art::after {
+  z-index: 0;
+}
+
+.an-official-media-art > span:not(.an-official-media-signal) {
+  z-index: 2;
+  letter-spacing: 0.18em;
+}
+
+.an-official-media-signal {
+  position: absolute;
+  z-index: 2;
+  right: 1rem;
+  bottom: 1rem;
+  display: inline-flex;
+  align-items: end;
+  gap: 3px;
+  height: 1.35rem;
+  padding: 0.35rem 0.45rem;
+  border: 1px solid var(--media-line);
+  background: rgba(5, 8, 20, 0.58);
+  backdrop-filter: blur(8px);
+}
+
+.an-official-media-signal i {
+  display: block;
+  width: 2px;
+  height: 35%;
+  background: var(--media-accent, #76efff);
+  box-shadow: 0 0 8px var(--media-accent, #76efff);
+  animation: an-official-signal-pulse 1.25s ease-in-out infinite alternate;
+}
+
+.an-official-media-signal i:nth-child(2) { height: 80%; animation-delay: 100ms; }
+.an-official-media-signal i:nth-child(3) { height: 52%; animation-delay: 180ms; }
+.an-official-media-signal i:nth-child(4) { height: 100%; animation-delay: 260ms; }
+.an-official-media-signal i:nth-child(5) { height: 66%; animation-delay: 340ms; }
+
+@keyframes an-official-signal-pulse {
+  from { opacity: 0.38; transform: scaleY(0.65); }
+  to { opacity: 1; transform: scaleY(1); }
+}
+
+.an-official-media-copy p {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.an-official-media-copy p > i {
+  display: inline-block;
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 999px;
+  background: var(--media-accent, #76efff);
+  box-shadow: 0 0 8px var(--media-accent, #76efff);
+}
+
+.an-official-media-copy h3 {
+  font-family: var(--an-body-font, "Space Grotesk", sans-serif);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-official-media-signal i { animation: none; }
+}

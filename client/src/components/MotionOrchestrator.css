@@ -58,32 +58,107 @@
 
 /* Release catalog motion is shared across public routes. The parent section is
    observed by MotionOrchestrator; cards only animate transform and opacity. */
-:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > * {
+:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .an-epk-release-list, .release-platform-links) > * {
   --release-motion-delay: 0ms;
   opacity: 0;
   transform: translate3d(0, 1.5rem, 0) scale(0.985);
   transition: opacity 680ms cubic-bezier(0.23, 1, 0.32, 1) var(--release-motion-delay), transform 680ms cubic-bezier(0.23, 1, 0.32, 1) var(--release-motion-delay);
   will-change: opacity, transform;
 }
-:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > :nth-child(2) { --release-motion-delay: 55ms; }
-:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > :nth-child(3) { --release-motion-delay: 110ms; }
-:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > :nth-child(4) { --release-motion-delay: 165ms; }
-:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > :nth-child(5) { --release-motion-delay: 220ms; }
-:is(.nf-page, .an-site) .is-motion-in-view :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > *,
-:is(.nf-page, .an-site) .is-revealed :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > * {
+:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .an-epk-release-list, .release-platform-links) > :nth-child(2) { --release-motion-delay: 55ms; }
+:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .an-epk-release-list, .release-platform-links) > :nth-child(3) { --release-motion-delay: 110ms; }
+:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .an-epk-release-list, .release-platform-links) > :nth-child(4) { --release-motion-delay: 165ms; }
+:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .an-epk-release-list, .release-platform-links) > :nth-child(5) { --release-motion-delay: 220ms; }
+:is(.nf-page, .an-site) .is-motion-in-view :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .an-epk-release-list, .release-platform-links) > *,
+:is(.nf-page, .an-site) .is-revealed :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .an-epk-release-list, .release-platform-links) > * {
   opacity: 1;
   transform: none;
   will-change: auto;
 }
-:is(.nf-page, .an-site) .is-motion-in-view :is(.nf-catalog, .en-catalog, .an-archive-release-grid, .release-platform-links) > *:hover,
-:is(.nf-page, .an-site) .is-revealed :is(.nf-catalog, .en-catalog, .an-archive-release-grid, .release-platform-links) > *:hover {
+:is(.nf-page, .an-site) .is-motion-in-view :is(.nf-catalog, .en-catalog, .an-archive-release-grid, .an-epk-release-list, .release-platform-links) > *:hover,
+:is(.nf-page, .an-site) .is-revealed :is(.nf-catalog, .en-catalog, .an-archive-release-grid, .an-epk-release-list, .release-platform-links) > *:hover {
   transform: translate3d(0, -0.3rem, 0) scale(1.002);
 }
 @media (prefers-reduced-motion: reduce) {
-  :is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > * {
+  :is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .an-epk-release-list, .release-platform-links) > * {
     opacity: 1;
     transform: none;
     transition: none;
     will-change: auto;
+  }
+}
+
+/* Shared route motion: non-home pages use the same signal-led pacing without pinning every section. */
+@media (prefers-reduced-motion: no-preference) {
+  .nf-page main > section.is-motion-in-view > .nf-page-eyebrow,
+  .nf-page main > section.is-motion-in-view > .nf-section-title,
+  .nf-page main > section.is-motion-in-view > .en-section-intro,
+  .nf-page main > section.is-motion-in-view > .section-heading,
+  .nf-page main > section.is-motion-in-view > .nf-two-column,
+  .nf-page main > section.is-motion-in-view > .en-two-column,
+  .nf-page main > section.is-motion-in-view > .an-story-art,
+  .nf-page main > section.is-motion-in-view > .an-story-copy,
+  .nf-page main > section.is-motion-in-view > .nf-platform-grid,
+  .nf-page main > section.is-motion-in-view > .nf-embed-grid,
+  .nf-page main > section.is-motion-in-view > .en-visual-grid,
+  .nf-page main > section.is-motion-in-view > .en-service-grid,
+  .nf-page main > section.is-motion-in-view > .nf-universe-grid,
+  .nf-page main > section.is-motion-in-view > .an-archive-release-grid,
+  .nf-page main > section.is-motion-in-view > .artist-editorial-heading,
+  .nf-page main > section.is-motion-in-view > .artist-combined-story-heading {
+    animation: nf-route-rise 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .nf-page main > section.is-motion-in-view > .nf-page-eyebrow,
+  .nf-page main > section.is-motion-in-view > .section-heading,
+  .nf-page main > section.is-motion-in-view > .artist-editorial-heading,
+  .nf-page main > section.is-motion-in-view > .artist-combined-story-heading {
+    animation-delay: 50ms;
+  }
+
+  .nf-page main > section.is-motion-in-view > :is(.nf-platform-grid, .nf-embed-grid, .en-visual-grid, .en-service-grid, .nf-universe-grid, .an-archive-release-grid) {
+    animation-delay: 130ms;
+  }
+
+  .nf-page main > section.is-motion-in-view > .nf-page-hero > div,
+  .nf-page main > section.is-motion-in-view > .nf-epk-hero-copy,
+  .nf-page main > section.is-motion-in-view > .en-epk-hero-copy,
+  .nf-page main > section.is-motion-in-view > .en-epk-art-card {
+    animation: nf-route-rise 780ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .nf-page main > section.is-motion-in-view > .nf-page-hero > div:nth-child(2),
+  .nf-page main > section.is-motion-in-view > .en-epk-art-card {
+    animation-delay: 110ms;
+  }
+}
+
+@keyframes nf-route-rise {
+  from { opacity: 0; transform: translate3d(0, 1.25rem, 0); }
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-page main > section.is-motion-in-view > .nf-page-eyebrow,
+  .nf-page main > section.is-motion-in-view > .nf-section-title,
+  .nf-page main > section.is-motion-in-view > .en-section-intro,
+  .nf-page main > section.is-motion-in-view > .section-heading,
+  .nf-page main > section.is-motion-in-view > .nf-two-column,
+  .nf-page main > section.is-motion-in-view > .en-two-column,
+  .nf-page main > section.is-motion-in-view > .an-story-art,
+  .nf-page main > section.is-motion-in-view > .an-story-copy,
+  .nf-page main > section.is-motion-in-view > .nf-platform-grid,
+  .nf-page main > section.is-motion-in-view > .nf-embed-grid,
+  .nf-page main > section.is-motion-in-view > .en-visual-grid,
+  .nf-page main > section.is-motion-in-view > .en-service-grid,
+  .nf-page main > section.is-motion-in-view > .nf-universe-grid,
+  .nf-page main > section.is-motion-in-view > .an-archive-release-grid,
+  .nf-page main > section.is-motion-in-view > .artist-editorial-heading,
+  .nf-page main > section.is-motion-in-view > .artist-combined-story-heading,
+  .nf-page main > section.is-motion-in-view > .nf-page-hero > div,
+  .nf-page main > section.is-motion-in-view > .nf-epk-hero-copy,
+  .nf-page main > section.is-motion-in-view > .en-epk-hero-copy,
+  .nf-page main > section.is-motion-in-view > .en-epk-art-card {
+    animation: none;
   }
 }

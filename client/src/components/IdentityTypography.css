@@ -1,0 +1,68 @@
+:root {
+  --an-display-font: "Bodoni Moda", "DM Serif Display", Georgia, serif;
+  --an-body-font: "Space Grotesk", "Manrope", Arial, sans-serif;
+  --an-utility-font: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+.an-site,
+.nf-page {
+  font-family: var(--an-body-font);
+}
+
+.an-site h1,
+.an-site h2,
+.nf-page h1,
+.nf-page h2,
+.nf-page .nf-epk-hero h1,
+.artist-editorial-section h2,
+.artist-combined-story-heading h2,
+.artist-combined-story-photo-card h3,
+.artist-photo-story-copy h3 {
+  font-family: var(--an-display-font) !important;
+  font-optical-sizing: auto;
+  font-weight: 500 !important;
+  letter-spacing: -0.055em;
+}
+
+.an-site .hero-title-editorial,
+.an-site .hero-title-word,
+.nf-page .nf-page-hero h1,
+.nf-page .nf-section h2,
+.nf-page .nf-epk-hero h1 {
+  font-family: var(--an-display-font) !important;
+  font-weight: 500 !important;
+}
+
+.an-site h1 em,
+.an-site h2 em,
+.nf-page h1 em,
+.nf-page h2 em,
+.nf-page .nf-epk-hero h1 em {
+  font-family: var(--an-display-font) !important;
+  font-style: italic;
+  font-weight: 400 !important;
+}
+
+.an-site h3,
+.nf-page h3,
+.nf-page strong,
+.artist-journey-timeline h3,
+.artist-combined-story-timeline h3 {
+  font-family: var(--an-body-font);
+}
+
+.nf-page .nf-page-hero h1,
+.nf-page .nf-section h2,
+.nf-page .nf-epk-hero h1 {
+  line-height: 0.86;
+}
+
+@media (max-width: 640px) {
+  .an-site h1,
+  .an-site h2,
+  .nf-page h1,
+  .nf-page h2,
+  .nf-page .nf-epk-hero h1 {
+    letter-spacing: -0.045em;
+  }
+}

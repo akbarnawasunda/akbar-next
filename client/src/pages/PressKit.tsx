@@ -4,6 +4,7 @@ import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
+import { HorizontalReleaseSequence } from "@/components/HorizontalReleaseSequence";
 import {
   formatPublicIndex,
   officialBrand,
@@ -176,20 +177,22 @@ export default function PressKit() {
           </div>
         </section>
 
-        <section className="nf-section dark-panel">
+        <HorizontalReleaseSequence locale="id" label="Selected press releases by Akbar Nawasunda" className="dark-panel">
           <div className="nf-section-title">
-            <div><p className="nf-page-eyebrow">RILISAN PILIHAN</p><h2>RILISAN<br />PILIHAN.</h2></div>
-            <p>Tautan resmi untuk editor, promotor, dan kolaborator.</p>
+            <div><p className="nf-page-eyebrow">RILISAN PILIHAN / SCROLL-THROUGH</p><h2>RILISAN<br />PILIHAN.</h2></div>
+            <p>Tautan resmi untuk editor, promotor, dan kolaborator. Scroll ke bawah untuk melewati seluruh pilihan.</p>
           </div>
-          <div className="an-epk-release-list">
-            {selectedReleases.map(release => (
-              <a className="an-epk-release" key={release.title} href={release.href} target="_blank" rel="noreferrer">
-                <ResilientArtworkImage src={release.image} backupSrc={officialBrand.socialPreview} alt={`Artwork ${release.title}`} />
-                <div><span>{release.platform} · {release.year}</span><h3>{release.title}</h3><p>{release.format} <ArrowUpRight size={12} /></p></div>
-              </a>
-            ))}
+          <div className="nf-horizontal-release-viewport" data-horizontal-viewport="true">
+            <div className="an-epk-release-list" data-horizontal-track="true">
+              {selectedReleases.map(release => (
+                <a className="an-epk-release" key={release.title} href={release.href} target="_blank" rel="noreferrer">
+                  <ResilientArtworkImage src={release.image} backupSrc={officialBrand.socialPreview} alt={`Artwork ${release.title}`} />
+                  <div><span>{release.platform} · {release.year}</span><h3>{release.title}</h3><p>{release.format} <ArrowUpRight size={12} /></p></div>
+                </a>
+              ))}
+            </div>
           </div>
-        </section>
+        </HorizontalReleaseSequence>
 
         <section className="nf-section an-epk-contact-panel">
           <div className="an-booking-grid">

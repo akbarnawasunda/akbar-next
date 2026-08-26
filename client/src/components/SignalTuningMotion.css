@@ -87,7 +87,6 @@
 
   .nf-page main > section[data-motion-replay="true"].is-motion-in-view :is(
       .nf-platform-grid,
-      .nf-catalog,
       .nf-visual-grid,
       .nf-video-embed-grid,
       .nf-embed-grid,
@@ -95,7 +94,6 @@
       .nf-event-grid,
       .an-epk-capability-grid,
       .an-epk-assets,
-      .an-epk-release-list,
       .an-release-links,
       .nf-signal-form,
       .nf-signal-block
@@ -111,6 +109,7 @@
       .an-epk-capability,
       .an-epk-asset,
       .an-epk-release,
+      .an-archive-release,
       .an-release-links > *,
       .nf-official-media
     ) {
@@ -437,7 +436,6 @@
 @media (prefers-reduced-motion: no-preference) {
   .nf-page main > section[data-motion-replay="true"][data-motion-direction="up"].is-motion-in-view :is(
       .nf-platform-grid,
-      .nf-catalog,
       .nf-visual-grid,
       .nf-video-embed-grid,
       .nf-embed-grid,
@@ -445,7 +443,6 @@
       .nf-event-grid,
       .an-epk-capability-grid,
       .an-epk-assets,
-      .an-epk-release-list,
       .an-release-links,
       .nf-signal-form,
       .nf-signal-block
@@ -461,6 +458,7 @@
       .an-epk-capability,
       .an-epk-asset,
       .an-epk-release,
+      .an-archive-release,
       .an-release-links > *,
       .nf-official-media
     ) {
