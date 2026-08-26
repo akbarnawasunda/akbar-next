@@ -18,6 +18,8 @@ import FanSignalInline from "@/components/FanSignalInline";
 import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
+import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
+import { publicJourney, publicPhotoStories } from "@/content/publicContent";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import { TiltCard } from "@/components/TiltCard";
 import {
@@ -147,6 +149,8 @@ export default function Home() {
       : currentRelease;
   const cmsHero = publicContent.data?.hero;
   const cmsProfile = publicContent.data?.profile;
+  const journey = publicJourney(publicContent.data);
+  const photoStories = publicPhotoStories(publicContent.data);
   const gameConfig = publicContent.data?.game;
   const gameEnabled = gameConfig?.isEnabled !== false;
   const configuredPortrait = cmsHero?.heroImage || cmsProfile?.portraitImage || officialBrand.portrait;
@@ -416,12 +420,20 @@ export default function Home() {
         </section>
         </div>
 
+        <div className="an-scroll-scene an-scroll-scene-journey" data-scroll-scene="journey">
+          <ArtistEditorialSections journey={journey} showPhotoStory={false} />
+        </div>
+
+        <div className="an-scroll-scene an-scroll-scene-photo-story" data-scroll-scene="photo-story">
+          <ArtistEditorialSections photoStories={photoStories} showJourney={false} />
+        </div>
+
         <div className="an-scroll-scene an-scroll-scene-catalog" data-scroll-scene="catalog" data-scroll-pin="true">
         <section
           ref={releaseSectionRef}
           className="section release-section reveal-target"
         >
-          <SectionIndex number="03" label="KATALOG" />
+          <SectionIndex number="05" label="KATALOG" />
           <div className="section-inline">
             <div>
               <p className="eyebrow">KATALOG RILISAN</p>
@@ -482,7 +494,7 @@ export default function Home() {
           className="section visual-section reveal-target"
           id="visuals"
         >
-          <SectionIndex number="04" label="KARYA VIDEO" />
+          <SectionIndex number="06" label="KARYA VIDEO" />
           <div className="section-heading">
             <p className="eyebrow">VISUAL</p>
             <h2>
@@ -525,7 +537,7 @@ export default function Home() {
           className="section live-section reveal-target"
           id="live"
         >
-          <SectionIndex number="05" label="LIVE" />
+          <SectionIndex number="07" label="LIVE" />
           <div
             className="live-backdrop"
             style={{
@@ -593,7 +605,7 @@ export default function Home() {
             id="game"
             aria-labelledby="game-teaser-title"
           >
-            <SectionIndex number="06" label="PLAYABLE SIGNAL" />
+            <SectionIndex number="08" label="PLAYABLE SIGNAL" />
             <div className="game-teaser-art" aria-hidden="true">
               <div className="game-teaser-scanline" />
               <span className="game-teaser-sun" />
@@ -624,7 +636,7 @@ export default function Home() {
           className="signal-section reveal-target"
           id="signal"
         >
-          <SectionIndex number="07" label="NEWS" />
+          <SectionIndex number="09" label="NEWS" />
           <div>
             <p className="eyebrow">
               <Sparkles size={14} /> KABAR TERBARU

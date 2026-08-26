@@ -294,6 +294,7 @@ var artistInquiries = mysqlTable("artistInquiries", {
 var customDocumentTypes = [
   "hero",
   "profile",
+  "journey",
   "pressKit",
   "siteSettings",
   "legal",
@@ -302,11 +303,13 @@ var customDocumentTypes = [
   "portrait",
   "live",
   "event",
+  "photoStory",
   "game"
 ];
 var prefixes = {
   hero: "custom-hero",
   profile: "custom-profile",
+  journey: "custom-journey",
   pressKit: "custom-press-kit",
   siteSettings: "custom-site-settings",
   legal: "custom-legal",
@@ -315,11 +318,13 @@ var prefixes = {
   portrait: "custom-portrait",
   live: "custom-live-signal",
   event: "custom-event",
+  photoStory: "custom-photo-story",
   game: "custom-game"
 };
 var singletonTypes = /* @__PURE__ */ new Set([
   "hero",
   "profile",
+  "journey",
   "pressKit",
   "siteSettings",
   "legal",
@@ -333,6 +338,7 @@ function documentTitle(type, payload) {
   const defaults = {
     hero: "Homepage hero",
     profile: "Artist profile",
+    journey: "Artist journey",
     pressKit: "Press and booking",
     siteSettings: "Site settings",
     legal: "Privacy policy",
@@ -341,6 +347,7 @@ function documentTitle(type, payload) {
     portrait: "Untitled portrait study",
     live: "Live signal",
     event: "Untitled event",
+    photoStory: "Untitled photo story",
     game: "JEDAG RUN \u2014 NIGHT FREQUENCY"
   };
   return stringValue(payload.title, stringValue(payload.siteTitle, defaults[type]));
@@ -348,8 +355,10 @@ function documentTitle(type, payload) {
 function documentLabel(type, payload) {
   if (typeof payload.label === "string") return payload.label;
   if (type === "release") return stringValue(payload.format, "Release");
+  if (type === "journey") return "Biography / journey";
   if (type === "visual") return "Official visual";
   if (type === "portrait") return "Portrait study";
+  if (type === "photoStory") return "Photo story";
   if (type === "event") return stringValue(payload.status, "announced");
   if (type === "game") return "Game + audio";
   return type;

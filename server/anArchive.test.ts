@@ -10,7 +10,9 @@ describe("AN Archive", () => {
     expect(archive).toContain("ARSIP AKBAR");
     expect(archive).toContain("verifiedArtistProfile.longBio");
     expect(archive).toContain("verifiedArtistProfile.genres.map");
-    expect(archive).toContain("releases.slice(0, 4)");
+    expect(archive).toContain("catalog.slice(0, 6)");
+    expect(archive).toContain("publicJourney");
+    expect(archive).toContain("ArtistPhotoStorySection");
   });
 
   it("keeps release, remix, and booking routes available from the archive", () => {

@@ -52,12 +52,14 @@ function text(payload: Record<string, unknown>, key: string) {
 function destinationFor(documentType: string) {
   if (documentType === "hero") return "/";
   if (documentType === "profile") return "/about + /universe";
+  if (documentType === "journey") return "Homepage Artist Journey + /about";
   if (documentType === "pressKit") return "/epk";
   if (documentType === "siteSettings") return "Homepage + metadata";
   if (documentType === "legal") return "/privacy";
   if (documentType === "release") return "/music + release detail";
   if (documentType === "visual") return "/visuals";
   if (documentType === "portrait") return "/visuals/portraits";
+  if (documentType === "photoStory") return "Homepage Photo Story + /visuals";
   if (documentType === "event" || documentType === "live") return "/live";
   if (documentType === "game") return "/game/jedag-run + homepage teaser";
   return "Public site";
@@ -65,15 +67,13 @@ function destinationFor(documentType: string) {
 
 export function StudioPublishChecklist({ documentType, payload, isPublished }: PublishChecklistProps) {
   const titleReady = Boolean(text(payload, "title") || text(payload, "heroTitle") || text(payload, "siteTitle"));
-  const mediaReady = documentType === "siteSettings" || documentType === "live" || documentType === "event"
+  const mediaReady = documentType === "siteSettings" || documentType === "live" || documentType === "event" || documentType === "game" || documentType === "journey"
     ? true
-    : documentType === "game"
-      ? true
-      : Boolean(text(payload, "imageUrl") || text(payload, "artworkUrl") || text(payload, "portraitImage") || text(payload, "heroImage") || text(payload, "socialPreviewUrl"));
+    : Boolean(text(payload, "imageUrl") || text(payload, "artworkUrl") || text(payload, "portraitImage") || text(payload, "heroImage") || text(payload, "socialPreviewUrl"));
   const routeReady = Boolean(destinationFor(documentType));
   const checks = [
     { label: "Judul / identitas terisi", ready: titleReady },
-    { label: documentType === "game" ? "Audio opsional / fallback siap" : "Media utama tersedia", ready: mediaReady },
+    { label: documentType === "game" ? "Audio opsional / fallback siap" : documentType === "journey" ? "Visual journey opsional" : "Media utama tersedia", ready: mediaReady },
     { label: "Halaman tujuan jelas", ready: routeReady },
   ];
   const passed = checks.filter(check => check.ready).length;

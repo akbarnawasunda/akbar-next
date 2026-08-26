@@ -13,12 +13,14 @@ import { StudioAssetPreview, StudioLinkPreview } from "./StudioAssetPreview";
 type DocumentType =
   | "hero"
   | "profile"
+  | "journey"
   | "pressKit"
   | "siteSettings"
   | "legal"
   | "release"
   | "visual"
   | "portrait"
+  | "photoStory"
   | "live"
   | "event"
   | "game";
@@ -33,12 +35,14 @@ type StudioDocumentPreviewProps = {
 const publicRoutes: Record<DocumentType, { route: string; surface: string }> = {
   hero: { route: "/", surface: "Homepage" },
   profile: { route: "/about", surface: "About / Universe / EPK" },
+  journey: { route: "/", surface: "Homepage Artist Journey + About" },
   pressKit: { route: "/epk", surface: "EPK" },
   siteSettings: { route: "/", surface: "Homepage + metadata" },
   legal: { route: "/privacy", surface: "Privacy / Legal" },
   release: { route: "/music", surface: "Music + release cards" },
   visual: { route: "/visuals", surface: "Visuals + homepage" },
   portrait: { route: "/visuals/portraits", surface: "Visual Studies gallery" },
+  photoStory: { route: "/", surface: "Homepage Photo Story + Visuals" },
   live: { route: "/live", surface: "Live + homepage" },
   event: { route: "/live", surface: "Live + homepage" },
   game: { route: "/game/jedag-run", surface: "JEDAG RUN + homepage teaser" },

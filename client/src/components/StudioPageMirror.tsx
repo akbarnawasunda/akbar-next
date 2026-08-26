@@ -222,6 +222,8 @@ export default function StudioPageMirror({ documents, onEditType }: StudioPageMi
     const live = firstDocument(documents, "live")?.payload ?? {};
     const legal = firstDocument(documents, "legal")?.payload ?? {};
     const game = firstDocument(documents, "game")?.payload ?? {};
+    const journey = firstDocument(documents, "journey")?.payload ?? {};
+    const photoStoryDocuments = documentsOf(documents, "photoStory");
     const managedPlatforms = parsePlatformLinks(settings.platformLinks);
     const textPlatforms = parsePlatformText(stringValue(settings, "platformLinksText"));
     const platforms = managedPlatforms.length
@@ -240,6 +242,13 @@ export default function StudioPageMirror({ documents, onEditType }: StudioPageMi
     const pressGenres = stringValue(pressKit, "snapshotGenresText") || verifiedArtistProfile.genres.join(", ");
     const pressAlias = stringValue(pressKit, "snapshotAlias") || verifiedArtistProfile.aliases.join(" / ");
     const pressEmail = stringValue(pressKit, "pressEmail") || verifiedArtistProfile.bookingEmail;
+    const journeyMilestones = Array.isArray(journey.milestones)
+      ? journey.milestones.flatMap(item => {
+          if (!item || typeof item !== "object" || Array.isArray(item)) return [];
+          const record = item as Record<string, unknown>;
+          return [textItem(String(record.year || "Milestone"), `${String(record.title || "")} — ${String(record.body || "")}`)];
+        })
+      : [];
     const pages: MirrorPage[] = [
       {
         route: "/",
@@ -298,6 +307,22 @@ export default function StudioPageMirror({ documents, onEditType }: StudioPageMi
             ],
           },
           {
+            title: "Artist Journey / Biography",
+            detail: "Biografi, milestone, dan foto opsional pada scene perjalanan homepage.",
+            icon: FileText,
+            editType: "journey",
+            sourceLabel: firstDocument(documents, "journey") ? "CMS · Artist Journey" : "Fallback resmi · Verified artist profile",
+            items: [textItem("Judul", stringValue(journey, "title") || "PERJALANAN MUSIK."), textItem("Intro", stringValue(journey, "intro") || profileBio), ...journeyMilestones].filter(item => item.value),
+          },
+          {
+            title: "Photo Story / visual scene",
+            detail: "Foto, caption, dan alt text yang tampil sebagai cerita visual homepage.",
+            icon: ImageIcon,
+            editType: "photoStory",
+            sourceLabel: photoStoryDocuments.length ? "CMS · Photo Story documents" : "Fallback resmi · Portrait studies",
+            items: photoStoryDocuments.length ? photoStoryDocuments.map(document => mediaItem(stringValue(document.payload, "title") || document.slug, stringValue(document.payload, "imageUrl"))) : portraitStudies.slice(0, 2).map(study => mediaItem(study.titleId, study.src)),
+          },
+          {
             title: "Katalog dan video resmi",
             detail: "Semua kartu rilisan serta visual video yang tampil pada homepage.",
             icon: FileText,
@@ -349,6 +374,14 @@ export default function StudioPageMirror({ documents, onEditType }: StudioPageMi
         marker: "MOVING IMAGE BOARD",
         summary: "Kartu visual resmi, thumbnail, label, dan URL video.",
         sections: [
+          {
+            title: "Photo Story homepage",
+            detail: "Foto editorial yang dipakai pada scene cerita homepage dan dapat ditambah dari Studio.",
+            icon: ImageIcon,
+            editType: "photoStory",
+            sourceLabel: photoStoryDocuments.length ? "CMS · Photo Story documents" : "Fallback resmi · Portrait studies",
+            items: photoStoryDocuments.length ? photoStoryDocuments.map(document => mediaItem(stringValue(document.payload, "title") || document.slug, stringValue(document.payload, "imageUrl"))) : portraitStudies.slice(0, 2).map(study => mediaItem(study.titleId, study.src)),
+          },
           {
             title: "Visual archive cards",
             detail: "Setiap kartu visual yang muncul pada halaman Visuals dan homepage.",
@@ -435,6 +468,14 @@ export default function StudioPageMirror({ documents, onEditType }: StudioPageMi
         summary: "Arah visual, artwork rilisan, dan jalur kontak resmi.",
         sections: [
           {
+            title: "Artist Journey",
+            detail: "Journey yang juga menjadi dasar cerita pada Archive dan homepage.",
+            icon: FileText,
+            editType: "journey",
+            sourceLabel: firstDocument(documents, "journey") ? "CMS · Artist Journey" : "Fallback resmi · Artist profile",
+            items: [textItem("Intro", stringValue(journey, "intro") || profileBio), ...journeyMilestones].filter(item => item.value),
+          },
+          {
             title: "Archive artwork",
             detail: "Artwork utama yang menjadi visual pembuka Archive.",
             icon: ImageIcon,
@@ -464,6 +505,14 @@ export default function StudioPageMirror({ documents, onEditType }: StudioPageMi
             editType: "profile",
             sourceLabel: firstDocument(documents, "profile") ? "CMS · Profile document" : "Fallback resmi · Artist profile",
             items: [mediaItem("Profile portrait", portrait), textItem("Location", profileLocation), linkItem("Google Maps", stringValue(profile, "locationUrl"))].filter(item => item.value),
+          },
+          {
+            title: "Homepage journey source",
+            detail: "Journey homepage mengambil copy terverifikasi dari dokumen ini.",
+            icon: FileText,
+            editType: "journey",
+            sourceLabel: firstDocument(documents, "journey") ? "CMS · Artist Journey" : "Fallback resmi · Artist profile",
+            items: [textItem("Journey intro", stringValue(journey, "intro") || profileBio), ...journeyMilestones].filter(item => item.value),
           },
           {
             title: "Bio, statement & genres",

@@ -1,7 +1,7 @@
 import { ArrowUpRight, MapPin, Radio, Sparkles } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
-import { usePublicArtistContent } from "@/content/publicContent";
+import { publicJourney, usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./ArtistModules.css";
 
@@ -9,7 +9,8 @@ export default function About() {
   const cms = usePublicArtistContent();
   const profile = cms.data?.profile;
   const shortBio = profile?.shortBio || verifiedArtistProfile.shortBio;
-  const longBio = profile?.longBio || verifiedArtistProfile.longBio;
+  const journey = publicJourney(cms.data);
+  const longBio = journey.intro || profile?.longBio || verifiedArtistProfile.longBio;
   const genres = profile?.genres?.length ? profile.genres : verifiedArtistProfile.genres;
   const location = profile?.location || verifiedArtistProfile.location;
   const locationUrl = profile?.locationUrl;

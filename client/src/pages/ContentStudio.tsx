@@ -64,57 +64,69 @@ const documentTypes = [
     description: "Bio, genres, statement, portrait",
   },
   {
+    value: "journey",
+    label: "Artist Journey",
+    eyebrow: "03",
+    description: "Biography, milestones, and story image",
+  },
+  {
     value: "pressKit",
     label: "Press & booking",
-    eyebrow: "03",
+    eyebrow: "04",
     description: "EPK copy, contacts, download links",
   },
   {
     value: "siteSettings",
     label: "Site settings / SEO",
-    eyebrow: "04",
+    eyebrow: "05",
     description: "Metadata and search presentation",
   },
   {
     value: "legal",
     label: "Privacy / legal",
-    eyebrow: "05",
+    eyebrow: "06",
     description: "Reviewed public policy documents",
   },
   {
     value: "release",
     label: "Release",
-    eyebrow: "06",
+    eyebrow: "07",
     description: "Music, artwork, platforms, credits",
   },
   {
     value: "visual",
     label: "Visual archive item",
-    eyebrow: "07",
+    eyebrow: "08",
     description: "Thumbnail, YouTube ID, URL, and archive card",
   },
   {
     value: "portrait",
     label: "Portrait study",
-    eyebrow: "08",
+    eyebrow: "09",
     description: "Foto, caption, alt text, dan urutan tampil",
+  },
+  {
+    value: "photoStory",
+    label: "Photo Story",
+    eyebrow: "10",
+    description: "Foto editorial, caption, alt text, dan link opsional",
   },
   {
     value: "live",
     label: "Live signal",
-    eyebrow: "09",
+    eyebrow: "11",
     description: "Standby, announced, or active",
   },
   {
     value: "event",
     label: "Live event",
-    eyebrow: "10",
+    eyebrow: "12",
     description: "Date, venue, ticket, poster",
   },
   {
     value: "game",
     label: "JEDAG RUN game",
-    eyebrow: "11",
+    eyebrow: "13",
     description: "Game route, copy, BGM, and SFX",
   },
 ] as const;
@@ -156,6 +168,21 @@ const fieldUsage: Record<string, string> = {
   "profile.portraitImage":
     "About + Universe → portrait profile; bukan foto utama kartu Editorial / Press EPK",
   "profile.artistStatement": "About → kutipan artist statement",
+  "journey.title": "Homepage + About → judul scene Artist Journey",
+  "journey.titleEn": "English homepage → journey title",
+  "journey.intro": "Homepage + About → intro biografi / journey Indonesia",
+  "journey.introEn": "English homepage + About → journey intro",
+  "journey.imageUrl": "Homepage → visual opsional untuk scene Artist Journey",
+  "journey.milestonesText": "Homepage + Universe → satu baris per milestone: Tahun | Judul ID | Copy ID | Judul EN | Copy EN; format 3 kolom lama tetap diterima",
+  "photoStory.title": "Homepage + Visuals → judul frame foto Indonesia",
+  "photoStory.titleEn": "English homepage + Visuals → judul frame foto",
+  "photoStory.label": "Homepage + Visuals → label kartu foto",
+  "photoStory.imageUrl": "Homepage + Visuals → foto story",
+  "photoStory.copyId": "Homepage + Visuals → caption Indonesia",
+  "photoStory.copyEn": "Homepage + Visuals → caption English",
+  "photoStory.altId": "Homepage + Visuals → alt text Indonesia",
+  "photoStory.altEn": "Homepage + Visuals → alt text English",
+  "photoStory.url": "Homepage + Visuals → link story opsional",
   "pressKit.intro": "EPK → pembuka press & booking",
   "pressKit.bookingEmail": "EPK → kontak booking",
   "pressKit.pressEmail": "EPK → kontak pers",
@@ -218,8 +245,10 @@ const primaryWorkflowTypes: DocumentType[] = [
   "pressKit",
   "siteSettings",
   "profile",
+  "journey",
   "visual",
   "portrait",
+  "photoStory",
   "game",
 ];
 const primaryWorkflows = [
@@ -246,6 +275,14 @@ const primaryWorkflows = [
     description: "Atur link Spotify, YouTube, dan kanal lain.",
     icon: Link2,
     action: "Edit tautan",
+  },
+  {
+    type: "journey" as const,
+    eyebrow: "06",
+    title: "Artist Journey",
+    description: "Atur biografi singkat dan milestone yang tampil di homepage.",
+    icon: FilePenLine,
+    action: "Edit journey",
   },
   {
     type: "pressKit" as const,
@@ -280,8 +317,16 @@ const primaryWorkflows = [
     action: "Kelola portrait",
   },
   {
-    type: "game" as const,
+    type: "photoStory" as const,
     eyebrow: "08",
+    title: "Photo Story",
+    description: "Tambah foto dan caption untuk scene cerita visual homepage.",
+    icon: ImageIcon,
+    action: "Tambah photo story",
+  },
+  {
+    type: "game" as const,
+    eyebrow: "09",
     title: "JEDAG RUN / Night Frequency",
     description: "Atur copy game, BGM, SFX, dan status tayang.",
     icon: Gamepad2,
@@ -349,6 +394,14 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
       media: true,
     },
     { key: "artistStatement", label: "Artist statement", multiline: true },
+  ],
+  journey: [
+    { key: "title", label: "Judul journey Indonesia", placeholder: "PERJALANAN MUSIK." },
+    { key: "titleEn", label: "Journey title English", placeholder: "MUSIC JOURNEY." },
+    { key: "intro", label: "Intro Indonesia", multiline: true, placeholder: "Biografi singkat yang sudah diverifikasi." },
+    { key: "introEn", label: "Intro English", multiline: true, placeholder: "A concise verified artist journey." },
+    { key: "imageUrl", label: "Foto / artwork journey", type: "url", media: true, hint: "Opsional. Dipakai sebagai visual pembuka journey homepage." },
+    { key: "milestonesText", label: "Milestone journey", multiline: true, hint: "Satu baris: Tahun | Judul Indonesia | Copy Indonesia | Judul English | Copy English. Kolom English boleh dikosongkan; format 3 kolom lama tetap diterima.", placeholder: "2020 | DJ Akbar Remix | Awal perjalanan... | DJ Akbar Remix | The beginning...\nSEKARANG | Akbar Nawasunda | Karya orisinal... | Akbar Nawasunda | Original work..." },
   ],
   pressKit: [
     { key: "intro", label: "EPK intro", multiline: true },
@@ -450,6 +503,17 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
     { key: "youtubeId", label: "YouTube ID", placeholder: "e.g. rv4DK8nVWd0" },
     { key: "url", label: "Official visual URL", type: "url" },
     { key: "imageUrl", label: "Thumbnail URL", type: "url", media: true },
+  ],
+  photoStory: [
+    { key: "title", label: "Judul foto Indonesia" },
+    { key: "titleEn", label: "Photo title English" },
+    { key: "label", label: "Label", placeholder: "PHOTO STORY" },
+    { key: "imageUrl", label: "Foto story", type: "url", media: true },
+    { key: "copyId", label: "Caption Indonesia", multiline: true },
+    { key: "copyEn", label: "Caption English", multiline: true },
+    { key: "altId", label: "Alt text Indonesia" },
+    { key: "altEn", label: "Alt text English" },
+    { key: "url", label: "Link story opsional", type: "url" },
   ],
   portrait: [
     { key: "title", label: "Judul studi Indonesia" },
@@ -583,6 +647,14 @@ function fallbackPayload(type: DocumentType): EditorPayload {
       genresText: verifiedArtistProfile.genres.join(", "),
       portraitImage: officialBrand.portrait,
     };
+  if (type === "journey")
+    return {
+      title: "PERJALANAN MUSIK.",
+      titleEn: "MUSIC JOURNEY.",
+      intro: "Perjalanan musik Akbar Nawasunda dimulai pada 2020 sebagai bedroom producer independen dengan nama DJ Akbar Remix. Eksperimennya membawa lagu-lagu populer ke wilayah Breakbeat, Jedag Jedug, dan Jungle Dutch bergaya Bandung. Kini, di bawah nama Akbar Nawasunda, ia merilis karya orisinal yang memadukan melodi pop, electronic bass, dan energi remix untuk platform musik digital global.",
+      introEn: "Akbar Nawasunda's musical journey began in 2020 as an independent bedroom producer known as DJ Akbar Remix. His experiments brought popular songs into a Bandung-rooted space of Breakbeat, Jedag Jedug, and Jungle Dutch. Today, he releases original work shaped by pop melody, electronic bass, and remix energy.",
+      milestonesText: "2020 | DJ Akbar Remix | Awal perjalanan sebagai bedroom producer independen dengan fokus pada reinterpretasi lagu populer. | DJ Akbar Remix | The beginning as an independent bedroom producer focused on reinterpreting popular songs.\nSEKARANG | Akbar Nawasunda | Karya orisinal dan remix yang membawa energi electronic bass ke platform musik digital. | Akbar Nawasunda | Original work and remixes carrying electronic bass energy across digital music platforms.",
+    };
   if (type === "pressKit")
     return {
       intro:
@@ -630,6 +702,19 @@ function fallbackPayload(type: DocumentType): EditorPayload {
       url: visual.href,
       youtubeId: visual.href.split("/").pop() || "",
       imageUrl: visual.image,
+    };
+  }
+  if (type === "photoStory") {
+    const study = portraitStudies[0];
+    return {
+      title: study.titleId,
+      titleEn: study.titleEn,
+      label: "PHOTO STORY",
+      imageUrl: study.src,
+      copyId: study.copyId,
+      copyEn: study.copyEn,
+      altId: study.altId,
+      altEn: study.altEn,
     };
   }
   if (type === "portrait") {
@@ -709,6 +794,25 @@ function formatPlatformLinks(value: unknown) {
 
 function preparedPayload(type: DocumentType, payload: EditorPayload) {
   const next = { ...payload };
+  if (type === "journey") {
+    next.milestones = textValue(next, "milestonesText")
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean)
+      .map(line => {
+        const parts = line.split("|").map(value => value.trim());
+        const [year, title, body, titleEn, ...bodyEnParts] = parts;
+        return {
+          year,
+          title,
+          body,
+          ...(titleEn && bodyEnParts.length ? { titleEn, bodyEn: bodyEnParts.join(" | ") } : {}),
+        };
+      })
+      .filter(item => item.year && item.title && item.body);
+    delete next.milestonesText;
+  }
+
   if (type === "profile") {
     next.genres = textValue(next, "genresText")
       .split(",")
@@ -759,6 +863,16 @@ function displayPayload(document: EditorDocument): EditorPayload {
     : { ...document.payload };
   if (document.documentType === "profile" && Array.isArray(next.genres))
     next.genresText = next.genres.join(", ");
+  if (document.documentType === "journey" && Array.isArray(next.milestones))
+    next.milestonesText = next.milestones
+      .map(item => [
+        String(item.year || ""),
+        String(item.title || ""),
+        String(item.body || ""),
+        String(item.titleEn || ""),
+        String(item.bodyEn || ""),
+      ].join(" | "))
+      .join("\n");
   if (document.documentType === "pressKit" && Array.isArray(next.snapshotGenres))
     next.snapshotGenresText = next.snapshotGenres.join(", ");
   if (document.documentType === "legal" && Array.isArray(next.sections))
@@ -1678,7 +1792,11 @@ export default function ContentStudio() {
                           Dipakai di:{" "}
                           {document.documentType === "release"
                             ? "Homepage + Music + EPK"
-                            : document.documentType === "event" ||
+                            : document.documentType === "journey"
+                              ? "Homepage Artist Journey + About / Universe"
+                              : document.documentType === "photoStory"
+                                ? "Homepage Photo Story + Visuals"
+                                : document.documentType === "event" ||
                                 document.documentType === "live"
                               ? "Live + Homepage"
                               : document.documentType === "profile"

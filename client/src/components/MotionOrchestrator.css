@@ -55,3 +55,35 @@
     text-shadow: none;
   }
 }
+
+/* Release catalog motion is shared across public routes. The parent section is
+   observed by MotionOrchestrator; cards only animate transform and opacity. */
+:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > * {
+  --release-motion-delay: 0ms;
+  opacity: 0;
+  transform: translate3d(0, 1.5rem, 0) scale(0.985);
+  transition: opacity 680ms cubic-bezier(0.23, 1, 0.32, 1) var(--release-motion-delay), transform 680ms cubic-bezier(0.23, 1, 0.32, 1) var(--release-motion-delay);
+  will-change: opacity, transform;
+}
+:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > :nth-child(2) { --release-motion-delay: 55ms; }
+:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > :nth-child(3) { --release-motion-delay: 110ms; }
+:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > :nth-child(4) { --release-motion-delay: 165ms; }
+:is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > :nth-child(5) { --release-motion-delay: 220ms; }
+:is(.nf-page, .an-site) .is-motion-in-view :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > *,
+:is(.nf-page, .an-site) .is-revealed :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > * {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+:is(.nf-page, .an-site) .is-motion-in-view :is(.nf-catalog, .en-catalog, .an-archive-release-grid, .release-platform-links) > *:hover,
+:is(.nf-page, .an-site) .is-revealed :is(.nf-catalog, .en-catalog, .an-archive-release-grid, .release-platform-links) > *:hover {
+  transform: translate3d(0, -0.3rem, 0) scale(1.002);
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.nf-page, .an-site) :is(.nf-catalog, .en-catalog, .release-grid, .an-archive-release-grid, .release-platform-links) > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+}

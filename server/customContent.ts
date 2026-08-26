@@ -3,6 +3,7 @@ import type { ArtistContent, InsertArtistContent } from "../drizzle/schema";
 export const customDocumentTypes = [
   "hero",
   "profile",
+  "journey",
   "pressKit",
   "siteSettings",
   "legal",
@@ -11,6 +12,7 @@ export const customDocumentTypes = [
   "portrait",
   "live",
   "event",
+  "photoStory",
   "game",
 ] as const;
 
@@ -33,6 +35,7 @@ type StoredEnvelope = { schemaVersion: 1; data: DocumentPayload };
 const prefixes: Record<CustomDocumentType, string> = {
   hero: "custom-hero",
   profile: "custom-profile",
+  journey: "custom-journey",
   pressKit: "custom-press-kit",
   siteSettings: "custom-site-settings",
   legal: "custom-legal",
@@ -41,12 +44,14 @@ const prefixes: Record<CustomDocumentType, string> = {
   portrait: "custom-portrait",
   live: "custom-live-signal",
   event: "custom-event",
+  photoStory: "custom-photo-story",
   game: "custom-game",
 };
 
 const singletonTypes = new Set<CustomDocumentType>([
   "hero",
   "profile",
+  "journey",
   "pressKit",
   "siteSettings",
   "legal",
@@ -62,6 +67,7 @@ function documentTitle(type: CustomDocumentType, payload: DocumentPayload): stri
   const defaults: Record<CustomDocumentType, string> = {
     hero: "Homepage hero",
     profile: "Artist profile",
+    journey: "Artist journey",
     pressKit: "Press and booking",
     siteSettings: "Site settings",
     legal: "Privacy policy",
@@ -70,6 +76,7 @@ function documentTitle(type: CustomDocumentType, payload: DocumentPayload): stri
     portrait: "Untitled portrait study",
     live: "Live signal",
     event: "Untitled event",
+    photoStory: "Untitled photo story",
     game: "JEDAG RUN — NIGHT FREQUENCY",
   };
   return stringValue(payload.title, stringValue(payload.siteTitle, defaults[type]));
@@ -78,8 +85,10 @@ function documentTitle(type: CustomDocumentType, payload: DocumentPayload): stri
 function documentLabel(type: CustomDocumentType, payload: DocumentPayload): string {
   if (typeof payload.label === "string") return payload.label;
   if (type === "release") return stringValue(payload.format, "Release");
+  if (type === "journey") return "Biography / journey";
   if (type === "visual") return "Official visual";
   if (type === "portrait") return "Portrait study";
+  if (type === "photoStory") return "Photo story";
   if (type === "event") return stringValue(payload.status, "announced");
   if (type === "game") return "Game + audio";
   return type;

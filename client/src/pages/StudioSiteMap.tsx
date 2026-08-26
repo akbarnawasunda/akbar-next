@@ -77,6 +77,18 @@ const sitePages: SitePage[] = [
         editType: "release",
       },
       {
+        label: "Artist Journey / Biography",
+        detail: "Biografi, milestone, dan visual opsional pada homepage.",
+        icon: FileText,
+        editType: "journey",
+      },
+      {
+        label: "Photo Story scene",
+        detail: "Foto editorial, caption, dan alt text untuk homepage.",
+        icon: Image,
+        editType: "photoStory",
+      },
+      {
         label: "Diskografi",
         detail: "Daftar semua rilisan dan artwork yang tampil di homepage.",
         icon: Music2,
@@ -182,6 +194,12 @@ const sitePages: SitePage[] = [
         editType: "visual",
       },
       {
+        label: "Photo Story homepage",
+        detail: "Foto editorial yang bisa ditambah dan diedit dari Studio.",
+        icon: Image,
+        editType: "photoStory",
+      },
+      {
         label: "Portrait Studies",
         detail: "Foto studi, caption, alt text, dan urutan portrait yang tampil di gallery.",
         icon: Image,
@@ -233,6 +251,12 @@ const sitePages: SitePage[] = [
       "Konteks perjalanan, artwork release, dan jalur resmi untuk musik, remix, booking, dan licensing.",
     accent: "violet",
     sections: [
+      {
+        label: "Artist Journey",
+        detail: "Timeline perjalanan yang disinkronkan dari dokumen Journey.",
+        icon: FileText,
+        editType: "journey",
+      },
       {
         label: "Origin & perjalanan",
         detail:
@@ -308,6 +332,12 @@ const sitePages: SitePage[] = [
           "Atur titik lokasi yang bisa dibuka pengunjung dari halaman About.",
         icon: MapPin,
         editType: "profile",
+      },
+      {
+        label: "Artist Journey source",
+        detail: "Long-form journey homepage dan copy biografi yang bisa dikelola dari Studio.",
+        icon: FileText,
+        editType: "journey",
       },
       {
         label: "Perjalanan musik",
