@@ -120,6 +120,7 @@ import "./components/ScrollReplay.css";
 import "./components/SignalTuningMotion.css";
 import "./components/HumanEditorialSystem.css";
 import "./components/SafeMotion.css";
+import "./components/EditorialTypography.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes

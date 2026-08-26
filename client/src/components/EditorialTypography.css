@@ -1,0 +1,157 @@
+/* Night Frequency type system: readable body, expressive display, precise mono UI. */
+
+:where(.an-site, .nf-page, .en-content) {
+  --an-font-body: "Manrope", system-ui, sans-serif;
+  --an-font-display: "Space Grotesk", system-ui, sans-serif;
+  --an-font-serif: "DM Serif Display", Georgia, serif;
+  --an-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--an-font-body);
+  text-rendering: optimizeLegibility;
+}
+
+:where(.an-site, .nf-page, .en-content) :is(button, input, select, textarea) {
+  font-family: var(--an-font-body);
+}
+
+:where(.an-site, .nf-page, .en-content) :is(h1, h2, h3, h4) {
+  font-family: var(--an-font-display);
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  text-wrap: balance;
+}
+
+:where(.an-site, .nf-page, .en-content) :is(h1, h2, h3, h4) em {
+  font-family: var(--an-font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+}
+
+:where(.an-site, .nf-page, .en-content) :is(
+  .eyebrow,
+  .nf-page-eyebrow,
+  .mono-label,
+  .an-section-index,
+  .release-number,
+  .release-card p,
+  .release-platform-line,
+  .home-platform-rack a span,
+  .home-platform-rack a strong,
+  .button-primary,
+  .button-quiet,
+  .text-link,
+  .nf-button,
+  .nf-text-button,
+  .an-header-news,
+  .an-nav-links a,
+  .nf-catalog-meta,
+  .nf-card-label,
+  .en-release-card-copy > span,
+  .en-release-card-copy > p,
+  .en-event-location-link,
+  .home-live-event-source
+) {
+  font-family: var(--an-font-mono);
+}
+
+:where(.an-site, .nf-page, .en-content) :is(
+  .eyebrow,
+  .nf-page-eyebrow,
+  .mono-label,
+  .an-section-index,
+  .release-number,
+  .nf-catalog-meta,
+  .nf-card-label,
+  .en-release-card-copy > span,
+  .en-release-card-copy > p
+) {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.an-site :is(.an-header-news, .an-nav-links a) {
+  font-size: 0.59rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.an-site :is(.button-primary, .button-quiet, .text-link, .home-deck-cta),
+.nf-page :is(.nf-button, .nf-text-button),
+.en-content :is(.nf-button, .nf-text-button) {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+/* Homepage release and visual titles use the serif as the editorial gesture. */
+.an-site :is(.release-detail h3, .release-card h3, .video-content h3) {
+  font-family: var(--an-font-serif) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.045em;
+}
+
+/* Editorial pages use the serif only where a title needs a human gesture. */
+.nf-page :is(.nf-page-hero h1, .nf-section-intro h2, .en-section-intro h2, .en-copy-block h2, .an-profile-copy h2) em,
+.en-content :is(.nf-page-hero h1, .nf-section-intro h2, .en-section-intro h2, .en-copy-block h2, .an-profile-copy h2) em {
+  color: var(--an-mint, #8be8db);
+}
+
+.nf-page :is(.nf-catalog-card h3, .nf-visual-card h3, .nf-official-media h3, .an-epk-release h3),
+.en-content :is(.en-release-card h3, .en-visual-card h3) {
+  font-family: var(--an-font-serif) !important;
+  font-size: clamp(1.35rem, 2.5vw, 2.15rem);
+  font-weight: 400 !important;
+  letter-spacing: -0.045em;
+}
+
+.nf-page :is(.nf-catalog-card p, .nf-visual-card p, .nf-official-media-copy p, .nf-official-media-actions a),
+.en-content :is(.en-release-card-copy > span, .en-release-card-copy > p) {
+  font-family: var(--an-font-mono);
+}
+
+/* Small UI actions should feel tactile but never move their surrounding layout. */
+:where(.an-site, .nf-page, .en-content) :is(a, button) {
+  -webkit-tap-highlight-color: transparent;
+  transition-duration: 180ms;
+}
+
+:where(.an-site, .nf-page, .en-content) :is(.button-primary, .button-quiet, .nf-button, .nf-text-button, .text-link):active {
+  transform: scale(0.97);
+}
+
+:where(.an-site, .nf-page, .en-content) :is(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--an-mint, #8be8db);
+  outline-offset: 4px;
+}
+
+@media (max-width: 560px) {
+  :where(.an-site, .nf-page, .en-content) :is(
+    .eyebrow,
+    .nf-page-eyebrow,
+    .mono-label,
+    .an-section-index,
+    .release-number,
+    .nf-catalog-meta,
+    .nf-card-label,
+    .en-release-card-copy > span,
+    .en-release-card-copy > p
+  ) {
+    font-size: 0.56rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.an-site, .nf-page, .en-content) :is(a, button) {
+    transition: none;
+  }
+
+  :where(.an-site, .nf-page, .en-content) :is(.button-primary, .button-quiet, .nf-button, .nf-text-button, .text-link):active {
+    transform: none;
+  }
+}
