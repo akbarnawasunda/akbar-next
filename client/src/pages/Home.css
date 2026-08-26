@@ -144,7 +144,7 @@
 .an-hero h1 em,
 .section h2 em,
 .signal-section h2 em {
-  font-family: var(--an-display-font, "Bodoni Moda", Georgia, serif);
+  font-family: "DM Serif Display", Georgia, serif;
   font-weight: 400;
   letter-spacing: -0.06em;
 }

@@ -18,7 +18,6 @@ import FanSignalInline from "@/components/FanSignalInline";
 import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
-import { FragmentRevealImage } from "@/components/FragmentRevealImage";
 import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
 import { publicJourney, publicPhotoStories } from "@/content/publicContent";
 import { SkeletonCard } from "@/components/SkeletonCard";
@@ -252,7 +251,7 @@ export default function Home() {
         <div className="an-scroll-scene an-scroll-scene-hero" data-scroll-scene="hero" data-scroll-pin="true">
           <section className="an-hero">
           <div className="home-hero-portrait">
-            <FragmentRevealImage
+            <img
               src={portraitSrc}
               alt="Portrait resmi Akbar Nawasunda"
               fetchPriority="high"
@@ -421,8 +420,12 @@ export default function Home() {
         </section>
         </div>
 
-        <div className="an-scroll-scene an-scroll-scene-artist-story" data-scroll-scene="artist-story">
-          <ArtistEditorialSections journey={journey} photoStories={photoStories} />
+        <div className="an-scroll-scene an-scroll-scene-journey" data-scroll-scene="journey">
+          <ArtistEditorialSections journey={journey} showPhotoStory={false} />
+        </div>
+
+        <div className="an-scroll-scene an-scroll-scene-photo-story" data-scroll-scene="photo-story">
+          <ArtistEditorialSections photoStories={photoStories} showJourney={false} />
         </div>
 
         <div className="an-scroll-scene an-scroll-scene-catalog" data-scroll-scene="catalog" data-scroll-pin="true">

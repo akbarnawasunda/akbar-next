@@ -55,7 +55,7 @@
 .an-site h1,
 .an-site .section h2,
 .an-site .signal-section h2 {
-  font-family: var(--an-display-font, "Bodoni Moda", Georgia, serif) !important;
+  font-family: "DM Serif Display", Georgia, serif !important;
   font-weight: 400 !important;
   letter-spacing: -0.065em !important;
 }

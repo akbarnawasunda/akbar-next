@@ -525,7 +525,7 @@
 
 /* Luxury display treatment: the hero name should feel like a masthead, not a label. */
 .an-site .hero-copy h1 {
-  font-family: var(--an-display-font, "Bodoni Moda", Georgia, serif) !important;
+  font-family: "DM Serif Display", Georgia, serif !important;
   font-weight: 400 !important;
   font-stretch: normal;
   font-size: clamp(62px, 8vw, 136px) !important;
