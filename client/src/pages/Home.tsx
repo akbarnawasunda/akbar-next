@@ -47,6 +47,7 @@ import "./HomeLayoutRefinement.css";
 import "./HomeMotionRefinement.css";
 import "./HomePortfolioPatterns.css";
 import "./HomeGameTeaser.css";
+import "./HomeArtDirection.css";
 
 export default function Home() {
   usePerformanceMonitor();

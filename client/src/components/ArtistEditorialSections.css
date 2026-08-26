@@ -314,3 +314,91 @@
   .artist-editorial-section.reveal-ready .artist-photo-story-card,
   .artist-editorial-section.reveal-ready.is-revealed .artist-photo-story-card:nth-child(3n) { opacity: 1; transform: none; transition: none; }
 }
+
+/* Signature editorial pass: connect the written journey to the portrait
+   archive through one visual language, without adding layout transforms. */
+.artist-editorial-section {
+  border-top: 1px solid rgba(139, 232, 219, 0.18);
+}
+
+.artist-editorial-section[data-artist-story-panel="journey"] {
+  background:
+    linear-gradient(rgba(139, 232, 219, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 232, 219, 0.025) 1px, transparent 1px),
+    #0a1116;
+  background-size: 44px 44px;
+}
+
+.artist-editorial-section[data-artist-story-panel="journey"]::after,
+.artist-editorial-section[data-artist-story-panel="photo"]::after {
+  position: absolute;
+  right: clamp(1.25rem, 4vw, 5rem);
+  top: clamp(2rem, 5vw, 5rem);
+  color: rgba(139, 232, 219, 0.5);
+  content: "IDENTITY / 03—04";
+  font: 0.6rem/1 "IBM Plex Mono", monospace;
+  letter-spacing: 0.16em;
+  pointer-events: none;
+}
+
+.artist-editorial-heading h2 {
+  font-family: "DM Serif Display", Georgia, serif;
+  font-size: clamp(3.8rem, 8vw, 8.8rem);
+  font-weight: 400;
+  letter-spacing: -0.07em;
+}
+
+.artist-journey-section .artist-editorial-heading h2 { max-width: 8ch; }
+.artist-journey-section .artist-editorial-intro { max-width: 28rem; }
+
+.artist-journey-aside {
+  border-color: rgba(139, 232, 219, 0.3);
+  background:
+    linear-gradient(145deg, rgba(139, 232, 219, 0.11), rgba(255, 255, 255, 0.02)),
+    rgba(5, 7, 11, 0.38);
+  box-shadow: 18px 22px 54px rgba(0, 0, 0, 0.18);
+}
+
+.artist-journey-timeline article {
+  border-bottom: 1px solid rgba(139, 232, 219, 0.12);
+}
+
+.artist-journey-timeline article:last-child { border-bottom: 0; }
+
+.artist-photo-story-section {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.42), transparent 42%),
+    #eee9e1;
+}
+
+.artist-photo-story-section::before {
+  opacity: 0.55;
+  background: radial-gradient(circle at 88% 10%, rgba(196, 66, 142, 0.18), transparent 22%), radial-gradient(circle at 12% 86%, rgba(41, 158, 147, 0.14), transparent 25%);
+}
+
+.artist-photo-story-heading h2 { max-width: 7ch; }
+.artist-photo-story-heading h2 em { color: #b53b83; }
+
+.artist-photo-story-grid {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  align-items: start;
+}
+
+.artist-photo-story-card {
+  border-color: rgba(18, 27, 34, 0.22);
+  background: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 18px 42px rgba(24, 29, 31, 0.08);
+}
+
+.artist-photo-story-card:nth-child(2) { margin-top: clamp(2rem, 7vw, 7rem); }
+.artist-photo-story-card:hover { box-shadow: 0 24px 54px rgba(24, 29, 31, 0.14); }
+.artist-photo-story-image { aspect-ratio: 1 / 1.14; }
+.artist-photo-story-card:first-child .artist-photo-story-image { aspect-ratio: 1 / 1.02; }
+.artist-photo-story-copy h3 { font-family: "DM Serif Display", Georgia, serif; font-size: clamp(1.5rem, 2.7vw, 2.3rem); font-weight: 400; }
+
+@media (max-width: 760px) {
+  .artist-editorial-section[data-artist-story-panel="journey"]::after,
+  .artist-editorial-section[data-artist-story-panel="photo"]::after { right: 1.25rem; top: 1.5rem; font-size: 0.52rem; }
+  .artist-photo-story-grid { grid-template-columns: 1fr; }
+  .artist-photo-story-card:nth-child(2) { margin-top: 0; }
+}

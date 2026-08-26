@@ -89,7 +89,21 @@ export function ArtistPhotoStorySection({
       <div className="artist-editorial-heading artist-photo-story-heading">
         <div>
           <p className="nf-page-eyebrow">{locale === "en" ? "VISUAL ARCHIVE / PHOTO STORY" : "ARSIP VISUAL / CERITA FOTO"}</p>
-          <h2>{locale === "en" ? "THE NAME<br /><em>IN PORTRAIT.</em>" : "NAMA<br /><em>DALAM POTRET.</em>"}</h2>
+          <h2>
+            {locale === "en" ? (
+              <>
+                THE NAME
+                <br />
+                <em>IN PORTRAIT.</em>
+              </>
+            ) : (
+              <>
+                NAMA
+                <br />
+                <em>DALAM POTRET.</em>
+              </>
+            )}
+          </h2>
         </div>
         <p className="artist-editorial-intro">{locale === "en" ? "Portrait studies and visual notes from the world of Akbar Nawasunda." : "Studi potret dan catatan visual dari dunia Akbar Nawasunda."}</p>
       </div>
