@@ -9,7 +9,7 @@ import {
   Sparkles,
   Ticket,
 } from "lucide-react";
-import { type CSSProperties, useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "wouter";
 import { toast } from "sonner";
@@ -53,18 +53,59 @@ import "./HomeVisibleUi.css";
 import "./HomeChapterInteraction.css";
 
 function HomeMenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open || typeof document === "undefined") return;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const getFocusable = () => Array.from(
+      dialogRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ) ?? [],
+    );
+    const focusFrame = window.requestAnimationFrame(() => getFocusable()[0]?.focus());
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (!focusable.length) {
+        event.preventDefault();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      document.removeEventListener("keydown", handleKeyDown);
+      if (previousFocus && document.contains(previousFocus)) {
+        window.requestAnimationFrame(() => previousFocus.focus());
+      }
+    };
+  }, [onClose, open]);
+
   if (!open || typeof document === "undefined") return null;
 
   return createPortal(
     <div
+      ref={dialogRef}
       id="an-mobile-navigation"
       className="an-mobile-navigation is-open"
       role="dialog"
       aria-modal="true"
       aria-label="Navigasi utama"
-      onKeyDown={event => {
-        if (event.key === "Escape") onClose();
-      }}
     >
       <Link href="/music" onClick={onClose}>MUSIC</Link>
       <Link href="/visuals" onClick={onClose}>VISUALS</Link>
@@ -208,6 +249,14 @@ export default function Home() {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [mobileNavOpen]);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.location.hash) return;
+    const targetId = decodeURIComponent(window.location.hash.slice(1));
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(targetId)?.scrollIntoView({ behavior: "auto", block: "start" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [contentIsLoading]);
   const hasCmsHero = Boolean(
     cmsHero?.heroTitle || cmsHero?.heroBody || cmsHero?.primaryActionUrl
   );
