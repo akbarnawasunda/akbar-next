@@ -119,6 +119,7 @@ import "./components/ResponsiveRepair.css";
 import "./components/ScrollReplay.css";
 import "./components/SignalTuningMotion.css";
 import "./components/HumanEditorialSystem.css";
+import "./components/SafeMotion.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes

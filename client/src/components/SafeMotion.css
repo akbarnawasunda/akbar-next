@@ -1,0 +1,126 @@
+/*
+ * Safe motion contract for public routes.
+ *
+ * This layer deliberately does not hide content. Section geometry and artwork
+ * must remain available while route observers settle, so animation cannot turn
+ * into a blank card or a missing image. Motion is allowed only where it does
+ * not own layout geometry.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .nf-page main > section[data-motion-replay="true"],
+  .nf-page .artist-editorial-section,
+  .nf-page .nf-platform-grid,
+  .en-content .nf-platform-grid,
+  .en-content .en-catalog,
+  .en-content .en-visual-grid,
+  .en-content .en-service-grid,
+  .nf-page .artist-editorial-section.reveal-ready .artist-editorial-heading,
+  .nf-page .artist-editorial-section.reveal-ready .artist-journey-aside,
+  .nf-page .artist-editorial-section.reveal-ready .artist-journey-timeline article,
+  .nf-page .artist-editorial-section.reveal-ready .artist-photo-story-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+    will-change: auto !important;
+  }
+
+  .nf-page main > section[data-motion-replay="true"]:not(.nf-page-hero):not(.nf-epk-hero) > :is(
+      .nf-section-title,
+      .nf-platform-hub-copy,
+      .nf-epk-hero-grid,
+      .an-booking-grid,
+      .an-release-detail-grid,
+      .an-archive-origin,
+      .an-archive-route-list,
+      .an-event-head,
+      .nf-platform-grid,
+      .nf-catalog,
+      .nf-visual-grid,
+      .nf-video-embed-grid,
+      .nf-embed-grid,
+      .nf-universe-grid,
+      .nf-event-grid,
+      .an-epk-capability-grid,
+      .an-epk-assets,
+      .an-epk-release-list,
+      .an-release-links,
+      .nf-signal-form,
+      .nf-signal-block
+    ),
+  .en-content .en-catalog,
+  .en-content .en-visual-grid,
+  .en-content .en-service-grid {
+    transform: none !important;
+  }
+
+  .nf-page main > section[data-motion-replay="true"]:not(.nf-page-hero):not(.nf-epk-hero) :is(
+      .nf-catalog-card,
+      .nf-visual-card,
+      .nf-event-card,
+      .nf-universe-card,
+      .an-epk-capability,
+      .an-epk-asset,
+      .an-epk-release,
+      .an-archive-release,
+      .an-release-links > *,
+      .nf-official-media
+    ),
+  .en-content :is(
+      .en-release-card,
+      .en-visual-card,
+      .en-service-card
+    ) {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    will-change: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-page main > section[data-motion-replay="true"],
+  .nf-page main > section[data-motion-replay="true"] > *,
+  .nf-page .artist-editorial-section,
+  .nf-page .nf-platform-grid,
+  .en-content .nf-platform-grid,
+  .en-content .en-catalog,
+  .en-content .en-visual-grid,
+  .en-content .en-service-grid,
+  .nf-page .artist-editorial-section.reveal-ready .artist-editorial-heading,
+  .nf-page .artist-editorial-section.reveal-ready .artist-journey-aside,
+  .nf-page .artist-editorial-section.reveal-ready .artist-journey-timeline article,
+  .nf-page .artist-editorial-section.reveal-ready .artist-photo-story-card,
+  .nf-page main > section[data-motion-replay="true"] :is(
+      .nf-catalog-card,
+      .nf-visual-card,
+      .nf-event-card,
+      .nf-universe-card,
+      .an-epk-capability,
+      .an-epk-asset,
+      .an-epk-release,
+      .an-archive-release,
+      .an-release-links > *,
+      .nf-official-media
+    ),
+  .en-content :is(
+      .en-release-card,
+      .en-visual-card,
+      .en-service-card
+    ) {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}
+
+/* Homepage keeps its authored hero treatment. The recovery guard in
+   HomePortfolioPatterns.css owns its catalog and forces a native grid. */
+.nf-page main > section.nf-page-hero,
+.nf-page main > section.nf-epk-hero {
+  opacity: 1 !important;
+  transform: none !important;
+}

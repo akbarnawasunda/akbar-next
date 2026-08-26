@@ -813,3 +813,59 @@
     animation: none;
   }
 }
+
+/* Recovery guard: the release catalog must never own the page scroll. Keep the
+   homepage catalog in normal document flow so artwork and metadata share one
+   layout context on every viewport. */
+.an-site .an-scroll-scene-catalog,
+.an-site .an-scroll-scene-catalog[data-scroll-pin="true"] {
+  min-height: 0 !important;
+}
+
+.an-site .an-scroll-scene-catalog > .release-section {
+  position: relative !important;
+  top: auto !important;
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+.an-site .an-scroll-scene-catalog .release-grid {
+  display: grid !important;
+  width: min(100%, var(--home-max, 1320px)) !important;
+  min-width: 0 !important;
+  margin-inline: auto !important;
+  transform: none !important;
+  will-change: auto !important;
+  overflow: visible !important;
+}
+
+@media (max-width: 959px) {
+  .an-site .an-scroll-scene-catalog .release-grid {
+    grid-auto-flow: row !important;
+    grid-auto-columns: auto !important;
+    overflow: visible !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .an-scroll-scene-catalog .release-grid,
+  .an-site .an-scroll-scene-catalog .section-inline,
+  .an-site .an-scroll-scene-catalog > .release-section {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Artwork and metadata must never be hidden while the native catalog enters
+   the viewport. Keep the card itself static; hover can remain local to its
+   descendants once the recovery phase is complete. */
+.an-site .an-scroll-scene-catalog .release-grid > .release-card {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}

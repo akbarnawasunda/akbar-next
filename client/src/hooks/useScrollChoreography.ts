@@ -4,12 +4,12 @@ function clamp(value: number, minimum = 0, maximum = 1) {
   return Math.min(maximum, Math.max(minimum, value));
 }
 
-function getSceneProgress(scene: HTMLElement, virtualTop: number, viewportHeight: number) {
+function getSceneProgress(scene: HTMLElement, sceneTop: number, viewportHeight: number) {
   if (scene.dataset.scrollPin === "true") {
-    return clamp(-virtualTop / Math.max(1, scene.offsetHeight - viewportHeight));
+    return clamp(-sceneTop / Math.max(1, scene.offsetHeight - viewportHeight));
   }
 
-  return clamp((viewportHeight - virtualTop) / (viewportHeight + Math.max(1, scene.offsetHeight)));
+  return clamp((viewportHeight - sceneTop) / (viewportHeight + Math.max(1, scene.offsetHeight)));
 }
 
 export function useScrollChoreography<T extends HTMLElement = HTMLElement>() {
@@ -23,21 +23,16 @@ export function useScrollChoreography<T extends HTMLElement = HTMLElement>() {
     const reducedMotion = motionQuery.matches;
     const scenes = Array.from(root.querySelectorAll<HTMLElement>("[data-scroll-scene]"));
     let frame = 0;
-    let targetScrollY = window.scrollY;
-    let virtualScrollY = targetScrollY;
 
     const apply = () => {
       const viewportHeight = window.innerHeight || 1;
-      const actualScrollY = window.scrollY;
-      const scrollOffset = actualScrollY - virtualScrollY;
       let activeScene = "";
       let activeScore = 0;
 
       scenes.forEach(scene => {
         const rect = scene.getBoundingClientRect();
-        const virtualTop = rect.top + scrollOffset;
-        const progress = getSceneProgress(scene, virtualTop, viewportHeight);
-        const center = virtualTop + scene.offsetHeight / 2;
+        const progress = getSceneProgress(scene, rect.top, viewportHeight);
+        const center = rect.top + scene.offsetHeight / 2;
         const distanceFromCenter = Math.abs(center - viewportHeight * 0.52);
         const active = scene.dataset.scrollPin === "true"
           ? progress > 0.02 && progress < 0.98
@@ -74,32 +69,19 @@ export function useScrollChoreography<T extends HTMLElement = HTMLElement>() {
 
       root.dataset.activeScene = activeScene;
       root.dataset.scrollReady = "true";
-      root.dataset.scrollMode = reducedMotion ? "reduced" : "inertial";
-    };
-
-    const tick = () => {
-      frame = 0;
-      if (!reducedMotion) {
-        const difference = targetScrollY - virtualScrollY;
-        virtualScrollY += difference * 0.14;
-        if (Math.abs(difference) < 0.08) virtualScrollY = targetScrollY;
-      } else {
-        virtualScrollY = targetScrollY;
-      }
-
-      apply();
-      if (Math.abs(targetScrollY - virtualScrollY) > 0.08) {
-        frame = window.requestAnimationFrame(tick);
-      }
+      root.dataset.scrollMode = reducedMotion ? "reduced" : "native";
     };
 
     const requestUpdate = () => {
-      targetScrollY = window.scrollY;
-      if (!frame) frame = window.requestAnimationFrame(tick);
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        apply();
+      });
     };
 
     root.dataset.scrollReady = "true";
-    root.dataset.scrollMode = reducedMotion ? "reduced" : "inertial";
+    root.dataset.scrollMode = reducedMotion ? "reduced" : "native";
     apply();
     window.addEventListener("scroll", requestUpdate, { passive: true });
     window.addEventListener("resize", requestUpdate);

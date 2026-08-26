@@ -46,7 +46,7 @@ export function ArtistJourneySection({
   const title = locale === "en" ? source.titleEn || "MUSIC JOURNEY." : source.title || "PERJALANAN MUSIK.";
   const intro = copyFor(locale, source.intro || "", source.introEn);
   return (
-    <section ref={ref} className="artist-editorial-section artist-journey-section reveal-target" id={locale === "en" ? "artist-journey" : "perjalanan"}>
+    <section ref={ref} className="artist-editorial-section artist-journey-section reveal-target" data-artist-story-panel="journey" id={locale === "en" ? "artist-journey" : "perjalanan"}>
       <SectionIndex number="03" label={locale === "en" ? "ARTIST JOURNEY" : "PERJALANAN ARTIS"} />
       <div className="artist-editorial-heading">
         <div>
@@ -84,12 +84,12 @@ export function ArtistPhotoStorySection({
   const ref = useScrollReveal<HTMLElement>();
   const stories = photoStories?.length ? photoStories : publicPhotoStories(null);
   return (
-    <section ref={ref} className="artist-editorial-section artist-photo-story-section reveal-target" id={locale === "en" ? "visual-story" : "cerita-visual"}>
+    <section ref={ref} className="artist-editorial-section artist-photo-story-section reveal-target" data-artist-story-panel="photo" id={locale === "en" ? "visual-story" : "cerita-visual"}>
       <SectionIndex number="04" label={locale === "en" ? "PHOTO STORY" : "CERITA VISUAL"} />
       <div className="artist-editorial-heading artist-photo-story-heading">
         <div>
           <p className="nf-page-eyebrow">{locale === "en" ? "VISUAL ARCHIVE / PHOTO STORY" : "ARSIP VISUAL / CERITA FOTO"}</p>
-          <h2>{locale === "en" ? "THE FRAME<br /><em>BETWEEN SIGNALS.</em>" : "FRAME<br /><em>DI ANTARA SIGNAL.</em>"}</h2>
+          <h2>{locale === "en" ? "THE NAME<br /><em>IN PORTRAIT.</em>" : "NAMA<br /><em>DALAM POTRET.</em>"}</h2>
         </div>
         <p className="artist-editorial-intro">{locale === "en" ? "Portrait studies and visual notes from the world of Akbar Nawasunda." : "Studi potret dan catatan visual dari dunia Akbar Nawasunda."}</p>
       </div>
