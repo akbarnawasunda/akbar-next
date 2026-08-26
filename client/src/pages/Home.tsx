@@ -321,7 +321,11 @@ export default function Home() {
                 rel="noreferrer"
               >
                 <Play size={15} fill="currentColor" />
-                <span>{heroActionLabel}</span>
+                <span className="signal-label" aria-hidden="true">
+                  <span>{heroActionLabel}</span>
+                  <span>{heroActionLabel}</span>
+                </span>
+                <span className="sr-only">{heroActionLabel}</span>
               </a>
               <Link className="button-quiet" href="/visuals">
                 LIHAT VISUALS <ArrowUpRight size={16} />
@@ -337,6 +341,10 @@ export default function Home() {
             <span className="home-hero-atmosphere-cloud home-hero-atmosphere-cloud-c" />
           </div>
             <BrandMotionMark src={officialBrand.rmxMark} />
+            <a className="hero-scroll-cue" href="#platforms" aria-label="Scroll untuk menjelajah">
+              <span>SCROLL TO EXPLORE</span>
+              <ArrowDownRight size={15} />
+            </a>
           </section>
         </div>
 
@@ -344,6 +352,7 @@ export default function Home() {
         <section
           ref={platformSectionRef}
           className="home-signal-deck reveal-target"
+          id="platforms"
           aria-labelledby="signal-deck-title"
         >
           <SectionIndex number="01" label="LINKS MUSIK" />
