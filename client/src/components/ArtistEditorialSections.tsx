@@ -85,22 +85,22 @@ export function ArtistPhotoStorySection({
   const stories = photoStories?.length ? photoStories : publicPhotoStories(null);
   return (
     <section ref={ref} className="artist-editorial-section artist-photo-story-section reveal-target" data-artist-story-panel="photo" id={locale === "en" ? "visual-story" : "cerita-visual"}>
-      <SectionIndex number="04" label={locale === "en" ? "PHOTO STORY" : "CERITA VISUAL"} />
+      <SectionIndex number="04" label={locale === "en" ? "PORTRAIT ARCHIVE" : "ARSIP POTRET"} />
       <div className="artist-editorial-heading artist-photo-story-heading">
         <div>
-          <p className="nf-page-eyebrow">{locale === "en" ? "VISUAL ARCHIVE / PHOTO STORY" : "ARSIP VISUAL / CERITA FOTO"}</p>
+          <p className="nf-page-eyebrow">{locale === "en" ? "VISUAL STUDIES" : "STUDI VISUAL"}</p>
           <h2>
             {locale === "en" ? (
               <>
-                THE NAME
+                PORTRAIT
                 <br />
-                <em>IN PORTRAIT.</em>
+                <em>STUDIES.</em>
               </>
             ) : (
               <>
-                NAMA
+                STUDI
                 <br />
-                <em>DALAM POTRET.</em>
+                <em>POTRET.</em>
               </>
             )}
           </h2>
