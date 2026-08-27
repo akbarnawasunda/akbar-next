@@ -309,7 +309,7 @@ html body .nf-page.en-page .nf-page-hero.en-hero h1 em { color: var(--ff-lime) !
 @media (max-width: 820px) {
   html body .an-site .hero-actions { flex-wrap: wrap; max-width: 100%; }
   html body .an-site .hero-actions .button-quiet,
-  html body .an-site .hero-actions .hero-signal-link { min-height: 42px; }
+  html body .an-site .hero-actions .hero-signal-link { min-height: 44px; }
   html body .an-site .an-nav,
   html body .nf-page .nf-nav { height: 64px; margin: 10px 10px 0; padding-inline: 14px; }
   html body .an-site .an-hero { min-height: auto; display: flex; flex-direction: column; align-items: stretch; margin-top: -74px; padding: 124px 22px 48px; background: linear-gradient(180deg,rgba(7,9,27,.96),rgba(7,9,27,.7)),var(--ff-hero-art) center/cover no-repeat !important; }
@@ -577,5 +577,35 @@ html body .an-site .an-menu-toggle .an-menu-close-mark {
   html body .an-site .home-signal-deck::before {
     background-image: none;
     opacity: 0;
+  }
+}
+
+
+/* Touch contract: keep public controls comfortable to tap without inflating their type. */
+@media (pointer: coarse) {
+  html body .an-site :is(.an-menu-toggle, .nav-signal, .an-nav nav a, .hero-actions a, .button-primary, .button-quiet, .home-deck-cta, .text-link, .nf-text-button, .nf-button, .nf-signal-form button, .an-footer a),
+  html body .nf-page :is(.nf-menu-toggle, .nf-signal, .nf-nav nav a, .nf-mobile-menu a, .nf-text-button, .nf-button, .nf-signal-form button, .nf-footer a) {
+    min-height: 44px;
+  }
+
+  html body .an-site :is(.an-menu-toggle, .nav-signal, .hero-actions a, .button-primary, .button-quiet, .home-deck-cta, .text-link, .nf-text-button, .nf-button, .nf-signal-form button),
+  html body .nf-page :is(.nf-menu-toggle, .nf-signal, .nf-text-button, .nf-button, .nf-signal-form button) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  html body .an-site .an-menu-toggle,
+  html body .nf-page .nf-menu-toggle,
+  html body .nf-page .nf-signal {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html body .an-site :is(.an-menu-toggle, .nav-signal, .hero-actions a, .button-primary, .button-quiet, .home-deck-cta, .text-link),
+  html body .nf-page :is(.nf-menu-toggle, .nf-signal, .nf-text-button, .nf-button) {
+    transition: none !important;
   }
 }
