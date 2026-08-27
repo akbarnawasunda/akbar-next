@@ -123,6 +123,7 @@ import "./components/SafeMotion.css";
 import "./components/EditorialTypography.css";
 import "./components/SafeScrollMotion.css";
 import "./styles/SignalHouseRedesign.css";
+import "./styles/FluidFrequencyFinal.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
