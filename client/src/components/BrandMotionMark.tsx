@@ -37,6 +37,8 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
   const frameRef = useRef<number | null>(null);
   const runningRef = useRef(false);
   const visibleRef = useRef(true);
+  const scrollingRef = useRef(false);
+  const scrollTimerRef = useRef<number | null>(null);
   const [assetReady, setAssetReady] = useState(false);
   const [imageSrc, setImageSrc] = useState(src);
   const [sequence, setSequence] = useState(0);
@@ -75,7 +77,7 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
       connection?.effectiveType === "2g" ||
       (navigator.hardwareConcurrency ?? 8) <= 4
     );
-    const pixelRatio = Math.min(window.devicePixelRatio || 1, constrainedDevice ? 1.25 : mobile ? 1.5 : 2);
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, constrainedDevice ? 1.15 : mobile ? 1.25 : 2);
     const bounds = canvas.getBoundingClientRect();
     const hostBounds = canvas.parentElement?.getBoundingClientRect() ?? bounds;
     const width = Math.max(1, Math.round(bounds.width));
@@ -114,7 +116,8 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
     }
 
     const particleCap = constrainedDevice ? 900 : mobile ? 1400 : 3000;
-    const step = constrainedDevice ? 4.35 : mobile ? 4.0 : 4.2;
+    const effectiveParticleCap = Math.min(particleCap, constrainedDevice ? 600 : mobile ? 900 : 2400);
+    const step = constrainedDevice ? 4.8 : mobile ? 4.55 : 4.2;
     const candidates: Particle[] = [];
     const centerX = width / 2;
     const centerY = height / 2;
@@ -176,7 +179,7 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
     const stride = Math.max(1, Math.ceil(candidates.length / particleCap));
     const particles = candidates
       .filter((_, index) => index % stride === 0)
-      .slice(0, particleCap);
+      .slice(0, effectiveParticleCap);
     canvas.dataset.particleCount = String(particles.length);
     canvas.dataset.particleMode = mobile ? "mobile" : "desktop";
     canvas.dataset.stage = "overscan-iris";
@@ -341,17 +344,19 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
         particleOpacity[index] = position.opacity;
       });
 
-      context.globalCompositeOperation = "lighter";
-      particles.forEach((particle, index) => {
-        context.globalAlpha = Math.min(1, particleOpacity[index] * 0.3);
-        context.fillStyle = particle.color;
-        context.fillRect(
-          roundHalf(particleX[index] - 0.8),
-          roundHalf(particleY[index] - 0.8),
-          particle.size + 1.8,
-          particle.size + 1.8
-        );
-      });
+      if (!mobile) {
+        context.globalCompositeOperation = "lighter";
+        particles.forEach((particle, index) => {
+          context.globalAlpha = Math.min(1, particleOpacity[index] * 0.3);
+          context.fillStyle = particle.color;
+          context.fillRect(
+            roundHalf(particleX[index] - 0.8),
+            roundHalf(particleY[index] - 0.8),
+            particle.size + 1.8,
+            particle.size + 1.8
+          );
+        });
+      }
       context.globalCompositeOperation = "source-over";
       particles.forEach((particle, index) => {
         context.globalAlpha = Math.min(1, particleOpacity[index]);
@@ -397,6 +402,7 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
     };
 
     const drawSignalSparks = (time: number, energy = 1) => {
+      if (mobile) return;
       const seconds = time * 0.001;
       context.save();
       context.globalCompositeOperation = "lighter";
@@ -447,10 +453,13 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
     let startedAt = 0;
     let lastFrameAt = 0;
     const minFrameInterval = constrainedDevice ? 1000 / 30 : 0;
+    const effectiveMinFrameInterval = constrainedDevice ? 1000 / 24 : mobile ? 1000 / 30 : 1000 / 45;
     let pausedAt: number | null = null;
     let pausedDuration = 0;
     let idleStartedAt: number | null = null;
     let idleActive = false;
+
+    const canAnimate = () => visibleRef.current && !scrollingRef.current;
 
     const getAnimatedPosition = (particle: Particle, progress: number, time: number) => {
       if (initialFormation) {
@@ -495,8 +504,8 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
     };
 
     const drawIdle = (time: number) => {
-      if (minFrameInterval && lastFrameAt && time - lastFrameAt < minFrameInterval) {
-        frameRef.current = visibleRef.current
+      if (effectiveMinFrameInterval && lastFrameAt && time - lastFrameAt < effectiveMinFrameInterval) {
+        frameRef.current = canAnimate()
           ? window.requestAnimationFrame(drawIdle)
           : null;
         return;
@@ -519,18 +528,18 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
         };
       });
       drawSignalSparks(time, 0.78);
-      frameRef.current = visibleRef.current
+      frameRef.current = canAnimate()
         ? window.requestAnimationFrame(drawIdle)
         : null;
     };
 
     const draw = (time: number) => {
-      if (!visibleRef.current) {
+      if (!canAnimate()) {
         frameRef.current = null;
         return;
       }
       if (!startedAt) startedAt = time;
-      if (minFrameInterval && lastFrameAt && time - lastFrameAt < minFrameInterval) {
+      if (effectiveMinFrameInterval && lastFrameAt && time - lastFrameAt < effectiveMinFrameInterval) {
         frameRef.current = window.requestAnimationFrame(draw);
         return;
       }
@@ -567,7 +576,7 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
             window.cancelAnimationFrame(frameRef.current);
             frameRef.current = null;
           }
-        } else if (runningRef.current && frameRef.current === null) {
+        } else if (runningRef.current && frameRef.current === null && canAnimate()) {
           frameRef.current = window.requestAnimationFrame(
             idleActive ? drawIdle : draw
           );
@@ -577,8 +586,30 @@ export function BrandMotionMark({ src, locale = "id" }: { src: string; locale?: 
     );
 
     observer.observe(canvas);
+
+    const pauseWhileScrolling = () => {
+      scrollingRef.current = true;
+      if (scrollTimerRef.current !== null) window.clearTimeout(scrollTimerRef.current);
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
+      scrollTimerRef.current = window.setTimeout(() => {
+        scrollTimerRef.current = null;
+        scrollingRef.current = false;
+        if (runningRef.current && canAnimate()) {
+          frameRef.current = window.requestAnimationFrame(idleActive ? drawIdle : draw);
+        }
+      }, 140);
+    };
+
+    window.addEventListener("scroll", pauseWhileScrolling, { passive: true });
     frameRef.current = window.requestAnimationFrame(draw);
     return () => {
+      window.removeEventListener("scroll", pauseWhileScrolling);
+      if (scrollTimerRef.current !== null) window.clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = null;
+      scrollingRef.current = false;
       observer.disconnect();
       if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
       frameRef.current = null;

@@ -121,8 +121,18 @@ function usePublicSectionReveal(location: string) {
     const setup = () => {
       if (cancelled) return;
 
+      // Public route sections previously matched `.nf-page main > section`.
+      const publicPage = document.querySelector<HTMLElement>(".nf-page");
+      // Homepage sections use their own reveal refs and are intentionally not
+      // replay-observed here. Stop the lazy-route retry once the homepage exists.
+      if (!publicPage) {
+        if (document.querySelector(".an-site")) return;
+        retryId = window.setTimeout(setup, 50);
+        return;
+      }
+
       const sections = Array.from(
-        document.querySelectorAll<HTMLElement>(".nf-page main > section:not(.reveal-target)")
+        publicPage.querySelectorAll<HTMLElement>("main > section:not(.reveal-target)")
       );
 
       // Lazy-loaded route modules can render after this effect's first pass.

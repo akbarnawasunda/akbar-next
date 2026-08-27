@@ -176,3 +176,18 @@
     display: none;
   }
 }
+
+/* Lightweight compositing on touch devices: preserve the mark, remove expensive multi-pass glow. */
+@media (max-width: 820px) {
+  .an-rmx-particle-hero::before { display: none; }
+  .an-rmx-particle-hero canvas {
+    width: 142%;
+    height: 142%;
+    mix-blend-mode: normal;
+    filter: drop-shadow(0 0 8px rgba(103, 232, 249, 0.22));
+  }
+  .an-rmx-particle-hero.is-idle canvas,
+  .an-rmx-particle-hero.is-animating canvas {
+    filter: drop-shadow(0 0 8px rgba(103, 232, 249, 0.22));
+  }
+}

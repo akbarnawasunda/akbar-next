@@ -107,12 +107,30 @@ function HomeMenuOverlay({ open, onClose }: { open: boolean; onClose: () => void
       aria-modal="true"
       aria-label="Navigasi utama"
     >
-      <Link href="/music" onClick={onClose}>MUSIC</Link>
-      <Link href="/visuals" onClick={onClose}>VISUALS</Link>
-      <Link href="/live" onClick={onClose}>LIVE</Link>
-      <Link href="/universe" onClick={onClose}>ARCHIVE</Link>
-      <Link href="/about" onClick={onClose}>ABOUT</Link>
-      <a className="mobile-signal" href="#signal" onClick={onClose}>KABAR TERBARU</a>
+      <Link href="/music" onClick={onClose}>
+        <span className="menu-link-title">MUSIC</span>
+        <span className="menu-link-note">NEW RELEASES</span>
+      </Link>
+      <Link href="/visuals" onClick={onClose}>
+        <span className="menu-link-title">VISUALS</span>
+        <span className="menu-link-note">OFFICIAL VIDEO</span>
+      </Link>
+      <Link href="/live" onClick={onClose}>
+        <span className="menu-link-title">LIVE</span>
+        <span className="menu-link-note">UPCOMING SHOWS</span>
+      </Link>
+      <Link href="/universe" onClick={onClose}>
+        <span className="menu-link-title">ARCHIVE</span>
+        <span className="menu-link-note">VISUAL ARCHIVE</span>
+      </Link>
+      <Link href="/about" onClick={onClose}>
+        <span className="menu-link-title">ABOUT</span>
+        <span className="menu-link-note">ARTIST PROFILE</span>
+      </Link>
+      <a className="mobile-signal" href="#signal" onClick={onClose}>
+        <span className="menu-link-title">KABAR TERBARU</span>
+        <span className="menu-link-note">LATEST UPDATES</span>
+      </a>
     </div>,
     document.body,
   );
@@ -316,7 +334,12 @@ export default function Home() {
           aria-controls="an-mobile-navigation"
           onClick={() => setMobileNavOpen(open => !open)}
         >
-          {mobileNavOpen ? "CLOSE" : "MENU"}
+          {mobileNavOpen ? (
+            <>
+              <span className="an-menu-close-mark" aria-hidden="true">×</span>
+              <span className="sr-only">Tutup</span>
+            </>
+          ) : "MENU"}
         </button>
       </header>
 
