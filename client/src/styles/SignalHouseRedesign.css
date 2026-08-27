@@ -271,3 +271,36 @@ html body .an-site .an-hero .hero-actions .button-quiet:focus-visible,
 html body .an-site .an-hero .hero-actions .hero-signal-link:focus-visible {
   color: var(--sh-violet) !important;
 }
+
+/* Contrast repair for the dark inquiry/licensing surfaces. */
+html body .nf-page.an-inquiry-page .an-inquiry-hero,
+html body .nf-page.an-licensing-page .an-inquiry-hero { color: var(--sh-paper); }
+html body .nf-page.an-inquiry-page .an-inquiry-hero h1,
+html body .nf-page.an-licensing-page .an-inquiry-hero h1 { color: var(--sh-paper) !important; }
+html body .nf-page.an-licensing-page .an-license-grid { background: var(--sh-ink); color: var(--sh-paper); }
+html body .nf-page.an-licensing-page .an-license-grid article { color: var(--sh-paper); }
+html body .nf-page.an-licensing-page .an-license-grid article h2 { color: var(--sh-paper) !important; }
+html body .nf-page.an-licensing-page .an-license-terms h2 { color: var(--sh-paper) !important; }
+html body .nf-page.an-licensing-page .an-license-terms > div > p:not(.nf-page-eyebrow) { color: rgba(243,238,231,.72); }
+
+/* EPK hero contrast repair: keep its editorial title on the dark hero. */
+html body .nf-page.an-epk-ready .nf-epk-hero,
+html body .nf-page.an-epk-ready .nf-epk-hero h1 { color: var(--sh-paper) !important; }
+
+/* EPK route-motion cascade lock: the lazy EPK sheet must stay readable on dark modules. */
+html body .route-motion[data-route="/epk"] .nf-page.an-epk-ready main > .nf-section:not(.an-epk-contact-panel) {
+  background: var(--sh-ink) !important;
+  background-image: none !important;
+  color: var(--sh-paper) !important;
+}
+html body .route-motion[data-route="/epk"] .nf-page.an-epk-ready main > .nf-section:not(.an-epk-contact-panel) .nf-section-title > p {
+  color: rgba(243,238,231,.72) !important;
+}
+
+/* English public hero lock: keep mirror routes legible even when their lazy layer is absent. */
+html body .nf-page.en-page .nf-page-hero.en-hero {
+  background: linear-gradient(90deg,rgba(23,23,33,.96) 0 38%,rgba(23,23,33,.67) 66%,rgba(23,23,33,.12)),linear-gradient(0deg,rgba(23,23,33,.9),transparent 66%),var(--page-image,url(/assets/akbar-night-frequency-hero-optimized.webp)) center/cover !important;
+  color: var(--sh-paper) !important;
+}
+html body .nf-page.en-page .nf-page-hero.en-hero h1 { color: var(--sh-paper) !important; }
+html body .nf-page.en-page .nf-page-hero.en-hero h1 em { color: var(--sh-cyan) !important; }
