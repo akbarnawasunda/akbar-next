@@ -17,7 +17,17 @@ const iconMarkup: Record<string, string> = {
 };
 
 export function PlatformIcon({ label, className = "" }: { label: string; className?: string }) {
-  const markup = iconMarkup[label.toLowerCase()] || musicNote;
+  const normalizedLabel = label.trim().toLowerCase().replace(/[\u00a0\s]+/g, " ");
+  const canonicalLabel = ({
+    applemusic: "apple music",
+    "apple-music": "apple music",
+    amazonmusic: "amazon music",
+    "amazon-music": "amazon music",
+    twitter: "x",
+    "x / twitter": "x",
+  } as Record<string, string>)[normalizedLabel.replace(/\s+/g, "")] || normalizedLabel;
+  const markup = iconMarkup[canonicalLabel] || musicNote;
   const cleanMarkup = markup.replace(/<title[^>]*>.*?<\/title>/gi, "");
-  return <span className={`an-platform-icon an-platform-${label.toLowerCase().replace(/\s+/g, "-")} ${className}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: cleanMarkup }} />;
+  const iconClass = canonicalLabel.replace(/\s+/g, "-");
+  return <span className={`an-platform-icon an-platform-${iconClass} ${className}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: cleanMarkup }} />;
 }

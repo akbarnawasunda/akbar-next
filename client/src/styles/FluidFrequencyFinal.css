@@ -379,3 +379,63 @@ html body .an-site .an-hero .hero-actions .button-quiet:focus-visible,
 html body .an-site .an-hero .hero-actions .hero-signal-link:focus-visible {
   color: var(--ff-cyan) !important;
 }
+
+/* Final recovery: keep the public homepage header reachable and icons visibly rendered. */
+html body .an-site .an-nav {
+  position: sticky !important;
+  top: 14px !important;
+  bottom: auto !important;
+}
+html body .an-site .an-menu-toggle {
+  display: inline-grid !important;
+  min-width: 52px;
+  position: relative !important;
+  inset: auto !important;
+}
+html body .an-site .an-platform-icon,
+html body .nf-page .an-platform-icon {
+  display: inline-grid !important;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  flex: 0 0 28px;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+html body .an-site .an-platform-icon > svg,
+html body .nf-page .an-platform-icon > svg {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  fill: currentColor;
+}
+html body .an-site .home-platform-icon-shell .an-platform-icon,
+html body .nf-page .nf-platform-grid a .an-platform-icon,
+html body .nf-page .nf-catalog-card > .an-platform-icon {
+  position: relative;
+  z-index: 2;
+}
+
+/* Platform tiles: keep each official SVG legible instead of letting it disappear into the tile surface. */
+html body .nf-page .nf-platform-grid a .an-platform-icon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  flex-basis: 44px;
+  padding: 9px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: rgba(246,241,232,.08);
+  box-shadow: 0 0 0 5px rgba(246,241,232,.035);
+}
+html body .nf-page .nf-platform-grid a .an-platform-icon > svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+html body .nf-page .nf-platform-grid a:hover .an-platform-icon,
+html body .nf-page .nf-platform-grid a:focus-visible .an-platform-icon {
+  background: rgba(7,9,27,.12);
+}
