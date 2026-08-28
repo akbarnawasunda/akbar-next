@@ -31,7 +31,7 @@ export async function setupVite(app: Express, server: Server) {
       let template = await fs.promises.readFile(clientTemplate, "utf-8");
       template = template.replace(
         `src="/src/entry-client.tsx"`,
-        `src="/src/entry-client.tsx?v=${nanoid()}`,
+        `src="/src/entry-client.tsx?v=${nanoid()}"`,
       );
       template = await vite.transformIndexHtml(url, template);
       template = template.replace(

@@ -51,6 +51,7 @@ import "./HomeGameTeaser.css";
 import "./HomeArtDirection.css";
 import "./HomeVisibleUi.css";
 import "./HomeChapterInteraction.css";
+import "./HomeReferenceConvergence.css";
 
 function HomeMenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const dialogRef = useRef<HTMLDivElement>(null);

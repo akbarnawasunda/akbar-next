@@ -1,0 +1,442 @@
+/*
+ * Reference convergence pass.
+ * Keeps the existing content, CMS wiring, and interaction systems intact while
+ * tightening the public surface around the supplied monochrome editorial brief.
+ */
+.an-site {
+  --ink: #06111f;
+  --paper: #e8fbff;
+  --muted: rgba(232, 251, 255, 0.58);
+  --line: rgba(232, 251, 255, 0.2);
+  --violet: #e8fbff;
+  --ice: rgba(232, 251, 255, 0.72);
+  --acid: #e8fbff;
+  --home-ink-deep: #06111f;
+  --home-ink-soft: #0b2238;
+  --home-paper: #e8fbff;
+  --home-mint: rgba(232, 251, 255, 0.7);
+  --home-acid: #e8fbff;
+  --home-violet: rgba(232, 251, 255, 0.72);
+  background: #06111f;
+  color: #e8fbff;
+  font-family: "Nippo", system-ui, sans-serif;
+}
+
+.an-site .an-nav {
+  height: 64px;
+  border-bottom-color: rgba(232, 251, 255, 0.22);
+  background: rgba(6, 17, 31, 0.78);
+  backdrop-filter: blur(16px);
+}
+
+.an-site .an-wordmark {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+}
+
+.an-site .an-brand-logo {
+  filter: grayscale(1) brightness(2);
+}
+
+.an-site .an-nav nav a,
+.an-site .nav-signal,
+.an-site .an-menu-toggle,
+.an-site .hero-scroll-cue,
+.an-site .hero-signal-link,
+.an-site .eyebrow,
+.an-site .mono-label,
+.an-site .text-link,
+.an-site .button-quiet,
+.an-site .home-deck-cta {
+  font-family: "Press Start 2P", ui-monospace, monospace;
+  letter-spacing: 0.15em;
+}
+
+.an-site .an-nav nav a,
+.an-site .nav-signal {
+  color: rgba(232, 251, 255, 0.72);
+}
+
+.an-site .nav-signal {
+  border-color: rgba(232, 251, 255, 0.42);
+  color: #e8fbff;
+}
+
+.an-site .an-menu-toggle {
+  border-color: rgba(232, 251, 255, 0.4);
+  color: #e8fbff;
+}
+
+.an-site .an-hero {
+  min-height: 100svh;
+  padding-top: 112px;
+  background-color: #06111f;
+  background-image:
+    linear-gradient(90deg, rgba(6, 17, 31, 0.97) 0%, rgba(6, 17, 31, 0.78) 38%, rgba(6, 17, 31, 0.2) 76%, rgba(6, 17, 31, 0.58) 100%),
+    linear-gradient(0deg, rgba(6, 17, 31, 0.96), transparent 54%),
+    var(--hero-image);
+}
+
+.an-site .an-hero::after {
+  background-image:
+    linear-gradient(rgba(232, 251, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232, 251, 255, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(90deg, black, transparent 88%);
+  opacity: 0.72;
+}
+
+.an-site .home-hero-portrait {
+  border-color: rgba(232, 251, 255, 0.3);
+  box-shadow: 24px 24px 0 rgba(232, 251, 255, 0.045), 0 34px 90px rgba(0, 0, 0, 0.55);
+}
+
+.an-site .home-hero-portrait img {
+  filter: grayscale(0.34) contrast(1.14) brightness(0.88);
+}
+
+.an-site .home-hero-portrait::before {
+  border-color: rgba(232, 251, 255, 0.74);
+}
+
+.an-site .hero-copy {
+  border-color: rgba(232, 251, 255, 0.28);
+  border-left-color: #e8fbff;
+  background: rgba(6, 17, 31, 0.72);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(14px);
+}
+
+.an-site .hero-copy::before,
+.an-site .hero-copy::after {
+  background: #e8fbff;
+  border-color: rgba(232, 251, 255, 0.64);
+}
+
+.an-site .hero-copy .eyebrow,
+.an-site .hero-copy .eyebrow > span {
+  color: #e8fbff;
+  background: #e8fbff;
+}
+
+.an-site .hero-title-editorial,
+.an-site .section h2,
+.an-site .signal-section h2,
+.an-site .release-detail h3,
+.an-site .release-card h3,
+.an-site .video-content h3 {
+  font-family: "Newsreader Variable", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.08em;
+}
+
+.an-site .hero-title-editorial {
+  max-width: 8ch;
+  font-size: clamp(4.3rem, 10.8vw, 10rem);
+  line-height: 0.78;
+  text-shadow: 0 12px 46px rgba(0, 0, 0, 0.48);
+}
+
+.an-site .hero-description {
+  color: rgba(232, 251, 255, 0.68);
+}
+
+.an-site .button-primary {
+  border: 1px solid #e8fbff;
+  background: #e8fbff;
+  color: #06111f;
+  box-shadow: none;
+}
+
+.an-site .button-primary:hover {
+  box-shadow: 0 14px 35px rgba(232, 251, 255, 0.12);
+}
+
+.an-site .section,
+.an-site .home-signal-deck,
+.an-site .release-section,
+.an-site .visual-section {
+  background-color: #06111f;
+  background-image: linear-gradient(rgba(232, 251, 255, 0.032) 1px, transparent 1px), linear-gradient(90deg, rgba(232, 251, 255, 0.032) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+.an-site .an-section-index {
+  border-top-color: rgba(232, 251, 255, 0.3);
+  color: rgba(232, 251, 255, 0.56);
+}
+
+.an-site .an-section-index > span:first-child,
+.an-site .mono-label,
+.an-site .release-number,
+.an-site .video-content span,
+.an-site .home-live-event span,
+.an-site .home-live-event small {
+  color: #e8fbff;
+}
+
+.an-site .home-signal-copy h2::after {
+  background: #e8fbff;
+}
+
+.an-site .home-platform-rack,
+.an-site .feature-release,
+.an-site .release-grid,
+.an-site .release-card,
+.an-site .video-card,
+.an-site .home-live-event,
+.an-site .live-status {
+  border-color: rgba(232, 251, 255, 0.24);
+}
+
+.an-site .home-platform-rack {
+  background: rgba(232, 251, 255, 0.08);
+}
+
+.an-site .home-platform-rack a,
+.an-site .release-card,
+.an-site .home-live-event {
+  background: rgba(6, 17, 31, 0.8);
+}
+
+.an-site .home-platform-rack a:hover,
+.an-site .release-card:hover,
+.an-site .release-card:focus-visible,
+.an-site .home-live-event:hover {
+  background: #e8fbff;
+  color: #06111f;
+  border-color: #e8fbff;
+}
+
+.an-site .feature-release {
+  background: rgba(232, 251, 255, 0.045);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.34);
+}
+
+.an-site .feature-release::before,
+.an-site .cover-orbit {
+  background: #e8fbff;
+  border-color: rgba(232, 251, 255, 0.55);
+}
+
+.an-site .release-cover {
+  border-color: rgba(232, 251, 255, 0.28);
+  background: #06111f;
+}
+
+.an-site .release-card-art {
+  background: #0f3048;
+}
+
+.an-site .live-section {
+  background-color: #06111f;
+  border-top-color: rgba(232, 251, 255, 0.25);
+  border-bottom-color: rgba(232, 251, 255, 0.25);
+}
+
+.an-site .live-section::after {
+  background: linear-gradient(90deg, rgba(6, 17, 31, 0.96) 8%, rgba(6, 17, 31, 0.74) 45%, rgba(6, 17, 31, 0.12));
+}
+
+.an-site .live-status {
+  border-top-color: #e8fbff;
+  background: rgba(6, 17, 31, 0.72);
+}
+
+.an-site .signal-section {
+  background-color: #e8fbff;
+  color: #06111f;
+}
+
+.an-site .an-mobile-navigation {
+  background: #06111f;
+  border-color: rgba(232, 251, 255, 0.42);
+}
+
+.an-site .an-mobile-navigation a:hover,
+.an-site .an-mobile-navigation a:focus-visible,
+.an-site .an-mobile-navigation .mobile-signal {
+  color: #06111f;
+  background: #e8fbff;
+}
+
+@media (max-width: 820px) {
+  .an-site .an-nav {
+    height: 60px;
+  }
+
+  .an-site .an-hero {
+    min-height: 100svh;
+    padding-top: 94px;
+    background-image:
+      linear-gradient(180deg, rgba(6, 17, 31, 0.42), rgba(6, 17, 31, 0.02) 34%, rgba(6, 17, 31, 0.96) 100%),
+      var(--hero-image);
+  }
+
+  .an-site .hero-copy {
+    background: rgba(6, 17, 31, 0.74);
+  }
+
+  .an-site .hero-title-editorial {
+    font-size: clamp(4.25rem, 18vw, 7rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .hero-copy,
+  .an-site .home-hero-portrait {
+    backdrop-filter: none;
+  }
+}
+
+/* Shared typography is intentionally strong; these selectors keep this page's
+ * reference treatment authoritative without changing the other public routes. */
+html body #root .an-site .hero-title-editorial.hero-title-editorial,
+html body #root .an-site .section h2,
+html body #root .an-site .signal-section h2,
+html body #root .an-site .release-detail h3,
+html body #root .an-site .release-card h3,
+html body #root .an-site .video-content h3 {
+  color: #e8fbff !important;
+  font-family: "Manrope", "Space Grotesk", sans-serif !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.08em !important;
+}
+
+html body #root .an-site .hero-title-editorial .hero-title-mask:last-child .hero-title-word,
+html body #root .an-site .hero-title-editorial .hero-title-mask:last-child .hero-title-word.hero-title-word {
+  color: #e8fbff !important;
+  font-family: "Manrope", "Space Grotesk", sans-serif !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+}
+
+html body #root .an-site .an-nav,
+html body #root .an-site .section,
+html body #root .an-site .home-signal-deck,
+html body #root .an-site .release-section,
+html body #root .an-site .visual-section,
+html body #root .an-site .live-section {
+  background-color: #06111f !important;
+}
+
+html body #root .an-site .an-nav nav a,
+html body #root .an-site .nav-signal,
+html body #root .an-site .an-menu-toggle,
+html body #root .an-site .eyebrow,
+html body #root .an-site .hero-description,
+html body #root .an-site .section p,
+html body #root .an-site .release-detail > p,
+html body #root .an-site .footer-bottom {
+  color: rgba(232, 251, 255, 0.72) !important;
+}
+
+html body #root .an-site .hero-copy .eyebrow > span,
+html body #root .an-site .home-signal-copy h2::after,
+html body #root .an-site .button-primary {
+  background: #e8fbff !important;
+}
+
+html body #root .an-site .button-primary {
+  color: #06111f !important;
+}
+
+@media (max-width: 820px) {
+  html body #root .an-site .hero-title-editorial.hero-title-editorial {
+    font-size: clamp(4.25rem, 18vw, 7rem) !important;
+  }
+}
+
+/* Requested Fontsource role map: every public-facing text role resolves to one
+ * of the supplied families, while the existing local WOFF2 files stay self-hosted. */
+html body #root .an-site {
+  font-family: "Nippo", system-ui, sans-serif !important;
+}
+
+html body #root .an-site :is(.an-wordmark, .button-primary, .button-quiet, .text-link, .home-deck-cta, .home-platform-rack a, .nav-signal, .an-menu-toggle) {
+  font-family: "Nippo", system-ui, sans-serif !important;
+}
+
+html body #root .an-site :is(.hero-copy .eyebrow, .an-nav nav a, .hero-scroll-cue, .hero-signal-link, .mono-label, .an-section-index, .release-number, .video-content span, .home-live-event span, .home-live-event small, .footer-bottom, label) {
+  font-family: "Press Start 2P", ui-monospace, monospace !important;
+}
+
+html body #root .an-site :is(h1, h2, h3, h4, .hero-title-editorial, .section-heading h2, .home-signal-copy h2, .live-copy h2, .game-teaser-section h2, .release-detail h3, .release-card h3, .video-content h3) {
+  font-family: "Newsreader Variable", Georgia, serif !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.055em !important;
+}
+
+html body #root .an-site :is(p, li, dd, .hero-description, .section-intro, .section-copy, .release-detail > p, .release-card p, .video-content p, .home-live-event small) {
+  font-family: "Inknut Antiqua", Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.012em !important;
+}
+
+html body #root .an-site :is(h1 em, h2 em, h3 em, .editorial-emphasis, .editorial-quote, .hero-title-mask:last-child .hero-title-word) {
+  font-family: "Caveat Variable", cursive !important;
+  font-weight: 600 !important;
+  font-style: normal !important;
+  letter-spacing: 0 !important;
+}
+
+html body #root .an-site .hero-title-editorial.hero-title-editorial {
+  color: #e8fbff !important;
+}
+
+html body #root .an-site .hero-title-editorial .hero-title-mask:last-child .hero-title-word,
+html body #root .an-site .hero-title-editorial .hero-title-mask:last-child .hero-title-word.hero-title-word {
+  color: #8ae8ff !important;
+  font-family: "Caveat Variable", cursive !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+}
+
+html body #root .an-site .home-signal-copy h2::after,
+html body #root .an-site .feature-release::before,
+html body #root .an-site .button-primary {
+  background: #8ae8ff !important;
+}
+
+html body #root .an-site .button-primary {
+  border-color: #8ae8ff !important;
+  color: #06111f !important;
+}
+
+html body #root .an-site .an-nav,
+html body #root .an-site .section,
+html body #root .an-site .home-signal-deck,
+html body #root .an-site .release-section,
+html body #root .an-site .visual-section,
+html body #root .an-site .live-section {
+  background-color: #06111f !important;
+}
+
+html body #root .an-site .an-nav nav a:hover,
+html body #root .an-site .an-nav nav a:focus-visible,
+html body #root .an-site .nav-signal:hover,
+html body #root .an-site .nav-signal:focus-visible,
+html body #root .an-site .an-menu-toggle:hover,
+html body #root .an-site .an-menu-toggle:focus-visible {
+  color: #8ae8ff !important;
+}
+
+/* The shared design layer also targets headings with #root + !important.
+ * Repeat the page scope here so Newsreader remains the actual live heading face. */
+html body #root .an-site.an-site :is(h1, h2, h3, h4, .hero-title-editorial, .section-heading h2, .home-signal-copy h2, .live-copy h2, .game-teaser-section h2, .release-detail h3, .release-card h3, .video-content h3) {
+  font-family: "Newsreader Variable", Georgia, serif !important;
+  font-style: normal !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.055em !important;
+}
+
+html body #root .an-site.an-site .hero-title-editorial .hero-title-mask:last-child .hero-title-word,
+html body #root .an-site.an-site .hero-title-editorial .hero-title-mask:last-child .hero-title-word.hero-title-word {
+  color: #8ae8ff !important;
+  font-family: "Caveat Variable", cursive !important;
+  font-style: normal !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+}
