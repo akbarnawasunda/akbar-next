@@ -1100,11 +1100,11 @@ html body #root .en-content .nf-page-eyebrow::before {
   --ff-night-2: #0a1d32;
   --ff-night-3: #102b47;
   --ff-paper: #edf5fc;
-  --ff-lime: #79baf0;
-  --ff-cyan: #b8d7f2;
-  --ff-coral: #5d8fbe;
-  --ff-violet: #6b94bf;
-  --ff-sun: #8db5d9;
+  --ff-lime: #0b60bc;
+  --ff-cyan: #4d8ed0;
+  --ff-coral: #1a4d84;
+  --ff-violet: #194d80;
+  --ff-sun: #2f6fae;
   --noir-00: #040b15;
   --noir-01: #081827;
   --noir-02: #0b2238;
@@ -1371,4 +1371,113 @@ html body :is(.an-site, .nf-page, .en-content) :is(.release-detail h3, .release-
   html body :is(.an-site, .nf-page, .en-content) :is(.release-detail h3, .release-card h3, .video-content h3, .nf-catalog-card h3, .nf-visual-card h3, .nf-official-media h3, .an-epk-release h3, .en-release-card h3, .en-visual-card h3) {
     font-size: clamp(18px, 5.4vw, 23px) !important;
   }
+}
+
+
+/* Hero direction: replace the circular portrait with a sharper editorial frame in the logo's deep blue family. */
+:root {
+  --ff-logo-blue: #0b60bc;
+  --ff-logo-deep: #052b58;
+  --ff-logo-ink: #031a36;
+  --ff-logo-highlight: #5b9fe8;
+}
+html body #root .an-site .an-hero::before {
+  color: var(--ff-logo-highlight) !important;
+}
+html body #root .an-site .an-hero .eyebrow,
+html body #root .an-site .hero-scroll-cue {
+  color: var(--ff-logo-highlight) !important;
+}
+html body #root .an-site .home-hero-portrait {
+  width: min(100%, 560px) !important;
+  aspect-ratio: 0.78 !important;
+  overflow: visible !important;
+  border: 1px solid rgba(91, 159, 232, 0.72) !important;
+  border-radius: 14px 76px 14px 14px !important;
+  background: var(--ff-logo-ink) !important;
+  box-shadow: 18px 18px 0 var(--ff-logo-deep), -10px -10px 0 rgba(11, 96, 188, 0.34) !important;
+  clip-path: polygon(0 0, 87% 0, 100% 11%, 100% 100%, 8% 100%, 0 92%) !important;
+  transform: rotate(-1deg) !important;
+}
+html body #root .an-site .home-hero-portrait::before {
+  color: var(--ff-paper) !important;
+}
+html body #root .an-site .home-hero-portrait::after {
+  right: -20px !important;
+  bottom: -20px !important;
+  width: 92px !important;
+  height: 92px !important;
+  border: 0 !important;
+  border-right: 1px solid var(--ff-logo-blue) !important;
+  border-bottom: 1px solid var(--ff-logo-blue) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  opacity: 0.9;
+}
+html body #root .an-site .home-hero-portrait img {
+  border-radius: 0 !important;
+  clip-path: polygon(0 0, 87% 0, 100% 11%, 100% 100%, 8% 100%, 0 92%) !important;
+  filter: saturate(0.9) contrast(1.08) brightness(1.04) !important;
+}
+html body #root .an-site .button-primary {
+  box-shadow: 0 0 0 1px rgba(11, 96, 188, 0.24), 8px 8px 0 rgba(11, 96, 188, 0.42) !important;
+}
+html body #root .an-site .button-primary:hover,
+html body #root .an-site .button-primary:focus-visible {
+  background: var(--ff-logo-highlight) !important;
+  box-shadow: 4px 4px 0 rgba(5, 43, 88, 0.7) !important;
+}
+@media (max-width: 820px) {
+  html body #root .an-site .home-hero-portrait {
+    width: min(100%, 520px) !important;
+    aspect-ratio: 0.82 !important;
+    border-radius: 10px 48px 10px 10px !important;
+    box-shadow: 12px 12px 0 var(--ff-logo-deep), -8px -8px 0 rgba(11, 96, 188, 0.3) !important;
+  }
+  html body #root .an-site .home-hero-portrait::after {
+    right: -14px !important;
+    bottom: -14px !important;
+    width: 64px !important;
+    height: 64px !important;
+  }
+}
+
+
+/* Deep logo-blue contrast lock: dark blue is the accent, paper remains the foreground text. */
+html body #root .an-site :is(.an-nav nav a:hover, .an-nav nav a:focus-visible, .nav-signal:hover, .nav-signal:focus-visible, .an-menu-toggle:hover, .an-menu-toggle:focus-visible),
+html body #root .nf-page :is(.nf-nav nav a:hover, .nf-nav nav a:focus-visible, .nf-signal:hover, .nf-signal:focus-visible, .nf-menu-toggle:hover, .nf-menu-toggle:focus-visible) {
+  background: var(--ff-logo-blue) !important;
+  color: var(--ff-paper) !important;
+}
+html body #root .an-site .button-primary,
+html body #root .nf-page .nf-button,
+html body #root .nf-page .nf-platform-grid a {
+  background: var(--ff-logo-blue) !important;
+  color: var(--ff-paper) !important;
+  border-color: var(--ff-logo-highlight) !important;
+}
+html body #root .an-site .button-primary:hover,
+html body #root .an-site .button-primary:focus-visible,
+html body #root .nf-page .nf-button:hover,
+html body #root .nf-page .nf-button:focus-visible,
+html body #root .nf-page .nf-platform-grid a:hover,
+html body #root .nf-page .nf-platform-grid a:focus-visible {
+  background: var(--ff-logo-highlight) !important;
+  color: var(--ff-logo-ink) !important;
+}
+html body #root .an-site .home-platform-card:hover,
+html body #root .an-site .home-platform-card:focus-visible {
+  border-color: var(--ff-logo-highlight) !important;
+  background: rgba(11, 96, 188, 0.18) !important;
+}
+html body #root .an-site :is(.home-platform-icon-shell, .an-menu-toggle) {
+  border-color: var(--ff-logo-highlight) !important;
+  color: var(--ff-logo-highlight) !important;
+}
+html body #root .an-site :is(.home-platform-arrow, .home-deck-cta, .text-link, .release-detail-actions a, .hero-signal-link:hover),
+html body #root .nf-page :is(.nf-text-button, .nf-page-eyebrow, .nf-catalog-card .index, .nf-visual-card span) {
+  color: var(--ff-logo-highlight) !important;
+}
+html body #root .an-site :is(.an-menu-toggle:hover, .an-menu-toggle:focus-visible) {
+  border-color: var(--ff-logo-highlight) !important;
 }
