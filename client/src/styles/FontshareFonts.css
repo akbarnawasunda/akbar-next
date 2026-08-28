@@ -92,3 +92,20 @@
   font-weight: 600;
   font-display: swap;
 }
+
+
+/* Satoshi — official Fontshare CDN, self-hosted locally for display comparison. */
+@font-face {
+  font-family: "Satoshi";
+  src: url("/assets/fonts/fontshare/satoshi-500.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("/assets/fonts/fontshare/satoshi-700.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}

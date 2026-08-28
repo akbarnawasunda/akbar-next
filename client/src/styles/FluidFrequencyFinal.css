@@ -9,7 +9,7 @@
   --ff-coral: #ff7182;
   --ff-violet: #8d7bff;
   --ff-sun: #ffd36b;
-  --ff-display: "Clash Display", "Arial Narrow", system-ui, sans-serif;
+  --ff-display: "Satoshi", "Clash Display", "Arial Narrow", system-ui, sans-serif;
   --ff-serif: "Boska", Georgia, serif;
   --ff-script: "Caveat Brush", "Segoe Print", cursive;
   --ff-ui: "General Sans", system-ui, sans-serif;
@@ -472,7 +472,7 @@ html body .an-mobile-navigation a {
   border-top: 1px solid rgba(246,241,232,.34);
   border-radius: 0;
   color: var(--ff-paper);
-  font: 700 clamp(1.9rem, 4.6vw, 3.3rem)/.95 "Clash Display", "Space Grotesk", sans-serif;
+  font: 700 clamp(1.9rem, 4.6vw, 3.3rem)/.95 "Satoshi", "Clash Display", "Space Grotesk", sans-serif;
   letter-spacing: -.055em;
   transform: translate3d(0, 14px, 0);
   transition: color 180ms ease, background-color 180ms ease, opacity 300ms cubic-bezier(.23,1,.32,1), transform 300ms cubic-bezier(.23,1,.32,1);
@@ -516,7 +516,7 @@ html body .an-mobile-navigation .mobile-signal {
   border-color: rgba(246,241,232,.34);
   border-radius: 0;
   color: var(--ff-lime);
-  font: 700 clamp(1.15rem, 3vw, 1.55rem)/1 "Clash Display", "Space Grotesk", sans-serif;
+  font: 700 clamp(1.15rem, 3vw, 1.55rem)/1 "Satoshi", "Clash Display", "Space Grotesk", sans-serif;
   letter-spacing: -.035em;
   background: transparent;
 }
@@ -1090,4 +1090,207 @@ html body #root .en-content .nf-page-eyebrow {
 html body #root .nf-page .nf-page-eyebrow::before,
 html body #root .en-content .nf-page-eyebrow::before {
   background: var(--ff-lime) !important;
+}
+
+
+/* Blue-led direction: one coherent blue family replaces the previous multi-accent palette. */
+:root {
+  --ff-night: #06111f;
+  --ff-night-2: #0a1d32;
+  --ff-night-3: #102b47;
+  --ff-paper: #edf5fc;
+  --ff-lime: #79baf0;
+  --ff-cyan: #b8d7f2;
+  --ff-coral: #5d8fbe;
+  --ff-violet: #6b94bf;
+  --ff-sun: #8db5d9;
+  --noir-00: #040b15;
+  --noir-01: #081827;
+  --noir-02: #0b2238;
+  --noir-03: #12304d;
+  --noir-violet: #6b94bf;
+  --noir-mint: #8dbce2;
+  --noir-flare: #5d8fbe;
+  --noir-bone: #edf5fc;
+  --noir-ash: #a9bfd2;
+}
+
+html body #root .an-site,
+html body #root .nf-page {
+  --route-accent: var(--ff-lime) !important;
+  --route-accent-rgb: 121, 186, 240 !important;
+  background-color: var(--ff-night) !important;
+  color: var(--ff-paper) !important;
+}
+html body #root .route-motion[data-route="/live"] .nf-page,
+html body #root .route-motion[data-route="/music"] .nf-page,
+html body #root .route-motion[data-route="/visuals"] .nf-page,
+html body #root .route-motion[data-route="/universe"] .nf-page {
+  --route-accent: var(--ff-lime) !important;
+  --route-accent-rgb: 121, 186, 240 !important;
+}
+
+html body #root .an-site .an-hero,
+html body #root .nf-page .nf-page-hero,
+html body #root .nf-page .nf-epk-hero {
+  background:
+    linear-gradient(90deg, rgba(4, 11, 21, 0.98), rgba(6, 17, 31, 0.84) 46%, rgba(6, 17, 31, 0.22) 84%),
+    var(--ff-hero-art) center/cover no-repeat !important;
+}
+html body #root .an-site .home-signal-deck,
+html body #root .an-site .release-section,
+html body #root .an-site .visual-section,
+html body #root .an-site .live-section,
+html body #root .an-site .game-teaser-section,
+html body #root .nf-page .nf-section,
+html body #root .nf-page .nf-platform-hub,
+html body #root .nf-page .nf-section.dark-panel {
+  background: linear-gradient(135deg, var(--ff-night-2), var(--ff-night)) !important;
+  color: var(--ff-paper) !important;
+  border-color: rgba(237, 245, 252, 0.14) !important;
+}
+html body #root .an-site .section-current,
+html body #root .an-site .signal-section,
+html body #root .nf-page .nf-signal-block {
+  background: var(--ff-paper) !important;
+  color: var(--ff-night) !important;
+}
+html body #root .an-site .section-current .release-detail {
+  background: var(--ff-night-2) !important;
+  color: var(--ff-paper) !important;
+  border-color: rgba(237, 245, 252, 0.16) !important;
+  box-shadow: 8px 8px 0 rgba(121, 186, 240, 0.24) !important;
+}
+html body #root .nf-page .nf-signal-block h2,
+html body #root .nf-page .nf-signal-block p,
+html body #root .nf-page .nf-signal-block label,
+html body #root .nf-page .nf-signal-block .nf-page-eyebrow {
+  color: var(--ff-night) !important;
+}
+
+html body #root .an-site .button-primary,
+html body #root .nf-page .nf-button,
+html body #root .an-site .signal-input button,
+html body #root .nf-page .nf-signal-form button {
+  background: var(--ff-lime) !important;
+  border-color: var(--ff-lime) !important;
+  color: var(--ff-night) !important;
+  box-shadow: 5px 5px 0 rgba(237, 245, 252, 0.16) !important;
+}
+html body #root .an-site .button-primary:hover,
+html body #root .an-site .button-primary:focus-visible,
+html body #root .nf-page .nf-button:hover,
+html body #root .nf-page .nf-button:focus-visible,
+html body #root .an-site .signal-input button:hover,
+html body #root .nf-page .nf-signal-form button:hover {
+  background: var(--ff-paper) !important;
+  border-color: var(--ff-paper) !important;
+  color: var(--ff-night) !important;
+  box-shadow: 3px 3px 0 rgba(121, 186, 240, 0.42) !important;
+}
+html body #root .an-site .an-menu-toggle,
+html body #root .nf-page .nf-menu-toggle {
+  border-color: var(--ff-lime) !important;
+  color: var(--ff-lime) !important;
+  background: transparent !important;
+}
+html body #root .an-site .an-menu-toggle:hover,
+html body #root .an-site .an-menu-toggle:focus-visible,
+html body #root .nf-page .nf-menu-toggle:hover,
+html body #root .nf-page .nf-menu-toggle:focus-visible {
+  background: var(--ff-lime) !important;
+  color: var(--ff-night) !important;
+}
+
+html body #root .an-site .home-platform-card,
+html body #root .an-site .release-card,
+html body #root .an-site .video-card,
+html body #root .nf-page .nf-platform-grid a,
+html body #root .nf-page .nf-catalog-card,
+html body #root .nf-page .nf-visual-card,
+html body #root .nf-page .nf-universe-card,
+html body #root .nf-page .nf-live-card {
+  background: rgba(16, 43, 71, 0.92) !important;
+  border-color: rgba(237, 245, 252, 0.18) !important;
+  color: var(--ff-paper) !important;
+  box-shadow: none !important;
+}
+html body #root .an-site .home-platform-card:hover,
+html body #root .an-site .home-platform-card:focus-visible,
+html body #root .an-site .release-card:hover,
+html body #root .an-site .release-card:focus-visible,
+html body #root .an-site .video-card:hover,
+html body #root .an-site .video-card:focus-visible,
+html body #root .nf-page .nf-platform-grid a:hover,
+html body #root .nf-page .nf-platform-grid a:focus-visible,
+html body #root .nf-page .nf-catalog-card:hover,
+html body #root .nf-page .nf-catalog-card:focus-visible {
+  background: #183a5d !important;
+  border-color: var(--ff-lime) !important;
+  color: var(--ff-paper) !important;
+}
+html body #root .nf-page .nf-platform-grid a svg,
+html body #root .nf-page .nf-platform-grid a .an-platform-icon,
+html body #root .an-site .home-platform-icon-shell,
+html body #root .an-site .round-play {
+  color: var(--ff-lime) !important;
+  border-color: rgba(184, 215, 242, 0.48) !important;
+}
+html body #root .nf-page .nf-platform-grid a:hover svg,
+html body #root .nf-page .nf-platform-grid a:focus-visible svg {
+  color: var(--ff-night) !important;
+}
+html body #root .an-site .home-platform-number,
+html body #root .an-site .release-number,
+html body #root .an-site .video-content span,
+html body #root .an-site .live-status span,
+html body #root .an-site .live-status small,
+html body #root .nf-page .nf-page-eyebrow,
+html body #root .nf-page .nf-visual-card span,
+html body #root .nf-page .nf-catalog-card .index,
+html body #root .nf-page .nf-live-card span,
+html body #root .nf-page .an-story-label,
+html body #root .nf-page .an-event-card span,
+html body #root .nf-page .an-press-pack span {
+  color: var(--ff-lime) !important;
+}
+html body #root .an-site .hero-actions .button-quiet:hover,
+html body #root .an-site .hero-actions .hero-signal-link:hover,
+html body #root .an-site .home-deck-cta:hover,
+html body #root .an-site .text-link:hover {
+  color: var(--ff-lime) !important;
+}
+html body #root .an-site .signal-input {
+  background: rgba(237, 245, 252, 0.86) !important;
+  border-color: rgba(6, 17, 31, 0.42) !important;
+}
+html body #root .an-site .home-hero-portrait {
+  box-shadow: 14px 14px 0 rgba(121, 186, 240, 0.72), -9px -9px 0 rgba(184, 215, 242, 0.18) !important;
+}
+html body #root .an-site .an-mobile-navigation {
+  background:
+    linear-gradient(rgba(184, 215, 242, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184, 215, 242, 0.035) 1px, transparent 1px),
+    #040b15 !important;
+  background-size: 44px 44px, 44px 44px, auto;
+}
+html body #root .an-site .an-mobile-navigation a:hover,
+html body #root .an-site .an-mobile-navigation a:focus-visible {
+  color: var(--ff-lime) !important;
+  background: rgba(121, 186, 240, 0.08) !important;
+}
+html body #root .an-site .an-mobile-navigation .mobile-signal,
+html body #root .an-site .an-mobile-navigation .mobile-signal .menu-link-note {
+  color: var(--ff-lime) !important;
+}
+html body #root .an-site .game-teaser-section .button-primary {
+  background: var(--ff-lime) !important;
+  color: var(--ff-night) !important;
+  box-shadow: 8px 8px 0 rgba(237, 245, 252, 0.18) !important;
+}
+
+@media (max-width: 480px) {
+  html body #root .an-site .home-hero-portrait {
+    box-shadow: 12px 12px 0 var(--ff-lime), -9px -9px 0 rgba(184, 215, 242, 0.18) !important;
+  }
 }
