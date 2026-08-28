@@ -9,11 +9,11 @@
   --ff-coral: #ff7182;
   --ff-violet: #8d7bff;
   --ff-sun: #ffd36b;
-  --ff-display: "Bona Nova SC", "DM Serif Display", Georgia, serif;
-  --ff-serif: "DM Serif Display", Georgia, serif;
+  --ff-display: "Clash Display", "Arial Narrow", system-ui, sans-serif;
+  --ff-serif: "Boska", Georgia, serif;
   --ff-script: "Caveat Brush", "Segoe Print", cursive;
-  --ff-ui: "Manrope", "Space Grotesk", sans-serif;
-  --ff-mono: "IBM Plex Mono", monospace;
+  --ff-ui: "General Sans", system-ui, sans-serif;
+  --ff-mono: "Azeret Mono", ui-monospace, monospace;
   --ff-hero-art: url("/assets/akbar-editorial-stage-bg.webp");
   --ff-signal-art: url("/assets/akbar-signal-texture-square.webp");
 }
@@ -107,7 +107,7 @@ html body .an-site .home-signal-copy h2,
 html body .an-site .section h2,
 html body .an-site .signal-section h2 { color: inherit; font: 700 clamp(52px,7.2vw,108px)/.82 var(--ff-display); letter-spacing: -.09em; text-transform: uppercase; }
 html body .an-site .home-signal-copy h2 em,
-html body .an-site .section h2 em { color: var(--ff-lime); font-family: var(--ff-script); font-weight: 600; font-style: normal; text-transform: none; letter-spacing: -.025em; }
+html body .an-site .section h2 em { color: var(--ff-lime); font-family: var(--ff-serif); font-weight: 500; font-style: italic; text-transform: none; letter-spacing: -.025em; }
 html body .an-site .home-deck-cta,
 html body .an-site .text-link,
 html body .an-site .release-detail-actions a { color: var(--ff-cyan); font: 800 9px/1 var(--ff-mono); letter-spacing: .15em; }
@@ -202,7 +202,7 @@ html body .nf-page .nf-section h2,
 html body .nf-page .nf-epk-hero h1 { color: var(--ff-paper) !important; font: 700 clamp(58px,8.8vw,132px)/.8 var(--ff-display) !important; letter-spacing: -.095em; text-transform: uppercase; }
 html body .nf-page .nf-page-hero h1 em,
 html body .nf-page .nf-section h2 em,
-html body .nf-page .nf-epk-hero h1 em { color: var(--ff-lime) !important; font-family: var(--ff-script) !important; font-weight: 600; font-style: normal; text-transform: none; letter-spacing: -.025em; }
+html body .nf-page .nf-epk-hero h1 em { color: var(--ff-lime) !important; font-family: var(--ff-serif) !important; font-weight: 500; font-style: italic; text-transform: none; letter-spacing: -.025em; }
 html body .nf-page .nf-page-eyebrow { color: var(--ff-cyan); }
 html body .nf-page .nf-page-eyebrow::before { background: var(--ff-coral); }
 html body .nf-page .nf-page-hero p:not(.nf-page-eyebrow) { color: rgba(246,241,232,.74); }
@@ -472,7 +472,7 @@ html body .an-mobile-navigation a {
   border-top: 1px solid rgba(246,241,232,.34);
   border-radius: 0;
   color: var(--ff-paper);
-  font: 700 clamp(1.9rem, 4.6vw, 3.3rem)/.95 "Bona Nova SC", "DM Serif Display", Georgia, serif;
+  font: 700 clamp(1.9rem, 4.6vw, 3.3rem)/.95 "Clash Display", "Space Grotesk", sans-serif;
   letter-spacing: -.055em;
   transform: translate3d(0, 14px, 0);
   transition: color 180ms ease, background-color 180ms ease, opacity 300ms cubic-bezier(.23,1,.32,1), transform 300ms cubic-bezier(.23,1,.32,1);
@@ -516,7 +516,7 @@ html body .an-mobile-navigation .mobile-signal {
   border-color: rgba(246,241,232,.34);
   border-radius: 0;
   color: var(--ff-lime);
-  font: 700 clamp(1.15rem, 3vw, 1.55rem)/1 "Bona Nova SC", "DM Serif Display", Georgia, serif;
+  font: 700 clamp(1.15rem, 3vw, 1.55rem)/1 "Clash Display", "Space Grotesk", sans-serif;
   letter-spacing: -.035em;
   background: transparent;
 }
@@ -614,7 +614,7 @@ html body .an-site .an-menu-toggle .an-menu-close-mark {
 
 
 /* Typography lock: the older editorial layer used !important on hero headings;
-   keep the new Google Fonts pairing as the final public brand system. */
+   keep the self-hosted Fontshare role system as the final public brand system. */
 html body .an-site .an-hero h1,
 html body .an-site .hero-copy h1,
 html body .an-site .home-signal-copy h2,
@@ -634,8 +634,8 @@ html body .an-site .section h2 em,
 html body .nf-page .nf-page-hero h1 em,
 html body .nf-page .nf-section h2 em,
 html body .nf-page .nf-epk-hero h1 em {
-  font-family: var(--ff-script) !important;
-  font-style: normal !important;
+  font-family: var(--ff-serif) !important;
+  font-style: italic !important;
 }
 
 
@@ -646,4 +646,111 @@ html body .an-site .hero-title-mask:last-child .hero-title-word {
   font-weight: 600;
   letter-spacing: -.035em;
   text-transform: none;
+}
+
+
+/* Final public role lock: local Fontshare faces own the hierarchy; Caveat Brush remains a deliberate signature accent only. */
+html body :is(.an-site, .nf-page, .en-content) {
+  font-family: var(--ff-ui) !important;
+  font-synthesis: none;
+}
+
+html body :is(.an-site, .nf-page, .en-content) :is(h1, h2, h3, h4, .hero-title-editorial, .section-heading h2, .home-signal-copy h2, .live-copy h2, .game-teaser-section h2, .nf-page-hero h1, .nf-section h2, .nf-epk-hero h1, .release-detail h3, .release-card h3, .video-content h3, .nf-catalog-card h3, .nf-visual-card h3, .nf-official-media h3, .an-epk-release h3, .en-release-card h3, .en-visual-card h3) {
+  font-family: var(--ff-display) !important;
+  font-weight: 700 !important;
+}
+
+html body :is(.an-site, .nf-page, .en-content) :is(h1, h2, h3, h4) em,
+html body :is(.an-site, .nf-page, .en-content) :is(.editorial-emphasis, .editorial-quote) {
+  font-family: var(--ff-serif) !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+}
+
+html body :is(.an-site, .nf-page, .en-content) :is(p:not(.nf-page-eyebrow), li, dd, dt, label, input, textarea, select, .hero-description, .release-detail > p:not(.mono-label), .release-card p, .nf-catalog-card p, .nf-visual-card p, .nf-official-media-copy p, .en-copy-block p, .en-release-card-copy > p) {
+  font-family: var(--ff-ui) !important;
+}
+
+html body :is(.an-site, .nf-page, .en-content) :is(.eyebrow, .mono-label, .an-section-index, .release-number, .release-platform-line, .home-platform-number, .home-live-event-source, .hero-scroll-cue, .nf-page-eyebrow, .nf-meta, .nf-catalog-meta, .nf-card-label, .nf-official-media-actions a, .en-release-card-copy > span, .en-event-location-link, .an-header-news, .an-nav-links a, .nf-nav a, .button-primary, .button-quiet, .text-link, .home-deck-cta, .nf-button, .nf-text-button, .signal-label, .an-menu-toggle, .nf-menu-toggle, .nav-signal, .nf-signal) {
+  font-family: var(--ff-mono) !important;
+}
+
+/* Preserve the visual signature as the only script-style exception. */
+html body .an-site .hero-title-mask:last-child .hero-title-word {
+  font-family: var(--ff-script) !important;
+  font-weight: 600 !important;
+  font-style: normal !important;
+  text-transform: none;
+}
+
+/* The visible release title is display-led; Boska is reserved for explicit emphasis. */
+html body .an-site :is(.release-detail h3, .release-card h3, .video-content h3),
+html body .nf-page :is(.nf-catalog-card h3, .nf-visual-card h3, .nf-official-media h3, .an-epk-release h3),
+html body .en-content :is(.en-release-card h3, .en-visual-card h3) {
+  font-family: var(--ff-display) !important;
+  font-style: normal !important;
+}
+
+/* Body copy stays comfortable; metadata/buttons stay intentionally technical. */
+html body :is(.an-site, .nf-page, .en-content) :is(.hero-description, .release-detail > p:not(.mono-label), .release-card p, .video-content p, .nf-catalog-card p, .nf-visual-card p, .nf-official-media-copy p, .en-copy-block p, .en-release-card-copy > p) {
+  font-weight: 400 !important;
+  letter-spacing: normal;
+  line-height: 1.6;
+}
+
+
+/* Route-specific precision: platform links and page eyebrows are technical metadata, too. */
+html body .nf-page .nf-platform-grid a,
+html body .en-content .nf-platform-grid a,
+html body .nf-page .nf-page-eyebrow,
+html body .en-content .nf-page-eyebrow {
+  font-family: var(--ff-mono) !important;
+}
+
+
+/* Explicit face fallback for lazy route metadata rules. */
+html body .nf-page .nf-page-eyebrow,
+html body .en-content .nf-page-eyebrow {
+  font-family: "Azeret Mono", ui-monospace, monospace !important;
+}
+
+
+/* The route eyebrow is a paragraph with a late shorthand rule; lock the full shorthand explicitly. */
+html body .nf-page p.nf-page-eyebrow,
+html body .en-content p.nf-page-eyebrow {
+  font: 500 0.62rem/1.35 "Azeret Mono", ui-monospace, monospace !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase;
+}
+
+
+/* Keep the eyebrow line animation while pinning its technical face through animation fill-mode. */
+@keyframes ff-line-datum-fontshare {
+  from {
+    opacity: 0;
+    transform: scaleX(0.16);
+    transform-origin: left center;
+    font-family: "Azeret Mono", ui-monospace, monospace;
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+    transform-origin: left center;
+    font-family: "Azeret Mono", ui-monospace, monospace;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html body .nf-page .nf-page-eyebrow,
+  html body .nf-page .nf-epk-hero .nf-page-eyebrow,
+  html body .en-content .nf-page-eyebrow {
+    animation-name: ff-line-datum-fontshare !important;
+  }
+}
+
+
+/* Font consistency takes priority over this decorative micro-animation; all primary route motion remains intact. */
+html body .nf-page .nf-page-eyebrow,
+html body .en-content .nf-page-eyebrow {
+  animation: none !important;
 }
