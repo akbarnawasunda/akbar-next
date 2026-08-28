@@ -9,8 +9,10 @@
   --ff-coral: #ff7182;
   --ff-violet: #8d7bff;
   --ff-sun: #ffd36b;
-  --ff-display: "Space Grotesk", "Manrope", sans-serif;
+  --ff-display: "Bona Nova SC", "DM Serif Display", Georgia, serif;
   --ff-serif: "DM Serif Display", Georgia, serif;
+  --ff-script: "Caveat", "Segoe Print", cursive;
+  --ff-ui: "Manrope", "Space Grotesk", sans-serif;
   --ff-mono: "IBM Plex Mono", monospace;
   --ff-hero-art: url("/assets/akbar-editorial-stage-bg.webp");
   --ff-signal-art: url("/assets/akbar-signal-texture-square.webp");
@@ -20,7 +22,7 @@
 html { background: var(--ff-night); overflow-x: clip; }
 html body { background: var(--ff-night); overflow-x: clip; }
 html body .an-site,
-html body .nf-page { color: var(--ff-paper); background: var(--ff-night); font-family: var(--ff-display); overflow-x: clip; overflow-y: visible; }
+html body .nf-page { color: var(--ff-paper); background: var(--ff-night); font-family: var(--ff-ui); overflow-x: clip; overflow-y: visible; font-synthesis: none; }
 html body .an-site *,
 html body .nf-page * { box-sizing: border-box; }
 
@@ -105,7 +107,7 @@ html body .an-site .home-signal-copy h2,
 html body .an-site .section h2,
 html body .an-site .signal-section h2 { color: inherit; font: 700 clamp(52px,7.2vw,108px)/.82 var(--ff-display); letter-spacing: -.09em; text-transform: uppercase; }
 html body .an-site .home-signal-copy h2 em,
-html body .an-site .section h2 em { color: var(--ff-lime); font-family: var(--ff-serif); font-weight: 400; text-transform: none; }
+html body .an-site .section h2 em { color: var(--ff-lime); font-family: var(--ff-script); font-weight: 600; font-style: normal; text-transform: none; letter-spacing: -.025em; }
 html body .an-site .home-deck-cta,
 html body .an-site .text-link,
 html body .an-site .release-detail-actions a { color: var(--ff-cyan); font: 800 9px/1 var(--ff-mono); letter-spacing: .15em; }
@@ -200,7 +202,7 @@ html body .nf-page .nf-section h2,
 html body .nf-page .nf-epk-hero h1 { color: var(--ff-paper) !important; font: 700 clamp(58px,8.8vw,132px)/.8 var(--ff-display) !important; letter-spacing: -.095em; text-transform: uppercase; }
 html body .nf-page .nf-page-hero h1 em,
 html body .nf-page .nf-section h2 em,
-html body .nf-page .nf-epk-hero h1 em { color: var(--ff-lime) !important; font-family: var(--ff-serif); font-weight: 400; text-transform: none; }
+html body .nf-page .nf-epk-hero h1 em { color: var(--ff-lime) !important; font-family: var(--ff-script) !important; font-weight: 600; font-style: normal; text-transform: none; letter-spacing: -.025em; }
 html body .nf-page .nf-page-eyebrow { color: var(--ff-cyan); }
 html body .nf-page .nf-page-eyebrow::before { background: var(--ff-coral); }
 html body .nf-page .nf-page-hero p:not(.nf-page-eyebrow) { color: rgba(246,241,232,.74); }
@@ -470,7 +472,7 @@ html body .an-mobile-navigation a {
   border-top: 1px solid rgba(246,241,232,.34);
   border-radius: 0;
   color: var(--ff-paper);
-  font: 600 clamp(1.9rem, 4.6vw, 3.3rem)/.95 "Space Grotesk", "Manrope", sans-serif;
+  font: 700 clamp(1.9rem, 4.6vw, 3.3rem)/.95 "Bona Nova SC", "DM Serif Display", Georgia, serif;
   letter-spacing: -.055em;
   transform: translate3d(0, 14px, 0);
   transition: color 180ms ease, background-color 180ms ease, opacity 300ms cubic-bezier(.23,1,.32,1), transform 300ms cubic-bezier(.23,1,.32,1);
@@ -514,7 +516,7 @@ html body .an-mobile-navigation .mobile-signal {
   border-color: rgba(246,241,232,.34);
   border-radius: 0;
   color: var(--ff-lime);
-  font: 600 clamp(1.15rem, 3vw, 1.55rem)/1 "Space Grotesk", "Manrope", sans-serif;
+  font: 700 clamp(1.15rem, 3vw, 1.55rem)/1 "Bona Nova SC", "DM Serif Display", Georgia, serif;
   letter-spacing: -.035em;
   background: transparent;
 }
@@ -608,4 +610,40 @@ html body .an-site .an-menu-toggle .an-menu-close-mark {
   html body .nf-page :is(.nf-menu-toggle, .nf-signal, .nf-text-button, .nf-button) {
     transition: none !important;
   }
+}
+
+
+/* Typography lock: the older editorial layer used !important on hero headings;
+   keep the new Google Fonts pairing as the final public brand system. */
+html body .an-site .an-hero h1,
+html body .an-site .hero-copy h1,
+html body .an-site .home-signal-copy h2,
+html body .an-site .section h2,
+html body .an-site .signal-section h2,
+html body .nf-page .nf-page-hero h1,
+html body .nf-page .nf-section h2,
+html body .nf-page .nf-epk-hero h1 {
+  font-family: var(--ff-display) !important;
+}
+html body .an-site .hero-description,
+html body .nf-page .nf-page-hero p:not(.nf-page-eyebrow) {
+  font-family: var(--ff-ui) !important;
+}
+html body .an-site .home-signal-copy h2 em,
+html body .an-site .section h2 em,
+html body .nf-page .nf-page-hero h1 em,
+html body .nf-page .nf-section h2 em,
+html body .nf-page .nf-epk-hero h1 em {
+  font-family: var(--ff-script) !important;
+  font-style: normal !important;
+}
+
+
+/* Artist signature: keep the accessible hero label intact while giving the visual title a handwritten final word. */
+html body .an-site .hero-title-mask:last-child .hero-title-word {
+  font-family: var(--ff-script) !important;
+  font-size: 1.08em;
+  font-weight: 600;
+  letter-spacing: -.035em;
+  text-transform: none;
 }
