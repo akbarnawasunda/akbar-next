@@ -107,6 +107,10 @@ function HomeMenuOverlay({ open, onClose }: { open: boolean; onClose: () => void
       aria-modal="true"
       aria-label="Navigasi utama"
     >
+      <button className="an-mobile-navigation-close" type="button" onClick={onClose} aria-label="Tutup navigasi">
+        <span aria-hidden="true">×</span>
+        <span aria-hidden="true">CANCEL</span>
+      </button>
       <Link href="/music" onClick={onClose}>
         <span className="menu-link-title">MUSIC</span>
         <span className="menu-link-note">NEW RELEASES</span>
@@ -337,6 +341,7 @@ export default function Home() {
           {mobileNavOpen ? (
             <>
               <span className="an-menu-close-mark" aria-hidden="true">×</span>
+              <span className="an-menu-close-label" aria-hidden="true">CANCEL</span>
               <span className="sr-only">Tutup</span>
             </>
           ) : "MENU"}
