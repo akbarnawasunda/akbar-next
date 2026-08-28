@@ -109,3 +109,20 @@
   font-weight: 700;
   font-display: swap;
 }
+
+
+/* Requested Google Fonts families, downloaded from the official Google Fonts CSS/CDN and self-hosted locally. */
+@font-face {
+  font-family: "Montenegrin Gothic One";
+  src: url("/assets/fonts/requested/montenegrin-gothic-one-400.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fredericka the Great";
+  src: url("/assets/fonts/requested/fredericka-the-great-400.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}

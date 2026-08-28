@@ -9,8 +9,9 @@
   --ff-coral: #ff7182;
   --ff-violet: #8d7bff;
   --ff-sun: #ffd36b;
-  --ff-display: "Satoshi", "Clash Display", "Arial Narrow", system-ui, sans-serif;
+  --ff-display: "Fredericka the Great", "Satoshi", "Clash Display", "Arial Narrow", system-ui, sans-serif;
   --ff-serif: "Boska", Georgia, serif;
+  --ff-brand: "Montenegrin Gothic One", "Satoshi", sans-serif;
   --ff-script: "Caveat Brush", "Segoe Print", cursive;
   --ff-ui: "General Sans", system-ui, sans-serif;
   --ff-mono: "Azeret Mono", ui-monospace, monospace;
@@ -1293,4 +1294,29 @@ html body #root .an-site .game-teaser-section .button-primary {
   html body #root .an-site .home-hero-portrait {
     box-shadow: 12px 12px 0 var(--ff-lime), -9px -9px 0 rgba(184, 215, 242, 0.18) !important;
   }
+}
+
+
+/* Requested final typography direction: Fredericka for titles, Montenegrin Gothic for the artist's brand voice. */
+html body :is(.an-site, .nf-page, .en-content) :is(h1, h2, h3, h4, .hero-title-editorial, .section-heading h2, .home-signal-copy h2, .live-copy h2, .game-teaser-section h2, .nf-page-hero h1, .nf-section h2, .nf-epk-hero h1, .release-detail h3, .release-card h3, .video-content h3, .nf-catalog-card h3, .nf-visual-card h3, .nf-official-media h3, .an-epk-release h3, .en-release-card h3, .en-visual-card h3) {
+  font-family: var(--ff-display) !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.035em;
+}
+html body :is(.an-site, .nf-page, .en-content) :is(.an-wordmark, .nf-wordmark, .footer-brand strong, .nf-brand, .an-nav nav a, .nf-nav nav a, .an-mobile-navigation .menu-link-title, .nf-mobile-menu a, .mobile-signal) {
+  font-family: var(--ff-brand) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.01em;
+}
+html body :is(.an-site, .nf-page, .en-content) :is(.hero-title-mask:last-child .hero-title-word) {
+  font-family: var(--ff-display) !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  letter-spacing: -0.045em;
+}
+html body :is(.an-site, .nf-page, .en-content) :is(h1, h2, h3, h4) em,
+html body :is(.an-site, .nf-page, .en-content) :is(.editorial-emphasis, .editorial-quote) {
+  font-family: var(--ff-display) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
 }
