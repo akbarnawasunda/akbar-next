@@ -51,7 +51,7 @@ export function ArtistJourneySection({
       <SectionIndex number="03" label={locale === "en" ? "ARTIST JOURNEY" : "PERJALANAN ARTIS"} />
       <div className="artist-editorial-heading">
         <div>
-          <p className="nf-page-eyebrow">{locale === "en" ? "ORIGIN / THROUGH-LINE" : "ASAL / GARIS BESAR"}</p>
+          <p className="nf-page-eyebrow">{locale === "en" ? "FROM HERE" : "DARI SINI"}</p>
           <h2>{title}</h2>
         </div>
         <p className="artist-editorial-intro">{intro}</p>
@@ -59,7 +59,7 @@ export function ArtistJourneySection({
       <div className="artist-journey-grid">
         <div className="artist-journey-aside">
           {source.imageUrl ? <div className="artist-journey-image"><ResilientArtworkImage src={source.imageUrl} backupSrc={officialBrand.socialPreview} alt={locale === "en" ? "Artist journey visual" : "Visual perjalanan artistik"} /></div> : <div className="artist-journey-signal" aria-hidden="true"><span /><span /><span /></div>}
-          <p>{locale === "en" ? "A living archive of the sound behind the name." : "Arsip hidup tentang suara di balik nama."}</p>
+          <p>{locale === "en" ? "The story behind the name, one step at a time." : "Cerita di balik nama ini, satu langkah demi satu."}</p>
           <span><MapPin size={13} /> {verifiedArtistProfile.location}</span>
         </div>
         <div className="artist-journey-timeline">
@@ -123,7 +123,7 @@ export function ArtistPhotoStorySection({
             )}
           </h2>
         </div>
-        <p className="artist-editorial-intro">{locale === "en" ? "Portrait studies and visual notes from the world of Akbar Nawasunda." : "Studi potret dan catatan visual dari dunia Akbar Nawasunda."}</p>
+        <p className="artist-editorial-intro">{locale === "en" ? "A few portraits, places, and moments from the road." : "Beberapa potret, tempat, dan momen dari perjalanan."}</p>
       </div>
       {activeStory ? (
         <div

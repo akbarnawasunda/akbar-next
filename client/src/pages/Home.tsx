@@ -432,15 +432,15 @@ export default function Home() {
           id="platforms"
           aria-labelledby="signal-deck-title"
         >
-          <SectionIndex number="01" label="LINKS MUSIK" />
+          <SectionIndex number="01" label="MUSIK" />
           <div className="home-signal-copy">
             <p className="eyebrow">
-              <span /> MUSIK ONLINE
+              <span /> MUSIK AKBAR
             </p>
             <h2 id="signal-deck-title">
               DENGAR
               <br />
-              DI MANA SAJA.
+              KARYANYA.
             </h2>
             <Link className="home-deck-cta" href="/music">
               LIHAT MUSIK <ArrowUpRight size={15} />
@@ -477,13 +477,13 @@ export default function Home() {
           className="section section-current reveal-target"
           id="music"
         >
-          <SectionIndex number="02" label="RILISAN UTAMA" />
+          <SectionIndex number="02" label="RILIS TERBARU" />
           <div className="section-heading">
-            <p className="eyebrow">RILISAN TERBARU</p>
+            <p className="eyebrow">RILIS TERBARU</p>
             <h2>
-              SEDANG
+              RILIS
               <br />
-              DIDENGARKAN.
+              TERBARU.
             </h2>
           </div>
           {contentIsLoading ? (
@@ -543,7 +543,7 @@ export default function Home() {
           ref={releaseSectionRef}
           className="section release-section reveal-target"
         >
-          <SectionIndex number="05" label="KATALOG" />
+          <SectionIndex number="05" label="KUMPULAN RILIS" />
           <div className="section-inline">
             <div>
               <p className="eyebrow">KATALOG RILISAN</p>
@@ -604,13 +604,13 @@ export default function Home() {
           className="section visual-section reveal-target"
           id="visuals"
         >
-          <SectionIndex number="06" label="KARYA VIDEO" />
+          <SectionIndex number="06" label="VIDEO" />
           <div className="section-heading">
             <p className="eyebrow">VISUAL</p>
             <h2>
               VIDEO
               <br />
-              RESMI.
+              & REMIX.
             </h2>
           </div>
           <div className="video-grid">
@@ -647,7 +647,7 @@ export default function Home() {
           className="section live-section reveal-target"
           id="live"
         >
-          <SectionIndex number="07" label="LIVE" />
+          <SectionIndex number="07" label="PANGGUNG" />
           <div
             className="live-backdrop"
             style={{
@@ -715,7 +715,7 @@ export default function Home() {
             id="game"
             aria-labelledby="game-teaser-title"
           >
-            <SectionIndex number="08" label="PLAYABLE SIGNAL" />
+            <SectionIndex number="08" label="GAME" />
             <div className="game-teaser-art" aria-hidden="true">
               <div className="game-teaser-scanline" />
               <span className="game-teaser-sun" />

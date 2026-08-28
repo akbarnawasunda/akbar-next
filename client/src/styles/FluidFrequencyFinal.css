@@ -1756,3 +1756,51 @@ html body #root .an-mobile-navigation .an-mobile-navigation-close:focus-visible 
     min-width: 92px !important;
   }
 }
+
+/* Human-centered polish: a quieter, more authored public surface. */
+html body #root :is(.an-site, .nf-page, .en-content) {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(p, li, dd) {
+  max-width: 68ch;
+  line-height: 1.65;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(.eyebrow, .nf-page-eyebrow, .mono-label, .release-number, .home-platform-number, .live-status span, .live-status small, .footer-kicker) {
+  letter-spacing: .08em !important;
+  font-weight: 500 !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(.eyebrow, .nf-page-eyebrow) {
+  color: var(--ff-logo-highlight) !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(.release-card, .video-card, .home-platform-card, .home-live-event, .nf-catalog-card, .nf-visual-card, .nf-event-card, .nf-universe-card, .nf-press-card, .an-archive-release) {
+  border-radius: 3px !important;
+  transition: transform 180ms cubic-bezier(.23,1,.32,1), background-color 180ms ease, border-color 180ms ease !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(.release-card:hover, .video-card:hover, .home-platform-card:hover, .home-live-event:hover, .nf-catalog-card:hover, .nf-visual-card:hover, .nf-event-card:hover, .nf-universe-card:hover, .nf-press-card:hover, .an-archive-release:hover) {
+  transform: translateY(-3px) !important;
+}
+html body #root .an-site :is(.button-primary, .button-quiet, .text-link, .home-deck-cta, .hero-signal-link),
+html body #root .nf-page :is(.nf-button, .nf-text-button) {
+  letter-spacing: .07em !important;
+}
+html body #root .an-site :is(.hero-description, .section-current .release-detail > p, .live-copy > p, .artist-editorial-intro),
+html body #root .nf-page :is(.nf-page-hero > p, .nf-section > p, .en-copy-block > p) {
+  color: color-mix(in srgb, var(--ff-paper) 76%, transparent) !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(.home-hero-atmosphere, .hero-grain, .home-hero-orbit, .cover-orbit, .an-about-motion) {
+  opacity: .34 !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  html body #root :is(.an-site, .nf-page, .en-content) :is(.release-card, .video-card, .home-platform-card, .home-live-event, .nf-catalog-card, .nf-visual-card, .nf-event-card, .nf-universe-card, .nf-press-card, .an-archive-release) {
+    transition: none !important;
+  }
+}
+
+/* Replace internal-sounding captions with plain, authored context. */
+html body #root .an-site .an-hero::before {
+  content: "AKBAR NAWASUNDA / MUSIK DAN VISUAL" !important;
+}
+html body #root .an-site .home-signal-deck::after {
+  content: "MUSIK / VISUAL / PANGGUNG" !important;
+}
