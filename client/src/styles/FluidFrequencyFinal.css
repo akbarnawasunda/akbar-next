@@ -1603,3 +1603,66 @@ html body #root .an-site .home-hero-portrait::before {
     letter-spacing: 0.1em !important;
   }
 }
+
+
+/* Requested all-font system: Nippo / Press Start 2P / Newsreader / Caveat / Inknut Antiqua. */
+:root {
+  --ff-display: "Newsreader Variable", Georgia, serif !important;
+  --ff-serif: "Inknut Antiqua", Georgia, serif !important;
+  --ff-brand: "Nippo", system-ui, sans-serif !important;
+  --ff-script: "Caveat Variable", cursive !important;
+  --ff-ui: "Nippo", system-ui, sans-serif !important;
+  --ff-mono: "Press Start 2P", ui-monospace, monospace !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) {
+  font-family: "Nippo", system-ui, sans-serif !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(h1, h2, h3, h4, .hero-title-editorial, .section-heading h2, .home-signal-copy h2, .live-copy h2, .game-teaser-section h2, .nf-page-hero h1, .nf-section h2, .nf-epk-hero h1, .release-detail h3, .release-card h3, .video-content h3, .nf-catalog-card h3, .nf-visual-card h3, .nf-official-media h3, .an-epk-release h3, .en-release-card h3, .en-visual-card h3) {
+  font-family: "Newsreader Variable", Georgia, serif !important;
+  font-weight: 500 !important;
+  font-style: normal !important;
+  letter-spacing: -0.045em !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(.an-wordmark, .nf-wordmark, .footer-brand strong, .nf-brand, .an-nav nav a, .nf-nav nav a, .an-mobile-navigation .menu-link-title, .nf-mobile-menu a, .mobile-signal, .button-primary, .nf-button) {
+  font-family: "Nippo", system-ui, sans-serif !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.015em !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(.hero-copy p, .section-intro, .section-copy, .nf-page-hero > p, .nf-section > p, .nf-hero-note, .en-copy-block > p, .en-section-intro > p) {
+  font-family: "Inknut Antiqua", Georgia, serif !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.012em !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(h1 em, h2 em, h3 em, .editorial-emphasis, .editorial-quote, .an-story-label, .an-genre-row span) {
+  font-family: "Caveat Variable", cursive !important;
+  font-weight: 600 !important;
+  font-style: normal !important;
+  letter-spacing: 0 !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(.eyebrow, .hero-scroll-cue, .home-platform-number, .release-number, .release-card .release-meta, .video-content span, .live-status span, .live-status small, .nf-page-eyebrow, .nf-visual-card span, .nf-catalog-card .index, .nf-live-card span, .an-event-card span, .an-press-pack span, .footer-kicker, label) {
+  font-family: "Press Start 2P", ui-monospace, monospace !important;
+  font-size: 7px !important;
+  line-height: 1.55 !important;
+  letter-spacing: 0.04em !important;
+  font-weight: 400 !important;
+}
+html body #root .an-site .home-hero-portrait::before {
+  font-family: "Press Start 2P", ui-monospace, monospace !important;
+  font-size: 6px !important;
+  line-height: 1.5 !important;
+  letter-spacing: 0.02em !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(.hero-title-mask:last-child .hero-title-word) {
+  font-family: "Newsreader Variable", Georgia, serif !important;
+  font-weight: 500 !important;
+  font-style: italic !important;
+}
+@media (max-width: 640px) {
+  html body #root :is(.an-site, .nf-page, .en-content) :is(h1, h2, h3, h4, .hero-title-editorial, .section-heading h2, .home-signal-copy h2, .live-copy h2, .game-teaser-section h2, .nf-page-hero h1, .nf-section h2, .nf-epk-hero h1, .release-detail h3, .release-card h3, .video-content h3, .nf-catalog-card h3, .nf-visual-card h3, .nf-official-media h3, .an-epk-release h3, .en-release-card h3, .en-visual-card h3) {
+    letter-spacing: -0.035em !important;
+  }
+  html body #root :is(.an-site, .nf-page, .en-content) :is(.eyebrow, .hero-scroll-cue, .home-platform-number, .release-number, .release-card .release-meta, .video-content span, .live-status span, .live-status small, .nf-page-eyebrow, .nf-visual-card span, .nf-catalog-card .index, .nf-live-card span, .an-event-card span, .an-press-pack span, .footer-kicker, label) {
+    font-size: 6px !important;
+    line-height: 1.45 !important;
+  }
+}

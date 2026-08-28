@@ -126,3 +126,118 @@
   font-weight: 400;
   font-display: swap;
 }
+
+
+/* New requested type system: all files are self-hosted under /assets/fonts/newtype. */
+@font-face {
+  font-family: "Nippo";
+  src: url("/assets/fonts/newtype/nippo-200.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Nippo";
+  src: url("/assets/fonts/newtype/nippo-300.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Nippo";
+  src: url("/assets/fonts/newtype/nippo-400.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Nippo";
+  src: url("/assets/fonts/newtype/nippo-500.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Nippo";
+  src: url("/assets/fonts/newtype/nippo-600.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader Variable";
+  src: url("/assets/fonts/newtype/newsreader-variable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader Variable";
+  src: url("/assets/fonts/newtype/newsreader-variable-italic.woff2") format("woff2");
+  font-style: italic;
+  font-weight: 200 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Caveat Variable";
+  src: url("/assets/fonts/newtype/caveat-variable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("/assets/fonts/newtype/press-start-2p-400.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inknut Antiqua";
+  src: url("/assets/fonts/newtype/inknut-antiqua-300.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inknut Antiqua";
+  src: url("/assets/fonts/newtype/inknut-antiqua-400.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inknut Antiqua";
+  src: url("/assets/fonts/newtype/inknut-antiqua-500.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inknut Antiqua";
+  src: url("/assets/fonts/newtype/inknut-antiqua-600.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inknut Antiqua";
+  src: url("/assets/fonts/newtype/inknut-antiqua-700.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inknut Antiqua";
+  src: url("/assets/fonts/newtype/inknut-antiqua-800.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inknut Antiqua";
+  src: url("/assets/fonts/newtype/inknut-antiqua-900.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+}
