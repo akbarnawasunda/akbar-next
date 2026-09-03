@@ -35,7 +35,7 @@ describe("homepage platform cards and portrait exposure", () => {
     expect(home).toContain("src={portraitSrc}");
     expect(home).toContain("setPortraitSrc(officialBrand.portraitFallback)");
     expect(brand).toContain(
-      'portraitFallback: "/assets/akbar-official-portrait-optimized.webp"'
+      'portraitFallback: "/assets/akbar-nawasunda-official-portrait.jpg"'
     );
     expect(css).toContain("brightness(1.2)");
     expect(css).toMatch(/text-shadow:\s*0 3px 26px rgba\(0, 0, 0, 0\.76\)/);
