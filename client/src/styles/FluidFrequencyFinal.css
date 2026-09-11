@@ -2017,3 +2017,236 @@ html body .nf-page .an-official-media-actions > * {
     flex: 1 1 150px;
   }
 }
+
+/*
+ * Editorial human theme v3
+ * Direction: quiet blue, warm paper, restrained type hierarchy.
+ * Boska carries the authored headlines; General Sans keeps the interface
+ * readable; Azeret Mono is reserved for small technical metadata.
+ */
+:root {
+  --ff-display: "Boska", "Newsreader Variable", Georgia, serif !important;
+  --ff-serif: "Boska", "Newsreader Variable", Georgia, serif !important;
+  --ff-brand: "General Sans", "Nippo", system-ui, sans-serif !important;
+  --ff-ui: "General Sans", "Nippo", system-ui, sans-serif !important;
+  --ff-body: "General Sans", "Nippo", system-ui, sans-serif !important;
+  --ff-mono: "Azeret Mono", ui-monospace, monospace !important;
+  --ff-script: "Caveat Variable", cursive !important;
+
+  --ff-night: #071522 !important;
+  --ff-night-2: #0c2235 !important;
+  --ff-night-3: #12324a !important;
+  --ff-paper: #f2eee7 !important;
+  --ff-lime: #739bb8 !important;
+  --ff-cyan: #9db7c9 !important;
+  --ff-coral: #315878 !important;
+  --ff-violet: #496d89 !important;
+  --ff-sun: #adc1cf !important;
+
+  --ff-logo-deep: #071522 !important;
+  --ff-logo-highlight: #9db7c9 !important;
+  --ff-logo-ink: #071522 !important;
+  --noir-00: #050e17 !important;
+  --noir-01: #091a2a !important;
+  --noir-02: #0e2940 !important;
+  --noir-03: #173a54 !important;
+  --noir-violet: #739bb8 !important;
+  --noir-mint: #9db7c9 !important;
+  --noir-flare: #5f86a3 !important;
+  --noir-bone: #f2eee7 !important;
+  --noir-ash: #aebdca !important;
+}
+
+html,
+body {
+  background: var(--ff-night) !important;
+  color: var(--ff-paper) !important;
+}
+
+html body #root :is(.an-site, .nf-page, .en-content) {
+  background-color: var(--ff-night) !important;
+  color: var(--ff-paper) !important;
+  font-family: var(--ff-body) !important;
+  font-weight: 400 !important;
+}
+
+html body #root :is(.an-site, .nf-page, .en-content) :is(
+  h1, h2, h3, h4, h5, h6,
+  .hero-title-editorial, .section-heading h2,
+  .home-signal-copy h2, .live-copy h2, .game-teaser-section h2,
+  .nf-page-hero h1, .nf-section h2, .nf-epk-hero h1,
+  .release-detail h3, .release-card h3, .video-content h3,
+  .nf-catalog-card h3, .nf-visual-card h3, .nf-official-media h3,
+  .an-epk-release h3, .en-release-card h3, .en-visual-card h3,
+  .an-story-copy h2, .an-profile-copy h2, .an-about-title,
+  .an-press-intro h2, .an-booking-grid h2, .an-event-section h2
+) {
+  font-family: var(--ff-display) !important;
+  font-weight: 500 !important;
+  font-style: normal !important;
+  letter-spacing: -0.035em !important;
+  text-wrap: balance;
+}
+
+html body #root :is(.an-site, .nf-page, .en-content) :is(
+  p, li, dd, dt, blockquote, input, textarea, select, button,
+  .hero-description, .hero-copy p, .section-intro, .section-copy,
+  .nf-page-hero > p, .nf-section > p, .nf-hero-note,
+  .en-copy-block > p, .en-section-intro > p, .an-story-copy p,
+  .an-profile-copy p, .an-event-card p, .an-press-pack p
+) {
+  font-family: var(--ff-body) !important;
+}
+
+html body #root :is(.an-site, .nf-page, .en-content) :is(
+  .an-wordmark, .nf-wordmark, .footer-brand strong, .nf-brand,
+  .an-nav nav a, .nf-nav nav a, .an-mobile-navigation .menu-link-title,
+  .nf-mobile-menu a, .mobile-signal, .button-primary, .nf-button,
+  .button-quiet, .hero-signal-link, .text-link, .home-deck-cta,
+  .release-detail-actions a
+) {
+  font-family: var(--ff-brand) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.045em !important;
+}
+
+html body #root :is(.an-site, .nf-page, .en-content) :is(
+  .eyebrow, .hero-scroll-cue, .home-platform-number, .release-number,
+  .release-card .release-meta, .video-content span, .live-status span,
+  .live-status small, .nf-page-eyebrow, .nf-visual-card span,
+  .nf-catalog-card .index, .nf-live-card span, .an-event-card span,
+  .an-press-pack span, .footer-kicker, label, .mono-label
+) {
+  font-family: var(--ff-mono) !important;
+  font-size: 9px !important;
+  line-height: 1.5 !important;
+  letter-spacing: 0.08em !important;
+  font-weight: 500 !important;
+}
+
+/* Replace the old multi-accent surfaces with one quiet blue family. */
+html body #root .an-site,
+html body #root .nf-page,
+html body #root .en-content {
+  --route-accent: var(--ff-lime) !important;
+  --route-accent-rgb: 115, 155, 184 !important;
+}
+
+html body #root .an-site :is(.an-hero, .home-hero),
+html body #root .nf-page :is(.nf-page-hero, .nf-epk-hero) {
+  background:
+    linear-gradient(90deg, rgba(5, 14, 23, .98), rgba(7, 21, 34, .86) 52%, rgba(7, 21, 34, .32) 90%),
+    var(--ff-hero-art) center / cover no-repeat !important;
+}
+
+html body #root .an-site :is(.home-signal-deck, .release-section, .visual-section, .live-section, .game-teaser-section),
+html body #root .nf-page :is(.nf-section, .nf-platform-hub, .nf-section.dark-panel) {
+  background: var(--ff-night-2) !important;
+  color: var(--ff-paper) !important;
+  border-color: rgba(242, 238, 231, .16) !important;
+}
+
+html body #root .an-site :is(.section-current, .signal-section),
+html body #root .nf-page .nf-signal-block {
+  background: var(--ff-paper) !important;
+  color: var(--ff-night) !important;
+}
+
+html body #root .an-site :is(.home-platform-card, .release-card, .video-card, .live-card),
+html body #root .nf-page :is(.nf-platform-grid a, .nf-catalog-card, .nf-visual-card, .nf-universe-card, .nf-live-card) {
+  background: var(--ff-night-3) !important;
+  border-color: rgba(242, 238, 231, .18) !important;
+  color: var(--ff-paper) !important;
+  box-shadow: none !important;
+}
+
+html body #root .an-site :is(.home-platform-card:hover, .home-platform-card:focus-visible, .release-card:hover, .release-card:focus-visible, .video-card:hover, .video-card:focus-visible),
+html body #root .nf-page :is(.nf-platform-grid a:hover, .nf-platform-grid a:focus-visible, .nf-catalog-card:hover, .nf-catalog-card:focus-visible) {
+  background: #1b4562 !important;
+  border-color: var(--ff-cyan) !important;
+  color: var(--ff-paper) !important;
+}
+
+html body #root .an-site :is(.button-primary, .signal-input button),
+html body #root .nf-page :is(.nf-button, .nf-signal-form button) {
+  background: var(--ff-cyan) !important;
+  border-color: var(--ff-cyan) !important;
+  color: var(--ff-night) !important;
+  box-shadow: 4px 4px 0 rgba(7, 21, 34, .48) !important;
+  font-family: var(--ff-brand) !important;
+}
+
+html body #root .an-site :is(.button-primary:hover, .button-primary:focus-visible, .signal-input button:hover),
+html body #root .nf-page :is(.nf-button:hover, .nf-button:focus-visible, .nf-signal-form button:hover) {
+  background: var(--ff-paper) !important;
+  border-color: var(--ff-paper) !important;
+  color: var(--ff-night) !important;
+}
+
+html body #root .an-site :is(.an-menu-toggle, .an-mobile-navigation-close),
+html body #root .nf-page .nf-menu-toggle {
+  border-color: var(--ff-cyan) !important;
+  color: var(--ff-cyan) !important;
+  background: transparent !important;
+}
+
+html body #root .an-site :is(.an-menu-toggle:hover, .an-menu-toggle:focus-visible, .an-mobile-navigation-close:hover, .an-mobile-navigation-close:focus-visible),
+html body #root .nf-page :is(.nf-menu-toggle:hover, .nf-menu-toggle:focus-visible) {
+  background: var(--ff-cyan) !important;
+  color: var(--ff-night) !important;
+}
+
+html body #root :is(.an-site, .nf-page, .en-content) :is(.nf-page-eyebrow, .eyebrow, .home-platform-number, .release-number, .live-status span, .live-status small, .an-event-card span, .an-press-pack span) {
+  color: var(--ff-cyan) !important;
+}
+
+html body #root .an-site .home-hero-portrait {
+  border-color: rgba(242, 238, 231, .46) !important;
+  box-shadow: 15px 15px 0 rgba(49, 88, 120, .82), -8px -8px 0 rgba(157, 183, 201, .2) !important;
+}
+
+html body #root .an-site .an-mobile-navigation {
+  background: var(--ff-logo-deep) !important;
+}
+
+@media (max-width: 640px) {
+  html body #root :is(.an-site, .nf-page, .en-content) :is(h1, h2, h3, h4, h5, h6) {
+    letter-spacing: -0.025em !important;
+  }
+  html body #root :is(.an-site, .nf-page, .en-content) :is(.eyebrow, .hero-scroll-cue, .nf-page-eyebrow, label, .mono-label) {
+    font-size: 8px !important;
+  }
+}
+
+
+/* Final editorial correction: emphasis remains in the display face, not a playful script. */
+html body #root :is(.an-site, .nf-page, .en-content) :is(h1 em, h2 em, h3 em, h4 em, .editorial-emphasis, .editorial-quote, .hero-title-word:last-child, .an-story-label) {
+  font-family: var(--ff-display) !important;
+  font-style: italic !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.035em !important;
+}
+
+/* Keep structural rules, but remove the old loud multi-colour signal. */
+html body #root :is(.an-site, .nf-page, .en-content) :is(
+  .eyebrow > span, .hero-scroll-cue::before, .nf-page-eyebrow::before,
+  .section-heading::before, .nf-section-title::before, .an-section-rule,
+  .nf-page-hero::after, .nf-section::after
+) {
+  background: var(--ff-cyan) !important;
+  border-color: var(--ff-cyan) !important;
+}
+html body #root :is(.an-site, .nf-page, .en-content) :is(
+  .home-platform-card, .release-card, .video-card, .nf-catalog-card,
+  .nf-visual-card, .nf-live-card, .nf-universe-card, .nf-platform-grid a
+) {
+  border-radius: 2px !important;
+}
+
+@media (max-width: 640px) {
+  html body #root :is(.an-site, .nf-page, .en-content) :is(h1 em, h2 em, h3 em, .editorial-emphasis, .hero-title-word:last-child) {
+    letter-spacing: -0.025em !important;
+  }
+}
+
+/* End of active theme layer. */
