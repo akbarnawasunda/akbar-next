@@ -2250,3 +2250,68 @@ html body #root :is(.an-site, .nf-page, .en-content) :is(
 }
 
 /* End of active theme layer. */
+
+
+/* Booking conversion block: give the new inquiry cards their own readable layout. */
+html body #root .nf-page .an-booking-grid {
+  align-items: start !important;
+  color: var(--ff-paper) !important;
+}
+html body #root .nf-page .an-booking-grid > div:first-child p {
+  max-width: 48ch !important;
+  color: rgba(242, 238, 231, .72) !important;
+  line-height: 1.65 !important;
+}
+html body #root .nf-page .an-booking-options {
+  display: grid !important;
+  gap: 10px !important;
+  width: 100% !important;
+  align-self: start !important;
+}
+html body #root .nf-page .an-booking-option {
+  display: grid !important;
+  grid-template-columns: 34px minmax(0, 1fr) auto !important;
+  gap: 10px 14px !important;
+  align-items: start !important;
+  padding: 18px !important;
+  border: 1px solid rgba(242, 238, 231, .18) !important;
+  background: var(--ff-night-3) !important;
+  color: var(--ff-paper) !important;
+  text-decoration: none !important;
+}
+html body #root .nf-page .an-booking-option > span {
+  color: var(--ff-cyan) !important;
+  font-family: var(--ff-mono) !important;
+  font-size: 9px !important;
+  line-height: 1.4 !important;
+}
+html body #root .nf-page .an-booking-option > strong {
+  min-width: 0 !important;
+  color: var(--ff-paper) !important;
+  font-family: var(--ff-brand) !important;
+  font-size: 13px !important;
+  line-height: 1.2 !important;
+  letter-spacing: .06em !important;
+}
+html body #root .nf-page .an-booking-option > svg {
+  color: var(--ff-cyan) !important;
+}
+html body #root .nf-page .an-booking-option > small {
+  grid-column: 2 / -1 !important;
+  max-width: 42ch !important;
+  color: rgba(242, 238, 231, .68) !important;
+  font-family: var(--ff-body) !important;
+  font-size: 13px !important;
+  line-height: 1.5 !important;
+}
+html body #root .nf-page .an-booking-option:hover,
+html body #root .nf-page .an-booking-option:focus-visible {
+  background: #1b4562 !important;
+  border-color: var(--ff-cyan) !important;
+  outline: none !important;
+}
+@media (max-width: 720px) {
+  html body #root .nf-page .an-booking-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

@@ -9,8 +9,8 @@ describe("public identity consistency", () => {
     const profile = source("client/src/content/artistPlatform.ts");
     const home = source("client/src/pages/Home.tsx");
     const english = source("client/src/pages/EnglishPages.tsx");
-    expect(profile).toContain("Produser, remixer, dan DJ asal Bandung Barat.");
-    expect(home).toContain("Produser, remixer, dan DJ asal Bandung Barat.");
+    expect(profile).toContain("Produser musik, remixer, dan DJ dari Bandung Barat.");
+    expect(home).toContain("Produser musik, remixer, dan DJ dari Bandung Barat.");
     expect(english).toContain("Music producer, remixer, and DJ from Bandung Barat.");
   });
 

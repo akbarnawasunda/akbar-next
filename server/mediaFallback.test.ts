@@ -38,6 +38,6 @@ describe("official media fallback and online EPK", () => {
     expect(epkStyles).toContain(".nf-page .an-epk-contact-panel");
     expect(epkStyles).toContain("background: #d8ff65 !important");
     expect(epkStyles).toContain("color: #141412 !important");
-    expect(live).toContain("BELUM ADA SHOW TERKONFIRMASI.");
+    expect(live).toContain("BOOKING / LIVE");
   });
 });

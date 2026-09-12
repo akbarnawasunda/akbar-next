@@ -292,13 +292,13 @@ export default function Home() {
   const heroBody =
     cmsHero?.heroBody ||
     managedHero?.subtitle ||
-    "Produser, remixer, dan DJ asal Bandung Barat.";
+    "Produser musik, remixer, dan DJ dari Bandung Barat. Breakbeat, electronic bass, dan remix untuk rilisan serta kolaborasi.";
   const heroActionUrl =
     cmsHero?.primaryActionUrl || managedHero?.href || activeRelease.href;
   const heroActionIsVisual = /youtube\.com|youtu\.be/i.test(heroActionUrl);
   const heroActionLabel =
     cmsHero?.primaryActionLabel ||
-    (heroActionIsVisual ? "TONTON VISUAL" : "DENGAR SEKARANG");
+    (heroActionIsVisual ? "TONTON VISUAL" : "DENGARKAN KARYA");
   const activeVideos = managedVideos.length
     ? managedVideos.map(item => ({
         title: item.title,
@@ -399,14 +399,11 @@ export default function Home() {
                 rel="noreferrer"
               >
                 <Play size={15} fill="currentColor" />
-                <span className="signal-label" aria-hidden="true">
-                  <span>{heroActionLabel}</span>
-                  <span>{heroActionLabel}</span>
-                </span>
+                <span className="signal-label">{heroActionLabel}</span>
                 <span className="sr-only">{heroActionLabel}</span>
               </a>
               <Link className="button-quiet" href="/visuals">
-                LIHAT VISUALS <ArrowUpRight size={16} />
+                LIHAT VISUAL <ArrowUpRight size={16} />
               </Link>
               <a className="hero-signal-link" href="#signal">
                 KABAR TERBARU <ArrowDownRight size={14} />
