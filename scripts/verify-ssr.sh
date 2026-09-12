@@ -293,7 +293,7 @@ check "/"                                      "MUSIK AKBAR"                    
 check "/music"                                "RILISAN TERBARU"                  "Music by Akbar Nawasunda" state,ogimage
 check "/about"                                "PERJALANAN"                      "About the Artist | Akbar Nawasunda" state,ogimage
 check "/visuals"                              "PILIHAN VIDEO"                   "Videos by Akbar Nawasunda" state,ogimage
-check "/live"                                 "JADWAL / MENUNGGU"               "Live Dates | Akbar Nawasunda" state,ogimage
+check "/live"                                 "BOOKING / LIVE"                  "Live Dates | Akbar Nawasunda" state,ogimage
 check "/universe"                             "PERJALANAN"                      "About the Work | Akbar Nawasunda" state,ogimage
 check "/inquire?type=licensing&source=release" "KIRIM INQUIRY"                  "Inquire | Akbar Nawasunda" state,ogimage
 check "/en"                                   "OFFICIAL PLATFORMS"              "Akbar Nawasunda | Official Website" state,ogimage
