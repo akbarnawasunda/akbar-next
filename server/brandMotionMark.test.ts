@@ -15,17 +15,17 @@ describe("lightweight RMX brand mark", () => {
     expect(vercel).toContain('"source": "/api/brand/rmx-mark"');
   });
 
-  it("renders a static lazy image instead of a public canvas animation", () => {
+  it("renders a static inline SVG instead of a public canvas animation", () => {
     const component = source("client/src/components/BrandMotionMark.tsx");
     const css = source("client/src/components/BrandMotionMark.css");
     expect(component).toContain("an-rmx-static-mark");
-    expect(component).toContain('loading="lazy"');
-    expect(component).toContain('decoding="async"');
-    expect(component).toContain("FALLBACK_RMX_MARK");
+    expect(component).toContain("<svg");
+    expect(component).toContain("an-rmx-monogram");
     expect(component).not.toContain("canvas");
     expect(component).not.toContain("requestAnimationFrame");
     expect(component).not.toContain("particleCap");
     expect(css).toContain(".an-rmx-static-mark");
+    expect(css).toContain(".an-rmx-monogram");
     expect(css).not.toContain("backdrop-filter");
     expect(css).not.toContain("filter:");
   });

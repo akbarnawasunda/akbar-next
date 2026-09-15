@@ -1,39 +1,65 @@
 .an-site .an-hero .an-rmx-static-mark {
   position: absolute !important;
   z-index: 2;
-  top: clamp(86px, 11vh, 132px) !important;
-  right: clamp(-64px, -2vw, -22px) !important;
+  top: 44% !important;
+  right: clamp(34px, 7vw, 116px) !important;
   bottom: auto !important;
   left: auto !important;
   display: grid;
   place-items: center;
-  width: min(49vw, 720px) !important;
+  width: clamp(150px, 15vw, 230px) !important;
   aspect-ratio: 1;
   overflow: visible;
-  opacity: 0.98 !important;
+  opacity: 0.82 !important;
   pointer-events: none;
 }
 
-.an-site .an-hero .an-rmx-static-mark img {
+.an-rmx-monogram {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  opacity: 0.92;
+  overflow: visible;
+}
+
+.an-rmx-monogram-ring {
+  fill: none;
+  stroke: rgba(126, 187, 220, 0.48);
+  stroke-width: 1;
+  stroke-dasharray: 2 8;
+}
+
+.an-rmx-monogram-line {
+  fill: none;
+  stroke: #d7e8f4;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-width: 7;
+}
+
+.an-rmx-monogram-accent {
+  stroke: #6ca9d5;
+  stroke-width: 4;
+}
+
+.an-rmx-monogram text {
+  fill: rgba(215, 232, 244, 0.82);
+  font: 600 8px/1 "IBM Plex Mono", monospace;
+  letter-spacing: 0.2em;
 }
 
 @media (max-width: 820px) {
   .an-site .an-hero .an-rmx-static-mark {
     top: auto !important;
-    right: -8vw !important;
-    bottom: -132px !important;
-    width: 112vw !important;
-    opacity: 0.82 !important;
+    right: 8vw !important;
+    bottom: 12px !important;
+    width: 132px !important;
+    opacity: 0.7 !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .an-site .an-hero .an-rmx-static-mark img {
+  .an-rmx-monogram,
+  .an-rmx-monogram * {
     transition: none;
   }
 }

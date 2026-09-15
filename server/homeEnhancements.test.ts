@@ -26,13 +26,12 @@ describe("homepage enhancement contract", () => {
     expect(performance).toContain("largest-contentful-paint");
   });
 
-  it("keeps the RMX public mark static and lazy-loaded", () => {
+  it("keeps the RMX public mark static and lightweight", () => {
     const component = source("client/src/components/BrandMotionMark.tsx");
 
     expect(component).toContain("an-rmx-static-mark");
-    expect(component).toContain('loading="lazy"');
-    expect(component).toContain('decoding="async"');
-    expect(component).toContain("FALLBACK_RMX_MARK");
+    expect(component).toContain("<svg");
+    expect(component).toContain("an-rmx-monogram");
     expect(component).not.toContain("canvas");
     expect(component).not.toContain("requestAnimationFrame");
   });
