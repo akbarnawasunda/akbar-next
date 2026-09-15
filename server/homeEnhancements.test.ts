@@ -26,23 +26,21 @@ describe("homepage enhancement contract", () => {
     expect(performance).toContain("largest-contentful-paint");
   });
 
-  it("pauses the RMX animation loop when its canvas leaves the viewport", () => {
+  it("keeps the RMX public mark static and lazy-loaded", () => {
     const component = source("client/src/components/BrandMotionMark.tsx");
 
-    expect(component).toContain("visibleRef");
-    expect(component).toContain("new IntersectionObserver");
-    expect(component).toContain("cancelAnimationFrame");
+    expect(component).toContain("an-rmx-static-mark");
+    expect(component).toContain('loading="lazy"');
+    expect(component).toContain('decoding="async"');
     expect(component).toContain("FALLBACK_RMX_MARK");
-    expect(component).toContain('"#d8ff65"');
-    expect(component).toContain("drawIdle");
-    expect(component).toContain("idleActive ? drawIdle : draw");
+    expect(component).not.toContain("canvas");
+    expect(component).not.toContain("requestAnimationFrame");
   });
 
   it("wires route transition, touch swipe, and richer particle rendering", () => {
     const app = source("client/src/App.tsx");
     const home = source("client/src/pages/Home.tsx");
     const motion = source("client/src/pages/HomeMotionRefinement.css");
-    const particle = source("client/src/components/BrandMotionMark.tsx");
 
     expect(app).toContain("useLocation");
     expect(app).toContain("RouteMotion");
@@ -52,10 +50,9 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain('import "./HomeMotionRefinement.css";');
     expect(motion).toContain("scroll-snap-type: x mandatory");
     expect(motion).toContain("touch-action: pan-x pan-y");
-    expect(particle).toContain('"#9c7cff"');
-    expect(particle).toContain("imageSmoothingEnabled = false");
-    expect(particle).toContain("idleTime * 0.62");
-    expect(particle).toContain("drawIrisReactor");
+    expect(source("client/src/components/BrandMotionMark.tsx")).not.toContain(
+      "requestAnimationFrame"
+    );
     expect(home).toContain('className="hero-title-editorial"');
     expect(home).toContain('data-no-scramble="true"');
     expect(home).toContain("hero-title-mask");
