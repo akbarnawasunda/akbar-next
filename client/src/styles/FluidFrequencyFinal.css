@@ -2315,3 +2315,32 @@ html body #root .nf-page .an-booking-option:focus-visible {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* Monospace editorial pass: one calm, human voice across the public site. */
+html body #root :is(.an-site, .nf-page, .en-content),
+html body #root :is(.an-site, .nf-page, .en-content) :is(*, *::before, *::after) {
+  font-family: var(--ff-mono) !important;
+}
+
+html body #root :is(.an-site, .nf-page, .en-content) :is(
+  h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, select, label,
+  small, strong, em, span, li, dt, dd, blockquote, figcaption
+) {
+  font-family: var(--ff-mono) !important;
+}
+
+html body #root :is(.an-site, .nf-page, .en-content) :is(h1, h2, h3, h4, h5, h6) {
+  font-style: normal !important;
+  font-synthesis: none;
+  letter-spacing: -0.055em;
+}
+
+html body #root :is(.an-site, .nf-page, .en-content) :is(em, .editorial-emphasis, .editorial-quote) {
+  font-style: italic !important;
+  letter-spacing: -0.035em;
+}
+
+html body #root :is(.an-site, .nf-page, .en-content) :is(input, textarea, select, button) {
+  font-family: var(--ff-mono) !important;
+}
