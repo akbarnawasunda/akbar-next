@@ -2344,3 +2344,28 @@ html body #root :is(.an-site, .nf-page, .en-content) :is(em, .editorial-emphasis
 html body #root :is(.an-site, .nf-page, .en-content) :is(input, textarea, select, button) {
   font-family: var(--ff-mono) !important;
 }
+
+
+/* Final title lock: legacy display selectors must not reintroduce serif or script faces. */
+html body #root :is(.an-site, .nf-page, .en-content) :is(
+  h1, h2, h3, h4, h5, h6,
+  .hero-title-editorial, .hero-title-mask, .hero-title-word,
+  .section-title, .section-title h2, .section-heading, .section-heading h2,
+  .section-inline h2, .release-detail h3, .release-card h3,
+  .feature-release h2, .feature-release h3, .an-release-copy h2,
+  .an-release-missing h1, .nf-page-hero h1, .nf-section-title,
+  .an-wordmark, .nf-wordmark, .footer-brand strong, .home-signal-copy h2,
+  .an-story-label, .editorial-emphasis, .editorial-quote
+) {
+  font-family: "Azeret Mono", ui-monospace, monospace !important;
+  font-synthesis: none !important;
+}
+
+html body #root :is(.an-site, .nf-page, .en-content) :is(
+  .hero-title-word, .hero-title-editorial, .section-title h2,
+  .section-heading h2, .section-inline h2, .release-card h3,
+  .release-detail h3, .feature-release h2, .feature-release h3,
+  .an-release-copy h2, .an-release-missing h1, .nf-page-hero h1
+) {
+  font-style: normal !important;
+}
