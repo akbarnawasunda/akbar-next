@@ -122,9 +122,9 @@ import "./components/HumanEditorialSystem.css";
 import "./components/SafeMotion.css";
 import "./components/EditorialTypography.css";
 import "./components/SafeScrollMotion.css";
+import "./styles/FontshareFonts.css";
 import "./styles/SignalHouseRedesign.css";
 import "./styles/FluidFrequencyFinal.css";
-import "./styles/FontshareFonts.css";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
