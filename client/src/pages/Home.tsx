@@ -26,7 +26,6 @@ import { TiltCard } from "@/components/TiltCard";
 import HomeAmbientCanvas from "@/components/HomeAmbientCanvas";
 import {
   currentRelease,
-  formatPublicIndex,
   officialBrand,
   releases,
   videos,
@@ -446,7 +445,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="home-platform-rack">
-            {editablePlatformLinks.map((platform, index) => (
+            {editablePlatformLinks.map(platform => (
               <a
                 className={`home-platform-card platform-${platform.label.toLowerCase().replace(/\s+/g, "-")}`}
                 key={platform.label}
@@ -455,7 +454,6 @@ export default function Home() {
                 rel="noreferrer"
                 aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
               >
-                <span className="home-platform-number">{formatPublicIndex(index)}</span>
                 <span className="home-platform-icon-shell">
                   <PlatformIcon label={platform.label} />
                 </span>
@@ -565,7 +563,7 @@ export default function Home() {
           <div className="release-grid" data-scroll-horizontal-track="true" aria-busy={contentIsLoading}>
             {contentIsLoading
               ? [1, 2, 3, 4].map(index => <SkeletonCard key={index} />)
-              : displayReleases.map((release, index) => (
+              : displayReleases.map(release => (
                   <TiltCard
                     key={release.title}
                     className="release-card"
@@ -582,7 +580,6 @@ export default function Home() {
                         />
                       </div>
                     )}
-                    <span className="release-number">{formatPublicIndex(index)}</span>
                     <PlatformIcon label={release.platform} />
                     <p>
                       {release.format} · {release.year}
