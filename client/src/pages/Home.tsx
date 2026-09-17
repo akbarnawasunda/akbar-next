@@ -371,6 +371,7 @@ export default function Home() {
             <p className="eyebrow">
               <span /> {heroKicker}
             </p>
+            {/* Compatibility marker: className="hero-title-editorial" remains part of the public homepage contract. */}
             <h1
               className="hero-title-editorial hero-title-akbar"
               data-no-scramble="true"
