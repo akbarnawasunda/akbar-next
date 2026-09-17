@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 
+type Particle = { x: number; y: number; vx: number; vy: number; radius: number; phase: number; opacity: number; target: { x: number; y: number } };
+
 export default function HomeWordmarkParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -31,9 +33,9 @@ export default function HomeWordmarkParticles() {
         if (pixels[(y * width + x) * 4 + 3] > 120) targets.push({ x, y });
       }
     }
-    const particles = targets.map((target, index) => ({
-      x: Math.random() * width, y: Math.random() * height,
-      vx: 0, vy: 0, target, phase: index * 0.37,
+    const particles: Particle[] = targets.map((target, index) => ({
+      x: Math.random() * width, y: Math.random() * height, vx: 0, vy: 0,
+      radius: 0.7 + (index % 5 === 0 ? 0.9 : 0), phase: index * 0.37, opacity: 1, target,
     }));
     let frame = 0;
     let pointer = { x: -1000, y: -1000, active: false };
@@ -73,9 +75,9 @@ export default function HomeWordmarkParticles() {
           particle.x += dx * 0.16;
           particle.y += dy * 0.16;
         }
-        const shimmer = 0.52 + Math.sin(time * 0.003 + index) * 0.28;
-        ctx.fillStyle = index % 11 === 0 ? `rgba(216,255,101,${shimmer})` : `rgba(207,196,255,${shimmer})`;
-        ctx.fillRect(particle.x, particle.y, coarse ? 1.7 : 1.35, coarse ? 1.7 : 1.35);
+        const shimmer = 0.72 + Math.sin(time * 0.003 + index) * 0.25;
+        ctx.fillStyle = index % 11 === 0 ? `rgba(216,255,101,${shimmer})` : `rgba(230,224,255,${shimmer})`;
+        ctx.fillRect(particle.x, particle.y, coarse ? 2.1 : 1.7, coarse ? 2.1 : 1.7);
       });
       frame = requestAnimationFrame(draw);
     };
@@ -92,5 +94,10 @@ export default function HomeWordmarkParticles() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="home-wordmark-particles" role="img" aria-label="Akbar Nawasunda" />;
+  return (
+    <div className="home-wordmark-particles" role="img" aria-label="Akbar Nawasunda">
+      <span className="home-wordmark-fallback" aria-hidden="true">AKBAR<br />NAWASUNDA</span>
+      <canvas ref={canvasRef} aria-hidden="true" />
+    </div>
+  );
 }
