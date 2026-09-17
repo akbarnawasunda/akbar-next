@@ -8,7 +8,6 @@ import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import VisualPortraitStudies from "@/components/VisualPortraitStudies";
 import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
-import HomeAmbientCanvas from "@/components/HomeAmbientCanvas";
 import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
 import { currentRelease, formatPublicIndex, officialBrand, portraitStudies, releases, verifiedArtistProfile, videos } from "@/content/artistPlatform";
 import type { CmsRelease, CmsVisual } from "@/content/publicContent";
@@ -87,7 +86,7 @@ function mergedCatalog(cmsReleases: CmsRelease[]): CatalogItem[] {
 }
 
 function EnglishFrame({ children }: { children: ReactNode }) {
-  return <div className="nf-page en-page an-site"><HomeAmbientCanvas /><EnglishHeader />{children}<EnglishFooter /></div>;
+  return <div className="nf-page en-page an-site"><EnglishHeader />{children}<EnglishFooter /></div>;
 }
 
 export function EnglishHome() {

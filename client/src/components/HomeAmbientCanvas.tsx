@@ -34,6 +34,7 @@ export default function HomeAmbientCanvas() {
     let visible = true;
     let frame = 0;
     let lastTime = 0;
+    let lastPaint = 0;
     let pointer = { x: -1000, y: -1000, active: false };
 
     const resize = () => {
@@ -60,6 +61,12 @@ export default function HomeAmbientCanvas() {
 
     const draw = (time: number) => {
       if (!visible) { frame = 0; return; }
+      const frameBudget = coarsePointer.matches ? 1000 / 30 : 1000 / 45;
+      if (time - lastPaint < frameBudget) {
+        frame = window.requestAnimationFrame(draw);
+        return;
+      }
+      lastPaint = time;
       const delta = Math.min(32, time - lastTime || 16);
       lastTime = time;
       context.clearRect(0, 0, width, height);

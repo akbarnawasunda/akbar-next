@@ -38,6 +38,7 @@ export default function HomeWordmarkParticles() {
       radius: 0.7 + (index % 5 === 0 ? 0.9 : 0), phase: index * 0.37, opacity: 1, target,
     }));
     let frame = 0;
+    let lastPaint = 0;
     let pointer = { x: -1000, y: -1000, active: false };
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
@@ -52,6 +53,12 @@ export default function HomeWordmarkParticles() {
     };
     const leave = () => { pointer.active = false; };
     const draw = (time: number) => {
+      const frameBudget = coarse ? 1000 / 30 : 1000 / 45;
+      if (time - lastPaint < frameBudget) {
+        frame = requestAnimationFrame(draw);
+        return;
+      }
+      lastPaint = time;
       ctx.clearRect(0, 0, width, height);
       particles.forEach((particle, index) => {
         const dx = particle.target.x - particle.x;
