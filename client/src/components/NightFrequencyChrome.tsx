@@ -3,10 +3,12 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { usePublicArtistContent, publicPlatformLinks } from "@/content/publicContent";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
+import HomeAmbientCanvas from "@/components/HomeAmbientCanvas";
 import "./NightFrequencyChrome.css";
 import "./OfficialBrand.css";
 import "./EcosystemRefinement.css";
 import "@/pages/ArtistModules.css";
+import "./PublicMotion.css";
 
 const navItems = [
   { href: "/music", label: "MUSIC" },
@@ -44,6 +46,8 @@ export function NightHeader({ active }: { active?: string }) {
     };
   }, [isOpen]);
   return (
+    <>
+    <HomeAmbientCanvas />
     <header ref={headerRef} className="nf-nav">
       <Link className="nf-wordmark nf-wordmark-official" href="/">
         <ResilientBrandImage className="nf-brand-logo" alt="Akbar Nawasunda" />
@@ -106,6 +110,7 @@ export function NightHeader({ active }: { active?: string }) {
         </div>
       </div>
     </header>
+    </>
   );
 }
 

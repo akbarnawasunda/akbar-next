@@ -8,6 +8,7 @@ import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import VisualPortraitStudies from "@/components/VisualPortraitStudies";
 import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
+import HomeAmbientCanvas from "@/components/HomeAmbientCanvas";
 import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
 import { currentRelease, formatPublicIndex, officialBrand, portraitStudies, releases, verifiedArtistProfile, videos } from "@/content/artistPlatform";
 import type { CmsRelease, CmsVisual } from "@/content/publicContent";
@@ -27,6 +28,7 @@ import "./HomePlatformCards.css";
 import "./HomeLayoutRefinement.css";
 import "./HomeMotionRefinement.css";
 import "./HomePortfolioPatterns.css";
+import "@/components/PublicMotion.css";
 
 const bookingEmail = verifiedArtistProfile.bookingEmail;
 const englishLongBio = "Akbar Nawasunda's musical journey began in 2020 as an independent bedroom producer known as DJ Akbar Remix. His experiments brought popular songs into a Bandung-rooted space of Breakbeat, Jedag Jedug, and Jungle Dutch. Today, as Akbar Nawasunda, he releases original work combining pop melody, electronic bass, and remix energy for global digital platforms.";
@@ -85,7 +87,7 @@ function mergedCatalog(cmsReleases: CmsRelease[]): CatalogItem[] {
 }
 
 function EnglishFrame({ children }: { children: ReactNode }) {
-  return <div className="nf-page en-page an-site"><EnglishHeader />{children}<EnglishFooter /></div>;
+  return <div className="nf-page en-page an-site"><HomeAmbientCanvas /><EnglishHeader />{children}<EnglishFooter /></div>;
 }
 
 export function EnglishHome() {
