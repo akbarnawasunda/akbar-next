@@ -1208,6 +1208,145 @@
   height: 300px;
 }
 
+/* Final homepage art direction: one restrained system, not stacked theme experiments. */
+.an-site {
+  --ink: #07151f;
+  --paper: #f1eee6;
+  --muted: #9db0b5;
+  --line: rgba(196, 231, 229, 0.18);
+  --violet: #65d6d0;
+  --ice: #b9ebe5;
+  --acid: #e7c46d;
+  color: var(--paper);
+  background: #07151f;
+  font-family: var(--font-body);
+}
+.an-site .an-nav {
+  height: 72px;
+  padding-inline: clamp(24px, 5vw, 80px);
+  border-bottom: 1px solid var(--line);
+  background: rgba(7, 21, 31, 0.78);
+  backdrop-filter: blur(18px);
+}
+.an-site .an-wordmark { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; }
+.an-site .an-brand-logo { width: 28px; height: 28px; filter: none; }
+.an-site .an-nav nav a,
+.an-site .nav-signal,
+.an-site .an-menu-toggle,
+.an-site .eyebrow,
+.an-site .mono-label,
+.an-site .hero-scroll-cue,
+.an-site .footer-links > span,
+.an-site .footer-bottom {
+  font-family: var(--font-mono);
+  letter-spacing: .12em;
+}
+.an-site .an-nav nav a { color: rgba(241,238,230,.68); }
+.an-site .an-nav nav a:hover { color: var(--acid); }
+.an-site .nav-signal { border-color: rgba(231,196,109,.55); color: var(--acid); }
+.an-site .an-hero {
+  min-height: min(920px, 100svh);
+  padding: 132px clamp(24px, 8vw, 128px) 76px;
+  background-image:
+    linear-gradient(90deg, rgba(7,21,31,.98) 0%, rgba(7,21,31,.82) 42%, rgba(7,21,31,.24) 100%),
+    linear-gradient(0deg, rgba(7,21,31,.96), transparent 62%), var(--hero-image);
+}
+.an-site .an-hero::before {
+  content: "01 / AKBAR NAWASUNDA";
+  position: absolute;
+  top: 110px;
+  right: clamp(24px, 8vw, 128px);
+  z-index: 3;
+  color: var(--ice);
+  font: 10px/1 var(--font-mono);
+  letter-spacing: .14em;
+}
+.an-site .hero-copy { max-width: 650px; margin-top: 110px; }
+.an-site .hero-copy .eyebrow { color: var(--ice); }
+.an-site .hero-copy h1.hero-title-akbar {
+  max-width: 8ch;
+  margin-top: 20px;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(72px, 10vw, 158px);
+  font-weight: 600;
+  letter-spacing: -.055em;
+  line-height: .84;
+  text-wrap: balance;
+  text-shadow: 0 18px 54px rgba(0,0,0,.28);
+}
+.an-site .hero-title-word { display: inline-block; }
+.an-site .hero-description { max-width: 370px; color: rgba(241,238,230,.7); font-size: 15px; line-height: 1.7; }
+.an-site .button-primary { border-radius: 999px; background: var(--acid); color: #07151f; box-shadow: 0 10px 30px rgba(231,196,109,.18); }
+.an-site .button-quiet { color: var(--ice); }
+.an-site .home-hero-portrait {
+  border: 1px solid rgba(185,235,229,.25);
+  box-shadow: -30px 30px 90px rgba(0,0,0,.28);
+}
+.an-site .home-hero-portrait img { filter: saturate(.82) contrast(1.05); }
+.an-site .section,
+.an-site .signal-section { padding-block: clamp(92px, 12vw, 168px); }
+.an-site .section h2,
+.an-site .signal-section h2,
+.an-site .live-copy h2,
+.an-site .game-teaser-section h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -.055em;
+  line-height: .88;
+}
+.an-site .section h2 { font-size: clamp(54px, 7vw, 104px); }
+.an-site .section-heading { margin-bottom: 62px; }
+.an-site .section-heading::after,
+.an-site .section-inline::after { bottom: -28px; width: 52px; height: 2px; background: var(--acid); }
+.an-site .feature-release {
+  max-width: 1160px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.an-site .release-cover { border-radius: 18px; overflow: visible; }
+.an-site .release-cover img { border-radius: 18px; }
+.an-site .release-detail h3,
+.an-site .release-card h3,
+.an-site .video-content h3,
+.an-site .home-live-event strong { font-family: var(--font-display); font-weight: 600; letter-spacing: -.045em; }
+.an-site .release-detail h3 { font-size: clamp(36px, 5vw, 74px); }
+.an-site .release-grid,
+.an-site .video-grid { gap: 16px; border: 0; }
+.an-site .release-card,
+.an-site .video-card,
+.an-site .home-platform-card,
+.an-site .home-live-event {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(13,44,57,.7);
+  box-shadow: none;
+  transition: transform .24s cubic-bezier(.23,1,.32,1), border-color .24s, background .24s;
+}
+.an-site .release-card:hover,
+.an-site .video-card:hover,
+.an-site .home-platform-card:hover,
+.an-site .home-live-event:hover { transform: translateY(-6px); border-color: var(--acid); background: rgba(20,66,76,.82); box-shadow: 0 18px 42px rgba(0,0,0,.2); }
+.an-site .release-card:nth-child(2n),
+.an-site .home-platform-card:nth-child(3n) { transform: none; }
+.an-site .release-card:nth-child(2n):hover,
+.an-site .home-platform-card:nth-child(3n):hover { transform: translateY(-6px); }
+.an-site .signal-section { background: linear-gradient(135deg, #e7c46d, #b9ebe5); color: #07151f; }
+.an-site .signal-section h2 { color: #07151f; }
+.an-site .signal-section .eyebrow { color: #245865; }
+.an-site .signal-input { border-radius: 14px; box-shadow: 5px 5px 0 #07151f; }
+.an-site .an-footer { background: #041018; }
+@media (max-width: 820px) {
+  .an-site .an-hero { min-height: 0; padding: 110px 20px 68px; }
+  .an-site .an-hero::before { top: 88px; left: 20px; right: auto; }
+  .an-site .hero-copy { margin-top: 44px; }
+  .an-site .hero-copy h1.hero-title-akbar { font-size: clamp(60px, 16vw, 100px); }
+  .an-site .an-nav { height: 66px; padding-inline: 20px; }
+  .an-site .section h2 { font-size: clamp(50px, 14vw, 82px); }
+}
+
 .button-primary:active {
   transform: translate3d(0, 0, 0) scale(0.97);
 }

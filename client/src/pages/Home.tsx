@@ -37,7 +37,6 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useScrollChoreography } from "@/hooks/useScrollChoreography";
 import { publicPlatformLinks, publicUpcomingEvents, usePublicArtistContent } from "@/content/publicContent";
 import "@/components/OfficialBrand.css";
-import "./Home.css";
 import "./HomeStates.css";
 import "./HomeRefinement.css";
 import "./HomeArtistUpgrade.css";
@@ -51,7 +50,7 @@ import "./HomeGameTeaser.css";
 import "./HomeArtDirection.css";
 import "./HomeVisibleUi.css";
 import "./HomeChapterInteraction.css";
-import "./HomeReferenceConvergence.css";
+import "./Home.css";
 
 function HomeMenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const dialogRef = useRef<HTMLDivElement>(null);
