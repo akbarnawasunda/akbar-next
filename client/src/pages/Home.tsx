@@ -23,6 +23,7 @@ import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
 import { publicJourney, publicPhotoStories } from "@/content/publicContent";
 import { SkeletonCard } from "@/components/SkeletonCard";
 import { TiltCard } from "@/components/TiltCard";
+import HomeAmbientCanvas from "@/components/HomeAmbientCanvas";
 import {
   currentRelease,
   formatPublicIndex,
@@ -311,6 +312,7 @@ export default function Home() {
   return (
     <>
       <div ref={choreographyRef} className="an-site">
+      <HomeAmbientCanvas />
       <header className="an-nav">
         <a
           className="an-wordmark"
