@@ -57,3 +57,10 @@
   .nf-page .an-profile-section,
   .nf-page .an-about-path { transition: none; }
 }
+
+/* Editorial pages use labels, not artificial numbered chapter markers. */
+.nf-page .an-section-index > span:first-child,
+.nf-page .an-section-index > i,
+.nf-page .home-platform-number,
+.nf-page .release-number { display: none !important; }
+.nf-page .an-section-index { gap: 0; }
