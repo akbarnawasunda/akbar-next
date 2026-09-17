@@ -1252,7 +1252,7 @@
     linear-gradient(0deg, rgba(7,21,31,.96), transparent 62%), var(--hero-image);
 }
 .an-site .an-hero::before {
-  content: "01 / AKBAR NAWASUNDA";
+  content: none;
   position: absolute;
   top: 110px;
   right: clamp(24px, 8vw, 128px);
@@ -1802,4 +1802,38 @@
 @media (max-width: 480px) {
   .home-ambient-canvas { opacity: .38; }
   .menu-link-title { font-size: clamp(25px,9vw,42px); }
+}
+
+
+/* Generative identity: the old static AN mark is replaced by a living wordmark. */
+.home-wordmark-particles {
+  position: absolute;
+  right: clamp(28px, 8vw, 130px);
+  bottom: clamp(64px, 11vh, 125px);
+  z-index: 5;
+  width: min(420px, 38vw);
+  height: 112px;
+  opacity: .86;
+  filter: drop-shadow(0 0 14px rgba(138,92,255,.35));
+  transition: opacity .25s ease, filter .25s ease;
+}
+.home-wordmark-particles:hover { opacity: 1; filter: drop-shadow(0 0 22px rgba(216,255,101,.4)); }
+.an-site .an-section-index > span:first-child,
+.an-site .an-section-index > i { display: none; }
+.an-site .an-section-index { gap: 0; }
+.an-site .an-hero::before { content: none; }
+.an-site .game-teaser-score,
+.an-site .release-number,
+.an-site .home-platform-number { display: none; }
+.an-site .game-teaser-runner { opacity: .22; }
+@media (max-width: 820px) {
+  .home-wordmark-particles {
+    right: 20px;
+    bottom: 38px;
+    width: min(360px, 86vw);
+    height: 96px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-wordmark-particles { opacity: .7; filter: none; }
 }

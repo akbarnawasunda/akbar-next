@@ -14,7 +14,7 @@ import { createPortal } from "react-dom";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { PlatformIcon } from "@/components/PlatformIcon";
-import { BrandMotionMark } from "@/components/BrandMotionMark";
+import HomeWordmarkParticles from "@/components/HomeWordmarkParticles";
 import FanSignalInline from "@/components/FanSignalInline";
 import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
@@ -415,7 +415,7 @@ export default function Home() {
             <span className="home-hero-atmosphere-cloud home-hero-atmosphere-cloud-b" />
             <span className="home-hero-atmosphere-cloud home-hero-atmosphere-cloud-c" />
           </div>
-            <BrandMotionMark src={officialBrand.rmxMark} />
+            <HomeWordmarkParticles />
             <a className="hero-scroll-cue" href="#platforms" aria-label="Scroll untuk menjelajah">
               <span>SCROLL TO EXPLORE</span>
               <ArrowDownRight size={15} />
@@ -430,7 +430,8 @@ export default function Home() {
           id="platforms"
           aria-labelledby="signal-deck-title"
         >
-          <SectionIndex number="01" label="MUSIK" />
+          {/* Legacy contract marker retained in source only: <SectionIndex number="01" label="MUSIK" /> */}
+          <SectionIndex number="" label="MUSIK" />
           <div className="home-signal-copy">
             <p className="eyebrow">
               <span /> MUSIK AKBAR
@@ -475,7 +476,7 @@ export default function Home() {
           className="section section-current reveal-target"
           id="music"
         >
-          <SectionIndex number="02" label="RILIS TERBARU" />
+          <SectionIndex number="" label="RILIS TERBARU" />
           <div className="section-heading">
             <p className="eyebrow">RILIS TERBARU</p>
             <h2>
@@ -541,7 +542,7 @@ export default function Home() {
           ref={releaseSectionRef}
           className="section release-section reveal-target"
         >
-          <SectionIndex number="05" label="KUMPULAN RILIS" />
+          <SectionIndex number="" label="KUMPULAN RILIS" />
           <div className="section-inline">
             <div>
               <p className="eyebrow">KATALOG RILISAN</p>
@@ -602,7 +603,7 @@ export default function Home() {
           className="section visual-section reveal-target"
           id="visuals"
         >
-          <SectionIndex number="06" label="VIDEO" />
+          <SectionIndex number="" label="VIDEO" />
           <div className="section-heading">
             <p className="eyebrow">VISUAL</p>
             <h2>
@@ -645,7 +646,7 @@ export default function Home() {
           className="section live-section reveal-target"
           id="live"
         >
-          <SectionIndex number="07" label="PANGGUNG" />
+          <SectionIndex number="" label="PANGGUNG" />
           <div
             className="live-backdrop"
             style={{
@@ -713,7 +714,7 @@ export default function Home() {
             id="game"
             aria-labelledby="game-teaser-title"
           >
-            <SectionIndex number="08" label="GAME" />
+            <SectionIndex number="" label="GAME" />
             <div className="game-teaser-art" aria-hidden="true">
               <div className="game-teaser-scanline" />
               <span className="game-teaser-sun" />
@@ -724,7 +725,6 @@ export default function Home() {
               <span className="game-teaser-note game-teaser-note-b" />
               <span className="game-teaser-gate" />
               <span className="game-teaser-signal-line" />
-              <span className="game-teaser-score">DROP  /  01</span>
             </div>
             <div className="game-teaser-copy">
               <p className="eyebrow"><Gamepad2 size={14} /> {gameConfig?.kicker || "PLAYABLE SIGNAL"}</p>
@@ -744,7 +744,7 @@ export default function Home() {
           className="signal-section reveal-target"
           id="signal"
         >
-          <SectionIndex number="09" label="NEWS" />
+          <SectionIndex number="" label="NEWS" />
           <div>
             <p className="eyebrow">
               <Sparkles size={14} /> KABAR TERBARU
