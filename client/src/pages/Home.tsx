@@ -372,7 +372,7 @@ export default function Home() {
               <span /> {heroKicker}
             </p>
             <h1
-              className="hero-title-editorial"
+              className="hero-title-editorial hero-title-akbar"
               data-no-scramble="true"
               aria-label={displayHeroTitle}
             >

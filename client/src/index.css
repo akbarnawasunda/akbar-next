@@ -1,3 +1,5 @@
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Azeret+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -43,6 +45,9 @@
 }
 
 :root {
+  --font-display: 'Clash Display', sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Azeret Mono', monospace;
   --primary: var(--color-blue-700);
   --primary-foreground: var(--color-blue-50);
   --sidebar-primary: var(--color-blue-600);
@@ -184,4 +189,19 @@ html {
   html {
     scroll-behavior: auto;
   }
+}
+
+@layer base {
+  html { font-family: var(--font-body); }
+  body { font-family: var(--font-body); }
+  h1, h2, h3 { font-family: var(--font-display); }
+  code, pre, .font-mono { font-family: var(--font-mono); }
+}
+
+.hero-title-akbar {
+  font-family: 'Clash Display', sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 0.95 !important;
+  font-style: normal !important;
 }
