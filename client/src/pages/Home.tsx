@@ -48,8 +48,6 @@ import "./HomeLayoutRefinement.css";
 import "./HomeMotionRefinement.css";
 import "./HomePortfolioPatterns.css";
 import "./HomeGameTeaser.css";
-import "./HomeArtDirection.css";
-import "./HomeVisibleUi.css";
 import "./HomeChapterInteraction.css";
 import "./Home.css";
 
