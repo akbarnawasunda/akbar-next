@@ -24,8 +24,8 @@ function websiteEntity() {
     "@type": "WebSite",
     "@id": `${siteOrigin}/#website`,
     url: `${siteOrigin}/`,
-    name: "Akbar Nawasunda",
-    alternateName: "Akbar Nawasunda | Official Website",
+    name: "Akbar Nawasunda | Official Website",
+    alternateName: "Akbar Nawasunda",
     publisher: { "@id": `${siteOrigin}/#artist` },
   };
 }
