@@ -1,2 +1,185 @@
-.nf-menu-toggle,.nf-mobile-menu{display:none}.nf-menu-toggle{appearance:none;border:1px solid rgba(216,255,101,.5);background:transparent;color:#f2f0ff;place-items:center;width:40px;height:40px;cursor:pointer;transition:transform 160ms cubic-bezier(.23,1,.32,1),background-color 160ms cubic-bezier(.23,1,.32,1)}.nf-menu-toggle:active{transform:scale(.97)}.nf-menu-toggle:focus-visible,.nf-mobile-menu a:focus-visible{outline:2px solid #d8ff65;outline-offset:4px}@media(max-width:820px){.nf-nav{position:relative}.nf-menu-toggle{display:grid}.nf-signal{margin-left:auto;margin-right:7px}.nf-mobile-menu{position:absolute;z-index:50;top:65px;left:0;right:0;padding:0 20px;overflow:hidden;display:block;max-height:0;opacity:0;visibility:hidden;background:rgba(7,7,15,.98);border-bottom:1px solid rgba(216,255,101,.35);backdrop-filter:blur(18px);transition:max-height 260ms cubic-bezier(.23,1,.32,1),opacity 180ms cubic-bezier(.23,1,.32,1),visibility 180ms}.nf-mobile-menu.is-open{max-height:500px;opacity:1;visibility:visible}.nf-mobile-menu-inner{display:grid;gap:0;padding:14px 0 22px}.nf-mobile-eyebrow{padding:8px 0 14px;color:#a9a4c2;font:10px "IBM Plex Mono",monospace;letter-spacing:.16em}.nf-mobile-menu a{display:flex;align-items:center;gap:9px;border-top:1px solid rgba(255,255,255,.1);padding:15px 0;color:#f2f0ff;font:600 14px "IBM Plex Mono",monospace;letter-spacing:.1em}.nf-mobile-menu a:last-child{margin-top:10px;border:1px solid rgba(216,255,101,.55);padding:13px;color:#d8ff65;justify-content:center}.nf-mobile-menu a.is-active{color:#d8ff65}.nf-mobile-menu a:last-child.is-active{color:#11110b;background:#d8ff65}}
-.an-language-switcher{display:flex;align-items:center;gap:6px;color:rgba(236,230,220,.55);font:600 10px/1 "IBM Plex Mono",monospace;letter-spacing:.12em;white-space:nowrap}.an-language-switcher a{color:inherit;text-decoration:none;transition:color 160ms cubic-bezier(.23,1,.32,1)}.an-language-switcher a:hover,.an-language-switcher a:focus-visible,.an-language-switcher a.is-active{color:var(--an-bone,#ece6dc)}.an-language-switcher a:focus-visible{outline:2px solid var(--an-plasma,#c7794c);outline-offset:4px}.en-mobile-language{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.1);padding-top:15px;margin-top:14px;color:#a9a4c2;font:10px "IBM Plex Mono",monospace;letter-spacing:.16em}.en-mobile-language .an-language-switcher{color:#f2f0ff}
+/* ============================================================
+   NIGHT FREQUENCY CHROME
+   Nav + mobile menu overlay (portal). Warna & font dari index.css.
+   ============================================================ */
+
+/* -- 1. MENU TOGGLE ---------------------------------------- */
+.nf-menu-toggle {
+  appearance: none;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--ink-line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  transition: border-color var(--dur-fast, 160ms) var(--ease, ease), color var(--dur-fast, 160ms) var(--ease, ease);
+}
+.nf-menu-toggle:hover,
+.nf-menu-toggle:focus-visible {
+  border-color: var(--acid);
+  color: var(--acid);
+}
+.nf-menu-toggle:active { transform: scale(0.97); }
+.nf-menu-toggle svg { width: 18px; height: 18px; }
+
+/* -- 2. MOBILE MENU OVERLAY (portal) ----------------------- */
+.nf-mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: center;
+  gap: 8px;
+  padding: clamp(80px, 12vh, 130px) var(--gutter, clamp(20px, 4.5vw, 64px)) 60px;
+  background: var(--ink);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur, 280ms) var(--ease, ease), visibility var(--dur, 280ms) var(--ease, ease);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.nf-mobile-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.nf-mobile-menu-close {
+  position: absolute;
+  top: 22px;
+  right: var(--gutter, clamp(20px, 4.5vw, 64px));
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--ink-line);
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color var(--dur-fast, 160ms) var(--ease, ease), color var(--dur-fast, 160ms) var(--ease, ease);
+}
+.nf-mobile-menu-close:hover,
+.nf-mobile-menu-close:focus-visible {
+  border-color: var(--acid);
+  color: var(--acid);
+}
+.nf-mobile-menu-close span:first-child {
+  font-size: 1.1rem;
+  line-height: 0.6;
+}
+
+.nf-mobile-menu-inner {
+  display: grid;
+  gap: 0;
+  width: 100%;
+  max-width: 720px;
+}
+
+.nf-mobile-eyebrow {
+  padding: 8px 0 14px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--mute);
+  text-transform: uppercase;
+}
+
+.nf-mobile-menu-inner > a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--ink-line);
+  color: var(--paper);
+  text-decoration: none;
+  transition: color var(--dur-fast, 160ms) var(--ease, ease), padding-left var(--dur-fast, 160ms) var(--ease, ease);
+}
+.nf-mobile-menu-inner > a:hover,
+.nf-mobile-menu-inner > a:focus-visible,
+.nf-mobile-menu-inner > a.is-active {
+  color: var(--acid);
+  padding-left: 6px;
+}
+
+.nf-mobile-menu-link-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
+  font-size: clamp(1.8rem, 8vw, 3.2rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+.nf-mobile-menu-inner > a svg {
+  flex: 0 0 auto;
+  color: currentColor;
+  opacity: 0.72;
+}
+
+.en-mobile-language {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ink-line);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  color: var(--mute);
+  text-transform: uppercase;
+}
+.en-mobile-language .an-language-switcher { color: var(--paper); }
+
+/* -- 3. LANGUAGE SWITCHER ---------------------------------- */
+.an-language-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--mute);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+.an-language-switcher a {
+  color: inherit;
+  transition: color var(--dur-fast, 160ms) var(--ease, ease);
+}
+.an-language-switcher a:hover,
+.an-language-switcher a:focus-visible,
+.an-language-switcher a.is-active {
+  color: var(--paper);
+}
+.an-language-switcher a:focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 4px;
+}
+
+/* -- 4. RESPONSIVE ----------------------------------------- */
+@media (max-width: 820px) {
+  .nf-nav { position: relative; }
+  .nf-menu-toggle { display: inline-flex; }
+  .nf-signal { margin-left: auto; margin-right: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-mobile-menu,
+  .nf-mobile-menu-inner > a,
+  .nf-menu-toggle,
+  .nf-mobile-menu-close {
+    transition: none !important;
+  }
+}
