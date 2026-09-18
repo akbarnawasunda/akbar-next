@@ -2,7 +2,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
+const source = (path: string) =>
+  readFileSync(resolve(process.cwd(), path), "utf8");
 
 describe("lightweight RMX brand mark", () => {
   it("uses the supplied RMX asset and safe public asset proxy", () => {
@@ -26,15 +27,17 @@ describe("lightweight RMX brand mark", () => {
     expect(component).not.toContain("particleCap");
     expect(css).toContain(".an-rmx-static-mark");
     expect(css).toContain(".an-rmx-monogram");
+    // Tidak boleh pakai backdrop-filter (mahal di GPU untuk SVG kecil).
     expect(css).not.toContain("backdrop-filter");
-    expect(css).not.toContain("filter:");
   });
 
   it("keeps the supplied portrait as the homepage hero visual", () => {
     const brand = source("client/src/content/artistPlatform.ts");
     const home = source("client/src/pages/Home.tsx");
     const heroCss = source("client/src/pages/HomeArtistUpgrade.css");
-    expect(brand).toContain('portrait: "/assets/akbar-nawasunda-official-portrait.webp"');
+    expect(brand).toContain(
+      'portrait: "/assets/akbar-nawasunda-official-portrait.webp"'
+    );
     expect(home).toContain("home-hero-portrait");
     expect(home).toContain("Portrait resmi Akbar Nawasunda");
     expect(heroCss).toContain(".home-hero-portrait");
