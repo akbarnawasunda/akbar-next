@@ -1,16 +1,22 @@
+/* ============================================================
+   BRAND MOTION MARK
+   Monogram SVG di hero EN. Warna lama: biru #6ca9d5.
+   Warna baru: acid + paper.
+   ============================================================ */
+
 .an-site .an-hero .an-rmx-static-mark {
-  position: absolute !important;
+  position: absolute;
   z-index: 2;
-  top: 44% !important;
-  right: clamp(34px, 7vw, 116px) !important;
-  bottom: auto !important;
-  left: auto !important;
+  top: 44%;
+  right: clamp(34px, 7vw, 116px);
+  bottom: auto;
+  left: auto;
   display: grid;
   place-items: center;
-  width: clamp(150px, 15vw, 230px) !important;
-  aspect-ratio: 1;
+  width: clamp(150px, 15vw, 230px);
+  aspect-ratio: 1 / 1;
   overflow: visible;
-  opacity: 0.82 !important;
+  opacity: 0.72;
   pointer-events: none;
 }
 
@@ -23,37 +29,39 @@
 
 .an-rmx-monogram-ring {
   fill: none;
-  stroke: rgba(126, 187, 220, 0.48);
+  stroke: color-mix(in srgb, var(--acid) 40%, transparent);
   stroke-width: 1;
   stroke-dasharray: 2 8;
 }
 
 .an-rmx-monogram-line {
   fill: none;
-  stroke: #d7e8f4;
+  stroke: var(--paper);
   stroke-linecap: square;
   stroke-linejoin: miter;
   stroke-width: 7;
 }
 
 .an-rmx-monogram-accent {
-  stroke: #6ca9d5;
+  stroke: var(--acid);
   stroke-width: 4;
 }
 
 .an-rmx-monogram text {
-  fill: rgba(215, 232, 244, 0.82);
-  font: 600 8px/1 "IBM Plex Mono", monospace;
+  fill: color-mix(in srgb, var(--paper) 78%, transparent);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: 600;
   letter-spacing: 0.2em;
 }
 
 @media (max-width: 820px) {
   .an-site .an-hero .an-rmx-static-mark {
-    top: auto !important;
-    right: 8vw !important;
-    bottom: 12px !important;
-    width: 132px !important;
-    opacity: 0.7 !important;
+    top: auto;
+    right: 8vw;
+    bottom: 12px;
+    width: 132px;
+    opacity: 0.6;
   }
 }
 
