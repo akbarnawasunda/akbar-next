@@ -1,6 +1,7 @@
 /* ============================================================
    NIGHT FREQUENCY CHROME
-   Nav + mobile menu overlay (portal). Warna & font dari index.css.
+   Nav + mobile menu overlay (portal). Warna di-hardcode supaya
+   tidak bocor transparan saat portal render di luar .nf-page.
    ============================================================ */
 
 /* -- 1. MENU TOGGLE ---------------------------------------- */
@@ -11,37 +12,42 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border: 1px solid var(--ink-line);
+  border: 1px solid rgba(240, 235, 220, 0.14);
   border-radius: 0;
   background: transparent;
-  color: var(--paper);
+  color: #f0ebdd;
   cursor: pointer;
-  transition: border-color var(--dur-fast, 160ms) var(--ease, ease), color var(--dur-fast, 160ms) var(--ease, ease);
+  transition: border-color 160ms ease, color 160ms ease;
 }
 .nf-menu-toggle:hover,
 .nf-menu-toggle:focus-visible {
-  border-color: var(--acid);
-  color: var(--acid);
+  border-color: #d8ff00;
+  color: #d8ff00;
 }
 .nf-menu-toggle:active { transform: scale(0.97); }
 .nf-menu-toggle svg { width: 18px; height: 18px; }
 
-/* -- 2. MOBILE MENU OVERLAY (portal) ----------------------- */
+/* -- 2. MOBILE MENU OVERLAY (portal) -----------------------
+   Semua warna di-hardcode supaya tidak bergantung pada CSS var
+   dari parent yang di-bypass portal.
+   ----------------------------------------------------------- */
 .nf-mobile-menu {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 9999;
   display: grid;
   grid-template-columns: 1fr;
   align-content: center;
   gap: 8px;
-  padding: clamp(80px, 12vh, 130px) var(--gutter, clamp(20px, 4.5vw, 64px)) 60px;
-  background: var(--ink);
+  padding: clamp(80px, 12vh, 130px) clamp(20px, 4.5vw, 64px) 60px;
+  background: #0a0a09;
+  color: #f0ebdd;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--dur, 280ms) var(--ease, ease), visibility var(--dur, 280ms) var(--ease, ease);
+  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), visibility 280ms cubic-bezier(0.16, 1, 0.3, 1);
   overflow-y: auto;
   overscroll-behavior: contain;
+  isolation: isolate;
 }
 .nf-mobile-menu.is-open {
   opacity: 1;
@@ -51,26 +57,26 @@
 .nf-mobile-menu-close {
   position: absolute;
   top: 22px;
-  right: var(--gutter, clamp(20px, 4.5vw, 64px));
+  right: clamp(20px, 4.5vw, 64px);
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border: 1px solid var(--ink-line);
+  border: 1px solid rgba(240, 235, 220, 0.14);
   background: transparent;
-  color: var(--paper);
-  font-family: var(--font-mono);
+  color: #f0ebdd;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: border-color var(--dur-fast, 160ms) var(--ease, ease), color var(--dur-fast, 160ms) var(--ease, ease);
+  transition: border-color 160ms ease, color 160ms ease;
 }
 .nf-mobile-menu-close:hover,
 .nf-mobile-menu-close:focus-visible {
-  border-color: var(--acid);
-  color: var(--acid);
+  border-color: #d8ff00;
+  color: #d8ff00;
 }
 .nf-mobile-menu-close span:first-child {
   font-size: 1.1rem;
@@ -86,11 +92,11 @@
 
 .nf-mobile-eyebrow {
   padding: 8px 0 14px;
-  font-family: var(--font-mono);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.18em;
-  color: var(--mute);
+  color: rgba(240, 235, 220, 0.6);
   text-transform: uppercase;
 }
 
@@ -100,25 +106,26 @@
   justify-content: space-between;
   gap: 20px;
   padding: 20px 0;
-  border-bottom: 1px solid var(--ink-line);
-  color: var(--paper);
+  border-bottom: 1px solid rgba(240, 235, 220, 0.14);
+  color: #f0ebdd;
   text-decoration: none;
-  transition: color var(--dur-fast, 160ms) var(--ease, ease), padding-left var(--dur-fast, 160ms) var(--ease, ease);
+  text-shadow: none;
+  transition: color 160ms ease, padding-left 160ms ease;
 }
 .nf-mobile-menu-inner > a:hover,
 .nf-mobile-menu-inner > a:focus-visible,
 .nf-mobile-menu-inner > a.is-active {
-  color: var(--acid);
+  color: #d8ff00;
   padding-left: 6px;
 }
 
 .nf-mobile-menu-link-title {
-  font-family: var(--font-display);
+  font-family: "Fraunces", Georgia, serif;
   font-weight: 400;
-  font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
   font-size: clamp(1.8rem, 8vw, 3.2rem);
   line-height: 1;
   letter-spacing: -0.035em;
+  text-shadow: none;
 }
 .nf-mobile-menu-inner > a svg {
   flex: 0 0 auto;
@@ -132,39 +139,39 @@
   justify-content: space-between;
   margin-top: 20px;
   padding-top: 18px;
-  border-top: 1px solid var(--ink-line);
-  font-family: var(--font-mono);
+  border-top: 1px solid rgba(240, 235, 220, 0.14);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.58rem;
   letter-spacing: 0.16em;
-  color: var(--mute);
+  color: rgba(240, 235, 220, 0.6);
   text-transform: uppercase;
 }
-.en-mobile-language .an-language-switcher { color: var(--paper); }
+.en-mobile-language .an-language-switcher { color: #f0ebdd; }
 
 /* -- 3. LANGUAGE SWITCHER ---------------------------------- */
 .an-language-switcher {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: var(--mute);
+  color: rgba(240, 235, 220, 0.6);
   white-space: nowrap;
   text-transform: uppercase;
 }
 .an-language-switcher a {
   color: inherit;
-  transition: color var(--dur-fast, 160ms) var(--ease, ease);
+  transition: color 160ms ease;
 }
 .an-language-switcher a:hover,
 .an-language-switcher a:focus-visible,
 .an-language-switcher a.is-active {
-  color: var(--paper);
+  color: #f0ebdd;
 }
 .an-language-switcher a:focus-visible {
-  outline: 2px solid var(--acid);
+  outline: 2px solid #d8ff00;
   outline-offset: 4px;
 }
 
@@ -180,6 +187,6 @@
   .nf-mobile-menu-inner > a,
   .nf-menu-toggle,
   .nf-mobile-menu-close {
-    transition: none !important;
+    transition: none;
   }
 }
