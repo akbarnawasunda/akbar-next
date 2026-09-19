@@ -1,8 +1,8 @@
 /* ============================================================
    PLATFORM ICON
-   Ikon per platform. Warna brand dipertahankan (Spotify hijau,
-   YouTube merah, dll) karena itu wajib untuk recognition.
-   Default color sebelum hover = var(--acid).
+   Ikon monokrom mengikuti palet utama (paper / acid).
+   Warna brand platform sengaja dilepas supaya konsisten
+   dengan palet editorial Night Frequency.
    ============================================================ */
 
 .an-platform-icon {
@@ -11,7 +11,8 @@
   width: 20px;
   height: 20px;
   flex: 0 0 auto;
-  color: var(--acid);
+  color: var(--paper);
+  transition: color 180ms ease;
 }
 .an-platform-icon svg {
   display: block;
@@ -20,33 +21,14 @@
   fill: currentColor;
 }
 
-.an-platform-soundcloud svg { fill: currentColor; }
+.an-platform-soundcloud svg,
 .an-platform-instagram svg,
 .an-platform-tiktok svg,
 .an-platform-x svg { fill: currentColor; }
 .an-platform-amazon-music svg { fill: none; }
 .an-platform-icon + span { min-width: 0; }
 
-/* Brand accents */
-.an-platform-icon.an-platform-spotify      { color: #1ed760; }
-.an-platform-icon.an-platform-youtube      { color: #ff0033; }
-.an-platform-icon.an-platform-soundcloud   { color: #ff5500; }
-.an-platform-icon.an-platform-instagram    { color: #e4405f; }
-.an-platform-icon.an-platform-apple-music  { color: #fa243c; }
-.an-platform-icon.an-platform-deezer       { color: #a238ff; }
-.an-platform-icon.an-platform-amazon-music { color: #25d1da; }
-.an-platform-icon.an-platform-tidal        { color: #f0ebdd; }
-.an-platform-icon.an-platform-tiktok       { color: #25f4ee; filter: drop-shadow(2px 0 #fe2c55); }
-.an-platform-icon.an-platform-x            { color: #f0ebdd; }
-
-/* Pada hover di platform card, semua ikon jadi ink (kontras dengan
-   background acid) supaya tetap terbaca. */
 .home-platform-card:hover .an-platform-icon,
 .nf-platform-grid a:hover .an-platform-icon {
-  color: var(--ink) !important;
-  filter: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .an-platform-icon.an-platform-tiktok { filter: none; }
+  color: var(--acid);
 }

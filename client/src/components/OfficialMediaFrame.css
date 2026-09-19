@@ -81,8 +81,10 @@
   background: linear-gradient(90deg, transparent, var(--media-accent, var(--acid)), transparent);
   animation: an-media-loading 1.15s ease-in-out infinite;
 }
-.an-official-media-provider-youtube { --media-accent: var(--signal); }
-.an-official-media-provider-soundcloud { --media-accent: var(--signal); }
+.an-official-media-provider-youtube,
+.an-official-media-provider-soundcloud {
+  --media-accent: var(--acid);
+}
 @keyframes an-media-loading {
   0%, 100% { opacity: 0.28; transform: scaleX(0.55); }
   50% { opacity: 1; transform: scaleX(1); }

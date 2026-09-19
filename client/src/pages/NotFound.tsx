@@ -1,52 +1,109 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle, Home } from "lucide-react";
-import { useLocation } from "wouter";
+import { ArrowUpRight } from "lucide-react";
+import { Link } from "wouter";
 
 export default function NotFound() {
-  const [, setLocation] = useLocation();
-
-  const handleGoHome = () => {
-    setLocation("/");
-  };
-
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
-      <Card className="w-full max-w-lg mx-4 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-        <CardContent className="pt-8 pb-8 text-center">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-red-100 rounded-full animate-pulse" />
-              <AlertCircle className="relative h-16 w-16 text-red-500" />
-            </div>
-          </div>
-
-          <h1 className="text-4xl font-bold text-slate-900 mb-2">404</h1>
-
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">
-            Page Not Found
-          </h2>
-
-          <p className="text-slate-600 mb-8 leading-relaxed">
-            Sorry, the page you are looking for doesn't exist.
-            <br />
-            It may have been moved or deleted.
-          </p>
-
-          <div
-            id="not-found-button-group"
-            className="flex flex-col sm:flex-row gap-3 justify-center"
+    <main
+      style={{
+        minHeight: "100dvh",
+        display: "grid",
+        placeItems: "center",
+        background: "var(--ink)",
+        color: "var(--paper)",
+        padding: "clamp(24px, 6vw, 80px)",
+        fontFamily: "var(--font-body)",
+      }}
+    >
+      <div style={{ maxWidth: "560px", width: "100%" }}>
+        <p
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.62rem",
+            fontWeight: 600,
+            letterSpacing: "0.24em",
+            color: "var(--acid)",
+            textTransform: "uppercase",
+            margin: 0,
+          }}
+        >
+          ERROR 404 · SIGNAL LOST
+        </p>
+        <h1
+          style={{
+            fontFamily: "var(--font-display)",
+            fontWeight: 400,
+            fontSize: "clamp(3rem, 12vw, 8rem)",
+            lineHeight: 0.86,
+            letterSpacing: "-0.05em",
+            margin: "20px 0 24px",
+            color: "var(--paper)",
+          }}
+        >
+          Halaman
+          <br />
+          tidak
+          <br />
+          ditemukan.
+        </h1>
+        <p
+          style={{
+            color: "var(--mute)",
+            fontSize: "1rem",
+            lineHeight: 1.7,
+            margin: "0 0 40px",
+            maxWidth: "42ch",
+          }}
+        >
+          Frekuensi ini tidak aktif. Mungkin URL salah ketik, atau
+          halaman sudah dipindahkan.
+        </p>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "16px 28px",
+            borderTop: "1px solid var(--paper)",
+            paddingTop: "28px",
+          }}
+        >
+          <Link
+            href="/"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "16px 22px",
+              background: "var(--acid)",
+              color: "var(--ink)",
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.66rem",
+              fontWeight: 700,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+            }}
           >
-            <Button
-              onClick={handleGoHome}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
-            >
-              <Home className="w-4 h-4 mr-2" />
-              Go Home
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+            KEMBALI KE HOME
+          </Link>
+          <Link
+            href="/music"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              paddingBottom: "8px",
+              borderBottom: "1px solid var(--paper)",
+              color: "var(--paper)",
+              fontFamily: "var(--font-mono)",
+              fontSize: "0.66rem",
+              fontWeight: 600,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+            }}
+          >
+            LIHAT MUSIK <ArrowUpRight size={14} />
+          </Link>
+        </div>
+      </div>
+    </main>
   );
 }
