@@ -1,11 +1,8 @@
 /* ============================================================
    NIGHT FREQUENCY SIGNATURE
-   Rail index navigasi section. Sebelumnya file ini sumber utama
-   kebocoran warna mint (#79d6c7) + glow ke seluruh halaman.
-   Sekarang: warna acid, tanpa glow, tanpa blur.
+   Rail index navigasi section. Warna acid, tanpa glow.
    ============================================================ */
 
-/* -- 1. ROUTE ENTRY ---------------------------------------- */
 .route-motion {
   position: relative;
   isolation: isolate;
@@ -37,7 +34,6 @@
   100% { opacity: 0.72; transform: scaleX(1); }
 }
 
-/* -- 2. SECTION ACCENTS ------------------------------------ */
 .nf-page main > section,
 .an-site main > section {
   --nf-section-accent: var(--acid);
@@ -45,7 +41,6 @@
   scroll-margin-top: 94px;
 }
 
-/* Garis tipis di atas setiap section (non-hero) */
 .nf-page main > section:not(.nf-page-hero)::before,
 .an-site main > section:not(.an-hero)::before {
   position: absolute;
@@ -68,7 +63,6 @@
   transform: scaleX(1);
 }
 
-/* Section title accent bar */
 .nf-page main > section:not(.nf-page-hero) .nf-section-title,
 .nf-page main > section:not(.nf-page-hero) .en-section-intro,
 .an-site main > section:not(.an-hero) .section-heading,
@@ -100,7 +94,6 @@
   transform: scaleY(1);
 }
 
-/* Eyebrow trailing line */
 .nf-page .nf-page-eyebrow,
 .an-site .an-section-index,
 .an-site .eyebrow {
@@ -120,7 +113,6 @@
   opacity: 0.72;
 }
 
-/* -- 3. SIGNATURE RAIL ------------------------------------- */
 .nf-signature-rail {
   position: fixed;
   z-index: 80;
@@ -212,7 +204,6 @@
   white-space: nowrap;
 }
 
-/* -- 4. CARD BOTTOM ACCENT --------------------------------- */
 .nf-page .nf-catalog-card,
 .nf-page .nf-visual-card,
 .nf-page .nf-event-card,
@@ -261,7 +252,6 @@
   transform: scaleX(1);
 }
 
-/* Image hover: subtle zoom pakai brightness, bukan scale */
 .nf-page .nf-catalog-card:hover .nf-catalog-art img,
 .nf-page .nf-visual-card:hover img,
 .an-site .release-card:hover .release-card-art img,
@@ -270,7 +260,6 @@
   filter: saturate(1.05) contrast(1.04);
 }
 
-/* -- 5. RESPONSIVE ----------------------------------------- */
 @media (max-width: 1100px) {
   .nf-signature-rail {
     right: 12px;
@@ -325,7 +314,6 @@
   .nf-signature-rail-status { display: none; }
 }
 
-/* -- 6. REDUCED MOTION ------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   .route-motion,
   .route-motion::before { animation: none; }
