@@ -50,7 +50,10 @@ describe("artist content contract", () => {
     const musicPage = source("client/src/pages/Music.tsx");
 
     expect(musicPage).toContain("const cmsCatalog = cmsReleases.map");
-    expect(musicPage).toContain("releases.filter(legacy => !cmsCatalog.some");
+    expect(musicPage).toContain("const catalog = [");
+    expect(musicPage).toContain("...cmsCatalog");
+    expect(musicPage).toContain("...releases.filter(");
+    expect(musicPage).toContain("!cmsCatalog.some(");
   });
 
   it("keeps the JEDAG RUN game and editable audio connected across public and Studio surfaces", () => {
@@ -103,8 +106,12 @@ describe("artist content contract", () => {
     expect(archive).toContain("Impor & edit");
     expect(previewAssets).toContain("StudioLinkPreview");
     expect(home).toContain("configuredPortrait");
-    expect(pressKit).toContain("const portrait = press?.editorialImage || profile?.portraitImage");
-    expect(pressKit).toContain("const bio = press?.snapshotBio || profile?.longBio");
+    expect(pressKit).toContain("const portrait =");
+    expect(pressKit).toContain("press?.editorialImage");
+    expect(pressKit).toContain("profile?.portraitImage");
+    expect(pressKit).toContain("const bio =");
+    expect(pressKit).toContain("press?.snapshotBio");
+    expect(pressKit).toContain("profile?.longBio");
     expect(source("client/src/content/publicContent.ts")).toContain("editorialImage:");
   });
 

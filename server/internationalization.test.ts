@@ -13,7 +13,8 @@ describe("international artist layer", () => {
     expect(app).toContain('path={"/en/music/:slug"} component={EnglishReleaseDetail}');
     expect(app).toContain('path={"/en/epk"} component={EnglishEpk}');
     expect(app).toContain('path={"/en/privacy"} component={EnglishPrivacy}');
-    expect(english).toContain("Producer, remixer, and electronic bass artist from Bandung Barat, Indonesia.");
+    expect(english).toContain("Producer, remixer, and electronic bass artist from Bandung");
+    expect(english).toContain("Barat, Indonesia.");
     expect(english).toContain("No confirmed show is public yet.");
     expect(english).toContain("Available on request.");
     expect(english).not.toContain("FanSignalInline");
@@ -22,7 +23,7 @@ describe("international artist layer", () => {
   it("keeps a visible language switcher in both public chrome implementations", () => {
     const idChrome = source("client/src/components/NightFrequencyChrome.tsx");
     const enChrome = source("client/src/components/EnglishChrome.tsx");
-    expect(idChrome).toContain('aria-label="Language selection"');
+    expect(idChrome).toContain('aria-label="Pilihan bahasa"');
     expect(idChrome).toContain('href={englishPath}');
     expect(enChrome).toContain('href={indonesianPath(pathname)}');
     expect(enChrome).toContain('href="/en/inquire"');

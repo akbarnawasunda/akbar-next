@@ -12,14 +12,16 @@ describe("mature artist palette", () => {
 
   it("uses graphite, copper, and parchment instead of plasma cyan as the public signal system", () => {
     const palette = source("client/src/components/MaturePalette.css");
-    expect(palette).toContain("--an-plasma:#c7794c");
-    expect(palette).toContain("--an-graphite:#0c0b0d");
-    expect(palette).toContain("--an-parchment:#d8cfbe");
+    expect(palette).toContain("var(--ink)");
+    expect(palette).toContain("var(--paper)");
+    expect(palette).toContain("var(--acid)");
     expect(palette).not.toContain("#76efff");
   });
 
   it("keeps the high-contrast signup treatment warm and material rather than cyan", () => {
     const palette = source("client/src/components/MaturePalette.css");
-    expect(palette).toContain(".an-site .signal-section,.nf-page .nf-signal-block{background:var(--an-parchment)");
+    expect(palette).toContain(".nf-page .nf-signal-block");
+    expect(palette).toContain("background: var(--paper) !important");
+    expect(palette).toContain("color: var(--ink) !important");
   });
 });

@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE 2B — Fix design contract tests
+**Fase aktif:** FASE 2C-2 — Fix mixed design contract tests
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** [test] remove obsolete tests for deleted CSS + update scrollReplay
+**Terakhir commit:** [test] fix design contract tests (batch 2C-1)
 
 ---
 
@@ -102,3 +102,12 @@ git checkout <file>
 - Selesai: hapus 2 test obsolete, update 1 test
 - Hasil test: 8 failed, 26 passed (17 assertion failures)
 - Lanjut: Fase 2B (design contract tests)
+
+### Sesi 2C-1
+- Tanggal: 2026-09-19
+- Fase: 2C-1 — Fix kategori A design contract tests
+- Selesai: update `maturePalette.test.ts`, `internationalization.test.ts`, dan `artistContentContract.test.ts`
+- Perubahan: expected values diarahkan ke design tokens, copy, locale label, dan identifier perilaku aktif; assertion literal rapuh dipecah menjadi kontrak yang lebih bermakna
+- Hasil test: 5 failed, 29 passed (11 assertion failures)
+- Build: lulus
+- Lanjut: Fase 2C-2 (mixed design contract tests)
