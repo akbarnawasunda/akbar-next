@@ -34,10 +34,6 @@ function LanguageSwitcher({ pathname }: { pathname: string }) {
   );
 }
 
-/* ------------------------------------------------------------------
-   MOBILE MENU OVERLAY — portal ke document.body
-   Menghindari masalah clipping dari parent .nf-nav dan .nf-page.
-   ------------------------------------------------------------------ */
 function MobileMenuOverlay({
   open,
   pathname,
@@ -165,7 +161,6 @@ export function NightHeader({ active }: { active?: string }) {
     window.requestAnimationFrame(() => triggerRef.current?.focus());
   };
 
-  // Body scroll lock saat menu buka
   useEffect(() => {
     if (!isOpen) return;
     const html = document.documentElement;
