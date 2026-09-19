@@ -456,3 +456,59 @@
 @media (max-width: 480px) {
   .nf-page .nf-platform-grid { grid-template-columns: 1fr !important; }
 }
+
+/* ============================================================
+   FIX: Booking grid standalone + signal block grid layout
+   ============================================================ */
+
+/* Booking grid saat dipakai sebagai section standalone (misal /live)
+   harus tetap dark — bukan paper. */
+.nf-page main > section.an-booking-grid {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+}
+.nf-page main > section.an-booking-grid h2,
+.nf-page main > section.an-booking-grid p,
+.nf-page main > section.an-booking-grid .nf-page-eyebrow {
+  color: var(--paper) !important;
+}
+.nf-page main > section.an-booking-grid .an-booking-options .an-booking-option {
+  background: transparent !important;
+  border-color: var(--ink-line) !important;
+  color: var(--paper) !important;
+}
+.nf-page main > section.an-booking-grid .an-booking-option > span,
+.nf-page main > section.an-booking-grid .an-booking-option > strong {
+  color: var(--paper) !important;
+}
+.nf-page main > section.an-booking-grid .an-booking-option > small {
+  color: var(--mute) !important;
+}
+.nf-page main > section.an-booking-grid .an-booking-option > svg {
+  color: var(--acid) !important;
+}
+
+/* Signal block: paksa 2 kolom (kiri copy, kanan form) */
+.nf-page .nf-signal-block {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr) !important;
+  align-items: center !important;
+  gap: clamp(40px, 8vw, 120px) !important;
+}
+@media (max-width: 820px) {
+  .nf-page .nf-signal-block {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+}
+
+/* Text di dalam signal block harus ink (dark) karena bg paper */
+.nf-page .nf-signal-block h2,
+.nf-page .nf-signal-block > div > p,
+.nf-page .nf-signal-block label,
+.nf-page .nf-signal-block small {
+  color: var(--ink) !important;
+}
+.nf-page .nf-signal-block .nf-page-eyebrow {
+  color: var(--ink) !important;
+}
