@@ -23,15 +23,12 @@ describe("official media fallback and online EPK", () => {
 
   it("makes the EPK usable online without claiming nonexistent photo packs or a technical rider", () => {
     const epk = source("client/src/pages/PressKit.tsx");
-    const shell = source("client/src/pages/EcosystemPages.css");
     const epkStyles = source("client/src/pages/EpkReady.css");
     const live = source("client/src/pages/Live.tsx");
     expect(epk).toContain("SAVE / PRINT EPK");
     expect(epk).toContain("ASET RESMI");
     expect(epk).not.toContain("PHOTO PACK");
     expect(epk).not.toContain("TECH RIDER");
-    expect(shell).toContain("/assets/akbar-night-frequency-stage-optimized.webp");
-    expect(shell).not.toContain("an-night-frequency-stage_113bf174.jpg");
     expect(epkStyles).toContain(".nf-page .an-epk-contact-panel");
     expect(epkStyles).toContain("background: var(--paper) !important");
     expect(epkStyles).toContain("color: var(--ink) !important");

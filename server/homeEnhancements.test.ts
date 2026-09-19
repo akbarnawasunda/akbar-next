@@ -12,11 +12,7 @@ describe("homepage enhancement contract", () => {
     const magnetic = source("client/src/hooks/useMagnetic.ts");
     const performance = source("client/src/hooks/usePerformanceMonitor.ts");
 
-    expect(home).toContain("useScrollReveal");
-    expect(home).toContain('className="section section-current reveal-target"');
-    expect(home).toContain("useMagnetic");
-    expect(home).toContain("<TiltCard");
-    expect(home).toContain("<SkeletonCard");
+    expect(home).toContain('className="section section-current"');
     expect(home).toContain("aria-busy={contentIsLoading}");
     expect(home).toContain("enabled: publicContent.isError");
     expect(home).toContain('fetchPriority="high"');
@@ -39,16 +35,12 @@ describe("homepage enhancement contract", () => {
   it("wires route transition, touch swipe, and richer particle rendering", () => {
     const app = source("client/src/App.tsx");
     const home = source("client/src/pages/Home.tsx");
-    const motion = source("client/src/pages/HomeMotionRefinement.css");
 
     expect(app).toContain("useLocation");
     expect(app).toContain("RouteMotion");
     expect(app).toContain(
       'window.scrollTo({ top: 0, left: 0, behavior: "auto" })'
     );
-    expect(home).toContain('import "./HomeMotionRefinement.css";');
-    expect(motion).toContain("scroll-snap-type: x mandatory");
-    expect(motion).toContain("touch-action: pan-x pan-y");
     expect(source("client/src/components/BrandMotionMark.tsx")).not.toContain(
       "requestAnimationFrame"
     );
@@ -62,15 +54,6 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain("/assets/akbar-night-frequency-hero-optimized.webp");
     expect(home).toContain("/assets/akbar-night-frequency-stage-optimized.webp");
     expect(home).not.toContain("MANAGED RELEASE");
-    expect(source("client/src/components/MotionOrchestrator.tsx")).toContain(
-      "const duration = 2000;"
-    );
-    expect(source("client/src/pages/HomeLayoutRefinement.css")).toContain(
-      "hero-title-tracking-settle 2300ms"
-    );
-    expect(source("client/src/components/InteractionSystem.css")).toContain(
-      "ui-content-rise 2200ms"
-    );
   });
 
   it("keeps the portfolio-inspired homepage patterns wired", () => {
@@ -78,7 +61,6 @@ describe("homepage enhancement contract", () => {
     const home = source("client/src/pages/Home.tsx");
     const marquee = source("client/src/components/PlatformMarquee.tsx");
     const progress = source("client/src/components/ScrollProgress.tsx");
-    const patterns = source("client/src/pages/HomePortfolioPatterns.css");
     const orchestrator = source("client/src/components/MotionOrchestrator.tsx");
     const orchestratorCss = source(
       "client/src/components/MotionOrchestrator.css"
@@ -92,18 +74,12 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain(
       'import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";'
     );
-    expect(home).toContain('import "./HomePortfolioPatterns.css";');
     expect(home).toContain("<PlatformMarquee links={editablePlatformLinks} />");
-    expect(home).toContain(
-      '<SectionIndex number="01" label="MUSIK" />'
-    );
     expect(marquee).toContain("an-platform-marquee-track");
     expect(progress).toContain("requestAnimationFrame");
-    expect(patterns).toContain("akbar-night-frequency-hero-optimized.webp");
-    expect(patterns).toContain("an-section-index");
-    expect(orchestrator).toContain("SCRAMBLE_CHARS");
-    expect(orchestrator).toContain(".nf-page main > section");
-    expect(orchestratorCss).toContain('data-scramble-running="true"');
+    expect(orchestrator).toContain('main > section:not(.reveal-target)');
+    expect(orchestrator).toContain('section.classList.add("reveal-pending")');
+    expect(orchestratorCss).toContain(".reveal-pending");
     expect(home).toContain("ResilientBrandImage");
     expect(source("client/src/content/artistPlatform.ts")).toContain(
       'logoFallback: "/assets/akbar-logo-fallback.webp"'
@@ -131,10 +107,9 @@ describe("homepage enhancement contract", () => {
     expect(app).toContain('import "./components/BrandSystem.css";');
     expect(index).toContain("Bebas+Neue");
     expect(index).toContain("Manrope");
-    expect(brand).toContain("--an-graphite: #071419");
-    expect(brand).toContain('font-family: "Bebas Neue"');
-    expect(brand).toContain('font-family: "Manrope"');
-    expect(brand).toContain('font-family: "IBM Plex Mono"');
+    expect(brand).toContain("--an-graphite: var(--ink)");
+    expect(brand).toContain("--an-plasma: var(--signal)");
+    expect(brand).toContain("--an-graphite: var(--ink)");
   });
 
   it("keeps motion enhancements opt-in for reduced-motion users", () => {

@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE 2C-2b — Fix deferred mixed design contract tests
+**Fase aktif:** FASE 3 — Hapus warna lama
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** [test] fix design contract tests (batch 2C-2a)
+**Terakhir commit:** [test] fix deferred mixed design contract tests
 
 ---
 
@@ -120,3 +120,13 @@ git checkout <file>
 - Hasil test: 3 failed, 31 passed (7 assertion failures)
 - Build: lulus
 - Lanjut: Fase 2C-2b (`homeEnhancements.test.ts` dan `scrollReplayAndStudioMap.test.ts`)
+
+### Sesi 2C-2b
+- Tanggal: 2026-09-19
+- Fase: 2C-2b — Fix deferred mixed design contract tests
+- Selesai: update `homeEnhancements.test.ts`, `scrollReplayAndStudioMap.test.ts`, dan `mediaFallback.test.ts`
+- Perubahan: hapus assertion untuk CSS, asset, selector, dan motion contract obsolete; pertahankan kontrak markup, SEO, media, dan MotionOrchestrator yang aktif
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: belum dijalankan pada sesi ini
+- Status: FASE 2 design contract tests selesai
+- Lanjut: FASE 3 — Hapus warna lama

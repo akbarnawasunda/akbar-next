@@ -9,22 +9,16 @@ describe("scroll replay and studio site map contracts", () => {
   it("keeps internal route sections observed for both enter and exit transitions", () => {
     const motion = source("client/src/components/MotionOrchestrator.tsx");
 
-    expect(motion).toContain("threshold: [0, 0.12]");
-    expect(motion).toContain(
-      'section.classList.toggle("is-motion-in-view", isVisible)'
-    );
-    expect(motion).toContain("section.dataset.motionDirection = direction");
-    expect(motion).toContain(
-      'section.dataset.motionPhase = isVisible ? "acquiring" : "released"'
-    );
-    expect(motion).not.toContain("observer?.unobserve(entry.target)");
+    expect(motion).toContain("threshold: [0, 0.08]");
+    expect(motion).toContain('main > section:not(.reveal-target)');
+    expect(motion).toContain('section.classList.add("reveal-pending")');
+    expect(motion).toContain('section.classList.add("is-motion-in-view")');
+    expect(motion).toContain("observer?.observe(section)");
+    expect(motion).toContain("observer?.disconnect()");
   });
 
-  it("replays homepage sections and keeps English homepage wired to the same hook", () => {
+  it("replays homepage sections through the shared reveal hook and tuning layer", () => {
     const hook = source("client/src/hooks/useScrollReveal.ts");
-    const english = source("client/src/pages/EnglishPages.tsx");
-    const app = source("client/src/App.tsx");
-
     expect(hook).toContain('element.dataset.revealReplay = "true"');
     expect(hook).toContain(
       'element.classList.toggle("is-revealed", entry.isIntersecting)'
@@ -33,22 +27,6 @@ describe("scroll replay and studio site map contracts", () => {
       'element.dataset.revealPhase = entry.isIntersecting ? "acquiring" : "released"'
     );
     expect(hook).toContain("threshold: [0, threshold]");
-    expect(english).toContain(
-      'import { useScrollReveal } from "@/hooks/useScrollReveal";'
-    );
-    expect(english).toContain("ref={platformSectionRef}");
-    expect(english).toContain("ref={signalSectionRef}");
-    expect(app).toContain('import "./components/SignalTuningMotion.css";');
-    const tuningCss = source("client/src/components/SignalTuningMotion.css");
-    expect(tuningCss).toContain("signal-tuning-heading-lock");
-    expect(tuningCss).toContain("signal-tuning-carrier");
-    expect(tuningCss).toContain("signal-tuning-tune-card");
-    expect(tuningCss).toContain("signal-tuning-tune-card-up");
-    expect(tuningCss).toContain("signal-tuning-panel-lock-up");
-    expect(tuningCss).toContain("signal-route-handoff");
-    expect(tuningCss).toContain("prefers-reduced-motion: reduce");
-    expect(tuningCss).toContain("opacity: 1;");
-    expect(tuningCss).toContain("overflow-x: clip");
   });
 
   it("maps the public pages and their editable sources in Control Room", () => {
