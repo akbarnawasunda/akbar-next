@@ -1939,3 +1939,42 @@
     clip-path: none;
   }
 }
+
+
+/* ============================================================
+   MASCOT DOODLE — user supplied hero accent
+   ============================================================ */
+@keyframes mascot-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-4deg); }
+  50% { transform: translate3d(-8px, -14px, 0) rotate(3deg); }
+}
+@keyframes mascot-glow {
+  0%, 100% { filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.48)) drop-shadow(0 0 0 rgba(0, 117, 255, 0)); }
+  50% { filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.44)) drop-shadow(0 0 22px rgba(0, 117, 255, 0.34)); }
+}
+.an-site .hero-mascot-doodle {
+  position: absolute !important;
+  z-index: 3 !important;
+  right: clamp(28px, 8vw, 132px);
+  bottom: clamp(30px, 7vh, 88px);
+  width: clamp(112px, 13vw, 188px);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 2px solid rgba(0, 117, 255, 0.72);
+  border-radius: 50%;
+  box-shadow: 8px 8px 0 rgba(0, 117, 255, 0.18);
+  pointer-events: none;
+  animation: mascot-float 5.8s ease-in-out infinite, mascot-glow 4.2s ease-in-out infinite;
+}
+.an-site .hero-mascot-doodle::after { content: none; }
+@media (max-width: 820px) {
+  .an-site .hero-mascot-doodle {
+    right: 18px;
+    bottom: 34px;
+    width: clamp(92px, 25vw, 132px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .an-site .hero-mascot-doodle { animation: none; }
+}

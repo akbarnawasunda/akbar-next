@@ -354,6 +354,15 @@ export default function Home() {
                 }}
               />
             </div>
+            <img
+              className="hero-mascot-doodle"
+              src="/assets/akbar-mascot-doodle.png"
+              alt="Maskot doodle Akbar Nawasunda"
+              width={1254}
+              height={1254}
+              loading="eager"
+              decoding="async"
+            />
 
             <div className="hero-copy">
               <p className="eyebrow">

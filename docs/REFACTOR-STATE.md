@@ -295,3 +295,13 @@ git checkout <file>
 - Hasil test: 34 passed, 0 failed (100 tests)
 - Build: lulus
 - Commit: menunggu commit/push sesi ini
+
+### Mascot Doodle Hero Pass
+- Tanggal: 2026-09-19
+- Fase: FINAL — user-supplied visual asset
+- Selesai: gambar maskot user dipasang sebagai floating hero doodle dengan tilt, blue glow pulse, dan responsive sizing
+- Batasan: tanpa image generation baru; asset lokal; pointer-events none; reduced-motion fallback aktif
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: menunggu commit/push sesi ini
