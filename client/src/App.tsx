@@ -115,6 +115,7 @@ export async function preloadPublicRoute(pathname: string) {
 
 import LegacyDocument from "./components/LegacyDocument";
 import { ScrollProgress } from "./components/ScrollProgress";
+import { SmoothScroll } from "./components/SmoothScroll";
 import { MotionOrchestrator } from "./components/MotionOrchestrator";
 import { NightFrequencySignature } from "./components/NightFrequencySignature";
 import { StructuredData } from "./components/StructuredData";
@@ -368,6 +369,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <ScrollProgress />
+          <SmoothScroll />
           <CmsMetadata />
           <StructuredData />
           <MotionOrchestrator />
