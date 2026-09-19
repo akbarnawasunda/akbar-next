@@ -397,9 +397,9 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
   font-weight: 400;
-  font-size: clamp(2rem, 4.5vw, 4rem);
+  font-size: clamp(3.5rem, 9vw, 8.5rem);
   line-height: 0.86;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
   color: var(--acid);
 }
 .an-section-index > i {
@@ -438,7 +438,8 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
   font-weight: 400;
-  font-size: clamp(2.2rem, 4.5vw, 4.5rem) !important;
+  font-size: clamp(2.6rem, 5.2vw, 5.4rem) !important;
+  font-style: italic;
   line-height: 0.86;
   letter-spacing: -0.05em;
   text-transform: none;
@@ -636,10 +637,10 @@
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  border: var(--hx-rule) solid var(--paper);
+  border: 2px solid var(--paper);
   background: var(--ink-soft);
   overflow: hidden;
-  box-shadow: var(--shadow-lift);
+  box-shadow: 8px 8px 0 0 var(--paper);
   margin: 0;
 }
 .an-site .release-cover img {
@@ -747,9 +748,10 @@
   width: 120px;
   height: 120px;
   margin: 0;
-  border: 1px solid var(--paper);
+  border: 2px solid var(--paper);
   background: var(--ink-soft);
   overflow: hidden;
+  box-shadow: 4px 4px 0 0 var(--paper);
   order: 1;
 }
 .an-site .release-card-art img {
@@ -855,10 +857,11 @@
 .an-site .video-card {
   position: relative;
   overflow: hidden;
-  border: var(--hx-rule) solid var(--paper);
+  border: 2px solid var(--paper);
   background: var(--ink-soft);
   color: var(--paper);
   box-shadow: var(--shadow-lift);
+  box-shadow: 6px 6px 0 0 var(--paper);
   transition: border-color 200ms ease;
 }
 .an-site .video-card:first-child { grid-row: 1 / -1; }
@@ -1034,6 +1037,7 @@
   border-bottom: 1px solid var(--paper);
   background: transparent;
   box-shadow: var(--shadow-soft);
+  box-shadow: 4px 4px 0 0 var(--paper);
   transition: background 180ms ease;
 }
 .an-site .home-live-event:hover { background: color-mix(in srgb, var(--paper) 4%, transparent); }
