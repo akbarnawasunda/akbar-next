@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE 4 — Hapus font legacy
+**Fase aktif:** FASE 5 — Kurangi !important
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** [fase-3b] migrate OfficialMediaFrame colors to tokens
+**Terakhir commit:** [fase-4] migrate font legacy to tokens
 
 ---
 
@@ -184,3 +184,16 @@ git checkout <file>
 - Build: lulus
 - Commit: `28cd9f2 [fase-3b] migrate OfficialMediaFrame colors to tokens`
 - Lanjut: FASE 4 — hapus font legacy
+
+### Sesi 4 — Hapus font legacy
+- Tanggal: 2026-09-19
+- Fase: 4 — Migrasi font legacy ke design tokens
+- Selesai: update `OfficialMediaFrame.css`, `PlatformTicker.css`, dan `JedagRunRenderer.ts`
+- Perubahan: `IBM Plex Mono` diganti `var(--font-mono)` pada CSS dan `JetBrains Mono` pada canvas; `Space Grotesk` diganti `var(--font-display)` untuk judul dan `var(--font-body)` untuk teks body/metadata; ukuran font, warna, layout, dan spacing tidak diubah
+- Verifikasi legacy font grep target: kosong
+- Verifikasi seluruh `client/src`: tidak ada `Space Grotesk`, `DM Serif Display`, `IBM Plex Mono`, atau `Clash Display`
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: menunggu commit/push sesi ini
+- Lanjut: FASE 5 — kurangi `!important`

@@ -256,7 +256,7 @@ export class JedagRunRenderer {
       ctx.lineWidth = 2;
       ctx.stroke();
       ctx.fillStyle = color;
-      ctx.font = powerUp.kind === "double" ? "12px 'IBM Plex Mono', monospace" : "15px 'IBM Plex Mono', monospace";
+      ctx.font = powerUp.kind === "double" ? "12px JetBrains Mono, monospace" : "15px JetBrains Mono, monospace";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(powerUpLabels[powerUp.kind], 0, 1);
@@ -383,7 +383,7 @@ export class JedagRunRenderer {
   private drawPopups(state: GameRenderState, reducedMotion: boolean) {
     const ctx = this.context;
     ctx.textAlign = "center";
-    ctx.font = "700 13px 'IBM Plex Mono', monospace";
+    ctx.font = "700 13px JetBrains Mono, monospace";
     for (const popup of state.popups) {
       ctx.globalAlpha = Math.min(1, popup.life * 2) * (reducedMotion ? 0.75 : 1);
       ctx.fillStyle = popup.color;
