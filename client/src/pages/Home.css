@@ -1576,3 +1576,271 @@
   .an-mobile-navigation,
   .an-mobile-navigation > a { transition: none !important; transform: none; opacity: 1; }
 }
+
+/* ============================================================
+   EDITORIAL PASS — opini desain tegas
+   Blok ini di-append di akhir. Kalau tidak suka, hapus dari
+   sini sampai akhir file.
+   Prinsip: tipografi memimpin, spacing lapang, garis tebal,
+   hero asimetris, majalah cetak bukan template.
+   ============================================================ */
+
+/* -- 1. TIPOGRAFI — 1.5x lebih besar ---------------------- */
+.an-site .hero-copy .hero-title-editorial {
+  font-size: clamp(3.8rem, 10vw, 11rem) !important;
+  line-height: 0.82 !important;
+  letter-spacing: -0.055em !important;
+}
+.an-site .section h2 {
+  font-size: clamp(3rem, 6.4vw, 7rem) !important;
+  line-height: 0.86 !important;
+  letter-spacing: -0.048em !important;
+}
+.an-site .home-signal-copy h2 {
+  font-size: clamp(3rem, 6vw, 6rem) !important;
+  line-height: 0.86 !important;
+}
+.an-site .live-copy h2 {
+  font-size: clamp(3rem, 6.4vw, 6.4rem) !important;
+  line-height: 0.86 !important;
+}
+.an-site .release-detail h3 {
+  font-size: clamp(2.6rem, 5vw, 5.2rem) !important;
+  line-height: 0.88 !important;
+}
+.an-site .game-teaser-copy h2 {
+  font-size: clamp(2.8rem, 5.6vw, 5.6rem) !important;
+  line-height: 0.86 !important;
+}
+
+/* -- 2. SPACING — 2x lebih lapang ------------------------ */
+.an-site .section {
+  padding-block: clamp(120px, 14vw, 220px) !important;
+}
+.an-site .home-signal-deck {
+  padding-block: clamp(120px, 14vw, 200px) !important;
+}
+.an-site .live-section {
+  padding-block: clamp(120px, 14vw, 200px) !important;
+}
+.an-site .signal-section {
+  padding-block: clamp(120px, 14vw, 200px) !important;
+}
+.an-site .an-footer {
+  padding-block: clamp(80px, 9vw, 120px) 34px !important;
+}
+.an-site .section-heading,
+.an-site .section-inline {
+  margin-bottom: clamp(56px, 6.5vw, 96px) !important;
+}
+
+/* -- 3. BORDER — dari tipis jadi tegas ------------------- */
+.an-site .release-card,
+.an-site .video-card,
+.an-site .home-live-event,
+.an-site .home-platform-card,
+.an-site .live-status {
+  border-color: var(--paper) !important;
+  border-width: 1px !important;
+}
+
+/* -- 4. HERO — asimetris, portrait lebih kecil ----------- */
+@media (min-width: 821px) {
+  .an-site .an-hero {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr) !important;
+    align-items: end !important;
+    min-height: min(100svh, 900px) !important;
+  }
+  .an-site .home-hero-portrait {
+    width: min(38%, 520px) !important;
+    inset: auto 4% 6% auto !important;
+    height: min(78%, 720px) !important;
+    border: 1px solid var(--paper) !important;
+  }
+  .an-site .home-hero-portrait::after {
+    background: linear-gradient(180deg, transparent 60%, color-mix(in srgb, var(--ink) 60%, transparent) 100%) !important;
+  }
+  .an-site .hero-copy {
+    max-width: 780px !important;
+    padding-bottom: clamp(40px, 6vh, 80px) !important;
+  }
+  .an-site .hero-description {
+    max-width: 48ch !important;
+    font-size: 1.08rem !important;
+  }
+}
+
+/* -- 5. SIGNAL SECTION — paper dominant ------------------ */
+.an-site .signal-section {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+}
+.an-site .signal-section .eyebrow,
+.an-site .signal-section .an-section-index {
+  color: var(--ink) !important;
+}
+.an-site .signal-section h2 {
+  color: var(--ink) !important;
+}
+.an-site .signal-section .nf-signal-form label {
+  color: var(--ink) !important;
+}
+.an-site .signal-section .nf-signal-form > div {
+  border: 2px solid var(--ink) !important;
+  background: var(--paper) !important;
+}
+.an-site .signal-section .nf-signal-form button {
+  background: var(--ink) !important;
+  color: var(--acid) !important;
+}
+
+/* -- 6. PLATFORM RACK — dari 5 kolom jadi 2 kolom -------- */
+.an-site .home-platform-rack {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  border: 1px solid var(--paper) !important;
+}
+.an-site .home-platform-card {
+  min-height: 140px !important;
+  padding: 24px !important;
+  border-right: 1px solid var(--paper) !important;
+  border-bottom: 1px solid var(--paper) !important;
+}
+.an-site .home-platform-card:nth-child(2n) {
+  border-right: 0 !important;
+}
+.an-site .home-platform-card:nth-last-child(-n+2) {
+  border-bottom: 0 !important;
+}
+.an-site .home-platform-card::before {
+  width: 3px !important;
+  opacity: 1 !important;
+}
+
+/* -- 7. RELEASE GRID — asimetris ------------------------- */
+.an-site .release-grid {
+  grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  border: 1px solid var(--paper) !important;
+}
+.an-site .release-card {
+  grid-column: span 4 !important;
+  min-height: 420px !important;
+  padding: 24px !important;
+  border-right: 1px solid var(--paper) !important;
+  border-bottom: 1px solid var(--paper) !important;
+}
+.an-site .release-card:nth-child(3n) {
+  border-right: 0 !important;
+}
+.an-site .release-card h3 {
+  font-size: 1.7rem !important;
+  line-height: 1.02 !important;
+}
+
+/* -- 8. VIDEO GRID — layout asimetris -------------------- */
+.an-site .video-grid {
+  grid-template-columns: 2fr 1fr !important;
+  grid-template-rows: repeat(2, minmax(240px, 1fr)) !important;
+  gap: 16px !important;
+  min-height: 620px !important;
+}
+.an-site .video-card {
+  border: 1px solid var(--paper) !important;
+}
+.an-site .video-card:first-child {
+  grid-row: 1 / -1 !important;
+}
+
+/* -- 9. LIVE — event besar di kiri, list di kanan -------- */
+.an-site .home-live-events {
+  border: 1px solid var(--paper) !important;
+}
+.an-site .home-live-event {
+  border-right: 1px solid var(--paper) !important;
+  border-bottom: 1px solid var(--paper) !important;
+  padding: 26px !important;
+  min-height: 190px !important;
+}
+.an-site .home-live-event:last-child {
+  border-right: 0 !important;
+}
+.an-site .home-live-event strong {
+  font-size: 1.5rem !important;
+  line-height: 1 !important;
+}
+
+/* -- 10. SECTION INDEX — angka besar, bukan label kecil - */
+.an-section-index {
+  font-size: 0.7rem !important;
+  letter-spacing: 0.24em !important;
+  color: var(--acid) !important;
+}
+
+/* -- 11. MONO LABEL — kurangi jumlah visual kecil ------- */
+.an-site .mono-label,
+.an-site .release-card p,
+.an-site .home-live-event small {
+  font-size: 0.62rem !important;
+  letter-spacing: 0.16em !important;
+}
+
+/* -- 12. MOBILE — override spacing tetap lapang --------- */
+@media (max-width: 820px) {
+  .an-site .hero-copy .hero-title-editorial {
+    font-size: clamp(3rem, 14vw, 5.4rem) !important;
+  }
+  .an-site .section h2,
+  .an-site .home-signal-copy h2,
+  .an-site .live-copy h2 {
+    font-size: clamp(2.4rem, 11vw, 4.4rem) !important;
+  }
+  .an-site .section,
+  .an-site .home-signal-deck,
+  .an-site .live-section,
+  .an-site .signal-section {
+    padding-block: clamp(88px, 12vw, 140px) !important;
+  }
+  .an-site .home-platform-rack {
+    grid-template-columns: 1fr !important;
+  }
+  .an-site .home-platform-card {
+    border-right: 0 !important;
+    min-height: 108px !important;
+  }
+  .an-site .release-grid {
+    grid-template-columns: 1fr !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+  }
+  .an-site .release-card {
+    grid-column: auto !important;
+    border-right: 0 !important;
+    border-left: 0 !important;
+    min-height: 0 !important;
+    padding: 20px 18px !important;
+  }
+  .an-site .video-grid {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto !important;
+    min-height: 0 !important;
+  }
+  .an-site .video-card:first-child {
+    grid-row: auto !important;
+  }
+  .an-site .home-live-event {
+    border-right: 0 !important;
+    padding: 20px 18px !important;
+    min-height: 0 !important;
+  }
+}
+
+/* -- 13. REDUCED MOTION ---------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .an-site .home-platform-card,
+  .an-site .release-card,
+  .an-site .video-card,
+  .an-site .home-live-event {
+    transition: none !important;
+  }
+}
