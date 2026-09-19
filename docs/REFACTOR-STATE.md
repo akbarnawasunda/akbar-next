@@ -245,5 +245,7 @@ git checkout <file>
 - Hasil check: lulus
 - Hasil test: 34 passed, 0 failed (100 tests)
 - Build: lulus
-- Commit: menunggu commit/push sesi ini
-- Lanjut: deploy production dan screenshot visual
+- Commit: `e602343 [typography-motion] self-host fonts and amplify gradients`
+- Verifikasi production: Vercel READY; Home CSS valid dan aktif setelah hydration
+- Catatan: headless full-page capture intermittently races dengan route CSS chunk; tidak dijadikan bukti visual final
+- Lanjut: review visual manual di browser/device user
