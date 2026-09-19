@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE 3b — OfficialMediaFrame colors
+**Fase aktif:** FASE 4 — Hapus font legacy
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** [fase-3a] migrate PublicMotion + PlatformTicker colors to tokens
+**Terakhir commit:** [fase-3b] migrate OfficialMediaFrame colors to tokens
 
 ---
 
@@ -172,3 +172,15 @@ git checkout <file>
 - Build: lulus
 - Commit: `2a2def7 [fase-3a] migrate PublicMotion + PlatformTicker colors to tokens`
 - Lanjut: FASE 3b — OfficialMediaFrame colors
+
+### Sesi 3b — OfficialMediaFrame colors
+- Tanggal: 2026-09-19
+- Fase: 3b — Migrasi warna legacy ke design tokens
+- Selesai: update `OfficialMediaFrame.css`
+- Perubahan: warna background, border, accent, overlay, metadata, CTA, player, dan provider diarahkan ke `--ink`, `--ink-soft`, `--paper`, `--acid`, `--signal`, `--mute`, dan `--ink-line`; font, layout, spacing, dan struktur CSS tidak diubah
+- Verifikasi legacy color grep: kosong
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: `28cd9f2 [fase-3b] migrate OfficialMediaFrame colors to tokens`
+- Lanjut: FASE 4 — hapus font legacy
