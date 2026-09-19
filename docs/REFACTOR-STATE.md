@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE 2C-2 — Fix mixed design contract tests
+**Fase aktif:** FASE 2C-2b — Fix deferred mixed design contract tests
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** [test] fix design contract tests (batch 2C-1)
+**Terakhir commit:** [test] fix design contract tests (batch 2C-2a)
 
 ---
 
@@ -111,3 +111,12 @@ git checkout <file>
 - Hasil test: 5 failed, 29 passed (11 assertion failures)
 - Build: lulus
 - Lanjut: Fase 2C-2 (mixed design contract tests)
+
+### Sesi 2C-2a
+- Tanggal: 2026-09-19
+- Fase: 2C-2a — Fix 3 mixed design contract tests yang paling mudah
+- Selesai: update `brandMotionMark.test.ts`, `homePlatformCards.test.ts`, dan `mediaFallback.test.ts`
+- Perubahan: hapus referensi CSS obsolete; pertahankan kontrak asset/markup/media; update expected EPK ke `var(--paper)` dan `var(--ink)`
+- Hasil test: 3 failed, 31 passed (7 assertion failures)
+- Build: lulus
+- Lanjut: Fase 2C-2b (`homeEnhancements.test.ts` dan `scrollReplayAndStudioMap.test.ts`)

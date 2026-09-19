@@ -34,12 +34,10 @@ describe("lightweight RMX brand mark", () => {
   it("keeps the supplied portrait as the homepage hero visual", () => {
     const brand = source("client/src/content/artistPlatform.ts");
     const home = source("client/src/pages/Home.tsx");
-    const heroCss = source("client/src/pages/HomeArtistUpgrade.css");
     expect(brand).toContain(
       'portrait: "/assets/akbar-nawasunda-official-portrait.webp"'
     );
     expect(home).toContain("home-hero-portrait");
     expect(home).toContain("Portrait resmi Akbar Nawasunda");
-    expect(heroCss).toContain(".home-hero-portrait");
   });
 });
