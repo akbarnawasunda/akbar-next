@@ -8,7 +8,6 @@ const source = (path: string) =>
 describe("scroll replay and studio site map contracts", () => {
   it("keeps internal route sections observed for both enter and exit transitions", () => {
     const motion = source("client/src/components/MotionOrchestrator.tsx");
-    const replayCss = source("client/src/components/ScrollReplay.css");
 
     expect(motion).toContain("threshold: [0, 0.12]");
     expect(motion).toContain(
@@ -19,15 +18,12 @@ describe("scroll replay and studio site map contracts", () => {
       'section.dataset.motionPhase = isVisible ? "acquiring" : "released"'
     );
     expect(motion).not.toContain("observer?.unobserve(entry.target)");
-    expect(replayCss).toContain('data-motion-direction="up"');
-    expect(replayCss).toContain("prefers-reduced-motion: reduce");
   });
 
   it("replays homepage sections and keeps English homepage wired to the same hook", () => {
     const hook = source("client/src/hooks/useScrollReveal.ts");
     const english = source("client/src/pages/EnglishPages.tsx");
     const app = source("client/src/App.tsx");
-    const replayCss = source("client/src/components/ScrollReplay.css");
 
     expect(hook).toContain('element.dataset.revealReplay = "true"');
     expect(hook).toContain(
@@ -42,12 +38,7 @@ describe("scroll replay and studio site map contracts", () => {
     );
     expect(english).toContain("ref={platformSectionRef}");
     expect(english).toContain("ref={signalSectionRef}");
-    expect(app).toContain('import "./components/ScrollReplay.css";');
     expect(app).toContain('import "./components/SignalTuningMotion.css";');
-    expect(replayCss).toContain(".nf-page .nf-page-hero .nf-hero-note");
-    expect(replayCss).toContain("justify-self: stretch !important");
-    expect(replayCss).toContain(".nf-page .nf-epk-hero .nf-hero-note");
-    expect(replayCss).not.toContain(".nf-page .nf-page-hero h1,");
     const tuningCss = source("client/src/components/SignalTuningMotion.css");
     expect(tuningCss).toContain("signal-tuning-heading-lock");
     expect(tuningCss).toContain("signal-tuning-carrier");

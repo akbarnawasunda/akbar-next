@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE 1 — Audit
-**Terakhir update:** (belum ada)
-**Terakhir commit:** (belum ada)
+**Fase aktif:** FASE 2B — Fix design contract tests
+**Terakhir update:** 2026-09-19
+**Terakhir commit:** [test] remove obsolete tests for deleted CSS + update scrollReplay
 
 ---
 
@@ -97,6 +97,8 @@ git checkout <file>
 ## LOG SESI
 
 ### Sesi 1
-- Tanggal: -
-- Status: belum mulai
-- Yang dikerjakan: -
+- Tanggal: 2026-09-19
+- Fase: 2A — Fix obsolete tests
+- Selesai: hapus 2 test obsolete, update 1 test
+- Hasil test: 8 failed, 26 passed (17 assertion failures)
+- Lanjut: Fase 2B (design contract tests)
