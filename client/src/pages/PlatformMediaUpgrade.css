@@ -1,7 +1,6 @@
 /* ============================================================
    PLATFORM MEDIA UPGRADE
    Micro-adjustment untuk platform card dan release card.
-   Warna & font dari index.css. Acid lama dihapus.
    ============================================================ */
 
 .home-platform-rack a,
@@ -22,7 +21,6 @@
   color: var(--acid);
 }
 
-/* -- RELEASE CARD ART OVERLAY ------------------------------ */
 .release-card {
   position: relative;
   overflow: hidden;
@@ -65,7 +63,6 @@
   gap: 8px;
 }
 
-/* -- RESPONSIVE ------------------------------------------- */
 @media (max-width: 640px) {
   .release-card-art { opacity: 0.12; }
   .home-platform-rack a,

@@ -1,61 +1,104 @@
+/* ============================================================
+   LIVE — Halaman /live
+   Panel signal pakai paper surface dengan form kontras.
+   ============================================================ */
+
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band {
-  min-height: 0 !important;
-  padding: clamp(56px, 8vw, 112px) clamp(20px, 8vw, 120px) !important;
-  background: #d8cfbe !important;
-  color: #1b1510 !important;
+  min-height: 0;
+  padding: clamp(56px, 8vw, 112px) var(--gutter, clamp(20px, 4.5vw, 64px));
   display: grid;
   grid-template-columns: minmax(0, 0.82fr) minmax(0, 1fr);
   align-items: center;
   gap: clamp(28px, 7vw, 96px);
+  background: var(--paper);
+  color: var(--ink);
+  border-top: 1px solid var(--ink-line);
 }
-
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band::before {
-  background: rgba(199, 121, 76, 0.16) !important;
-  filter: blur(44px);
+  content: none !important;
+  background: none !important;
 }
 
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band h2,
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band p,
-.route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-page-eyebrow,
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band label,
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band small {
-  color: #1b1510 !important;
+  color: var(--ink);
+}
+.route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-page-eyebrow {
+  color: var(--ink);
+}
+.route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-page-eyebrow::before {
+  background: var(--signal);
 }
 
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form {
+  width: min(100%, 520px);
+  justify-self: end;
   margin: 0;
 }
-
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form > div {
-  border-color: rgba(27, 21, 16, 0.4) !important;
-  background: rgba(255, 255, 255, 0.34) !important;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  border: 1px solid var(--ink);
+  background: var(--paper);
 }
-
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form input {
+  flex: 1;
   min-width: 0;
-  background: #f5eee2 !important;
-  color: #1b1510 !important;
-  caret-color: #1b1510;
+  padding: 14px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  caret-color: var(--ink);
 }
-
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form input::placeholder {
-  color: rgba(27, 21, 16, 0.58) !important;
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
 }
-
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form button {
-  background: #1b1510 !important;
-  color: #d8cfbe !important;
-  border-color: #1b1510 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 14px 18px;
+  border: 0;
+  border-left: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media (max-width: 820px) {
   .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: 1fr;
     gap: 26px;
-    padding: 48px 20px 54px !important;
+    padding: 48px 20px 54px;
   }
-
   .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band h2 {
-    max-width: 100% !important;
+    max-width: 100%;
+  }
+  .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form {
+    justify-self: stretch;
+  }
+  .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form > div {
+    flex-wrap: wrap;
+  }
+  .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form button {
+    width: 100%;
+    justify-content: center;
+    border-left: 0;
+    border-top: 1px solid var(--ink);
   }
 }
