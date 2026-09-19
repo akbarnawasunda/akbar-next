@@ -150,7 +150,11 @@
   min-height: calc(100svh - 76px) !important;
   padding: clamp(48px, 7vh, 96px) var(--hx-gutter) clamp(56px, 8vh, 112px) !important;
   border-bottom: var(--hx-rule) solid var(--paper) !important;
-  background: var(--ink) !important;
+  background-color: var(--ink) !important;
+  background-image:
+    radial-gradient(ellipse 48% 72% at 78% 42%, color-mix(in srgb, var(--signal) 18%, transparent), transparent 68%),
+    linear-gradient(90deg, transparent 0 64%, color-mix(in srgb, var(--paper) 4%, transparent) 64% 64.1%, transparent 64.1% 100%),
+    repeating-linear-gradient(0deg, transparent 0 88px, color-mix(in srgb, var(--paper) 4%, transparent) 88px 89px) !important;
   overflow: hidden;
 }
 .an-site .an-hero::before,
@@ -262,11 +266,16 @@
   grid-row: 1 / 2;
   width: 100% !important;
   height: min(76vh, 680px) !important;
-  border: var(--hx-rule) solid var(--paper);
+  border: 2px solid var(--paper);
   overflow: hidden;
   background: var(--ink-soft);
   box-shadow: var(--shadow-hero);
+  transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 360ms cubic-bezier(0.16, 1, 0.3, 1);
   align-self: end;
+}
+.an-site .home-hero-portrait:hover {
+  transform: translate(-8px, -8px);
+  box-shadow: 16px 16px 0 var(--acid);
 }
 .an-site .home-hero-portrait::after {
   content: "23:47";
@@ -548,7 +557,7 @@
   border-bottom: 1px solid var(--paper) !important;
   background: transparent !important;
   color: var(--paper);
-  transition: padding-left 260ms cubic-bezier(0.16, 1, 0.3, 1), background 180ms ease;
+  transition: padding-left 260ms cubic-bezier(0.16, 1, 0.3, 1), background 180ms ease, transform 220ms ease, box-shadow 220ms ease;
 }
 .an-site .home-platform-card::before,
 .an-site .home-platform-card::after { content: none !important; }
@@ -557,8 +566,8 @@
   background: color-mix(in srgb, var(--paper) 4%, transparent) !important;
   padding-left: 24px !important;
   border-color: var(--paper) !important;
-  box-shadow: none !important;
-  transform: none !important;
+  box-shadow: 6px 6px 0 var(--acid) !important;
+  transform: translate(-4px, -4px) !important;
 }
 
 .home-platform-number {
@@ -731,7 +740,7 @@
   opacity: 1 !important;
   transform: none !important;
   animation: none !important;
-  transition: padding-left 260ms cubic-bezier(0.16, 1, 0.3, 1), background 180ms ease;
+  transition: padding-left 260ms cubic-bezier(0.16, 1, 0.3, 1), background 180ms ease, transform 220ms ease, box-shadow 220ms ease;
 }
 .an-site .release-card:hover,
 .an-site .release-card:focus-visible {
@@ -739,8 +748,8 @@
   box-shadow: var(--shadow-lift);
   padding-left: 20px !important;
   border-color: var(--paper) !important;
-  box-shadow: none !important;
-  transform: none !important;
+  box-shadow: 8px 8px 0 var(--acid) !important;
+  transform: translate(-4px, -4px) !important;
 }
 .an-site .release-card::before { content: none !important; }
 
@@ -862,10 +871,14 @@
   color: var(--paper);
   box-shadow: var(--shadow-lift);
   box-shadow: 6px 6px 0 0 var(--paper);
-  transition: border-color 200ms ease;
+  transition: border-color 200ms ease, transform 240ms ease, box-shadow 240ms ease;
 }
 .an-site .video-card:first-child { grid-row: 1 / -1; }
-.an-site .video-card:hover { border-color: var(--acid); }
+.an-site .video-card:hover {
+  border-color: var(--acid);
+  box-shadow: 10px 10px 0 var(--acid);
+  transform: translate(-5px, -5px);
+}
 .an-site .video-card > img {
   width: 100%;
   height: 100%;
@@ -1038,9 +1051,13 @@
   background: transparent;
   box-shadow: var(--shadow-soft);
   box-shadow: 4px 4px 0 0 var(--paper);
-  transition: background 180ms ease;
+  transition: background 180ms ease, transform 220ms ease, box-shadow 220ms ease;
 }
-.an-site .home-live-event:hover { background: color-mix(in srgb, var(--paper) 4%, transparent); }
+.an-site .home-live-event:hover {
+  background: color-mix(in srgb, var(--paper) 4%, transparent);
+  box-shadow: 8px 8px 0 var(--acid);
+  transform: translate(-4px, -4px);
+}
 .an-site .home-live-event > span {
   font-family: var(--font-mono);
   font-size: 0.62rem;
@@ -1122,10 +1139,16 @@
   position: relative;
   order: 2;
   min-height: 480px;
-  border: var(--hx-rule) solid var(--paper);
+  border: 2px solid var(--paper);
   background: var(--ink-soft);
   overflow: hidden;
   isolation: isolate;
+  box-shadow: var(--shadow-lift);
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms ease;
+}
+.an-site .game-teaser-art:hover {
+  transform: translate(-6px, -6px);
+  box-shadow: 12px 12px 0 var(--acid);
 }
 .an-site .game-teaser-scanline {
   position: absolute;

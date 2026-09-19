@@ -81,6 +81,7 @@
 .nf-page .nf-epk-hero {
   background-color: var(--ink) !important;
   background-image:
+    radial-gradient(ellipse 55% 100% at 82% 18%, color-mix(in srgb, var(--signal) 20%, transparent), transparent 70%),
     linear-gradient(90deg, var(--ink) 0%, color-mix(in srgb, var(--ink) 78%, transparent) 46%, color-mix(in srgb, var(--ink) 22%, transparent) 100%),
     var(--page-image, none) !important;
   background-size: cover !important;
@@ -142,7 +143,7 @@
 
 .nf-page .nf-section {
   background: var(--ink) !important;
-  background-image: none !important;
+  background-image: repeating-linear-gradient(0deg, transparent 0 96px, color-mix(in srgb, var(--paper) 3%, transparent) 96px 97px) !important;
   border-top: 1px solid var(--ink-line) !important;
   padding-block: clamp(72px, 9vw, 132px) !important;
   padding-inline: var(--gutter, clamp(20px, 4.5vw, 64px)) !important;
@@ -240,9 +241,9 @@
 .nf-page .an-platform-card {
   border: 1px solid var(--ink-line) !important;
   border-radius: 0 !important;
-  background: transparent !important;
+  background: color-mix(in srgb, var(--paper) 2.5%, transparent) !important;
   background-image: none !important;
-  box-shadow: none !important;
+  box-shadow: var(--shadow-soft) !important;
   transition: background var(--dur-fast, 160ms) var(--ease, ease), border-color var(--dur-fast, 160ms) var(--ease, ease);
 }
 .nf-page .nf-catalog-card:hover,
@@ -253,10 +254,10 @@
 .nf-page .an-event-card:hover,
 .nf-page .an-epk-asset:hover,
 .nf-page .an-epk-release:hover {
-  background: color-mix(in srgb, var(--paper) 4%, transparent) !important;
-  border-color: var(--ink-line) !important;
-  box-shadow: none !important;
-  transform: none !important;
+  background: color-mix(in srgb, var(--paper) 7%, transparent) !important;
+  border-color: var(--acid) !important;
+  box-shadow: 8px 8px 0 var(--acid) !important;
+  transform: translate(-4px, -4px) !important;
 }
 .nf-page .nf-catalog-card::before,
 .nf-page .nf-visual-card::before,
@@ -327,7 +328,7 @@
   border: 0 !important;
   border-right: 1px solid var(--ink-line) !important;
   border-bottom: 1px solid var(--ink-line) !important;
-  background: transparent !important;
+  background: color-mix(in srgb, var(--paper) 2%, transparent) !important;
   color: var(--paper) !important;
   font-family: var(--font-mono) !important;
   font-size: 0.62rem;
@@ -337,10 +338,10 @@
 }
 .nf-page .nf-platform-grid a:hover,
 .nf-page .nf-platform-grid a:focus-visible {
-  background: color-mix(in srgb, var(--paper) 5%, transparent) !important;
-  border-color: var(--ink-line) !important;
+  background: color-mix(in srgb, var(--acid) 10%, transparent) !important;
+  border-color: var(--acid) !important;
   color: var(--paper) !important;
-  transform: none !important;
+  transform: translate(-3px, -3px) !important;
 }
 .nf-page .nf-platform-grid a svg { color: var(--acid); }
 

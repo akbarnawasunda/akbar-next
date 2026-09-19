@@ -10,7 +10,7 @@
 
 **Fase aktif:** FASE 5B — Animasi (menunggu approval)
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** [batch-1] monokrom ikon + konsisten CTA media + fix 404 page
+**Terakhir commit:** visual polish pass — atmospheric surfaces + tactile interactions
 
 ---
 
@@ -222,3 +222,14 @@ git checkout <file>
 - Build: lulus
 - Commit: menunggu commit/push sesi ini
 - Lanjut: FASE 5B — animasi, menunggu approval user
+
+### Visual Polish Pass — Homepage dan Music
+- Tanggal: 2026-09-19
+- Fase: FASE 5B — animasi dan visual refinement
+- Selesai: polish `Home.css` dan `MaturePalette.css`
+- Perubahan: atmospheric gradient/grid surfaces, stronger hero portrait frame, dimensional card shadows, tactile hover lift untuk platform/release/video/live/game cards, dan richer `/music` hero/platform/catalog surfaces
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: menunggu commit/push sesi ini
+- Lanjut: verifikasi screenshot production dan iterasi berikutnya bila diperlukan
