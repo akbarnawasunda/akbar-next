@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE 3 — Hapus warna lama
+**Fase aktif:** FASE B1 — Verifikasi menu navigasi
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** [test] fix deferred mixed design contract tests
+**Terakhir commit:** [fix] restore mobile navigation CSS on homepage
 
 ---
 
@@ -130,3 +130,13 @@ git checkout <file>
 - Build: belum dijalankan pada sesi ini
 - Status: FASE 2 design contract tests selesai
 - Lanjut: FASE 3 — Hapus warna lama
+
+### Sesi B1 — Mobile navigation
+- Tanggal: 2026-09-19
+- Fase: B1 — Fix homepage mobile navigation CSS
+- Selesai: restore blok `.an-mobile-navigation` yang hilang dari `Home.css`
+- Perubahan: overlay homepage kembali memiliki positioning fixed, z-index, visibility state, focus styling, link layout, dan responsive padding
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: `bb26e35 [fix] restore mobile navigation CSS on homepage`
+- Lanjut: minta user verifikasi menu di perangkat mobile sebelum FASE 3a
