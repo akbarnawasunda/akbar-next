@@ -97,7 +97,4 @@
 }
 
 /* Let the browser skip layout/paint for distant inner-page sections. */
-.nf-page:not(.an-site) main > section:not(.nf-page-hero) {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 720px;
-}
+
