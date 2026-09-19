@@ -307,3 +307,13 @@ git checkout <file>
 - Commit: `2595db2 [final] add animated mascot doodle hero`
 - Verifikasi production: Vercel READY; GitHub Actions success
 - Status: FINAL — menunggu review user, tidak ada perubahan tambahan
+
+### Mascot Signal System Extension
+- Tanggal: 2026-09-19
+- Fase: FINAL+ — shared identity polish
+- Selesai: mascot companion badge ditambahkan ke shared footer seluruh halaman publik dengan label BACK TO SIGNAL dan float/tilt motion ringan
+- Batasan: tidak mengubah struktur grid utama atau routing; reduced-motion fallback aktif
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: menunggu commit/push sesi ini
