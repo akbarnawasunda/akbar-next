@@ -107,19 +107,6 @@
   color: var(--ink);
 }
 
-.nf-menu-toggle {
-  display: none;
-  padding: 8px 12px;
-  border: 1px solid var(--ink-line);
-  background: transparent;
-  color: var(--paper);
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 .nf-page-hero {
   position: relative;
   display: grid;
@@ -1070,8 +1057,6 @@
   }
   .nf-nav nav { display: none; }
   .nf-signal { font-size: 0; padding: 8px; gap: 0; }
-  .nf-menu-toggle { display: inline-grid; }
-
   .nf-page-hero {
     grid-template-columns: 1fr;
     min-height: 0;

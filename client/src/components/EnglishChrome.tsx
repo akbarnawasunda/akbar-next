@@ -7,7 +7,6 @@ import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
 import "./NightFrequencyChrome.css";
 import "./OfficialBrand.css";
-import "./EcosystemRefinement.css";
 import "./EnglishLayer.css";
 
 const navItems = [

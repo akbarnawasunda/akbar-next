@@ -213,6 +213,7 @@ export default function Home() {
     ),
   ];
 
+  const activeReleaseStory = cmsCurrentRelease?.story ?? managedRelease?.subtitle;
   const activeRelease = cmsCurrentRelease
     ? {
         ...currentRelease,
@@ -223,7 +224,6 @@ export default function Home() {
           currentRelease.type,
         href: cmsCurrentRelease.url || currentRelease.href,
         image: cmsCurrentRelease.artworkUrl || currentRelease.image,
-        story: cmsCurrentRelease.story,
       }
     : managedRelease
       ? {
@@ -236,7 +236,6 @@ export default function Home() {
             managedRelease.imageUrl !== officialBrand.socialPreview
               ? managedRelease.imageUrl
               : currentRelease.image,
-          story: managedRelease.subtitle,
         }
       : currentRelease;
 
@@ -485,8 +484,7 @@ export default function Home() {
                 </p>
                 <h3>{activeRelease.title}</h3>
                 <p>
-                  {activeRelease.story ||
-                    managedRelease?.subtitle ||
+                  {activeReleaseStory ||
                     "Buka rilisan ini di platform resminya."}
                 </p>
                 <div className="release-detail-actions">

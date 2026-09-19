@@ -9,7 +9,6 @@ import {
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import "./NightFrequencyChrome.css";
 import "./OfficialBrand.css";
-import "./EcosystemRefinement.css";
 import "@/pages/ArtistModules.css";
 import "./PublicMotion.css";
 
