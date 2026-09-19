@@ -8,7 +8,6 @@ type RuntimeEntry = {
   active: boolean;
   tags: HTMLScriptElement[];
   styleLinks: HTMLLinkElement[];
-  fontLink: HTMLLinkElement;
   disposeTimer?: number;
 };
 
@@ -47,12 +46,8 @@ export default function LegacyDocument({ source, scripts = "home" }: Props) {
       document.head.appendChild(link);
       return link;
     });
-    const fontLink = document.createElement("link");
-    fontLink.rel = "stylesheet";
-    fontLink.href = "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&family=Bebas+Neue&family=Space+Grotesk:wght@500;700&family=Chakra+Petch:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;1,400&family=Anton&family=JetBrains+Mono:wght@400;600&display=swap";
-    document.head.appendChild(fontLink);
     const sources = scripts === "home" ? homeScripts.map((name) => `/assets/js/${name}`) : [];
-    const entry: RuntimeEntry = { refs: 1, active: true, tags: [], styleLinks, fontLink };
+    const entry: RuntimeEntry = { refs: 1, active: true, tags: [], styleLinks };
     runtimeEntries.set(runtimeKey, entry);
     const load = async () => {
       if (scripts === "home") {
@@ -82,7 +77,6 @@ function releaseRuntime(key: string, entry: RuntimeEntry) {
     entry.active = false;
     entry.tags.forEach((tag) => tag.remove());
     entry.styleLinks.forEach((link) => link.remove());
-    entry.fontLink.remove();
     runtimeEntries.delete(key);
   }, 100);
 }

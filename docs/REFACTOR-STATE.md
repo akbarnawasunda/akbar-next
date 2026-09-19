@@ -10,7 +10,7 @@
 
 **Fase aktif:** FASE 5B — Animasi (menunggu approval)
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** visual polish pass — atmospheric surfaces + tactile interactions
+**Terakhir commit:** self-hosted typography + gradient motion system
 
 ---
 
@@ -234,3 +234,16 @@ git checkout <file>
 - Commit: `6834c20 [visual-pass] add atmospheric surfaces and tactile interactions`
 - Verifikasi production: Vercel READY; screenshot homepage dan `/music` tervalidasi
 - Lanjut: iterasi visual berikutnya berdasarkan feedback user
+
+### Typography + Gradient Motion Pass
+- Tanggal: 2026-09-19
+- Fase: FASE 5B — typography, gradients, dan motion
+- Selesai: migrasi font ke Fontsource lokal, gradient token system, animated hero atmosphere, gradient CTA, dan tambahan card/button motion
+- Font: Bricolage Grotesque Variable, Plus Jakarta Sans Variable, JetBrains Mono Variable; tidak ada Google Fonts atau Fontshare runtime request
+- Batasan: reduced-motion override dipertahankan; legacy HTML font requests juga dibersihkan
+- Hasil external font audit: kosong
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: menunggu commit/push sesi ini
+- Lanjut: deploy production dan screenshot visual

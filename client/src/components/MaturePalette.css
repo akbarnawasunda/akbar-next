@@ -180,7 +180,8 @@
   padding: 14px 18px;
   border: 1px solid var(--acid) !important;
   border-radius: 0 !important;
-  background: var(--acid) !important;
+  background: var(--gradient-accent) !important;
+  background-size: 180% 100%;
   color: var(--ink) !important;
   box-shadow: none !important;
   font-family: var(--font-mono) !important;
@@ -188,14 +189,13 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: background var(--dur-fast, 160ms) var(--ease, ease), color var(--dur-fast, 160ms) var(--ease, ease);
+  transition: background-position 280ms ease, color var(--dur-fast, 160ms) var(--ease, ease), transform 180ms ease;
 }
 .nf-page .nf-button:hover,
 .nf-page .nf-button:focus-visible {
-  background: var(--paper) !important;
-  border-color: var(--paper) !important;
+  background-position: 100% 0;
   color: var(--ink) !important;
-  transform: none !important;
+  transform: translateY(-3px) !important;
   box-shadow: none !important;
 }
 
@@ -244,7 +244,7 @@
   background: color-mix(in srgb, var(--paper) 2.5%, transparent) !important;
   background-image: none !important;
   box-shadow: var(--shadow-soft) !important;
-  transition: background var(--dur-fast, 160ms) var(--ease, ease), border-color var(--dur-fast, 160ms) var(--ease, ease);
+  transition: background var(--dur-fast, 160ms) var(--ease, ease), border-color var(--dur-fast, 160ms) var(--ease, ease), transform 220ms ease, box-shadow 220ms ease;
 }
 .nf-page .nf-catalog-card:hover,
 .nf-page .nf-visual-card:hover,
@@ -334,7 +334,7 @@
   font-size: 0.62rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  transition: background var(--dur-fast, 160ms) var(--ease, ease);
+  transition: background var(--dur-fast, 160ms) var(--ease, ease), transform 180ms ease;
 }
 .nf-page .nf-platform-grid a:hover,
 .nf-page .nf-platform-grid a:focus-visible {

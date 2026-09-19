@@ -3,9 +3,9 @@
    Satu-satunya sumber kebenaran untuk: font, warna, tipe, base.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
-@import url('https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap');
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/jetbrains-mono";
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -13,9 +13,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
-  --font-body:    "Switzer", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", sans-serif;
+  --font-body:    "Plus Jakarta Sans Variable", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --ink:        #0a0a09;
   --ink-soft:   #131211;
@@ -26,6 +26,9 @@
 
   --acid:     #4a7c7c;
   --signal:   #a03a24;
+  --gradient-accent: linear-gradient(115deg, #4a7c7c 0%, #7fb8a5 48%, #d8b36a 100%);
+  --gradient-signal: linear-gradient(135deg, #a03a24 0%, #d06b48 52%, #f0c88b 100%);
+  --gradient-night: linear-gradient(135deg, #101d22 0%, #0a0a09 46%, #2a1715 100%);
 
   --shadow-text:  0 2px 6px rgba(0, 0, 0, 0.55);
   --shadow-soft:  0 4px 12px rgba(0, 0, 0, 0.35);
