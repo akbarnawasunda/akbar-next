@@ -274,3 +274,13 @@ git checkout <file>
 - Commit: `710cb68 [visual-correction] restore restrained typography hierarchy`
 - Verifikasi production: Vercel READY; GitHub Actions success
 - Lanjut: user review ulang di desktop dan HP; tidak ada perubahan tambahan sampai feedback berikutnya
+
+### Kinetic Typography Pass
+- Tanggal: 2026-09-19
+- Fase: FASE 5B — electronic artist text motion
+- Selesai: word reveal lebih ekspresif, clip-mask, micro-glitch shadow pulse, scan beam, dan label flicker ringan pada hero
+- Batasan: motion hanya pada teks/label, tidak menggeser layout; reduced-motion fallback tetap aktif
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: menunggu commit/push sesi ini

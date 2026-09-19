@@ -1852,3 +1852,90 @@
     padding: 90px var(--hx-gutter, 20px) 48px;
   }
 }
+
+
+/* ============================================================
+   KINETIC TYPE — electronic artist energy, restrained
+   ============================================================ */
+@keyframes hx-word-signal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 108%, 0) skewX(-5deg);
+    clip-path: inset(0 0 100% 0);
+    text-shadow: 0 0 0 transparent;
+  }
+  58% {
+    opacity: 1;
+    transform: translate3d(0, -2%, 0) skewX(1deg);
+    clip-path: inset(0 0 0 0);
+    text-shadow: -4px 0 0 rgba(74, 124, 124, 0.42), 4px 0 0 rgba(160, 58, 36, 0.28);
+  }
+  72% {
+    transform: translate3d(2px, 0, 0) skewX(0);
+    text-shadow: 3px 0 0 rgba(74, 124, 124, 0.26), -3px 0 0 rgba(160, 58, 36, 0.2);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(0 0 0 0);
+    text-shadow: var(--shadow-text);
+  }
+}
+@keyframes hx-scan-beam {
+  0%, 18% { transform: translateY(-120%); opacity: 0; }
+  28% { opacity: 0.7; }
+  48%, 100% { transform: translateY(260%); opacity: 0; }
+}
+@keyframes hx-label-flicker {
+  0%, 92%, 100% { opacity: 1; }
+  94% { opacity: 0.55; }
+  96% { opacity: 0.92; }
+}
+.an-site .hero-copy .hero-title-editorial {
+  position: relative;
+  isolation: isolate;
+}
+.an-site .hero-copy .hero-title-mask {
+  position: relative;
+}
+.an-site .hero-copy .hero-title-mask::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  left: -4%;
+  top: -24%;
+  width: 108%;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--acid), var(--paper), transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--acid) 70%, transparent);
+  animation: hx-scan-beam 3.8s cubic-bezier(0.16, 1, 0.3, 1) 1.05s both;
+}
+.an-site .hero-copy .hero-title-word {
+  animation: hx-word-signal 1120ms cubic-bezier(0.16, 1, 0.3, 1) calc(180ms + var(--hero-word-index, 0) * 180ms) both;
+  will-change: transform, opacity, clip-path, text-shadow;
+}
+.an-site .hero-copy .eyebrow {
+  animation: hx-label-flicker 4.8s steps(1, end) 1.8s both;
+}
+.an-site .section h2,
+.an-site .signal-section h2 {
+  transition: letter-spacing 260ms cubic-bezier(0.23, 1, 0.32, 1), text-shadow 260ms ease;
+}
+.an-site .section:hover h2,
+.an-site .signal-section:hover h2 {
+  letter-spacing: -0.045em;
+  text-shadow: 5px 5px 0 color-mix(in srgb, var(--acid) 26%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .an-site .hero-copy .hero-title-word,
+  .an-site .hero-copy .eyebrow,
+  .an-site .hero-copy .hero-title-mask::after {
+    animation: none;
+  }
+  .an-site .hero-copy .hero-title-word {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+  }
+}
