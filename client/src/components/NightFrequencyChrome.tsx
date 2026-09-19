@@ -232,7 +232,7 @@ export function NightFooter() {
         <strong>AKBAR NAWASUNDA</strong>
         <p>PRODUCER / REMIXER / INDONESIA</p>
         <Link className="nf-footer-mascot" href="/" aria-label="Kembali ke homepage">
-          <img src="/assets/akbar-mascot-doodle.png" alt="Maskot doodle Akbar Nawasunda" width={92} height={92} />
+          <img src="/assets/akbar-mascot-doodle.webp" alt="Maskot doodle Akbar Nawasunda" width={92} height={92} loading="lazy" decoding="async" />
           <span>BACK TO SIGNAL <ArrowUpRight size={12} /></span>
         </Link>
       </div>

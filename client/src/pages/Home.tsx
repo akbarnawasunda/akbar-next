@@ -354,15 +354,19 @@ export default function Home() {
                 }}
               />
             </div>
-            <img
-              className="hero-mascot-doodle"
-              src="/assets/akbar-mascot-doodle.png"
-              alt="Maskot doodle Akbar Nawasunda"
-              width={1254}
-              height={1254}
-              loading="eager"
-              decoding="async"
-            />
+            <picture className="hero-mascot-doodle">
+              <source srcSet="/assets/akbar-mascot-doodle.avif" type="image/avif" />
+              <source srcSet="/assets/akbar-mascot-doodle.webp" type="image/webp" />
+              <img
+                src="/assets/akbar-mascot-doodle.webp"
+                alt="Maskot doodle Akbar Nawasunda"
+                width={1254}
+                height={1254}
+                loading="lazy"
+                fetchPriority="low"
+                decoding="async"
+              />
+            </picture>
 
             <div className="hero-copy">
               <p className="eyebrow">
