@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE B1 — Verifikasi menu navigasi
+**Fase aktif:** FASE B2 — Stabilkan menu dan layout halaman dalam
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** [fix] restore mobile navigation CSS on homepage
+**Terakhir commit:** [fix] stabilize inner page navigation and layout
 
 ---
 
@@ -140,3 +140,14 @@ git checkout <file>
 - Build: lulus
 - Commit: `bb26e35 [fix] restore mobile navigation CSS on homepage`
 - Lanjut: minta user verifikasi menu di perangkat mobile sebelum FASE 3a
+
+### Sesi B2 — Inner page navigation and layout
+- Tanggal: 2026-09-19
+- Fase: B2 — Stabilkan menu dan layout halaman dalam
+- Selesai: hapus override `.nf-menu-toggle` dari `EcosystemPages.css`, lepaskan import `EcosystemRefinement.css` dari public/English chrome, dan perbaiki narrowing `story` di `Home.tsx`
+- Perubahan: aturan tombol menu internal kini berasal dari `NightFrequencyChrome.css`; layer refinement global tidak lagi menimpa selector layout shared; quality gate TypeScript kembali lulus
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: `6284e93 [fix] stabilize inner page navigation and layout`
+- Lanjut: verifikasi menu dan layout halaman internal di perangkat mobile; setelah konfirmasi lanjut FASE 3a
