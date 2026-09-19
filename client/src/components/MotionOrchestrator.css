@@ -1,12 +1,11 @@
 /* ============================================================
    MOTION ORCHESTRATOR
-   Section reveal untuk halaman dalam.
-   Hanya sembunyikan section yang sudah ditandai TSX dengan
-   data-motion-replay="true" — supaya kalau observer gagal
-   atau lambat, section tetap kelihatan.
+   Pendekatan aman: CSS TIDAK menyembunyikan section secara
+   default. JS yang menambah .reveal-pending sebelum observer
+   aktif. Kalau JS gagal, konten tetap visible.
    ============================================================ */
 
-.nf-page main > section[data-motion-replay="true"]:not(.is-motion-in-view) {
+.nf-page main > section.reveal-pending {
   opacity: 0;
   transform: translate3d(0, 18px, 0);
   will-change: opacity, transform;
@@ -22,10 +21,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nf-page main > section[data-motion-replay="true"] {
+  .nf-page main > section.reveal-pending {
     opacity: 1;
     transform: none;
-    transition: none;
     will-change: auto;
   }
 }
