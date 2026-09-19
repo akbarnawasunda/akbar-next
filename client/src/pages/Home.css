@@ -1844,3 +1844,156 @@
     transition: none !important;
   }
 }
+
+/* ============================================================
+   PASS 2 — gradient, lazy render, editorial menu
+   ============================================================ */
+
+/* -- GRADIENT per section (bukan flat) ------------------- */
+.an-site .section,
+.an-site .home-signal-deck,
+.an-site .live-section,
+.an-site .signal-section {
+  background-color: var(--ink) !important;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 205, 160, 0.035), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(216, 255, 0, 0.018), transparent 55%),
+    linear-gradient(180deg, #0c0c0a 0%, #0a0a09 100%) !important;
+}
+
+.an-site .section-current {
+  background-image:
+    radial-gradient(ellipse 70% 60% at 90% 10%, rgba(255, 74, 28, 0.035), transparent 55%),
+    radial-gradient(ellipse 60% 50% at 10% 90%, rgba(216, 255, 0, 0.02), transparent 55%),
+    linear-gradient(180deg, #0c0c0a 0%, #0a0a09 100%) !important;
+}
+
+.an-site .release-section {
+  background-image:
+    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(255, 205, 160, 0.03), transparent 60%),
+    linear-gradient(180deg, #0b0b09 0%, #0a0a09 100%) !important;
+}
+
+.an-site .visual-section {
+  background-image:
+    radial-gradient(ellipse 70% 60% at 20% 20%, rgba(216, 255, 0, 0.022), transparent 55%),
+    linear-gradient(180deg, #0c0c0a 0%, #0a0a09 100%) !important;
+}
+
+.an-site .signal-section {
+  background-image:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255, 255, 255, 0.25), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(255, 74, 28, 0.06), transparent 55%),
+    var(--paper) !important;
+}
+
+/* -- LAZY RENDER — section yang jauh dari viewport tidak di-render -- */
+.an-site .section,
+.an-site .home-signal-deck,
+.an-site .live-section,
+.an-site .signal-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .section,
+  .an-site .home-signal-deck,
+  .an-site .live-section,
+  .an-site .signal-section {
+    content-visibility: visible;
+    contain-intrinsic-size: none;
+  }
+}
+
+/* -- MOBILE MENU baru (konsisten homepage + halaman dalam) -- */
+.an-mobile-navigation .an-mobile-navigation-inner,
+.an-mobile-navigation {
+  counter-reset: menuitem;
+}
+
+.an-mobile-navigation > a,
+.nf-mobile-menu-inner > a {
+  position: relative;
+  display: grid !important;
+  grid-template-columns: 34px 1fr auto;
+  align-items: baseline;
+  gap: 16px;
+  padding: 22px 0 !important;
+  border-bottom: 1px solid var(--ink-line) !important;
+  color: var(--paper) !important;
+  text-decoration: none;
+  transition: padding-left 240ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms ease;
+}
+.an-mobile-navigation > a::before,
+.nf-mobile-menu-inner > a::before {
+  counter-increment: menuitem;
+  content: counter(menuitem, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--mute);
+  text-transform: uppercase;
+  align-self: center;
+}
+.an-mobile-navigation > a:hover,
+.an-mobile-navigation > a:focus-visible,
+.nf-mobile-menu-inner > a:hover,
+.nf-mobile-menu-inner > a:focus-visible,
+.nf-mobile-menu-inner > a.is-active {
+  padding-left: 12px !important;
+  color: var(--acid) !important;
+}
+.an-mobile-navigation > a svg,
+.nf-mobile-menu-inner > a svg {
+  align-self: center;
+  opacity: 0.5;
+}
+.an-mobile-navigation > a:hover svg,
+.nf-mobile-menu-inner > a:hover svg {
+  opacity: 1;
+  transform: translateX(4px);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reset counter untuk NF mobile menu (yang punya eyebrow sebagai child 1) */
+.nf-mobile-menu-inner {
+  counter-reset: menuitem;
+}
+.nf-mobile-menu-inner > a::before {
+  counter-increment: menuitem;
+}
+
+/* Override untuk link "KABAR" (yang punya Radio icon)
+   Jangan pakai counter setelah EPK */
+.an-mobile-navigation .mobile-signal::before,
+.nf-mobile-menu-inner > a:last-child::before {
+  content: counter(menuitem, decimal-leading-zero);
+}
+
+/* Tombol close di kanan atas */
+.an-mobile-navigation-close,
+.nf-mobile-menu-close {
+  position: absolute !important;
+  top: 22px !important;
+  right: clamp(20px, 4.5vw, 64px) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  border: 1px solid var(--ink-line) !important;
+  background: transparent !important;
+  color: var(--paper) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.6rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase !important;
+  cursor: pointer;
+}
+.an-mobile-navigation-close span:first-child,
+.nf-mobile-menu-close span:first-child {
+  font-size: 1.1rem;
+  line-height: 0.6;
+}
