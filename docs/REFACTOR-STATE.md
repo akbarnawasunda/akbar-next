@@ -10,7 +10,7 @@
 
 **Fase aktif:** FASE B2 — Stabilkan menu dan layout halaman dalam
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** [fix] stabilize inner page navigation and layout
+**Terakhir commit:** [fix] disable EcosystemRefinement.css + cleanup nf-menu-toggle duplicate
 
 ---
 
@@ -151,3 +151,12 @@ git checkout <file>
 - Build: lulus
 - Commit: `6284e93 [fix] stabilize inner page navigation and layout`
 - Lanjut: verifikasi menu dan layout halaman internal di perangkat mobile; setelah konfirmasi lanjut FASE 3a
+
+### Sesi B2-FIX — Disable refinement layer
+- Tanggal: 2026-09-19
+- Fase: B2-FIX — Rapikan konflik multi-file
+- Selesai: rename `EcosystemRefinement.css` menjadi `EcosystemRefinement.css.disabled`, import sudah dihapus dari dua chrome files, dan override `.nf-menu-toggle` page-level sudah dibersihkan
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Lanjut: minta user verifikasi `/music`, `/visuals`, `/live`, dan `/about` di HP; setelah konfirmasi lanjut FASE 3a
