@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE B2 — Stabilkan menu dan layout halaman dalam
+**Fase aktif:** FASE 3b — OfficialMediaFrame colors
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** [fix] disable EcosystemRefinement.css + cleanup nf-menu-toggle duplicate
+**Terakhir commit:** [fase-3a] migrate PublicMotion + PlatformTicker colors to tokens
 
 ---
 
@@ -160,3 +160,15 @@ git checkout <file>
 - Hasil test: 34 passed, 0 failed (100 tests)
 - Build: lulus
 - Lanjut: minta user verifikasi `/music`, `/visuals`, `/live`, dan `/about` di HP; setelah konfirmasi lanjut FASE 3a
+
+### Sesi 3a — PublicMotion and PlatformTicker colors
+- Tanggal: 2026-09-19
+- Fase: 3a — Migrasi warna legacy ke design tokens
+- Selesai: update `PublicMotion.css` dan `PlatformTicker.css`
+- Perubahan: warna background, border, accent, overlay, ticker text, icon, separator, dan focus state diarahkan ke `--ink`, `--ink-soft`, `--paper`, `--acid`, `--signal`, dan `--ink-line`; tidak ada perubahan font, layout, atau spacing
+- Verifikasi legacy color grep: kosong
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: `2a2def7 [fase-3a] migrate PublicMotion + PlatformTicker colors to tokens`
+- Lanjut: FASE 3b — OfficialMediaFrame colors
