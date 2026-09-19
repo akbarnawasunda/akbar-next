@@ -1,24 +1,32 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { createElement, lazy, Suspense, useEffect, useMemo } from "react";
 import { Toaster } from "@/components/ui/sonner";
-import NotFound from "@/pages/NotFound";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+
 type PreloadableComponent<T extends React.ComponentType<any>> = T & {
   preload: () => Promise<{ default: T }>;
 };
 
 function lazyWithPreload<T extends React.ComponentType<any>>(
-  loader: () => Promise<{ default: T }>,
+  loader: () => Promise<{ default: T }>
 ): PreloadableComponent<T> {
   let loaded: T | null = null;
   let promise: Promise<{ default: T }> | null = null;
   const load = () => {
-    promise ||= loader().then(module => {
-      loaded = module.default;
-      return module;
-    });
+    if (!promise) {
+      promise = loader().then(
+        (module) => {
+          loaded = module.default;
+          return module;
+        },
+        (error) => {
+          promise = null;
+          throw error;
+        }
+      );
+    }
     return promise;
   };
   const component = ((props: React.ComponentProps<T>) => {
@@ -42,25 +50,30 @@ const ReleaseDetail = lazyWithPreload(() => import("./pages/ReleaseDetail"));
 const Inquiry = lazyWithPreload(() => import("./pages/Inquiry"));
 const Licensing = lazyWithPreload(() => import("./pages/Licensing"));
 const GameJedagRun = lazyWithPreload(() => import("./pages/GameJedagRun"));
-const EnglishGameJedagRun = lazyWithPreload(() => import("./pages/GameJedagRun").then(module => ({ default: module.EnglishGameJedagRun })));
+const EnglishGameJedagRun = lazyWithPreload(() =>
+  import("./pages/GameJedagRun").then((module) => ({ default: module.EnglishGameJedagRun }))
+);
 const GameJedagRunRoute = () => <GameJedagRun />;
 const EnglishGameJedagRunRoute = () => <EnglishGameJedagRun />;
 const PrivacyPolicy = lazyWithPreload(() => import("./pages/PrivacyPolicy"));
 const EnglishPages = () => import("./pages/EnglishPages");
-const EnglishHome = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishHome })));
-const EnglishMusic = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishMusic })));
-const EnglishVisuals = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishVisuals })));
-const EnglishVisualPortraitGallery = lazyWithPreload(() => import("./pages/VisualPortraitGallery").then(module => ({ default: module.EnglishVisualPortraitGallery })));
-const EnglishLive = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishLive })));
-const EnglishUniverse = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishUniverse })));
-const EnglishAbout = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishAbout })));
-const EnglishEpk = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishEpk })));
-const EnglishInquiry = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishInquiry })));
-const EnglishLicensing = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishLicensing })));
-const EnglishPrivacy = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishPrivacy })));
-const EnglishReleaseDetail = lazyWithPreload(() => EnglishPages().then(module => ({ default: module.EnglishReleaseDetail })));
+const EnglishHome = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishHome })));
+const EnglishMusic = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishMusic })));
+const EnglishVisuals = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishVisuals })));
+const EnglishVisualPortraitGallery = lazyWithPreload(() =>
+  import("./pages/VisualPortraitGallery").then((module) => ({ default: module.EnglishVisualPortraitGallery }))
+);
+const EnglishLive = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishLive })));
+const EnglishUniverse = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishUniverse })));
+const EnglishAbout = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishAbout })));
+const EnglishEpk = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishEpk })));
+const EnglishInquiry = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishInquiry })));
+const EnglishLicensing = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishLicensing })));
+const EnglishPrivacy = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishPrivacy })));
+const EnglishReleaseDetail = lazyWithPreload(() =>
+  EnglishPages().then((module) => ({ default: module.EnglishReleaseDetail }))
+);
 
-// Auth-gated routes stay code-split and are explicitly noindex in the SSR head.
 const ContentStudio = lazy(() => import("./pages/ContentStudio"));
 const AssetLibrary = lazy(() => import("./pages/AssetLibrary"));
 const InquiryStudio = lazy(() => import("./pages/InquiryStudio"));
@@ -99,6 +112,7 @@ export async function preloadPublicRoute(pathname: string) {
   else if (path === "/en/privacy") add(EnglishPrivacy);
   await Promise.all(jobs);
 }
+
 import LegacyDocument from "./components/LegacyDocument";
 import { ScrollProgress } from "./components/ScrollProgress";
 import { MotionOrchestrator } from "./components/MotionOrchestrator";
@@ -107,24 +121,13 @@ import { StructuredData } from "./components/StructuredData";
 import { trpc } from "./lib/trpc";
 import { customDocumentsToPublicContent } from "./content/publicContent";
 import { publicMediaUrl } from "./lib/publicMedia";
-import "./components/PlasmaRefinement.css";
-import "./components/EditorialSimplification.css";
+
 import "./components/MaturePalette.css";
-import "./components/RouteMotion.css";
 import "./components/BrandSystem.css";
-import "./components/InteractionSystem.css";
+import "./components/RouteMotion.css";
 import "./components/NightFrequencySignature.css";
-import "./components/SignalNoirSystem.css";
-import "./components/ResponsiveRepair.css";
-import "./components/ScrollReplay.css";
-import "./components/SignalTuningMotion.css";
-import "./components/HumanEditorialSystem.css";
-import "./components/SafeMotion.css";
-import "./components/EditorialTypography.css";
-import "./components/SafeScrollMotion.css";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
@@ -158,20 +161,11 @@ function Router() {
       <Route path={"/en/game/jedag-run"} component={EnglishGameJedagRunRoute} />
       <Route path={"/en/epk"} component={EnglishEpk} />
       <Route path={"/en/privacy"} component={EnglishPrivacy} />
-      <Route
-        path={"/404"}
-        component={() => <LegacyDocument source="/legacy/404.html" scripts="none" />}
-      />
-      {/* Final fallback route */}
+      <Route path={"/404"} component={() => <LegacyDocument source="/legacy/404.html" scripts="none" />} />
       <Route component={() => <LegacyDocument source="/legacy/404.html" scripts="none" />} />
     </Switch>
   );
 }
-
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 const supportedLanguagePaths = [
   "/",
@@ -189,14 +183,25 @@ const supportedLanguagePaths = [
 ];
 
 function isSupportedLanguagePath(pathname: string) {
-  return supportedLanguagePaths.includes(pathname) || /^\/music\/[a-z0-9-]+$/i.test(pathname);
+  return (
+    supportedLanguagePaths.includes(pathname) ||
+    /^(\/en)?\/music\/[a-z0-9-]+$/i.test(pathname)
+  );
 }
 
 function languagePair(pathname: string) {
-  if (pathname.startsWith("/en") && isSupportedLanguagePath(pathname.replace(/^\/en/, "") || "/")) {
+  if (
+    pathname.startsWith("/en") &&
+    isSupportedLanguagePath(pathname.replace(/^\/en/, "") || "/")
+  ) {
     return { id: pathname.replace(/^\/en/, "") || "/", en: pathname };
   }
-  if (isSupportedLanguagePath(pathname)) return { id: pathname, en: pathname === "/" ? "/en" : `/en${pathname}` };
+  if (isSupportedLanguagePath(pathname)) {
+    return {
+      id: pathname,
+      en: pathname === "/" ? "/en" : `/en${pathname}`,
+    };
+  }
   return null;
 }
 
@@ -233,19 +238,37 @@ const englishTitles: Record<string, string> = {
 function CmsMetadata() {
   const [location] = useLocation();
   const customContent = trpc.content.documents.useQuery();
-  const settings = useMemo(() => customDocumentsToPublicContent(customContent.data as Parameters<typeof customDocumentsToPublicContent>[0])?.siteSettings ?? null, [customContent.data]);
+  const settings = useMemo(
+    () =>
+      customDocumentsToPublicContent(
+        customContent.data as Parameters<typeof customDocumentsToPublicContent>[0]
+      )?.siteSettings ?? null,
+    [customContent.data]
+  );
 
   useEffect(() => {
     const isEnglish = location === "/en" || location.startsWith("/en/");
     const siteOrigin = (settings?.canonicalUrl || "https://akbarnawasunda.my.id").replace(/\/$/, "");
     const pathname = location || "/";
     const pair = languagePair(pathname);
-    const releaseTitleFromPath = pathname.startsWith("/en/music/") || pathname.startsWith("/music/")
-      ? pathname.split("/").pop()?.split("-").map(word => word ? word[0].toUpperCase() + word.slice(1) : word).join(" ")
-      : undefined;
+    const releaseTitleFromPath =
+      pathname.startsWith("/en/music/") || pathname.startsWith("/music/")
+        ? pathname
+            .split("/")
+            .pop()
+            ?.split("-")
+            .map((word) => (word ? word[0].toUpperCase() + word.slice(1) : word))
+            .join(" ")
+        : undefined;
     const defaultTitle = isEnglish
-      ? englishTitles[pathname] || (releaseTitleFromPath ? `${releaseTitleFromPath} | Akbar Nawasunda` : "Akbar Nawasunda | Official Website")
-      : idTitles[pathname] || (pathname.startsWith("/music/") ? `${releaseTitleFromPath || "Release"} | Akbar Nawasunda` : "Akbar Nawasunda | Official Website");
+      ? englishTitles[pathname] ||
+        (releaseTitleFromPath
+          ? `${releaseTitleFromPath} | Akbar Nawasunda`
+          : "Akbar Nawasunda | Official Website")
+      : idTitles[pathname] ||
+        (pathname.startsWith("/music/")
+          ? `${releaseTitleFromPath || "Release"} | Akbar Nawasunda`
+          : "Akbar Nawasunda | Official Website");
     const defaultDescription = isEnglish
       ? "Akbar Nawasunda is a producer, remixer, and electronic bass artist from Bandung Barat, Indonesia."
       : "Website resmi Akbar Nawasunda — producer, remixer, dan electronic bass artist dari Bandung Barat, Indonesia.";
@@ -256,8 +279,14 @@ function CmsMetadata() {
       if (identity) meta.setAttribute(identity[1], identity[2]);
       meta.setAttribute("content", value);
     };
-    const setLink = (rel: string, href: string, attributes: Record<string, string> = {}) => {
-      const selector = `link[rel="${rel}"]${attributes.hreflang ? `[hreflang="${attributes.hreflang}"]` : ""}`;
+    const setLink = (
+      rel: string,
+      href: string,
+      attributes: Record<string, string> = {}
+    ) => {
+      const selector = `link[rel="${rel}"]${
+        attributes.hreflang ? `[hreflang="${attributes.hreflang}"]` : ""
+      }`;
       const existing = document.head.querySelector<HTMLLinkElement>(selector);
       const link = existing || document.head.appendChild(document.createElement("link"));
       link.rel = rel;
@@ -267,9 +296,19 @@ function CmsMetadata() {
 
     document.documentElement.lang = isEnglish ? "en" : "id";
     const isHome = pathname === "/" || pathname === "/en";
-    const resolvedTitle = isEnglish ? defaultTitle : (isHome ? settings?.ogTitle?.trim() || settings?.siteTitle?.trim() : undefined) || defaultTitle;
-    const resolvedDescription = isEnglish ? defaultDescription : settings?.ogDescription?.trim() || settings?.metaDescription?.trim() || defaultDescription;
-    const resolvedImage = publicMediaUrl(settings?.socialPreviewUrl) || `${siteOrigin}/assets/akbar-social-preview-optimized.webp`;
+    const resolvedTitle = isEnglish
+      ? defaultTitle
+      : (isHome ? settings?.ogTitle?.trim() || settings?.siteTitle?.trim() : undefined) ||
+        defaultTitle;
+    const resolvedDescription = isEnglish
+      ? defaultDescription
+      : settings?.ogDescription?.trim() ||
+        settings?.metaDescription?.trim() ||
+        defaultDescription;
+    const resolvedImage =
+      publicMediaUrl(settings?.socialPreviewUrl) ||
+      `${siteOrigin}/assets/akbar-social-preview-optimized.webp`;
+
     document.title = resolvedTitle;
     setMeta('meta[name="description"]', resolvedDescription);
     setMeta('meta[property="og:title"]', resolvedTitle);
@@ -283,15 +322,15 @@ function CmsMetadata() {
 
     const robots = document.head.querySelector<HTMLMetaElement>('meta[name="robots"]');
     if (robots && isSupportedLanguagePath(pathname)) robots.remove();
-    document.head.querySelectorAll('link[data-language-link="true"]').forEach(link => link.remove());
+
+    document.head.querySelectorAll('link[data-language-link="true"]').forEach((link) => link.remove());
     if (pair) {
       const idUrl = `${siteOrigin}${pair.id === "/" ? "/" : pair.id}`;
       const enUrl = `${siteOrigin}${pair.en}`;
-      const xDefaultUrl = idUrl;
       [
         ["id", idUrl],
         ["en", enUrl],
-        ["x-default", xDefaultUrl],
+        ["x-default", idUrl],
       ].forEach(([hreflang, href]) => {
         const link = document.createElement("link");
         link.rel = "alternate";
@@ -316,8 +355,8 @@ function RouteMotion() {
   return (
     <div className="route-motion" key={location} data-route={location}>
       <Suspense fallback={<div className="route-loading" role="status">MEMUAT HALAMAN…</div>}>
-      <Router />
-    </Suspense>
+        <Router />
+      </Suspense>
     </div>
   );
 }
@@ -325,10 +364,7 @@ function RouteMotion() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="dark"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
           <ScrollProgress />
