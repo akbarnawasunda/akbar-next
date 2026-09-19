@@ -195,5 +195,5 @@ git checkout <file>
 - Hasil check: lulus
 - Hasil test: 34 passed, 0 failed (100 tests)
 - Build: lulus
-- Commit: menunggu commit/push sesi ini
+- Commit: `d9c8eed [fase-4] migrate font legacy to tokens`
 - Lanjut: FASE 5 — kurangi `!important`
