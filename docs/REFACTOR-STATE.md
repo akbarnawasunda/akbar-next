@@ -10,7 +10,7 @@
 
 **Fase aktif:** FASE 5B — Animasi (menunggu approval)
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** self-hosted typography + gradient motion system
+**Terakhir commit:** bold cinematic neon visual pass
 
 ---
 
@@ -249,3 +249,15 @@ git checkout <file>
 - Verifikasi production: Vercel READY; Home CSS valid dan aktif setelah hydration
 - Catatan: headless full-page capture intermittently races dengan route CSS chunk; tidak dijadikan bukti visual final
 - Lanjut: review visual manual di browser/device user
+
+### Bold Cinematic Neon Pass
+- Tanggal: 2026-09-19
+- Fase: FASE 5B — visual direction refinement
+- Selesai: dorong visual dari flat editorial ke cinematic neon editorial
+- Perubahan: teal-violet-coral gradient system, gradient headline, layered hero glow, offset portrait frame, luminous CTA, gradient section transitions, richer card surfaces, dan hover shadows pada homepage serta inner pages
+- Batasan: tidak mengubah konten, routing, atau data; mobile breakpoint dan reduced-motion tetap aktif
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: menunggu commit/push sesi ini
+- Lanjut: verifikasi Vercel production

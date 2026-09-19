@@ -26,9 +26,11 @@
 
   --acid:     #4a7c7c;
   --signal:   #a03a24;
-  --gradient-accent: linear-gradient(115deg, #4a7c7c 0%, #7fb8a5 48%, #d8b36a 100%);
-  --gradient-signal: linear-gradient(135deg, #a03a24 0%, #d06b48 52%, #f0c88b 100%);
-  --gradient-night: linear-gradient(135deg, #101d22 0%, #0a0a09 46%, #2a1715 100%);
+  --gradient-accent: linear-gradient(115deg, #58f0d0 0%, #7f9cff 48%, #d789ff 100%);
+  --gradient-signal: linear-gradient(135deg, #ff6f61 0%, #ff9f68 52%, #ffe08a 100%);
+  --gradient-night: linear-gradient(135deg, #101d2c 0%, #0a0a12 46%, #29152b 100%);
+  --gradient-horizon: linear-gradient(110deg, #58f0d0 0%, #7f9cff 34%, #d789ff 68%, #ff8f70 100%);
+  --glow-accent: 0 0 0 1px rgba(88, 240, 208, 0.18), 0 18px 70px rgba(127, 156, 255, 0.22);
 
   --shadow-text:  0 2px 6px rgba(0, 0, 0, 0.55);
   --shadow-soft:  0 4px 12px rgba(0, 0, 0, 0.35);

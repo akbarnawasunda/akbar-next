@@ -1852,3 +1852,132 @@
     padding: 90px var(--hx-gutter, 20px) 48px;
   }
 }
+
+
+/* ============================================================
+   BOLD VISUAL PASS — cinematic neon editorial
+   ============================================================ */
+.an-site {
+  background:
+    radial-gradient(70% 42% at 8% 4%, rgba(88, 240, 208, 0.11), transparent 70%),
+    radial-gradient(60% 45% at 94% 24%, rgba(215, 137, 255, 0.12), transparent 70%),
+    var(--ink) !important;
+}
+.an-site .an-hero {
+  min-height: min(920px, 94svh);
+  background:
+    linear-gradient(110deg, rgba(8, 14, 24, 0.96) 0%, rgba(10, 10, 18, 0.76) 48%, rgba(42, 21, 43, 0.46) 100%),
+    radial-gradient(55% 80% at 78% 48%, rgba(127, 156, 255, 0.25), transparent 68%),
+    var(--ink) !important;
+  isolation: isolate;
+}
+.an-site .an-hero::before {
+  background:
+    radial-gradient(circle at 72% 38%, rgba(88, 240, 208, 0.42), transparent 22%),
+    radial-gradient(circle at 90% 78%, rgba(215, 137, 255, 0.24), transparent 28%);
+  mix-blend-mode: screen;
+}
+.an-site .an-hero::after {
+  background: linear-gradient(110deg, transparent 0 36%, rgba(255, 143, 112, 0.26) 52%, transparent 68%);
+  mix-blend-mode: screen;
+}
+.an-site .hero-copy .hero-title-editorial,
+.an-site .hero-copy h1 {
+  background: var(--gradient-horizon);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  filter: drop-shadow(0 12px 34px rgba(127, 156, 255, 0.18));
+  text-wrap: balance;
+}
+.an-site .hero-copy .hero-title-editorial em,
+.an-site .hero-copy h1 em { color: transparent !important; }
+.an-site .hero-copy .hero-description { max-width: 48ch; color: rgba(240, 235, 220, 0.78); }
+.an-site .hero-copy::after {
+  content: "LIVE / 2026";
+  display: inline-flex;
+  margin-top: 22px;
+  padding: 7px 11px;
+  border: 1px solid rgba(88, 240, 208, 0.32);
+  color: var(--acid);
+  font: 600 0.58rem/1 var(--font-mono);
+  letter-spacing: 0.18em;
+  box-shadow: var(--glow-accent);
+}
+.an-site .home-hero-portrait {
+  border-color: rgba(88, 240, 208, 0.72) !important;
+  box-shadow: 18px 18px 0 rgba(215, 137, 255, 0.35), 0 30px 90px rgba(127, 156, 255, 0.24) !important;
+  transform: rotate(1.2deg);
+}
+.an-site .home-hero-portrait::before {
+  content: "";
+  position: absolute;
+  inset: -18px;
+  z-index: -1;
+  border: 1px solid rgba(255, 143, 112, 0.4);
+  transform: rotate(-3deg);
+}
+.an-site .home-hero-portrait:hover {
+  transform: rotate(0) translate(-8px, -8px) scale(1.015);
+  box-shadow: 22px 22px 0 rgba(88, 240, 208, 0.52), 0 38px 110px rgba(127, 156, 255, 0.32) !important;
+}
+.an-site .button-primary {
+  background: var(--gradient-accent);
+  box-shadow: var(--glow-accent);
+  font-weight: 800;
+}
+.an-site .button-primary:hover,
+.an-site .button-primary:focus-visible { box-shadow: 0 10px 40px rgba(88, 240, 208, 0.34); }
+.an-site .section {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(127, 156, 255, 0.035), transparent 18%),
+    var(--ink) !important;
+}
+.an-site .section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(38vw, 520px);
+  height: 1px;
+  background: var(--gradient-horizon);
+  opacity: 0.85;
+}
+.an-site .section h2 {
+  background: linear-gradient(105deg, var(--paper) 0%, #b9c8ff 52%, #f2b5e8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.an-site .home-platform-card,
+.an-site .release-card,
+.an-site .video-card,
+.an-site .home-live-event {
+  background: linear-gradient(110deg, rgba(88, 240, 208, 0.035), rgba(215, 137, 255, 0.045)) !important;
+  border-color: rgba(240, 235, 220, 0.22) !important;
+}
+.an-site .home-platform-card:hover,
+.an-site .release-card:hover,
+.an-site .video-card:hover,
+.an-site .home-live-event:hover {
+  background: linear-gradient(110deg, rgba(88, 240, 208, 0.12), rgba(215, 137, 255, 0.13)) !important;
+  border-color: rgba(88, 240, 208, 0.72) !important;
+  box-shadow: 9px 9px 0 rgba(215, 137, 255, 0.62) !important;
+}
+.an-site .home-platform-card:hover .an-platform-icon,
+.an-site .release-card:hover .release-number { color: #58f0d0 !important; }
+.an-site .signal-section,
+.an-site .home-signal-deck { background: var(--gradient-night) !important; }
+.an-site .signal-section .nf-signal-form button { box-shadow: 0 0 40px rgba(255, 111, 97, 0.22); }
+@media (max-width: 700px) {
+  .an-site .an-hero { min-height: 820px; }
+  .an-site .home-hero-portrait { transform: rotate(0.5deg); }
+  .an-site .hero-copy .hero-title-editorial,
+  .an-site .hero-copy h1 { font-size: clamp(3.7rem, 18vw, 7rem) !important; }
+  .an-site .section::before { width: 70vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .an-site .home-hero-portrait { transform: none; }
+  .an-site .home-hero-portrait:hover { transform: none; }
+}
