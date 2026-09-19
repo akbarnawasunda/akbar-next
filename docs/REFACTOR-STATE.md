@@ -10,7 +10,7 @@
 
 **Fase aktif:** FASE 5B — Animasi (menunggu approval)
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** bold cinematic neon visual pass
+**Terakhir commit:** corrective typography + restrained visual hierarchy
 
 ---
 
@@ -262,3 +262,14 @@ git checkout <file>
 - Commit: `49b6bbb [visual-pass-2] push cinematic neon direction`
 - Verifikasi production: Vercel READY; GitHub Actions success
 - Lanjut: minta user review arah visual baru di HP dan desktop
+
+### Corrective Typography + Scale Pass
+- Tanggal: 2026-09-19
+- Fase: FASE 5B — typography correction dan layout stabilization
+- Selesai: rollback treatment neon yang terlalu besar, turunkan heading scale, dan ganti font family menjadi Syne / DM Sans / IBM Plex Mono
+- Perubahan: display, body, dan metadata sekarang punya karakter berbeda; gradient text dan oversized neon blocks dihapus; CTA/background gradient dipertahankan sebagai aksen ringan
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: menunggu commit/push sesi ini
+- Lanjut: deploy production dan minta user review ulang

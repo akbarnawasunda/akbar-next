@@ -3,9 +3,11 @@
    Satu-satunya sumber kebenaran untuk: font, warna, tipe, base.
    ============================================================ */
 
-@import "@fontsource-variable/bricolage-grotesque";
-@import "@fontsource-variable/plus-jakarta-sans";
-@import "@fontsource-variable/jetbrains-mono";
+@import "@fontsource-variable/syne";
+@import "@fontsource-variable/dm-sans";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-mono/600.css";
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -13,9 +15,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", sans-serif;
-  --font-body:    "Plus Jakarta Sans Variable", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono:    "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: "Syne Variable", "Syne", sans-serif;
+  --font-body:    "DM Sans Variable", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --ink:        #0a0a09;
   --ink-soft:   #131211;
@@ -26,11 +28,11 @@
 
   --acid:     #4a7c7c;
   --signal:   #a03a24;
-  --gradient-accent: linear-gradient(115deg, #58f0d0 0%, #7f9cff 48%, #d789ff 100%);
-  --gradient-signal: linear-gradient(135deg, #ff6f61 0%, #ff9f68 52%, #ffe08a 100%);
-  --gradient-night: linear-gradient(135deg, #101d2c 0%, #0a0a12 46%, #29152b 100%);
-  --gradient-horizon: linear-gradient(110deg, #58f0d0 0%, #7f9cff 34%, #d789ff 68%, #ff8f70 100%);
-  --glow-accent: 0 0 0 1px rgba(88, 240, 208, 0.18), 0 18px 70px rgba(127, 156, 255, 0.22);
+  --gradient-accent: linear-gradient(115deg, #4a7c7c 0%, #738ca8 52%, #b18aa8 100%);
+  --gradient-signal: linear-gradient(135deg, #a03a24 0%, #c56a55 52%, #d6b07a 100%);
+  --gradient-night: linear-gradient(135deg, #101b22 0%, #0a0a09 52%, #24171c 100%);
+  --gradient-horizon: linear-gradient(110deg, #4a7c7c 0%, #738ca8 42%, #b18aa8 76%, #c56a55 100%);
+  --glow-accent: 0 0 0 1px rgba(74, 124, 124, 0.22), 0 12px 34px rgba(74, 124, 124, 0.12);
 
   --shadow-text:  0 2px 6px rgba(0, 0, 0, 0.55);
   --shadow-soft:  0 4px 12px rgba(0, 0, 0, 0.35);
