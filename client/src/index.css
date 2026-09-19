@@ -3,7 +3,7 @@
    Satu-satunya sumber kebenaran untuk: font, warna, tipe, base.
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
 @import url('https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap');
 
@@ -13,7 +13,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
   --font-body:    "Switzer", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
@@ -24,8 +24,13 @@
   --paper-soft: #e2dccc;
   --paper-line: rgba(10, 10, 9, 0.14);
 
-  --acid:     #d8ff00;
-  --signal:   #ff4a1c;
+  --acid:     #4a7c7c;
+  --signal:   #a03a24;
+
+  --shadow-text:  0 2px 6px rgba(0, 0, 0, 0.55);
+  --shadow-soft:  0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lift:  0 20px 50px rgba(0, 0, 0, 0.45);
+  --shadow-hero:  0 40px 90px rgba(0, 0, 0, 0.60);
 
   --mute:      rgba(240, 235, 220, 0.60);
   --mute-soft: rgba(240, 235, 220, 0.38);

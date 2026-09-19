@@ -208,11 +208,11 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 1;
   font-weight: 400;
-  font-size: clamp(4.4rem, 12.5vw, 14rem) !important;
+  font-size: clamp(3rem, 7.5vw, 7.5rem) !important;
   line-height: 0.78 !important;
   letter-spacing: -0.055em;
   color: var(--paper);
-  text-shadow: none !important;
+  text-shadow: var(--shadow-text);
   text-transform: none;
   animation: none !important;
 }
@@ -265,6 +265,7 @@
   border: var(--hx-rule) solid var(--paper);
   overflow: hidden;
   background: var(--ink-soft);
+  box-shadow: var(--shadow-hero);
   align-self: end;
 }
 .an-site .home-hero-portrait::after {
@@ -396,7 +397,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
   font-weight: 400;
-  font-size: clamp(3.4rem, 8vw, 7.5rem);
+  font-size: clamp(2rem, 4.5vw, 4rem);
   line-height: 0.86;
   letter-spacing: -0.02em;
   color: var(--acid);
@@ -437,7 +438,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
   font-weight: 400;
-  font-size: clamp(3rem, 7vw, 8rem) !important;
+  font-size: clamp(2.2rem, 4.5vw, 4.5rem) !important;
   line-height: 0.86;
   letter-spacing: -0.05em;
   text-transform: none;
@@ -512,7 +513,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
   font-weight: 400;
-  font-size: clamp(3rem, 7vw, 8rem);
+  font-size: clamp(2.2rem, 4.5vw, 4.5rem);
   line-height: 0.86;
   letter-spacing: -0.05em;
   color: var(--paper);
@@ -583,7 +584,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 96, "SOFT" 40, "WONK" 0;
   font-weight: 400;
-  font-size: clamp(1.7rem, 3vw, 2.8rem);
+  font-size: clamp(1.3rem, 2vw, 1.9rem);
   letter-spacing: -0.035em;
   line-height: 1;
 }
@@ -638,6 +639,7 @@
   border: var(--hx-rule) solid var(--paper);
   background: var(--ink-soft);
   overflow: hidden;
+  box-shadow: var(--shadow-lift);
   margin: 0;
 }
 .an-site .release-cover img {
@@ -668,7 +670,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
   font-weight: 400;
-  font-size: clamp(2.8rem, 6.5vw, 6.5rem);
+  font-size: clamp(2rem, 4.5vw, 4rem);
   line-height: 0.86;
   letter-spacing: -0.05em;
   color: var(--paper);
@@ -724,6 +726,7 @@
   border-bottom: 1px solid var(--paper) !important;
   background: transparent !important;
   color: var(--paper);
+  box-shadow: var(--shadow-soft);
   opacity: 1 !important;
   transform: none !important;
   animation: none !important;
@@ -732,6 +735,7 @@
 .an-site .release-card:hover,
 .an-site .release-card:focus-visible {
   background: color-mix(in srgb, var(--paper) 4%, transparent);
+  box-shadow: var(--shadow-lift);
   padding-left: 20px !important;
   border-color: var(--paper) !important;
   box-shadow: none !important;
@@ -779,7 +783,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 96, "SOFT" 40, "WONK" 0;
   font-weight: 400;
-  font-size: clamp(1.6rem, 3vw, 2.8rem);
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
   line-height: 1;
   letter-spacing: -0.035em;
   color: var(--paper);
@@ -854,6 +858,7 @@
   border: var(--hx-rule) solid var(--paper);
   background: var(--ink-soft);
   color: var(--paper);
+  box-shadow: var(--shadow-lift);
   transition: border-color 200ms ease;
 }
 .an-site .video-card:first-child { grid-row: 1 / -1; }
@@ -893,7 +898,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 96, "SOFT" 40, "WONK" 0;
   font-weight: 400;
-  font-size: clamp(1.4rem, 2.4vw, 2.2rem);
+  font-size: clamp(1.1rem, 1.7vw, 1.5rem);
   line-height: 1.02;
   letter-spacing: -0.032em;
   color: var(--paper);
@@ -945,7 +950,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
   font-weight: 400;
-  font-size: clamp(3rem, 7vw, 8rem);
+  font-size: clamp(2.2rem, 4.5vw, 4.5rem);
   line-height: 0.86;
   letter-spacing: -0.05em;
   color: var(--paper);
@@ -964,6 +969,7 @@
   padding: 36px;
   border: var(--hx-rule) solid var(--paper);
   background: transparent;
+  box-shadow: var(--shadow-soft);
 }
 .an-site .live-status::before {
   content: "LIVE FEED";
@@ -993,7 +999,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 96, "SOFT" 40, "WONK" 0;
   font-weight: 400;
-  font-size: clamp(1.8rem, 3.2vw, 3rem);
+  font-size: clamp(1.3rem, 2.2vw, 2rem);
   line-height: 1;
   letter-spacing: -0.035em;
   color: var(--paper);
@@ -1027,6 +1033,7 @@
   border-right: 1px solid var(--paper);
   border-bottom: 1px solid var(--paper);
   background: transparent;
+  box-shadow: var(--shadow-soft);
   transition: background 180ms ease;
 }
 .an-site .home-live-event:hover { background: color-mix(in srgb, var(--paper) 4%, transparent); }
@@ -1043,7 +1050,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 96, "SOFT" 40, "WONK" 0;
   font-weight: 400;
-  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
   line-height: 1.02;
   letter-spacing: -0.035em;
   color: var(--paper);
@@ -1220,7 +1227,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
   font-weight: 400;
-  font-size: clamp(3rem, 6.5vw, 6.5rem);
+  font-size: clamp(2.2rem, 4.5vw, 4.5rem);
   line-height: 0.86;
   letter-spacing: -0.05em;
   color: var(--paper);
@@ -1284,7 +1291,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
   font-weight: 400;
-  font-size: clamp(3rem, 7vw, 8rem);
+  font-size: clamp(2.2rem, 4.5vw, 4.5rem);
   line-height: 0.86;
   letter-spacing: -0.05em;
   color: var(--ink);
@@ -1377,7 +1384,7 @@
   font-family: var(--font-display);
   font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
   font-weight: 400;
-  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
   letter-spacing: -0.048em;
   line-height: 0.88;
   color: var(--paper);
@@ -1482,7 +1489,7 @@
     justify-self: start;
   }
   .an-site .hero-copy .hero-title-editorial {
-    font-size: clamp(3.4rem, 15.5vw, 6rem) !important;
+    font-size: clamp(2.4rem, 10vw, 4.2rem) !important;
   }
   .an-site .hero-copy .eyebrow { font-size: 0.6rem; margin-bottom: 26px; }
   .an-site .hero-description { font-size: 1rem; margin: 28px 0 36px; }
@@ -1510,7 +1517,7 @@
   .an-site .live-copy h2,
   .an-site .game-teaser-copy h2,
   .an-site .signal-section h2 {
-    font-size: clamp(2.6rem, 12.5vw, 4.6rem) !important;
+    font-size: clamp(2rem, 8.5vw, 3.4rem) !important;
   }
 
   .an-site .home-platform-card {

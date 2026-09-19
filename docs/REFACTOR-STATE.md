@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE 5 — Kurangi !important
+**Fase aktif:** FASE 5B — Animasi (menunggu approval)
 **Terakhir update:** 2026-09-19
-**Terakhir commit:** [fase-4] migrate font legacy to tokens
+**Terakhir commit:** [fase-5a.5] add shadow system to hero, media, cards
 
 ---
 
@@ -197,3 +197,16 @@ git checkout <file>
 - Build: lulus
 - Commit: `d9c8eed [fase-4] migrate font legacy to tokens`
 - Lanjut: FASE 5 — kurangi `!important`
+
+### Sesi 5A + 5A.5 — Palette, Instrument Serif, font size, dan shadow system
+- Tanggal: 2026-09-19
+- Fase: 5A/5A.5 — Refresh visual foundation dan sistem shadow
+- Selesai: update `index.css`, `Home.css`, dan `OfficialMediaFrame.css`
+- Perubahan: `Fraunces` diganti `Instrument Serif`; `--acid` menjadi deep teal `#4a7c7c`; `--signal` menjadi terracotta `#a03a24`; ukuran heading utama homepage diturunkan; empat token shadow (`--shadow-text`, `--shadow-soft`, `--shadow-lift`, `--shadow-hero`) diterapkan pada hero, portrait, release/media cards, live blocks, dan official media
+- Batasan: hardcode `#d8ff00` yang masih tersisa di `NameParticleField.tsx` dan `NightFrequencyChrome.css` sengaja belum diubah sesuai instruksi sesi
+- Verifikasi: `Fraunces` tidak tersisa di `index.css`; `Instrument Serif` aktif; empat shadow token tersedia; `git diff --check` lulus
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: menunggu commit/push sesi ini
+- Lanjut: FASE 5B — animasi, menunggu approval user
