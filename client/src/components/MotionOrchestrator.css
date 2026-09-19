@@ -1,42 +1,28 @@
 /* ============================================================
    MOTION ORCHESTRATOR
-   Section reveal untuk halaman dalam (/music, /about, dst).
-   Homepage punya observer sendiri di Home.css.
+   Section reveal untuk halaman dalam.
+   Hanya sembunyikan section yang sudah ditandai TSX dengan
+   data-motion-replay="true" — supaya kalau observer gagal
+   atau lambat, section tetap kelihatan.
    ============================================================ */
 
-.nf-page main > section {
-  --nf-motion-delay: 0ms;
+.nf-page main > section[data-motion-replay="true"]:not(.is-motion-in-view) {
   opacity: 0;
   transform: translate3d(0, 18px, 0);
-  transition:
-    opacity 520ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)) var(--nf-motion-delay),
-    transform 520ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)) var(--nf-motion-delay);
   will-change: opacity, transform;
-}
-
-.nf-page main > section:nth-child(2n) {
-  --nf-motion-delay: 60ms;
-}
-
-.nf-page main > section:nth-child(3n) {
-  --nf-motion-delay: 100ms;
 }
 
 .nf-page main > section.is-motion-in-view {
   opacity: 1;
   transform: none;
+  transition:
+    opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: auto;
 }
 
-/* Hero selalu terlihat — tidak boleh menunggu observer */
-.nf-page main > section.nf-page-hero,
-.nf-page main > section.nf-epk-hero {
-  opacity: 1 !important;
-  transform: none !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .nf-page main > section {
+  .nf-page main > section[data-motion-replay="true"] {
     opacity: 1;
     transform: none;
     transition: none;
