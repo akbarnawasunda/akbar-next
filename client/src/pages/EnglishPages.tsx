@@ -45,7 +45,7 @@ import {
 import "./EcosystemPages.css";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
-import "./EnglishLayer.css";
+import "@/components/EnglishLayer.css";
 
 const bookingEmail = verifiedArtistProfile.bookingEmail;
 
