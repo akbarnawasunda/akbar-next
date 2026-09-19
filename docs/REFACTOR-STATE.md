@@ -285,3 +285,13 @@ git checkout <file>
 - Build: lulus
 - Commit: `74fa4ab [motion] add kinetic electronic artist typography`
 - Verifikasi production: Vercel READY; GitHub Actions success
+
+### Compact Embedded Players Pass
+- Tanggal: 2026-09-19
+- Fase: FASE 5B — embed layout refinement
+- Selesai: SoundCloud dan YouTube embed diubah dari full-width poster menjadi compact 2-column player cards dengan max-width 980px
+- Perubahan: artwork dipendekkan, iframe 142px desktop / 128px mobile, controls dipadatkan, dan breakpoint mobile menjadi single-column
+- Hasil check: lulus
+- Hasil test: 34 passed, 0 failed (100 tests)
+- Build: lulus
+- Commit: menunggu commit/push sesi ini

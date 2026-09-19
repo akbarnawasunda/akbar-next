@@ -592,3 +592,67 @@
     transform: none;
   }
 }
+
+
+/* Compact embedded players: readable cards instead of full-width posters. */
+.nf-page .nf-embed-grid,
+.nf-page .nf-video-embed-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  width: min(100%, 980px);
+  margin-inline: auto;
+  align-items: start;
+}
+.nf-page .nf-embed-grid .an-official-media,
+.nf-page .nf-video-embed-grid .an-official-media {
+  min-width: 0;
+  width: 100%;
+  box-shadow: var(--shadow-soft) !important;
+}
+.nf-page .nf-embed-grid .an-official-media:hover,
+.nf-page .nf-video-embed-grid .an-official-media:hover {
+  box-shadow: 6px 6px 0 var(--acid) !important;
+  transform: translate(-3px, -3px) !important;
+}
+.nf-page .nf-embed-grid .an-official-media-art,
+.nf-page .nf-video-embed-grid .an-official-media-art {
+  aspect-ratio: 16 / 8;
+}
+.nf-page .nf-embed-grid .an-official-media-copy,
+.nf-page .nf-video-embed-grid .an-official-media-copy {
+  padding: 14px 15px 2px;
+}
+.nf-page .nf-embed-grid .an-official-media-copy h3,
+.nf-page .nf-video-embed-grid .an-official-media-copy h3 {
+  font-size: clamp(1rem, 1.5vw, 1.35rem) !important;
+  line-height: 1.08;
+}
+.nf-page .nf-embed-grid .an-official-media-actions,
+.nf-page .nf-video-embed-grid .an-official-media-actions {
+  padding: 13px 15px 15px;
+}
+.nf-page .nf-embed-grid .an-official-media-actions a,
+.nf-page .nf-embed-grid .an-official-media-actions button,
+.nf-page .nf-video-embed-grid .an-official-media-actions a,
+.nf-page .nf-video-embed-grid .an-official-media-actions button {
+  min-height: 34px;
+  padding-inline: 9px;
+  font-size: 0.55rem;
+}
+.nf-page .nf-embed-grid .an-official-player iframe,
+.nf-page .nf-video-embed-grid .an-official-player iframe {
+  height: 142px;
+}
+@media (max-width: 720px) {
+  .nf-page .nf-embed-grid,
+  .nf-page .nf-video-embed-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    width: 100%;
+  }
+  .nf-page .nf-embed-grid .an-official-player iframe,
+  .nf-page .nf-video-embed-grid .an-official-player iframe {
+    height: 128px;
+  }
+}
