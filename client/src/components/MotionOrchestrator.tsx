@@ -2,24 +2,12 @@ import { useEffect } from "react";
 import { useLocation } from "wouter";
 import "./MotionOrchestrator.css";
 
-/**
- * MotionOrchestrator
- *
- * Perannya sekarang minimal:
- *   - Attach observer ke section halaman dalam.
- *   - Toggle `is-motion-in-view` supaya animasi masuk halus.
- *   - Hormati prefers-reduced-motion.
- *
- * Yang sudah DIHAPUS dari versi lama:
- *   - Scramble teks di h1, h2, h3, button, link.
- *     Sebelumnya bikin judul bergetar tiap klik dan ganggu
- *     screen reader. Sekarang tidak ada lagi.
- */
 function usePublicSectionReveal(location: string) {
   useEffect(() => {
     let cancelled = false;
     let retryId: number | undefined;
     let observer: IntersectionObserver | undefined;
+    let safetyId: number | undefined;
 
     const setup = () => {
       if (cancelled) return;
@@ -36,7 +24,6 @@ function usePublicSectionReveal(location: string) {
           "main > section:not(.reveal-target)"
         )
       );
-
       if (!sections.length) {
         retryId = window.setTimeout(setup, 50);
         return;
@@ -46,44 +33,40 @@ function usePublicSectionReveal(location: string) {
         "(prefers-reduced-motion: reduce)"
       ).matches;
 
-      sections.forEach((section) => {
-        section.dataset.motionReplay = "true";
-      });
-
       if (reducedMotion || !("IntersectionObserver" in window)) {
         sections.forEach((section) => {
-          section.dataset.motionPhase = "locked";
           section.classList.add("is-motion-in-view");
         });
         return;
       }
 
-      const setMotionState = (section: HTMLElement, isVisible: boolean) => {
-        section.dataset.motionPhase = isVisible ? "acquiring" : "released";
-        section.classList.toggle("is-motion-in-view", isVisible);
-        if (!isVisible) return;
-        window.requestAnimationFrame(() => {
-          if (
-            !cancelled &&
-            section.isConnected &&
-            section.classList.contains("is-motion-in-view")
-          ) {
-            section.dataset.motionPhase = "locked";
+      // Safety: kalau setelah 2.5s ada section yang belum masuk observer
+      // (misal observer gagal fire), paksa tampil.
+      safetyId = window.setTimeout(() => {
+        if (cancelled) return;
+        sections.forEach((section) => {
+          if (!section.classList.contains("is-motion-in-view")) {
+            section.classList.add("is-motion-in-view");
           }
         });
-      };
+      }, 2500);
 
       observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             const section = entry.target as HTMLElement;
-            setMotionState(section, entry.isIntersecting);
+            if (entry.isIntersecting) {
+              section.classList.add("is-motion-in-view");
+            }
           });
         },
-        { threshold: [0, 0.12], rootMargin: "0px 0px -8%" }
+        { threshold: [0, 0.08], rootMargin: "0px 0px -6%" }
       );
 
-      sections.forEach((section) => observer?.observe(section));
+      sections.forEach((section) => {
+        section.dataset.motionReplay = "true";
+        observer?.observe(section);
+      });
     };
 
     setup();
@@ -91,6 +74,7 @@ function usePublicSectionReveal(location: string) {
     return () => {
       cancelled = true;
       if (retryId !== undefined) window.clearTimeout(retryId);
+      if (safetyId !== undefined) window.clearTimeout(safetyId);
       observer?.disconnect();
     };
   }, [location]);

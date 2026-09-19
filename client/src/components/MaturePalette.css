@@ -512,3 +512,82 @@
 .nf-page .nf-signal-block .nf-page-eyebrow {
   color: var(--ink) !important;
 }
+
+/* ============================================================
+   FIX PASS 1 — Bug dari refactor sebelumnya
+   ============================================================ */
+
+/* FIX: signal block harus 2 kolom (kiri copy, kanan form) */
+.nf-page .nf-signal-block {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr) !important;
+  align-items: center !important;
+  gap: clamp(40px, 8vw, 120px) !important;
+}
+@media (max-width: 820px) {
+  .nf-page .nf-signal-block {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+}
+
+/* FIX: .an-booking-grid standalone (misal /live empty state) → dark */
+.nf-page main > section.nf-section.an-booking-grid {
+  background: var(--ink) !important;
+  color: var(--paper) !important;
+}
+.nf-page main > section.nf-section.an-booking-grid h2,
+.nf-page main > section.nf-section.an-booking-grid p,
+.nf-page main > section.nf-section.an-booking-grid .nf-page-eyebrow,
+.nf-page main > section.nf-section.an-booking-grid strong,
+.nf-page main > section.nf-section.an-booking-grid small {
+  color: var(--paper) !important;
+}
+.nf-page main > section.nf-section.an-booking-grid .an-booking-option {
+  border-color: var(--ink-line) !important;
+  background: transparent !important;
+}
+.nf-page main > section.nf-section.an-booking-grid .an-booking-option > span,
+.nf-page main > section.nf-section.an-booking-grid .an-booking-option > strong {
+  color: var(--paper) !important;
+}
+.nf-page main > section.nf-section.an-booking-grid .an-booking-option > small {
+  color: var(--mute) !important;
+}
+.nf-page main > section.nf-section.an-booking-grid .an-booking-option > svg {
+  color: var(--acid) !important;
+}
+
+/* Nested inside epk-contact-panel → tetap ink (paper bg) */
+.nf-page .an-epk-contact-panel .an-booking-grid,
+.nf-page .en-contact-panel .an-booking-grid {
+  background: transparent !important;
+  color: var(--ink) !important;
+}
+.nf-page .an-epk-contact-panel .an-booking-grid h2,
+.nf-page .an-epk-contact-panel .an-booking-grid p,
+.nf-page .an-epk-contact-panel .an-booking-grid .nf-page-eyebrow,
+.nf-page .en-contact-panel .an-booking-grid h2,
+.nf-page .en-contact-panel .an-booking-grid p,
+.nf-page .en-contact-panel .an-booking-grid .nf-page-eyebrow {
+  color: var(--ink) !important;
+}
+
+/* FIX: section reveal tidak boleh nge-blank. Kalau observer gagal,
+   setelah 2.5s paksa visible. */
+.nf-page main > section[data-motion-replay="true"]:not(.is-motion-in-view) {
+  animation: nf-force-visible 0ms ease 2500ms forwards;
+}
+@keyframes nf-force-visible {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nf-page main > section[data-motion-replay="true"]:not(.is-motion-in-view) {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
