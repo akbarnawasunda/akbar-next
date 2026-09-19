@@ -1,1 +1,174 @@
-.an-back-link{display:inline-flex;align-items:center;gap:8px;margin-bottom:26px;color:#d8ff65;font:500 10px "IBM Plex Mono",monospace;letter-spacing:.11em}.an-release-detail-hero h1{max-width:780px}.an-release-detail-grid{display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,1fr);gap:clamp(42px,10vw,150px);align-items:start}.an-release-art{position:relative}.an-release-art img{width:100%;aspect-ratio:1;object-fit:cover;box-shadow:28px 28px 0 rgba(138,92,255,.18)}.an-release-art span{position:absolute;right:13px;bottom:13px;display:flex;align-items:center;gap:8px;background:#d8ff65;padding:9px 11px;color:#12120d;font:600 10px "IBM Plex Mono",monospace;letter-spacing:.08em}.an-release-copy h2,.an-release-missing h1{margin:12px 0 22px;font:600 clamp(43px,5.4vw,78px)/.82 "Space Grotesk",sans-serif;letter-spacing:-.08em}.an-release-copy h2 em,.an-release-missing h1 em{font-family:"DM Serif Display",Georgia,serif;font-weight:400}.an-release-copy>p{max-width:650px;color:#c0bdcf;font-size:17px;line-height:1.72}.an-release-credits{margin:30px 0;border-top:1px solid rgba(255,255,255,.15);padding-top:20px}.an-release-credits span{color:#d8ff65;font:500 10px "IBM Plex Mono",monospace;letter-spacing:.11em}.an-release-credits p{color:#aaa6ba;font:500 12px/1.7 "IBM Plex Mono",monospace;white-space:pre-line}.an-release-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.an-release-links a{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:12px;border:1px solid rgba(255,255,255,.18);padding:19px;color:#f2f1fa;font:600 13px "Space Grotesk",sans-serif;transition:.18s cubic-bezier(.23,1,.32,1)}.an-release-links a:hover{background:#d8ff65;border-color:#d8ff65;color:#14140f;transform:translateY(-3px)}.an-release-next{display:flex;align-items:center;justify-content:space-between;gap:24px}.an-release-missing{min-height:65vh;display:grid;place-content:center;padding:80px;text-align:center}.an-release-missing .nf-button{margin:10px auto 0}@media(max-width:760px){.an-release-detail-grid{grid-template-columns:1fr;gap:34px}.an-release-art{max-width:360px}.an-release-next{align-items:flex-start;flex-direction:column}.an-release-missing{min-height:55vh;padding:40px 22px}}@media(prefers-reduced-motion:reduce){.an-release-links a:hover{transform:none}}
+/* ============================================================
+   RELEASE DETAIL — /music/:slug dan /en/music/:slug
+   ============================================================ */
+
+.an-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 26px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--mute);
+  text-transform: uppercase;
+  transition: color var(--dur-fast, 160ms) var(--ease, ease);
+}
+.an-back-link:hover,
+.an-back-link:focus-visible { color: var(--acid); }
+
+.an-release-detail-hero h1 { max-width: 20ch; }
+
+.an-release-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr);
+  gap: clamp(40px, 8vw, 120px);
+  align-items: start;
+}
+
+.an-release-art { position: relative; }
+.an-release-art img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: var(--ink-soft);
+  border: 1px solid var(--ink-line);
+  box-shadow: none;
+}
+.an-release-art::after {
+  content: "";
+  position: absolute;
+  inset: 12px -12px -12px 12px;
+  border: 1px solid var(--acid);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: -1;
+}
+.an-release-art span {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  background: var(--acid);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.an-release-copy h2,
+.an-release-missing h1 {
+  margin: 12px 0 22px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 4.4vw, 4.2rem);
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  color: var(--paper);
+}
+.an-release-copy h2 em,
+.an-release-missing h1 em {
+  font-style: italic;
+  color: var(--acid);
+}
+.an-release-copy > p {
+  max-width: 58ch;
+  color: var(--mute);
+  font-size: 1rem;
+  line-height: 1.72;
+}
+
+.an-release-credits {
+  margin: 30px 0;
+  padding-top: 22px;
+  border-top: 1px solid var(--ink-line);
+}
+.an-release-credits span {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--acid);
+  text-transform: uppercase;
+}
+.an-release-credits p {
+  margin: 10px 0 0;
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.an-release-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+.an-release-links a {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--ink-line);
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background var(--dur-fast, 160ms) var(--ease, ease), border-color var(--dur-fast, 160ms) var(--ease, ease), color var(--dur-fast, 160ms) var(--ease, ease);
+}
+.an-release-links a:hover,
+.an-release-links a:focus-visible {
+  background: var(--acid);
+  border-color: var(--acid);
+  color: var(--ink);
+  transform: none;
+}
+
+.an-release-next {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.an-release-missing {
+  min-height: 60vh;
+  display: grid;
+  place-content: center;
+  padding: 80px var(--gutter, 20px);
+  text-align: center;
+}
+.an-release-missing .nf-button {
+  margin: 10px auto 0;
+}
+
+@media (max-width: 820px) {
+  .an-release-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+  .an-release-art { max-width: 360px; }
+  .an-release-next {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .an-release-missing {
+    min-height: 50vh;
+    padding: 40px 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-release-links a:hover { transform: none; }
+}
