@@ -15,6 +15,8 @@ import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
 import FanSignalInline from "@/components/FanSignalInline";
+import { Reveal } from "@/components/Reveal";
+import { HeroDots } from "@/components/HeroDots";
 import { trpc } from "@/lib/trpc";
 import {
   publicJourney,
@@ -339,6 +341,7 @@ export default function Home() {
 
         <main id="top">
           <section className="an-hero">
+            <HeroDots />
             <div className="home-hero-portrait">
               <img
                 src={portraitSrc}
@@ -464,6 +467,7 @@ export default function Home() {
             <PlatformMarquee links={editablePlatformLinks} />
           </section>
 
+          <Reveal>
           <section className="section section-current" id="music">
             <SectionIndex number="" label="RILIS TERBARU" />
             <div className="section-heading">
@@ -514,10 +518,12 @@ export default function Home() {
               </div>
             </div>
           </section>
+          </Reveal>
 
           <ArtistEditorialSections journey={journey} showPhotoStory={false} />
           <ArtistEditorialSections photoStories={photoStories} showJourney={false} />
 
+          <Reveal>
           <section className="section release-section">
             <SectionIndex number="" label="KATALOG" />
             <div className="section-inline">
@@ -580,6 +586,7 @@ export default function Home() {
                   ))}
             </div>
           </section>
+          </Reveal>
 
           <section className="section visual-section" id="visuals">
             <SectionIndex number="" label="VIDEO" />
@@ -620,6 +627,7 @@ export default function Home() {
             </div>
           </section>
 
+          <Reveal>
           <section className="section live-section" id="live">
             <SectionIndex number="" label="PANGGUNG" />
             <div
@@ -748,6 +756,7 @@ export default function Home() {
               </div>
             ) : null}
           </section>
+          </Reveal>
 
           {gameEnabled ? (
             <section

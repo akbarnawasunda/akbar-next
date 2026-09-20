@@ -2,6 +2,7 @@ import FanSignalInline from "@/components/FanSignalInline";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { ArrowUpRight } from "lucide-react";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
+import { Reveal } from "@/components/Reveal";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import {
@@ -162,6 +163,7 @@ export default function Music() {
           </div>
         </section>
 
+        <Reveal>
         <section className="nf-section an-story-section">
           <div className="an-story-art">
             <ResilientArtworkImage
@@ -191,7 +193,9 @@ export default function Music() {
             </Link>
           </div>
         </section>
+        </Reveal>
 
+        <Reveal>
         <section className="nf-section">
           <div className="nf-section-title">
             <div>
@@ -229,7 +233,9 @@ export default function Music() {
             })}
           </div>
         </section>
+        </Reveal>
 
+        <Reveal>
         <section className="nf-section dark-panel">
           <div className="nf-section-title">
             <div>
@@ -273,6 +279,7 @@ export default function Music() {
             ))}
           </div>
         </section>
+        </Reveal>
 
         <section className="nf-section">
           <div className="nf-section-title">
