@@ -642,16 +642,16 @@
   transform: translateX(6px);
 }
 
-.platform-spotify      { --brand: #1ed760; }
-.platform-youtube      { --brand: #ff3d3d; }
-.platform-soundcloud   { --brand: #ff6d17; }
-.platform-instagram    { --brand: #ef6aa8; }
-.platform-apple-music  { --brand: #fa57c1; }
-.platform-deezer       { --brand: #a238ff; }
-.platform-amazon-music { --brand: #ffad36; }
-.platform-tidal        { --brand: #1cd6c8; }
-.platform-tiktok       { --brand: #31f2e4; }
-.platform-x            { --brand: var(--paper); }
+.platform-spotify,
+.platform-youtube,
+.platform-soundcloud,
+.platform-instagram,
+.platform-apple-music,
+.platform-deezer,
+.platform-amazon-music,
+.platform-tidal,
+.platform-tiktok,
+.platform-x { --brand: var(--ink); }
 
 /* ============================================================
    02 — CURRENT RELEASE
@@ -2050,20 +2050,20 @@
 }
 
 .an-site .button-primary {
-  background-size: 200% 100% !important;
-  background-position: 0% 50%;
-  transition: background-position 480ms ease, color 180ms ease,
-    border-color 180ms ease, box-shadow 180ms ease;
+  background: var(--acid) !important;
+  color: var(--paper) !important;
+  border: 1px solid var(--acid) !important;
+  background-image: none !important;
+  background-size: auto !important;
+  background-position: initial !important;
+  transition: background 180ms ease, color 180ms ease,
+    border-color 180ms ease, transform 180ms ease;
 }
 .an-site .button-primary:hover,
 .an-site .button-primary:focus-visible {
-  background-image: linear-gradient(
-    100deg,
-    var(--acid) 0%,
-    color-mix(in srgb, var(--acid) 70%, var(--paper)) 50%,
-    var(--acid) 100%
-  ) !important;
-  background-position: 100% 50%;
+  background: var(--ink) !important;
+  border-color: var(--ink) !important;
+  color: var(--paper) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2138,20 +2138,20 @@
 }
 
 .an-site .button-primary {
-  background-size: 200% 100% !important;
-  background-position: 0% 50%;
-  transition: background-position 480ms ease, color 180ms ease,
-    border-color 180ms ease, box-shadow 180ms ease;
+  background: var(--acid) !important;
+  color: var(--paper) !important;
+  border: 1px solid var(--acid) !important;
+  background-image: none !important;
+  background-size: auto !important;
+  background-position: initial !important;
+  transition: background 180ms ease, color 180ms ease,
+    border-color 180ms ease, transform 180ms ease;
 }
 .an-site .button-primary:hover,
 .an-site .button-primary:focus-visible {
-  background-image: linear-gradient(
-    100deg,
-    var(--acid) 0%,
-    color-mix(in srgb, var(--acid) 70%, var(--paper)) 50%,
-    var(--acid) 100%
-  ) !important;
-  background-position: 100% 50%;
+  background: var(--ink) !important;
+  border-color: var(--ink) !important;
+  color: var(--paper) !important;
 }
 
 /* Card hover lift — semua kartu naik 2px + glow tepi */
@@ -2184,3 +2184,67 @@
   .an-site .home-live-event:hover,
   .an-site .release-cover:hover { transform: none; }
 }
+
+
+/* TAHAP A — editorial paper content surfaces and stable platform marquee */
+.an-site .section,
+.an-site .home-signal-deck,
+.an-site .signal-section {
+  background: var(--paper) !important;
+  color: var(--ink);
+  border-top-color: var(--ink-line) !important;
+}
+.an-site .section h2,
+.an-site .home-signal-copy h2,
+.an-site .release-detail h3,
+.an-site .an-section-index > span:last-child,
+.an-site .section-heading .eyebrow,
+.an-site .section-inline .eyebrow,
+.an-site .home-signal-copy .eyebrow { color: var(--ink); }
+.an-site .an-section-index,
+.an-site .section-heading,
+.an-site .section-inline,
+.an-site .home-signal-copy { color: var(--ink); }
+.an-site .an-section-index { border-bottom-color: var(--ink-line); }
+.an-site .an-section-index > i { background-image: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 6px); }
+.an-site .section .eyebrow > span,
+.an-site .home-signal-copy .eyebrow > span { background: var(--acid); }
+.an-site .home-signal-copy > p:not(.eyebrow),
+.an-site .release-detail > p:not(.mono-label),
+.an-site .live-copy > p:not(.eyebrow),
+.an-site .home-live-event small { color: var(--mute); }
+.an-site .mono-label,
+.an-site .home-platform-number,
+.an-site .release-platform-line,
+.an-site .home-live-event > span,
+.an-site .home-live-event-source { color: var(--signal); }
+.an-site .text-link,
+.an-site .home-deck-cta { border-bottom-color: var(--ink-line); color: var(--ink); }
+.an-site .home-platform-rack,
+.an-site .release-grid { border-top-color: var(--ink-line); }
+.an-site .home-platform-card,
+.an-site .release-card,
+.an-site .home-live-event { border-bottom-color: var(--ink-line) !important; color: var(--ink); box-shadow: none; }
+.an-site .home-platform-card:hover,
+.an-site .release-card:hover,
+.an-site .home-live-event:hover { background: color-mix(in srgb, var(--ink) 4%, transparent) !important; border-color: var(--ink-line) !important; }
+.an-site .home-platform-copy strong,
+.an-site .release-card h3,
+.an-site .home-live-event strong { color: var(--ink); }
+.an-site .home-platform-icon-shell,
+.an-site .home-platform-arrow,
+.an-site .release-card::after { color: var(--ink); }
+.an-site .release-detail-actions { border-top-color: var(--ink-line); color: var(--mute); }
+.an-site .release-cover,
+.an-site .release-card-art { border-color: var(--ink); box-shadow: 8px 8px 0 var(--ink); }
+.an-site .live-status,
+.an-site .home-live-events { border-color: var(--ink-line); }
+.an-site .live-status strong { color: var(--ink); }
+.an-site .live-status small { color: var(--mute); }
+.an-site .an-platform-marquee { margin-top: clamp(56px, 7vw, 96px); overflow: hidden; border-top: 1px solid var(--ink-line); color: var(--ink); }
+.an-site .an-platform-marquee-heading { display: flex; justify-content: space-between; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--ink-line); color: var(--mute); font: 600 0.62rem/1 var(--font-mono); letter-spacing: 0.16em; }
+.an-site .an-platform-marquee-row { overflow: hidden; width: 100%; border-bottom: 1px solid var(--ink-line); }
+.an-site .an-platform-marquee-track { display: flex; width: max-content; }
+.an-site .an-platform-marquee-set { display: flex; flex: 0 0 auto; gap: 32px; padding: 20px 32px 20px 0; }
+.an-site .an-platform-marquee-item { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 10px; min-width: max-content; color: var(--ink); white-space: nowrap; font: 600 0.72rem/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
+.an-site .an-platform-marquee-item .an-platform-icon { color: var(--ink); }

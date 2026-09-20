@@ -472,7 +472,6 @@ export default function Home() {
             <SectionIndex number="" label="RILIS TERBARU" />
             <div className="section-heading">
               <div>
-                <p className="eyebrow">RILIS TERBARU</p>
                 <h2>
                   RILIS
                   <br />

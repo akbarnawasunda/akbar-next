@@ -20,28 +20,29 @@
   --font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   --ink:        #0a0a09;
-  --ink-soft:   #131211;
-  --ink-line:   rgba(240, 235, 220, 0.14);
-  --paper:      #f0ebdd;
-  --paper-soft: #e2dccc;
-  --paper-line: rgba(10, 10, 9, 0.14);
+  --ink-soft:   #1a1917;
+  --paper:      #f5f3ed;
+  --paper-soft: #ebe7db;
 
-  --acid:     #4a7c7c;
-  --signal:   #a03a24;
-  --gradient-accent: linear-gradient(115deg, #4a7c7c 0%, #738ca8 52%, #b18aa8 100%);
-  --gradient-signal: linear-gradient(135deg, #a03a24 0%, #c56a55 52%, #d6b07a 100%);
-  --gradient-night: linear-gradient(135deg, #101b22 0%, #0a0a09 52%, #24171c 100%);
-  --gradient-horizon: linear-gradient(110deg, #4a7c7c 0%, #738ca8 42%, #b18aa8 76%, #c56a55 100%);
-  --glow-accent: 0 0 0 1px rgba(74, 124, 124, 0.22), 0 12px 34px rgba(74, 124, 124, 0.12);
+  --acid:       #b8442a;
+  --signal:     #8b2f1c;
+  --mute:       rgba(10, 10, 9, 0.55);
+  --mute-soft:  rgba(10, 10, 9, 0.35);
+  --mute-ink:   rgba(245, 243, 237, 0.60);
+
+  --ink-line:   rgba(10, 10, 9, 0.14);
+  --paper-line: rgba(245, 243, 237, 0.14);
+  --gradient-accent: linear-gradient(115deg, var(--acid) 0%, var(--signal) 100%);
+  --gradient-signal: linear-gradient(135deg, var(--signal) 0%, var(--acid) 100%);
+  --gradient-night: linear-gradient(135deg, var(--ink-soft) 0%, var(--ink) 100%);
+  --gradient-horizon: linear-gradient(110deg, var(--signal) 0%, var(--acid) 100%);
+  --glow-accent: 0 0 0 1px color-mix(in srgb, var(--acid) 22%, transparent), 0 12px 34px color-mix(in srgb, var(--acid) 12%, transparent);
 
   --shadow-text:  0 2px 6px rgba(0, 0, 0, 0.55);
   --shadow-soft:  0 4px 12px rgba(0, 0, 0, 0.35);
   --shadow-lift:  0 20px 50px rgba(0, 0, 0, 0.45);
   --shadow-hero:  0 40px 90px rgba(0, 0, 0, 0.60);
 
-  --mute:      rgba(240, 235, 220, 0.60);
-  --mute-soft: rgba(240, 235, 220, 0.38);
-  --mute-ink:  rgba(10, 10, 9, 0.60);
 
   --gutter: clamp(20px, 4.5vw, 64px);
   --max:    1440px;
@@ -72,7 +73,6 @@
 
   --ink-mute: var(--mute-ink);
   --ink-deep: var(--ink);
-  --acid-deep: #a8cc00;
 
   --background: var(--ink);
   --foreground: var(--paper);
@@ -114,8 +114,8 @@
   body {
     margin: 0;
     min-height: 100dvh;
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--paper);
+    color: var(--ink);
     font-family: var(--font-body);
     font-size: 1rem;
     line-height: 1.55;

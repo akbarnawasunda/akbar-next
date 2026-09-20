@@ -4,7 +4,7 @@
 .an-official-media {
   position: relative;
   isolation: isolate;
-  border-color: color-mix(in srgb, var(--media-accent, var(--acid)) 28%, transparent);
+  border-color: color-mix(in srgb, var(--acid) 28%, transparent);
   background: linear-gradient(145deg, color-mix(in srgb, var(--ink-soft) 94%, transparent), color-mix(in srgb, var(--ink) 98%, transparent));
   box-shadow: var(--shadow-lift);
   transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1), border-color 220ms ease, box-shadow 220ms ease;
@@ -14,12 +14,12 @@
   position: absolute;
   z-index: -1;
   inset: 0;
-  background: radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--media-accent, var(--acid)) 15%, transparent), transparent 36%);
+  background: radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--acid) 15%, transparent), transparent 36%);
   pointer-events: none;
 }
 .an-official-media:hover {
   transform: translateY(-4px);
-  border-color: color-mix(in srgb, var(--media-accent, var(--acid)) 58%, transparent);
+  border-color: color-mix(in srgb, var(--acid) 58%, transparent);
   box-shadow: var(--shadow-hero);
 }
 .an-official-media-art {
@@ -32,19 +32,19 @@
 .an-official-media-copy p,
 .an-official-player > span,
 .an-official-player p strong {
-  color: var(--media-accent, var(--paper));
+  color: var(--paper);
 }
 .an-official-media-art i {
   width: 42px;
   height: 42px;
-  border-color: color-mix(in srgb, var(--media-accent, var(--paper)) 72%, transparent);
+  border-color: color-mix(in srgb, var(--paper) 72%, transparent);
   background: color-mix(in srgb, var(--ink) 52%, transparent);
   backdrop-filter: blur(10px);
   transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1), background 180ms ease;
 }
 .an-official-media:hover .an-official-media-art i {
   transform: scale(1.08);
-  background: var(--media-accent, var(--acid));
+  background: var(--acid);
   color: var(--ink);
 }
 .an-official-media-actions a,
@@ -54,12 +54,12 @@
   transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 .an-official-media-actions a {
-  background: var(--media-accent, var(--acid));
-  border-color: var(--media-accent, var(--acid));
+  background: var(--acid);
+  border-color: var(--acid);
 }
 .an-official-media-actions button:hover {
-  border-color: var(--media-accent, var(--acid));
-  color: var(--media-accent, var(--acid));
+  border-color: var(--acid);
+  color: var(--acid);
   transform: translateY(-2px);
 }
 .an-official-media-actions a:active,
@@ -67,7 +67,7 @@
   transform: scale(0.97);
 }
 .an-official-player {
-  border-top-color: color-mix(in srgb, var(--media-accent, var(--paper)) 28%, transparent);
+  border-top-color: color-mix(in srgb, var(--paper) 28%, transparent);
 }
 .an-official-player iframe {
   background: var(--ink);
@@ -78,7 +78,7 @@
   height: 2px;
   position: absolute;
   bottom: 22px;
-  background: linear-gradient(90deg, transparent, var(--media-accent, var(--acid)), transparent);
+  background: linear-gradient(90deg, transparent, var(--acid), transparent);
   animation: an-media-loading 1.15s ease-in-out infinite;
 }
 .an-official-media-provider-youtube,
