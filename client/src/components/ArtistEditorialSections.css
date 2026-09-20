@@ -668,3 +668,119 @@
     transform: none !important;
   }
 }
+
+
+/* TAHAP A.5 — light editorial treatment for journey and photo studies */
+.artist-editorial-section,
+.artist-journey-section,
+.artist-photo-story-section {
+  background: var(--paper) !important;
+  background-image: none !important;
+  color: var(--ink);
+  border-top-color: var(--ink-line);
+}
+.artist-editorial-heading h2,
+.artist-journey-timeline h3,
+.artist-photo-story-copy h3,
+.artist-photo-story-stage .artist-photo-story-copy h3 { color: var(--ink); }
+.artist-editorial-heading h2 em,
+.artist-journey-aside > span,
+.artist-journey-year,
+.artist-photo-story-copy > span,
+.artist-photo-story-stage .artist-photo-story-copy > span { color: var(--acid); }
+.artist-editorial-intro {
+  color: var(--ink);
+  font-size: 1.125rem;
+  line-height: 1.75;
+  font-weight: 400;
+}
+.artist-journey-aside {
+  border-color: var(--ink);
+  background: var(--paper);
+}
+.artist-journey-image,
+.artist-photo-story-image,
+.artist-photo-story-stage .artist-photo-story-image { background: var(--paper-soft); }
+.artist-journey-aside p,
+.artist-journey-timeline p,
+.artist-photo-story-copy p,
+.artist-photo-story-stage .artist-photo-story-copy p {
+  color: var(--mute);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.artist-journey-aside p,
+.artist-journey-timeline article,
+.artist-photo-story-copy { border-color: var(--ink-line); }
+.artist-journey-timeline::before { background: var(--ink-line); }
+.artist-journey-timeline article > div::before {
+  background: var(--paper);
+  border-color: var(--acid);
+}
+.artist-journey-timeline article:last-child > div::before { background: var(--acid); }
+.artist-photo-story-card,
+.artist-photo-story-stage,
+.artist-photo-story-rail { border-color: var(--ink); }
+.artist-photo-story-card { color: var(--ink); background: var(--paper); }
+.artist-photo-story-card:hover,
+.artist-photo-story-card:focus-visible { background: var(--paper) !important; }
+.artist-photo-story-index {
+  background: var(--paper);
+  color: var(--acid);
+  border-color: var(--ink);
+}
+.artist-photo-story-copy b,
+.artist-photo-story-footer .nf-text-button {
+  border-bottom-color: var(--ink-line);
+  color: var(--ink);
+}
+.artist-photo-story-stage .artist-photo-story-copy {
+  background: var(--paper);
+  border-left-color: var(--ink-line);
+}
+.artist-photo-story-stage .artist-photo-story-copy a { color: var(--acid); border-color: var(--acid); }
+.artist-photo-story-stage .artist-photo-story-copy a:hover,
+.artist-photo-story-stage .artist-photo-story-copy a:focus-visible {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.artist-photo-story-counter { color: var(--mute); }
+.artist-photo-story-counter i { background: var(--ink); }
+.artist-photo-story-arrows button {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.artist-photo-story-rail button {
+  border-right-color: var(--ink-line);
+  color: var(--mute);
+}
+.artist-photo-story-rail button:hover,
+.artist-photo-story-rail button:focus-visible {
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  color: var(--ink);
+}
+.artist-photo-story-rail button.is-active,
+.artist-photo-story-rail button.is-active span,
+.artist-photo-story-rail button.is-active b { color: var(--ink); }
+.artist-photo-story-rail button.is-active { background: var(--acid); }
+.artist-photo-story-section.artist-editorial-light,
+.artist-photo-story-section[data-theme="light"] {
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+}
+
+/* Type hierarchy */
+.artist-journey-aside > span,
+.artist-journey-year,
+.artist-photo-story-copy > span,
+.artist-photo-story-index,
+.artist-photo-story-footer .nf-text-button,
+.artist-photo-story-stage .artist-photo-story-copy a,
+.artist-photo-story-counter,
+.artist-photo-story-rail button span {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.artist-photo-story-copy b { font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.5; letter-spacing: 0.05em; }

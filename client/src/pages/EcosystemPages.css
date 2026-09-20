@@ -1113,34 +1113,115 @@
 
 
 /* TAHAP A — white editorial content surfaces; heroes and footer remain dark */
-.nf-page main > section:not(.nf-page-hero) {
+.nf-page main section:not(.nf-page-hero) {
   background: var(--paper);
   color: var(--ink);
   border-top-color: var(--ink-line);
 }
-.nf-page main > section:not(.nf-page-hero) .nf-section-title h2,
-.nf-page main > section:not(.nf-page-hero) .nf-section-title > p,
-.nf-page main > section:not(.nf-page-hero) h2,
-.nf-page main > section:not(.nf-page-hero) h3,
-.nf-page main > section:not(.nf-page-hero) .an-archive-route-list a,
-.nf-page main > section:not(.nf-page-hero) .nf-catalog-card,
-.nf-page main > section:not(.nf-page-hero) .nf-event-card { color: var(--ink); }
-.nf-page main > section:not(.nf-page-hero) p,
-.nf-page main > section:not(.nf-page-hero) .nf-section-title > p,
-.nf-page main > section:not(.nf-page-hero) .nf-catalog-card p,
-.nf-page main > section:not(.nf-page-hero) .an-story-copy p,
-.nf-page main > section:not(.nf-page-hero) .an-profile-copy p { color: var(--mute); }
-.nf-page main > section:not(.nf-page-hero) [class*="card"],
-.nf-page main > section:not(.nf-page-hero) [class*="grid"],
-.nf-page main > section:not(.nf-page-hero) [class*="list"],
-.nf-page main > section:not(.nf-page-hero) [class*="timeline"],
-.nf-page main > section:not(.nf-page-hero) [class*="capability"] { border-color: var(--ink-line); }
-.nf-page main > section:not(.nf-page-hero) .nf-catalog-card,
-.nf-page main > section:not(.nf-page-hero) .nf-universe-card,
-.nf-page main > section:not(.nf-page-hero) .an-booking-option,
-.nf-page main > section:not(.nf-page-hero) .an-epk-capability { background: transparent; }
-.nf-page main > section:not(.nf-page-hero) .nf-catalog-art,
-.nf-page main > section:not(.nf-page-hero) .an-story-art { background: var(--paper-soft); border-color: var(--ink-line); }
-.nf-page main > section:not(.nf-page-hero) .nf-button { color: var(--paper); }
-.nf-page main > section:not(.nf-page-hero) .nf-text-button { color: var(--ink); border-bottom-color: var(--ink-line); }
-.nf-page main > section:not(.nf-page-hero) .an-platform-icon { color: var(--ink); }
+.nf-page main section:not(.nf-page-hero) .nf-section-title h2,
+.nf-page main section:not(.nf-page-hero) .nf-section-title > p,
+.nf-page main section:not(.nf-page-hero) h2,
+.nf-page main section:not(.nf-page-hero) h3,
+.nf-page main section:not(.nf-page-hero) .an-archive-route-list a,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
+.nf-page main section:not(.nf-page-hero) .nf-event-card { color: var(--ink); }
+.nf-page main section:not(.nf-page-hero) p,
+.nf-page main section:not(.nf-page-hero) .nf-section-title > p,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card p,
+.nf-page main section:not(.nf-page-hero) .an-story-copy p,
+.nf-page main section:not(.nf-page-hero) .an-profile-copy p { color: var(--mute); }
+.nf-page main section:not(.nf-page-hero) [class*="card"],
+.nf-page main section:not(.nf-page-hero) [class*="grid"],
+.nf-page main section:not(.nf-page-hero) [class*="list"],
+.nf-page main section:not(.nf-page-hero) [class*="timeline"],
+.nf-page main section:not(.nf-page-hero) [class*="capability"] { border-color: var(--ink-line); }
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
+.nf-page main section:not(.nf-page-hero) .nf-universe-card,
+.nf-page main section:not(.nf-page-hero) .an-booking-option,
+.nf-page main section:not(.nf-page-hero) .an-epk-capability { background: transparent; }
+.nf-page main section:not(.nf-page-hero) .nf-catalog-art,
+.nf-page main section:not(.nf-page-hero) .an-story-art { background: var(--paper-soft); border-color: var(--ink-line); }
+.nf-page main section:not(.nf-page-hero) .nf-button { color: var(--paper); }
+.nf-page main section:not(.nf-page-hero) .nf-text-button { color: var(--ink); border-bottom-color: var(--ink-line); }
+.nf-page main section:not(.nf-page-hero) .an-platform-icon { color: var(--ink); }
+
+
+/* TAHAP A.5 — all non-hero ecosystem content uses paper/ink contrast */
+.nf-page main section:not(.nf-page-hero),
+.nf-page main section:not(.nf-page-hero).dark-panel,
+.nf-page main section.nf-section.dark-panel {
+  background: var(--paper) !important;
+  background-image: none !important;
+  color: var(--ink);
+  border-top-color: var(--ink-line);
+}
+.nf-page main section:not(.nf-page-hero) .nf-section-title h2,
+.nf-page main section:not(.nf-page-hero) h2,
+.nf-page main section:not(.nf-page-hero) h3,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
+.nf-page main section:not(.nf-page-hero) .nf-event-card,
+.nf-page main section:not(.nf-page-hero) .an-story-copy,
+.nf-page main section:not(.nf-page-hero) .an-archive-route-list a { color: var(--ink); }
+.nf-page main section:not(.nf-page-hero) .nf-section-title > p {
+  color: var(--ink);
+  font-size: 1.125rem;
+  line-height: 1.75;
+  font-weight: 400;
+}
+.nf-page main section:not(.nf-page-hero) p:not(.nf-page-eyebrow) {
+  color: var(--mute);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.nf-page main section:not(.nf-page-hero) .nf-page-eyebrow,
+.nf-page main section:not(.nf-page-hero) .nf-section-title .nf-page-eyebrow,
+.nf-page main section:not(.nf-page-hero) .an-story-label { color: var(--acid); }
+.nf-page main section:not(.nf-page-hero) .nf-page-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.nf-page main section:not(.nf-page-hero) .nf-catalog,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
+.nf-page main section:not(.nf-page-hero) .nf-event-grid,
+.nf-page main section:not(.nf-page-hero) .nf-event-card,
+.nf-page main section:not(.nf-page-hero) .an-story-credits,
+.nf-page main section:not(.nf-page-hero) .nf-archive-route-list,
+.nf-page main section:not(.nf-page-hero) .nf-archive-route-list a {
+  border-color: var(--ink-line);
+}
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
+.nf-page main section:not(.nf-page-hero) .nf-universe-card,
+.nf-page main section:not(.nf-page-hero) .an-booking-option,
+.nf-page main section:not(.nf-page-hero) .an-epk-capability { background: var(--paper); }
+.nf-page main section:not(.nf-page-hero) .nf-catalog-art,
+.nf-page main section:not(.nf-page-hero) .an-story-art { background: var(--paper-soft); }
+.nf-page main section:not(.nf-page-hero) .an-platform-icon,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card > svg,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card .index { color: var(--ink); }
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card p,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card b,
+.nf-page main section:not(.nf-page-hero) .nf-archive-route-list span { color: var(--acid); }
+.nf-page main section:not(.nf-page-hero) .nf-text-button {
+  color: var(--ink);
+  border-bottom-color: var(--ink-line);
+}
+.nf-page main section:not(.nf-page-hero) .nf-button { color: var(--paper); }
+.nf-page main section:not(.nf-page-hero) .an-story-credits { color: var(--mute); }
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card p,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card b,
+.nf-page main section:not(.nf-page-hero) .nf-archive-route-list span {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.nf-page main section:not(.nf-page-hero) figcaption,
+.nf-page main section:not(.nf-page-hero) .caption {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--mute);
+  letter-spacing: 0.05em;
+}
