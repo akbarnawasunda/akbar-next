@@ -110,6 +110,7 @@ export default function Music() {
           style={
             {
               "--page-image": `url(${featured.artwork || officialBrand.socialPreview})`,
+              backgroundAttachment: "fixed",
             } as React.CSSProperties
           }
         >
