@@ -653,8 +653,6 @@
 .platform-tiktok       { --brand: #31f2e4; }
 .platform-x            { --brand: var(--paper); }
 
-.an-platform-marquee { display: none !important; }
-
 /* ============================================================
    02 — CURRENT RELEASE
    ============================================================ */
