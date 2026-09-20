@@ -1273,3 +1273,123 @@
 .nf-page main section:not(.nf-page-hero) .nf-button { color: var(--paper) !important; }
 .nf-page main section:not(.nf-page-hero) figcaption,
 .nf-page main section:not(.nf-page-hero) .caption { color: var(--mute-soft) !important; }
+
+
+/* FINAL MUSIC REFINEMENT — horizontal release catalog, stable players */
+.nf-catalog-frame {
+  position: relative;
+  min-width: 0;
+}
+.nf-catalog-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 12px;
+  color: var(--mute);
+  font: 600 0.58rem/1.2 var(--font-mono);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.nf-catalog-controls {
+  display: inline-flex;
+  gap: 8px;
+}
+.nf-catalog-controls button {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 34px;
+  border: 1px solid var(--paper-line);
+  color: var(--paper);
+  background: color-mix(in srgb, var(--paper) 4%, transparent);
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+.nf-catalog-controls button:hover,
+.nf-catalog-controls button:focus-visible {
+  border-color: var(--acid);
+  background: var(--acid);
+  color: var(--ink);
+}
+.nf-catalog-controls button:active { transform: scale(.96); }
+.nf-page .nf-catalog {
+  display: flex;
+  gap: 14px;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-color: color-mix(in srgb, var(--acid) 72%, transparent) transparent;
+  scrollbar-width: thin;
+  border: 0;
+  padding: 4px 2px 18px;
+}
+.nf-page .nf-catalog::-webkit-scrollbar { height: 4px; }
+.nf-page .nf-catalog::-webkit-scrollbar-track { background: color-mix(in srgb, var(--paper) 8%, transparent); }
+.nf-page .nf-catalog::-webkit-scrollbar-thumb { background: var(--acid); }
+.nf-page .nf-catalog-card {
+  flex: 0 0 clamp(230px, 24vw, 320px);
+  min-height: 390px;
+  scroll-snap-align: start;
+  border: 1px solid var(--paper-line);
+  background: var(--ink-soft) !important;
+  transition: border-color 180ms ease, background 180ms ease, transform 220ms cubic-bezier(.23,1,.32,1);
+}
+.nf-page .nf-catalog-card:hover,
+.nf-page .nf-catalog-card:focus-visible {
+  border-color: color-mix(in srgb, var(--acid) 70%, transparent);
+  background: color-mix(in srgb, var(--ink-soft) 84%, var(--acid)) !important;
+  transform: translateY(-4px);
+}
+.nf-page .nf-catalog-card .nf-catalog-art {
+  flex: 0 0 auto;
+  aspect-ratio: 1;
+  margin-bottom: 8px;
+  border: 0;
+  background: var(--ink) !important;
+}
+.nf-page .nf-catalog-card .nf-catalog-art img,
+.nf-page .nf-catalog-card > img { transition: transform 420ms cubic-bezier(.23,1,.32,1), filter 280ms ease; }
+.nf-page .nf-catalog-card:hover .nf-catalog-art img,
+.nf-page .nf-catalog-card:focus-visible .nf-catalog-art img,
+.nf-page .nf-catalog-card:hover > img,
+.nf-page .nf-catalog-card:focus-visible > img { transform: scale(1.035); }
+.nf-page .nf-catalog-card .index,
+.nf-page .nf-catalog-card p { color: var(--mute) !important; }
+.nf-page .nf-catalog-card h3 { color: var(--paper) !important; }
+.nf-page .nf-catalog-card b { color: var(--acid) !important; }
+.nf-page .nf-catalog-card > svg { color: var(--paper) !important; }
+
+/* Dark imagery always gets a text-safe local scrim, never a blanket wash. */
+.nf-page .nf-visual-card::after {
+  background: linear-gradient(0deg, color-mix(in srgb, var(--ink) 94%, transparent) 0%, color-mix(in srgb, var(--ink) 66%, transparent) 30%, transparent 72%);
+}
+.nf-page .nf-visual-card span,
+.nf-page .nf-visual-card h3,
+.nf-page .nf-visual-card p { text-shadow: 0 1px 16px color-mix(in srgb, var(--ink) 76%, transparent); }
+.nf-page .nf-section-title > p,
+.nf-page .an-story-copy p,
+.nf-page .an-story-credits,
+.nf-page .nf-catalog-card p,
+.nf-page .nf-catalog-toolbar { color: var(--mute) !important; }
+.nf-page .nf-page-hero p:not(.nf-page-eyebrow),
+.nf-page .nf-hero-note > strong,
+.nf-page .nf-section-title h2,
+.nf-page .an-story-copy h2 { text-shadow: 0 1px 18px color-mix(in srgb, var(--ink) 60%, transparent); }
+
+@media (max-width: 700px) {
+  .nf-catalog-toolbar { margin-bottom: 8px; }
+  .nf-catalog-controls button { width: 34px; height: 32px; }
+  .nf-page .nf-catalog { gap: 12px; padding-bottom: 16px; scroll-padding-inline: 2px; }
+  .nf-page .nf-catalog-card { flex-basis: min(78vw, 290px); min-height: 360px; padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nf-page .nf-catalog { scroll-behavior: auto; scroll-snap-type: none; }
+  .nf-page .nf-catalog-card,
+  .nf-page .nf-catalog-card:hover,
+  .nf-page .nf-catalog-card:focus-visible,
+  .nf-page .nf-catalog-card .nf-catalog-art img { transform: none; transition: none; }
+  .nf-catalog-controls button { transition: none; }
+}

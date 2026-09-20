@@ -1,6 +1,7 @@
 import FanSignalInline from "@/components/FanSignalInline";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, ArrowRight } from "lucide-react";
+import { useRef } from "react";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { Reveal } from "@/components/Reveal";
 import { PlatformIcon } from "@/components/PlatformIcon";
@@ -43,6 +44,7 @@ const releaseSlug = (value: string) =>
     .replace(/^-|-$/g, "");
 
 export default function Music() {
+  const catalogRef = useRef<HTMLDivElement>(null);
   const cms = usePublicArtistContent();
   const editablePlatformLinks = publicPlatformLinks(cms.data);
   const cmsReleases = cms.data?.releases ?? [];
@@ -100,6 +102,10 @@ export default function Music() {
     .map((item) => ({ title: item.title, url: item.embedUrl! }));
 
   const players = embeddedDrops.length ? embeddedDrops : soundcloudDrops;
+  const scrollCatalog = (direction: number) => {
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    catalogRef.current?.scrollBy({ left: direction * Math.min(catalogRef.current.clientWidth * 0.82, 520), behavior });
+  };
 
   return (
     <div className="nf-page">
@@ -253,31 +259,44 @@ export default function Music() {
                 : "Kumpulan rilisan Akbar Nawasunda."}
             </p>
           </div>
-          <div className="nf-catalog">
-            {catalog.map((release, index) => (
-              <Link
-                key={`${release.title}-${index}`}
-                className="nf-catalog-card"
-                href={`/music/${releaseSlug(release.title)}`}
-              >
-                <ResilientArtworkImage
-                  className="nf-catalog-art"
-                  src={release.image}
-                  backupSrc={officialBrand.socialPreview}
-                  alt={`Artwork ${release.title}`}
-                />
-                <span className="index">{formatPublicIndex(index)}</span>
-                <PlatformIcon label={release.platform} />
-                <p>
-                  {release.format} · {release.year}
-                </p>
-                <h3>{release.title}</h3>
-                <b>
-                  {release.platform}
-                  <ArrowUpRight size={13} />
-                </b>
-              </Link>
-            ))}
+          <div className="nf-catalog-frame">
+            <div className="nf-catalog-toolbar">
+              <span>GESER UNTUK MENJELAJAH</span>
+              <div className="nf-catalog-controls" aria-label="Kontrol katalog rilisan">
+                <button type="button" aria-label="Rilisan sebelumnya" onClick={() => scrollCatalog(-1)}>
+                  <ArrowLeft size={15} />
+                </button>
+                <button type="button" aria-label="Rilisan berikutnya" onClick={() => scrollCatalog(1)}>
+                  <ArrowRight size={15} />
+                </button>
+              </div>
+            </div>
+            <div className="nf-catalog" ref={catalogRef} tabIndex={0} aria-label="Katalog rilisan Akbar Nawasunda">
+              {catalog.map((release, index) => (
+                <Link
+                  key={`${release.title}-${index}`}
+                  className="nf-catalog-card"
+                  href={`/music/${releaseSlug(release.title)}`}
+                >
+                  <ResilientArtworkImage
+                    className="nf-catalog-art"
+                    src={release.image}
+                    backupSrc={officialBrand.socialPreview}
+                    alt={`Artwork ${release.title}`}
+                  />
+                  <span className="index">{formatPublicIndex(index)}</span>
+                  <PlatformIcon label={release.platform} />
+                  <p>
+                    {release.format} · {release.year}
+                  </p>
+                  <h3>{release.title}</h3>
+                  <b>
+                    {release.platform}
+                    <ArrowUpRight size={13} />
+                  </b>
+                </Link>
+              ))}
+            </div>
           </div>
         </section>
         </Reveal>
