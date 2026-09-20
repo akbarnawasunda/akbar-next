@@ -18,17 +18,23 @@ const navItems = [
   { href: "/live", label: "LIVE" },
   { href: "/universe", label: "ARCHIVE" },
   { href: "/about", label: "ABOUT" },
+  { href: "/epk", label: "EPK" },
+  { href: "/inquire", label: "CONTACT" },
 ];
 
 function LanguageSwitcher({ pathname }: { pathname: string }) {
-  const englishPath = pathname === "/" ? "/en" : `/en${pathname}`;
+  const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
+  const idPath = isEnglish ? pathname.replace(/^\/en/, "") || "/" : pathname;
+  const englishPath = isEnglish ? pathname : pathname === "/" ? "/en" : `/en${pathname}`;
   return (
     <div className="an-language-switcher" aria-label="Pilihan bahasa">
-      <Link className="is-active" href={pathname} aria-current="page">
+      <Link className={!isEnglish ? "is-active" : ""} href={idPath} aria-current={!isEnglish ? "page" : undefined}>
         ID
       </Link>
       <span aria-hidden="true">/</span>
-      <Link href={englishPath}>EN</Link>
+      <Link className={isEnglish ? "is-active" : ""} href={englishPath} aria-current={isEnglish ? "page" : undefined}>
+        EN
+      </Link>
     </div>
   );
 }
@@ -129,11 +135,6 @@ function MobileMenuOverlay({
           </Link>
         ))}
 
-        <Link href="/epk" onClick={onClose}>
-          <span className="nf-mobile-menu-link-title">EPK / BOOKING</span>
-          <ArrowUpRight size={16} aria-hidden="true" />
-        </Link>
-
         <a href="#signal" onClick={onClose}>
           <span className="nf-mobile-menu-link-title">KABAR TERBARU</span>
           <Radio size={14} aria-hidden="true" />
@@ -152,6 +153,14 @@ function MobileMenuOverlay({
 export function NightHeader({ active }: { active?: string }) {
   const [pathname] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const activeRoute = active ??
+    (pathname.startsWith("/music") ? "/music" :
+      pathname.startsWith("/visuals") ? "/visuals" :
+        pathname.startsWith("/live") ? "/live" :
+          pathname.startsWith("/universe") ? "/universe" :
+            pathname.startsWith("/about") ? "/about" :
+              pathname.startsWith("/epk") ? "/epk" :
+                pathname.startsWith("/inquire") ? "/inquire" : undefined);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   const close = () => setIsOpen(false);
@@ -185,7 +194,7 @@ export function NightHeader({ active }: { active?: string }) {
           {navItems.map((item) => (
             <Link
               key={item.href}
-              className={active === item.href ? "is-active" : ""}
+              className={activeRoute === item.href ? "is-active" : ""}
               href={item.href}
             >
               {item.label}
@@ -212,7 +221,7 @@ export function NightHeader({ active }: { active?: string }) {
       <MobileMenuOverlay
         open={isOpen}
         pathname={pathname}
-        active={active}
+        active={activeRoute}
         onClose={closeAndReturnFocus}
       />
     </>

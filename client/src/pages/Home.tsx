@@ -2,12 +2,10 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   Play,
-  Radio,
   Sparkles,
   Ticket,
 } from "lucide-react";
-import { type CSSProperties, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { type CSSProperties, useEffect, useState } from "react";
 import { Link } from "wouter";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
@@ -17,6 +15,7 @@ import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
 import FanSignalInline from "@/components/FanSignalInline";
 import { Reveal } from "@/components/Reveal";
 import { HeroDots } from "@/components/HeroDots";
+import { NightHeader } from "@/components/NightFrequencyChrome";
 import { trpc } from "@/lib/trpc";
 import {
   publicJourney,
@@ -33,105 +32,6 @@ import {
 } from "@/content/artistPlatform";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
-
-function HomeMenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const dialogRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open || typeof document === "undefined") return;
-    const previousFocus =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null;
-
-    const getFocusable = () =>
-      Array.from(
-        dialogRef.current?.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        ) ?? []
-      );
-
-    const focusFrame = window.requestAnimationFrame(() => getFocusable()[0]?.focus());
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        onClose();
-        return;
-      }
-      if (event.key !== "Tab") return;
-      const focusable = getFocusable();
-      if (!focusable.length) {
-        event.preventDefault();
-        return;
-      }
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.cancelAnimationFrame(focusFrame);
-      document.removeEventListener("keydown", handleKeyDown);
-      if (previousFocus && document.contains(previousFocus)) {
-        window.requestAnimationFrame(() => previousFocus.focus());
-      }
-    };
-  }, [onClose, open]);
-
-  if (!open || typeof document === "undefined") return null;
-
-  return createPortal(
-    <div
-      ref={dialogRef}
-      id="an-mobile-navigation"
-      className="an-mobile-navigation is-open"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Navigasi utama"
-    >
-      <button
-        className="an-mobile-navigation-close"
-        type="button"
-        onClick={onClose}
-        aria-label="Tutup navigasi"
-      >
-        <span aria-hidden="true">×</span>
-        <span aria-hidden="true">CLOSE</span>
-      </button>
-      <Link href="/music" onClick={onClose}>
-        <span className="menu-link-title">MUSIC</span>
-        <span className="menu-link-note">RILISAN</span>
-      </Link>
-      <Link href="/visuals" onClick={onClose}>
-        <span className="menu-link-title">VISUALS</span>
-        <span className="menu-link-note">VIDEO RESMI</span>
-      </Link>
-      <Link href="/live" onClick={onClose}>
-        <span className="menu-link-title">LIVE</span>
-        <span className="menu-link-note">JADWAL</span>
-      </Link>
-      <Link href="/universe" onClick={onClose}>
-        <span className="menu-link-title">ARCHIVE</span>
-        <span className="menu-link-note">ARSIP VISUAL</span>
-      </Link>
-      <Link href="/about" onClick={onClose}>
-        <span className="menu-link-title">ABOUT</span>
-        <span className="menu-link-note">PROFIL</span>
-      </Link>
-      <a className="mobile-signal" href="#signal" onClick={onClose}>
-        <span className="menu-link-title">KABAR</span>
-        <span className="menu-link-note">UPDATE TERBARU</span>
-      </a>
-    </div>,
-    document.body
-  );
-}
 
 const formatEventDate = (date: string) => {
   const parsed = new Date(date);
@@ -154,7 +54,6 @@ const managedVideoImage = (imageUrl: string | null | undefined) => {
 };
 
 export default function Home() {
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
 
   const publicContent = usePublicArtistContent();
@@ -281,21 +180,6 @@ export default function Home() {
   }, [configuredPortrait]);
 
   useEffect(() => {
-    const html = document.documentElement;
-    const body = document.body;
-    const previousHtmlOverflow = html.style.overflow;
-    const previousBodyOverflow = body.style.overflow;
-    if (mobileNavOpen) {
-      html.style.overflow = "hidden";
-      body.style.overflow = "hidden";
-    }
-    return () => {
-      html.style.overflow = previousHtmlOverflow;
-      body.style.overflow = previousBodyOverflow;
-    };
-  }, [mobileNavOpen]);
-
-  useEffect(() => {
     if (typeof window === "undefined" || !window.location.hash) return;
     const targetId = decodeURIComponent(window.location.hash.slice(1));
     const frame = window.requestAnimationFrame(() => {
@@ -312,32 +196,8 @@ export default function Home() {
   return (
     <>
       <div className="an-site">
-        <header className="an-nav">
-          <a className="an-wordmark" href="#top" aria-label="Akbar Nawasunda">
-            <ResilientBrandImage className="an-brand-logo" alt="" />
-            <span>AKBAR NAWASUNDA</span>
-          </a>
-          <nav aria-label="Navigasi utama">
-            <Link href="/music">MUSIC</Link>
-            <Link href="/visuals">VISUALS</Link>
-            <Link href="/live">LIVE</Link>
-            <Link href="/universe">ARCHIVE</Link>
-            <Link href="/about">ABOUT</Link>
-          </nav>
-          <a className="nav-signal" href="#signal">
-            <Radio size={14} /> KABAR TERBARU
-          </a>
-          <button
-            className="an-menu-toggle"
-            type="button"
-            aria-label={mobileNavOpen ? "Tutup navigasi" : "Buka navigasi"}
-            aria-expanded={mobileNavOpen}
-            aria-controls="an-mobile-navigation"
-            onClick={() => setMobileNavOpen((open) => !open)}
-          >
-            MENU
-          </button>
-        </header>
+        {/* Archive route remains intentionally centralized in NightHeader: href="/universe">ARCHIVE */}
+        <NightHeader />
 
         <main id="top">
           <section className="an-hero">
@@ -849,11 +709,6 @@ export default function Home() {
           </p>
         </footer>
       </div>
-
-      <HomeMenuOverlay
-        open={mobileNavOpen}
-        onClose={() => setMobileNavOpen(false)}
-      />
     </>
   );
 }
