@@ -1,6 +1,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
+import { verifiedArtistProfile } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
 import { useSearch } from "wouter";
 import "./EcosystemPages.css";
@@ -72,21 +73,14 @@ export default function Inquiry() {
     budgetContext: "",
     message: "",
   });
+  const [submissionState, setSubmissionState] = useState<"idle" | "success" | "error">("idle");
   const submit = trpc.inquiry.submit.useMutation({
     onSuccess: () => {
+      setSubmissionState("success");
       toast.success("Inquiry diterima. Jalur owner akan meninjaunya.");
-      setForm({
-        name: "",
-        email: "",
-        organization: "",
-        projectTitle: "",
-        location: "",
-        timeline: "",
-        budgetContext: "",
-        message: "",
-      });
     },
     onError: error => {
+      setSubmissionState("error");
       console.error("Inquiry error:", error);
       const message = error.message.toLowerCase();
       if (message.includes("database") || message.includes("connect")) {
@@ -105,7 +99,21 @@ export default function Inquiry() {
   const current = labels[type];
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSubmissionState("idle");
     submit.mutate({ inquiryType: type, source, ...form });
+  };
+  const resetSubmission = () => {
+    setSubmissionState("idle");
+    setForm({
+      name: "",
+      email: "",
+      organization: "",
+      projectTitle: "",
+      location: "",
+      timeline: "",
+      budgetContext: "",
+      message: "",
+    });
   };
   const update = (key: keyof typeof form, value: string) =>
     setForm(previous => ({ ...previous, [key]: value }));
@@ -123,7 +131,28 @@ export default function Inquiry() {
           </div>
         </section>
         <section className="an-inquiry-shell">
+          <div className="an-inquiry-contact-column">
+            <p className="an-inquiry-column-label">CONTACT / WORK TOGETHER</p>
+            <h2>LET&apos;S MAKE<br />A SIGNAL.</h2>
+            <p className="an-inquiry-contact-copy">
+              Booking, remix, collaboration, press, and music licensing requests are reviewed directly.
+            </p>
+            <div className="an-inquiry-roles" aria-label="Jenis inquiry">
+              <span>BOOKING</span>
+              <span>COLLABORATION</span>
+              <span>PRESS</span>
+              <span>GENERAL</span>
+            </div>
+            <a className="an-inquiry-email" href={`mailto:${verifiedArtistProfile.bookingEmail}`}>
+              {verifiedArtistProfile.bookingEmail}
+            </a>
+            <p className="an-inquiry-contact-note">Bandung Barat — Indonesia</p>
+          </div>
           <form className="an-inquiry-form" onSubmit={onSubmit}>
+            <div className="an-inquiry-form-heading">
+              <p className="an-inquiry-column-label">SEND A MESSAGE</p>
+              <h2>{current.title.replace("\n", " ")}</h2>
+            </div>
             <div className="an-inquiry-type-row">
               {validTypes.map(option => (
                 <button
@@ -211,15 +240,23 @@ export default function Inquiry() {
             <button className="an-inquiry-submit" disabled={submit.isPending}>
               {submit.isPending ? "MENGIRIM…" : "KIRIM INQUIRY"}
             </button>
+            {submissionState === "success" ? (
+              <div className="an-inquiry-feedback is-success" role="status" aria-live="polite">
+                <strong>MESSAGE RECEIVED.</strong>
+                <span>Terima kasih — pesanmu sudah masuk ke inbox Akbar Nawasunda.</span>
+                <button type="button" onClick={resetSubmission}>KIRIM PESAN LAIN</button>
+              </div>
+            ) : null}
+            {submissionState === "error" ? (
+              <div className="an-inquiry-feedback is-error" role="alert">
+                <strong>MESSAGE COULDN&apos;T BE SENT.</strong>
+                <span>Coba lagi, atau kirim langsung ke {verifiedArtistProfile.bookingEmail}.</span>
+              </div>
+            ) : null}
             <p className="an-inquiry-note">
               Konfirmasi diberikan setelah inquiry ditinjau.
             </p>
           </form>
-          <aside className="an-inquiry-aside">
-            <span>SERTAKAN</span>
-            <p>Tujuan, format penggunaan, deadline, dan link referensi.</p>
-            <a href="/licensing">LICENSING & USAGE →</a>
-          </aside>
         </section>
       </main>
       <NightFooter />

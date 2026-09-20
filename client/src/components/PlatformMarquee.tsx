@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { allPlatformLinks } from "@/content/artistPlatform";
 import type { CmsPlatformLink } from "@/content/publicContent";
+import "./PlatformMarquee.css";
 
 type PlatformLink = CmsPlatformLink;
 
