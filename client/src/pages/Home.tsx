@@ -1,11 +1,13 @@
 import {
   ArrowDownRight,
+  ArrowLeft,
   ArrowUpRight,
+  ArrowRight,
   Play,
   Sparkles,
   Ticket,
 } from "lucide-react";
-import { type CSSProperties, useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
@@ -55,6 +57,7 @@ const managedVideoImage = (imageUrl: string | null | undefined) => {
 
 export default function Home() {
   const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
+  const releaseCatalogRef = useRef<HTMLDivElement>(null);
 
   const publicContent = usePublicArtistContent();
   const contentQuery = trpc.content.list.useQuery(undefined, {
@@ -407,42 +410,55 @@ export default function Home() {
                 SPOTIFY <PlatformIcon label="Spotify" /> <ArrowUpRight size={14} />
               </a>
             </div>
-            <div className="release-grid" aria-busy={contentIsLoading}>
-              {contentIsLoading
-                ? [1, 2, 3, 4].map((index) => (
-                    <div className="release-card skeleton" key={index} aria-hidden="true">
-                      <div className="skeleton-icon" />
-                      <span className="skeleton-text" />
-                      <span className="skeleton-title" />
-                    </div>
-                  ))
-                : displayReleases.map((release) => (
-                    <a
-                      key={release.title}
-                      className="release-card"
-                      href={release.href}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {release.image && (
-                        <div className="release-card-art">
-                          <ResilientArtworkImage
-                            src={release.image}
-                            backupSrc={officialBrand.socialPreview}
-                            alt={`Artwork ${release.title}`}
-                          />
-                        </div>
-                      )}
-                      <PlatformIcon label={release.platform} />
-                      <p>
-                        {release.format} · {release.year}
-                      </p>
-                      <h3>{release.title}</h3>
-                      <span className="release-platform-line">
-                        {release.platform} <ArrowUpRight size={13} />
-                      </span>
-                    </a>
-                  ))}
+            <div className="home-release-carousel">
+              <div className="home-release-carousel-toolbar">
+                <span>GESER UNTUK MENJELAJAH</span>
+                <div className="home-release-carousel-controls" aria-label="Kontrol katalog rilisan">
+                  <button type="button" aria-label="Rilisan sebelumnya" onClick={() => releaseCatalogRef.current?.scrollBy({ left: -360, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })}>
+                    <ArrowLeft size={15} />
+                  </button>
+                  <button type="button" aria-label="Rilisan berikutnya" onClick={() => releaseCatalogRef.current?.scrollBy({ left: 360, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" })}>
+                    <ArrowRight size={15} />
+                  </button>
+                </div>
+              </div>
+              <div className="release-grid" ref={releaseCatalogRef} tabIndex={0} aria-busy={contentIsLoading} aria-label="Katalog rilisan Akbar Nawasunda">
+                {contentIsLoading
+                  ? [1, 2, 3, 4].map((index) => (
+                      <div className="release-card skeleton" key={index} aria-hidden="true">
+                        <div className="skeleton-icon" />
+                        <span className="skeleton-text" />
+                        <span className="skeleton-title" />
+                      </div>
+                    ))
+                  : displayReleases.map((release) => (
+                      <a
+                        key={release.title}
+                        className="release-card"
+                        href={release.href}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {release.image && (
+                          <div className="release-card-art">
+                            <ResilientArtworkImage
+                              src={release.image}
+                              backupSrc={officialBrand.socialPreview}
+                              alt={`Artwork ${release.title}`}
+                            />
+                          </div>
+                        )}
+                        <PlatformIcon label={release.platform} />
+                        <p>
+                          {release.format} · {release.year}
+                        </p>
+                        <h3>{release.title}</h3>
+                        <span className="release-platform-line">
+                          {release.platform} <ArrowUpRight size={13} />
+                        </span>
+                      </a>
+                    ))}
+              </div>
             </div>
           </section>
           </Reveal>

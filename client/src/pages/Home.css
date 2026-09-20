@@ -2332,3 +2332,45 @@
   .an-site .release-card:hover,
   .an-site .home-live-event:hover { transform: none !important; }
 }
+
+
+/* HOMEPAGE MUSIC REFINEMENT — visible discography carousel */
+.an-site .home-release-carousel { min-width: 0; }
+.an-site .home-release-carousel-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin: 0 0 12px; color: var(--mute); font: 600 0.58rem/1.2 var(--font-mono); letter-spacing: 0.15em; text-transform: uppercase; }
+.an-site .home-release-carousel-controls { display: inline-flex; gap: 8px; }
+.an-site .home-release-carousel-controls button { display: inline-grid; place-items: center; width: 38px; height: 34px; border: 1px solid var(--paper-line); color: var(--paper); background: color-mix(in srgb, var(--paper) 4%, transparent); transition: border-color 180ms ease, background 180ms ease, color 180ms ease, transform 180ms ease; }
+.an-site .home-release-carousel-controls button:hover,
+.an-site .home-release-carousel-controls button:focus-visible { border-color: var(--acid); background: var(--acid); color: var(--ink); }
+.an-site .home-release-carousel-controls button:active { transform: scale(.96); }
+.an-site .release-grid { display: flex; gap: 14px; width: 100%; overflow-x: auto; overflow-y: hidden; padding: 4px 2px 18px; border: 0 !important; overscroll-behavior-x: contain; scroll-behavior: smooth; scroll-snap-type: x proximity; scrollbar-color: color-mix(in srgb, var(--acid) 72%, transparent) transparent; scrollbar-width: thin; }
+.an-site .release-grid::-webkit-scrollbar { height: 4px; }
+.an-site .release-grid::-webkit-scrollbar-track { background: color-mix(in srgb, var(--paper) 8%, transparent); }
+.an-site .release-grid::-webkit-scrollbar-thumb { background: var(--acid); }
+.an-site .release-grid .release-card { flex: 0 0 clamp(230px, 24vw, 320px); min-height: 390px; scroll-snap-align: start; border: 1px solid var(--paper-line) !important; background: var(--ink-soft) !important; color: var(--paper) !important; box-shadow: none !important; transition: border-color 180ms ease, background 180ms ease, transform 220ms cubic-bezier(.23,1,.32,1); }
+.an-site .release-grid .release-card:hover,
+.an-site .release-grid .release-card:focus-visible { border-color: color-mix(in srgb, var(--acid) 70%, transparent) !important; background: color-mix(in srgb, var(--ink-soft) 84%, var(--acid)) !important; transform: translateY(-4px); }
+.an-site .release-grid .release-card-art { flex: 0 0 auto; aspect-ratio: 1; margin-bottom: 8px; border: 0 !important; box-shadow: none !important; background: var(--ink) !important; overflow: hidden; }
+.an-site .release-grid .release-card-art img { transition: transform 420ms cubic-bezier(.23,1,.32,1), filter 280ms ease; }
+.an-site .release-grid .release-card:hover .release-card-art img,
+.an-site .release-grid .release-card:focus-visible .release-card-art img { transform: scale(1.035); }
+.an-site .release-grid .release-card p,
+.an-site .release-grid .release-platform-line { color: var(--mute) !important; }
+.an-site .release-grid .release-card h3 { color: var(--paper) !important; }
+.an-site .release-grid .release-card .release-platform-line { color: var(--acid) !important; }
+@media (max-width: 700px) {
+  .an-site .home-release-carousel-toolbar { margin-bottom: 8px; }
+  .an-site .home-release-carousel-controls button { width: 34px; height: 32px; }
+  .an-site .release-grid { gap: 12px; padding-bottom: 16px; scroll-padding-inline: 2px; }
+  .an-site .release-grid .release-card { flex-basis: min(78vw, 290px); min-height: 360px; padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .an-site .release-grid { scroll-behavior: auto; scroll-snap-type: none; }
+  .an-site .release-grid .release-card,
+  .an-site .release-grid .release-card:hover,
+  .an-site .release-grid .release-card:focus-visible,
+  .an-site .release-grid .release-card-art img { transform: none; transition: none; }
+  .an-site .home-release-carousel-controls button { transition: none; }
+}
+
+.an-site .release-grid .release-card { width: clamp(230px, 24vw, 320px) !important; max-width: none !important; min-width: 0; }
+.an-site .release-grid { display: flex !important; gap: 14px !important; }
