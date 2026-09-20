@@ -784,3 +784,50 @@
   text-transform: uppercase;
 }
 .artist-photo-story-copy b { font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.5; letter-spacing: 0.05em; }
+
+
+/* REFINED ALL-DARK — journey and portrait studies stay editorial, never paper-white */
+.artist-editorial-section,
+.artist-journey-section,
+.artist-photo-story-section,
+.artist-photo-story-section.artist-editorial-light,
+.artist-photo-story-section[data-theme="light"] {
+  background: var(--ink) !important;
+  background-image: none !important;
+  color: var(--paper) !important;
+  border-top-color: var(--paper-line) !important;
+}
+.artist-journey-aside,
+.artist-photo-story-card,
+.artist-photo-story-stage { background: var(--ink-soft) !important; border-color: var(--paper-line) !important; }
+.artist-editorial-heading h2,
+.artist-journey-timeline h3,
+.artist-photo-story-copy h3,
+.artist-photo-story-stage .artist-photo-story-copy h3 { color: var(--paper) !important; }
+.artist-editorial-intro,
+.artist-journey-aside p,
+.artist-journey-timeline p,
+.artist-photo-story-copy p,
+.artist-photo-story-stage .artist-photo-story-copy p { color: var(--mute) !important; }
+.artist-journey-aside > span,
+.artist-journey-year,
+.artist-photo-story-copy > span,
+.artist-photo-story-stage .artist-photo-story-copy > span { color: var(--mute-soft) !important; }
+.artist-journey-timeline article,
+.artist-photo-story-copy,
+.artist-photo-story-stage .artist-photo-story-copy { border-color: var(--paper-line) !important; }
+.artist-journey-timeline::before { background: var(--paper-line); }
+.artist-journey-timeline article > div::before { background: var(--ink); border-color: var(--acid); }
+.artist-journey-timeline article:last-child > div::before { background: var(--acid); }
+.artist-photo-story-image,
+.artist-photo-story-stage .artist-photo-story-image { background: var(--ink); }
+.artist-photo-story-copy b,
+.artist-photo-story-footer .nf-text-button { color: var(--paper) !important; border-bottom-color: var(--paper-line) !important; }
+.artist-photo-story-index { background: var(--ink); color: var(--mute-soft); border-color: var(--paper-line); }
+.artist-photo-story-stage .artist-photo-story-copy a { color: var(--acid); border-color: var(--acid); }
+.artist-photo-story-counter { color: var(--mute); }
+.artist-photo-story-counter i { background: var(--paper-line); }
+.artist-photo-story-arrows button { border-color: var(--paper-line); color: var(--paper); }
+.artist-photo-story-rail { border-color: var(--paper-line); background: var(--ink-soft); }
+.artist-photo-story-rail button { border-right-color: var(--paper-line); color: var(--mute); }
+.artist-photo-story-rail button.is-active { background: color-mix(in srgb, var(--acid) 18%, var(--ink-soft)); color: var(--paper); }

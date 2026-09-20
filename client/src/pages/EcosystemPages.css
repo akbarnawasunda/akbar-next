@@ -1225,3 +1225,51 @@
   color: var(--mute);
   letter-spacing: 0.05em;
 }
+
+
+/* REFINED ALL-DARK — preserve the existing ecosystem layout, restore dark editorial surfaces */
+.nf-page main section:not(.nf-page-hero),
+.nf-page main section:not(.nf-page-hero).dark-panel,
+.nf-page main section.nf-section.dark-panel {
+  background: var(--ink) !important;
+  background-image: none !important;
+  color: var(--paper) !important;
+  border-top-color: var(--paper-line) !important;
+}
+.nf-page main section:nth-of-type(even):not(.nf-page-hero),
+.nf-page main section.nf-section.dark-panel { background-color: var(--ink-soft) !important; }
+.nf-page main section:not(.nf-page-hero) h2,
+.nf-page main section:not(.nf-page-hero) h3,
+.nf-page main section:not(.nf-page-hero) .nf-section-title h2,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
+.nf-page main section:not(.nf-page-hero) .nf-event-card,
+.nf-page main section:not(.nf-page-hero) .an-story-copy,
+.nf-page main section:not(.nf-page-hero) .an-archive-route-list a { color: var(--paper) !important; }
+.nf-page main section:not(.nf-page-hero) p:not(.nf-page-eyebrow),
+.nf-page main section:not(.nf-page-hero) .nf-section-title > p,
+.nf-page main section:not(.nf-page-hero) .an-story-copy p,
+.nf-page main section:not(.nf-page-hero) .an-profile-copy p { color: var(--mute) !important; }
+.nf-page main section:not(.nf-page-hero) .nf-page-eyebrow,
+.nf-page main section:not(.nf-page-hero) .an-story-label,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card p,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card b,
+.nf-page main section:not(.nf-page-hero) .nf-archive-route-list span { color: var(--mute-soft) !important; }
+.nf-page main section:not(.nf-page-hero) [class*="card"],
+.nf-page main section:not(.nf-page-hero) [class*="grid"],
+.nf-page main section:not(.nf-page-hero) [class*="list"],
+.nf-page main section:not(.nf-page-hero) [class*="timeline"],
+.nf-page main section:not(.nf-page-hero) [class*="capability"],
+.nf-page main section:not(.nf-page-hero) .nf-archive-route-list a { border-color: var(--paper-line) !important; }
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
+.nf-page main section:not(.nf-page-hero) .nf-universe-card,
+.nf-page main section:not(.nf-page-hero) .an-booking-option,
+.nf-page main section:not(.nf-page-hero) .an-epk-capability,
+.nf-page main section:not(.nf-page-hero) .an-story-art { background: var(--ink-soft) !important; }
+.nf-page main section:not(.nf-page-hero) .nf-catalog-art { background: var(--ink) !important; border-color: var(--paper-line) !important; }
+.nf-page main section:not(.nf-page-hero) .an-platform-icon,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card > svg,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card .index { color: var(--paper) !important; }
+.nf-page main section:not(.nf-page-hero) .nf-text-button { color: var(--paper) !important; border-bottom-color: var(--paper-line) !important; }
+.nf-page main section:not(.nf-page-hero) .nf-button { color: var(--paper) !important; }
+.nf-page main section:not(.nf-page-hero) figcaption,
+.nf-page main section:not(.nf-page-hero) .caption { color: var(--mute-soft) !important; }

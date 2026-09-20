@@ -2248,3 +2248,87 @@
 .an-site .an-platform-marquee-set { display: flex; flex: 0 0 auto; gap: 32px; padding: 20px 32px 20px 0; }
 .an-site .an-platform-marquee-item { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 10px; min-width: max-content; color: var(--ink); white-space: nowrap; font: 600 0.72rem/1 var(--font-mono); letter-spacing: 0.12em; text-transform: uppercase; }
 .an-site .an-platform-marquee-item .an-platform-icon { color: var(--ink); }
+
+
+/* REFINED ALL-DARK — surgical cascade over the previous paper-surface experiment */
+.an-site .section,
+.an-site .home-signal-deck,
+.an-site .signal-section,
+.an-site .section-current,
+.an-site .release-section,
+.an-site .visual-section,
+.an-site .live-section,
+.an-site .home-editorial-section {
+  background: var(--ink) !important;
+  background-image: none !important;
+  color: var(--paper) !important;
+  border-top-color: var(--paper-line) !important;
+}
+.an-site .section:nth-of-type(even),
+.an-site .release-section,
+.an-site .visual-section { background-color: var(--ink-soft) !important; }
+.an-site .section h2,
+.an-site .home-signal-copy h2,
+.an-site .release-detail h3,
+.an-site .an-section-index,
+.an-site .an-section-index > span:last-child,
+.an-site .section-heading,
+.an-site .section-inline,
+.an-site .home-signal-copy,
+.an-site .home-platform-copy strong,
+.an-site .release-card h3,
+.an-site .home-live-event strong,
+.an-site .live-status strong { color: var(--paper) !important; }
+.an-site .section h2,
+.an-site .home-signal-copy h2,
+.an-site .release-detail h3 { font-style: normal; }
+.an-site .home-signal-copy > p:not(.eyebrow),
+.an-site .release-detail > p:not(.mono-label),
+.an-site .live-copy > p:not(.eyebrow),
+.an-site .home-live-event small,
+.an-site .live-status small { color: var(--mute) !important; }
+.an-site .section .eyebrow,
+.an-site .home-signal-copy .eyebrow,
+.an-site .mono-label,
+.an-site .home-platform-number,
+.an-site .release-platform-line,
+.an-site .home-live-event > span,
+.an-site .home-live-event-source { color: var(--mute-soft) !important; }
+.an-site .section .eyebrow > span,
+.an-site .home-signal-copy .eyebrow > span { background: var(--acid); }
+.an-site .text-link,
+.an-site .home-deck-cta { border-bottom-color: var(--paper-line); color: var(--paper) !important; }
+.an-site .home-platform-rack,
+.an-site .release-grid,
+.an-site .an-section-index { border-color: var(--paper-line) !important; }
+.an-site .home-platform-card,
+.an-site .release-card,
+.an-site .home-live-event { border-color: var(--paper-line) !important; color: var(--paper) !important; box-shadow: none; }
+.an-site .home-platform-card:hover,
+.an-site .release-card:hover,
+.an-site .home-live-event:hover { background: color-mix(in srgb, var(--paper) 5%, transparent) !important; border-color: var(--acid) !important; }
+.an-site .home-platform-copy strong,
+.an-site .release-card h3,
+.an-site .home-live-event strong { color: var(--paper) !important; }
+.an-site .home-platform-icon-shell,
+.an-site .home-platform-arrow,
+.an-site .release-card::after { color: var(--paper) !important; }
+.an-site .release-detail-actions { border-top-color: var(--paper-line); color: var(--mute); }
+.an-site .release-cover,
+.an-site .release-card-art { border-color: var(--paper) !important; box-shadow: 8px 8px 0 color-mix(in srgb, var(--paper) 32%, transparent); }
+.an-site .live-status,
+.an-site .home-live-events { border-color: var(--paper-line); }
+.an-site .an-section-index > i { background-image: repeating-linear-gradient(90deg, var(--paper) 0 2px, transparent 2px 6px); }
+.an-site .an-platform-marquee { border-color: var(--paper-line); color: var(--paper); }
+.an-site .an-platform-marquee-heading,
+.an-site .an-platform-marquee-row { border-color: var(--paper-line); }
+.an-site .an-platform-marquee-heading { color: var(--mute); }
+.an-site .an-platform-marquee-set { gap: 32px; }
+.an-site .an-platform-marquee-item,
+.an-site .an-platform-marquee-item .an-platform-icon { color: var(--paper); }
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .home-platform-card:hover,
+  .an-site .release-card:hover,
+  .an-site .home-live-event:hover { transform: none !important; }
+}
