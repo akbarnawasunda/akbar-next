@@ -1393,3 +1393,60 @@
   .nf-page .nf-catalog-card .nf-catalog-art img { transform: none; transition: none; }
   .nf-catalog-controls button { transition: none; }
 }
+
+
+/* RESPONSIVE QA — media grids stay inside their section at every width */
+.nf-page main,
+.nf-page section,
+.nf-section-title,
+.nf-embed-grid,
+.nf-video-embed-grid,
+.nf-catalog-frame,
+.nf-catalog,
+.nf-visual-grid,
+.nf-universe-grid,
+.an-story-section,
+.an-booking-grid,
+.an-archive-origin,
+.an-profile-section,
+.an-epk-capability-grid,
+.an-epk-release-list {
+  min-width: 0;
+  max-width: 100%;
+}
+.nf-page .nf-embed-grid,
+.nf-page .nf-video-embed-grid {
+  width: min(100%, 980px);
+  min-width: 0;
+  overflow: visible;
+}
+.nf-page .nf-embed-grid > *,
+.nf-page .nf-video-embed-grid > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.nf-page .nf-catalog {
+  max-width: 100%;
+  overscroll-behavior-inline: contain;
+}
+.nf-page .nf-catalog-card {
+  min-width: 0;
+  max-width: min(320px, 78vw);
+}
+.nf-page .nf-visual-card,
+.nf-page .nf-event-card,
+.nf-page .nf-universe-card,
+.nf-page .an-booking-option,
+.nf-page .an-epk-capability,
+.nf-page .an-archive-route-list a {
+  min-width: 0;
+  overflow: hidden;
+}
+@media (max-width: 720px) {
+  .nf-page .nf-embed-grid,
+  .nf-page .nf-video-embed-grid { gap: 18px; }
+  .nf-page .nf-embed-grid .an-official-media,
+  .nf-page .nf-video-embed-grid .an-official-media { width: 100%; max-width: 100%; }
+  .nf-page .nf-section-title > p { max-width: 100%; font-size: 0.96rem; line-height: 1.68; }
+  .nf-page .nf-catalog-card { flex-basis: min(78vw, 290px); }
+}

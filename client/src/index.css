@@ -201,3 +201,49 @@ html.lenis body {
 .lenis.lenis-stopped {
   overflow: hidden;
 }
+
+
+/* RESPONSIVE QA FOUNDATION — no accidental viewport escape */
+html,
+body,
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+#root,
+main,
+section,
+article,
+form,
+[class*="grid"],
+[class*="card"],
+[class*="hero"] {
+  min-width: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+a,
+button,
+label,
+small,
+strong {
+  overflow-wrap: anywhere;
+}
+
+iframe,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+@media (max-width: 720px) {
+  body { font-size: 0.97rem; }
+  h1, h2, h3, h4 { text-wrap: balance; }
+  p { line-height: 1.68; }
+}
