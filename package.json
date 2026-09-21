@@ -5,12 +5,13 @@
   "type": "module",
   "license": "MIT",
   "engines": {
-    "node": "24.x"
+    "node": ">=22"
   },
   "scripts": {
     "dev": "NODE_ENV=development tsx watch server/_core/index.ts",
     "build": "NODE_ENV=production vite build && NODE_ENV=production vite build --config vite.config.ssr.ts && NODE_ENV=production esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && NODE_ENV=production esbuild server/vercelTrpcHandler.js --platform=node --packages=external --bundle --format=esm --outfile=api/trpc.js && NODE_ENV=production esbuild server/vercelSsrHandler.ts --platform=node --packages=external --bundle --format=esm --outfile=api/ssr.js",
     "start": "NODE_ENV=production node dist/index.js",
+    "lint": "tsc --noEmit",
     "check": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
