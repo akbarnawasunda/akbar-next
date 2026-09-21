@@ -11,16 +11,17 @@
 .nf-page h1,
 .nf-page h2 {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-variation-settings: "wght" 560;
-  letter-spacing: -0.035em;
-  line-height: 0.92;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
   text-transform: none;
 }
 .nf-page h3 {
   font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.025em;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 .nf-page strong { font-family: var(--font-body); font-weight: 600; }
 .nf-page code,
@@ -33,9 +34,9 @@
 .nf-page .an-section-index,
 .nf-page .release-number {
   font-family: var(--font-mono) !important;
-  font-size: 0.62rem;
-  font-weight: 500;
-  letter-spacing: 0.18em !important;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em !important;
   text-transform: uppercase;
   color: var(--acid) !important;
 }
@@ -345,57 +346,91 @@
 }
 .nf-page .nf-platform-grid a svg { color: var(--acid); }
 
-.nf-page .nf-signal-block,
+.nf-page .nf-signal-block {
+  background: var(--ink-soft) !important;
+  background-image: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(0, 212, 255, 0.04), transparent 70%) !important;
+  border-top: 1px solid var(--paper-line) !important;
+  color: var(--paper) !important;
+  padding-block: clamp(72px, 9vw, 120px) !important;
+}
+
 .nf-page .an-epk-contact-panel,
 .nf-page .en-contact-panel,
-.nf-page .an-booking-grid,
-.nf-page .nf-signal-form {
-  background: var(--paper) !important;
+.nf-page .an-booking-grid {
+  background: var(--ink-soft) !important;
   background-image: none !important;
-  color: var(--ink) !important;
+  border: 1px solid var(--paper-line) !important;
+  color: var(--paper) !important;
 }
-.nf-page .nf-signal-block { padding-block: clamp(72px, 9vw, 120px) !important; }
 
 .nf-page .nf-signal-block h2,
-.nf-page .nf-signal-block p,
 .nf-page .nf-signal-block label,
-.nf-page .nf-signal-block small,
 .nf-page .nf-signal-block .nf-page-eyebrow,
 .nf-page .an-epk-contact-panel h2,
-.nf-page .an-epk-contact-panel p,
 .nf-page .en-contact-panel h2,
-.nf-page .en-contact-panel p,
 .nf-page .en-contact-panel .nf-page-eyebrow {
-  color: var(--ink) !important;
+  color: var(--paper) !important;
 }
+
+.nf-page .nf-signal-block p,
+.nf-page .nf-signal-block small,
+.nf-page .an-epk-contact-panel p,
+.nf-page .en-contact-panel p {
+  color: var(--mute) !important;
+}
+
 .nf-page .nf-signal-block .nf-page-eyebrow::before,
 .nf-page .en-contact-panel .nf-page-eyebrow::before,
 .nf-page .an-epk-contact-panel .nf-page-eyebrow::before {
-  background: var(--signal) !important;
+  background: var(--acid) !important;
 }
 
-.nf-page .nf-signal-form > div,
-.nf-page .nf-signal-block input {
-  border: 1px solid var(--ink) !important;
-  border-radius: 0 !important;
-  background: var(--paper) !important;
-  color: var(--ink) !important;
+.nf-page .nf-signal-form > div {
+  border: 1px solid var(--paper-line) !important;
+  border-radius: 4px !important;
+  background: var(--ink) !important;
+  color: var(--paper) !important;
   box-shadow: none !important;
+  overflow: hidden !important;
+  transition: border-color 160ms ease, box-shadow 160ms ease !important;
 }
-.nf-page .nf-signal-form input::placeholder { color: color-mix(in srgb, var(--ink) 45%, transparent); }
+
+.nf-page .nf-signal-form > div:focus-within {
+  border-color: var(--acid) !important;
+  box-shadow: 0 0 0 1px var(--acid), 0 4px 16px rgba(0, 212, 255, 0.12) !important;
+}
+
+.nf-page .nf-signal-form input,
+.nf-page .nf-signal-block input {
+  background: transparent !important;
+  color: var(--paper) !important;
+  border: 0 !important;
+  font-family: var(--font-body) !important;
+}
+
+.nf-page .nf-signal-form input::placeholder {
+  color: rgba(162, 171, 185, 0.65) !important;
+}
+
 .nf-page .nf-signal-form button,
 .nf-page .nf-signal-block .nf-button {
   border: 0 !important;
-  border-left: 1px solid var(--ink) !important;
+  border-left: 1px solid var(--paper-line) !important;
   border-radius: 0 !important;
-  background: var(--ink) !important;
-  color: var(--acid) !important;
+  background: var(--acid) !important;
+  color: var(--ink) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  transition: background 160ms ease, transform 140ms ease !important;
 }
-.nf-page .nf-signal-form button:hover,
+
+.nf-page .nf-signal-form button:hover:not(:disabled),
 .nf-page .nf-signal-block .nf-button:hover {
-  background: var(--ink-soft) !important;
-  color: var(--acid) !important;
-  transform: none !important;
+  background: #38e1ff !important;
+  color: var(--ink) !important;
+  transform: translateY(-1px) !important;
 }
 
 .nf-page .nf-footer,
@@ -503,33 +538,17 @@
   }
 }
 
-/* Text di dalam signal block harus ink (dark) karena bg paper */
+/* Text di dalam signal block nocturnal */
 .nf-page .nf-signal-block h2,
+.nf-page .nf-signal-block label {
+  color: var(--paper) !important;
+}
 .nf-page .nf-signal-block > div > p,
-.nf-page .nf-signal-block label,
 .nf-page .nf-signal-block small {
-  color: var(--ink) !important;
+  color: var(--mute) !important;
 }
 .nf-page .nf-signal-block .nf-page-eyebrow {
-  color: var(--ink) !important;
-}
-
-/* ============================================================
-   FIX PASS 1 — Bug dari refactor sebelumnya
-   ============================================================ */
-
-/* FIX: signal block harus 2 kolom (kiri copy, kanan form) */
-.nf-page .nf-signal-block {
-  display: grid !important;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr) !important;
-  align-items: center !important;
-  gap: clamp(40px, 8vw, 120px) !important;
-}
-@media (max-width: 820px) {
-  .nf-page .nf-signal-block {
-    grid-template-columns: 1fr !important;
-    gap: 32px !important;
-  }
+  color: var(--paper) !important;
 }
 
 /* FIX: .an-booking-grid standalone (misal /live empty state) → dark */
@@ -630,29 +649,41 @@
 }
 .nf-page .nf-embed-grid .an-official-media-actions,
 .nf-page .nf-video-embed-grid .an-official-media-actions {
-  padding: 13px 15px 15px;
+  padding: 14px 18px 16px;
 }
 .nf-page .nf-embed-grid .an-official-media-actions a,
 .nf-page .nf-embed-grid .an-official-media-actions button,
 .nf-page .nf-video-embed-grid .an-official-media-actions a,
 .nf-page .nf-video-embed-grid .an-official-media-actions button {
-  min-height: 34px;
-  padding-inline: 9px;
-  font-size: 0.55rem;
+  min-height: 38px;
+  padding-inline: 14px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
-.nf-page .nf-embed-grid .an-official-player iframe,
+.nf-page .nf-embed-grid .an-official-player iframe {
+  height: 166px;
+  width: 100%;
+}
 .nf-page .nf-video-embed-grid .an-official-player iframe {
-  height: 142px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: 240px;
 }
 @media (max-width: 720px) {
   .nf-page .nf-embed-grid,
   .nf-page .nf-video-embed-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 20px;
     width: 100%;
   }
-  .nf-page .nf-embed-grid .an-official-player iframe,
+  .nf-page .nf-embed-grid .an-official-player iframe {
+    height: 166px;
+  }
   .nf-page .nf-video-embed-grid .an-official-player iframe {
-    height: 128px;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 200px;
   }
 }

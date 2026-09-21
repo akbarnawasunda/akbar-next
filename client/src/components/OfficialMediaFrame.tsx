@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { ArrowUpRight, Play } from "lucide-react";
+import { useState } from "react";
+import { ArrowUpRight, Play, Volume2 } from "lucide-react";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
+import { MusicEmbed, EmbedPlatform } from "@/components/MusicEmbed";
 import "./OfficialMediaFrame.css";
 
 type OfficialMediaFrameProps = {
   title: string;
-  provider: "SoundCloud" | "YouTube";
+  provider: "SoundCloud" | "YouTube" | "Spotify" | string;
   sourceUrl: string;
   embedUrl: string;
   artwork: string;
@@ -13,33 +14,86 @@ type OfficialMediaFrameProps = {
   description?: string;
 };
 
-export function OfficialMediaFrame({ title, provider, sourceUrl, embedUrl, artwork, backupArtwork, description }: OfficialMediaFrameProps) {
+export function OfficialMediaFrame({
+  title,
+  provider,
+  sourceUrl,
+  embedUrl,
+  artwork,
+  backupArtwork,
+  description,
+}: OfficialMediaFrameProps) {
   const [playerRequested, setPlayerRequested] = useState(false);
-  const [playerLoaded, setPlayerLoaded] = useState(false);
-  const [slowPlayer, setSlowPlayer] = useState(false);
 
-  useEffect(() => {
-    if (!playerRequested || playerLoaded) return;
-    const timer = window.setTimeout(() => setSlowPlayer(true), 4500);
-    return () => window.clearTimeout(timer);
-  }, [playerLoaded, playerRequested]);
-
-  const openPlayer = () => {
-    setSlowPlayer(false);
-    setPlayerLoaded(false);
-    setPlayerRequested(true);
+  const togglePlayer = () => {
+    setPlayerRequested((prev) => !prev);
   };
 
   const providerClass = provider.toLowerCase().replace(/\s+/g, "-");
+  const platformVariant: EmbedPlatform =
+    provider.toLowerCase().includes("youtube") ? "youtube" :
+    provider.toLowerCase().includes("spotify") ? "spotify" : "soundcloud";
 
-  return <article className={`an-official-media an-official-media-provider-${providerClass}${playerRequested ? " is-player-open" : ""}`}>
-    <a className="an-official-media-art" href={sourceUrl} target="_blank" rel="noreferrer">
-      <ResilientArtworkImage src={artwork} backupSrc={backupArtwork} alt={`Artwork resmi untuk ${title}`} />
-      <span>OFFICIAL {provider.toUpperCase()}</span>
-      <i><Play size={18} fill="currentColor" /></i>
-    </a>
-    <div className="an-official-media-copy"><p>{provider} · OFFICIAL LINK</p><h3>{title}</h3>{description && <small>{description}</small>}</div>
-    <div className="an-official-media-actions"><a href={sourceUrl} target="_blank" rel="noreferrer">OPEN {provider.toUpperCase()} <ArrowUpRight size={14} /></a><button type="button" aria-expanded={playerRequested} onClick={openPlayer}>{playerRequested ? "RELOAD PLAYER" : "PLAY HERE"} <Play size={13} fill="currentColor" /></button></div>
-    {playerRequested && <div className={`an-official-player${playerLoaded ? " is-loaded" : ""}`}><iframe title={`${provider} player: ${title}`} src={embedUrl} loading="lazy" referrerPolicy="strict-origin-when-cross-origin" allow="autoplay; encrypted-media; picture-in-picture; web-share" allowFullScreen onLoad={() => setPlayerLoaded(true)} />{!playerLoaded && <span>CONNECTING TO {provider.toUpperCase()}…</span>}{slowPlayer && <p>Player belum merespons di browser ini. Gunakan tombol <strong>OPEN {provider.toUpperCase()}</strong> di atas untuk membuka sumber resminya.</p>}</div>}
-  </article>;
+  return (
+    <article
+      className={`an-official-media an-official-media-provider-${providerClass}${
+        playerRequested ? " is-player-open" : ""
+      }`}
+    >
+      <a
+        className="an-official-media-art"
+        href={sourceUrl}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`Lihat karya ${title} di ${provider}`}
+      >
+        <ResilientArtworkImage
+          src={artwork}
+          backupSrc={backupArtwork}
+          alt={`Artwork resmi untuk ${title}`}
+        />
+        <span>OFFICIAL {provider.toUpperCase()}</span>
+        <i>
+          <Play size={18} fill="currentColor" />
+        </i>
+      </a>
+
+      <div className="an-official-media-copy">
+        <p>{provider.toUpperCase()} · OFFICIAL LINK</p>
+        <h3>{title}</h3>
+        {description && <small>{description}</small>}
+      </div>
+
+      <div className="an-official-media-actions">
+        <a href={sourceUrl} target="_blank" rel="noreferrer">
+          OPEN {provider.toUpperCase()} <ArrowUpRight size={14} />
+        </a>
+        <button
+          type="button"
+          aria-expanded={playerRequested}
+          onClick={togglePlayer}
+        >
+          {playerRequested ? (
+            <>
+              <Volume2 size={13} className="text-[var(--acid)]" /> TUTUP PLAYER
+            </>
+          ) : (
+            <>
+              PLAY HERE <Play size={13} fill="currentColor" />
+            </>
+          )}
+        </button>
+      </div>
+
+      {playerRequested && (
+        <div className="an-official-player-wrap">
+          <MusicEmbed
+            url={embedUrl || sourceUrl}
+            title={title}
+            variant={platformVariant}
+          />
+        </div>
+      )}
+    </article>
+  );
 }

@@ -17,7 +17,7 @@ import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
 import FanSignalInline from "@/components/FanSignalInline";
 import { Reveal } from "@/components/Reveal";
 import { HeroDots } from "@/components/HeroDots";
-import { NightHeader } from "@/components/NightFrequencyChrome";
+import { NightHeader, NightFooter } from "@/components/NightFrequencyChrome";
 import { trpc } from "@/lib/trpc";
 import {
   publicJourney,
@@ -689,41 +689,7 @@ export default function Home() {
           </section>
         </main>
 
-        <footer className="an-footer">
-          <div className="footer-brand">
-            <span className="an-mark">AN</span>
-            <strong>AKBAR NAWASUNDA</strong>
-            <p>PRODUCER / REMIXER / INDONESIA</p>
-          </div>
-          <div className="footer-links">
-            <span>CONNECT</span>
-            {editablePlatformLinks.slice(0, 4).map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {link.label} <ArrowUpRight size={12} />
-              </a>
-            ))}
-          </div>
-          <div className="footer-links">
-            <span>ACCESS</span>
-            <Link href="/epk">
-              EPK / Booking <ArrowUpRight size={12} />
-            </Link>
-            <a href="mailto:akbarnawasunda@gmail.com">
-              Email <ArrowUpRight size={12} />
-            </a>
-            <Link href="/privacy">
-              Privacy <ArrowUpRight size={12} />
-            </Link>
-          </div>
-          <p className="footer-bottom">
-            © {new Date().getFullYear()} AKBAR NAWASUNDA · ALL RIGHTS RESERVED
-          </p>
-        </footer>
+        <NightFooter />
       </div>
     </>
   );

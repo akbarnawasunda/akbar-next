@@ -12,8 +12,8 @@
 (function () {
   "use strict";
 
-  // Prevent double initialization
-  if (window.__MANUS_DEBUG_COLLECTOR__) return;
+  // Disabled in Google AI Studio environment
+  return;
 
   // ==========================================================================
   // Configuration

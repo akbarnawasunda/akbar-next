@@ -42,8 +42,21 @@
   align-items: center;
   gap: 0;
   padding: 0;
-  border: 1px solid var(--ink);
-  background: var(--paper);
+  border: 1px solid var(--paper-line);
+  background: var(--ink);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form > div:focus-within {
+  border-color: var(--acid);
+  box-shadow: 0 0 0 1px var(--acid), 0 4px 16px rgba(0, 212, 255, 0.12);
+}
+.route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form > div > svg {
+  display: block;
+  margin-left: 14px;
+  color: var(--mute);
+  flex-shrink: 0;
 }
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form input {
   flex: 1;
@@ -51,29 +64,36 @@
   padding: 14px 16px;
   border: 0;
   background: transparent;
-  color: var(--ink);
+  color: var(--paper);
   font-family: var(--font-body);
   font-size: 0.95rem;
   outline: none;
-  caret-color: var(--ink);
+  caret-color: var(--acid);
 }
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form input::placeholder {
-  color: color-mix(in srgb, var(--ink) 45%, transparent);
+  color: rgba(162, 171, 185, 0.65);
 }
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form button {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 14px 18px;
+  padding: 14px 20px;
   border: 0;
-  border-left: 1px solid var(--ink);
-  background: var(--ink);
-  color: var(--acid);
+  border-left: 1px solid var(--paper-line);
+  background: var(--acid);
+  color: var(--ink);
   font-family: var(--font-mono);
   font-size: 0.62rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 160ms ease, transform 140ms ease;
+}
+.route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form button:hover:not(:disabled) {
+  background: #38e1ff;
+  transform: translateY(-1px);
 }
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form button:disabled {
   opacity: 0.5;

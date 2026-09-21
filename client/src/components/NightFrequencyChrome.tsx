@@ -1,16 +1,18 @@
 import { ArrowUpRight, Menu, Radio, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { Link, useLocation } from "wouter";
 import {
   usePublicArtistContent,
   publicPlatformLinks,
 } from "@/content/publicContent";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
+import { MobileSlideMenu } from "./MobileSlideMenu";
 import "./NightFrequencyChrome.css";
 import "./OfficialBrand.css";
 import "@/pages/ArtistModules.css";
 import "./PublicMotion.css";
+
+export { MobileSlideMenu };
 
 const navItems = [
   { href: "/music", label: "MUSIC" },
@@ -39,117 +41,6 @@ function LanguageSwitcher({ pathname }: { pathname: string }) {
   );
 }
 
-function MobileMenuOverlay({
-  open,
-  pathname,
-  active,
-  onClose,
-}: {
-  open: boolean;
-  pathname: string;
-  active?: string;
-  onClose: () => void;
-}) {
-  const dialogRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open || typeof document === "undefined") return;
-    const previousFocus =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null;
-
-    const getFocusable = () =>
-      Array.from(
-        dialogRef.current?.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        ) ?? []
-      );
-
-    const focusFrame = window.requestAnimationFrame(() => getFocusable()[0]?.focus());
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        onClose();
-        return;
-      }
-      if (event.key !== "Tab") return;
-      const focusable = getFocusable();
-      if (!focusable.length) {
-        event.preventDefault();
-        return;
-      }
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.cancelAnimationFrame(focusFrame);
-      document.removeEventListener("keydown", handleKeyDown);
-      if (previousFocus && document.contains(previousFocus)) {
-        window.requestAnimationFrame(() => previousFocus.focus());
-      }
-    };
-  }, [onClose, open]);
-
-  if (!open || typeof document === "undefined") return null;
-
-  return createPortal(
-    <div
-      ref={dialogRef}
-      id="night-mobile-menu"
-      className="nf-mobile-menu is-open"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Menu navigasi"
-    >
-      <button
-        className="nf-mobile-menu-close"
-        type="button"
-        onClick={onClose}
-        aria-label="Tutup navigasi"
-      >
-        <span aria-hidden="true">×</span>
-        <span aria-hidden="true">TUTUP</span>
-      </button>
-
-      <div className="nf-mobile-menu-inner">
-        <span className="nf-mobile-eyebrow">AKBAR NAWASUNDA / MENU</span>
-
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            className={active === item.href ? "is-active" : ""}
-            href={item.href}
-            onClick={onClose}
-          >
-            <span className="nf-mobile-menu-link-title">{item.label}</span>
-            <ArrowUpRight size={16} aria-hidden="true" />
-          </Link>
-        ))}
-
-        <a href="#signal" onClick={onClose}>
-          <span className="nf-mobile-menu-link-title">KABAR TERBARU</span>
-          <Radio size={14} aria-hidden="true" />
-        </a>
-
-        <div className="en-mobile-language">
-          <span>LANGUAGE</span>
-          <LanguageSwitcher pathname={pathname} />
-        </div>
-      </div>
-    </div>,
-    document.body
-  );
-}
-
 export function NightHeader({ active }: { active?: string }) {
   const [pathname] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -163,25 +54,10 @@ export function NightHeader({ active }: { active?: string }) {
                 pathname.startsWith("/inquire") ? "/inquire" : undefined);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const close = () => setIsOpen(false);
   const closeAndReturnFocus = () => {
     setIsOpen(false);
     window.requestAnimationFrame(() => triggerRef.current?.focus());
   };
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const html = document.documentElement;
-    const body = document.body;
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-    html.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    return () => {
-      html.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
-    };
-  }, [isOpen]);
 
   return (
     <>
@@ -218,11 +94,12 @@ export function NightHeader({ active }: { active?: string }) {
         </button>
       </header>
 
-      <MobileMenuOverlay
+      <MobileSlideMenu
         open={isOpen}
         pathname={pathname}
         active={activeRoute}
         onClose={closeAndReturnFocus}
+        lang="id"
       />
     </>
   );

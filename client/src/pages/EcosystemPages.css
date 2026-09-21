@@ -119,7 +119,8 @@
   border-bottom: 1px solid var(--ink-line);
   background-color: var(--ink);
   background-image:
-    linear-gradient(90deg, var(--ink) 0%, color-mix(in srgb, var(--ink) 78%, transparent) 46%, color-mix(in srgb, var(--ink) 24%, transparent) 100%),
+    linear-gradient(to right, rgba(12, 13, 18, 0.94) 0%, rgba(12, 13, 18, 0.82) 48%, rgba(12, 13, 18, 0.35) 100%),
+    linear-gradient(to top, rgba(12, 13, 18, 0.92) 0%, transparent 65%),
     var(--page-image, none);
   background-size: cover;
   background-position: center;
@@ -135,11 +136,11 @@
   max-width: 16ch;
   margin: 14px 0 22px;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 1;
   font-size: clamp(2.6rem, 6.2vw, 6.6rem);
-  line-height: 0.88;
-  letter-spacing: -0.042em;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
   color: var(--paper);
   text-wrap: balance;
 }
@@ -230,11 +231,11 @@
   max-width: 18ch;
   margin: 10px 0 0;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
   font-size: clamp(2rem, 4.4vw, 4.2rem);
-  line-height: 0.94;
-  letter-spacing: -0.035em;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
   color: var(--paper);
 }
 .nf-section-title > p {
@@ -546,10 +547,10 @@
 .an-booking-grid h2 {
   margin: 12px 0 20px;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(2rem, 4.4vw, 4.4rem);
-  line-height: 0.94;
-  letter-spacing: -0.035em;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
 .an-booking-grid p {
   max-width: 46ch;
@@ -647,10 +648,10 @@
 .an-story-copy h2 {
   margin: 12px 0 20px;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(2rem, 4.2vw, 4rem);
-  line-height: 0.94;
-  letter-spacing: -0.035em;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
 .an-story-copy p {
   max-width: 52ch;
@@ -690,10 +691,10 @@
 .an-archive-routes h2 {
   margin: 12px 0 20px;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(2rem, 4.4vw, 4.4rem);
-  line-height: 0.94;
-  letter-spacing: -0.035em;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
   max-width: 16ch;
   color: var(--paper);
 }
@@ -882,10 +883,10 @@
 .an-profile-copy h2 {
   margin: 12px 0 22px;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(2rem, 4.4vw, 4.4rem);
-  line-height: 0.94;
-  letter-spacing: -0.035em;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
 .an-profile-copy p {
   max-width: 56ch;
@@ -943,10 +944,10 @@
 .an-about-path h2 {
   margin: 12px 0 0;
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   font-size: clamp(2rem, 4.4vw, 4.4rem);
-  line-height: 0.94;
-  letter-spacing: -0.035em;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
 }
 .an-about-actions {
   display: flex;
@@ -1112,122 +1113,7 @@
 }
 
 
-/* TAHAP A — white editorial content surfaces; heroes and footer remain dark */
-.nf-page main section:not(.nf-page-hero) {
-  background: var(--paper);
-  color: var(--ink);
-  border-top-color: var(--ink-line);
-}
-.nf-page main section:not(.nf-page-hero) .nf-section-title h2,
-.nf-page main section:not(.nf-page-hero) .nf-section-title > p,
-.nf-page main section:not(.nf-page-hero) h2,
-.nf-page main section:not(.nf-page-hero) h3,
-.nf-page main section:not(.nf-page-hero) .an-archive-route-list a,
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
-.nf-page main section:not(.nf-page-hero) .nf-event-card { color: var(--ink); }
-.nf-page main section:not(.nf-page-hero) p,
-.nf-page main section:not(.nf-page-hero) .nf-section-title > p,
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card p,
-.nf-page main section:not(.nf-page-hero) .an-story-copy p,
-.nf-page main section:not(.nf-page-hero) .an-profile-copy p { color: var(--mute); }
-.nf-page main section:not(.nf-page-hero) [class*="card"],
-.nf-page main section:not(.nf-page-hero) [class*="grid"],
-.nf-page main section:not(.nf-page-hero) [class*="list"],
-.nf-page main section:not(.nf-page-hero) [class*="timeline"],
-.nf-page main section:not(.nf-page-hero) [class*="capability"] { border-color: var(--ink-line); }
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
-.nf-page main section:not(.nf-page-hero) .nf-universe-card,
-.nf-page main section:not(.nf-page-hero) .an-booking-option,
-.nf-page main section:not(.nf-page-hero) .an-epk-capability { background: transparent; }
-.nf-page main section:not(.nf-page-hero) .nf-catalog-art,
-.nf-page main section:not(.nf-page-hero) .an-story-art { background: var(--paper-soft); border-color: var(--ink-line); }
-.nf-page main section:not(.nf-page-hero) .nf-button { color: var(--paper); }
-.nf-page main section:not(.nf-page-hero) .nf-text-button { color: var(--ink); border-bottom-color: var(--ink-line); }
-.nf-page main section:not(.nf-page-hero) .an-platform-icon { color: var(--ink); }
-
-
-/* TAHAP A.5 — all non-hero ecosystem content uses paper/ink contrast */
-.nf-page main section:not(.nf-page-hero),
-.nf-page main section:not(.nf-page-hero).dark-panel,
-.nf-page main section.nf-section.dark-panel {
-  background: var(--paper) !important;
-  background-image: none !important;
-  color: var(--ink);
-  border-top-color: var(--ink-line);
-}
-.nf-page main section:not(.nf-page-hero) .nf-section-title h2,
-.nf-page main section:not(.nf-page-hero) h2,
-.nf-page main section:not(.nf-page-hero) h3,
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
-.nf-page main section:not(.nf-page-hero) .nf-event-card,
-.nf-page main section:not(.nf-page-hero) .an-story-copy,
-.nf-page main section:not(.nf-page-hero) .an-archive-route-list a { color: var(--ink); }
-.nf-page main section:not(.nf-page-hero) .nf-section-title > p {
-  color: var(--ink);
-  font-size: 1.125rem;
-  line-height: 1.75;
-  font-weight: 400;
-}
-.nf-page main section:not(.nf-page-hero) p:not(.nf-page-eyebrow) {
-  color: var(--mute);
-  font-size: 1rem;
-  line-height: 1.65;
-}
-.nf-page main section:not(.nf-page-hero) .nf-page-eyebrow,
-.nf-page main section:not(.nf-page-hero) .nf-section-title .nf-page-eyebrow,
-.nf-page main section:not(.nf-page-hero) .an-story-label { color: var(--acid); }
-.nf-page main section:not(.nf-page-hero) .nf-page-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
-.nf-page main section:not(.nf-page-hero) .nf-catalog,
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
-.nf-page main section:not(.nf-page-hero) .nf-event-grid,
-.nf-page main section:not(.nf-page-hero) .nf-event-card,
-.nf-page main section:not(.nf-page-hero) .an-story-credits,
-.nf-page main section:not(.nf-page-hero) .nf-archive-route-list,
-.nf-page main section:not(.nf-page-hero) .nf-archive-route-list a {
-  border-color: var(--ink-line);
-}
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card,
-.nf-page main section:not(.nf-page-hero) .nf-universe-card,
-.nf-page main section:not(.nf-page-hero) .an-booking-option,
-.nf-page main section:not(.nf-page-hero) .an-epk-capability { background: var(--paper); }
-.nf-page main section:not(.nf-page-hero) .nf-catalog-art,
-.nf-page main section:not(.nf-page-hero) .an-story-art { background: var(--paper-soft); }
-.nf-page main section:not(.nf-page-hero) .an-platform-icon,
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card > svg,
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card .index { color: var(--ink); }
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card p,
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card b,
-.nf-page main section:not(.nf-page-hero) .nf-archive-route-list span { color: var(--acid); }
-.nf-page main section:not(.nf-page-hero) .nf-text-button {
-  color: var(--ink);
-  border-bottom-color: var(--ink-line);
-}
-.nf-page main section:not(.nf-page-hero) .nf-button { color: var(--paper); }
-.nf-page main section:not(.nf-page-hero) .an-story-credits { color: var(--mute); }
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card p,
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card b,
-.nf-page main section:not(.nf-page-hero) .nf-archive-route-list span {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-.nf-page main section:not(.nf-page-hero) figcaption,
-.nf-page main section:not(.nf-page-hero) .caption {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  line-height: 1.5;
-  color: var(--mute);
-  letter-spacing: 0.05em;
-}
-
-
-/* REFINED ALL-DARK — preserve the existing ecosystem layout, restore dark editorial surfaces */
+/* NOCTURNAL COHESION — inner ecosystem content surfaces */
 .nf-page main section:not(.nf-page-hero),
 .nf-page main section:not(.nf-page-hero).dark-panel,
 .nf-page main section.nf-section.dark-panel {
@@ -1238,6 +1124,7 @@
 }
 .nf-page main section:nth-of-type(even):not(.nf-page-hero),
 .nf-page main section.nf-section.dark-panel { background-color: var(--ink-soft) !important; }
+
 .nf-page main section:not(.nf-page-hero) h2,
 .nf-page main section:not(.nf-page-hero) h3,
 .nf-page main section:not(.nf-page-hero) .nf-section-title h2,
@@ -1245,34 +1132,61 @@
 .nf-page main section:not(.nf-page-hero) .nf-event-card,
 .nf-page main section:not(.nf-page-hero) .an-story-copy,
 .nf-page main section:not(.nf-page-hero) .an-archive-route-list a { color: var(--paper) !important; }
+
 .nf-page main section:not(.nf-page-hero) p:not(.nf-page-eyebrow),
 .nf-page main section:not(.nf-page-hero) .nf-section-title > p,
 .nf-page main section:not(.nf-page-hero) .an-story-copy p,
-.nf-page main section:not(.nf-page-hero) .an-profile-copy p { color: var(--mute) !important; }
+.nf-page main section:not(.nf-page-hero) .an-profile-copy p,
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card p { color: var(--mute) !important; }
+
 .nf-page main section:not(.nf-page-hero) .nf-page-eyebrow,
-.nf-page main section:not(.nf-page-hero) .an-story-label,
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card p,
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card b,
-.nf-page main section:not(.nf-page-hero) .nf-archive-route-list span { color: var(--mute-soft) !important; }
+.nf-page main section:not(.nf-page-hero) .nf-section-title .nf-page-eyebrow,
+.nf-page main section:not(.nf-page-hero) .an-story-label {
+  color: var(--acid) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.62rem !important;
+  letter-spacing: 0.22em !important;
+  text-transform: uppercase !important;
+}
+
 .nf-page main section:not(.nf-page-hero) [class*="card"],
 .nf-page main section:not(.nf-page-hero) [class*="grid"],
 .nf-page main section:not(.nf-page-hero) [class*="list"],
 .nf-page main section:not(.nf-page-hero) [class*="timeline"],
 .nf-page main section:not(.nf-page-hero) [class*="capability"],
+.nf-page main section:not(.nf-page-hero) .nf-archive-route-list,
 .nf-page main section:not(.nf-page-hero) .nf-archive-route-list a { border-color: var(--paper-line) !important; }
+
 .nf-page main section:not(.nf-page-hero) .nf-catalog-card,
 .nf-page main section:not(.nf-page-hero) .nf-universe-card,
 .nf-page main section:not(.nf-page-hero) .an-booking-option,
 .nf-page main section:not(.nf-page-hero) .an-epk-capability,
 .nf-page main section:not(.nf-page-hero) .an-story-art { background: var(--ink-soft) !important; }
+
 .nf-page main section:not(.nf-page-hero) .nf-catalog-art { background: var(--ink) !important; border-color: var(--paper-line) !important; }
+
 .nf-page main section:not(.nf-page-hero) .an-platform-icon,
 .nf-page main section:not(.nf-page-hero) .nf-catalog-card > svg,
-.nf-page main section:not(.nf-page-hero) .nf-catalog-card .index { color: var(--paper) !important; }
-.nf-page main section:not(.nf-page-hero) .nf-text-button { color: var(--paper) !important; border-bottom-color: var(--paper-line) !important; }
-.nf-page main section:not(.nf-page-hero) .nf-button { color: var(--paper) !important; }
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card .index { color: var(--mute) !important; }
+
+.nf-page main section:not(.nf-page-hero) .nf-catalog-card b,
+.nf-page main section:not(.nf-page-hero) .nf-archive-route-list span { color: var(--acid) !important; }
+
+.nf-page main section:not(.nf-page-hero) .nf-text-button {
+  color: var(--paper) !important;
+  border-bottom-color: var(--paper-line) !important;
+}
+.nf-page main section:not(.nf-page-hero) .nf-button { color: var(--ink) !important; background: var(--acid) !important; }
+
 .nf-page main section:not(.nf-page-hero) figcaption,
-.nf-page main section:not(.nf-page-hero) .caption { color: var(--mute-soft) !important; }
+.nf-page main section:not(.nf-page-hero) .caption,
+.nf-page main section:not(.nf-page-hero) .an-story-credits {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--mute) !important;
+  letter-spacing: 0.05em;
+}
 
 
 /* FINAL MUSIC REFINEMENT — horizontal release catalog, stable players */
@@ -1416,9 +1330,22 @@
 }
 .nf-page .nf-embed-grid,
 .nf-page .nf-video-embed-grid {
-  width: min(100%, 980px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  width: min(100%, 1080px);
   min-width: 0;
+  margin-inline: auto;
+  align-items: start;
   overflow: visible;
+}
+@media (max-width: 768px) {
+  .nf-page .nf-embed-grid,
+  .nf-page .nf-video-embed-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+  }
 }
 .nf-page .nf-embed-grid > *,
 .nf-page .nf-video-embed-grid > * {

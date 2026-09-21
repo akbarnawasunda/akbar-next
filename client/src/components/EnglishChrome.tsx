@@ -1,20 +1,22 @@
 import { ArrowUpRight, Mail, Menu, Radio, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { createPortal } from "react-dom";
 import { Link, useLocation } from "wouter";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
+import { MobileSlideMenu } from "./MobileSlideMenu";
 import "./NightFrequencyChrome.css";
 import "./OfficialBrand.css";
 import "./EnglishLayer.css";
 
 const navItems = [
-  { href: "/en/music", label: "MUSIC" },
-  { href: "/en/visuals", label: "VISUALS" },
-  { href: "/en/live", label: "LIVE" },
-  { href: "/en/universe", label: "ARCHIVE" },
-  { href: "/en/about", label: "ABOUT" },
+  { href: "/en/music", label: "MUSIC", desc: "Official discography & tracks" },
+  { href: "/en/visuals", label: "VISUALS", desc: "Music videos & visual art" },
+  { href: "/en/live", label: "LIVE", desc: "Tour dates & stage archive" },
+  { href: "/universe", label: "ARCHIVE", desc: "Complete ecosystem catalog" },
+  { href: "/en/about", label: "ABOUT", desc: "Artist biography & statement" },
+  { href: "/en/epk", label: "EPK", desc: "Official press kit & curations" },
+  { href: "/en/inquire", label: "CONTACT", desc: "Direct booking & inquiry" },
 ];
 
 function indonesianPath(pathname: string) {
@@ -34,122 +36,6 @@ function LanguageSwitcher({ pathname }: { pathname: string }) {
   );
 }
 
-function MobileMenuOverlay({
-  open,
-  pathname,
-  active,
-  onClose,
-}: {
-  open: boolean;
-  pathname: string;
-  active?: string;
-  onClose: () => void;
-}) {
-  const dialogRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open || typeof document === "undefined") return;
-    const previousFocus =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null;
-
-    const getFocusable = () =>
-      Array.from(
-        dialogRef.current?.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        ) ?? []
-      );
-
-    const focusFrame = window.requestAnimationFrame(() => getFocusable()[0]?.focus());
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        onClose();
-        return;
-      }
-      if (event.key !== "Tab") return;
-      const focusable = getFocusable();
-      if (!focusable.length) {
-        event.preventDefault();
-        return;
-      }
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.cancelAnimationFrame(focusFrame);
-      document.removeEventListener("keydown", handleKeyDown);
-      if (previousFocus && document.contains(previousFocus)) {
-        window.requestAnimationFrame(() => previousFocus.focus());
-      }
-    };
-  }, [onClose, open]);
-
-  if (!open || typeof document === "undefined") return null;
-
-  return createPortal(
-    <div
-      ref={dialogRef}
-      id="english-mobile-menu"
-      className="nf-mobile-menu is-open"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Navigation menu"
-    >
-      <button
-        className="nf-mobile-menu-close"
-        type="button"
-        onClick={onClose}
-        aria-label="Close navigation"
-      >
-        <span aria-hidden="true">×</span>
-        <span aria-hidden="true">CLOSE</span>
-      </button>
-
-      <div className="nf-mobile-menu-inner">
-        <span className="nf-mobile-eyebrow">AKBAR NAWASUNDA // EXPLORE</span>
-
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            className={active === item.href ? "is-active" : ""}
-            href={item.href}
-            onClick={onClose}
-          >
-            <span className="nf-mobile-menu-link-title">{item.label}</span>
-            <ArrowUpRight size={16} aria-hidden="true" />
-          </Link>
-        ))}
-
-        <Link href="/en/epk" onClick={onClose}>
-          <span className="nf-mobile-menu-link-title">EPK / BOOKING</span>
-          <ArrowUpRight size={16} aria-hidden="true" />
-        </Link>
-
-        <Link href="/en/inquire" onClick={onClose}>
-          <span className="nf-mobile-menu-link-title">INQUIRE</span>
-          <Mail size={14} aria-hidden="true" />
-        </Link>
-
-        <div className="en-mobile-language">
-          <span>LANGUAGE</span>
-          <LanguageSwitcher pathname={pathname} />
-        </div>
-      </div>
-    </div>,
-    document.body
-  );
-}
-
 export function EnglishHeader({ active }: { active?: string }) {
   const [pathname] = useLocation();
   const resolvedActive =
@@ -157,25 +43,10 @@ export function EnglishHeader({ active }: { active?: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const close = () => setIsOpen(false);
   const closeAndReturnFocus = () => {
     setIsOpen(false);
     window.requestAnimationFrame(() => triggerRef.current?.focus());
   };
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const html = document.documentElement;
-    const body = document.body;
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-    html.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    return () => {
-      html.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
-    };
-  }, [isOpen]);
 
   return (
     <>
@@ -212,11 +83,13 @@ export function EnglishHeader({ active }: { active?: string }) {
         </button>
       </header>
 
-      <MobileMenuOverlay
+      <MobileSlideMenu
         open={isOpen}
         pathname={pathname}
         active={resolvedActive}
         onClose={closeAndReturnFocus}
+        lang="en"
+        navItems={navItems}
       />
     </>
   );
