@@ -719,15 +719,44 @@ function hitPad(k) {
   var el = document.querySelector('.pad[data-pad="' + k + '"]');
   if (el) { el.classList.add('hit'); setTimeout(function() { el.classList.remove('hit'); }, 150); }
 }
+
+var lastPadTouchTime = 0;
 document.querySelectorAll('.pad').forEach(function(p) {
-  p.addEventListener('pointerdown', function() { hitPad(p.dataset.pad); });
+  // Ultra-responsive touchstart: triggers instantaneously with zero latency
+  p.addEventListener('touchstart', function(e) {
+    lastPadTouchTime = (window.performance && performance.now) ? performance.now() : Date.now();
+    hitPad(p.dataset.pad);
+    if (e.cancelable) e.preventDefault(); // Prevents emulated mouse/ghost clicks
+  }, { passive: false });
+
+  // Pointerdown fallback for desktop mouse / stylus
+  p.addEventListener('pointerdown', function(e) {
+    if (e.pointerType === 'touch') return;
+    var now = (window.performance && performance.now) ? performance.now() : Date.now();
+    if (now - lastPadTouchTime < 500) return; // Discard synthetic ghost click
+    hitPad(p.dataset.pad);
+  });
 });
+
 window.addEventListener('keydown', function(e) {
   var m = { '1': 'kick', '2': 'bass', '3': 'hat', '4': 'snare' };
   if (m[e.key]) hitPad(m[e.key]);
 });
+
 var stopBtn = document.getElementById('stopAll');
-if (stopBtn) stopBtn.addEventListener('click', function() { if (typeof stopAllSfx === 'function') stopAllSfx(); });
+if (stopBtn) {
+  var lastStopTouchTime = 0;
+  stopBtn.addEventListener('touchstart', function(e) {
+    lastStopTouchTime = (window.performance && performance.now) ? performance.now() : Date.now();
+    if (typeof stopAllSfx === 'function') stopAllSfx();
+    if (e.cancelable) e.preventDefault();
+  }, { passive: false });
+  stopBtn.addEventListener('click', function(e) {
+    var now = (window.performance && performance.now) ? performance.now() : Date.now();
+    if (now - lastStopTouchTime < 500) return;
+    if (typeof stopAllSfx === 'function') stopAllSfx();
+  });
+}
 
 /* ===== 18. JEDAG ENGINE (7 channel) ===== */
 (function() {
@@ -776,22 +805,68 @@ if (stopBtn) stopBtn.addEventListener('click', function() { if (typeof stopAllSf
       }).join('');
     body.appendChild(row);
   });
+  function toggleStep(s) {
+    var k = s.dataset.ch, i = +s.dataset.i;
+    SEQ.grid[k][i] = !SEQ.grid[k][i];
+    s.classList.toggle('on');
+    if (SEQ.grid[k][i]) AUDIO.schedule(k, AUDIO.ctx().currentTime, 0.9);
+  }
+
+  function toggleMs(m) {
+    var k = m.dataset.ch;
+    if (m.classList.contains('m')) {
+      SEQ.muted[k] = !SEQ.muted[k];
+      m.classList.toggle('m-on');
+    } else {
+      SEQ.solo[k] = !SEQ.solo[k];
+      m.classList.toggle('s-on');
+    }
+  }
+
+  var lastRackTouchTime = 0;
+
+  // Ultra-responsive touchstart listener for sequencer steps & mute/solo buttons
+  body.addEventListener('touchstart', function(e) {
+    lastRackTouchTime = (window.performance && performance.now) ? performance.now() : Date.now();
+    var touchedAny = false;
+    for (var t = 0; t < e.changedTouches.length; t++) {
+      var touch = e.changedTouches[t];
+      var target = document.elementFromPoint(touch.clientX, touch.clientY) || touch.target;
+      if (!target) continue;
+      var s = target.closest('.step');
+      if (s && body.contains(s)) {
+        toggleStep(s);
+        touchedAny = true;
+        continue;
+      }
+      var m = target.closest('.ms');
+      if (m && body.contains(m)) {
+        toggleMs(m);
+        touchedAny = true;
+      }
+    }
+    // Prevent synthetic ghost click from reverting the step toggle or causing double trigger
+    if (touchedAny && e.cancelable) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  // Pointerdown fallback for desktop mouse / stylus
   body.addEventListener('pointerdown', function(e) {
+    if (e.pointerType === 'touch') return;
+    var now = (window.performance && performance.now) ? performance.now() : Date.now();
+    if (now - lastRackTouchTime < 500) return; // Discard synthetic ghost clicks
     var s = e.target.closest('.step');
     if (s) {
-      var k = s.dataset.ch, i = +s.dataset.i;
-      SEQ.grid[k][i] = !SEQ.grid[k][i];
-      s.classList.toggle('on');
-      if (SEQ.grid[k][i]) AUDIO.schedule(k, AUDIO.ctx().currentTime, 0.9);
+      toggleStep(s);
       return;
     }
     var m = e.target.closest('.ms');
     if (m) {
-      var k = m.dataset.ch;
-      if (m.classList.contains('m')) { SEQ.muted[k] = !SEQ.muted[k]; m.classList.toggle('m-on'); }
-      else { SEQ.solo[k] = !SEQ.solo[k]; m.classList.toggle('s-on'); }
+      toggleMs(m);
     }
   });
+
   var playBtn = document.getElementById('seqPlay'), stopBtn2 = document.getElementById('seqStop');
   var pending = [];
   function scheduleStep(s, t) {
@@ -819,20 +894,40 @@ if (stopBtn) stopBtn.addEventListener('click', function() { if (typeof stopAllSf
     playBtn.classList.remove('on');
     body.querySelectorAll('.step.now').forEach(function(s) { s.classList.remove('now'); });
   }
-  playBtn.addEventListener('click', function() { SEQ.playing ? stop() : play(); });
-  stopBtn2.addEventListener('click', stop);
+
+  // Fast touch wrapper for sequencer controls (Play, Stop, BPM chips, Preset chips)
+  function attachFastControl(el, onTrigger) {
+    if (!el) return;
+    var lastControlTouch = 0;
+    el.addEventListener('touchstart', function(e) {
+      lastControlTouch = (window.performance && performance.now) ? performance.now() : Date.now();
+      onTrigger(e);
+      if (e.cancelable) e.preventDefault();
+    }, { passive: false });
+    el.addEventListener('click', function(e) {
+      var now = (window.performance && performance.now) ? performance.now() : Date.now();
+      if (now - lastControlTouch < 500) return;
+      onTrigger(e);
+    });
+  }
+
+  attachFastControl(playBtn, function() { SEQ.playing ? stop() : play(); });
+  attachFastControl(stopBtn2, stop);
+
   document.querySelectorAll('.chip.bpm').forEach(function(b) {
-    b.addEventListener('click', function() {
+    attachFastControl(b, function() {
       document.querySelectorAll('.chip.bpm').forEach(function(x) { x.classList.remove('active'); });
       b.classList.add('active'); SEQ.bpm = +b.dataset.bpm;
     });
   });
+
   document.querySelectorAll('.chip.preset').forEach(function(b) {
-    b.addEventListener('click', function() {
+    attachFastControl(b, function() {
       document.querySelectorAll('.chip.preset').forEach(function(x) { x.classList.remove('active'); });
       b.classList.add('active'); loadPreset(b.dataset.preset);
     });
   });
+
   (function light() {
     requestAnimationFrame(light);
     if (!SEQ.playing) return;
@@ -844,10 +939,11 @@ if (stopBtn) stopBtn.addEventListener('click', function() { if (typeof stopAllSf
       body.querySelectorAll('.step[data-i="' + cur + '"]').forEach(function(s) { s.classList.add('now'); });
     }
   })();
+
   var tapBtn = document.getElementById('tapTempo');
   if (tapBtn) {
     var taps = [], idle = null;
-    tapBtn.addEventListener('click', function() {
+    function handleTap() {
       var n = performance.now();
       if (idle) clearTimeout(idle);
       idle = setTimeout(function() { taps = []; tapBtn.textContent = 'TAP'; }, 2000);
@@ -862,7 +958,8 @@ if (stopBtn) stopBtn.addEventListener('click', function() { if (typeof stopAllSf
         tapBtn.textContent = bpm + ' BPM';
         document.querySelectorAll('.chip.bpm').forEach(function(x) { x.classList.toggle('active', +x.dataset.bpm === bpm); });
       }
-    });
+    }
+    attachFastControl(tapBtn, handleTap);
   }
   loadPreset('jedag');
 })();
