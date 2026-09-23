@@ -92,6 +92,9 @@ export function OfficialMediaFrame({
             title={title}
             variant={platformVariant}
           />
+          <p className="an-official-player-hint">
+            Player belum merespons di browser ini? Gunakan tautan resmi di atas.
+          </p>
         </div>
       )}
     </article>

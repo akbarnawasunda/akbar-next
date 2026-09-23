@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
-import { MobileSlideMenu } from "./MobileSlideMenu";
+import { MobileNav } from "./MobileNav";
 import "./NightFrequencyChrome.css";
 import "./OfficialBrand.css";
 import "./EnglishLayer.css";
@@ -83,8 +83,8 @@ export function EnglishHeader({ active }: { active?: string }) {
         </button>
       </header>
 
-      <MobileSlideMenu
-        open={isOpen}
+      <MobileNav
+        isOpen={isOpen}
         pathname={pathname}
         active={resolvedActive}
         onClose={closeAndReturnFocus}

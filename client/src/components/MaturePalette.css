@@ -347,10 +347,9 @@
 .nf-page .nf-platform-grid a svg { color: var(--acid); }
 
 .nf-page .nf-signal-block {
-  background: var(--ink-soft) !important;
-  background-image: radial-gradient(ellipse 80% 50% at 50% 100%, rgba(0, 212, 255, 0.04), transparent 70%) !important;
+  background: var(--paper) !important;
+  color: var(--ink) !important;
   border-top: 1px solid var(--paper-line) !important;
-  color: var(--paper) !important;
   padding-block: clamp(72px, 9vw, 120px) !important;
 }
 

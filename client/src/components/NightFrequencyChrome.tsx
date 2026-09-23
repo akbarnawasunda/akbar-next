@@ -6,13 +6,15 @@ import {
   publicPlatformLinks,
 } from "@/content/publicContent";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
+import { MobileNav } from "./MobileNav";
 import { MobileSlideMenu } from "./MobileSlideMenu";
+import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import "./NightFrequencyChrome.css";
 import "./OfficialBrand.css";
 import "@/pages/ArtistModules.css";
 import "./PublicMotion.css";
 
-export { MobileSlideMenu };
+export { MobileNav, MobileSlideMenu, useLockBodyScroll };
 
 const navItems = [
   { href: "/music", label: "MUSIC" },
@@ -94,8 +96,8 @@ export function NightHeader({ active }: { active?: string }) {
         </button>
       </header>
 
-      <MobileSlideMenu
-        open={isOpen}
+      <MobileNav
+        isOpen={isOpen}
         pathname={pathname}
         active={activeRoute}
         onClose={closeAndReturnFocus}
