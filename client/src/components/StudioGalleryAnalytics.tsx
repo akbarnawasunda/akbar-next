@@ -31,7 +31,7 @@ export default function StudioGalleryAnalytics() {
     <section className="overflow-hidden rounded-2xl border border-cyan-200/15 bg-cyan-200/[0.045] shadow-2xl shadow-black/10" aria-label="Portrait gallery analytics">
       <div className="flex items-start justify-between gap-4 border-b border-cyan-200/10 px-5 py-5 sm:px-6">
         <div>
-          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-200/75"><BarChart3 size={13} /> 03 // Gallery signal</div>
+          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-200/75"><BarChart3 size={13} /> 03. Gallery Signal</div>
           <h2 className="mt-2 text-xl font-semibold tracking-tight text-white">Portrait gallery access</h2>
           <p className="mt-1 max-w-md text-xs leading-5 text-white/45">Berapa banyak browser anonim yang membuka halaman gallery foto.</p>
         </div>

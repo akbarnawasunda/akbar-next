@@ -219,7 +219,7 @@ export function MobileNav({
             {/* Scrollable Body */}
             <div className="nf-mobile-drawer-body">
               <div className="nf-mobile-drawer-eyebrow">
-                <span>{lang === "en" ? "NAVIGATION // ROUTES" : "NAVIGASI // JALUR UTAMA"}</span>
+                <span>{lang === "en" ? "NAVIGATION · DIRECT ROUTES" : "NAVIGASI · JALUR UTAMA"}</span>
               </div>
 
               {/* Navigation Links */}

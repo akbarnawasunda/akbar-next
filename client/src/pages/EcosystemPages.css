@@ -136,10 +136,9 @@
   max-width: 16ch;
   margin: 14px 0 22px;
   font-family: var(--font-display);
-  font-weight: 500;
-  font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 1;
+  font-weight: 700;
   font-size: clamp(2.6rem, 6.2vw, 6.6rem);
-  line-height: 1.08;
+  line-height: 1.05;
   letter-spacing: -0.035em;
   color: var(--paper);
   text-wrap: balance;

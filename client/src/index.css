@@ -3,8 +3,7 @@
    Satu-satunya sumber kebenaran untuk: font, warna, tipe, base.
    ============================================================ */
 
-@import url("https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600&f[]=satoshi@400,500,600,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Syne:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -12,9 +11,9 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-display: "Clash Display", ui-sans-serif, system-ui, sans-serif;
-  --font-body:    "Satoshi", ui-sans-serif, system-ui, sans-serif;
-  --font-mono:    "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Syne", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body:    "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Nocturnal Electronic Artist Palette */
   --ink:        #0c0d12;
@@ -127,10 +126,9 @@
   h1, h2, h3, h4 {
     margin: 0;
     font-family: var(--font-display);
-    font-weight: 500;
-    font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
-    letter-spacing: -0.025em;
-    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
     text-wrap: balance;
   }
   h1 { font-size: clamp(2.5rem, 6.5vw, 6.8rem); line-height: 1.05; letter-spacing: -0.035em; }

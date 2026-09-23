@@ -102,9 +102,15 @@ export function MusicEmbed({
         {!isLoaded && (
           <div className="an-embed-placeholder" aria-hidden="true">
             <div className="an-embed-pulse">
-              <span className="an-embed-spinner" />
+              <div className="an-embed-equalizer">
+                <span className="an-eq-bar an-eq-1" />
+                <span className="an-eq-bar an-eq-2" />
+                <span className="an-eq-bar an-eq-3" />
+                <span className="an-eq-bar an-eq-4" />
+                <span className="an-eq-bar an-eq-5" />
+              </div>
               <p className="an-embed-loading-text">
-                <Radio size={13} className="animate-pulse text-[var(--acid)]" /> MEMUAT PLAYER {platform.toUpperCase()}…
+                <Radio size={13} className="text-[var(--acid)]" /> MEMUAT PLAYER {platform.toUpperCase()}…
               </p>
             </div>
           </div>

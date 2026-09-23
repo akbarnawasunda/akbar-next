@@ -79,7 +79,7 @@ export default function StudioLeaderboardManager() {
     <section id="studio-jedag-leaderboard" className="overflow-hidden rounded-2xl border border-amber-200/15 bg-amber-200/[0.035] shadow-2xl shadow-black/10" aria-label="JEDAG RUN leaderboard manager">
       <div className="flex flex-col gap-4 border-b border-amber-200/10 px-5 py-5 sm:px-6 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-amber-100/75"><Trophy size={13} /> 04 // Playable signal</div>
+          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-amber-100/75"><Trophy size={13} /> 04. Playable Signal</div>
           <h2 className="mt-2 text-xl font-semibold tracking-tight text-white">JEDAG RUN leaderboard</h2>
           <p className="mt-1 max-w-2xl text-xs leading-5 text-white/45">Kelola nama dan skor yang tampil di papan peringkat publik. Entry pemain dan entry manual berada di daftar yang sama.</p>
         </div>
