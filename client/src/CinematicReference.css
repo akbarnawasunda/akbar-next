@@ -505,3 +505,108 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
 }
+
+/* Music route refinement — match the supplied reference composition */
+.music-reference-page .nf-page-hero {
+  min-height: min(760px, calc(100svh - 70px)) !important;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr) !important;
+  background-position: 70% center !important;
+}
+.music-reference-page .nf-page-hero::after {
+  content: "BANDUNG\\A INDONESIA\\A EST. 2020" !important;
+  white-space: pre;
+  position: absolute;
+  right: var(--ref-gutter);
+  top: 44px;
+  z-index: 1;
+  color: var(--ref-muted);
+  font: 0.56rem/1.65 var(--ref-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.music-reference-page .nf-page-hero > div:first-child { max-width: 430px !important; }
+.music-reference-page .nf-page-hero h1 {
+  max-width: 8ch !important;
+  font-size: clamp(4rem, 9vw, 9.2rem) !important;
+  letter-spacing: -0.08em !important;
+}
+.music-reference-page .nf-page-hero h1 em { color: var(--ref-ink) !important; }
+.music-reference-page .nf-page-hero p:not(.nf-page-eyebrow) {
+  max-width: 28ch !important;
+  font-family: var(--ref-mono) !important;
+  font-size: 0.62rem !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.music-reference-page .nf-hero-note {
+  align-self: end !important;
+  margin-bottom: 0 !important;
+  background: rgba(5, 9, 15, 0.42) !important;
+}
+.music-reference-page .an-story-section {
+  grid-template-columns: minmax(210px, 0.58fr) minmax(0, 0.92fr) !important;
+  align-items: center !important;
+  max-width: 1180px;
+  margin-inline: auto;
+  padding-block: 56px !important;
+}
+.music-reference-page .an-story-art {
+  aspect-ratio: 1 / 1 !important;
+  box-shadow: 12px 12px 0 rgba(30, 232, 255, 0.08) !important;
+}
+.music-reference-page .an-story-copy h2 {
+  max-width: 8ch !important;
+  font-size: clamp(2.8rem, 5.3vw, 5.6rem) !important;
+  text-transform: uppercase;
+}
+.music-reference-page .an-story-copy::after {
+  content: "SPOTIFY  ↗   YOUTUBE  ↗   APPLE MUSIC  ↗   SOUNDCLOUD  ↗";
+  display: block;
+  margin-top: 28px;
+  padding-top: 14px;
+  border-top: 1px solid var(--ref-line);
+  color: var(--ref-muted);
+  font: 0.56rem/1.6 var(--ref-mono);
+  letter-spacing: 0.09em;
+}
+.music-reference-page .nf-platform-hub {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-top: 1px solid var(--ref-line);
+  background: linear-gradient(90deg, var(--ref-bg-2), rgba(9, 22, 35, 0.78)) !important;
+}
+.music-reference-page .nf-platform-hub-copy { max-width: 1180px; width: 100%; }
+.music-reference-page .nf-platform-hub h2 { max-width: 8ch; }
+.music-reference-page .nf-platform-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; max-width: 760px; }
+.music-reference-page .nf-platform-grid a { min-height: 94px !important; }
+.music-reference-page .nf-section:has(.nf-catalog-frame) {
+  padding-top: 70px !important;
+  padding-bottom: 82px !important;
+}
+.music-reference-page .nf-catalog-toolbar { color: var(--ref-muted) !important; }
+.music-reference-page .nf-catalog-card { flex-basis: clamp(190px, 18vw, 236px) !important; min-height: 330px !important; }
+.music-reference-page .nf-signal-block {
+  max-width: none !important;
+  padding: 70px var(--ref-gutter) !important;
+  border-top: 1px solid var(--ref-line) !important;
+  background: var(--ref-bg-2) !important;
+}
+@media (max-width: 767.98px) {
+  .music-reference-page .nf-page-hero {
+    min-height: 680px !important;
+    grid-template-columns: 1fr !important;
+    background-position: 66% center !important;
+  }
+  .music-reference-page .nf-page-hero::after { top: 78px; right: 20px; }
+  .music-reference-page .nf-page-hero h1 { font-size: clamp(3.8rem, 18vw, 6.2rem) !important; }
+  .music-reference-page .an-story-section { padding-block: 62px !important; }
+  .music-reference-page .an-story-copy h2 { max-width: 9ch !important; }
+  .music-reference-page .nf-platform-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; max-width: none; }
+  .music-reference-page .nf-platform-grid a { min-height: 76px !important; }
+}
+@media (max-width: 480px) {
+  .music-reference-page .nf-page-hero::after { display: none; }
+  .music-reference-page .nf-page-hero { min-height: 640px !important; }
+  .music-reference-page .nf-page-hero h1 { font-size: clamp(3.55rem, 17vw, 5.2rem) !important; }
+  .music-reference-page .nf-platform-grid { grid-template-columns: 1fr !important; }
+}

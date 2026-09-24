@@ -108,14 +108,14 @@ export default function Music() {
   };
 
   return (
-    <div className="nf-page">
+    <div className="nf-page music-reference-page">
       <NightHeader active="/music" />
       <main>
         <section
           className="nf-page-hero"
           style={
             {
-              "--page-image": `url(${featured.artwork || officialBrand.socialPreview})`,
+              "--page-image": `url(${officialBrand.portrait || featured.artwork || officialBrand.socialPreview})`,
               backgroundAttachment: "fixed",
             } as React.CSSProperties
           }
@@ -142,31 +142,6 @@ export default function Music() {
             >
               DENGAR <ArrowUpRight size={14} />
             </a>
-          </div>
-        </section>
-
-        <section className="nf-platform-hub">
-          <div className="nf-platform-hub-copy">
-            <p className="nf-page-eyebrow">DENGARKAN DI SINI</p>
-            <h2>
-              PILIH
-              <br />
-              TEMPATNYA.
-            </h2>
-            <div className="nf-platform-grid">
-              {editablePlatformLinks.map((platform) => (
-                <a
-                  key={platform.label}
-                  href={platform.href}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <PlatformIcon label={platform.label} />
-                  <span>{platform.label}</span>
-                  <ArrowUpRight size={14} />
-                </a>
-              ))}
-            </div>
           </div>
         </section>
 
@@ -201,6 +176,31 @@ export default function Music() {
           </div>
         </section>
         </Reveal>
+
+        <section className="nf-platform-hub">
+          <div className="nf-platform-hub-copy">
+            <p className="nf-page-eyebrow">DENGARKAN DI SINI</p>
+            <h2>
+              PILIH
+              <br />
+              TEMPATNYA.
+            </h2>
+            <div className="nf-platform-grid">
+              {editablePlatformLinks.map((platform) => (
+                <a
+                  key={platform.label}
+                  href={platform.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <PlatformIcon label={platform.label} />
+                  <span>{platform.label}</span>
+                  <ArrowUpRight size={14} />
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
 
         <Reveal>
         <section className="nf-section">
