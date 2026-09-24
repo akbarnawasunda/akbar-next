@@ -601,6 +601,70 @@
 }
 
 
+/* Desktop Stage HUD — Commanding audio studio console bar for widescreen monitors (1024px+) */
+.nf-desktop-hud {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .nf-desktop-hud {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 28px;
+    padding-inline: var(--gutter, clamp(20px, 4.5vw, 64px));
+    background: #090a0e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.58rem;
+    color: #7b788a;
+    letter-spacing: 0.12em;
+    user-select: none;
+  }
+  .nf-hud-left,
+  .nf-hud-right {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nf-hud-live-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #00ffd5;
+    box-shadow: 0 0 6px #00ffd5;
+    display: inline-block;
+    animation: hx-blink 1.4s ease-in-out infinite;
+  }
+  .nf-hud-badge {
+    color: #00ffd5;
+    font-weight: 600;
+  }
+  .nf-hud-time {
+    color: #e8e6f0;
+    font-weight: 600;
+  }
+  .nf-hud-sep {
+    opacity: 0.4;
+  }
+  .nf-hud-center {
+    color: #a29fb2;
+    font-weight: 500;
+  }
+  .nf-hud-kbd-hint {
+    color: #5f5c6c;
+  }
+  .nf-hud-right kbd {
+    display: inline-block;
+    padding: 1px 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+    color: #d6d3e3;
+    font-size: 0.54rem;
+    font-family: inherit;
+  }
+}
+
 /* Shared global header foundation — consumed by Home and all public ecosystem pages */
 .nf-nav {
   position: sticky;

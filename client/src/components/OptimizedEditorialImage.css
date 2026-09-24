@@ -1,0 +1,51 @@
+.an-opt-img-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  background-color: #0c0d12;
+}
+
+.an-opt-img-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  background-size: 200% 100%;
+  animation: an-shimmer-sweep 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes an-shimmer-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.an-opt-img-element {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity;
+}
+
+.an-opt-img-element.has-faded-in {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-opt-img-shimmer {
+    animation: none;
+    opacity: 0.5;
+  }
+  .an-opt-img-element {
+    transition: none;
+    opacity: 1;
+  }
+}

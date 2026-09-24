@@ -206,19 +206,55 @@ export default function Home() {
           <section className="an-hero">
             <HeroDots />
             <div className="home-hero-portrait">
-              <img
-                src={portraitSrc}
-                alt="Portrait resmi Akbar Nawasunda"
-                fetchPriority="high"
-                decoding="async"
-                width={800}
-                height={1000}
-                onError={() => {
-                  if (portraitSrc !== officialBrand.portraitFallback) {
-                    setPortraitSrc(officialBrand.portraitFallback);
-                  }
-                }}
-              />
+              <picture className="home-hero-picture">
+                <source
+                  media="(max-width: 640px)"
+                  srcSet="/assets/akbar-official-portrait-optimized.webp"
+                  type="image/webp"
+                />
+                <source
+                  srcSet="/assets/akbar-nawasunda-official-portrait.webp"
+                  type="image/webp"
+                />
+                <img
+                  src={portraitSrc}
+                  alt="Portrait resmi Akbar Nawasunda"
+                  fetchPriority="high"
+                  decoding="async"
+                  width={800}
+                  height={1000}
+                  onError={() => {
+                    if (portraitSrc !== officialBrand.portraitFallback) {
+                      setPortraitSrc(officialBrand.portraitFallback);
+                    }
+                  }}
+                />
+              </picture>
+              {/* Desktop-exclusive Stage Deck: Authentic Audio Console Specs */}
+              <div className="desktop-stage-deck" aria-hidden="true">
+                <div className="desktop-vinyl-badge">
+                  <div className="desktop-vinyl-disc" />
+                  <div className="desktop-vinyl-meta">
+                    <span className="desktop-vinyl-cat">CAT: AN-001 · LATEST DROP</span>
+                    <strong className="desktop-vinyl-track">{activeRelease.title}</strong>
+                    <span className="desktop-vinyl-spec">130 BPM · 24-BIT MASTER AUDIO</span>
+                  </div>
+                </div>
+                <div className="desktop-stage-specs">
+                  <div className="desktop-spec-item">
+                    <span>STAGE STATUS</span>
+                    <strong>TRANSMISSION ACTIVE</strong>
+                  </div>
+                  <div className="desktop-spec-item">
+                    <span>LOCATION</span>
+                    <strong>BANDUNG (WIB)</strong>
+                  </div>
+                  <div className="desktop-spec-item">
+                    <span>GENRE</span>
+                    <strong>INDO BASS / BREAKBEAT</strong>
+                  </div>
+                </div>
+              </div>
             </div>
             <picture className="hero-mascot-doodle">
               <source srcSet="/assets/akbar-mascot-doodle.avif" type="image/avif" />

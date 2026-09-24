@@ -5,6 +5,7 @@ import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
 import type { CmsJourney, CmsPhotoStory } from "@/content/publicContent";
 import { publicJourney, publicPhotoStories } from "@/content/publicContent";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
+import { OptimizedEditorialImage } from "@/components/OptimizedEditorialImage";
 import { SectionIndex } from "@/components/PlatformMarquee";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import "./ArtistEditorialSections.css";
@@ -147,7 +148,14 @@ export function ArtistPhotoStorySection({
             }}
           >
             <div className="artist-photo-story-image">
-              <ResilientArtworkImage src={activeStory.imageUrl} backupSrc={officialBrand.socialPreview} alt={storyAlt} />
+              <OptimizedEditorialImage
+                src={activeStory.imageUrl}
+                backupSrc={officialBrand.socialPreview}
+                alt={storyAlt}
+                width={800}
+                height={600}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 60vw, 750px"
+              />
               <span className="artist-photo-story-index">{String(safeIndex + 1).padStart(2, "0")}</span>
               <span className="artist-photo-story-scan" aria-hidden="true" />
             </div>

@@ -108,6 +108,16 @@ const mount = () => {
       </QueryClientProvider>
     </trpc.Provider>
   );
+
+  // Double RAF ensures React layout & styles are fully painted before dismissing preloader
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const dismiss = (window as unknown as { __dismissAkbarPreloader?: () => void }).__dismissAkbarPreloader;
+      if (typeof dismiss === "function") {
+        dismiss();
+      }
+    });
+  });
 };
 
 void preloadPublicRoute(initialRoute)

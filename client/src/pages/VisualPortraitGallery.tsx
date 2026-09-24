@@ -6,6 +6,7 @@ import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { officialBrand } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
 import { publicPortraitStudies, usePublicArtistContent } from "@/content/publicContent";
+import { OptimizedEditorialImage } from "@/components/OptimizedEditorialImage";
 import "./EcosystemPages.css";
 import "./VisualPortraitGallery.css";
 
@@ -71,7 +72,13 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
             return (
               <article className={`portrait-gallery-card ${index === 0 ? "portrait-gallery-card-featured" : ""}`} id={study._id} key={study._id}>
                 <div className="portrait-gallery-image-wrap">
-                  <img src={study.imageUrl || officialBrand.socialPreview} alt={alt} loading={index < 2 ? "eager" : "lazy"} decoding="async" />
+                  <OptimizedEditorialImage
+                    src={study.imageUrl || officialBrand.socialPreview}
+                    backupSrc={officialBrand.socialPreview}
+                    alt={alt}
+                    priority={index === 0}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                  />
                   <span className="portrait-gallery-index">{String(index + 1).padStart(2, "0")}</span>
                 </div>
                 <div className="portrait-gallery-card-copy">

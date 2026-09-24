@@ -26,6 +26,53 @@ const navItems = [
   { href: "/inquire", label: "CONTACT" },
 ];
 
+function DesktopStageHud() {
+  const [wibTime, setWibTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      try {
+        const now = new Date();
+        const formatter = new Intl.DateTimeFormat("id-ID", {
+          timeZone: "Asia/Jakarta",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        });
+        setWibTime(`${formatter.format(now)} WIB`);
+      } catch {
+        setWibTime("BANDUNG / STAGE");
+      }
+    };
+    updateTime();
+    const timer = setInterval(updateTime, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="nf-desktop-hud" aria-hidden="true">
+      <div className="nf-hud-left">
+        <span className="nf-hud-live-dot" />
+        <span className="nf-hud-badge">STAGE ACTIVE</span>
+        <span className="nf-hud-sep">·</span>
+        <span className="nf-hud-time">{wibTime || "LIVE WIB"}</span>
+        <span className="nf-hud-sep">·</span>
+        <span>BANDUNG (UTC+7)</span>
+      </div>
+      <div className="nf-hud-center">
+        <span>AKBAR NAWASUNDA // 130 BPM · BREAKBEAT · INDO BASS</span>
+      </div>
+      <div className="nf-hud-right">
+        <span className="nf-hud-kbd-hint">HOTKEYS:</span>
+        <kbd>[M] MUSIC</kbd>
+        <kbd>[V] VISUALS</kbd>
+        <kbd>[E] EPK</kbd>
+      </div>
+    </div>
+  );
+}
+
 function LanguageSwitcher({ pathname }: { pathname: string }) {
   const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
   const idPath = isEnglish ? pathname.replace(/^\/en/, "") || "/" : pathname;
@@ -44,7 +91,7 @@ function LanguageSwitcher({ pathname }: { pathname: string }) {
 }
 
 export function NightHeader({ active }: { active?: string }) {
-  const [pathname] = useLocation();
+  const [pathname, navigate] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const activeRoute = active ??
     (pathname.startsWith("/music") ? "/music" :
@@ -56,6 +103,35 @@ export function NightHeader({ active }: { active?: string }) {
                 pathname.startsWith("/inquire") ? "/inquire" : undefined);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
+  // Desktop keyboard hotkeys for instant navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input, textarea, or contentEditable
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable)
+      ) {
+        return;
+      }
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+      const key = e.key.toLowerCase();
+      if (key === "m") {
+        navigate("/music");
+      } else if (key === "v") {
+        navigate("/visuals");
+      } else if (key === "e") {
+        navigate("/epk");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [navigate]);
+
   const closeAndReturnFocus = () => {
     setIsOpen(false);
     window.requestAnimationFrame(() => triggerRef.current?.focus());
@@ -63,6 +139,7 @@ export function NightHeader({ active }: { active?: string }) {
 
   return (
     <>
+      <DesktopStageHud />
       <header className="nf-nav">
         <Link className="nf-wordmark nf-wordmark-official" href="/">
           <ResilientBrandImage className="nf-brand-logo" alt="Akbar Nawasunda" />
