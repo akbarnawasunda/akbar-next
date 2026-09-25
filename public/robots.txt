@@ -1,6 +1,0 @@
-User-agent: *
-    Allow: /
-    Disallow: /admin.html
-    Disallow: /404.html
-
-    Sitemap: https://akbarnawasunda.my.id/sitemap.xml
