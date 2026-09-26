@@ -610,3 +610,46 @@ body::before {
   .music-reference-page .nf-page-hero h1 { font-size: clamp(3.55rem, 17vw, 5.2rem) !important; }
   .music-reference-page .nf-platform-grid { grid-template-columns: 1fr !important; }
 }
+
+/* Taste-skill guardrails: cinematic depth without mobile repaint cost. */
+.nf-page img,
+.an-site img { max-width: 100%; }
+.nf-page a:focus-visible,
+.nf-page button:focus-visible,
+.an-site a:focus-visible,
+.an-site button:focus-visible,
+.nf-page input:focus-visible,
+.nf-page textarea:focus-visible {
+  outline: 2px solid var(--ref-cyan) !important;
+  outline-offset: 4px !important;
+}
+.nf-page-hero,
+.nf-page-hero::before,
+.nf-page-hero::after { background-attachment: scroll !important; }
+.nf-page section,
+.an-site section { scroll-margin-top: 82px; }
+.an-official-media,
+.nf-catalog-card,
+.nf-visual-card,
+.an-story-art { contain: layout paint; }
+@media (prefers-reduced-motion: reduce) {
+  .nf-page-hero,
+  .nf-page-hero::before,
+  .nf-page-hero::after { background-attachment: scroll !important; }
+}
+
+/* Homepage title guardrail: preserve the artist name as intentional mobile lines. */
+.hero-title-break-mobile { display: none; }
+@media (max-width: 767.98px) {
+  .an-site .hero-copy .hero-title-editorial {
+    font-size: clamp(2.7rem, 11vw, 4rem) !important;
+    letter-spacing: -0.06em !important;
+  }
+  .an-site .hero-copy .hero-title-word {
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+  }
+  .an-site .hero-copy .hero-title-mask:not(:last-child) { margin-right: 0; }
+  .an-site .hero-copy .hero-title-break-mobile { display: block !important; }
+}

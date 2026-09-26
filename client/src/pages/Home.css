@@ -2509,3 +2509,20 @@
     opacity: 0.25 !important;
   }
 }
+
+/* Taste refinement: preserve the artist name as intentional mobile lines. */
+.hero-title-break-mobile { display: none !important; }
+@media (max-width: 767.98px) {
+  .an-site .hero-copy .hero-title-editorial {
+    font-size: clamp(2.7rem, 11vw, 4rem) !important;
+    letter-spacing: -0.06em !important;
+  }
+  .an-site .hero-copy .hero-title-word {
+    display: inline-block;
+    white-space: nowrap !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+  }
+  .an-site .hero-copy .hero-title-mask:not(:last-child) { margin-right: 0; }
+  .an-site .hero-copy .hero-title-break-mobile { display: block !important; }
+}
