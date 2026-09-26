@@ -1,0 +1,442 @@
+/* ============================================================
+   ADMIN CONTROL ROOM
+   Variabel lokal lama dihapus, semua pakai var() global.
+   Warna neon (mint, lime, coral, violet) diganti acid + signal.
+   ============================================================ */
+
+.an-control-room {
+  min-height: calc(100vh - 32px);
+  margin: -16px;
+  padding: clamp(28px, 5vw, 74px) var(--gutter, clamp(20px, 4.5vw, 64px)) 34px;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* -- Hero -------------------------------------------------- */
+.an-control-room-hero {
+  display: flex;
+  gap: 30px;
+  align-items: end;
+  justify-content: space-between;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding-bottom: clamp(44px, 7vw, 78px);
+  border-bottom: 1px solid var(--ink-line);
+}
+
+.an-control-room-kicker {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  margin: 0;
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.an-control-room-kicker span {
+  display: inline-block;
+  width: 22px;
+  height: 1px;
+  background: var(--acid);
+}
+
+.an-control-room-hero h1 {
+  margin: 16px 0 22px;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 8vw, 8rem);
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+}
+.an-control-room-hero h1 em,
+.an-control-section-heading h2 em,
+.an-control-workflow h2 em {
+  color: var(--acid);
+  font-style: italic;
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+
+.an-control-room-intro {
+  max-width: 58ch;
+  margin: 0;
+  color: var(--mute);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.an-control-public-link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 9px;
+  align-items: center;
+  padding: 13px 15px;
+  border: 1px solid var(--ink-line);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: border-color var(--dur-fast, 160ms) var(--ease, ease), color var(--dur-fast, 160ms) var(--ease, ease);
+}
+.an-control-public-link:hover,
+.an-control-public-link:focus-visible {
+  border-color: var(--acid);
+  color: var(--acid);
+  transform: none;
+}
+
+/* -- Stats ------------------------------------------------ */
+.an-control-room-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 1380px;
+  margin: 0 auto;
+  border-left: 1px solid var(--ink-line);
+}
+.an-control-room-stats article {
+  min-height: 148px;
+  padding: 18px 20px;
+  border-right: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--ink-line);
+  background: transparent;
+}
+.an-stat-icon {
+  display: grid;
+  width: 33px;
+  height: 33px;
+  place-items: center;
+  color: var(--acid);
+  border: 1px solid var(--ink-line);
+}
+.an-control-room-stats strong {
+  display: block;
+  margin-top: 24px;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.8rem;
+  letter-spacing: -0.03em;
+}
+.an-control-room-stats small {
+  display: block;
+  margin-top: 8px;
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* -- Section heading -------------------------------------- */
+.an-control-section-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(240px, 0.42fr);
+  gap: 30px;
+  align-items: end;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: clamp(74px, 9vw, 130px) 0 34px;
+}
+.an-control-section-heading h2 {
+  margin: 14px 0 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 5.4vw, 4.8rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+}
+.an-control-section-heading > p {
+  max-width: 46ch;
+  margin: 0;
+  color: var(--mute);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+/* -- Tool grid -------------------------------------------- */
+.an-control-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 1380px;
+  margin: 0 auto;
+  border-top: 1px solid var(--ink-line);
+  border-left: 1px solid var(--ink-line);
+}
+.an-control-tool {
+  position: relative;
+  display: flex;
+  min-height: 275px;
+  flex-direction: column;
+  padding: 22px;
+  border-right: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--ink-line);
+  background: transparent;
+  color: var(--paper);
+  text-decoration: none;
+  transition: background var(--dur-fast, 160ms) var(--ease, ease), border-color var(--dur-fast, 160ms) var(--ease, ease);
+}
+.an-control-tool:hover,
+.an-control-tool:focus-visible {
+  border-color: var(--ink-line);
+  background: color-mix(in srgb, var(--paper) 4%, transparent);
+  transform: none;
+}
+
+.an-control-tool-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--mute);
+}
+.an-control-tool-icon {
+  display: grid;
+  width: 35px;
+  height: 35px;
+  place-items: center;
+  border: 1px solid currentColor;
+  color: var(--acid);
+}
+.an-control-tool-eyebrow {
+  margin-top: 31px;
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.an-control-tool h2 {
+  margin: 10px 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.an-control-tool p {
+  max-width: 38ch;
+  margin: 0;
+  color: var(--mute);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+.an-control-tool-bottom {
+  display: grid;
+  gap: 9px;
+  margin-top: auto;
+  padding-top: 22px;
+}
+.an-control-tool-bottom small {
+  color: var(--mute-soft);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+}
+.an-control-tool-bottom strong {
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
+/* Semua variant warna tool icon diseragamkan ke acid — 
+   supaya tidak ada biru/cyan/violet yang bocor. */
+.an-control-tool-coral .an-control-tool-icon,
+.an-control-tool-violet .an-control-tool-icon,
+.an-control-tool-bone .an-control-tool-icon,
+.an-control-tool-cyan .an-control-tool-icon,
+.an-control-tool-graphite .an-control-tool-icon {
+  color: var(--acid);
+}
+
+/* -- Workflow --------------------------------------------- */
+.an-control-workflow {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.5fr) minmax(0, 1fr);
+  gap: clamp(44px, 10vw, 150px);
+  max-width: 1380px;
+  margin: clamp(78px, 11vw, 150px) auto 0;
+  padding: clamp(40px, 5vw, 65px) 0;
+  border-top: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--ink-line);
+}
+.an-control-workflow h2 {
+  margin: 16px 0 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.4rem, 4.8vw, 4.4rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+.an-control-workflow ol {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.an-control-workflow li {
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: 18px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--ink-line);
+}
+.an-control-workflow li:last-child { border-bottom: 0; }
+.an-control-workflow li > b {
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+.an-control-workflow li > span {
+  display: grid;
+  gap: 7px;
+  color: var(--mute);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+.an-control-workflow li strong {
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* -- Note ------------------------------------------------- */
+.an-control-room-note {
+  display: flex;
+  max-width: 1380px;
+  gap: 20px;
+  justify-content: space-between;
+  margin: 26px auto 0;
+  color: var(--mute-soft);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.an-control-room-note span {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--signal);
+}
+.an-control-room-note small {
+  color: var(--mute-soft);
+  font: inherit;
+}
+
+/* -- Access gate ------------------------------------------ */
+.an-control-access {
+  display: grid;
+  min-height: calc(100vh - 64px);
+  place-items: center;
+  margin: -16px;
+  padding: 28px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.an-control-access section {
+  max-width: 440px;
+  text-align: center;
+}
+.an-control-access svg { color: var(--acid); }
+.an-control-access p {
+  margin: 24px 0 0;
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.an-control-access h1 {
+  margin: 15px 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+.an-control-access span {
+  display: block;
+  color: var(--mute);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.an-control-access a {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 26px;
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color var(--dur-fast, 160ms) var(--ease, ease);
+}
+.an-control-access a:hover { color: var(--acid); }
+
+/* -- Responsive ------------------------------------------- */
+@media (max-width: 900px) {
+  .an-control-tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .an-control-room-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .an-control-section-heading { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 620px) {
+  .an-control-room { margin: -8px; padding: 28px 16px 24px; }
+  .an-control-room-hero {
+    align-items: start;
+    flex-direction: column;
+    padding-bottom: 42px;
+  }
+  .an-control-room-hero h1 { font-size: clamp(2.6rem, 14vw, 4.2rem); }
+  .an-control-public-link { width: 100%; justify-content: center; }
+  .an-control-room-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .an-control-room-stats article { min-height: 124px; padding: 15px; }
+  .an-control-room-stats strong { margin-top: 19px; font-size: 1.5rem; }
+  .an-control-tool-grid { grid-template-columns: 1fr; }
+  .an-control-tool { min-height: 245px; }
+  .an-control-workflow {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    margin-top: 76px;
+  }
+  .an-control-room-note {
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    line-height: 1.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-control-public-link,
+  .an-control-tool,
+  .an-control-access a {
+    transition: none;
+  }
+}

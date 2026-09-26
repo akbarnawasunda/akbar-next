@@ -288,9 +288,6 @@ export default function Home() {
                     >
                       <span className="hero-title-word">{word}</span>
                       {index < heroTitleWords.length - 1 ? " " : null}
-                      {index < heroTitleWords.length - 1 ? (
-                        <br className="hero-title-break-mobile" />
-                      ) : null}
                     </span>
                   ))}
                 </span>

@@ -1,0 +1,154 @@
+# Deployment Recovery Checklist
+
+- [x] Confirm the current build script and deployment output contract; full-stack deployment now builds `dist/` with Vite and esbuild.
+- [x] Superseded by the full-stack conversion: the active Vite build generates the deployer-required `dist/` directory.
+- [x] Superseded by the full-stack conversion: static-export-only route settings were removed from the active runtime.
+- [x] Run type checking and production build; verify the full-stack `dist/` output and route assets exist.
+- [x] Save a new checkpoint after successful verification; checkpoint `858f8ed2` is saved and live.
+- [x] Resolve the full-stack upgrade conflicts while preserving the portfolio routes and vanilla interactions.
+- [x] Add a protected File Storage upload procedure using `storagePut` and persist file metadata in the database.
+- [x] Add an authenticated asset library UI for uploading and viewing stored portfolio media.
+- [x] Add Vitest coverage for the File Storage procedure and verify full-stack build/test flows.
+- [x] Restore the original portfolio experience in the active full-stack client, including home, admin, EPK, privacy, and 404 routes with vanilla interactions.
+- [x] Add Vitest coverage for successful asset upload/list flows with mocked storage and database helpers, then rerun the complete verification sequence.
+- [x] Load the legacy CSS and required head assets in the active full-stack client for preserved page presentation.
+- [x] Replace the router catch-all with the legacy 404 experience.
+- [x] Re-verify the active legacy pages after CSS and catch-all restoration.
+- [x] Open the full-stack preview and verify `/`, `/admin`, `/epk`, `/privacy`, and an unmatched route after the LegacyDocument CSS/head restoration.
+- [x] Confirm legacy CSS, fonts, and 404 catch-all behavior render without broken layout or missing styling.
+- [x] Inspect network and DOM evidence that `/legacy/style.css`, `/legacy/admin.css`, and the Google Fonts stylesheet load successfully on restored routes.
+- [x] Perform route-by-route visual verification for `/`, `/admin`, `/epk`, `/privacy`, and an unmatched path, documenting any layout or styling issues.
+- [x] Collect and document network/DOM evidence for stylesheet and Google Fonts loading on `/epk` and `/privacy`.
+- [x] Diagnose the opaque home-page `Script error.` and isolate the legacy or external source.
+- [x] Prevent duplicate or opaque external script failures while preserving home-page interactions.
+- [x] Verify the repaired home route and save a checkpoint; checkpoint `ab7f4e11` is saved and live.
+- [x] Add duplicate-load guards to the legacy script loader and re-verify the home route.
+- [x] Exercise key home interactions after the repair and confirm no console errors recur.
+- [x] Establish a premium electronic-artist visual direction that retains Akbar Nawasunda’s identity.
+- [x] Replace the legacy home shell with a cinematic, responsive artist-platform homepage.
+- [x] Add future-ready public modules for releases, videos, tour/event readiness, newsletter capture, and fan engagement.
+- [x] Build a content architecture that can evolve from static portfolio data to managed admin content.
+- [x] Preserve core music tools and validate the redesigned experience across desktop and mobile.
+- [x] Add a duplicate-safe, public fan-signal signup workflow backed by the database.
+- [x] Add database-backed artist content models and public read procedures for releases, videos, live status, and the current era.
+- [x] Add an owner-only content-management workflow and wire the homepage to managed content with loading, empty, and fallback states.
+- [ ] Verify the owner studio while authenticated as an admin, including content list and save/edit success paths.
+- [ ] Create managed artist-content records through the owner workflow and confirm the public homepage renders them instead of static fallback content.
+- [x] Make the managed-content loading and empty states explicit in the public homepage UI.
+- [ ] Complete owner-authenticated Studio publish verification when the user chooses to authorize a sign-in session.
+- [x] Initialize the managed-content database with verified existing release, visual, and live-status information for the public launch.
+- [x] Build dedicated Music and Release Vault pages with playable, platform-linked catalog discovery.
+- [x] Build a dedicated Visuals page for video premieres, visual archive, and social discovery pathways.
+- [x] Build a dedicated Live page with event-ready states, venue/ticket architecture, and Fan Signal conversion.
+- [x] Build a Community/Universe page with fan journeys, creator challenges, and future gated-drop pathways.
+- [x] Upgrade the EPK into a modern press and booking experience with downloadable materials and contact workflows.
+- [x] Expand the owner Studio information architecture for public content, fan leads, and asset operations.
+- [x] Create a cohesive cross-platform navigation, footer, route metadata, and responsive user journey across all modules.
+- [x] Fix the `/studio` route so the owner-management access screen resolves instead of the legacy 404 fallback.
+- [x] Add an accessible mobile navigation drawer for the Night Frequency public header.
+- [x] Harden the mobile navigation drawer with Escape, focus return, and outside-interaction closing behavior.
+- [x] Verify the mobile Night Frequency navigation and rerun the complete quality gate after the drawer change.
+- [x] Confirm checkpoint `35ec0d92` matches the configured GitHub `main` branch.
+- [x] Commit and push the current GitHub-first handoff metadata without creating another production checkpoint.
+- [x] Diagnose and fix the external deployment platform’s incorrect Next.js detection for the Vite plus Express application.
+- [x] Audit and reuse authentic logo, favicon, Open Graph image, and other suitable media from the original portfolio repository.
+- [x] Add real music and video embeds with graceful public fallback states to the Vercel-facing experience.
+- [x] Establish an owner-friendly, no-code content administration path compatible with the selected deployment architecture.
+- [x] Select and integrate an external CMS compatible with the Vercel static deployment for non-code artist-content management.
+- [x] Supersede the embedded `/admin` Studio approach with a standalone Sanity Studio configured for the supplied public project and dataset.
+- [x] Read published Sanity artist content in the public Vite routes with a static fallback when the CMS is empty or unavailable.
+- [x] Move the owner Sanity Studio into a standalone deployment so its editor bundle does not burden the Vercel public website.
+- [x] Configure the standalone Sanity Studio as a second Vercel project rooted at `cms/sanity-studio` for phone-friendly owner access.
+- [x] Fix the standalone Sanity Studio Vercel install command so the `sanity` build binary is available during deployment.
+- [x] Allow Sanity Studio’s required `esbuild` postinstall binary in the standalone pnpm deployment configuration.
+- [x] Confirm a sustainable free-tier CMS option or switch to an owner-approved GitHub-based alternative before relying on Sanity for routine content updates.
+- [x] Connect the published Sanity Artist Site document to the Vercel homepage hero and verify that owner edits replace its static fallback.
+- [x] Refine the public artist UI with higher-impact visual hierarchy, original-identity detail, responsive polish, and restrained motion across the entire public route system.
+- [x] Add a mobile-safe homepage navigation drawer and strengthen the hero’s signal hierarchy using the original artist identity.
+- [x] Add refined motion, tactile interaction states, and responsive card rhythm across the homepage without reducing readability.
+- [x] Correct the mobile homepage hero flow so status information and copy remain readable without overlap.
+- [x] Extend the refined visual system to Music, Visuals, Live, Universe, and EPK, then verify the consistent mobile and desktop experience.
+- [x] Add a unified all-platform listening hub using verified Akbar Nawasunda destination links.
+- [x] Add real artwork/thumbnail treatment to each supported music and video embed with safe visual fallbacks.
+- [x] Add a performant Akbar Nawasunda particle field and rotating vinyl component with the original AN mark at its center.
+- [x] Verify direct live navigation on the Vercel Music and Visuals routes after the corrected SPA rewrite deployment.
+- [ ] Verify direct live navigation on the remaining public SPA routes (`/`, `/live`, `/universe`, `/epk`, and `/lab`) after the Vercel deployment.
+- [ ] Replace remaining relative `/manus-storage/...` public-page asset references with Vercel-safe absolute asset URLs and rerun production build verification.
+- [ ] Document live-site verification results for every public route after the rewrite deployment.
+- [x] Improve the public visual treatment using the original artist identity before the next GitHub deployment.
+- [ ] Re-verify all public routes and remove remaining stale relative storage references before the next GitHub deployment.
+- [x] Hapus route `/lab`, seluruh tautan navigasi, dan seluruh CTA publik yang masih mengarah ke pengalaman LAB lama.
+- [x] Rancang ulang homepage dengan arah warna dan atmosfer yang lebih berkarakter untuk musik elektronik Akbar Nawasunda.
+- [x] Perkuat hierarki homepage untuk discovery musik, visual, live signal, dan konversi Fan Signal tanpa mengembalikan pengalaman LAB.
+- [x] Tambahkan atau perbarui tes navigasi/routing untuk memastikan LAB tidak lagi terekspos sebagai route publik.
+- [x] Verifikasi desktop, Android/mobile, type check, test, production build, serta deployment Vercel setelah perombakan homepage.
+- [x] Audit kelengkapan konten, fitur, dan operasi pada official artist website Akbar Nawasunda.
+- [x] Petakan celah kritis serta backlog prioritas untuk musik, live, press, fan CRM, dan CMS.
+- [x] Susun rekomendasi ide produk serta roadmap pengembangan bertahap untuk ekosistem artis musik.
+- [x] Tambahkan model konten dan CMS untuk artist biography, release story, press assets, booking profile, serta event/tour.
+- [x] Bangun halaman publik About / Biography, release detail, dan EPK yang dilengkapi status aman untuk materi asli yang belum tersedia.
+- [x] Tambahkan jalur booking yang terstruktur dan event-ready Live Signal tanpa mengarang jadwal, testimonial, atau detail acara.
+- [x] Tambahkan text scramble, reveal, dan particle motion reusable yang menghormati `prefers-reduced-motion` serta tetap ringan di Android.
+- [x] Bangun halaman detail rilisan publik berbasis CMS untuk artwork, release story, credits, dan official listening links dengan fallback yang jujur.
+- [x] Perluas tes untuk data content model, public routing, dan motion fallback; lalu verifikasi desktop, Android, build, serta deployment.
+- [x] Tambahkan tes regresi untuk fallback `prefers-reduced-motion` pada text scramble dan motion partikel/vinyl.
+- [x] Audit seluruh file relevan dari repository lama akbarnawasunda-portofolio untuk mengidentifikasi konten artis yang autentik.
+- [x] Ekstrak dan petakan bio, rilisan, kontak, kredensial, tautan, serta aset terverifikasi dari repository lama ke struktur platform baru.
+- [x] Terapkan data lama yang jelas sumbernya ke fallback konten publik atau CMS tanpa mengarang klaim baru.
+- [x] Tambahkan ikon SVG yang terarah dan aksesibel untuk Spotify, Apple Music, YouTube, SoundCloud, Instagram, Deezer, Amazon Music, Tidal, TikTok, serta X.
+- [x] Terapkan artwork per-rilisan yang tersedia dari sumber legacy/CMS pada homepage, kartu katalog, release detail, dan embed.
+- [x] Buat text scramble interaktif berdurasi 2–3 detik untuk heading/CTA terpilih di Home, Music, Visuals, Live, Universe, About, dan EPK.
+- [x] Pastikan halaman detail rilisan memakai artwork legacy/CMS yang sama dengan katalog, lalu verifikasi visualnya pada route publik.
+- [x] Tambahkan tes regresi serta verifikasi Android, reduced-motion, build, dan deployment untuk pengalaman visual baru.
+- [x] Tambahkan schema dan prosedur database untuk inquiry booking, remix, collaboration, dan licensing yang masuk dari publik.
+- [x] Bangun halaman inquiry publik dan form terstruktur dengan validasi, pilihan jenis kebutuhan, serta status submit yang jelas.
+- [x] Bangun halaman Licensing & Usage berbasis data legacy terverifikasi tanpa membuat klaim harga atau hak yang belum ditetapkan.
+- [x] Tambahkan CTA inquiry dari EPK, release detail, dan Universe serta operasi owner untuk membaca inquiry masuk.
+- [x] Tambahkan tes, verifikasi Android, build, dan deployment untuk alur conversion baru.
+- [x] Verifikasi form inquiry, licensing, EPK, detail rilisan, dan CTA kolaborasi pada viewport desktop sebelum menutup quality gate conversion.
+- [x] Audit dan sederhanakan penggunaan text scramble agar setiap jenis teks memiliki motion yang tepat.
+- [x] Bangun particle name-field yang menyebar dan menyatu membentuk teks AKBAR NAWASUNDA dengan fallback reduced-motion.
+- [x] Tambahkan ticker platform horizontal yang bergerak lembut dengan ikon SVG dan kontrol reduced-motion.
+- [x] Ganti aksen chartreuse/kuning dengan palet aksen baru yang lebih selaras dengan identitas elektronika malam Akbar Nawasunda.
+- [x] Audit serta sempurnakan detail visual/motion yang masih generik, lalu verifikasi desktop, Android, build, dan deployment.
+- [x] Audit semua embed musik/video yang gagal muncul dan identifikasi penyebab per-provider tanpa menghapus link resmi.
+- [x] Tambahkan fallback media yang stabil, informatif, dan tetap mengarahkan ke tautan resmi saat embed pihak ketiga diblokir.
+- [x] Ubah EPK dari daftar placeholder menjadi press kit yang siap dibaca, dibagikan, dan dihubungi tanpa mengarang materi yang belum tersedia.
+- [x] Hilangkan pola visual berulang yang terasa template/AI pada katalog, EPK, dan CTA mobile dengan keputusan editorial yang lebih spesifik.
+- [x] Verifikasi perbaikan di Android, test, production build, GitHub, dan Vercel.
+- [x] Audit data terverifikasi untuk narasi perjalanan DJ Akbar Remix ke Akbar Nawasunda pada AN Archive.
+- [x] Ubah halaman Universe menjadi AN Archive dengan artwork rilisan, genre, dan konteks artist tanpa foto press atau klaim baru.
+- [x] Tambahkan jalur resmi untuk release, remix/collaboration, dan booking dari AN Archive.
+- [x] Verifikasi AN Archive pada desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Audit copy dan motion pada seluruh rute publik untuk menandai teks generik, CTA berulang, dan animasi yang tidak menambah makna.
+- [x] Terapkan sistem copy ringkas: satu pesan utama, satu konteks faktual, dan satu aksi jelas per section publik.
+- [x] Kurangi efek dekoratif serta standardisasi motion menjadi transisi singkat, responsif, dan optional bagi reduced-motion.
+- [x] Verifikasi penyederhanaan pada desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Audit seluruh aksen cyan, surface gelap, gradient, dan CTA yang saat ini terasa seperti UI-tech generik.
+- [x] Terapkan palet editorial baru dengan aksen hemat, kontras aksesibel, dan kedalaman warna yang lebih material.
+- [x] Rebalance Home, katalog, form, EPK, navigasi, dan state interaktif agar tidak tampak seperti dashboard atau template developer.
+- [x] Verifikasi rework warna di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Verifikasi palet graphite–copper pada Visuals, Live, About, dan AN Archive di desktop serta Android, lalu dokumentasikan hasilnya.
+- [x] Audit penggunaan logo saat ini dan pilih satu motion mark yang layak dipicu pengguna, bukan autoplay dekoratif.
+- [x] Implementasikan motion logo singkat dengan fallback reduced-motion serta aman untuk Android.
+- [x] Verifikasi motion logo di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Audit motion mark RMX saat ini dan tetapkan batas jumlah partikel yang aman untuk desktop maupun Android.
+- [x] Ganti scan ringan dengan canvas particle dissolve-and-reform yang dipicu saat pengguna menekan mark RMX.
+- [x] Verifikasi runtime tap/click particle mark dan izin CORS asset RMX pada browser desktop serta emulasi Android 375 × 812 sebelum deployment.
+- [x] Tangkap bukti desktop dan emulasi Android bahwa particle RMX benar-benar menyebar lalu membentuk ulang artwork setelah interaksi.
+- [x] Verifikasi particle mark di desktop dan Android, lalu jalankan test, type check, build, GitHub, dan Vercel.
+- [x] Investigasi dan perbaiki particle mark RMX yang tidak terlihat berjalan saat kotak kecil ditekan di deployment live.
+- [x] Verifikasi ulang interaksi particle mark yang diperbaiki pada production desktop dan mobile, lalu dorong ke GitHub/Vercel.
+- [x] Hapus kartu kecil/gambar RMX sebagai elemen hero karena pendekatan tersebut tidak memenuhi arah particle logo yang diminta.
+- [x] Bangun particle hero murni berbasis pixel artwork RMX sehingga siluet logo terbentuk langsung dari titik-titik tanpa gambar logo yang terlihat.
+- [x] Buat interaksi form–dissolve–reform yang jelas pada particle hero, aman untuk Android, dan statis pada reduced-motion.
+- [x] Verifikasi visual serta runtime particle hero baru di desktop dan mobile, lalu dorong ke GitHub/Vercel.
+- [x] Unggah portrait resmi Akbar Nawasunda ke storage web sebagai aset hero yang aman untuk deployment.
+- [x] Jadikan portrait resmi visual utama homepage dengan crop responsif, fokus wajah yang terjaga, dan copy/CTA yang tetap terbaca.
+- [x] Pertahankan particle RMX sebagai layer hero yang terlihat jelas di atas foto tanpa kartu kecil atau benturan dengan wajah.
+- [x] Verifikasi homepage foto plus particle di desktop/mobile, jalankan quality gate, lalu dorong ke GitHub/Vercel.
+- [x] Perbaiki rewrite Vercel portrait resmi yang masih tertangkap fallback SPA sehingga production memuat gambar hero, bukan HTML.
+- [x] Ubah platform resmi menjadi grid kartu dengan ikon dan aksen warna yang mengikuti identitas masing-masing layanan.
+- [x] Perbaiki exposure portrait hero agar wajah terlihat lebih jelas di desktop dan mobile tanpa mengurangi keterbacaan copy atau particle RMX.
+- [ ] Dokumentasikan penggunaan portrait resmi yang saat ini hanya berada di homepage dan verifikasi visual pembaruan platform/hero.
+- [ ] Jalankan quality gate, dorong revisi platform dan portrait ke GitHub/Vercel, lalu uji production.
