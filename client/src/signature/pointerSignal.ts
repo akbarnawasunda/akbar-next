@@ -1,3 +1,4 @@
+import { phraseFor } from "./stagePhrases";
 import type { SignatureStore } from "./types";
 
 /**
@@ -13,6 +14,10 @@ import type { SignatureStore } from "./types";
 
 const INTERACTIVE_SELECTOR =
   "a[href], button, [role='button'], input, select, textarea, summary, [data-signal-interactive]";
+
+/** Satu jam untuk semua sinyal: sama dengan timestamp requestAnimationFrame. */
+const now = () =>
+  typeof performance !== "undefined" ? performance.now() : Date.now();
 
 export function attachPointerSignal(store: SignatureStore) {
   if (typeof window === "undefined") return () => undefined;
@@ -39,7 +44,10 @@ export function attachPointerSignal(store: SignatureStore) {
         signals.pointerVX * 0.6 + (event.clientX - previousX) * 0.4;
       signals.pointerVY =
         signals.pointerVY * 0.6 + (event.clientY - previousY) * 0.4;
-      signals.pointerMovedAt = event.timeStamp || Date.now();
+      // Jam yang sama dengan requestAnimationFrame. Dulu dipakai
+      // `event.timeStamp` lalu dibandingkan dengan `Date.now()` di engine —
+      // selisihnya 1,7e12 ms, jadi efek seret tidak pernah benar-benar aktif.
+      signals.pointerMovedAt = now();
     }
     signals.pointerX = event.clientX;
     signals.pointerY = event.clientY;
@@ -86,6 +94,10 @@ export function attachPointerSignal(store: SignatureStore) {
   };
 
   let scrollFrame = 0;
+  let lastScrollY = 0;
+  let lastScrollAt = now();
+  /** Sampel pertama hanya menyetel titik acuan, bukan kecepatan. */
+  let scrollPrimed = false;
   const readStage = () => {
     // Satu panggung per halaman. Diukur hanya saat scroll/resize yang sudah
     // dibatasi rAF, jadi tidak memicu layout tiap frame.
@@ -124,14 +136,43 @@ export function attachPointerSignal(store: SignatureStore) {
       visibility: eased * eased * (3 - 2 * eased),
       progress,
     };
+
+    // Frasa yang sedang disusun adalah state diskret: hanya berubah dua kali
+    // sepanjang jalur, jadi aman dikirim ke React (baris konteks ikut ganti).
+    const phrase = phraseFor(progress);
+    if (store.getSnapshot().stagePhrase !== phrase) {
+      store.patch({ stagePhrase: phrase });
+    }
   };
   const readScroll = () => {
     scrollFrame = 0;
     const y = window.scrollY || window.pageYOffset || 0;
+    const at = now();
+    const moved = y !== lastScrollY;
+
+    // Kecepatan gulir px/ms, dihaluskan EMA 0,15. Nilainya meluruh sendiri
+    // karena frame lanjutan tetap diukur beberapa saat setelah gulir
+    // berhenti — tanpa itu partikel akan terus didorong oleh angka basi.
+    const elapsed = Math.max(1, at - lastScrollAt);
+    const raw = scrollPrimed ? (y - lastScrollY) / elapsed : 0;
+    scrollPrimed = true;
+    signals.scrollVelocity += (raw - signals.scrollVelocity) * 0.15;
+    if (Math.abs(signals.scrollVelocity) < 0.0015) signals.scrollVelocity = 0;
+    lastScrollY = y;
+    lastScrollAt = at;
+
     signals.scrollY = y;
     const viewport = window.innerHeight || 1;
     signals.heroProgress = Math.max(0, Math.min(1, y / (viewport * 0.9)));
-    readStage();
+    // Rect panggung hanya berubah kalau halaman benar-benar bergeser; frame
+    // peluruhan tidak perlu membayar layout read lagi.
+    if (moved || !signals.stage) readStage();
+
+    // Terus ukur sampai kecepatannya habis, supaya dorongan partikel
+    // mereda mulus alih-alih berhenti mendadak di frame terakhir.
+    if (signals.scrollVelocity !== 0) {
+      scrollFrame = window.requestAnimationFrame(readScroll);
+    }
   };
   const onScroll = () => {
     if (scrollFrame) return;

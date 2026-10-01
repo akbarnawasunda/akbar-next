@@ -329,7 +329,10 @@ export function EnglishHome() {
           </div>
         </section>
 
-        <SignatureStage alsoKnownAs="Also known as DJ Akbar Remix and akbarnawasunda.my.id." />
+        <SignatureStage
+          lang="en"
+          alsoKnownAs="Also known as DJ Akbar Remix and akbarnawasunda.my.id."
+        />
 
         <section
           className="home-signal-deck"

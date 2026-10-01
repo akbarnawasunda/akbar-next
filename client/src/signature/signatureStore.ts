@@ -21,6 +21,7 @@ export const INITIAL_SNAPSHOT: SignatureSnapshot = {
   audio: { state: "idle", analyzable: false, track: null },
   frequency: { active: false, enabled: true, triggered: false },
   era: { index: 0, total: 0, id: "" },
+  stagePhrase: 0,
   fieldReady: false,
 };
 
@@ -36,6 +37,7 @@ function createSignals(): SignatureSignals {
     interactive: false,
     magnetic: false,
     scrollY: 0,
+    scrollVelocity: 0,
     heroProgress: 0,
     amplitude: 0,
     beat: 0,
