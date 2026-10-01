@@ -19,7 +19,7 @@ export function ParticleWordmark({ text }: Props) {
       navigator as Navigator & { connection?: { saveData?: boolean } }
     ).connection;
     const lowPower =
-      (navigator.hardwareConcurrency || 4) <= 4 ||
+      (navigator.hardwareConcurrency || 2) <= 2 ||
       connection?.saveData ||
       window.innerWidth < 768;
     if (reduced || lowPower) return;
