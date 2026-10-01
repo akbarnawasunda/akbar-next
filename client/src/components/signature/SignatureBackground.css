@@ -6,7 +6,9 @@
   pointer-events: none;
   opacity: 0;
   transition: opacity 600ms ease;
-  contain: strict;
+  /* Hanya layout/paint/style: `size` tidak dipakai supaya kanvas selalu
+     mewarisi tinggi viewport, termasuk saat bilah URL mobile berubah. */
+  contain: layout paint style;
 }
 
 .an-signature-field canvas {
@@ -15,8 +17,8 @@
   display: block;
 }
 
-.an-signature-field[data-signature-mode="wordmark"] { opacity: 0.8; }
-.an-signature-field[data-signature-mode="signal"] { opacity: 0.5; }
+.an-signature-field[data-signature-mode="wordmark"] { opacity: 1; }
+.an-signature-field[data-signature-mode="signal"] { opacity: 0.62; }
 .an-signature-field[data-signature-mode="dust"] { opacity: 0.34; }
 .an-signature-field[data-signature-mode="era"] { opacity: 0.42; }
 .an-signature-field[data-signature-mode="quiet"] { opacity: 0.26; }
@@ -24,9 +26,9 @@
 
 /* Perangkat lite memakai kerapatan rendah; turunkan juga intensitasnya agar
    teks tetap kontras di layar kecil. */
-.an-signature-field[data-signature-tier="lite"] { opacity: 0.4; }
+.an-signature-field[data-signature-tier="lite"] { opacity: 0.5; }
 .an-signature-field[data-signature-tier="lite"][data-signature-mode="wordmark"] {
-  opacity: 0.55;
+  opacity: 0.92;
 }
 
 @media (prefers-reduced-motion: reduce) {

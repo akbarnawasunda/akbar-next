@@ -36,7 +36,29 @@ type Point = {
 };
 
 const WORDMARK = ["AKBAR", "NAWASUNDA"];
+const WORDMARK_FONT = '"Clash Display", "General Sans", sans-serif';
 const TAU = Math.PI * 2;
+
+/** Mode yang menyusun huruf; butuh titik lebih banyak agar terbaca. */
+const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency"];
+
+function readToken(name: string, fallback: string) {
+  if (typeof window === "undefined") return fallback;
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+  return value || fallback;
+}
+
+function rgbaFrom(hex: string, alpha: number, fallback: string) {
+  const match = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+  if (!match) return fallback;
+  const value = parseInt(match[1], 16);
+  const r = (value >> 16) & 255;
+  const g = (value >> 8) & 255;
+  const b = value & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
 
 export type ParticleField = {
   resize: () => void;
@@ -64,67 +86,134 @@ export function createParticleField(
   let currentEra = -1;
   let frame = 0;
   let running = false;
+  let destroyed = false;
   let lastTime = 0;
   let frameCost = 4;
   let sweepEnergy = 0;
+  let formation = 0;
   let lastTransition: "idle" | "sweep" | "settle" = "idle";
 
-  const colors = [
-    "rgba(143,178,192,0.22)",
-    "rgba(143,178,192,0.38)",
-    "rgba(185,204,212,0.52)",
-    "rgba(236,234,229,0.66)",
+  // Warna diambil dari token tema (client/src/index.css) supaya palet
+  // signature tidak pernah menyimpang dari brand.
+  const paper = readToken("--paper", "#eceae5");
+  const acid = readToken("--acid", "#8fb2c0");
+
+  // Huruf harus benar-benar terbaca; mode ambient tetap tipis.
+  const textColors = [
+    rgbaFrom(acid, 0.42, "rgba(143,178,192,0.42)"),
+    rgbaFrom(acid, 0.62, "rgba(143,178,192,0.62)"),
+    rgbaFrom(paper, 0.6, "rgba(236,234,229,0.6)"),
+    rgbaFrom(paper, 0.88, "rgba(236,234,229,0.88)"),
+  ];
+  const ambientColors = [
+    rgbaFrom(acid, 0.2, "rgba(143,178,192,0.2)"),
+    rgbaFrom(acid, 0.34, "rgba(143,178,192,0.34)"),
+    rgbaFrom(paper, 0.4, "rgba(236,234,229,0.4)"),
+    rgbaFrom(paper, 0.6, "rgba(236,234,229,0.6)"),
   ];
 
   /* ---------------------------------------------------------------- targets */
 
-  function sampleTextTargets(text: string[], scale: number, centerY: number) {
-    const sampleWidth = Math.min(Math.ceil(width), 1400);
-    const sampleHeight = Math.min(Math.ceil(height), 900);
-    const ratio = sampleWidth / Math.max(1, width);
+  /**
+   * Raster wordmark lalu ambil piksel yang terisi sebagai target titik.
+   *
+   * Dua hal yang dulu salah dan diperbaiki di sini:
+   * 1. Koordinat Y ikut dibagi rasio lebar, jadi teks melayang keluar posisi
+   *    di layar yang rasionya tidak sama dengan kanvas sampel.
+   * 2. Ukuran font ditebak dari jumlah karakter, jadi di layar lebar teksnya
+   *    lebih lebar dari kanvas sampel dan huruf pinggirnya terpotong.
+   *    Sekarang font dipaskan dengan `measureText`.
+   */
+  function sampleTextTargets(
+    lines: string[],
+    widthRatio: number,
+    centerY: number,
+    wanted: number
+  ) {
+    const sampleWidth = Math.max(320, Math.min(Math.round(width), 1600));
+    const sampleHeight = Math.max(240, Math.min(Math.round(height), 1000));
+    const scaleX = width / sampleWidth;
+    const scaleY = height / sampleHeight;
+
     const offscreen = document.createElement("canvas");
     offscreen.width = sampleWidth;
     offscreen.height = sampleHeight;
     const sample = offscreen.getContext("2d", { willReadFrequently: true });
     if (!sample) return [];
 
-    const lines = text;
-    const fontSize = Math.min(
-      (sampleWidth * scale) / Math.max(...lines.map(line => line.length)) * 1.7,
-      (sampleHeight / lines.length) * 0.72
+    const setFont = (size: number) => {
+      sample.font = `700 ${size}px ${WORDMARK_FONT}`;
+    };
+    const spaced = sample as CanvasRenderingContext2D & {
+      letterSpacing?: string;
+    };
+    if ("letterSpacing" in spaced) spaced.letterSpacing = "0.02em";
+
+    const maxTextWidth = sampleWidth * widthRatio;
+    let fontSize = Math.min(
+      (sampleHeight / lines.length) * 0.78,
+      sampleWidth * 0.26
     );
+    setFont(fontSize);
+    const widest = Math.max(
+      1,
+      ...lines.map(line => sample.measureText(line).width)
+    );
+    if (widest > maxTextWidth) {
+      fontSize = Math.max(18, fontSize * (maxTextWidth / widest));
+      setFont(fontSize);
+    }
+
     sample.fillStyle = "#fff";
     sample.textAlign = "center";
     sample.textBaseline = "middle";
-    sample.font = `700 ${Math.max(18, fontSize)}px "Clash Display", "General Sans", sans-serif`;
-    const lineHeight = Math.max(18, fontSize) * 1.02;
+    const lineHeight = fontSize * 1.04;
     const top = sampleHeight * centerY - ((lines.length - 1) * lineHeight) / 2;
     lines.forEach((line, index) => {
       sample.fillText(line, sampleWidth / 2, top + index * lineHeight);
     });
 
     const pixels = sample.getImageData(0, 0, sampleWidth, sampleHeight).data;
-    const targets: { x: number; y: number }[] = [];
-    const step = sampleWidth > 900 ? 3 : 2;
-    for (let y = 0; y < sampleHeight; y += step) {
-      for (let x = 0; x < sampleWidth; x += step) {
-        if (pixels[(y * sampleWidth + x) * 4 + 3] > 110) {
-          targets.push({ x: x / ratio, y: y / ratio });
+
+    // Langkah sampling disesuaikan agar jumlah target kira-kira sebanyak
+    // titik yang tersedia: terlalu rapat boros, terlalu renggang tidak
+    // terbaca.
+    const collect = (step: number) => {
+      const targets: { x: number; y: number }[] = [];
+      for (let y = 0; y < sampleHeight; y += step) {
+        for (let x = 0; x < sampleWidth; x += step) {
+          if (pixels[(y * sampleWidth + x) * 4 + 3] > 110) {
+            targets.push({ x: x * scaleX, y: y * scaleY });
+          }
         }
       }
+      return targets;
+    };
+
+    let step = 2;
+    let targets = collect(step);
+    while (targets.length > wanted * 2.4 && step < 7) {
+      step += 1;
+      targets = collect(step);
     }
     return targets;
   }
 
-  function targetsFor(mode: SignatureFieldMode, index: number, total: number) {
+  function targetsFor(
+    mode: SignatureFieldMode,
+    index: number,
+    total: number,
+    wanted: number
+  ) {
     const compact = width < 900;
     switch (mode) {
       case "wordmark":
       case "frequency":
         return sampleTextTargets(
           compact ? WORDMARK : [WORDMARK.join(" ")],
-          compact ? 0.92 : 1.05,
-          compact ? 0.33 : 0.4
+          compact ? 0.86 : 0.82,
+          compact ? 0.36 : 0.44,
+          wanted
         );
       case "signal": {
         const list: { x: number; y: number }[] = [];
@@ -162,19 +251,34 @@ export function createParticleField(
     }
   }
 
+  /** Jumlah titik untuk mode ini. Huruf butuh massa, ambient tidak. */
+  function countFor(mode: SignatureFieldMode, capability: SignatureCapability) {
+    const base = particleBudget(capability, width * height);
+    if (mode === "quiet") return Math.round(base * 0.35);
+    if (!TEXT_MODES.includes(mode)) return base;
+    // Wordmark di layar kecil tetap harus terbaca: fillRect sangat murah,
+    // jadi lantai kerapatannya dinaikkan ketimbang mematikan efeknya.
+    const ceiling = capability.tier === "lite" ? 1100 : 2600;
+    const density = capability.tier === "lite" ? 330 : 420;
+    return Math.max(base, Math.min(ceiling, Math.round((width * height) / density)));
+  }
+
   function buildPoints() {
     const state = readState();
-    const area = width * height;
-    budget = particleBudget(state.capability, area);
-    const quiet = state.mode === "quiet";
-    const count = quiet ? Math.round(budget * 0.35) : budget;
-    const targets = targetsFor(state.mode, state.era.index, state.era.total);
+    const count = countFor(state.mode, state.capability);
+    budget = count;
+    const targets = targetsFor(
+      state.mode,
+      state.era.index,
+      state.era.total,
+      count
+    );
     const next: Point[] = [];
     for (let i = 0; i < count; i++) {
       const target = targets.length
         ? targets[Math.floor((i / count) * targets.length) % targets.length]
         : { x: Math.random() * width, y: Math.random() * height };
-      const jitter = targets.length ? 1.4 : 0;
+      const jitter = targets.length ? 2.2 : 0;
       next.push({
         x: Math.random() * width,
         y: Math.random() * height,
@@ -190,17 +294,22 @@ export function createParticleField(
     activeCount = next.length;
     currentMode = state.mode;
     currentEra = state.era.index;
+    formation = 1;
   }
 
   function retarget() {
     const state = readState();
-    const targets = targetsFor(state.mode, state.era.index, state.era.total);
-    const quiet = state.mode === "quiet";
-    const desired = quiet ? Math.round(budget * 0.35) : budget;
-    if (Math.abs(desired - points.length) > budget * 0.2) {
+    const desired = countFor(state.mode, state.capability);
+    if (Math.abs(desired - points.length) > Math.max(1, desired * 0.2)) {
       buildPoints();
       return;
     }
+    const targets = targetsFor(
+      state.mode,
+      state.era.index,
+      state.era.total,
+      desired
+    );
     points.forEach((point, index) => {
       const target = targets.length
         ? targets[Math.floor((index / points.length) * targets.length) % targets.length]
@@ -208,15 +317,17 @@ export function createParticleField(
       point.tx = target.x;
       point.ty = target.y;
     });
+    budget = desired;
     currentMode = state.mode;
     currentEra = state.era.index;
     activeCount = Math.min(points.length, desired);
+    formation = 0.6;
   }
 
   /* ------------------------------------------------------------------ frame */
 
   function drawGrid(amplitude: number) {
-    ctx.strokeStyle = `rgba(143,178,192,${0.06 + amplitude * 0.1})`;
+    ctx.strokeStyle = rgbaFrom(acid, 0.06 + amplitude * 0.1, "rgba(143,178,192,0.1)");
     ctx.lineWidth = 1;
     const gap = Math.max(48, width / 18);
     ctx.beginPath();
@@ -262,10 +373,14 @@ export function createParticleField(
     const frequency = state.frequency;
     if (frequency) drawGrid(amplitude);
 
+    const textMode = TEXT_MODES.includes(state.mode);
+    const colors = textMode ? textColors : ambientColors;
     const pointerX = signals.pointerActive ? signals.pointerX : -9999;
     const pointerY = signals.pointerActive ? signals.pointerY : -9999;
     const repelRadius = state.capability.tier === "lite" ? 90 : 130;
-    const spring = 0.055 + amplitude * 0.02;
+    // Saat baru terbentuk, tarikan sedikit lebih lembut supaya titik terlihat
+    // berkumpul menjadi huruf, bukan muncul begitu saja.
+    const spring = (0.055 + amplitude * 0.02) * (1 - formation * 0.55);
     const damping = 0.82;
     const disperse = state.mode === "wordmark" ? hero : hero * 0.4;
     const sweep = sweepEnergy;
@@ -273,7 +388,8 @@ export function createParticleField(
     // Burst dari tap/drag/klik: satu kali impuls radial.
     const bursts = signals.bursts.splice(0, signals.bursts.length);
 
-    const size = state.capability.tier === "lite" ? 1.6 : 1.35;
+    const base = state.capability.tier === "lite" ? 1.9 : 1.7;
+    const size = textMode ? base : base * 0.85;
     let bucket = -1;
     const limit = Math.min(activeCount, points.length);
     const visible = Math.max(
@@ -342,6 +458,7 @@ export function createParticleField(
       }
     }
 
+    if (formation > 0.001) formation *= 0.965;
     if (sweepEnergy > 0.001) sweepEnergy *= 0.9;
 
     const cost = performance.now() - started;
@@ -380,8 +497,8 @@ export function createParticleField(
   function resize() {
     const rect = canvas.getBoundingClientRect();
     dpr = Math.min(window.devicePixelRatio || 1, 1.5);
-    width = Math.max(1, rect.width);
-    height = Math.max(1, rect.height);
+    width = Math.max(1, rect.width || window.innerWidth);
+    height = Math.max(1, rect.height || window.innerHeight);
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -413,9 +530,26 @@ export function createParticleField(
   window.addEventListener("orientationchange", onResize, { passive: true });
   resize();
 
+  // Wordmark disampling dari font brand. Kalau font-nya belum selesai dimuat,
+  // sampel pertama memakai fallback sistem — susun ulang begitu font siap.
+  const fonts = (document as Document & { fonts?: FontFaceSet }).fonts;
+  if (fonts) {
+    const resample = () => {
+      if (destroyed) return;
+      if (!TEXT_MODES.includes(readState().mode)) return;
+      buildPoints();
+    };
+    void fonts
+      .load(`700 120px ${WORDMARK_FONT}`)
+      .then(resample)
+      .catch(() => undefined);
+    void fonts.ready.then(resample).catch(() => undefined);
+  }
+
   return {
     resize,
     destroy() {
+      destroyed = true;
       stop();
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("resize", onResize);

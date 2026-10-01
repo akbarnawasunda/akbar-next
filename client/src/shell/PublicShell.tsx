@@ -27,16 +27,21 @@ function ShellSurfaces({ lang }: { lang: "id" | "en" }) {
   const playerState = useSignatureState(snapshot => snapshot.audio.state);
   const mode = useSignatureState(snapshot => snapshot.route.mode);
   const frequency = useSignatureState(snapshot => snapshot.frequency.active);
+  const tier = useSignatureState(snapshot => snapshot.capability.tier);
 
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.signatureMode = frequency ? "frequency" : mode;
     root.dataset.playerState = playerState;
+    // Dipakai untuk diagnosa cepat: `off` berarti runtime menghormati
+    // reduced motion / hemat data / perangkat sangat lemah.
+    root.dataset.signatureTier = tier;
     return () => {
       delete root.dataset.signatureMode;
       delete root.dataset.playerState;
+      delete root.dataset.signatureTier;
     };
-  }, [frequency, mode, playerState]);
+  }, [frequency, mode, playerState, tier]);
 
   return (
     <>

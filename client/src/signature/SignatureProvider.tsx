@@ -88,8 +88,8 @@ export function SignatureProvider({ children }: { children: ReactNode }) {
         requestIdleCallback?: (cb: () => void, options?: { timeout: number }) => number;
       }
     ).requestIdleCallback;
-    const timer = window.setTimeout(ready, 1400);
-    const idleId = idle ? idle(ready, { timeout: 2200 }) : undefined;
+    const timer = window.setTimeout(ready, 600);
+    const idleId = idle ? idle(ready, { timeout: 900 }) : undefined;
     return () => {
       cancelled = true;
       window.clearTimeout(timer);
