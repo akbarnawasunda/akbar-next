@@ -1,5 +1,8 @@
 packages:
   - "."
-allowBuilds:
-  esbuild: true
-  unrs-resolver: true
+
+# Catatan: daftar paket yang boleh menjalankan install script TIDAK ditulis di
+# sini. pnpm 10.4 (versi di field "packageManager") hanya membaca setelan itu
+# dari field "pnpm.onlyBuiltDependencies" di package.json — kunci di berkas ini
+# diabaikan diam-diam, dan itulah yang dulu membuat build Vercel tetap
+# mencetak "Ignored build scripts: esbuild".
