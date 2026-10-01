@@ -2,9 +2,9 @@ name: Website quality gate
 
 on:
   push:
-    branches: [main]
+    branches: [main, "arena/**"]
   pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -24,7 +24,8 @@ jobs:
           node-version: 24
 
       - name: Enable pnpm
-        run: corepack enable && corepack prepare pnpm@10.4.1 --activate
+        # Versi pnpm diambil dari field "packageManager" di package.json.
+        run: corepack enable
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
