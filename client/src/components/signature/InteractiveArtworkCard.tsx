@@ -1,5 +1,6 @@
 import { ArrowUpRight, Play, Square } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Link } from "wouter";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { useSignatureRuntime, useSignatureState } from "@/signature/useSignature";
 import "./InteractiveArtworkCard.css";
@@ -158,12 +159,22 @@ export function InteractiveArtworkCard({
             </button>
           ) : null}
 
-          {href ? (
+          {href && href.startsWith("/") ? (
+            // Tautan internal lewat router yang sama dengan sisa situs, jadi
+            // transisi rute (dan partikelnya) tetap berjalan.
+            <Link
+              className="an-artwork-card-link"
+              href={href}
+              data-signal-interactive
+            >
+              {openLabel || "BUKA"} <ArrowUpRight size={13} aria-hidden="true" />
+            </Link>
+          ) : href ? (
             <a
               className="an-artwork-card-link"
               href={href}
-              target={href.startsWith("http") ? "_blank" : undefined}
-              rel={href.startsWith("http") ? "noreferrer" : undefined}
+              target="_blank"
+              rel="noreferrer"
               data-signal-interactive
             >
               {openLabel || "BUKA"} <ArrowUpRight size={13} aria-hidden="true" />

@@ -10,6 +10,8 @@
    berganti; posisinya dibaca runtime sebagai progres 0..1. */
 .an-signature-stage-track {
   position: relative;
+  /* Tiga kata butuh ruang gulir, tapi jangan sampai halaman terasa
+     disandera. Di layar kecil jalurnya dipendekkan (lihat media query). */
   min-height: 240vh;
 }
 
@@ -94,9 +96,40 @@
   color: var(--mute);
 }
 
+.an-signature-stage-word span {
+  display: inline-block;
+  max-width: 100%;
+  /* Nama panjang tidak boleh mendorong layout melebar di layar 320px. */
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .an-signature-stage-track {
+    min-height: 200vh;
+  }
+}
+
 @media (max-width: 640px) {
+  .an-signature-stage-track {
+    min-height: 170vh;
+  }
+  .an-signature-stage-sticky {
+    gap: 12px;
+    padding-block: clamp(28px, 5vh, 56px);
+  }
   .an-signature-stage-field {
-    min-height: clamp(180px, 32vh, 300px);
+    min-height: clamp(170px, 30vh, 280px);
+  }
+  .an-signature-stage-head {
+    font-size: 0.52rem;
+    letter-spacing: 0.18em;
+  }
+}
+
+/* Layar sangat lebar: wordmark tetap punya margin, tidak menempel tepi. */
+@media (min-width: 1600px) {
+  .an-signature-stage-word {
+    font-size: clamp(5rem, 8vw, 10rem);
   }
 }
 

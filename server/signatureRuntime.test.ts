@@ -261,6 +261,22 @@ describe("kontrak runtime yang tidak muncul di HTML", () => {
     expect(particleBudget({ ...base, tier: "off" }, 1440 * 900)).toBe(0);
   });
 
+  it("meruntuhkan jalur panggung saat efeknya tidak jalan", () => {
+    // Aturan tinggi jalur hanya hidup di CSS; kalau runtuhnya hilang,
+    // pengguna reduced motion harus menggulir dua layar kosong.
+    const css = source("client/src/components/signature/SignatureStage.css");
+    expect(css).toMatch(
+      /\.an-signature-stage\[data-live="false"\] \.an-signature-stage-track \{\s*min-height: 0;/
+    );
+    expect(css).toMatch(
+      /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.an-signature-stage-track \{\s*min-height: 0;/
+    );
+    // Layar kecil tidak boleh kebagian jalur sepanjang desktop.
+    expect(css).toMatch(/@media \(max-width: 640px\)[\s\S]*?min-height: 170vh;/);
+    // Sticky memakai svh supaya bilah URL mobile tidak memotong panggung.
+    expect(css).toContain("min-height: 100svh");
+  });
+
   it("memakai metadata rute bersama untuk label tirai", () => {
     expect(routeInfo("/music").label).toBe("MUSIK");
     expect(routeInfo("/en/music").label).toBe("MUSIC");

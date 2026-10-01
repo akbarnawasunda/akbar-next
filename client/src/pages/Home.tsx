@@ -936,6 +936,7 @@ export default function Home() {
 
           <FanSignalSection
             source={FAN_SIGNAL_SOURCES.home}
+            anchorId="fan-signal"
             indexLabel="NEWS"
             eyebrow="KABAR TERBARU"
             title={
