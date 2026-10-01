@@ -12,6 +12,7 @@ import {
   SignalHeading,
   SignalIndex,
 } from "@/components/signature/SignalType";
+import { SignatureStage } from "@/components/signature/SignatureStage";
 import { publicEras } from "@/content/eras";
 import {
   ArrowLeft,
@@ -277,7 +278,7 @@ export function EnglishHome() {
             />
           </div>
 
-          <div className="hero-copy" data-signal-shield>
+          <div className="hero-copy">
             <p className="eyebrow">
               <span /> AKBAR NAWASUNDA
             </p>
@@ -328,6 +329,12 @@ export function EnglishHome() {
             </div>
           </div>
         </section>
+
+        <SignatureStage
+          index="00 — SIGNATURE"
+          caption="NIGHT FREQUENCY"
+          note="The name is drawn by thousands of points that react to your cursor, your touch, and the scroll. Move the pointer across it to break the particles apart."
+        />
 
         <section
           className="home-signal-deck"

@@ -43,6 +43,7 @@ import {
   videos,
   youtubeThumbnail,
 } from "@/content/artistPlatform";
+import { SignatureStage } from "@/components/signature/SignatureStage";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
 
@@ -367,7 +368,7 @@ export default function Home() {
               />
             </picture>
 
-            <div className="hero-copy" data-signal-shield>
+            <div className="hero-copy">
               <p className="eyebrow">
                 <span /> {heroKicker}
               </p>
@@ -425,6 +426,12 @@ export default function Home() {
               <ArrowDownRight size={14} />
             </a>
           </section>
+
+          <SignatureStage
+            index="00 — SIGNATURE"
+            caption="NIGHT FREQUENCY"
+            note="Nama ini disusun ribuan titik yang bereaksi pada kursor, sentuhan, dan gulir halaman. Gerakkan penunjuk di atasnya untuk membelah partikelnya."
+          />
 
           <EditorialSection
             id="signal"

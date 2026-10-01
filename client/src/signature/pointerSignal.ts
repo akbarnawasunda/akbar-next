@@ -73,24 +73,31 @@ export function attachPointerSignal(store: SignatureStore) {
   };
 
   let scrollFrame = 0;
-  const readShield = () => {
-    // Satu elemen per halaman (judul hero). Diukur hanya saat scroll/resize
-    // yang sudah dibatasi rAF, jadi tidak memicu layout tiap frame.
-    const element = document.querySelector("[data-signal-shield]");
+  const readStage = () => {
+    // Satu panggung per halaman. Diukur hanya saat scroll/resize yang sudah
+    // dibatasi rAF, jadi tidak memicu layout tiap frame.
+    const element = document.querySelector("[data-signal-stage]");
     if (!element) {
-      signals.shield = null;
+      signals.stage = null;
       return;
     }
     const rect = element.getBoundingClientRect();
     if (!rect.width || !rect.height) {
-      signals.shield = null;
+      signals.stage = null;
       return;
     }
-    signals.shield = {
+    const viewport = window.innerHeight || 1;
+    const center = rect.top + rect.height / 2;
+    const span = Math.max(1, viewport * 0.5 + rect.height * 0.5);
+    const raw = 1 - Math.abs(center - viewport / 2) / span;
+    // Tahan penuh selama panggung masih memenuhi layar, lalu turun mulus.
+    const eased = Math.max(0, Math.min(1, raw * 1.45));
+    signals.stage = {
       x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2,
+      y: center,
       w: rect.width,
       h: rect.height,
+      visibility: eased * eased * (3 - 2 * eased),
     };
   };
   const readScroll = () => {
@@ -99,7 +106,7 @@ export function attachPointerSignal(store: SignatureStore) {
     signals.scrollY = y;
     const viewport = window.innerHeight || 1;
     signals.heroProgress = Math.max(0, Math.min(1, y / (viewport * 0.9)));
-    readShield();
+    readStage();
   };
   const onScroll = () => {
     if (scrollFrame) return;

@@ -153,7 +153,7 @@ function capability(tier: SignatureCapability["tier"]): SignatureCapability {
   };
 }
 
-function signalsStub(): SignatureSignals {
+function signalsStub(stage: SignatureSignals["stage"] = null): SignatureSignals {
   return {
     pointerX: -9999,
     pointerY: -9999,
@@ -166,7 +166,7 @@ function signalsStub(): SignatureSignals {
     amplitude: 0,
     beat: 0,
     bursts: [],
-    shield: null,
+    stage,
   };
 }
 
@@ -180,12 +180,13 @@ afterEach(() => {
 function runWordmark(
   viewportWidth: number,
   viewportHeight: number,
-  tier: SignatureCapability["tier"] = "full"
+  tier: SignatureCapability["tier"] = "full",
+  stage: SignatureSignals["stage"] = null
 ) {
   const dom = setupDom(viewportWidth, viewportHeight);
   const field = createParticleField(
     dom.canvas as unknown as HTMLCanvasElement,
-    signalsStub(),
+    signalsStub(stage),
     () => ({
       mode: "wordmark" as const,
       capability: capability(tier),
@@ -268,6 +269,31 @@ describe("particle field", () => {
       point => point.y > 780 * 0.2 && point.y < 780 * 0.6
     );
     expect(band.length / dom.drawn.length).toBeGreaterThan(0.9);
+  });
+
+  it("menyusun wordmark di dalam panggung, bukan di tengah layar", () => {
+    // Panggung setinggi 360px yang pusatnya ada di 70% tinggi viewport.
+    const stage = {
+      x: 720,
+      y: 630,
+      w: 1200,
+      h: 360,
+      visibility: 1,
+    };
+    const dom = runWordmark(1440, 900, "full", stage);
+
+    const inside = dom.drawn.filter(
+      point =>
+        point.x > stage.x - stage.w / 2 - 8 &&
+        point.x < stage.x + stage.w / 2 + 8 &&
+        point.y > stage.y - stage.h / 2 - 8 &&
+        point.y < stage.y + stage.h / 2 + 8
+    );
+    expect(inside.length / dom.drawn.length).toBeGreaterThan(0.9);
+
+    // Area judul hero (sepertiga atas layar) harus bersih.
+    const overTitle = dom.drawn.filter(point => point.y < 300);
+    expect(overTitle.length / dom.drawn.length).toBeLessThan(0.02);
   });
 
   it("tidak menggambar apa pun saat tier off", () => {

@@ -29,6 +29,7 @@ type Point = {
   y: number;
   vx: number;
   vy: number;
+  /** Target dalam koordinat panggung (atau viewport bila tanpa panggung). */
   tx: number;
   ty: number;
   seed: number;
@@ -96,6 +97,10 @@ export function createParticleField(
   let frameCost = 4;
   let sweepEnergy = 0;
   let formationStart = -1;
+  let stageOffsetX = 0;
+  let stageOffsetY = 0;
+  let stageWidth = 0;
+  let stageHeight = 0;
   let lastTransition: "idle" | "sweep" | "settle" = "idle";
 
   // Warna diambil dari token tema (client/src/index.css) supaya palet
@@ -105,9 +110,9 @@ export function createParticleField(
 
   // Huruf harus benar-benar terbaca; mode ambient tetap tipis.
   const textColors = [
-    rgbaFrom(acid, 0.55, "rgba(143,178,192,0.55)"),
-    rgbaFrom(acid, 0.78, "rgba(143,178,192,0.78)"),
-    rgbaFrom(paper, 0.74, "rgba(236,234,229,0.74)"),
+    rgbaFrom(acid, 0.68, "rgba(143,178,192,0.68)"),
+    rgbaFrom(acid, 0.9, "rgba(143,178,192,0.9)"),
+    rgbaFrom(paper, 0.86, "rgba(236,234,229,0.86)"),
     rgbaFrom(paper, 1, "rgba(236,234,229,1)"),
   ];
   const ambientColors = [
@@ -133,12 +138,14 @@ export function createParticleField(
     lines: string[],
     widthRatio: number,
     centerY: number,
-    wanted: number
+    wanted: number,
+    boxWidth = width,
+    boxHeight = height
   ) {
-    const sampleWidth = Math.max(320, Math.min(Math.round(width), 1600));
-    const sampleHeight = Math.max(240, Math.min(Math.round(height), 1000));
-    const scaleX = width / sampleWidth;
-    const scaleY = height / sampleHeight;
+    const sampleWidth = Math.max(320, Math.min(Math.round(boxWidth), 1600));
+    const sampleHeight = Math.max(200, Math.min(Math.round(boxHeight), 1000));
+    const scaleX = boxWidth / sampleWidth;
+    const scaleY = boxHeight / sampleHeight;
 
     const offscreen = document.createElement("canvas");
     offscreen.width = sampleWidth;
@@ -210,16 +217,24 @@ export function createParticleField(
     total: number,
     wanted: number
   ) {
-    const compact = width < 900;
+    const stage = signals.stage;
     switch (mode) {
       case "wordmark":
-      case "frequency":
+      case "frequency": {
+        // Ada panggung khusus → wordmark disusun di dalam kotak itu, dalam
+        // koordinat lokal panggung, jadi tidak pernah menimpa judul hero.
+        const boxWidth = stage ? stage.w : width;
+        const boxHeight = stage ? stage.h : height;
+        const compact = boxWidth < 900;
         return sampleTextTargets(
           compact ? WORDMARK : [WORDMARK.join(" ")],
-          compact ? 0.86 : 0.82,
-          compact ? 0.36 : 0.44,
-          wanted
+          compact ? 0.92 : 0.9,
+          stage ? 0.5 : compact ? 0.36 : 0.44,
+          wanted,
+          boxWidth,
+          boxHeight
         );
+      }
       case "signal": {
         const list: { x: number; y: number }[] = [];
         const baseline = height * 0.46;
@@ -279,6 +294,12 @@ export function createParticleField(
       count
     );
     const textMode = TEXT_MODES.includes(state.mode);
+    const stage = signals.stage;
+    const anchored = textMode && Boolean(stage);
+    stageWidth = stage ? stage.w : 0;
+    stageHeight = stage ? stage.h : 0;
+    stageOffsetX = stage ? stage.x - stage.w / 2 : 0;
+    stageOffsetY = stage ? stage.y - stage.h / 2 : 0;
     const next: Point[] = [];
     const radius = Math.max(width, height);
     for (let i = 0; i < count; i++) {
@@ -291,9 +312,11 @@ export function createParticleField(
       // besar di halaman dalam.
       const angle = Math.random() * TAU;
       const distance = radius * (0.62 + Math.random() * 0.5);
+      const originX = anchored ? stageOffsetX + stageWidth / 2 : width / 2;
+      const originY = anchored ? stageOffsetY + stageHeight / 2 : height / 2;
       next.push({
-        x: textMode ? width / 2 + Math.cos(angle) * distance : Math.random() * width,
-        y: textMode ? height / 2 + Math.sin(angle) * distance : Math.random() * height,
+        x: textMode ? originX + Math.cos(angle) * distance : Math.random() * width,
+        y: textMode ? originY + Math.sin(angle) * distance : Math.random() * height,
         vx: 0,
         vy: 0,
         tx: target.x + (Math.random() - 0.5) * jitter,
@@ -330,6 +353,9 @@ export function createParticleField(
       point.tx = target.x;
       point.ty = target.y;
     });
+    const stage = signals.stage;
+    stageWidth = stage ? stage.w : 0;
+    stageHeight = stage ? stage.h : 0;
     budget = desired;
     currentMode = state.mode;
     currentEra = state.era.index;
@@ -388,6 +414,41 @@ export function createParticleField(
 
     const textMode = TEXT_MODES.includes(state.mode);
     const colors = textMode ? textColors : ambientColors;
+    const stage = signals.stage;
+    const anchored = textMode && Boolean(stage);
+
+    if (anchored && stage) {
+      // Panggung berubah ukuran (resize / layout) → susun ulang hurufnya.
+      if (
+        Math.abs(stage.w - stageWidth) > 24 ||
+        Math.abs(stage.h - stageHeight) > 24
+      ) {
+        buildPoints();
+      }
+      const nextX = stage.x - stage.w / 2;
+      const nextY = stage.y - stage.h / 2;
+      const shiftX = nextX - stageOffsetX;
+      const shiftY = nextY - stageOffsetY;
+      // Titik ikut bergerak bersama panggung saat halaman digulir, jadi
+      // wordmark terkunci di sectionnya, bukan tertinggal di belakang.
+      if (shiftX || shiftY) {
+        for (let i = 0; i < points.length; i++) {
+          points[i].x += shiftX;
+          points[i].y += shiftY;
+        }
+        stageOffsetX = nextX;
+        stageOffsetY = nextY;
+      }
+      // Panggung sudah jauh dari layar: tidak ada gunanya menggambar.
+      if (stage.visibility <= 0.02) {
+        frame = requestAnimationFrame(step);
+        return;
+      }
+    } else {
+      stageOffsetX = 0;
+      stageOffsetY = 0;
+    }
+
     if (formationStart < 0) formationStart = time;
     const formation = Math.max(
       0,
@@ -398,14 +459,20 @@ export function createParticleField(
     const repelRadius = state.capability.tier === "lite" ? 90 : 130;
     const spring = 0.055 + amplitude * 0.02;
     const damping = 0.82;
-    const disperse = state.mode === "wordmark" ? hero : hero * 0.4;
+    // Dengan panggung, "buyar" mengikuti posisi panggung di layar; tanpa
+    // panggung tetap mengikuti progres hero seperti sebelumnya.
+    const disperse = anchored && stage
+      ? (1 - stage.visibility) * 0.85
+      : state.mode === "wordmark"
+        ? hero
+        : hero * 0.4;
     const sweep = sweepEnergy;
 
     // Burst dari tap/drag/klik: satu kali impuls radial.
     const bursts = signals.bursts.splice(0, signals.bursts.length);
 
-    const base = state.capability.tier === "lite" ? 2.1 : 2;
-    const size = textMode ? base : base * 0.7;
+    const base = state.capability.tier === "lite" ? 2.6 : 2.5;
+    const size = textMode ? base : base * 0.56;
     let bucket = -1;
     const limit = Math.min(activeCount, points.length);
     const visible = Math.max(
@@ -420,7 +487,7 @@ export function createParticleField(
       ctx.fillStyle = colors[b];
       // Satu dari empat kelompok sedikit lebih besar supaya huruf punya
       // "inti" yang terbaca, bukan kabut rata.
-      const dotSize = b === colors.length - 1 ? size + 0.7 : size;
+      const dotSize = b === colors.length - 1 ? size + 0.9 : size;
       bucket = b;
       for (let i = 0; i < visible; i++) {
         const point = points[i];
@@ -428,9 +495,9 @@ export function createParticleField(
 
         const wobble = frequency ? 2.4 + amplitude * 9 : 1.6 + amplitude * 3.4;
         let targetX =
-          point.tx + Math.cos(time * 0.0006 + point.seed) * wobble;
+          point.tx + stageOffsetX + Math.cos(time * 0.0006 + point.seed) * wobble;
         let targetY =
-          point.ty + Math.sin(time * 0.0007 + point.seed) * wobble;
+          point.ty + stageOffsetY + Math.sin(time * 0.0007 + point.seed) * wobble;
 
         if (disperse > 0.01) {
           const spreadX = (point.seed / TAU - 0.5) * width * 0.9;
@@ -490,28 +557,6 @@ export function createParticleField(
     }
 
     ctx.globalAlpha = 1;
-
-    // Perisai judul: partikel memudar lembut di area teks hero supaya
-    // headline (yang juga dibaca mesin pencari dan screen reader) tetap
-    // kontras. Satu gradient per frame, tanpa membaca DOM di sini.
-    const shield = signals.shield;
-    if (textMode && shield && disperse < 0.9) {
-      const radius = Math.max(shield.w, shield.h) * 0.62;
-      const squeeze = Math.max(0.28, Math.min(2.6, shield.h / shield.w));
-      const fade = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius);
-      fade.addColorStop(0, "rgba(0,0,0,0.95)");
-      fade.addColorStop(0.62, "rgba(0,0,0,0.78)");
-      fade.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.save();
-      ctx.globalCompositeOperation = "destination-out";
-      ctx.translate(shield.x, shield.y);
-      ctx.scale(1, squeeze);
-      ctx.fillStyle = fade;
-      ctx.beginPath();
-      ctx.arc(0, 0, radius, 0, TAU);
-      ctx.fill();
-      ctx.restore();
-    }
 
     if (sweepEnergy > 0.001) sweepEnergy *= 0.9;
 

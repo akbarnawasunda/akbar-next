@@ -134,10 +134,17 @@ export type SignatureSignals = {
   /** Burst dari tap/drag/click yang belum dikonsumsi engine. */
   bursts: { x: number; y: number; strength: number; at: number }[];
   /**
-   * Kotak teks yang tidak boleh ditimpa partikel (judul hero).
-   * Diukur dari elemen ber-`data-signal-shield`.
+   * Panggung wordmark: kotak kosong tempat partikel menyusun nama.
+   * Diukur dari elemen ber-`data-signal-stage`; `visibility` 1 saat panggung
+   * berada di tengah layar dan 0 saat sudah lewat.
    */
-  shield: { x: number; y: number; w: number; h: number } | null;
+  stage: {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+    visibility: number;
+  } | null;
 };
 
 export type SignatureStore = {

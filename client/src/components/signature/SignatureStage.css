@@ -1,0 +1,86 @@
+/* Panggung wordmark: bidang kosong tempat partikel menyusun nama. */
+.an-signature-stage {
+  position: relative;
+  display: grid;
+  gap: clamp(14px, 2vw, 22px);
+  padding: clamp(40px, 7vh, 88px) var(--hx-gutter, clamp(20px, 5vw, 88px));
+  border-bottom: 1.5px solid var(--paper);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.an-signature-stage-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-signature-stage-index {
+  color: var(--acid);
+}
+
+/* Kotak yang diukur Signature Runtime. Tingginya sengaja besar supaya
+   wordmark partikel punya ruang dan benar-benar terbaca. */
+.an-signature-stage-field {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(220px, 38vh, 420px);
+  border-top: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+}
+
+.an-signature-stage-word {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.28em;
+  font-family: var(--font-display, inherit);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 11vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  text-align: center;
+  color: var(--paper);
+  transition: opacity 420ms ease;
+}
+
+/* Particle field hidup → teks statis mundur, partikel yang bicara.
+   Teks tetap ada di DOM untuk screen reader dan mesin pencari. */
+.an-signature-stage[data-live="true"] .an-signature-stage-word {
+  opacity: 0;
+}
+
+.an-signature-stage-note {
+  margin: 0;
+  max-width: 54ch;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  line-height: 1.7;
+  letter-spacing: 0.08em;
+  color: var(--mute);
+}
+
+@media (max-width: 640px) {
+  .an-signature-stage-field {
+    min-height: clamp(180px, 32vh, 300px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Tidak ada partikel → wordmark tetap tampil sebagai teks penuh. */
+  .an-signature-stage[data-live="true"] .an-signature-stage-word {
+    opacity: 1;
+  }
+  .an-signature-stage-word {
+    transition: none;
+  }
+}
