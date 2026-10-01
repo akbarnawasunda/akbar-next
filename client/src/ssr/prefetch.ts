@@ -7,6 +7,7 @@ import { customDocumentsToPublicContent } from "@/content/publicContent";
 import { officialBrand, releases } from "@/content/artistPlatform";
 import { publicMediaUrl } from "@/lib/publicMedia";
 import { buildSiteStructuredData } from "@/content/structuredData";
+import { slugify } from "@shared/slug";
 
 export type HeadMeta = {
   title: string;
@@ -66,14 +67,6 @@ const enTitles: Record<string, string> = {
   "/game/jedag-run": "JEDAG RUN — Night Frequency | Akbar Nawasunda",
   "/privacy": "Privacy Policy | Akbar Nawasunda",
 };
-
-const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 
 const absoluteUrl = (value: string) => {
   const normalized = publicMediaUrl(value) || value;

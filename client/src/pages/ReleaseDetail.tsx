@@ -5,14 +5,7 @@ import { officialBrand, releases } from "@/content/artistPlatform";
 import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./ReleaseDetail.css";
-
-const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+import { slugify } from "@shared/slug";
 
 const rightsLabel = (format?: string) =>
   /bootleg/i.test(format || "")

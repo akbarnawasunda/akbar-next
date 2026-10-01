@@ -17,7 +17,7 @@ type RouteMeta = {
   en: string;
 };
 
-const ROUTE_META: Record<string, RouteMeta> = {
+const ROUTE_META = {
   "/": { mode: "wordmark", id: "BERANDA", en: "HOME" },
   "/music": { mode: "signal", id: "MUSIK", en: "MUSIC" },
   "/visuals": { mode: "dust", id: "VISUAL", en: "VISUALS" },
@@ -30,7 +30,10 @@ const ROUTE_META: Record<string, RouteMeta> = {
   "/epk": { mode: "quiet", id: "EPK", en: "EPK" },
   "/privacy": { mode: "quiet", id: "PRIVASI", en: "PRIVACY" },
   "/game/jedag-run": { mode: "frequency", id: "JEDAG RUN", en: "JEDAG RUN" },
-};
+} as const satisfies Record<string, RouteMeta>;
+
+/** Path rute publik berbahasa Indonesia, sebagai tipe. */
+export type PublicRoutePath = keyof typeof ROUTE_META;
 
 const RELEASE_META: RouteMeta = {
   mode: "signal",
@@ -38,7 +41,7 @@ const RELEASE_META: RouteMeta = {
   en: "RELEASE",
 };
 
-export const PUBLIC_ROUTE_PATHS = Object.keys(ROUTE_META);
+export const PUBLIC_ROUTE_PATHS = Object.keys(ROUTE_META) as PublicRoutePath[];
 
 export function languageOf(pathname: string): SignatureLanguage {
   return pathname === "/en" || pathname.startsWith("/en/") ? "en" : "id";
@@ -53,8 +56,8 @@ export function neutralPath(pathname: string) {
 export function routeInfo(pathname: string): SignatureRouteInfo {
   const lang = languageOf(pathname);
   const path = neutralPath(pathname);
-  const meta =
-    ROUTE_META[path] ||
+  const meta: RouteMeta | undefined =
+    ROUTE_META[path as PublicRoutePath] ||
     (/^\/music\/[^/]+$/.test(path) ? RELEASE_META : undefined);
   if (!meta) {
     return { path: pathname, lang, label: "", mode: "quiet" };
@@ -69,7 +72,9 @@ export function routeInfo(pathname: string): SignatureRouteInfo {
 
 export function isPublicRoute(pathname: string) {
   const path = neutralPath(pathname);
-  return Boolean(ROUTE_META[path]) || /^\/music\/[^/]+$/.test(path);
+  return (
+    Boolean(ROUTE_META[path as PublicRoutePath]) || /^\/music\/[^/]+$/.test(path)
+  );
 }
 
 /** Pasangan ID/EN untuk satu path, dipakai palette dan language switcher. */

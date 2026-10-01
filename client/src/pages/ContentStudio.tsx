@@ -49,6 +49,7 @@ import {
   videos,
 } from "@/content/artistPlatform";
 import { publicPortraitStudies } from "@/content/publicContent";
+import { slugify } from "@shared/slug";
 
 const documentTypes = [
   {
@@ -767,15 +768,6 @@ function emptyPayload(type: DocumentType): EditorPayload {
 
 function textValue(payload: EditorPayload, key: string) {
   return typeof payload[key] === "string" ? String(payload[key]) : "";
-}
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 }
 
 function formatPlatformLinks(value: unknown) {

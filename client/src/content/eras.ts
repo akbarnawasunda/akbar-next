@@ -4,6 +4,7 @@ import {
 } from "@/content/artistPlatform";
 import type { CmsArtistContent } from "@/content/publicContent";
 import { publicJourney } from "@/content/publicContent";
+import { slugify } from "@shared/slug";
 
 /**
  * Era arsip — satu bentuk data bersama untuk timeline Universe ID dan EN.
@@ -18,14 +19,6 @@ export type Era = {
   artwork?: string;
   relatedRelease?: string;
 };
-
-const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 
 export function publicEras(
   content: CmsArtistContent | null | undefined,

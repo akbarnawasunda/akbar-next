@@ -6,6 +6,7 @@ import {
 import type { CmsArtistContent } from "@/content/publicContent";
 import { publicPlatformLinks, publicUpcomingEvents } from "@/content/publicContent";
 import { publicMediaUrl } from "@/lib/publicMedia";
+import { slugify } from "@shared/slug";
 
 /**
  * Structured data bersama.
@@ -34,14 +35,6 @@ const VERIFIED_IDENTITY_LINKS = [
   "https://musicbrainz.org/artist/bb843d35-fc0a-4d3b-b445-390b9b299812",
   "https://www.wikidata.org/wiki/Q141049199",
 ];
-
-const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 
 const absoluteUrl = (value: string) => {
   const normalized = publicMediaUrl(value) || value;

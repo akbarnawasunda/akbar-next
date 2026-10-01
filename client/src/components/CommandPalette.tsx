@@ -3,7 +3,13 @@ import { useLocation } from "wouter";
 import { usePublicArtistContent, publicUpcomingEvents } from "@/content/publicContent";
 import { releases as catalogReleases } from "@/content/artistPlatform";
 import { useSignatureRuntime, useSignatureState } from "@/signature/useSignature";
+import {
+  PUBLIC_ROUTE_PATHS,
+  languagePairFor,
+  type PublicRoutePath,
+} from "@/signature/routeSignal";
 import "./CommandPalette.css";
+import { slugify } from "@shared/slug";
 
 /**
  * Command palette (Cmd/Ctrl + K).
@@ -12,6 +18,44 @@ import "./CommandPalette.css";
  * Navigasi memakai router yang sudah ada (wouter), fokus terkunci selama
  * terbuka, ESC menutup, dan seluruh daftar bisa dijelajahi dengan panah.
  */
+
+/**
+ * Nama dan keterangan halaman untuk palette.
+ *
+ * Kuncinya `PublicRoutePath`, jadi menambah rute publik tanpa menuliskan
+ * namanya di sini akan gagal saat type check — palette tidak bisa lagi diam-
+ * diam ketinggalan satu halaman. Daftar rutenya sendiri hanya hidup di
+ * `signature/routeSignal.ts`.
+ */
+const PAGE_COPY: Record<
+  PublicRoutePath,
+  { id: [string, string]; en: [string, string] }
+> = {
+  "/": { id: ["Beranda", "Halaman utama"], en: ["Home", "Start page"] },
+  "/music": { id: ["Musik", "Katalog resmi"], en: ["Music", "Official catalogue"] },
+  "/visuals": {
+    id: ["Visual", "Video & karya visual"],
+    en: ["Visuals", "Videos & visual work"],
+  },
+  "/visuals/portraits": {
+    id: ["Studi potret", "Galeri potret"],
+    en: ["Portrait studies", "Portrait gallery"],
+  },
+  "/live": {
+    id: ["Jadwal live", "Jadwal & arsip panggung"],
+    en: ["Live", "Dates & stage archive"],
+  },
+  "/universe": { id: ["Arsip", "Babak & linimasa"], en: ["Archive", "Eras & timeline"] },
+  "/about": { id: ["Tentang", "Profil artis"], en: ["About", "Artist biography"] },
+  "/inquire": { id: ["Kontak", "Inquiry langsung"], en: ["Inquire", "Direct inquiry"] },
+  "/licensing": { id: ["Lisensi", "Lisensi musik"], en: ["Licensing", "Music licensing"] },
+  "/epk": { id: ["EPK", "Press kit & booking"], en: ["EPK", "Press kit & booking"] },
+  "/privacy": { id: ["Privasi", "Kebijakan privasi"], en: ["Privacy", "Privacy policy"] },
+  "/game/jedag-run": {
+    id: ["Jedag Run", "Game browser"],
+    en: ["Jedag Run", "Browser game"],
+  },
+};
 
 type Command = {
   id: string;
@@ -22,14 +66,6 @@ type Command = {
   external?: boolean;
   action?: () => void;
 };
-
-const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 
 export function CommandPalette() {
   const [, navigate] = useLocation();
@@ -72,36 +108,11 @@ export function CommandPalette() {
   const prefix = lang === "en" ? "/en" : "";
 
   const commands = useMemo<Command[]>(() => {
-    const pages: [string, string, string][] =
-      lang === "en"
-        ? [
-            ["Home", "/en", "Start page"],
-            ["Music", "/en/music", "Official catalogue"],
-            ["Visuals", "/en/visuals", "Videos & visual work"],
-            ["Portrait studies", "/en/visuals/portraits", "Portrait gallery"],
-            ["Live", "/en/live", "Dates & stage archive"],
-            ["Archive", "/en/universe", "Eras & timeline"],
-            ["About", "/en/about", "Artist biography"],
-            ["EPK", "/en/epk", "Press kit & booking"],
-            ["Inquire", "/en/inquire", "Direct inquiry"],
-            ["Licensing", "/en/licensing", "Music licensing"],
-            ["Jedag Run", "/en/game/jedag-run", "Browser game"],
-            ["Privacy", "/en/privacy", "Privacy policy"],
-          ]
-        : [
-            ["Beranda", "/", "Halaman utama"],
-            ["Musik", "/music", "Katalog resmi"],
-            ["Visual", "/visuals", "Video & karya visual"],
-            ["Studi potret", "/visuals/portraits", "Galeri potret"],
-            ["Jadwal live", "/live", "Jadwal & arsip panggung"],
-            ["Arsip", "/universe", "Babak & linimasa"],
-            ["Tentang", "/about", "Profil artis"],
-            ["EPK", "/epk", "Press kit & booking"],
-            ["Kontak", "/inquire", "Inquiry langsung"],
-            ["Lisensi", "/licensing", "Lisensi musik"],
-            ["Jedag Run", "/game/jedag-run", "Game browser"],
-            ["Privasi", "/privacy", "Kebijakan privasi"],
-          ];
+    const pages = PUBLIC_ROUTE_PATHS.map(path => {
+      const [label, hint] = PAGE_COPY[path][lang];
+      const pair = languagePairFor(path);
+      return [label, pair ? pair[lang] : path, hint] as [string, string, string];
+    });
 
     const pageCommands: Command[] = pages.map(([label, href, hint]) => ({
       id: `page:${href}`,
