@@ -34,9 +34,18 @@ type Point = {
   ty: number;
   seed: number;
   bucket: number;
-  /** Jeda masuk 0..0.55 — bikin titik berdatangan bergelombang. */
+  /** Jeda masuk 0..0.6 — menyapu dari kiri ke kanan. */
   delay: number;
 };
+
+/** Medan aliran prosedural: murah, tanpa tabel noise, tanpa dependensi. */
+function flowAngle(x: number, y: number, t: number) {
+  return (
+    Math.sin(x * 0.0042 + t) * 1.7 +
+    Math.cos(y * 0.0051 - t * 0.8) * 1.7 +
+    Math.sin((x + y) * 0.0023 + t * 0.45) * 1.1
+  );
+}
 
 const WORDMARK = ["AKBAR", "NAWASUNDA"];
 const WORDMARK_FONT = '"Clash Display", "General Sans", sans-serif';
@@ -46,7 +55,7 @@ const TAU = Math.PI * 2;
 const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency"];
 
 /** Lama titik berkumpul menjadi huruf (ms). */
-const FORMATION_MS = 1700;
+const FORMATION_MS = 2100;
 
 function readToken(name: string, fallback: string) {
   if (typeof window === "undefined") return fallback;
@@ -323,7 +332,15 @@ export function createParticleField(
         ty: target.y + (Math.random() - 0.5) * jitter,
         seed: Math.random() * TAU,
         bucket: i % 4,
-        delay: textMode ? Math.random() * 0.55 : 0,
+        // Sapuan kiri→kanan: huruf terbentuk seperti ditulis, bukan muncul
+        // acak sekaligus.
+        delay: textMode
+          ? Math.min(
+              0.62,
+              (target.x / Math.max(1, anchored ? stageWidth : width)) * 0.5 +
+                Math.random() * 0.12
+            )
+          : 0,
       });
     }
     points = next;
@@ -405,12 +422,9 @@ export function createParticleField(
     const delta = Math.min(2.2, (time - lastTime) / 16.67 || 1);
     lastTime = time;
 
-    ctx.clearRect(0, 0, width, height);
-
     const amplitude = signals.amplitude;
     const hero = signals.heroProgress;
     const frequency = state.frequency;
-    if (frequency) drawGrid(amplitude);
 
     const textMode = TEXT_MODES.includes(state.mode);
     const colors = textMode ? textColors : ambientColors;
@@ -468,6 +482,53 @@ export function createParticleField(
         : hero * 0.4;
     const sweep = sweepEnergy;
 
+    // Jejak gerak. Selama titik masih terbang masuk, buyar, atau disapu
+    // transisi, frame sebelumnya tidak dihapus total sehingga tiap titik
+    // meninggalkan ekor halus. Begitu wordmark mengunci, penghapusan kembali
+    // penuh supaya hurufnya tetap tajam.
+    const motion = Math.max(1 - formation, disperse, sweep);
+    const clearStrength = motion > 0.02 ? 0.26 + (1 - motion) * 0.6 : 1;
+    if (clearStrength >= 1) {
+      ctx.clearRect(0, 0, width, height);
+    } else {
+      // Jejak hanya perlu dipelihara di sekitar panggung; sisanya dihapus
+      // biasa supaya tidak ada sisa gambar yang menggantung.
+      const fadeTop =
+        anchored && stage ? Math.max(0, stageOffsetY - stage.h * 0.9) : 0;
+      const fadeHeight =
+        anchored && stage
+          ? Math.min(height - fadeTop, stage.h * 3.2)
+          : height;
+      if (fadeTop > 0) ctx.clearRect(0, 0, width, fadeTop);
+      const fadeBottom = fadeTop + fadeHeight;
+      if (fadeBottom < height) {
+        ctx.clearRect(0, fadeBottom, width, height - fadeBottom);
+      }
+      ctx.save();
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.fillStyle = `rgba(0,0,0,${clearStrength.toFixed(3)})`;
+      ctx.fillRect(0, fadeTop, width, fadeHeight);
+      ctx.restore();
+    }
+
+    if (frequency) drawGrid(amplitude);
+
+    // Denyut halus: bernapas pelan saat senyap, mengikuti amplitudo saat ada
+    // audio yang benar-benar bisa dianalisis.
+    const pulse =
+      1 + Math.sin(time * 0.0009) * 0.004 + amplitude * 0.03 * (textMode ? 1 : 0.4);
+    const centerX = anchored && stage ? stage.w / 2 : width / 2;
+    const centerY = anchored && stage ? stage.h / 2 : height / 2;
+
+    // Seret: gerakan pointer ikut membawa partikel di sekitarnya, lalu
+    // kecepatannya meluruh sendiri.
+    const pointerAge = signals.pointerMovedAt
+      ? Math.max(0, Date.now() - signals.pointerMovedAt)
+      : 9999;
+    const dragFade = Math.max(0, 1 - pointerAge / 160);
+    const dragX = Math.max(-26, Math.min(26, signals.pointerVX)) * dragFade;
+    const dragY = Math.max(-26, Math.min(26, signals.pointerVY)) * dragFade;
+
     // Burst dari tap/drag/klik: satu kali impuls radial.
     const bursts = signals.bursts.splice(0, signals.bursts.length);
 
@@ -488,6 +549,7 @@ export function createParticleField(
       // Satu dari empat kelompok sedikit lebih besar supaya huruf punya
       // "inti" yang terbaca, bukan kabut rata.
       const dotSize = b === colors.length - 1 ? size + 0.9 : size;
+      const sparkleBucket = textMode && b === colors.length - 1;
       bucket = b;
       for (let i = 0; i < visible; i++) {
         const point = points[i];
@@ -495,15 +557,24 @@ export function createParticleField(
 
         const wobble = frequency ? 2.4 + amplitude * 9 : 1.6 + amplitude * 3.4;
         let targetX =
-          point.tx + stageOffsetX + Math.cos(time * 0.0006 + point.seed) * wobble;
+          centerX +
+          (point.tx - centerX) * pulse +
+          stageOffsetX +
+          Math.cos(time * 0.0006 + point.seed) * wobble;
         let targetY =
-          point.ty + stageOffsetY + Math.sin(time * 0.0007 + point.seed) * wobble;
+          centerY +
+          (point.ty - centerY) * pulse +
+          stageOffsetY +
+          Math.sin(time * 0.0007 + point.seed) * wobble;
 
         if (disperse > 0.01) {
-          const spreadX = (point.seed / TAU - 0.5) * width * 0.9;
-          const spreadY = (Math.sin(point.seed * 3.1) * 0.5) * height * 0.8;
-          targetX += spreadX * disperse;
-          targetY += spreadY * disperse + disperse * height * 0.15;
+          // Buyar seperti debu tertiup: jatuh bergelombang mengikuti posisi
+          // horizontal, bukan meledak acak ke segala arah.
+          const wave = Math.sin(point.tx * 0.012 + point.seed * 0.4);
+          targetX += (wave * 0.55 + (point.seed / TAU - 0.5) * 0.7) * width * 0.4 * disperse;
+          targetY +=
+            disperse * height * (0.22 + 0.3 * (0.5 + 0.5 * wave)) +
+            Math.sin(point.seed * 3.1) * height * 0.12 * disperse;
         }
 
         if (sweep > 0.01) {
@@ -516,9 +587,11 @@ export function createParticleField(
 
         // Koreografi masuk: tiap titik punya jeda sendiri, lalu tarikannya
         // menguat mulus (smoothstep) sampai mengunci di posisi hurufnya.
+        // Tiap titik punya jendela rakit sendiri (0,3 dari total durasi),
+        // jadi huruf kiri benar-benar selesai lebih dulu daripada kanan.
         const local = Math.max(
           0,
-          Math.min(1, (formation - point.delay) / Math.max(0.2, 1 - point.delay))
+          Math.min(1, (formation - point.delay) / 0.3)
         );
         const ramp = textMode ? local * local * (3 - 2 * local) : 1;
         const pull = spring * (0.12 + 0.88 * ramp);
@@ -526,14 +599,27 @@ export function createParticleField(
         point.vx += (targetX - point.x) * pull;
         point.vy += (targetY - point.y) * pull;
 
+        // Sebelum mengunci, titik menyusuri medan aliran — jalurnya
+        // melengkung dan tiap titik mengambil rute berbeda.
+        if (textMode && ramp < 0.995) {
+          const drift = (1 - ramp) * (1 - ramp) * 0.5;
+          const angle = flowAngle(point.x, point.y, time * 0.00022 + point.seed * 0.08);
+          point.vx += Math.cos(angle) * drift;
+          point.vy += Math.sin(angle) * drift;
+        }
+
         const dx = point.x - pointerX;
         const dy = point.y - pointerY;
         const distanceSquared = dx * dx + dy * dy;
         if (distanceSquared < repelRadius * repelRadius) {
           const distance = Math.sqrt(distanceSquared) || 1;
-          const force = (1 - distance / repelRadius) * 2.6;
+          const falloff = 1 - distance / repelRadius;
+          const force = falloff * 2.6;
           point.vx += (dx / distance) * force;
           point.vy += (dy / distance) * force;
+          // Nama ikut terseret ke arah gerakan kursor, lalu pulih sendiri.
+          point.vx += dragX * falloff * 0.16;
+          point.vy += dragY * falloff * 0.16;
         }
 
         for (let k = 0; k < bursts.length; k++) {
@@ -552,7 +638,13 @@ export function createParticleField(
         point.x += point.vx * delta;
         point.y += point.vy * delta;
 
-        ctx.fillRect(point.x, point.y, dotSize, dotSize);
+        // Kilau: sesekali satu titik membesar sesaat, seperti partikel yang
+        // menangkap cahaya.
+        const sparkle =
+          sparkleBucket && Math.sin(time * 0.0031 + point.seed * 9.7) > 0.985
+            ? 1.7
+            : 0;
+        ctx.fillRect(point.x, point.y, dotSize + sparkle, dotSize + sparkle);
       }
     }
 

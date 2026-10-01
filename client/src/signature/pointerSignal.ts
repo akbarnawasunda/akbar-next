@@ -30,6 +30,17 @@ export function attachPointerSignal(store: SignatureStore) {
   };
 
   const onPointerMove = (event: PointerEvent) => {
+    const previousX = signals.pointerX;
+    const previousY = signals.pointerY;
+    const moved = signals.pointerActive && previousX > -9000;
+    if (moved) {
+      // Dihaluskan supaya satu lompatan besar tidak menghempas partikel.
+      signals.pointerVX =
+        signals.pointerVX * 0.6 + (event.clientX - previousX) * 0.4;
+      signals.pointerVY =
+        signals.pointerVY * 0.6 + (event.clientY - previousY) * 0.4;
+      signals.pointerMovedAt = event.timeStamp || Date.now();
+    }
     signals.pointerX = event.clientX;
     signals.pointerY = event.clientY;
     signals.pointerActive = true;
@@ -59,6 +70,8 @@ export function attachPointerSignal(store: SignatureStore) {
     signals.magnetic = false;
     signals.pointerX = -9999;
     signals.pointerY = -9999;
+    signals.pointerVX = 0;
+    signals.pointerVY = 0;
   };
 
   const onFocusIn = (event: FocusEvent) => {

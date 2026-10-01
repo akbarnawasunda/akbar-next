@@ -120,6 +120,11 @@ export type SignatureSignals = {
   pointerX: number;
   pointerY: number;
   pointerActive: boolean;
+  /** Kecepatan pointer (px per gerakan) untuk efek seret. */
+  pointerVX: number;
+  pointerVY: number;
+  /** Timestamp gerakan terakhir; dipakai meluruhkan kecepatan. */
+  pointerMovedAt: number;
   pointerPressed: boolean;
   /** Elemen interaktif yang sedang di bawah pointer/fokus. */
   interactive: boolean;

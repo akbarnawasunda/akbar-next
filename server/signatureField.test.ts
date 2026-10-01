@@ -51,16 +51,36 @@ function setupDom(viewportWidth: number, viewportHeight: number) {
   const drawn: Drawn[] = [];
   const frames: ((time: number) => void)[] = [];
 
-  const mainContext = {
+  const stack: { composite: string; alpha: number }[] = [];
+  const mainContext: Record<string, unknown> & {
+    globalCompositeOperation: string;
+  } = {
     setTransform: () => undefined,
     clearRect: () => undefined,
     beginPath: () => undefined,
     moveTo: () => undefined,
     lineTo: () => undefined,
     stroke: () => undefined,
-    fillRect: (x: number, y: number) => drawn.push({ x, y }),
-    save: () => undefined,
-    restore: () => undefined,
+    fillRect(x: number, y: number) {
+      // Fade jejak memakai destination-out — bukan titik, jangan dicatat.
+      if (mainContext.globalCompositeOperation === "source-over") {
+        drawn.push({ x, y });
+      }
+    },
+    // save/restore ditiru seadanya supaya composite mode benar-benar pulih
+    // seperti di kanvas asli.
+    save() {
+      stack.push({
+        composite: mainContext.globalCompositeOperation,
+        alpha: mainContext.globalAlpha as number,
+      });
+    },
+    restore() {
+      const previous = stack.pop();
+      if (!previous) return;
+      mainContext.globalCompositeOperation = previous.composite;
+      mainContext.globalAlpha = previous.alpha;
+    },
     translate: () => undefined,
     scale: () => undefined,
     arc: () => undefined,
@@ -158,6 +178,9 @@ function signalsStub(stage: SignatureSignals["stage"] = null): SignatureSignals 
     pointerX: -9999,
     pointerY: -9999,
     pointerActive: false,
+    pointerVX: 0,
+    pointerVY: 0,
+    pointerMovedAt: 0,
     pointerPressed: false,
     interactive: false,
     magnetic: false,
@@ -198,20 +221,22 @@ function runWordmark(
 
   // 160 frame ≈ 2,7 detik: cukup untuk titik mengunci ke posisi hurufnya.
   const early: Drawn[] = [];
+  const mid: Drawn[] = [];
   for (let i = 0; i < 160; i++) {
     const next = dom.frames.pop();
     dom.frames.length = 0;
     if (!next) break;
-    if (i === 12) early.push(...dom.drawn);
-    if (i > 140) dom.drawn.length = 0; // simpan hanya frame terakhir
+    dom.drawn.length = 0; // tiap tangkapan hanya berisi satu frame
     next(i * 16.67);
+    if (i === 12) early.push(...dom.drawn);
+    if (i === 46) mid.push(...dom.drawn);
   }
 
   teardown = () => {
     field.destroy();
     dom.restore();
   };
-  return { ...dom, early };
+  return { ...dom, early, mid };
 }
 
 describe("particle field", () => {
@@ -294,6 +319,41 @@ describe("particle field", () => {
     // Area judul hero (sepertiga atas layar) harus bersih.
     const overTitle = dom.drawn.filter(point => point.y < 300);
     expect(overTitle.length / dom.drawn.length).toBeLessThan(0.02);
+  });
+
+  it("membentuk huruf menyapu dari kiri ke kanan", () => {
+    const stage = { x: 720, y: 450, w: 1200, h: 360, visibility: 1 };
+    const dom = runWordmark(1440, 900, "full", stage);
+
+    // Hanya hitung titik yang benar-benar di dalam panggung — titik yang
+    // masih menunggu di luar layar tidak boleh ikut terhitung.
+    const inStage = (point: Drawn) =>
+      point.y > stage.y - stage.h / 2 &&
+      point.y < stage.y + stage.h / 2 &&
+      point.x > stage.x - stage.w / 2 &&
+      point.x < stage.x + stage.w / 2;
+    // Pita kiri dan kanan diambil di dalam rentang teks (teks tiruan
+    // menempati 20%–80% lebar panggung).
+    const leftOf = (point: Drawn) =>
+      inStage(point) &&
+      point.x > stage.x - stage.w * 0.3 &&
+      point.x < stage.x - stage.w * 0.15;
+    const rightOf = (point: Drawn) =>
+      inStage(point) &&
+      point.x > stage.x + stage.w * 0.15 &&
+      point.x < stage.x + stage.w * 0.3;
+    const leftBand = dom.mid.filter(leftOf).length;
+    const rightBand = dom.mid.filter(rightOf).length;
+    // Di pertengahan animasi, huruf kiri sudah terbentuk sementara huruf
+    // kanan masih dalam perjalanan.
+    expect(leftBand).toBeGreaterThan(40);
+    expect(leftBand).toBeGreaterThan(rightBand * 1.6);
+
+    // Di akhir, kedua sisi sama-sama penuh.
+    const leftFinal = dom.drawn.filter(leftOf).length;
+    const rightFinal = dom.drawn.filter(rightOf).length;
+    expect(leftFinal).toBeGreaterThan(40);
+    expect(rightFinal).toBeGreaterThan(leftFinal * 0.6);
   });
 
   it("tidak menggambar apa pun saat tier off", () => {
