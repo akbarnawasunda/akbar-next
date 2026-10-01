@@ -19,6 +19,7 @@ import {
   EnglishHeader,
 } from "@/components/EnglishChrome";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
+import { soundcloudEmbedUrl } from "@/components/MusicEmbed";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import VisualPortraitStudies from "@/components/VisualPortraitStudies";
@@ -79,9 +80,6 @@ const youtubeId = (href: string) =>
 
 const youtubeThumbnail = (id: string) =>
   `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
-
-const soundcloudEmbed = (url: string) =>
-  `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%230a1737&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
 
 function formatEnglishDate(date: string, time?: string) {
   const parsed = new Date(date);
@@ -780,7 +778,7 @@ export function EnglishMusic() {
                     title={drop.title}
                     provider="SoundCloud"
                     sourceUrl={drop.url}
-                    embedUrl={soundcloudEmbed(drop.url)}
+                    embedUrl={soundcloudEmbedUrl(drop.url)}
                     artwork={known?.image || officialBrand.socialPreview}
                     backupArtwork={officialBrand.socialPreview}
                     description="Official link available."

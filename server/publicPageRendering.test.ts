@@ -150,6 +150,17 @@ describe("halaman publik yang dirender server", () => {
     }
   });
 
+  it("memakai satu konfigurasi SoundCloud audio yang tidak visual", async () => {
+    for (const route of ["/music", "/en/music"]) {
+      const { html } = await renderPage(route);
+      expect(html).toMatch(
+        /data-embed-url="https:\/\/w\.soundcloud\.com\/player\/[^\"]*visual=false/
+      );
+      expect(html).not.toContain("%230a1737");
+      expect(html).not.toContain("visual=true");
+    }
+  });
+
   it("tidak merender penanda section yang kosong", async () => {
     const { html } = await renderPage("/");
     expect(html).not.toMatch(/class="an-section-index"[^>]*>\s*<span><\/span>/);
