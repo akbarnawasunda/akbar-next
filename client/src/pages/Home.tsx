@@ -18,6 +18,13 @@ import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
 import FanSignalSection from "@/components/FanSignalSection";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { Reveal } from "@/components/Reveal";
+import {
+  CtaPanel,
+  CurrentSignalBoard,
+  EditorialSection,
+  SignalIndicator,
+  type SignalRow,
+} from "@/components/editorial/EditorialKit";
 import { HeroDots } from "@/components/HeroDots";
 import { NightHeader, NightFooter } from "@/components/NightFrequencyChrome";
 import { trpc } from "@/lib/trpc";
@@ -226,6 +233,49 @@ export default function Home() {
       .join(" · ")
       .toUpperCase() || currentRelease.eyebrow;
 
+  const currentSignalRows: SignalRow[] = [
+    {
+      label: "RILISAN TERBARU",
+      value: activeRelease.title,
+      note: heroDeckSpec,
+      href: `/music/${activeRelease.title
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "")}`,
+      actionLabel: "DETAIL",
+    },
+    featuredEvent
+      ? {
+          label: "LIVE BERIKUTNYA",
+          value: featuredEvent.title,
+          note: [
+            formatEventDate(featuredEvent.date),
+            featuredEvent.venue,
+            featuredEvent.city,
+          ]
+            .filter(Boolean)
+            .join(" · "),
+          href: "/live",
+          actionLabel: "JADWAL",
+        }
+      : {
+          label: "STATUS BOOKING",
+          value: "TERBUKA UNTUK BOOKING & REMIX",
+          note: "Belum ada jadwal publik yang dikonfirmasi. Slot studio masih tersedia.",
+          href: "/inquire?type=booking&source=home",
+          actionLabel: "AJUKAN",
+        },
+    {
+      label: "STUDIO",
+      value: "BANDUNG BARAT · BREAKBEAT / INDO BASS",
+      note: "Remix custom, produksi, dan kolaborasi lewat jalur inquiry resmi.",
+      href: "/inquire?type=remix&source=home",
+      actionLabel: "KIRIM BRIEF",
+    },
+  ];
+
   const displayHeroTitle = (heroTitle || "AKBAR NAWASUNDA.").trim();
   const heroTitleWords = displayHeroTitle.split(/\s+/);
 
@@ -368,6 +418,23 @@ export default function Home() {
               <ArrowDownRight size={14} />
             </a>
           </section>
+
+          <EditorialSection
+            id="signal"
+            index="01 — SINYAL"
+            eyebrow="CURRENT SIGNAL"
+            title={
+              <>
+                YANG SEDANG
+                <br />
+                BERJALAN.
+              </>
+            }
+            lede="Status terbaru dari studio: rilisan yang sedang diputar, jadwal live terdekat, dan jalur kontak resmi."
+            aside={<SignalIndicator label="LIVE DARI STUDIO" />}
+          >
+            <CurrentSignalBoard rows={currentSignalRows} />
+          </EditorialSection>
 
           <section
             className="home-signal-deck"
@@ -828,6 +895,29 @@ export default function Home() {
               </div>
             </section>
           ) : null}
+
+          <CtaPanel
+            id="booking"
+            eyebrow="BOOKING / KOLABORASI"
+            title={
+              <>
+                BAWA SUARA INI
+                <br />
+                KE PANGGUNGMU.
+              </>
+            }
+            copy="Performance, remix custom, lisensi musik, atau kolaborasi rilisan — kirim konteks proyek dan tanggalnya, balasan datang dari studio langsung."
+            actions={
+              <>
+                <Link className="ed-button" href="/inquire?source=home">
+                  AJUKAN BOOKING <ArrowUpRight size={14} />
+                </Link>
+                <Link className="ed-button--ghost" href="/epk">
+                  LIHAT EPK <ArrowRight size={14} />
+                </Link>
+              </>
+            }
+          />
 
           <FanSignalSection
             source={FAN_SIGNAL_SOURCES.home}

@@ -353,3 +353,71 @@ svg {
   h1, h2, h3, h4 { text-wrap: balance; }
   p { line-height: 1.68; }
 }
+
+/* ============================================================
+   EDITORIAL LAYOUT POLISH — dipakai lintas halaman ID & EN.
+   Tujuan: desktop memakai lebar layar dengan baik, mobile punya
+   komposisi sendiri, dan tidak ada konten yang terpotong.
+   ============================================================ */
+
+/* Gutter aman untuk notch iOS tanpa menambah scroll horizontal. */
+.nf-page .nf-section,
+.nf-page .nf-nav,
+.an-site .section,
+.ed-section {
+  padding-inline-start: max(var(--gutter), env(safe-area-inset-left));
+  padding-inline-end: max(var(--gutter), env(safe-area-inset-right));
+}
+
+/* Lebar layar besar: konten dibingkai, bukan melebar tanpa batas. */
+.nf-page .nf-section > * {
+  max-width: var(--max);
+  margin-inline: auto;
+  min-width: 0;
+}
+
+/* Target sentuh minimal 44px untuk semua tautan teks utilitas. */
+.nf-text-button,
+.nf-nav nav a,
+.nf-signal,
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* Embed tidak boleh memotong layout di mana pun. */
+.nf-page iframe,
+.an-site iframe,
+.ed-player iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+}
+
+/* Heading panjang tidak boleh keluar viewport di layar 320px. */
+@media (max-width: 420px) {
+  .nf-page h1,
+  .an-site h1 {
+    font-size: clamp(2rem, 11vw, 2.9rem);
+  }
+  .nf-page h2,
+  .an-site h2 {
+    font-size: clamp(1.6rem, 8.5vw, 2.3rem);
+  }
+  .ed-head__title,
+  .ed-cta__title {
+    font-size: clamp(1.7rem, 9vw, 2.4rem);
+  }
+  .ed-section,
+  .nf-page .nf-section {
+    padding-block: clamp(48px, 14vw, 72px);
+  }
+}
+
+/* Footer area tetap bernapas di perangkat dengan home indicator. */
+.nf-page footer,
+.an-site footer {
+  padding-bottom: max(clamp(28px, 4vw, 56px), env(safe-area-inset-bottom));
+}

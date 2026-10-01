@@ -1,4 +1,15 @@
 import {
+  CtaPanel,
+  CurrentSignalBoard,
+  EditorialSection,
+  EditorialTimeline,
+  EmptyState,
+  EventCountdown,
+  SignalIndicator,
+  type SignalRow,
+  type TimelineEntry,
+} from "@/components/editorial/EditorialKit";
+import {
   ArrowLeft,
   ArrowUpRight,
   CalendarDays,
@@ -151,6 +162,14 @@ function mergedCatalog(cmsReleases: CmsRelease[]): CatalogItem[] {
   ];
 }
 
+const englishSlug = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
 function EnglishFrame({ children }: { children: ReactNode }) {
   return (
     <div className="nf-page en-page an-site">
@@ -195,6 +214,46 @@ export function EnglishHome() {
   const photoStories = publicPhotoStories(cms.data);
   const featuredEvent =
     publicEvents.find((event) => event.isFeatured) || publicEvents[0];
+
+  const currentSignalRows: SignalRow[] = [
+    {
+      label: "LATEST RELEASE",
+      value: activeRelease.title,
+      note: [activeRelease.format, activeRelease.year, activeRelease.platform]
+        .filter(Boolean)
+        .join(" · "),
+      href: `/en/music/${englishSlug(activeRelease.title)}`,
+      actionLabel: "DETAILS",
+    },
+    featuredEvent
+      ? {
+          label: "NEXT LIVE",
+          value: featuredEvent.title,
+          note: [
+            formatEnglishDate(featuredEvent.date, featuredEvent.time),
+            featuredEvent.venue,
+            featuredEvent.city,
+          ]
+            .filter(Boolean)
+            .join(" · "),
+          href: "/en/live",
+          actionLabel: "DATES",
+        }
+      : {
+          label: "BOOKING STATUS",
+          value: "OPEN FOR SHOWS & CUSTOM REMIXES",
+          note: "No public date confirmed yet — studio and stage slots are still available.",
+          href: "/en/inquire?type=booking&source=home",
+          actionLabel: "INQUIRE",
+        },
+    {
+      label: "STUDIO",
+      value: "BANDUNG BARAT · BREAKBEAT / INDO BASS",
+      note: "Custom remixes, production, and collaborations through the official inquiry line.",
+      href: "/en/inquire?type=remix&source=home",
+      actionLabel: "SEND BRIEF",
+    },
+  ];
 
   const displayHeroTitle = "AKBAR NAWASUNDA.";
   const heroTitleWords = displayHeroTitle.split(/\s+/);
@@ -569,6 +628,46 @@ export function EnglishHome() {
           ) : null}
         </section>
 
+        <EditorialSection
+          id="current-signal"
+          index="01 — SIGNAL"
+          eyebrow="CURRENT SIGNAL"
+          title={
+            <>
+              WHAT IS
+              <br />
+              RUNNING NOW.
+            </>
+          }
+          lede="Live status from the studio: the release in rotation, the next date on stage, and the official contact route."
+          aside={<SignalIndicator label="LIVE FROM THE STUDIO" />}
+        >
+          <CurrentSignalBoard rows={currentSignalRows} actionFallback="OPEN" />
+        </EditorialSection>
+
+        <CtaPanel
+          id="booking"
+          eyebrow="BOOKING / COLLABORATION"
+          title={
+            <>
+              BRING THIS SOUND
+              <br />
+              TO YOUR STAGE.
+            </>
+          }
+          copy="Shows, custom remixes, music licensing, or release collaborations — send the project context and dates, and the reply comes straight from the studio."
+          actions={
+            <>
+              <Link className="ed-button" href="/en/inquire?source=home">
+                START AN INQUIRY <ArrowUpRight size={14} />
+              </Link>
+              <Link className="ed-button--ghost" href="/en/epk">
+                VIEW THE EPK <ArrowUpRight size={14} />
+              </Link>
+            </>
+          }
+        />
+
         <section className="signal-section" id="signal">
           <SectionIndex label="NEWS" />
           <div>
@@ -822,6 +921,31 @@ export function EnglishMusic() {
             ))}
           </div>
         </section>
+
+        <CtaPanel
+          eyebrow="LICENSING / REMIX"
+          title={
+            <>
+              USE THIS SOUND
+              <br />
+              IN YOUR PROJECT.
+            </>
+          }
+          copy="Need a track for film, advertising, or content — or a custom remix? Licensing and production briefs run through one place."
+          actions={
+            <>
+              <Link className="ed-button" href="/en/licensing">
+                MUSIC LICENSING <ArrowUpRight size={14} />
+              </Link>
+              <Link
+                className="ed-button--ghost"
+                href="/en/inquire?type=remix&source=music"
+              >
+                REQUEST A REMIX <ArrowUpRight size={14} />
+              </Link>
+            </>
+          }
+        />
       </main>
     </EnglishFrame>
   );
@@ -971,6 +1095,31 @@ export function EnglishVisuals() {
             </a>
           </div>
         </section>
+
+        <CtaPanel
+          eyebrow="VISUALS / COLLABORATION"
+          title={
+            <>
+              BUILD THE NEXT
+              <br />
+              VISUAL TOGETHER.
+            </>
+          }
+          copy="Music videos, visualizers, stage documentation, or release artwork — send the concept and we shape it from scratch."
+          actions={
+            <>
+              <Link
+                className="ed-button"
+                href="/en/inquire?type=visual&source=visuals"
+              >
+                PITCH A PROJECT <ArrowUpRight size={14} />
+              </Link>
+              <Link className="ed-button--ghost" href="/en/visuals/portraits">
+                VIEW PORTRAITS <ArrowUpRight size={14} />
+              </Link>
+            </>
+          }
+        />
       </main>
     </EnglishFrame>
   );
@@ -1018,6 +1167,81 @@ export function EnglishLive() {
             )}
           </div>
         </section>
+
+        {featured ? (
+          <EditorialSection
+            id="next-show"
+            index="01 — NEXT SHOW"
+            eyebrow="NEXT ON STAGE"
+            title={featured.title}
+            lede={[
+              formatEnglishDate(featured.date, featured.time),
+              featured.venue,
+              featured.city,
+              featured.country,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+            aside={
+              <>
+                <SignalIndicator
+                  label={`STATUS: ${featured.status?.toUpperCase() || "ANNOUNCED"}`}
+                />
+                <EventCountdown
+                  target={featured.date}
+                  labels={["DAYS", "HRS", "MIN", "SEC"]}
+                  idleLabel="Countdown to the next confirmed show"
+                />
+                <div className="ed-cta__actions">
+                  {featured.ticketUrl ? (
+                    <a
+                      className="ed-button"
+                      href={featured.ticketUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Ticket size={13} /> GET TICKETS
+                    </a>
+                  ) : null}
+                  {featured.mapsUrl ? (
+                    <a
+                      className="ed-button--ghost"
+                      href={featured.mapsUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <MapPin size={13} /> OPEN MAP
+                    </a>
+                  ) : null}
+                </div>
+              </>
+            }
+          />
+        ) : (
+          <EditorialSection
+            id="next-show"
+            index="01 — STATUS"
+            eyebrow="BOOKING STATUS"
+            title={
+              <>
+                THE CALENDAR
+                <br />
+                IS OPEN.
+              </>
+            }
+            lede="No public date is confirmed right now, but stage and studio slots can still be claimed."
+          >
+            <EmptyState
+              title="NO PUBLIC DATE YET"
+              copy="As soon as a show is confirmed, the date, venue, timezone, and ticket link appear here first."
+              action={
+                <Link className="ed-button" href="/en/inquire?type=booking&source=live">
+                  PROPOSE A DATE <ArrowUpRight size={13} />
+                </Link>
+              }
+            />
+          </EditorialSection>
+        )}
 
         <section className="nf-section">
           <div className="en-section-intro">
@@ -1144,6 +1368,24 @@ export function EnglishUniverse() {
   const catalog = mergedCatalog(cms.data?.releases ?? []);
   const journey = publicJourney(cms.data);
   const photoStories = publicPhotoStories(cms.data);
+  const englishTimeline: TimelineEntry[] = journey.milestones.map(
+    (milestone, index) => {
+      const linked = catalog[index];
+      return {
+        year: milestone.year,
+        title: milestone.titleEn || milestone.title,
+        copy: milestone.bodyEn || milestone.body,
+        links: [
+          linked
+            ? { label: `RELEASE · ${linked.title}`, href: linked.href }
+            : { label: "RELEASE CATALOG", href: "/en/music" },
+          index % 2 === 0
+            ? { label: "VISUALS", href: "/en/visuals" }
+            : { label: "LIVE", href: "/en/live" },
+        ],
+      };
+    }
+  );
 
   return (
     <EnglishFrame>
@@ -1203,22 +1445,30 @@ export function EnglishUniverse() {
                   <span key={genre}>{genre}</span>
                 ))}
               </div>
-              <div className="an-archive-timeline">
-                {journey.milestones.map((milestone, index) => (
-                  <article
-                    key={`${milestone.year}-${milestone.title}-${index}`}
-                  >
-                    <span>{milestone.year}</span>
-                    <div>
-                      <h3>{milestone.titleEn || milestone.title}</h3>
-                      <p>{milestone.bodyEn || milestone.body}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
             </div>
           </div>
         </section>
+
+        <EditorialSection
+          id="timeline"
+          index="01 — TIMELINE"
+          eyebrow="DJ AKBAR REMIX → AKBAR NAWASUNDA"
+          title={
+            <>
+              ONE NAME,
+              <br />
+              MANY CHAPTERS.
+            </>
+          }
+          lede="Open each chapter to see what happened, then jump to the releases, visuals, or shows that came out of it."
+          aside={<SignalIndicator label="INTERACTIVE ARCHIVE" />}
+        >
+          <EditorialTimeline
+            entries={englishTimeline}
+            openLabel="OPEN"
+            closeLabel="CLOSE"
+          />
+        </EditorialSection>
 
         <ArtistEditorialSections photoStories={photoStories} locale="en" />
 

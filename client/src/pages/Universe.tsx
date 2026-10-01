@@ -15,6 +15,12 @@ import {
 } from "@/content/publicContent";
 import { ArtistPhotoStorySection } from "@/components/ArtistEditorialSections";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
+import {
+  EditorialSection,
+  EditorialTimeline,
+  SignalIndicator,
+  type TimelineEntry,
+} from "@/components/editorial/EditorialKit";
 import "./EcosystemPages.css";
 import "./ArchiveUpgrade.css";
 import "./ArchiveArtwork.css";
@@ -81,6 +87,25 @@ export default function Universe() {
         image: release.image,
       })),
   ];
+  const timelineEntries: TimelineEntry[] = journey.milestones.map(
+    (milestone, index) => {
+      const linkedRelease = catalog[index];
+      return {
+        year: milestone.year,
+        title: milestone.title,
+        copy: milestone.body,
+        links: [
+          linkedRelease
+            ? { label: `RILISAN · ${linkedRelease.title}`, href: linkedRelease.href }
+            : { label: "KATALOG RILISAN", href: "/music" },
+          index % 2 === 0
+            ? { label: "VISUAL", href: "/visuals" }
+            : { label: "PANGGUNG", href: "/live" },
+        ],
+      };
+    }
+  );
+
   return (
     <div className="nf-page an-archive-page">
       <NightHeader active="/universe" />
@@ -122,19 +147,28 @@ export default function Universe() {
                 ))}
               </div>
             </div>
-            <div className="an-archive-timeline">
-              {journey.milestones.map((milestone, index) => (
-                <article key={`${milestone.year}-${milestone.title}-${index}`}>
-                  <span>{milestone.year}</span>
-                  <div>
-                    <h3>{milestone.title}</h3>
-                    <p>{milestone.body}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
           </div>
         </section>
+        <EditorialSection
+          id="timeline"
+          index="01 — LINIMASA"
+          eyebrow="DJ AKBAR REMIX → AKBAR NAWASUNDA"
+          title={
+            <>
+              SATU NAMA,
+              <br />
+              BANYAK BABAK.
+            </>
+          }
+          lede="Buka tiap babak untuk melihat apa yang terjadi, lalu lompat ke rilisan, visual, atau panggung yang lahir dari babak itu."
+          aside={<SignalIndicator label="ARSIP INTERAKTIF" />}
+        >
+          <EditorialTimeline
+            entries={timelineEntries}
+            openLabel="BUKA"
+            closeLabel="TUTUP"
+          />
+        </EditorialSection>
         <section className="nf-section an-archive-art-feature">
           <div className="an-archive-art-frame">
             <img
