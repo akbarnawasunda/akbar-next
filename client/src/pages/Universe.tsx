@@ -1,6 +1,7 @@
 import { ArrowUpRight, Disc3, Music2, Sparkles } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import {
+  artworkThumb,
   officialBrand,
   releases,
   verifiedArtistProfile,
@@ -185,8 +186,8 @@ export default function Universe() {
                 key={release.title}
               >
                 <ResilientArtworkImage
-                  src={release.image}
-                  backupSrc={officialBrand.socialPreview}
+                  src={artworkThumb(release.image)}
+                  backupSrc={release.image}
                   alt={`Artwork ${release.title}`}
                 />
                 <div>

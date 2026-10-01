@@ -230,3 +230,31 @@ export const futureModules = [
     copy: "A live email opt-in now, with room for gated drops, early access, and community tools later.",
   },
 ];
+
+/**
+ * Minta ukuran kecil dari CDN artwork (SoundCloud / Spotify / Apple Music)
+ * untuk kartu katalog. Pola yang sama dipakai situs artis besar: satu master
+ * di CDN, lalu tiap slot meminta ukuran yang benar-benar dipakai.
+ * Kalau polanya tidak dikenal, URL asli dikembalikan apa adanya.
+ */
+export function artworkThumb(
+  url: string | undefined | null
+): string | undefined {
+  if (!url) return undefined;
+  // SoundCloud: ...-t500x500.jpg -> ...-t200x200.jpg
+  if (/i\d*\.sndcdn\.com/.test(url)) {
+    return url.replace(/-t\d+x\d+(\.\w+)$/, "-t200x200$1");
+  }
+  // Spotify: ab67616d0000b273 (640px) / ab67616d0000aa54 -> ab67616d00001e02 (300px)
+  if (/i\.scdn\.co\/image\//.test(url)) {
+    return url.replace(/ab67616d[0-9a-f]{8}/, "ab67616d00001e02");
+  }
+  // Apple Music (mzstatic): .../1200x1200bb.jpg -> .../300x300bb.webp
+  if (/mzstatic\.com/.test(url)) {
+    return url.replace(
+      /\/\d+x\d+([a-z]{2})\.(jpg|jpeg|png|webp)$/i,
+      "/300x300$1.webp"
+    );
+  }
+  return url;
+}

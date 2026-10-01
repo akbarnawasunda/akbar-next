@@ -28,6 +28,7 @@ import {
   usePublicArtistContent,
 } from "@/content/publicContent";
 import {
+  artworkThumb,
   currentRelease,
   officialBrand,
   releases,
@@ -592,8 +593,8 @@ export default function Home() {
                           {release.image && (
                             <div className="release-card-art">
                               <ResilientArtworkImage
-                                src={release.image}
-                                backupSrc={officialBrand.socialPreview}
+                                src={artworkThumb(release.image)}
+                                backupSrc={release.image}
                                 alt={`Artwork ${release.title}`}
                               />
                             </div>
