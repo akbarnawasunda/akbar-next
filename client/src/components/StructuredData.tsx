@@ -1,123 +1,43 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import { officialBrand, releases, verifiedArtistProfile } from "@/content/artistPlatform";
-import { publicPlatformLinks, publicUpcomingEvents, usePublicArtistContent } from "@/content/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
+import { buildSiteStructuredData } from "@/content/structuredData";
 
-const siteOrigin = "https://akbarnawasunda.my.id";
-const verifiedIdentityLinks = [
-  "https://open.spotify.com/artist/7KOQuIQLuxyklLox0RDMMw",
-  "https://www.youtube.com/channel/UCS-UDttyS3sruwkEPlGjuDg",
-  "https://soundcloud.com/akbarnawasunda",
-  "https://www.instagram.com/akbarnawasunda",
-  "https://music.apple.com/id/artist/akbar-nawasunda/1816312738?l=id",
-  "https://musicbrainz.org/artist/bb843d35-fc0a-4d3b-b445-390b9b299812",
-  "https://www.wikidata.org/wiki/Q141049199",
-] as const;
-const releaseSlug = (value: string) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-
-function absoluteUrl(path: string) {
-  return path.startsWith("http") ? path : `${siteOrigin}${path === "/" ? "/" : path}`;
-}
-
-function websiteEntity() {
-  return {
-    "@type": "WebSite",
-    "@id": `${siteOrigin}/#website`,
-    url: `${siteOrigin}/`,
-    name: "Akbar Nawasunda | Official Website",
-    alternateName: "Akbar Nawasunda",
-    publisher: { "@id": `${siteOrigin}/#artist` },
-  };
-}
-
-function artistEntity(platforms: Array<{ label?: string; href: string }>) {
-  const artistLinks = platforms.filter(link =>
-    ["Spotify", "YouTube", "SoundCloud", "Instagram"].includes(link.label || ""),
-  );
-  return {
-    "@type": "MusicGroup",
-    "@id": `${siteOrigin}/#artist`,
-    name: "Akbar Nawasunda",
-    alternateName: verifiedArtistProfile.aliases,
-    url: `${siteOrigin}/`,
-    description: verifiedArtistProfile.shortBio,
-    image: [absoluteUrl(officialBrand.socialPreview)],
-    logo: absoluteUrl(officialBrand.logo),
-    genre: verifiedArtistProfile.genres,
-    sameAs: Array.from(new Set([
-      ...artistLinks.map(link => link.href),
-      ...verifiedIdentityLinks,
-    ])),
-    location: {
-      "@type": "Place",
-      name: verifiedArtistProfile.location,
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Bandung Barat",
-        addressCountry: "ID",
-      },
-    },
-  };
-}
-
+/**
+ * Structured data di client.
+ *
+ * Memakai builder yang sama dengan SSR, jadi hidrasi tidak pernah menurunkan
+ * kualitas JSON-LD yang sudah dikirim server (WebSite + WebPage + MusicGroup
+ * + entitas rute). Script hanya diperbarui saat isinya memang berubah.
+ */
 export function StructuredData() {
   const [location] = useLocation();
   const cms = usePublicArtistContent();
-  const editablePlatformLinks = publicPlatformLinks(cms.data);
 
   useEffect(() => {
     const isEnglish = location === "/en" || location.startsWith("/en/");
-    const pathWithoutLanguage = location.replace(/^\/en(?=\/|$)/, "") || "/";
-    const events = publicUpcomingEvents(cms.data);
-    const graph: Record<string, unknown>[] = [websiteEntity(), artistEntity(editablePlatformLinks)];
-    const releaseMatch = pathWithoutLanguage.match(/^\/music\/([a-z0-9-]+)$/i);
-
-    if (releaseMatch) {
-      const slug = releaseMatch[1];
-      const cmsRelease = cms.data?.releases.find(item => releaseSlug(item.title) === slug);
-      const legacyRelease = releases.find(item => releaseSlug(item.title) === slug);
-      const title = cmsRelease?.title || legacyRelease?.title;
-      const href = cmsRelease?.url || legacyRelease?.href;
-      const year = cmsRelease?.year || legacyRelease?.year;
-      if (title && href) {
-        graph.push({
-          "@type": "MusicRecording",
-          "@id": `${siteOrigin}${location}#recording`,
-          name: title,
-          url: absoluteUrl(location),
-          sameAs: [href, ...(cmsRelease?.platformLinks?.map(link => link.href) || [])],
-          byArtist: { "@id": `${siteOrigin}/#artist` },
-          ...(year ? { datePublished: year } : {}),
-        });
-      }
-    }
-
-    if (pathWithoutLanguage === "/live" && events.length) {
-      events.forEach(event => {
-        const eventLocation = [event.venue, event.city, event.country].filter(Boolean).join(", ") || "Indonesia";
-        graph.push({
-          "@type": "MusicEvent",
-          "@id": `${siteOrigin}${location}#event-${event._id}`,
-          name: event.title,
-          startDate: event.date,
-          performer: { "@id": `${siteOrigin}/#artist` },
-          location: { "@type": "Place", name: eventLocation },
-          ...(event.ticketUrl ? { offers: { "@type": "Offer", url: event.ticketUrl } } : {}),
-          ...(event.status === "cancelled" ? { eventStatus: "https://schema.org/EventCancelled" } : {}),
-        });
-      });
-    }
+    const path = (location.split("?")[0] || "/").replace(/\/+$/, "") || "/";
+    const payload = buildSiteStructuredData({
+      path,
+      isEnglish,
+      content: cms.data,
+      title: document.title,
+      description:
+        document.head
+          .querySelector<HTMLMetaElement>('meta[name="description"]')
+          ?.content || undefined,
+    });
 
     const scriptId = "akbar-structured-data";
     const existing = document.getElementById(scriptId);
-    const script = existing instanceof HTMLScriptElement ? existing : document.head.appendChild(document.createElement("script"));
+    const script =
+      existing instanceof HTMLScriptElement
+        ? existing
+        : document.head.appendChild(document.createElement("script"));
     script.id = scriptId;
     script.type = "application/ld+json";
-    script.textContent = JSON.stringify({
-      "@context": "https://schema.org",
-      "@graph": graph,
-      inLanguage: isEnglish ? "en" : "id",
-    });
+    const serialized = JSON.stringify(payload);
+    if (script.textContent !== serialized) script.textContent = serialized;
   }, [cms.data, location]);
 
   return null;

@@ -1,0 +1,49 @@
+/* Cangkang publik. Tidak mengubah layout halaman; hanya menyediakan konteks
+   posisi untuk lapisan signature. */
+.an-public-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100%;
+}
+
+/* Petunjuk command palette: terlihat di desktop, tidak mengganggu konten,
+   dan tidak pernah menangkap pointer. */
+.an-shell-hint {
+  position: fixed;
+  left: clamp(10px, 2vw, 22px);
+  bottom: clamp(10px, 2vw, 18px);
+  z-index: 40;
+  padding: 5px 8px;
+  border: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+  background: var(--ink-card);
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.22em;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .an-shell-hint {
+    display: none;
+  }
+}
+
+/* Mode frequency: grid neon tipis + wordmark bergetar.
+   Hanya aktif saat user benar-benar memilihnya. */
+html[data-signature-mode="frequency"] .nf-wordmark span,
+html[data-signature-mode="frequency"] .hero-title-editorial {
+  animation: an-frequency-shake 220ms steps(2, end) infinite alternate;
+}
+
+@keyframes an-frequency-shake {
+  from { transform: translate3d(-0.6px, 0, 0); }
+  to { transform: translate3d(0.6px, -0.4px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-signature-mode="frequency"] .nf-wordmark span,
+  html[data-signature-mode="frequency"] .hero-title-editorial {
+    animation: none;
+  }
+}

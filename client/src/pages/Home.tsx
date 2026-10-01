@@ -397,11 +397,17 @@ export default function Home() {
                   href={heroActionUrl}
                   target="_blank"
                   rel="noreferrer"
+                  data-signal-magnetic
+                  data-signal-interactive
                 >
                   <Play size={14} fill="currentColor" />
                   <span>{heroActionLabel}</span>
                 </a>
-                <Link className="button-quiet" href="/visuals">
+                <Link
+                  className="button-quiet"
+                  href="/visuals"
+                  data-signal-magnetic
+                >
                   LIHAT VISUAL <ArrowRight size={15} />
                 </Link>
                 <a className="hero-signal-link" href="#signal">

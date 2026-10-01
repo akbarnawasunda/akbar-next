@@ -1,0 +1,36 @@
+/* Particle field global — dekoratif murni, tidak pernah menangkap pointer. */
+.an-signature-field {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 600ms ease;
+  contain: strict;
+}
+
+.an-signature-field canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.an-signature-field[data-signature-mode="wordmark"] { opacity: 0.8; }
+.an-signature-field[data-signature-mode="signal"] { opacity: 0.5; }
+.an-signature-field[data-signature-mode="dust"] { opacity: 0.34; }
+.an-signature-field[data-signature-mode="era"] { opacity: 0.42; }
+.an-signature-field[data-signature-mode="quiet"] { opacity: 0.26; }
+.an-signature-field[data-signature-mode="frequency"] { opacity: 0.9; }
+
+/* Perangkat lite memakai kerapatan rendah; turunkan juga intensitasnya agar
+   teks tetap kontras di layar kecil. */
+.an-signature-field[data-signature-tier="lite"] { opacity: 0.4; }
+.an-signature-field[data-signature-tier="lite"][data-signature-mode="wordmark"] {
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-signature-field {
+    display: none;
+  }
+}

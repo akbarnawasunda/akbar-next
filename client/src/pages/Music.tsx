@@ -309,6 +309,7 @@ export default function Music() {
                     key={`${release.title}-${index}`}
                     className="nf-catalog-card"
                     href={`/music/${releaseSlug(release.title)}`}
+                    data-signal-interactive
                   >
                     <ResilientArtworkImage
                       className="nf-catalog-art"

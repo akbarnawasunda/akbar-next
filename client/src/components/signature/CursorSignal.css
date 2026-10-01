@@ -1,0 +1,60 @@
+/* Cursor signal. Dekoratif: pointer-events none, cursor sistem tetap ada,
+   focus ring tidak pernah disentuh. */
+.an-cursor-signal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.an-cursor-dot,
+.an-cursor-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 999px;
+  will-change: transform;
+}
+
+.an-cursor-dot {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  background: var(--acid);
+}
+
+.an-cursor-ring {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border: 1px solid color-mix(in srgb, var(--acid) 55%, transparent);
+  transition: border-color 200ms ease;
+}
+
+.an-cursor-ring[data-interactive="true"] {
+  border-color: var(--paper);
+}
+
+[data-signal-magnetic] {
+  transform: translate3d(var(--magnetic-x, 0px), var(--magnetic-y, 0px), 0);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-cursor-signal {
+    display: none;
+  }
+  [data-signal-magnetic] {
+    transform: none;
+    transition: none;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .an-cursor-signal {
+    display: none;
+  }
+  [data-signal-magnetic] {
+    transform: none;
+  }
+}

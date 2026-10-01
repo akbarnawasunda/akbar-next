@@ -2,13 +2,17 @@ import {
   CtaPanel,
   CurrentSignalBoard,
   EditorialSection,
-  EditorialTimeline,
   EmptyState,
   EventCountdown,
   SignalIndicator,
   type SignalRow,
-  type TimelineEntry,
 } from "@/components/editorial/EditorialKit";
+import { EraTimeline } from "@/components/signature/EraTimeline";
+import {
+  SignalHeading,
+  SignalIndex,
+} from "@/components/signature/SignalType";
+import { publicEras } from "@/content/eras";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -305,11 +309,17 @@ export function EnglishHome() {
                 href={activeRelease.href}
                 target="_blank"
                 rel="noreferrer"
+                data-signal-magnetic
+                data-signal-interactive
               >
                 <Play size={14} fill="currentColor" />
                 <span>LISTEN NOW</span>
               </a>
-              <Link className="button-quiet" href="/en/visuals">
+              <Link
+                className="button-quiet"
+                href="/en/visuals"
+                data-signal-magnetic
+              >
                 VIEW VISUALS <ArrowUpRight size={15} />
               </Link>
               <a className="hero-signal-link" href="#signal">
@@ -1368,24 +1378,7 @@ export function EnglishUniverse() {
   const catalog = mergedCatalog(cms.data?.releases ?? []);
   const journey = publicJourney(cms.data);
   const photoStories = publicPhotoStories(cms.data);
-  const englishTimeline: TimelineEntry[] = journey.milestones.map(
-    (milestone, index) => {
-      const linked = catalog[index];
-      return {
-        year: milestone.year,
-        title: milestone.titleEn || milestone.title,
-        copy: milestone.bodyEn || milestone.body,
-        links: [
-          linked
-            ? { label: `RELEASE · ${linked.title}`, href: linked.href }
-            : { label: "RELEASE CATALOG", href: "/en/music" },
-          index % 2 === 0
-            ? { label: "VISUALS", href: "/en/visuals" }
-            : { label: "LIVE", href: "/en/live" },
-        ],
-      };
-    }
-  );
+  const eras = publicEras(cms.data, "en");
 
   return (
     <EnglishFrame>
@@ -1460,14 +1453,10 @@ export function EnglishUniverse() {
               MANY CHAPTERS.
             </>
           }
-          lede="Open each chapter to see what happened, then jump to the releases, visuals, or shows that came out of it."
+          lede="Every chapter is readable right here. Scroll to watch the era rail light up and the related artwork change."
           aside={<SignalIndicator label="INTERACTIVE ARCHIVE" />}
         >
-          <EditorialTimeline
-            entries={englishTimeline}
-            openLabel="OPEN"
-            closeLabel="CLOSE"
-          />
+          <EraTimeline eras={eras} lang="en" releaseHrefPrefix="/en" />
         </EditorialSection>
 
         <ArtistEditorialSections photoStories={photoStories} locale="en" />
@@ -1505,12 +1494,8 @@ export function EnglishUniverse() {
 
         <section className="nf-section dark-panel">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">RELEASED WORK</p>
-            <h2>
-              THE
-              <br />
-              <em>CATALOG.</em>
-            </h2>
+            <SignalIndex index="02" label="RELEASED WORK" />
+            <SignalHeading as="h2" lines={["THE", "CATALOG."]} />
             <p>Open each title through the official platform route.</p>
           </div>
           <div className="en-catalog">

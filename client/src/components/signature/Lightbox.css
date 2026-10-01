@@ -1,0 +1,98 @@
+/* Lightbox global. Solid, tanpa backdrop-filter. */
+.an-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 4vw, 48px);
+  background: color-mix(in srgb, var(--ink) 94%, black);
+}
+
+.an-lightbox-frame {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  width: min(1100px, 100%);
+  max-height: 100%;
+  outline: none;
+}
+
+.an-lightbox-figure {
+  margin: 0;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+}
+
+.an-lightbox-figure img {
+  max-width: 100%;
+  max-height: 72vh;
+  object-fit: contain;
+  border: 1px solid color-mix(in srgb, var(--paper) 18%, transparent);
+}
+
+.an-lightbox-figure figcaption {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  text-align: center;
+  font-family: var(--font-mono);
+  color: var(--paper);
+}
+
+.an-lightbox-figure figcaption span {
+  font-size: 0.56rem;
+  letter-spacing: 0.24em;
+  color: var(--acid);
+}
+
+.an-lightbox-figure figcaption strong {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.4vw, 1.5rem);
+  font-weight: 600;
+}
+
+.an-lightbox-figure figcaption small {
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  color: var(--mute);
+  font-variant-numeric: tabular-nums;
+}
+
+.an-lightbox-close,
+.an-lightbox-nav button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid color-mix(in srgb, var(--paper) 28%, transparent);
+  background: var(--ink-card);
+  color: var(--paper);
+  cursor: pointer;
+}
+
+.an-lightbox-close {
+  position: absolute;
+  top: -6px;
+  right: 0;
+}
+
+.an-lightbox-nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.an-lightbox-close:focus-visible,
+.an-lightbox-nav button:focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .an-lightbox-figure img {
+    max-height: 60vh;
+  }
+}

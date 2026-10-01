@@ -7,6 +7,7 @@ import { officialBrand } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
 import { publicPortraitStudies, usePublicArtistContent } from "@/content/publicContent";
 import { OptimizedEditorialImage } from "@/components/OptimizedEditorialImage";
+import { useLightbox, type LightboxItem } from "@/components/signature/LightboxProvider";
 import "./EcosystemPages.css";
 import "./VisualPortraitGallery.css";
 
@@ -40,6 +41,19 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
     recordVisit.mutate({ gallery: "portrait-gallery", visitorKey });
   }, []);
   const studies = publicPortraitStudies(cms.data);
+  const lightbox = useLightbox();
+  const lightboxItems: LightboxItem[] = studies.map(study => {
+    const title = english ? study.titleEn || study.title : study.title;
+    return {
+      id: study._id,
+      src: study.imageUrl || officialBrand.socialPreview,
+      alt: english
+        ? study.altEn || study.altId || title
+        : study.altId || study.altEn || title,
+      caption: title,
+      meta: study.label || (english ? "PORTRAIT STUDY" : "STUDI POTRET"),
+    };
+  });
   return (
     <main className={english ? "en-content" : undefined}>
       <section className="nf-page-hero portrait-gallery-hero">
@@ -72,13 +86,21 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
             return (
               <article className={`portrait-gallery-card ${index === 0 ? "portrait-gallery-card-featured" : ""}`} id={study._id} key={study._id}>
                 <div className="portrait-gallery-image-wrap">
-                  <OptimizedEditorialImage
-                    src={study.imageUrl || officialBrand.socialPreview}
-                    backupSrc={officialBrand.socialPreview}
-                    alt={alt}
-                    priority={index === 0}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
-                  />
+                  <button
+                    type="button"
+                    className="portrait-gallery-trigger"
+                    onClick={() => lightbox.open(lightboxItems, index)}
+                    aria-label={english ? `Open ${title} in the image viewer` : `Buka ${title} di penampil gambar`}
+                    data-signal-interactive
+                  >
+                    <OptimizedEditorialImage
+                      src={study.imageUrl || officialBrand.socialPreview}
+                      backupSrc={officialBrand.socialPreview}
+                      alt={alt}
+                      priority={index === 0}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                    />
+                  </button>
                   <span className="portrait-gallery-index">{String(index + 1).padStart(2, "0")}</span>
                 </div>
                 <div className="portrait-gallery-card-copy">

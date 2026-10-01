@@ -1,0 +1,110 @@
+/* Kinetic editorial type.
+   Default: teks tampil penuh (tanpa JS pun terbaca).
+   Peningkatan: reveal per baris via animation-timeline: view(). */
+
+.an-signal-heading {
+  margin: 0;
+  font-family: var(--font-display);
+  line-height: 1.02;
+}
+
+.an-signal-heading-line {
+  display: block;
+  overflow: hidden;
+}
+
+.an-signal-heading-line > span {
+  display: block;
+}
+
+.an-signal-index {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.26em;
+  color: var(--mute);
+  font-variant-numeric: tabular-nums;
+}
+
+.an-signal-index-number {
+  color: var(--acid);
+  font-variant-numeric: tabular-nums;
+}
+
+.an-signal-index i {
+  display: block;
+  width: clamp(24px, 6vw, 64px);
+  height: 1px;
+  background: color-mix(in srgb, var(--paper) 32%, transparent);
+}
+
+.an-tabular-counter {
+  display: inline-grid;
+  gap: 2px;
+}
+
+.an-tabular-counter-value {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  color: var(--paper);
+}
+
+.an-tabular-counter-label {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.22em;
+  color: var(--mute);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .an-signal-heading-line > span {
+      animation: an-signal-line-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 6% cover 26%;
+    }
+
+    .an-signal-reveal > * {
+      animation: an-signal-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 4% cover 24%;
+    }
+  }
+}
+
+@keyframes an-signal-line-rise {
+  from {
+    transform: translateY(100%);
+    opacity: 0.2;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes an-signal-reveal {
+  from {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0.3;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-signal-heading-line > span,
+  .an-signal-reveal > * {
+    animation: none !important;
+    transform: none !important;
+    clip-path: none !important;
+    opacity: 1 !important;
+  }
+}

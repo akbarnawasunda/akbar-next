@@ -1,4 +1,113 @@
-.an-command-backdrop{position:fixed;inset:0;z-index:500;background:rgba(10,11,12,.78);display:grid;place-items:start center;padding:12vh var(--gutter);}
-.an-command{width:min(620px,100%);border:1px solid var(--ink-line);background:var(--ink-card);box-shadow:var(--shadow-lift);padding:clamp(18px,3vw,30px);}
-.an-command label,.an-command p{font:600 .58rem var(--font-mono);letter-spacing:.15em;color:var(--mute);text-transform:uppercase}.an-command input{width:100%;margin:12px 0;padding:14px 0;border-bottom:1px solid var(--acid);font-size:1.25rem;outline:0}.an-command-results{display:grid;gap:2px}.an-command-results button{display:flex;justify-content:space-between;gap:16px;padding:13px 10px;text-align:left;border:1px solid transparent}.an-command-results button:hover,.an-command-results button:focus-visible{border-color:var(--acid);color:var(--acid)}.an-command-results span{font: .62rem var(--font-mono);color:var(--mute)}.an-command p{margin:18px 0 0;font-size:.5rem}
-@media (prefers-reduced-motion:reduce){.an-command-backdrop *{transition:none!important}}
+/* Command palette. Solid (tanpa backdrop-filter) dan keyboard-first. */
+.an-command-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: grid;
+  place-items: start center;
+  padding: 10vh clamp(12px, 4vw, 32px);
+  background: color-mix(in srgb, var(--ink) 92%, black);
+}
+
+.an-command {
+  width: min(640px, 100%);
+  max-height: 76vh;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  border: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+  background: var(--ink-card);
+  padding: clamp(16px, 3vw, 26px);
+}
+
+.an-command-label {
+  font: 600 0.58rem var(--font-mono);
+  letter-spacing: 0.18em;
+  color: var(--mute);
+  text-transform: uppercase;
+}
+
+.an-command input {
+  width: 100%;
+  margin: 10px 0 14px;
+  padding: 12px 0;
+  border: 0;
+  border-bottom: 1px solid var(--acid);
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  outline: 0;
+}
+
+.an-command input:focus-visible {
+  border-bottom-color: var(--paper);
+  outline: 2px solid var(--acid);
+  outline-offset: 4px;
+}
+
+.an-command-results {
+  display: grid;
+  gap: 2px;
+  overflow-y: auto;
+  align-content: start;
+}
+
+.an-command-group {
+  margin: 12px 0 4px;
+  font: 600 0.5rem var(--font-mono);
+  letter-spacing: 0.26em;
+  color: var(--mute-soft);
+  text-transform: uppercase;
+}
+
+.an-command-results button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 11px 10px;
+  text-align: left;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  cursor: pointer;
+}
+
+.an-command-results button.is-active,
+.an-command-results button:hover,
+.an-command-results button:focus-visible {
+  border-color: var(--acid);
+  color: var(--acid);
+  outline: none;
+}
+
+.an-command-results button:focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 2px;
+}
+
+.an-command-hint {
+  font: 0.58rem var(--font-mono);
+  letter-spacing: 0.1em;
+  color: var(--mute);
+  white-space: nowrap;
+}
+
+.an-command-empty,
+.an-command-footer {
+  margin: 14px 0 0;
+  font: 0.52rem var(--font-mono);
+  letter-spacing: 0.16em;
+  color: var(--mute);
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-command-backdrop * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
