@@ -33,10 +33,13 @@ describe("beranda yang dilihat pengunjung", () => {
     expect(home).toMatch(/aria-busy="(true|false)"/);
   });
 
-  it("memasang progress scroll, marquee platform, dan penanda section", () => {
+  it("memasang progress scroll dan marquee platform", () => {
     expect(home).toContain('class="an-scroll-progress"');
     expect(home).toContain("an-platform-marquee-track");
-    expect(home).toContain('class="an-section-index"');
+    // Penanda section ("MUSIK", "SOROTAN", …) sengaja dibuang: setiap
+    // section sudah punya judulnya sendiri, label di atasnya hanya
+    // mengulang dan membuat halaman terasa seperti template.
+    expect(home).not.toContain('class="an-section-index"');
   });
 
   it("memakai turunan gambar ringan untuk latar panggung", () => {
@@ -60,14 +63,16 @@ describe("hal yang tidak terlihat di HTML hasil render", () => {
     const css = source("client/src/pages/Home.css");
     const globalCss = source("client/src/index.css");
     const reveal = source("client/src/hooks/useScrollReveal.ts");
-    const magnetic = source("client/src/hooks/useMagnetic.ts");
+    const pointer = source("client/src/signature/capability.ts");
 
     expect(css).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)/);
     expect(globalCss).toMatch(/scroll-behavior:\s*smooth/);
     expect(globalCss).toMatch(/scroll-behavior:\s*auto/);
     expect(reveal).toContain("prefers-reduced-motion: reduce");
-    // Efek magnetik hanya untuk perangkat dengan mouse, bukan layar sentuh.
-    expect(magnetic).toContain("(hover: hover) and (pointer: fine)");
+    // Efek pointer (kursor signal, tarikan magnetik) hanya untuk perangkat
+    // bermouse. Dulu kontrak ini diuji lewat hooks/useMagnetic.ts yang sudah
+    // tidak dipakai halaman mana pun; sekarang diuji di tempat yang hidup.
+    expect(pointer).toContain("(hover: hover) and (pointer: fine)");
   });
 
   it("menjaga dokumen HTML dan sitemap tetap layak crawl", () => {
@@ -82,9 +87,10 @@ describe("hal yang tidak terlihat di HTML hasil render", () => {
     expect(sitemap).toContain("https://akbarnawasunda.my.id/music");
   });
 
-  it("mengukur Largest Contentful Paint di browser", () => {
-    expect(source("client/src/hooks/usePerformanceMonitor.ts")).toContain(
-      "largest-contentful-paint"
-    );
-  });
+  /*
+   * Dulu ada tes "mengukur Largest Contentful Paint di browser" yang membaca
+   * hooks/usePerformanceMonitor.ts. Hook itu tidak pernah dipanggil halaman
+   * mana pun, jadi tesnya hijau untuk kode mati: tidak ada yang benar-benar
+   * mengukur LCP. Hook dan tesnya dihapus daripada memberi rasa aman palsu.
+   */
 });

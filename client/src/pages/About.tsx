@@ -28,7 +28,6 @@ export default function About() {
           }
         >
           <div>
-            <p className="nf-page-eyebrow">TENTANG AKBAR</p>
             <h1 className="an-about-title">
               AKBAR
               <br />
@@ -59,7 +58,6 @@ export default function About() {
 
         <section className="nf-section an-profile-section">
           <div className="an-profile-aside">
-            <p className="nf-page-eyebrow">PROFIL ARTIS</p>
             <MapPin size={17} />
             {locationUrl ? (
               <a
@@ -102,7 +100,6 @@ export default function About() {
         </section>
 
         <CtaPanel
-          eyebrow="KERJA SAMA"
           title={
             <>
               MULAI SATU
@@ -125,7 +122,6 @@ export default function About() {
 
         <section className="nf-section dark-panel an-about-path">
           <div>
-            <p className="nf-page-eyebrow">MUSIK &amp; KERJA SAMA</p>
             <h2>
               DENGAR
               <br />

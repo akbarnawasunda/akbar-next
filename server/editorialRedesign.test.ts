@@ -95,39 +95,42 @@ describe("rute publik sesudah redesign", () => {
   it("menampilkan papan Current Signal di beranda ID dan EN", async () => {
     const home = await renderPage("/");
     expect(home.html).toContain('id="signal"');
-    expect(home.text).toContain("CURRENT SIGNAL");
+    // Label "CURRENT SIGNAL" di atas judul sudah dibuang; isi papannya
+    // yang harus tetap ada.
     expect(home.text).toContain("RILISAN TERBARU");
+    expect(home.text).toContain("STATUS BOOKING");
     expect(home.html).toContain("ed-signal-board");
 
     const english = await renderPage("/en");
-    expect(english.text).toContain("CURRENT SIGNAL");
     expect(english.text).toContain("LATEST RELEASE");
+    expect(english.text).toContain("BOOKING STATUS");
     expect(english.html).toContain("ed-signal-board");
   });
 
   it("menampilkan panel CTA booking di beranda kedua bahasa", async () => {
     const home = await renderPage("/");
     expect(home.html).toContain("ed-cta");
-    expect(home.text).toContain("BOOKING / KOLABORASI");
+    expect(home.text).toContain("BAWA SUARA INI");
     expect(home.html).toContain('href="/inquire?source=home"');
 
     const english = await renderPage("/en");
     expect(english.html).toContain("ed-cta");
-    expect(english.text).toContain("BOOKING / COLLABORATION");
+    expect(english.text).toContain("BRING THIS SOUND");
     expect(english.html).toContain('href="/en/inquire?source=home"');
   });
 
-  it("menjadikan Universe linimasa interaktif yang tetap terbaca crawler", async () => {
-    for (const [route, label] of [
-      ["/universe", "SATU NAMA,"],
-      ["/en/universe", "ONE NAME,"],
+  it("menjadikan Universe linimasa yang terbaca penuh tanpa JavaScript", async () => {
+    for (const [route, label, era] of [
+      ["/universe", "SATU NAMA,", "DJ Akbar Remix"],
+      ["/en/universe", "ONE NAME,", "DJ Akbar Remix"],
     ] as const) {
       const page = await renderPage(route);
-      expect(page.html, route).toContain("ed-timeline");
       expect(page.text, route).toContain(label);
-      // Panel pertama terbuka saat SSR: isi milestone harus ikut terkirim.
-      expect(page.html, route).toContain("ed-timeline__copy");
-      expect(page.html, route).toContain('aria-expanded="true"');
+      // Kontrak sebenarnya: seluruh isi era terkirim ke crawler, tidak ada
+      // panel yang disembunyikan di balik interaksi.
+      expect(page.text, route).toContain(era);
+      expect(page.text, route).toContain("2020");
+      expect(page.html, route).not.toContain("hidden=\"\"");
     }
   });
 
@@ -154,7 +157,11 @@ describe("rute publik sesudah redesign", () => {
     const visuals = await renderPage("/visuals");
     expect(visuals.html).toContain("ed-filters");
     expect(visuals.text).toContain("SEMUA");
-    expect(visuals.html).toContain("nf-visual-card");
+    // Kartu arsip tetap terkirim lengkap dengan judul, label, dan tautan
+    // resmi — bentuk komponennya boleh berubah.
+    expect(visuals.text).toContain("BUKA VIDEO");
+    expect(visuals.html).toMatch(/href="https:\/\/youtu\.be\//);
+    expect(visuals.html).toMatch(/alt="Artwork [^"]+"/);
   });
 
   it("menjaga Fan Signal tetap satu per halaman dengan source yang benar", async () => {
@@ -209,14 +216,17 @@ describe("aset statis redesign", () => {
   });
 
   it("tirai perpindahan halaman memakai bahasa visual splash, tanpa menyentuh SSR", async () => {
-    const css = read("client/src/components/RouteTransition.css");
-    expect(css).toContain(".an-route-curtain");
-    expect(css).toContain("an-curtain-sweep");
+    // Tirai sekarang hidup di Signature Runtime; CSS-nya tetap wajib punya
+    // jalur reduced-motion karena aturan itu tidak muncul di HTML.
+    const css = read("client/src/components/signature/RouteSignalCurtain.css");
+    expect(css).toContain(".an-route-signal");
+    expect(css).toContain("an-route-signal-sweep");
     expect(css).toMatch(/prefers-reduced-motion: reduce/);
 
     for (const route of ["/", "/music", "/en/live"]) {
       const page = await renderPage(route);
       expect(page.html, route).not.toContain("an-route-curtain");
+      expect(page.html, route).not.toContain("an-route-signal");
     }
   });
 

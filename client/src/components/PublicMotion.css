@@ -13,8 +13,8 @@
   position: fixed !important;
   inset: 0 !important;
   z-index: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
+  width: 100% !important;
+  height: 100% !important;
   opacity: .28;
   pointer-events: none !important;
   mix-blend-mode: screen;

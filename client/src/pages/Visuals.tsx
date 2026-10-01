@@ -1,4 +1,4 @@
-import { ArrowUpRight, Play } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { CtaPanel, FilterBar } from "@/components/editorial/EditorialKit";
@@ -7,7 +7,8 @@ import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import FanSignalSection from "@/components/FanSignalSection";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { officialBrand, videos } from "@/content/artistPlatform";
-import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
+import { InteractiveArtworkCard } from "@/components/signature/InteractiveArtworkCard";
+import { SignalHeading } from "@/components/signature/SignalType";
 import VisualPortraitStudies from "@/components/VisualPortraitStudies";
 import { ArtistPhotoStorySection } from "@/components/ArtistEditorialSections";
 import {
@@ -87,7 +88,6 @@ export default function Visuals() {
           }
         >
           <div>
-            <p className="nf-page-eyebrow">VISUAL</p>
             <h1>
               VIDEO
               <br />
@@ -112,7 +112,6 @@ export default function Visuals() {
         <section className="nf-section">
           <div className="nf-section-title">
             <div>
-              <p className="nf-page-eyebrow">PILIHAN VIDEO</p>
               <h2>
                 LIHAT
                 <br />
@@ -144,12 +143,7 @@ export default function Visuals() {
         <section className="nf-section dark-panel">
           <div className="nf-section-title">
             <div>
-              <p className="nf-page-eyebrow">ARSIP VIDEO</p>
-              <h2>
-                SEMUA
-                <br />
-                VIDEO.
-              </h2>
+              <SignalHeading as="h2" lines={["SEMUA", "VIDEO."]} />
             </div>
             <p>
               {cmsVisuals.length
@@ -165,32 +159,20 @@ export default function Visuals() {
           />
           <div className="nf-visual-grid">
             {visibleArchive.map(video => (
-              <a
+              <InteractiveArtworkCard
                 key={video.title}
-                className="nf-visual-card"
+                title={video.title}
+                badge={video.label}
+                image={video.image || officialBrand.socialPreview}
+                backupImage={video.backupImage}
                 href={video.href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <ResilientArtworkImage
-                  src={video.image}
-                  backupSrc={video.backupImage}
-                  alt={`${video.title} — official visual artwork`}
-                />
-                <div>
-                  <span>{video.label}</span>
-                  <h3>{video.title}</h3>
-                  <p className="nf-text-button">
-                    BUKA VIDEO <Play size={13} fill="currentColor" />
-                  </p>
-                </div>
-              </a>
+                openLabel="BUKA VIDEO"
+              />
             ))}
           </div>
         </section>
 
         <CtaPanel
-          eyebrow="VISUAL / KOLABORASI"
           title={
             <>
               BIKIN VISUAL
@@ -213,7 +195,6 @@ export default function Visuals() {
 
         <FanSignalSection
           source={FAN_SIGNAL_SOURCES.visuals}
-          eyebrow="KABAR VISUAL"
           title={
             <>
               LIHAT YANG

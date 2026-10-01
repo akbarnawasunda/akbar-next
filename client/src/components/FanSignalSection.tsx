@@ -11,11 +11,17 @@ type SignalStatus =
 
 type FanSignalSectionProps = {
   source: FanSignalSource;
-  eyebrow: string;
+  eyebrow?: string;
   title: ReactNode;
   description: string;
   indexLabel?: string;
   className?: string;
+  /**
+   * Id anchor section. Default `signal` supaya tautan "SIGNAL" di navigasi
+   * tetap mendarat di sini. Halaman yang sudah punya section `#signal`
+   * sendiri (beranda) wajib mengirim id lain agar tidak ada id ganda.
+   */
+  anchorId?: string;
 };
 
 export default function FanSignalSection({
@@ -25,6 +31,7 @@ export default function FanSignalSection({
   description,
   indexLabel,
   className = "",
+  anchorId = "signal",
 }: FanSignalSectionProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<SignalStatus>(null);
@@ -69,7 +76,7 @@ export default function FanSignalSection({
   return (
     <section
       className={sectionClassName}
-      id="signal"
+      id={anchorId}
       data-fan-signal-source={source}
       aria-labelledby={headingId}
     >
@@ -82,7 +89,7 @@ export default function FanSignalSection({
       ) : null}
 
       <div className="fan-signal-copy">
-        <p className="fan-signal-eyebrow">{eyebrow}</p>
+        {eyebrow ? <p className="fan-signal-eyebrow">{eyebrow}</p> : null}
         <h2 id={headingId}>{title}</h2>
         <p>{description}</p>
       </div>

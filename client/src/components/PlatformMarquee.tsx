@@ -83,24 +83,3 @@ export function PlatformMarquee({
     </div>
   );
 }
-
-export function SectionIndex({
-  number,
-  label,
-}: {
-  number?: string;
-  label: string;
-}) {
-  const hasNumber = Boolean(number && number.trim());
-  return (
-    <div className="an-section-index" aria-hidden="true">
-      {hasNumber ? (
-        <>
-          <span>{number}</span>
-          <i />
-        </>
-      ) : null}
-      <span>{label}</span>
-    </div>
-  );
-}

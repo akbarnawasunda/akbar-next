@@ -1,0 +1,176 @@
+/* Player global. Solid, tanpa backdrop-filter, dan tidak menutupi konten. */
+.an-global-player {
+  position: fixed;
+  right: clamp(12px, 3vw, 28px);
+  /* Area aman: bilah gestur Android dan home indicator iOS. */
+  bottom: calc(clamp(12px, 3vw, 24px) + env(safe-area-inset-bottom, 0px));
+  z-index: 48;
+  width: min(420px, calc(100vw - 24px));
+  border: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+  background: var(--ink-card);
+  color: var(--paper);
+  font-family: var(--font-mono);
+}
+
+.an-global-player-bar {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+}
+
+.an-global-player-toggle,
+.an-global-player-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid color-mix(in srgb, var(--paper) 26%, transparent);
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+}
+
+.an-global-player-toggle {
+  background: var(--acid);
+  color: var(--ink);
+  border-color: var(--acid);
+}
+
+.an-global-player-toggle:hover,
+.an-global-player-icon:hover {
+  background: var(--ink-hover);
+  color: var(--paper);
+}
+
+.an-global-player-toggle:focus-visible,
+.an-global-player-icon:focus-visible,
+.an-global-player-link:focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 2px;
+}
+
+.an-global-player-wave {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 18px;
+}
+
+.an-global-player-wave i {
+  display: block;
+  width: 2px;
+  height: 4px;
+  background: color-mix(in srgb, var(--acid) 70%, transparent);
+}
+
+.an-global-player[data-player-state="playing"] .an-global-player-wave i,
+.an-global-player[data-player-state="loading"] .an-global-player-wave i {
+  height: calc(4px + var(--an-amp, 0.2) * 14px);
+  animation: an-player-wave 900ms ease-in-out infinite alternate;
+}
+
+@keyframes an-player-wave {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+.an-global-player-meta {
+  display: grid;
+  min-width: 0;
+}
+
+.an-global-player-label {
+  font-size: 0.56rem;
+  letter-spacing: 0.18em;
+  color: var(--mute);
+}
+
+.an-global-player-meta strong {
+  font-size: 0.72rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.an-global-player-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  color: var(--acid);
+  text-decoration: none;
+}
+
+/* Rak buka/tutup memakai grid-template-rows 0fr → 1fr. */
+.an-global-player-shelf {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.an-global-player-shelf[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.an-global-player-shelf-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.an-global-player-shelf iframe {
+  display: block;
+  width: 100%;
+  /* Tinggi embed audio resmi: token tetap 166px. */
+  height: var(--an-embed-audio-h, 166px);
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+}
+
+@media (max-width: 640px) {
+  .an-global-player {
+    left: 12px;
+    right: 12px;
+    width: auto;
+  }
+  .an-global-player-link {
+    display: none;
+  }
+}
+
+/* Jempol butuh sasaran yang lebih besar daripada kursor mouse. */
+@media (pointer: coarse) {
+  .an-global-player-toggle,
+  .an-global-player-icon {
+    width: 44px;
+    height: 44px;
+  }
+  .an-global-player-bar {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+}
+
+/* Player melayang di atas konten; sisakan ruang supaya bagian bawah halaman
+   (footer, tombol terakhir) tidak pernah tertimbun permanen di layar kecil. */
+@media (max-width: 640px) {
+  html[data-an-player="visible"] body {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+  html[data-an-player="visible"][data-an-player-shelf="open"] body {
+    padding-bottom: calc(76px + var(--an-embed-audio-h, 166px) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-global-player-shelf {
+    transition: none;
+  }
+  .an-global-player-wave i {
+    animation: none !important;
+  }
+}

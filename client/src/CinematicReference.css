@@ -124,6 +124,7 @@ body::before {
 /* Public inner pages */
 .nf-page {
   min-height: 100vh;
+  min-height: 100svh;
   color: var(--ref-ink) !important;
   background: var(--ref-bg) !important;
   overflow-x: clip !important;
@@ -372,7 +373,6 @@ body::before {
 .an-site .hero-copy .hero-title-mask { padding: 0 !important; }
 .an-site .hero-description { max-width: 34ch !important; margin: 28px 0 30px !important; color: var(--ref-muted) !important; font-family: var(--ref-mono) !important; font-size: 0.69rem !important; line-height: 1.8 !important; }
 .an-site .home-hero-portrait { height: min(78vh, 720px) !important; border: 0 !important; box-shadow: var(--ref-shadow) !important; }
-.an-site .home-hero-portrait::after { content: "01 / 08  THE SIGNAL" !important; right: 18px; bottom: 16px; padding: 0 !important; border: 0 !important; background: transparent !important; color: var(--ref-cyan) !important; font-size: 0.56rem !important; }
 .an-site .home-hero-portrait img { filter: saturate(0.62) contrast(1.2) brightness(0.76) !important; object-position: 50% 22% !important; }
 .an-site .button-primary { padding: 13px 16px !important; background: var(--ref-cyan) !important; color: var(--ink) !important; font-family: var(--ref-mono) !important; font-size: 0.59rem !important; letter-spacing: 0.12em !important; }
 .an-site .button-quiet { padding: 13px 0 !important; border-bottom-color: var(--ref-line) !important; color: var(--ref-ink) !important; font-size: 0.59rem !important; }
@@ -472,7 +472,7 @@ body::before {
   }
   .an-site .home-hero-portrait { order: -1; width: 100% !important; height: 405px !important; }
   .an-site .hero-copy { max-width: 100% !important; }
-  .an-site .hero-copy .hero-title-editorial { font-size: clamp(3.4rem, 16vw, 5.8rem) !important; }
+  .an-site .hero-copy .hero-title-editorial { font-size: clamp(2rem, 12vw, 4rem) !important; }
   .an-site .hero-description { max-width: 36ch !important; margin: 22px 0 24px !important; font-size: 0.65rem !important; }
   .an-site .hero-actions { gap: 10px 18px !important; }
   .an-site .button-primary { min-height: 44px; }
@@ -497,7 +497,7 @@ body::before {
   .nf-catalog-card { flex-basis: min(78vw, 290px) !important; min-height: 350px !important; }
   .an-site .an-hero { min-height: 680px !important; }
   .an-site .home-hero-portrait { height: 330px !important; }
-  .an-site .hero-copy .hero-title-editorial { font-size: clamp(3rem, 16vw, 5rem) !important; }
+  .an-site .hero-copy .hero-title-editorial { font-size: clamp(2rem, 12vw, 4rem) !important; }
   .an-site .section h2, .an-site .home-signal-copy h2 { font-size: clamp(2.7rem, 15vw, 5rem) !important; }
   .an-site .video-grid { grid-template-rows: 250px 180px !important; }
 }
@@ -641,7 +641,9 @@ body::before {
 .hero-title-break-mobile { display: none; }
 @media (max-width: 767.98px) {
   .an-site .hero-copy .hero-title-editorial {
-    font-size: clamp(2.7rem, 11vw, 4rem) !important;
+    /* Kata judul dipaksa nowrap, jadi ukurannya harus ikut lebar layar.
+       Lantai rem tetap membuat "NAWASUNDA." terpotong di layar 320px. */
+    font-size: clamp(2rem, 12vw, 4rem) !important;
     letter-spacing: -0.06em !important;
   }
   .an-site .hero-copy .hero-title-word {

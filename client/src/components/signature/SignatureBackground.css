@@ -1,0 +1,45 @@
+/* Particle field global — dekoratif murni, tidak pernah menangkap pointer. */
+.an-signature-field {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 600ms ease;
+  /* Hanya layout/paint/style: `size` tidak dipakai supaya kanvas selalu
+     mewarisi tinggi viewport, termasuk saat bilah URL mobile berubah. */
+  contain: layout paint style;
+}
+
+.an-signature-field canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.an-signature-field[data-signature-mode="wordmark"] { opacity: 1; }
+.an-signature-field[data-signature-mode="signal"] { opacity: 0.62; }
+.an-signature-field[data-signature-mode="dust"] { opacity: 0.34; }
+.an-signature-field[data-signature-mode="era"] { opacity: 0.42; }
+.an-signature-field[data-signature-mode="quiet"] { opacity: 0.26; }
+.an-signature-field[data-signature-mode="frequency"] { opacity: 0.9; }
+
+/* Selama perpindahan halaman, label tujuan digambar partikel — lapisannya
+   naik ke atas tirai supaya huruf itu yang terbaca, bukan tirainya. */
+.an-signature-field[data-signature-transit="true"] {
+  z-index: 59;
+  opacity: 1;
+}
+
+/* Perangkat lite memakai kerapatan rendah; turunkan juga intensitasnya agar
+   teks tetap kontras di layar kecil. */
+.an-signature-field[data-signature-tier="lite"] { opacity: 0.5; }
+.an-signature-field[data-signature-tier="lite"][data-signature-mode="wordmark"] {
+  opacity: 0.92;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-signature-field {
+    display: none;
+  }
+}

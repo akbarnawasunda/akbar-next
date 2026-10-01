@@ -76,7 +76,6 @@ export default function PrivacyPolicy() {
       <main>
         <section className="an-privacy-hero">
           <div className="an-privacy-hero-copy">
-            <p className="nf-page-eyebrow">AKBAR NAWASUNDA / DATA NOTE</p>
             <h1>PRIVACY<br />POLICY.</h1>
             <p>
               {reviewedIntro || "Penjelasan singkat dan terbuka tentang data yang diproses saat kamu memakai situs resmi Akbar Nawasunda."}

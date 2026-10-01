@@ -17,10 +17,11 @@ import { ArtistPhotoStorySection } from "@/components/ArtistEditorialSections";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import {
   EditorialSection,
-  EditorialTimeline,
   SignalIndicator,
-  type TimelineEntry,
 } from "@/components/editorial/EditorialKit";
+import { EraTimeline } from "@/components/signature/EraTimeline";
+import { SignalHeading } from "@/components/signature/SignalType";
+import { publicEras } from "@/content/eras";
 import "./EcosystemPages.css";
 import "./ArchiveUpgrade.css";
 import "./ArchiveArtwork.css";
@@ -87,24 +88,7 @@ export default function Universe() {
         image: release.image,
       })),
   ];
-  const timelineEntries: TimelineEntry[] = journey.milestones.map(
-    (milestone, index) => {
-      const linkedRelease = catalog[index];
-      return {
-        year: milestone.year,
-        title: milestone.title,
-        copy: milestone.body,
-        links: [
-          linkedRelease
-            ? { label: `RILISAN · ${linkedRelease.title}`, href: linkedRelease.href }
-            : { label: "KATALOG RILISAN", href: "/music" },
-          index % 2 === 0
-            ? { label: "VISUAL", href: "/visuals" }
-            : { label: "PANGGUNG", href: "/live" },
-        ],
-      };
-    }
-  );
+  const eras = publicEras(cms.data, "id");
 
   return (
     <div className="nf-page an-archive-page">
@@ -119,7 +103,6 @@ export default function Universe() {
           }
         >
           <div>
-            <p className="nf-page-eyebrow">ARSIP AKBAR</p>
             <h1>
               AKBAR
               <br />
@@ -138,7 +121,6 @@ export default function Universe() {
         <section id="origin" className="nf-section">
           <div className="an-archive-origin">
             <div>
-              <p className="nf-page-eyebrow">PERJALANAN</p>
               <h2>{journey.title || "PERJALANAN MUSIK."}</h2>
               <p>{journey.intro || verifiedArtistProfile.longBio}</p>
               <div className="an-archive-genres">
@@ -151,8 +133,6 @@ export default function Universe() {
         </section>
         <EditorialSection
           id="timeline"
-          index="01 — LINIMASA"
-          eyebrow="DJ AKBAR REMIX → AKBAR NAWASUNDA"
           title={
             <>
               SATU NAMA,
@@ -160,14 +140,10 @@ export default function Universe() {
               BANYAK BABAK.
             </>
           }
-          lede="Buka tiap babak untuk melihat apa yang terjadi, lalu lompat ke rilisan, visual, atau panggung yang lahir dari babak itu."
+          lede="Setiap babak terbaca penuh di halaman ini. Gulir untuk melihat garis babak menyala dan artwork terkait berganti."
           aside={<SignalIndicator label="ARSIP INTERAKTIF" />}
         >
-          <EditorialTimeline
-            entries={timelineEntries}
-            openLabel="BUKA"
-            closeLabel="TUTUP"
-          />
+          <EraTimeline eras={eras} lang="id" />
         </EditorialSection>
         <section className="nf-section an-archive-art-feature">
           <div className="an-archive-art-frame">
@@ -181,7 +157,6 @@ export default function Universe() {
             />
           </div>
           <div className="an-archive-art-copy">
-            <p className="nf-page-eyebrow">ARAH VISUAL / 001</p>
             <h2>
               DARI
               <br />
@@ -203,12 +178,7 @@ export default function Universe() {
         <section className="nf-section dark-panel">
           <div className="nf-section-title">
             <div>
-              <p className="nf-page-eyebrow">RILISAN PILIHAN</p>
-              <h2>
-                ARTWORK
-                <br />
-                RILISAN.
-              </h2>
+              <SignalHeading as="h2" lines={["ARTWORK", "RILISAN."]} />
             </div>
             <p>Buka di platform resmi.</p>
           </div>
@@ -242,7 +212,6 @@ export default function Universe() {
         <section className="nf-section">
           <div className="an-archive-routes">
             <div>
-              <p className="nf-page-eyebrow">KONTAK</p>
               <h2>
                 JALUR
                 <br />
@@ -268,7 +237,6 @@ export default function Universe() {
 
         <FanSignalSection
           source={FAN_SIGNAL_SOURCES.universe}
-          eyebrow="KABAR DARI ARSIP"
           title={
             <>
               TETAP DI

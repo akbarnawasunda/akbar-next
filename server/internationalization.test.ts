@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { render } from "../client/src/entry-server";
 
 const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
 
@@ -30,9 +31,8 @@ describe("international artist layer", () => {
     expect(enChrome).toContain('aria-controls="english-mobile-menu"');
   });
 
-  it("emits route-aware canonical, language alternates, and only factual schema types", () => {
+  it("emits route-aware canonical, language alternates, and only factual schema types", async () => {
     const app = source("client/src/App.tsx");
-    const schema = source("client/src/components/StructuredData.tsx");
     const index = source("client/index.html");
     const ssr = source("server/_core/ssrHtml.ts");
     const robots = source("client/public/robots.txt");
@@ -53,14 +53,36 @@ describe("international artist layer", () => {
     expect(robots).toContain("Disallow: /studio");
     expect(sitemap).toContain("https://akbarnawasunda.my.id/en/music");
     expect(sitemap).toContain('hreflang="en"');
-    expect(schema).toContain('"@type": "WebSite"');
-    expect(schema).toContain('name: "Akbar Nawasunda | Official Website"');
-    expect(schema).toContain('alternateName: "Akbar Nawasunda"');
-    expect(schema).toContain('"@type": "MusicGroup"');
-    expect(schema).toContain('"@type": "MusicRecording"');
-    expect(schema).toContain('"@type": "MusicEvent"');
-    expect(schema).toContain('pathWithoutLanguage === "/live"');
-    expect(schema).toContain('publicUpcomingEvents(cms.data)');
+    // Schema diperiksa dari payload yang benar-benar dikirim ke halaman,
+    // bukan dari isi file komponennya.
+    const home = await render("/", { documents: async () => [] as never });
+    const graph = (
+      home.head.structuredData as { "@graph": Record<string, unknown>[] }
+    )["@graph"];
+    const types = graph.map(node => node["@type"]);
+    expect(types).toContain("WebSite");
+    expect(types).toContain("WebPage");
+    expect(types).toContain("MusicGroup");
+
+    const website = graph.find(node => node["@type"] === "WebSite") as {
+      name: string;
+      alternateName: string[];
+      inLanguage: string;
+    };
+    expect(website.name).toBe("Akbar Nawasunda | Official Website");
+    expect(website.alternateName).toEqual([
+      "Akbar Nawasunda",
+      "DJ Akbar Remix",
+      "akbarnawasunda.my.id",
+    ]);
+
+    const english = await render("/en", { documents: async () => [] as never });
+    const englishWebsite = (
+      english.head.structuredData as { "@graph": Record<string, unknown>[] }
+    )["@graph"].find(node => node["@type"] === "WebSite") as {
+      inLanguage: string;
+    };
+    expect(englishWebsite.inLanguage).toBe("en");
   });
 
   it("shares one public custom-content query between page data and metadata", () => {

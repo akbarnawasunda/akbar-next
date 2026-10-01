@@ -161,8 +161,12 @@ describe("halaman publik yang dirender server", () => {
     }
   });
 
-  it("tidak merender penanda section yang kosong", async () => {
-    const { html } = await renderPage("/");
-    expect(html).not.toMatch(/class="an-section-index"[^>]*>\s*<span><\/span>/);
+  it("tidak merender penanda section sama sekali", async () => {
+    // Dulu tesnya hanya melarang penanda kosong. Penandanya sendiri kini
+    // sudah dibuang dari seluruh halaman publik.
+    for (const route of ["/", "/en", "/visuals", "/universe"]) {
+      const { html } = await renderPage(route);
+      expect(html, route).not.toContain('class="an-section-index"');
+    }
   });
 });

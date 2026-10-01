@@ -152,7 +152,7 @@ import { ScrollProgress } from "./components/ScrollProgress";
 import { SmoothScroll } from "./components/SmoothScroll";
 import { MotionOrchestrator } from "./components/MotionOrchestrator";
 import { NightFrequencySignature } from "./components/NightFrequencySignature";
-import { CommandPalette } from "./components/CommandPalette";
+import { PublicShell } from "./shell/PublicShell";
 import { StructuredData } from "./components/StructuredData";
 import { trpc } from "./lib/trpc";
 import { customDocumentsToPublicContent } from "./content/publicContent";
@@ -161,11 +161,7 @@ import { publicMediaUrl } from "./lib/publicMedia";
 import "./components/MaturePalette.css";
 import "./components/BrandSystem.css";
 import "./components/RouteMotion.css";
-import {
-  PageLoading,
-  RouteCurtain,
-  RouteProgress,
-} from "./components/RouteTransition";
+import { PageLoading, RouteProgress } from "./components/RouteTransition";
 import "./components/NightFrequencySignature.css";
 
 function Router() {
@@ -445,16 +441,17 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
-          <Toaster />
-          <ScrollProgress />
-          <RouteProgress />
-          <RouteCurtain />
-          <SmoothScroll />
-          <CmsMetadata />
-          <StructuredData />
-          <MotionOrchestrator />
-          <RouteMotion />
-          <NightFrequencySignature />
+          <PublicShell>
+            <Toaster />
+            <ScrollProgress />
+            <RouteProgress />
+            <SmoothScroll />
+            <CmsMetadata />
+            <StructuredData />
+            <MotionOrchestrator />
+            <RouteMotion />
+            <NightFrequencySignature />
+          </PublicShell>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

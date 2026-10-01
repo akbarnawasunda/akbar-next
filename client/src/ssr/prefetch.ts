@@ -3,17 +3,11 @@ import { getQueryKey } from "@trpc/react-query";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "../../../server/routers";
 import { trpc } from "@/lib/trpc";
-import {
-  customDocumentsToPublicContent,
-  publicPlatformLinks,
-  publicUpcomingEvents,
-} from "@/content/publicContent";
-import {
-  officialBrand,
-  releases,
-  verifiedArtistProfile,
-} from "@/content/artistPlatform";
+import { customDocumentsToPublicContent } from "@/content/publicContent";
+import { officialBrand, releases } from "@/content/artistPlatform";
 import { publicMediaUrl } from "@/lib/publicMedia";
+import { buildSiteStructuredData } from "@/content/structuredData";
+import { slugify } from "@shared/slug";
 
 export type HeadMeta = {
   title: string;
@@ -39,15 +33,6 @@ export type SsrPrefetch = {
 
 const SITE_NAME = "Akbar Nawasunda | Official Website";
 const SITE_ORIGIN = "https://akbarnawasunda.my.id";
-const VERIFIED_IDENTITY_LINKS = [
-  "https://open.spotify.com/artist/7KOQuIQLuxyklLox0RDMMw",
-  "https://www.youtube.com/channel/UCS-UDttyS3sruwkEPlGjuDg",
-  "https://soundcloud.com/akbarnawasunda",
-  "https://www.instagram.com/akbarnawasunda",
-  "https://music.apple.com/id/artist/akbar-nawasunda/1816312738?l=id",
-  "https://musicbrainz.org/artist/bb843d35-fc0a-4d3b-b445-390b9b299812",
-  "https://www.wikidata.org/wiki/Q141049199",
-] as const;
 const ID_DESCRIPTION =
   "Website resmi Akbar Nawasunda — produser, remixer, dan DJ asal Bandung Barat, Indonesia.";
 const EN_DESCRIPTION =
@@ -83,14 +68,6 @@ const enTitles: Record<string, string> = {
   "/privacy": "Privacy Policy | Akbar Nawasunda",
 };
 
-const slugify = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-
 const absoluteUrl = (value: string) => {
   const normalized = publicMediaUrl(value) || value;
   return normalized.startsWith("http")
@@ -106,124 +83,6 @@ function decodedPath(url: string) {
     // Keep the raw path; wouter also fails safely for malformed encodings.
   }
   return path.replace(/\/+$/, "") || "/";
-}
-
-function publicArtistGraph(
-  content: ReturnType<typeof customDocumentsToPublicContent>
-) {
-  const artistLinks = publicPlatformLinks(content).filter(({ label }) =>
-    ["Spotify", "YouTube", "SoundCloud", "Instagram"].includes(label)
-  );
-  return {
-    "@type": "MusicGroup",
-    "@id": `${SITE_ORIGIN}/#artist`,
-    name: "Akbar Nawasunda",
-    alternateName: verifiedArtistProfile.aliases,
-    description: content?.profile?.shortBio || verifiedArtistProfile.shortBio,
-    url: `${SITE_ORIGIN}/`,
-    image: [
-      absoluteUrl(
-        content?.siteSettings?.socialPreviewUrl || officialBrand.socialPreview
-      ),
-    ],
-    logo: absoluteUrl(officialBrand.logo),
-    genre: content?.profile?.genres?.length
-      ? content.profile.genres
-      : verifiedArtistProfile.genres,
-    sameAs: Array.from(
-      new Set([
-        ...artistLinks.map(link => link.href),
-        ...VERIFIED_IDENTITY_LINKS,
-      ])
-    ),
-    location: {
-      "@type": "Place",
-      name: content?.profile?.location || verifiedArtistProfile.location,
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Bandung Barat",
-        addressCountry: "ID",
-      },
-    },
-  };
-}
-
-function buildStructuredData(
-  path: string,
-  isEnglish: boolean,
-  content: ReturnType<typeof customDocumentsToPublicContent>
-) {
-  const pathWithoutLanguage = path.replace(/^\/en(?=\/|$)/, "") || "/";
-  const graph: Record<string, unknown>[] = [
-    {
-      "@type": "WebSite",
-      "@id": `${SITE_ORIGIN}/#website`,
-      url: `${SITE_ORIGIN}/`,
-      name: SITE_NAME,
-      alternateName: [
-        "Akbar Nawasunda",
-        "DJ Akbar Remix",
-        "akbarnawasunda.my.id",
-      ],
-      inLanguage: isEnglish ? "en" : "id",
-      publisher: { "@id": `${SITE_ORIGIN}/#artist` },
-    },
-    publicArtistGraph(content),
-  ];
-
-  const releaseMatch = pathWithoutLanguage.match(/^\/music\/([a-z0-9-]+)$/i);
-  if (releaseMatch) {
-    const slug = releaseMatch[1];
-    const cmsRelease = content?.releases.find(
-      item => slugify(item.title) === slug
-    );
-    const fallbackRelease = releases.find(item => slugify(item.title) === slug);
-    const title = cmsRelease?.title || fallbackRelease?.title;
-    const href = cmsRelease?.url || fallbackRelease?.href;
-    const year = cmsRelease?.year || fallbackRelease?.year;
-    if (title && href) {
-      graph.push({
-        "@type": "MusicRecording",
-        "@id": `${SITE_ORIGIN}${path}#recording`,
-        name: title,
-        url: absoluteUrl(path),
-        sameAs: [
-          href,
-          ...(cmsRelease?.platformLinks?.map(link => link.href) || []),
-        ],
-        byArtist: { "@id": `${SITE_ORIGIN}/#artist` },
-        ...(year ? { datePublished: year } : {}),
-      });
-    }
-  }
-
-  if (pathWithoutLanguage === "/live") {
-    publicUpcomingEvents(content).forEach(event => {
-      const eventLocation =
-        [event.venue, event.city, event.country].filter(Boolean).join(", ") ||
-        "Indonesia";
-      graph.push({
-        "@type": "MusicEvent",
-        "@id": `${SITE_ORIGIN}${path}#event-${event._id}`,
-        name: event.title,
-        startDate: event.date,
-        performer: { "@id": `${SITE_ORIGIN}/#artist` },
-        location: { "@type": "Place", name: eventLocation },
-        ...(event.ticketUrl
-          ? { offers: { "@type": "Offer", url: event.ticketUrl } }
-          : {}),
-        ...(event.status === "cancelled"
-          ? { eventStatus: "https://schema.org/EventCancelled" }
-          : {}),
-      });
-    });
-  }
-
-  return {
-    "@context": "https://schema.org",
-    "@graph": graph,
-    inLanguage: isEnglish ? "en" : "id",
-  };
 }
 
 async function seed(queryClient: QueryClient, input: PublicDocuments) {
@@ -309,7 +168,13 @@ export async function prefetchForPath(
       : isEnglish
         ? EN_DESCRIPTION
         : content?.siteSettings?.metaDescription || ID_DESCRIPTION;
-  const structuredData = buildStructuredData(path, isEnglish, content);
+  const structuredData = buildSiteStructuredData({
+    path,
+    isEnglish,
+    content,
+    title,
+    description,
+  });
   const base: HeadMeta = {
     title,
     description,

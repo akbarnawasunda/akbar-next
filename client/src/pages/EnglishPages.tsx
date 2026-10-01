@@ -2,13 +2,17 @@ import {
   CtaPanel,
   CurrentSignalBoard,
   EditorialSection,
-  EditorialTimeline,
   EmptyState,
   EventCountdown,
   SignalIndicator,
   type SignalRow,
-  type TimelineEntry,
 } from "@/components/editorial/EditorialKit";
+import { EraTimeline } from "@/components/signature/EraTimeline";
+import {
+  SignalHeading,
+} from "@/components/signature/SignalType";
+import { SignatureStage } from "@/components/signature/SignatureStage";
+import { publicEras } from "@/content/eras";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -35,7 +39,7 @@ import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import VisualPortraitStudies from "@/components/VisualPortraitStudies";
 import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
-import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
+import { PlatformMarquee } from "@/components/PlatformMarquee";
 import {
   currentRelease,
   formatPublicIndex,
@@ -305,11 +309,17 @@ export function EnglishHome() {
                 href={activeRelease.href}
                 target="_blank"
                 rel="noreferrer"
+                data-signal-magnetic
+                data-signal-interactive
               >
                 <Play size={14} fill="currentColor" />
                 <span>LISTEN NOW</span>
               </a>
-              <Link className="button-quiet" href="/en/visuals">
+              <Link
+                className="button-quiet"
+                href="/en/visuals"
+                data-signal-magnetic
+              >
                 VIEW VISUALS <ArrowUpRight size={15} />
               </Link>
               <a className="hero-signal-link" href="#signal">
@@ -319,11 +329,12 @@ export function EnglishHome() {
           </div>
         </section>
 
+        <SignatureStage alsoKnownAs="Also known as DJ Akbar Remix and akbarnawasunda.my.id." />
+
         <section
           className="home-signal-deck"
           aria-labelledby="en-signal-deck-title"
         >
-          <SectionIndex label="LISTENING LINKS" />
           <div className="home-signal-copy">
             <p className="eyebrow">
               <span /> OFFICIAL PLATFORMS
@@ -363,7 +374,6 @@ export function EnglishHome() {
         </section>
 
         <section className="section section-current" id="music">
-          <SectionIndex label="FEATURED RELEASE" />
           <div className="section-heading">
             <div>
               <p className="eyebrow">LATEST RELEASE</p>
@@ -418,7 +428,6 @@ export function EnglishHome() {
         />
 
         <section className="section release-section">
-          <SectionIndex label="CATALOG" />
           <div className="section-inline">
             <div>
               <p className="eyebrow">DISCOGRAPHY</p>
@@ -473,7 +482,6 @@ export function EnglishHome() {
         </section>
 
         <section className="section visual-section" id="visuals">
-          <SectionIndex label="VISUALS" />
           <div className="section-heading">
             <div>
               <p className="eyebrow">VISUAL</p>
@@ -512,7 +520,6 @@ export function EnglishHome() {
         </section>
 
         <section className="section live-section" id="live">
-          <SectionIndex label="LIVE" />
           <div
             className="live-backdrop"
             style={{
@@ -630,8 +637,6 @@ export function EnglishHome() {
 
         <EditorialSection
           id="current-signal"
-          index="01 — SIGNAL"
-          eyebrow="CURRENT SIGNAL"
           title={
             <>
               WHAT IS
@@ -647,7 +652,6 @@ export function EnglishHome() {
 
         <CtaPanel
           id="booking"
-          eyebrow="BOOKING / COLLABORATION"
           title={
             <>
               BRING THIS SOUND
@@ -669,7 +673,6 @@ export function EnglishHome() {
         />
 
         <section className="signal-section" id="signal">
-          <SectionIndex label="NEWS" />
           <div>
             <p className="eyebrow">
               <Sparkles size={13} /> LATEST UPDATES
@@ -764,7 +767,6 @@ export function EnglishMusic() {
           }
         >
           <div>
-            <p className="nf-page-eyebrow">MUSIC / OFFICIAL CATALOG</p>
             <h1>
               MUSIC
               <br />
@@ -790,7 +792,6 @@ export function EnglishMusic() {
 
         <section className="nf-section">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">LISTENING LINKS</p>
             <h2>
               CHOOSE
               <br />
@@ -828,7 +829,6 @@ export function EnglishMusic() {
               </span>
             </div>
             <div className="en-copy-block">
-              <p className="nf-page-eyebrow">RELEASE NOTE</p>
               <h2>
                 KEEP
                 <br />
@@ -853,7 +853,6 @@ export function EnglishMusic() {
 
         <section className="nf-section dark-panel">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">LISTEN HERE</p>
             <h2>
               LISTEN
               <br />
@@ -891,7 +890,6 @@ export function EnglishMusic() {
 
         <section className="nf-section">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">FULL CATALOG</p>
             <h2>
               EVERY
               <br />
@@ -923,7 +921,6 @@ export function EnglishMusic() {
         </section>
 
         <CtaPanel
-          eyebrow="LICENSING / REMIX"
           title={
             <>
               USE THIS SOUND
@@ -993,7 +990,6 @@ export function EnglishVisuals() {
           }
         >
           <div>
-            <p className="nf-page-eyebrow">VISUALS / OFFICIAL CHANNEL</p>
             <h1>
               VIDEO
               <br />
@@ -1022,7 +1018,6 @@ export function EnglishVisuals() {
 
         <section className="nf-section">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">SELECTED VISUALS</p>
             <h2>
               WATCH
               <br />
@@ -1076,7 +1071,6 @@ export function EnglishVisuals() {
         <section className="nf-section dark-panel">
           <div className="en-contact-panel">
             <div>
-              <p className="nf-page-eyebrow">DIRECTOR / BOOKER / CURATOR</p>
               <h2>
                 NEED THE
                 <br />
@@ -1097,7 +1091,6 @@ export function EnglishVisuals() {
         </section>
 
         <CtaPanel
-          eyebrow="VISUALS / COLLABORATION"
           title={
             <>
               BUILD THE NEXT
@@ -1135,7 +1128,6 @@ export function EnglishLive() {
       <main className="en-content">
         <section className="nf-page-hero en-hero">
           <div>
-            <p className="nf-page-eyebrow">LIVE / VERIFIED DATES</p>
             <h1>
               LIVE
               <br />
@@ -1171,8 +1163,6 @@ export function EnglishLive() {
         {featured ? (
           <EditorialSection
             id="next-show"
-            index="01 — NEXT SHOW"
-            eyebrow="NEXT ON STAGE"
             title={featured.title}
             lede={[
               formatEnglishDate(featured.date, featured.time),
@@ -1220,8 +1210,6 @@ export function EnglishLive() {
         ) : (
           <EditorialSection
             id="next-show"
-            index="01 — STATUS"
-            eyebrow="BOOKING STATUS"
             title={
               <>
                 THE CALENDAR
@@ -1245,7 +1233,6 @@ export function EnglishLive() {
 
         <section className="nf-section">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">EVENT BOARD</p>
             <h2>
               LIVE
               <br />
@@ -1339,7 +1326,6 @@ export function EnglishLive() {
               </p>
             </div>
             <div className="en-copy-block">
-              <p className="nf-page-eyebrow">BOOKING</p>
               <h2>
                 BRING THE
                 <br />
@@ -1368,31 +1354,13 @@ export function EnglishUniverse() {
   const catalog = mergedCatalog(cms.data?.releases ?? []);
   const journey = publicJourney(cms.data);
   const photoStories = publicPhotoStories(cms.data);
-  const englishTimeline: TimelineEntry[] = journey.milestones.map(
-    (milestone, index) => {
-      const linked = catalog[index];
-      return {
-        year: milestone.year,
-        title: milestone.titleEn || milestone.title,
-        copy: milestone.bodyEn || milestone.body,
-        links: [
-          linked
-            ? { label: `RELEASE · ${linked.title}`, href: linked.href }
-            : { label: "RELEASE CATALOG", href: "/en/music" },
-          index % 2 === 0
-            ? { label: "VISUALS", href: "/en/visuals" }
-            : { label: "LIVE", href: "/en/live" },
-        ],
-      };
-    }
-  );
+  const eras = publicEras(cms.data, "en");
 
   return (
     <EnglishFrame>
       <main className="en-content">
         <section className="nf-page-hero en-hero">
           <div>
-            <p className="nf-page-eyebrow">AN ARCHIVE / ORIGIN</p>
             <h1>
               THE
               <br />
@@ -1415,12 +1383,10 @@ export function EnglishUniverse() {
         <section className="nf-section" id="origin">
           <div className="en-two-column">
             <div className="en-aside">
-              <p className="nf-page-eyebrow">THE BEGINNING</p>
               <strong>From DJ Akbar Remix to Akbar Nawasunda.</strong>
               <span>Independent producer · Bandung Barat · Indonesia</span>
             </div>
             <div className="en-copy-block">
-              <p className="nf-page-eyebrow">THE THROUGH-LINE</p>
               <h2>
                 REBUILD THE
                 <br />
@@ -1451,8 +1417,6 @@ export function EnglishUniverse() {
 
         <EditorialSection
           id="timeline"
-          index="01 — TIMELINE"
-          eyebrow="DJ AKBAR REMIX → AKBAR NAWASUNDA"
           title={
             <>
               ONE NAME,
@@ -1460,14 +1424,10 @@ export function EnglishUniverse() {
               MANY CHAPTERS.
             </>
           }
-          lede="Open each chapter to see what happened, then jump to the releases, visuals, or shows that came out of it."
+          lede="Every chapter is readable right here. Scroll to watch the era rail light up and the related artwork change."
           aside={<SignalIndicator label="INTERACTIVE ARCHIVE" />}
         >
-          <EditorialTimeline
-            entries={englishTimeline}
-            openLabel="OPEN"
-            closeLabel="CLOSE"
-          />
+          <EraTimeline eras={eras} lang="en" releaseHrefPrefix="/en" />
         </EditorialSection>
 
         <ArtistEditorialSections photoStories={photoStories} locale="en" />
@@ -1484,7 +1444,6 @@ export function EnglishUniverse() {
             />
           </div>
           <div className="en-archive-art-copy">
-            <p className="nf-page-eyebrow">VISUAL LANGUAGE / 001</p>
             <h2>
               THE FUTURE
               <br />
@@ -1505,12 +1464,7 @@ export function EnglishUniverse() {
 
         <section className="nf-section dark-panel">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">RELEASED WORK</p>
-            <h2>
-              THE
-              <br />
-              <em>CATALOG.</em>
-            </h2>
+            <SignalHeading as="h2" lines={["THE", "CATALOG."]} />
             <p>Open each title through the official platform route.</p>
           </div>
           <div className="en-catalog">
@@ -1565,7 +1519,6 @@ export function EnglishAbout() {
           }
         >
           <div>
-            <p className="nf-page-eyebrow">ABOUT / ARTIST PROFILE</p>
             <h1>
               AKBAR
               <br />
@@ -1642,7 +1595,6 @@ export function EnglishAbout() {
 
         <section className="nf-section dark-panel an-about-path">
           <div>
-            <p className="nf-page-eyebrow">MUSIC & CONTACT</p>
             <h2>
               LISTEN TO
               <br />
@@ -1698,7 +1650,6 @@ export function EnglishEpk() {
       <main className="en-content">
         <section className="nf-epk-hero en-hero en-epk-hero">
           <div className="en-epk-hero-copy">
-            <p className="nf-page-eyebrow">AKBAR NAWASUNDA / ONLINE EPK</p>
             <h1>
               PRESS &
               <br />
@@ -1747,7 +1698,6 @@ export function EnglishEpk() {
         <section className="nf-section">
           <div className="en-two-column">
             <div>
-              <p className="nf-page-eyebrow">ARTIST SNAPSHOT</p>
               <h2>
                 AKBAR
                 <br />
@@ -1774,7 +1724,6 @@ export function EnglishEpk() {
 
         <section className="nf-section dark-panel">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">CAPABILITIES</p>
             <h2>
               BUILT FOR
               <br />
@@ -1812,7 +1761,6 @@ export function EnglishEpk() {
 
         <section className="nf-section">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">PRESS ASSETS</p>
             <h2>
               OFFICIAL
               <br />
@@ -1861,7 +1809,6 @@ export function EnglishEpk() {
 
         <section className="nf-section dark-panel">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">SELECTED RELEASES</p>
             <h2>
               RELEASED
               <br />
@@ -1900,7 +1847,6 @@ export function EnglishEpk() {
         <section className="nf-section en-contact-panel">
           <div className="en-two-column">
             <div>
-              <p className="nf-page-eyebrow">BOOKING / COLLABORATION</p>
               <h2>
                 PROJECT
                 <br />
@@ -1931,7 +1877,6 @@ export function EnglishEpk() {
 
         <section className="nf-section">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">OFFICIAL CHANNELS</p>
             <h2>
               OFFICIAL
               <br />
@@ -1987,7 +1932,6 @@ export function EnglishInquiry() {
       <main className="en-content">
         <section className="nf-page-hero en-hero">
           <div>
-            <p className="nf-page-eyebrow">INQUIRE / DIRECT CONTACT</p>
             <h1>
               MAKE A
               <br />
@@ -2009,7 +1953,6 @@ export function EnglishInquiry() {
 
         <section className="nf-section">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">WHAT CAN WE BUILD?</p>
             <h2>
               START WITH
               <br />
@@ -2035,7 +1978,6 @@ export function EnglishInquiry() {
         <section className="nf-section dark-panel">
           <div className="en-contact-panel">
             <div>
-              <p className="nf-page-eyebrow">BOOKING / COLLAB / PRESS</p>
               <h2>
                 DIRECT IS
                 <br />
@@ -2089,7 +2031,6 @@ export function EnglishLicensing() {
       <main className="en-content">
         <section className="nf-page-hero en-hero">
           <div>
-            <p className="nf-page-eyebrow">LICENSING / MUSIC USAGE</p>
             <h1>
               LICENSE
               <br />
@@ -2114,7 +2055,6 @@ export function EnglishLicensing() {
 
         <section className="nf-section">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">THE ROUTE</p>
             <h2>
               CLARITY
               <br />
@@ -2140,7 +2080,6 @@ export function EnglishLicensing() {
         <section className="nf-section dark-panel">
           <div className="en-contact-panel">
             <div>
-              <p className="nf-page-eyebrow">BEFORE YOU PUBLISH</p>
               <h2>
                 DESCRIBE
                 <br />
@@ -2180,7 +2119,6 @@ export function EnglishPrivacy() {
         <section className="nf-section en-privacy-intro">
           <div className="en-two-column">
             <div className="en-copy-block">
-              <p className="nf-page-eyebrow">AKBAR NAWASUNDA / DATA NOTE</p>
               <h1>
                 PRIVACY
                 <br />
@@ -2217,7 +2155,6 @@ export function EnglishPrivacy() {
             </nav>
             <div>
               <article className="en-legal-block" id="short-version">
-                <p className="nf-page-eyebrow">01 / THE SHORT VERSION</p>
                 <h2>
                   LIGHT ON
                   <br />
@@ -2233,7 +2170,6 @@ export function EnglishPrivacy() {
                 </p>
               </article>
               <article className="en-legal-block" id="collection">
-                <p className="nf-page-eyebrow">02 / WHAT WE COLLECT</p>
                 <h2>
                   WHAT ENTERS
                   <br />
@@ -2258,7 +2194,6 @@ export function EnglishPrivacy() {
                 </ul>
               </article>
               <article className="en-legal-block" id="cookies">
-                <p className="nf-page-eyebrow">03 / COOKIES & LOCAL STORAGE</p>
                 <h2>
                   NO HIDDEN
                   <br />
@@ -2280,7 +2215,6 @@ export function EnglishPrivacy() {
                 </p>
               </article>
               <article className="en-legal-block" id="services">
-                <p className="nf-page-eyebrow">04 / THIRD-PARTY SERVICES</p>
                 <h2>
                   WHO HELPS
                   <br />
@@ -2307,7 +2241,6 @@ export function EnglishPrivacy() {
                 </ul>
               </article>
               <article className="en-legal-block" id="rights">
-                <p className="nf-page-eyebrow">05 / YOUR RIGHTS</p>
                 <h2>
                   YOUR DATA.
                   <br />
@@ -2389,9 +2322,6 @@ export function EnglishReleaseDetail() {
             <Link className="en-back-link" href="/en/music">
               <ArrowLeft size={13} /> BACK TO MUSIC
             </Link>
-            <p className="nf-page-eyebrow">
-              RELEASE / {release?.format || "LOADING"}
-            </p>
             <h1>{release?.title || "LOADING RELEASE…"}</h1>
             <p>
               {release
@@ -2430,7 +2360,6 @@ export function EnglishReleaseDetail() {
               </div>
             </div>
             <div className="en-copy-block">
-              <p className="nf-page-eyebrow">ABOUT THE RELEASE</p>
               <h2>{release?.title || "RELEASE"}</h2>
               <p>
                 Release details will appear when published. Use the listed source
@@ -2445,7 +2374,6 @@ export function EnglishReleaseDetail() {
 
         <section className="nf-section dark-panel">
           <div className="en-section-intro">
-            <p className="nf-page-eyebrow">LISTEN ON</p>
             <h2>
               OFFICIAL
               <br />

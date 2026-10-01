@@ -214,7 +214,7 @@ export function CtaPanel({
   actions,
   id,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: ReactNode;
   copy: string;
   actions: ReactNode;
@@ -225,7 +225,7 @@ export function CtaPanel({
       <div className="ed-shell">
         <div className="ed-cta">
           <div>
-            <p className="ed-head__eyebrow">{eyebrow}</p>
+            {eyebrow ? <p className="ed-head__eyebrow">{eyebrow}</p> : null}
             <h2 className="ed-cta__title">{title}</h2>
             <p className="ed-cta__copy">{copy}</p>
           </div>

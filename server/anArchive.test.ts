@@ -7,7 +7,8 @@ const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf
 describe("AN Archive", () => {
   it("grounds the archive in verified artist history, genres, and release artwork", () => {
     const archive = source("client/src/pages/Universe.tsx");
-    expect(archive).toContain("ARSIP AKBAR");
+    // Label hiasan "ARSIP AKBAR" sengaja dibuang; isinya yang dijaga.
+    expect(archive).toContain("publicEras");
     expect(archive).toContain("verifiedArtistProfile.longBio");
     expect(archive).toContain("verifiedArtistProfile.genres.map");
     expect(archive).toContain("catalog.slice(0, 6)");

@@ -1,0 +1,120 @@
+/* Panggung wordmark: bidang kosong tempat partikel menyusun nama. */
+.an-signature-stage {
+  position: relative;
+  border-bottom: 1.5px solid var(--paper);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Jalur scroll. Tingginya memberi ruang bagi tiga kata untuk saling
+   berganti; posisinya dibaca runtime sebagai progres 0..1. */
+.an-signature-stage-track {
+  position: relative;
+  /* Tiga kata butuh ruang gulir, tapi jangan sampai halaman terasa
+     disandera. Di layar kecil jalurnya dipendekkan (lihat media query). */
+  min-height: 240vh;
+}
+
+.an-signature-stage-sticky {
+  position: sticky;
+  top: 0;
+  display: grid;
+  align-content: center;
+  gap: clamp(14px, 2vw, 22px);
+  min-height: 100svh;
+  padding: clamp(40px, 7vh, 88px) var(--hx-gutter, clamp(20px, 5vw, 88px));
+}
+
+/* Tanpa particle field (reduced motion, hemat data, perangkat lemah, atau
+   JS mati) jalur panjangnya tidak ada gunanya — runtuh jadi section biasa. */
+.an-signature-stage[data-live="false"] .an-signature-stage-track {
+  min-height: 0;
+}
+
+.an-signature-stage[data-live="false"] .an-signature-stage-sticky {
+  position: static;
+  min-height: 0;
+}
+
+/* Kotak yang diukur Signature Runtime. Tingginya sengaja besar supaya
+   wordmark partikel punya ruang dan benar-benar terbaca. */
+.an-signature-stage-field {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(220px, 38vh, 420px);
+  border-top: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+}
+
+.an-signature-stage-word {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 0.28em;
+  font-family: var(--font-display, inherit);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 11vw, 9rem);
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  text-align: center;
+  color: var(--paper);
+  transition: opacity 420ms ease;
+}
+
+/* Particle field hidup → teks statis mundur, partikel yang bicara.
+   Teks tetap ada di DOM untuk screen reader dan mesin pencari. */
+.an-signature-stage[data-live="true"] .an-signature-stage-word {
+  opacity: 0;
+}
+
+.an-signature-stage-word span {
+  display: inline-block;
+  max-width: 100%;
+  /* Nama panjang tidak boleh mendorong layout melebar di layar 320px. */
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .an-signature-stage-track {
+    min-height: 200vh;
+  }
+}
+
+@media (max-width: 640px) {
+  .an-signature-stage-track {
+    min-height: 170vh;
+  }
+  .an-signature-stage-sticky {
+    gap: 12px;
+    padding-block: clamp(28px, 5vh, 56px);
+  }
+  .an-signature-stage-field {
+    min-height: clamp(170px, 30vh, 280px);
+  }
+}
+
+/* Layar sangat lebar: wordmark tetap punya margin, tidak menempel tepi. */
+@media (min-width: 1600px) {
+  .an-signature-stage-word {
+    font-size: clamp(5rem, 8vw, 10rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-signature-stage-track {
+    min-height: 0;
+  }
+  .an-signature-stage-sticky {
+    position: static;
+    min-height: 0;
+  }
+  /* Tidak ada partikel → wordmark tetap tampil sebagai teks penuh. */
+  .an-signature-stage[data-live="true"] .an-signature-stage-word {
+    opacity: 1;
+  }
+  .an-signature-stage-word {
+    transition: none;
+  }
+}

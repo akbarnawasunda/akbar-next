@@ -7,6 +7,7 @@ import { officialBrand } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
 import { publicPortraitStudies, usePublicArtistContent } from "@/content/publicContent";
 import { OptimizedEditorialImage } from "@/components/OptimizedEditorialImage";
+import { useLightbox, type LightboxItem } from "@/components/signature/LightboxProvider";
 import "./EcosystemPages.css";
 import "./VisualPortraitGallery.css";
 
@@ -40,11 +41,23 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
     recordVisit.mutate({ gallery: "portrait-gallery", visitorKey });
   }, []);
   const studies = publicPortraitStudies(cms.data);
+  const lightbox = useLightbox();
+  const lightboxItems: LightboxItem[] = studies.map(study => {
+    const title = english ? study.titleEn || study.title : study.title;
+    return {
+      id: study._id,
+      src: study.imageUrl || officialBrand.socialPreview,
+      alt: english
+        ? study.altEn || study.altId || title
+        : study.altId || study.altEn || title,
+      caption: title,
+      meta: study.label || (english ? "PORTRAIT STUDY" : "STUDI POTRET"),
+    };
+  });
   return (
     <main className={english ? "en-content" : undefined}>
       <section className="nf-page-hero portrait-gallery-hero">
         <div>
-          <p className="nf-page-eyebrow">{english ? "VISUALS / PORTRAIT STUDIES" : "VISUAL / STUDI POTRET"}</p>
           <h1>{english ? <>PHOTO<br /><em>STUDIES.</em></> : <>STUDI<br /><em>POTRET.</em></>}</h1>
           <p>{english ? "A still-image archive from the Akbar Nawasunda visual language." : "Arsip foto dari bahasa visual Akbar Nawasunda."}</p>
         </div>
@@ -59,7 +72,6 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
       <section className="nf-section portrait-gallery-intro">
         <div className="nf-section-title">
           <div>
-            <p className="nf-page-eyebrow">{english ? "THE STILL FRAME" : "FRAME YANG DITAHAN"}</p>
             <h2>{english ? <>SEE THE<br /><em>DETAIL.</em></> : <>LIHAT<br /><em>DETAILNYA.</em></>}</h2>
           </div>
           <p>{english ? "Each frame is presented as a study, not a product gallery. The image stays inside the site while the story remains close to the work." : "Setiap frame ditampilkan sebagai studi, bukan etalase produk. Fotonya tetap berada di dalam pengalaman website, sementara ceritanya tetap dekat dengan karya."}</p>
@@ -72,13 +84,21 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
             return (
               <article className={`portrait-gallery-card ${index === 0 ? "portrait-gallery-card-featured" : ""}`} id={study._id} key={study._id}>
                 <div className="portrait-gallery-image-wrap">
-                  <OptimizedEditorialImage
-                    src={study.imageUrl || officialBrand.socialPreview}
-                    backupSrc={officialBrand.socialPreview}
-                    alt={alt}
-                    priority={index === 0}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
-                  />
+                  <button
+                    type="button"
+                    className="portrait-gallery-trigger"
+                    onClick={() => lightbox.open(lightboxItems, index)}
+                    aria-label={english ? `Open ${title} in the image viewer` : `Buka ${title} di penampil gambar`}
+                    data-signal-interactive
+                  >
+                    <OptimizedEditorialImage
+                      src={study.imageUrl || officialBrand.socialPreview}
+                      backupSrc={officialBrand.socialPreview}
+                      alt={alt}
+                      priority={index === 0}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+                    />
+                  </button>
                   <span className="portrait-gallery-index">{String(index + 1).padStart(2, "0")}</span>
                 </div>
                 <div className="portrait-gallery-card-copy">
@@ -95,7 +115,6 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
       </section>
       <section className="nf-section dark-panel portrait-gallery-close">
         <div>
-          <p className="nf-page-eyebrow">{english ? "KEEP EXPLORING" : "LANJUT MENJELAJAH"}</p>
           <h2>{english ? <>MOVE THROUGH<br /><em>THE ARCHIVE.</em></> : <>LANJUT KE<br /><em>ARSIPNYA.</em></>}</h2>
         </div>
         <div className="portrait-gallery-close-actions">
