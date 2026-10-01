@@ -208,6 +208,35 @@ describe("aset statis redesign", () => {
     expect(kit).toMatch(/prefers-reduced-motion: reduce/);
   });
 
+  it("tirai perpindahan halaman memakai bahasa visual splash, tanpa menyentuh SSR", async () => {
+    const css = read("client/src/components/RouteTransition.css");
+    expect(css).toContain(".an-route-curtain");
+    expect(css).toContain("an-curtain-sweep");
+    expect(css).toMatch(/prefers-reduced-motion: reduce/);
+
+    for (const route of ["/", "/music", "/en/live"]) {
+      const page = await renderPage(route);
+      expect(page.html, route).not.toContain("an-route-curtain");
+    }
+  });
+
+  it("palet publik tidak memakai neon mentah lagi", () => {
+    const banned = ["#00d4ff", "#00ffd5", "#1ee8ff", "#38e1ff", "#ff0055"];
+    for (const file of [
+      "client/src/index.css",
+      "client/src/components/MusicEmbed.css",
+      "client/src/components/NightFrequencyChrome.css",
+      "client/src/pages/Home.css",
+      "client/index.html",
+    ]) {
+      const content = read(file);
+      for (const hex of banned) {
+        expect(content.toLowerCase(), `${hex} di ${file}`).not.toContain(hex);
+      }
+    }
+    expect(read("client/src/index.css")).toContain("--acid:       #8fb2c0");
+  });
+
   it("token audio embed dan warna inti tetap utuh", () => {
     expect(read("client/src/components/MusicEmbed.css")).toContain(
       "--an-embed-audio-h: 166px"

@@ -28,14 +28,14 @@ export function detectEmbedPlatform(url: string): EmbedPlatform {
 export function soundcloudEmbedUrl(url: string): string {
   if (url.includes("w.soundcloud.com/player")) {
     const embedUrl = new URL(url);
-    embedUrl.searchParams.set("color", "#00d4ff");
+    embedUrl.searchParams.set("color", "#8fb2c0");
     embedUrl.searchParams.set("visual", "false");
     return embedUrl.toString();
   }
 
   return `https://w.soundcloud.com/player/?url=${encodeURIComponent(
     url
-  )}&color=%2300d4ff&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+  )}&color=%238fb2c0&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
 }
 
 export function formatEmbedUrl(url: string, platform: EmbedPlatform): string {

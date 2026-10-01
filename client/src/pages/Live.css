@@ -50,7 +50,7 @@
 }
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form > div:focus-within {
   border-color: var(--acid);
-  box-shadow: 0 0 0 1px var(--acid), 0 4px 16px rgba(0, 212, 255, 0.12);
+  box-shadow: 0 0 0 1px var(--acid), 0 4px 16px rgba(var(--acid-rgb), 0.12);
 }
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form > div > svg {
   display: block;

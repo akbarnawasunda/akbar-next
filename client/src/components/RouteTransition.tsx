@@ -91,6 +91,67 @@ export function RouteProgress() {
   );
 }
 
+/**
+ * Tirai perpindahan halaman.
+ *
+ * Memakai bahasa visual yang sama dengan splash pembuka (wordmark naik +
+ * signal line menyapu), hanya lebih pendek supaya navigasi tetap terasa
+ * cepat. Hanya hidup di client: HTML hasil SSR tidak pernah membawanya,
+ * jadi crawler tetap menerima halaman penuh.
+ */
+const CURTAIN_HOLD_MS = 560;
+const CURTAIN_LIFT_MS = 460;
+
+export function RouteCurtain() {
+  const [location] = useLocation();
+  const firstRender = useRef(true);
+  const [phase, setPhase] = useState<"idle" | "hold" | "lift">("idle");
+
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (reduced) return;
+
+    setPhase("hold");
+    const toLift = window.setTimeout(() => setPhase("lift"), CURTAIN_HOLD_MS);
+    const toIdle = window.setTimeout(
+      () => setPhase("idle"),
+      CURTAIN_HOLD_MS + CURTAIN_LIFT_MS
+    );
+    return () => {
+      window.clearTimeout(toLift);
+      window.clearTimeout(toIdle);
+    };
+  }, [location]);
+
+  if (phase === "idle") return null;
+
+  return (
+    <div
+      className={`an-route-curtain is-${phase}`}
+      role="status"
+      aria-live="polite"
+      aria-label="Memuat halaman"
+    >
+      <div className="an-route-curtain-inner" aria-hidden="true">
+        <span className="an-route-curtain-line">
+          <span className="an-route-curtain-word">AKBAR</span>
+        </span>
+        <span className="an-route-curtain-line">
+          <span className="an-route-curtain-word">NAWASUNDA</span>
+        </span>
+        <span className="an-route-curtain-rule" />
+        <span className="an-route-curtain-signal" />
+      </div>
+    </div>
+  );
+}
+
 const LOADING_WORD = "MEMUAT";
 
 export function PageLoading() {
