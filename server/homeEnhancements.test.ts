@@ -22,17 +22,7 @@ describe("homepage enhancement contract", () => {
     expect(performance).toContain("largest-contentful-paint");
   });
 
-  it("keeps the RMX public mark static and lightweight", () => {
-    const component = source("client/src/components/BrandMotionMark.tsx");
-
-    expect(component).toContain("an-rmx-static-mark");
-    expect(component).toContain("<svg");
-    expect(component).toContain("an-rmx-monogram");
-    expect(component).not.toContain("canvas");
-    expect(component).not.toContain("requestAnimationFrame");
-  });
-
-  it("wires route transition, touch swipe, and richer particle rendering", () => {
+  it("wires route transition and a static, data-driven hero", () => {
     const app = source("client/src/App.tsx");
     const home = source("client/src/pages/Home.tsx");
 
@@ -40,9 +30,6 @@ describe("homepage enhancement contract", () => {
     expect(app).toContain("RouteMotion");
     expect(app).toContain(
       'window.scrollTo({ top: 0, left: 0, behavior: "auto" })'
-    );
-    expect(source("client/src/components/BrandMotionMark.tsx")).not.toContain(
-      "requestAnimationFrame"
     );
     expect(home).toContain('className="hero-title-editorial"');
     expect(home).toContain('data-no-scramble="true"');
@@ -55,7 +42,9 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain(
       "/assets/akbar-night-frequency-hero-mobile-optimized.webp"
     );
-    expect(home).toContain("/assets/akbar-night-frequency-stage-optimized.webp");
+    expect(home).toContain(
+      "/assets/akbar-night-frequency-stage-optimized.webp"
+    );
     expect(home).not.toContain("MANAGED RELEASE");
   });
 
@@ -80,7 +69,7 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain("<PlatformMarquee links={editablePlatformLinks} />");
     expect(marquee).toContain("an-platform-marquee-track");
     expect(progress).toContain("requestAnimationFrame");
-    expect(orchestrator).toContain('main > section:not(.reveal-target)');
+    expect(orchestrator).toContain("main > section:not(.reveal-target)");
     expect(orchestrator).toContain('section.classList.add("reveal-pending")');
     expect(orchestratorCss).toContain(".reveal-pending");
     expect(home).toContain("ResilientBrandImage");

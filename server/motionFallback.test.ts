@@ -1,25 +1,42 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
+const source = (path: string) =>
+  readFileSync(resolve(process.cwd(), path), "utf8");
+
+const clientSources = () => {
+  const roots = ["client/src/pages", "client/src/components"];
+  const files: string[] = [];
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(resolve(process.cwd(), dir), {
+      withFileTypes: true,
+    })) {
+      const next = `${dir}/${entry.name}`;
+      if (entry.isDirectory()) walk(next);
+      else if (/\.(ts|tsx)$/.test(entry.name)) files.push(next);
+    }
+  };
+  roots.forEach(walk);
+  return files.map(file => source(file)).join("\n");
+};
 
 describe("motion simplification", () => {
-  it("renders headings as their final copy without a scramble timer", () => {
-    const scramble = source("client/src/components/ScrambleText.tsx");
-    expect(scramble).toContain("return <Tag");
-    expect(scramble).not.toContain("setInterval");
-    expect(scramble).not.toContain("onClick");
+  it("keeps the particle, ticker, and scramble experiments out of the shipped UI", () => {
+    const code = clientSources();
+    [
+      "NameParticleField",
+      "PlatformTicker",
+      "ScrambleText",
+      "ArtistSignalMotion",
+      "HomeAmbientCanvas",
+      "HomeWordmarkParticles",
+    ].forEach(experiment => expect(code).not.toContain(experiment));
   });
 
-  it("does not animate the static heading layer", () => {
-    const scrambleCss = source("client/src/components/ScrambleText.css");
-    expect(scrambleCss).toContain("animation:none!important");
-  });
-
-  it("keeps the particle and ticker experiments out of the public homepage", () => {
+  it("renders the hero heading as final copy, without a scramble timer", () => {
     const home = source("client/src/pages/Home.tsx");
-    expect(home).not.toContain("NameParticleField");
-    expect(home).not.toContain("PlatformTicker");
+    expect(home).toContain('data-no-scramble="true"');
+    expect(home).toContain("hero-title-editorial");
   });
 });

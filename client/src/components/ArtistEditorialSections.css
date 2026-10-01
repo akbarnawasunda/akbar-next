@@ -205,9 +205,6 @@
   background: var(--ink);
   content: "";
 }
-.artist-journey-timeline article:last-child > div::before {
-  background: var(--acid);
-}
 
 .artist-journey-timeline h3 {
   margin: 0 0 12px;
@@ -716,7 +713,6 @@
   background: var(--paper);
   border-color: var(--acid);
 }
-.artist-journey-timeline article:last-child > div::before { background: var(--acid); }
 .artist-photo-story-card,
 .artist-photo-story-stage,
 .artist-photo-story-rail { border-color: var(--ink); }
@@ -737,13 +733,11 @@
   background: var(--paper);
   border-left-color: var(--ink-line);
 }
-.artist-photo-story-stage .artist-photo-story-copy a { color: var(--acid); border-color: var(--acid); }
 .artist-photo-story-stage .artist-photo-story-copy a:hover,
 .artist-photo-story-stage .artist-photo-story-copy a:focus-visible {
   color: var(--ink);
   border-color: var(--ink);
 }
-.artist-photo-story-counter { color: var(--mute); }
 .artist-photo-story-counter i { background: var(--ink); }
 .artist-photo-story-arrows button {
   border-color: var(--ink);
