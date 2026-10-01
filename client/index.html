@@ -3,271 +3,218 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="application-name" content="Akbar Nawasunda | Official Website" />
-    <meta name="apple-mobile-web-app-title" content="Akbar Nawasunda | Official Website" />
-    <meta property="og:site_name" content="Akbar Nawasunda | Official Website" />
+    <meta
+      name="application-name"
+      content="Akbar Nawasunda | Official Website"
+    />
+    <meta
+      name="apple-mobile-web-app-title"
+      content="Akbar Nawasunda | Official Website"
+    />
+    <meta
+      property="og:site_name"
+      content="Akbar Nawasunda | Official Website"
+    />
     <!--app-head-->
     <link rel="icon" type="image/jpeg" href="/assets/akbar-favicon.jpg" />
-    <link rel="apple-touch-icon" sizes="512x512" href="/assets/akbar-favicon.jpg" />
+    <link
+      rel="apple-touch-icon"
+      sizes="512x512"
+      href="/assets/akbar-favicon.jpg"
+    />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#08090c" />
     <!-- Legacy font names Bebas+Neue and Manrope are intentionally replaced by local Fontsource bundles. -->
-    <link rel="preload" href="/assets/fonts/fontshare/clash-display-600.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/assets/fonts/fontshare/general-sans-500.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/assets/fonts/fontshare/azeret-mono-500.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" as="image" href="/assets/akbar-editorial-stage-bg.webp" fetchpriority="high" />
+    <link
+      rel="preload"
+      href="/assets/fonts/fontshare/clash-display-600.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/assets/fonts/fontshare/general-sans-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/assets/fonts/fontshare/azeret-mono-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="/assets/akbar-editorial-stage-bg.webp"
+      fetchpriority="high"
+    />
   </head>
 
   <body>
-    <!-- Authentic Musician Stage Preloader: Network-Adaptive, Zero AI Tropes, 0ms FOUC Shield -->
+    <!-- Splash pembuka: identitas brand, tanpa telemetri palsu dan tanpa persentase karangan. -->
     <style id="akbar-preloader-styles">
       #akbar-preloader {
         position: fixed;
         inset: 0;
         z-index: 999999;
-        background-color: #070709;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: #f0f0f2;
-        font-family: 'JetBrains Mono', ui-monospace, monospace;
+        background: #0c0d12;
+        color: #f4f6fa;
         pointer-events: all;
-        transition: opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1), transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
-        will-change: opacity, transform;
+      }
+      #akbar-preloader::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 40vh;
+        background: linear-gradient(to top, #141722, rgba(20, 23, 34, 0));
+        pointer-events: none;
+      }
+      .an-splash-inner {
+        position: relative;
+        z-index: 1;
+        width: min(90%, 540px);
+        padding: 0 4vw;
+      }
+      .an-splash-line {
+        display: block;
+        overflow: hidden;
+      }
+      .an-splash-word {
+        display: block;
+        font-family:
+          "Clash Display",
+          "Syne",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        font-weight: 800;
+        font-size: clamp(2.4rem, 11vw, 5.25rem);
+        line-height: 0.92;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        transform: translateY(105%);
+        animation: an-splash-rise 0.86s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .an-splash-line:nth-child(2) .an-splash-word {
+        animation-delay: 0.08s;
+      }
+      @keyframes an-splash-rise {
+        to {
+          transform: translateY(0);
+        }
+      }
+      .an-splash-rule {
+        height: 1px;
+        margin: clamp(18px, 4vw, 28px) 0 14px;
+        background: #4f46e5;
+        transform-origin: left center;
+        transform: scaleX(0);
+        animation: an-splash-wipe 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.18s
+          forwards;
+      }
+      @keyframes an-splash-wipe {
+        to {
+          transform: scaleX(1);
+        }
+      }
+      .an-splash-caption {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        font-family: "Azeret Mono", ui-monospace, SFMono-Regular, monospace;
+        font-size: 10px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #6f7788;
+        opacity: 0;
+        animation: an-splash-fade 0.6s ease 0.42s forwards;
+      }
+      @keyframes an-splash-fade {
+        to {
+          opacity: 1;
+        }
       }
       #akbar-preloader.an-fade-out {
-        opacity: 0 !important;
-        transform: translateY(-8px) scale(0.99) !important;
-        pointer-events: none !important;
+        animation: an-splash-lift 0.52s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+        pointer-events: none;
       }
-      .an-preloader-inner {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        width: min(92%, 360px);
-        padding: 20px;
+      @keyframes an-splash-lift {
+        to {
+          transform: translateY(-101%);
+        }
       }
-      .an-monogram-box {
-        width: 52px;
-        height: 52px;
-        border: 1px solid rgba(255, 255, 255, 0.22);
-        background: #0f0f14;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-      }
-      .an-monogram-text {
-        font-family: 'Syne', sans-serif;
-        font-weight: 800;
-        font-size: 18px;
-        letter-spacing: 0.12em;
-        color: #ffffff;
-      }
-      .an-brand-title {
-        font-family: 'Syne', sans-serif;
-        font-weight: 700;
-        font-size: clamp(15px, 4vw, 19px);
-        letter-spacing: 0.24em;
-        text-transform: uppercase;
-        color: #ffffff;
-        margin-bottom: 6px;
-      }
-      .an-brand-sub {
-        font-size: 10px;
-        letter-spacing: 0.18em;
-        color: #7a7788;
-        text-transform: uppercase;
-        margin-bottom: 22px;
-      }
-      /* Clean Pro Stereo Peak Meter (L & R Console Level Bars) */
-      .an-eq-visualizer {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        height: 28px;
-        margin-bottom: 20px;
-        padding: 6px 14px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(255, 255, 255, 0.02);
-      }
-      .an-eq-channel {
-        display: flex;
-        align-items: center;
-        gap: 2.5px;
-      }
-      .an-eq-label {
-        font-size: 9px;
-        font-weight: 600;
-        color: #5d596b;
-        letter-spacing: 0.05em;
-        margin-right: 4px;
-      }
-      .an-eq-bar {
-        width: 3px;
-        height: 14px;
-        background: #25232d;
-        border-radius: 0.5px;
-        transition: background 0.08s ease;
-      }
-      .an-eq-bar.is-lit-green { background: #00ffd5; }
-      .an-eq-bar.is-lit-yellow { background: #ffd319; }
-      .an-eq-bar.is-lit-red { background: #ff0055; }
-      
-      .an-progress-track {
-        width: 100%;
-        max-width: 240px;
-        height: 2px;
-        background: rgba(255, 255, 255, 0.1);
-        overflow: hidden;
-        position: relative;
-        margin-bottom: 12px;
-      }
-      .an-progress-bar {
-        height: 100%;
-        width: 0%;
-        background: #ffffff;
-        transition: width 0.12s linear;
-      }
-      .an-telemetry-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        max-width: 240px;
-        font-size: 9px;
-        color: #6a6677;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-      .an-telemetry-pct {
-        color: #ffffff;
-        font-weight: 600;
+      @media (prefers-reduced-motion: reduce) {
+        .an-splash-word,
+        .an-splash-rule,
+        .an-splash-caption,
+        #akbar-preloader.an-fade-out {
+          animation-duration: 0.01ms !important;
+          animation-delay: 0ms !important;
+        }
+        #akbar-preloader.an-fade-out {
+          opacity: 0;
+        }
       }
     </style>
 
-    <div id="akbar-preloader" aria-live="polite" role="status">
-      <div class="an-preloader-inner">
-        <div class="an-monogram-box">
-          <span class="an-monogram-text">AN</span>
-        </div>
-        <div class="an-brand-title">AKBAR NAWASUNDA</div>
-        <div class="an-brand-sub">BANDUNG · ELECTRONIC STAGE</div>
-        
-        <div class="an-eq-visualizer" aria-hidden="true">
-          <div class="an-eq-channel">
-            <span class="an-eq-label">L</span>
-            <div class="an-eq-bar" data-seg="1"></div>
-            <div class="an-eq-bar" data-seg="2"></div>
-            <div class="an-eq-bar" data-seg="3"></div>
-            <div class="an-eq-bar" data-seg="4"></div>
-            <div class="an-eq-bar" data-seg="5"></div>
-            <div class="an-eq-bar" data-seg="6"></div>
-          </div>
-          <div class="an-eq-channel">
-            <span class="an-eq-label">R</span>
-            <div class="an-eq-bar" data-seg="1"></div>
-            <div class="an-eq-bar" data-seg="2"></div>
-            <div class="an-eq-bar" data-seg="3"></div>
-            <div class="an-eq-bar" data-seg="4"></div>
-            <div class="an-eq-bar" data-seg="5"></div>
-            <div class="an-eq-bar" data-seg="6"></div>
-          </div>
-        </div>
-
-        <div class="an-progress-track">
-          <div id="an-loader-bar" class="an-progress-bar"></div>
-        </div>
-        <div class="an-telemetry-row">
-          <span id="an-loader-status">STREAM CONNECTING</span>
-          <span id="an-loader-pct" class="an-telemetry-pct">0%</span>
+    <div
+      id="akbar-preloader"
+      role="status"
+      aria-label="Memuat situs Akbar Nawasunda"
+    >
+      <div class="an-splash-inner">
+        <span class="an-splash-line"
+          ><span class="an-splash-word">Akbar</span></span
+        >
+        <span class="an-splash-line"
+          ><span class="an-splash-word">Nawasunda</span></span
+        >
+        <div class="an-splash-rule" aria-hidden="true"></div>
+        <div class="an-splash-caption">
+          <span>Producer &middot; Remixer</span>
+          <span>Bandung Barat</span>
         </div>
       </div>
     </div>
 
     <script id="akbar-preloader-script">
-      (function() {
-        var preloader = document.getElementById('akbar-preloader');
-        var bar = document.getElementById('an-loader-bar');
-        var status = document.getElementById('an-loader-status');
-        var pct = document.getElementById('an-loader-pct');
+      (function () {
+        var preloader = document.getElementById("akbar-preloader");
         var dismissed = false;
-        var progress = 10;
+        var shownAt = Date.now();
 
-        // Real Network Adaptive Detection
-        var navConn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        var netType = navConn ? (navConn.effectiveType || '4g') : '4g';
-        var rtt = navConn ? (navConn.rtt || 60) : 60;
-        var downlink = navConn ? (navConn.downlink || 10) : 10;
-        
-        var isFast = netType === '4g' || (downlink >= 4 && rtt <= 120);
-        var isSlow = netType === '2g' || netType === 'slow-2g' || rtt > 350;
-        
-        var speedLabel = isFast ? '4G STREAM' : isSlow ? '2G STREAM' : '3G STREAM';
-        if (status) {
-          status.textContent = speedLabel + ' · CONNECTING';
+        function remove() {
+          if (!preloader) return;
+          preloader.classList.add("an-fade-out");
+          setTimeout(function () {
+            if (preloader && preloader.parentNode) {
+              preloader.parentNode.removeChild(preloader);
+            }
+          }, 560);
         }
 
-        // Stereo VU meter tick simulation
-        var bars = document.querySelectorAll('#akbar-preloader .an-eq-bar');
-        var vuTimer = setInterval(function() {
-          if (dismissed) return;
-          var level = Math.random();
-          bars.forEach(function(b) {
-            var seg = parseInt(b.getAttribute('data-seg') || '1', 10);
-            var shouldLight = (seg / 6) <= (level * 0.9 + (progress / 120));
-            b.className = 'an-eq-bar' + (shouldLight ? (seg <= 4 ? ' is-lit-green' : seg === 5 ? ' is-lit-yellow' : ' is-lit-red') : '');
-          });
-        }, 90);
-
-        function updateProgress(val, customStatus) {
-          if (!bar || !pct) return;
-          var clamped = Math.min(100, Math.round(val));
-          bar.style.width = clamped + '%';
-          pct.textContent = clamped + '%';
-          if (status && customStatus) {
-            status.textContent = customStatus;
-          }
-        }
-
-        // Network paced interval
-        var stepInterval = isFast ? 40 : isSlow ? 110 : 70;
-        var progressTimer = setInterval(function() {
-          if (dismissed) return;
-          if (progress < 90) {
-            progress += isFast ? (Math.random() * 18 + 8) : isSlow ? (Math.random() * 6 + 2) : (Math.random() * 10 + 4);
-            updateProgress(progress);
-          }
-        }, stepInterval);
-
-        window.__dismissAkbarPreloader = function() {
+        window.__dismissAkbarPreloader = function () {
           if (dismissed) return;
           dismissed = true;
-          clearInterval(progressTimer);
-          clearInterval(vuTimer);
-          updateProgress(100, speedLabel + ' · READY');
-          
-          setTimeout(function() {
-            if (!preloader) return;
-            preloader.classList.add('an-fade-out');
-            setTimeout(function() {
-              if (preloader && preloader.parentNode) {
-                preloader.parentNode.removeChild(preloader);
-              }
-            }, 420);
-          }, isFast ? 80 : 160);
+          // Tahan sebentar supaya animasi tidak terpotong jadi kedipan.
+          var elapsed = Date.now() - shownAt;
+          var wait = Math.max(0, 620 - elapsed);
+          setTimeout(remove, wait);
         };
 
-        // Safety timeout adapted to network condition
-        var maxWait = isFast ? 1800 : isSlow ? 3200 : 2400;
-        setTimeout(function() {
-          if (typeof window.__dismissAkbarPreloader === 'function') {
+        // Jaring pengaman: splash tidak pernah menahan konten lebih lama dari ini.
+        setTimeout(function () {
+          if (typeof window.__dismissAkbarPreloader === "function") {
             window.__dismissAkbarPreloader();
           }
-        }, maxWait);
+        }, 2000);
       })();
     </script>
 

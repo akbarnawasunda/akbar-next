@@ -266,7 +266,7 @@ export function EnglishHome() {
           className="home-signal-deck"
           aria-labelledby="en-signal-deck-title"
         >
-          <SectionIndex number="" label="LISTENING LINKS" />
+          <SectionIndex label="LISTENING LINKS" />
           <div className="home-signal-copy">
             <p className="eyebrow">
               <span /> OFFICIAL PLATFORMS
@@ -306,7 +306,7 @@ export function EnglishHome() {
         </section>
 
         <section className="section section-current" id="music">
-          <SectionIndex number="" label="FEATURED RELEASE" />
+          <SectionIndex label="FEATURED RELEASE" />
           <div className="section-heading">
             <div>
               <p className="eyebrow">LATEST RELEASE</p>
@@ -361,7 +361,7 @@ export function EnglishHome() {
         />
 
         <section className="section release-section">
-          <SectionIndex number="" label="CATALOG" />
+          <SectionIndex label="CATALOG" />
           <div className="section-inline">
             <div>
               <p className="eyebrow">DISCOGRAPHY</p>
@@ -416,7 +416,7 @@ export function EnglishHome() {
         </section>
 
         <section className="section visual-section" id="visuals">
-          <SectionIndex number="" label="VISUALS" />
+          <SectionIndex label="VISUALS" />
           <div className="section-heading">
             <div>
               <p className="eyebrow">VISUAL</p>
@@ -455,7 +455,7 @@ export function EnglishHome() {
         </section>
 
         <section className="section live-section" id="live">
-          <SectionIndex number="" label="LIVE" />
+          <SectionIndex label="LIVE" />
           <div
             className="live-backdrop"
             style={{
@@ -572,7 +572,7 @@ export function EnglishHome() {
         </section>
 
         <section className="signal-section" id="signal">
-          <SectionIndex number="" label="NEWS" />
+          <SectionIndex label="NEWS" />
           <div>
             <p className="eyebrow">
               <Sparkles size={13} /> LATEST UPDATES
@@ -784,6 +784,7 @@ export function EnglishMusic() {
                     artwork={known?.image || officialBrand.socialPreview}
                     backupArtwork={officialBrand.socialPreview}
                     description="Official link available."
+                    locale="en"
                   />
                 </div>
               );
@@ -922,6 +923,7 @@ export function EnglishVisuals() {
                     artwork={item.image}
                     backupArtwork={officialBrand.socialPreview}
                     description="Official video channel."
+                    locale="en"
                   />
                 </div>
               ) : (

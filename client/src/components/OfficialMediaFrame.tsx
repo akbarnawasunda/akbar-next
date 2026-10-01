@@ -12,6 +12,7 @@ type OfficialMediaFrameProps = {
   artwork: string;
   backupArtwork?: string;
   description?: string;
+  locale?: "id" | "en";
 };
 
 export function OfficialMediaFrame({
@@ -22,17 +23,40 @@ export function OfficialMediaFrame({
   artwork,
   backupArtwork,
   description,
+  locale = "id",
 }: OfficialMediaFrameProps) {
+  const t =
+    locale === "en"
+      ? {
+          artLabel: (p: string) => `Open ${title} on ${p}`,
+          official: (p: string) => `${p} · OFFICIAL LINK`,
+          open: (p: string) => `OPEN ${p}`,
+          close: "CLOSE PLAYER",
+          play: "PLAY HERE",
+          hint: "Player not responding in this browser? Use the official link above.",
+        }
+      : {
+          artLabel: (p: string) => `Buka ${title} di ${p}`,
+          official: (p: string) => `${p} · TAUTAN RESMI`,
+          open: (p: string) => `BUKA ${p}`,
+          close: "TUTUP PLAYER",
+          play: "PUTAR DI SINI",
+          hint: "Player belum merespons di browser ini? Gunakan tautan resmi di atas.",
+        };
   const [playerRequested, setPlayerRequested] = useState(false);
 
   const togglePlayer = () => {
-    setPlayerRequested((prev) => !prev);
+    setPlayerRequested(prev => !prev);
   };
 
   const providerClass = provider.toLowerCase().replace(/\s+/g, "-");
-  const platformVariant: EmbedPlatform =
-    provider.toLowerCase().includes("youtube") ? "youtube" :
-    provider.toLowerCase().includes("spotify") ? "spotify" : "soundcloud";
+  const platformVariant: EmbedPlatform = provider
+    .toLowerCase()
+    .includes("youtube")
+    ? "youtube"
+    : provider.toLowerCase().includes("spotify")
+      ? "spotify"
+      : "soundcloud";
 
   return (
     <article
@@ -45,28 +69,28 @@ export function OfficialMediaFrame({
         href={sourceUrl}
         target="_blank"
         rel="noreferrer"
-        aria-label={`Lihat karya ${title} di ${provider}`}
+        aria-label={t.artLabel(provider)}
       >
         <ResilientArtworkImage
           src={artwork}
           backupSrc={backupArtwork}
           alt={`Artwork resmi untuk ${title}`}
         />
-        <span>OFFICIAL {provider.toUpperCase()}</span>
+        <span>{provider.toUpperCase()}</span>
         <i>
           <Play size={18} fill="currentColor" />
         </i>
       </a>
 
       <div className="an-official-media-copy">
-        <p>{provider.toUpperCase()} · OFFICIAL LINK</p>
+        <p>{t.official(provider.toUpperCase())}</p>
         <h3>{title}</h3>
         {description && <small>{description}</small>}
       </div>
 
       <div className="an-official-media-actions">
         <a href={sourceUrl} target="_blank" rel="noreferrer">
-          OPEN {provider.toUpperCase()} <ArrowUpRight size={14} />
+          {t.open(provider.toUpperCase())} <ArrowUpRight size={14} />
         </a>
         <button
           type="button"
@@ -75,11 +99,11 @@ export function OfficialMediaFrame({
         >
           {playerRequested ? (
             <>
-              <Volume2 size={13} className="text-[var(--acid)]" /> TUTUP PLAYER
+              <Volume2 size={13} className="text-[var(--acid)]" /> {t.close}
             </>
           ) : (
             <>
-              PLAY HERE <Play size={13} fill="currentColor" />
+              {t.play} <Play size={13} fill="currentColor" />
             </>
           )}
         </button>
@@ -92,9 +116,7 @@ export function OfficialMediaFrame({
             title={title}
             variant={platformVariant}
           />
-          <p className="an-official-player-hint">
-            Player belum merespons di browser ini? Gunakan tautan resmi di atas.
-          </p>
+          <p className="an-official-player-hint">{t.hint}</p>
         </div>
       )}
     </article>

@@ -686,3 +686,14 @@
     min-height: 200px;
   }
 }
+
+
+/* Blur header mahal di mobile; latar solid memberi hasil visual setara. */
+@media (max-width: 1024px) {
+  .nf-page .nf-nav,
+  .nf-header {
+    background: var(--ink) !important;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}

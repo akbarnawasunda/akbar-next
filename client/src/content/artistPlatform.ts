@@ -1,5 +1,17 @@
-export type Release = { title: string; format: string; year: string; href: string; platform: string; image?: string };
-export type Video = { title: string; label: string; href: string; image: string };
+export type Release = {
+  title: string;
+  format: string;
+  year: string;
+  href: string;
+  platform: string;
+  image?: string;
+};
+export type Video = {
+  title: string;
+  label: string;
+  href: string;
+  image: string;
+};
 
 export const officialBrand = {
   logo: "/assets/akbar-logo.webp",
@@ -21,7 +33,8 @@ export const portraitStudies = [
     height: 4032,
     titleId: "Potret Neon",
     titleEn: "Neon Portrait",
-    copyId: "Potret editorial dengan cahaya biru dan ungu dari sesi visual Akbar.",
+    copyId:
+      "Potret editorial dengan cahaya biru dan ungu dari sesi visual Akbar.",
     copyEn: "An editorial portrait from Akbar’s blue and violet light session.",
     altId: "Potret Akbar Nawasunda dengan cahaya magenta dan biru",
     altEn: "Akbar Nawasunda portrait with magenta and blue light",
@@ -33,17 +46,24 @@ export const portraitStudies = [
     height: 1491,
     titleId: "Studi KX-07",
     titleEn: "KX-07 Study",
-    copyId: "Potret dengan kontras tinggi dari sesi visual dan materi promosi Akbar.",
+    copyId:
+      "Potret dengan kontras tinggi dari sesi visual dan materi promosi Akbar.",
     copyEn: "A high-contrast portrait from Akbar’s visual and press session.",
-    altId: "Potret editorial Akbar Nawasunda dengan masker dan elemen grafis kuning magenta",
-    altEn: "Editorial Akbar Nawasunda portrait with a mask and yellow magenta graphics",
+    altId:
+      "Potret editorial Akbar Nawasunda dengan masker dan elemen grafis kuning magenta",
+    altEn:
+      "Editorial Akbar Nawasunda portrait with a mask and yellow magenta graphics",
   },
 ] as const;
 
-export const formatPublicIndex = (index: number) => String(index + 1).padStart(2, "0");
+export const formatPublicIndex = (index: number) =>
+  String(index + 1).padStart(2, "0");
 
 export const platformLinks = [
-  { label: "Spotify", href: "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw" },
+  {
+    label: "Spotify",
+    href: "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw",
+  },
   { label: "YouTube", href: "https://www.youtube.com/@akbarnawasunda" },
   { label: "SoundCloud", href: "https://soundcloud.com/akbarnawasunda" },
   { label: "Instagram", href: "https://www.instagram.com/akbarnawasunda" },
@@ -51,7 +71,10 @@ export const platformLinks = [
 
 export const allPlatformLinks = [
   ...platformLinks,
-  { label: "Apple Music", href: "https://music.apple.com/id/song/pada-imut-aisyah-tak-belagu/1868511241?l=id" },
+  {
+    label: "Apple Music",
+    href: "https://music.apple.com/id/song/pada-imut-aisyah-tak-belagu/1868511241?l=id",
+  },
   { label: "Deezer", href: "https://www.deezer.com/us/artist/322209491" },
   { label: "Amazon Music", href: "https://music.amazon.com/albums/B0G4GBYQKJ" },
   { label: "Tidal", href: "https://tidal.com/track/443331782" },
@@ -62,12 +85,26 @@ export const allPlatformLinks = [
 export const verifiedArtistProfile = {
   aliases: ["DJ Akbar Remix"],
   location: "Bandung Barat, Indonesia",
-  shortBio: "Produser musik, remixer, dan DJ dari Bandung Barat. Mulai berkarya pada 2020 sebagai DJ Akbar Remix, kini merilis karya sebagai Akbar Nawasunda di platform musik digital.",
-  longBio: "Perjalanan musik Akbar Nawasunda dimulai pada 2020 sebagai bedroom producer independen dengan nama DJ Akbar Remix. Eksperimennya membawa lagu-lagu populer ke wilayah Breakbeat, Jedag Jedug, dan Jungle Dutch bergaya Bandung. Kini, di bawah nama Akbar Nawasunda, ia merilis karya orisinal yang memadukan melodi pop, electronic bass, dan energi remix untuk platform musik digital global.",
-  genres: ["Breakbeat", "Indo Bass", "Jedag Jedug", "Jungle Dutch", "Kendang Chops"],
+  shortBio:
+    "Produser musik, remixer, dan DJ dari Bandung Barat. Mulai berkarya pada 2020 sebagai DJ Akbar Remix, kini merilis karya sebagai Akbar Nawasunda di platform musik digital.",
+  longBio:
+    "Perjalanan musik Akbar Nawasunda dimulai pada 2020 sebagai bedroom producer independen dengan nama DJ Akbar Remix. Eksperimennya membawa lagu-lagu populer ke wilayah Breakbeat, Jedag Jedug, dan Jungle Dutch bergaya Bandung. Kini, di bawah nama Akbar Nawasunda, ia merilis karya orisinal yang memadukan melodi pop, electronic bass, dan energi remix untuk platform musik digital global.",
+  genres: [
+    "Breakbeat",
+    "Indo Bass",
+    "Jedag Jedug",
+    "Jungle Dutch",
+    "Kendang Chops",
+  ],
   bookingEmail: "akbarnawasunda@gmail.com",
-  services: ["Remix requests", "Custom arrangements", "Collaborations", "Music licensing"],
-  licensing: "Untuk penggunaan musik pada konten, hubungi melalui email. Penggunaan komersial akan dibicarakan secara terpisah; penggunaan non-komersial dengan credit sangat diapresiasi.",
+  services: [
+    "Remix requests",
+    "Custom arrangements",
+    "Collaborations",
+    "Music licensing",
+  ],
+  licensing:
+    "Untuk penggunaan musik pada konten, hubungi melalui email. Penggunaan komersial akan dibicarakan secara terpisah; penggunaan non-komersial dengan credit sangat diapresiasi.",
 };
 
 export const currentRelease = {
@@ -79,24 +116,145 @@ export const currentRelease = {
 };
 
 export const releases: Release[] = [
-  { title: "Masih Mencintainya — Papinka", format: "Remix", year: "2025", platform: "SoundCloud", href: "https://soundcloud.com/akbarnawasunda/masih-mencintainya-papinka-2025-akbar-nawasunda", image: "https://i1.sndcdn.com/artworks-Zyzr6WJb8jUksH1v-u0tohw-t500x500.jpg" },
-  { title: "Ngertenono Ati Medium Hall", format: "Remix", year: "2025", platform: "SoundCloud", href: "https://soundcloud.com/akbarnawasunda/ngertenono_ati_medium_hall_mbfrecords", image: "https://i1.sndcdn.com/artworks-3yBxworMu4rYkKQo-jWKhvg-t500x500.jpg" },
-  { title: "Lali Dalane", format: "Single", year: "2024", platform: "Spotify", href: "https://open.spotify.com/intl-id/album/3r5GTZnjOFsSfHx5YeANIS?si=9MJhKIkeRkmOBYMbtKP5wg", image: "https://i.scdn.co/image/ab67616d0000aa54c24c088e7cda8fba473c8d5f" },
-  { title: "Pada Imut Aisyah Tak Belagu", format: "Single", year: "2025", platform: "Apple Music", href: "https://music.apple.com/id/song/pada-imut-aisyah-tak-belagu/1868511241?l=id", image: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/f2/40/e5/f240e5cf-1a0f-bb1b-6a0b-1d772744ff30/698308345017_cover.jpg/632x632cc.webp" },
-  { title: "DJ Rantau Den Panjauah", format: "Remix", year: "2024", platform: "Spotify", href: "https://open.spotify.com/intl-id/track/32xyWKqnleBI5U56jvnGUa?si=b22bacdf3ab24e2e", image: "https://i.scdn.co/image/ab67616d0000b273d769a33006faeb8803afc5da" },
-  { title: "Kamu Nanyeak", format: "Single", year: "2025", platform: "Apple Music", href: "https://music.apple.com/id/song/kamu-nanyeak/1821914972?l=id", image: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/a0/a1/c2/a0a1c2d6-866a-0a82-fe62-8d643b320bf9/5063740331938_cover.jpg/1200x1200bb.jpg" },
-  { title: "ROSE & Bruno Mars — APT (Rmx)", format: "Remix", year: "2024", platform: "SoundCloud", href: "https://soundcloud.com/akbarnawasunda/rose-bruno-mars-apt-2024-dj-akbar-remix", image: "https://i1.sndcdn.com/artworks-5dZROzMX9gkyFfzy-8VIoSA-t500x500.jpg" },
-  { title: "Die With A Smile × Warga +62", format: "Bootleg", year: "2024", platform: "SoundCloud", href: "https://soundcloud.com/akbarnawasunda/dj-die-with-a-smile-x-warga-62-x-est-ce-que-tu-maimes-breakbeat-2024-dj-akbar-remix", image: "https://i1.sndcdn.com/artworks-Wsjyv1dXaUqLUexc-wVuSww-t500x500.jpg" },
+  {
+    title: "Masih Mencintainya — Papinka",
+    format: "Remix",
+    year: "2025",
+    platform: "SoundCloud",
+    href: "https://soundcloud.com/akbarnawasunda/masih-mencintainya-papinka-2025-akbar-nawasunda",
+    image:
+      "https://i1.sndcdn.com/artworks-Zyzr6WJb8jUksH1v-u0tohw-t500x500.jpg",
+  },
+  {
+    title: "Ngertenono Ati Medium Hall",
+    format: "Remix",
+    year: "2025",
+    platform: "SoundCloud",
+    href: "https://soundcloud.com/akbarnawasunda/ngertenono_ati_medium_hall_mbfrecords",
+    image:
+      "https://i1.sndcdn.com/artworks-3yBxworMu4rYkKQo-jWKhvg-t500x500.jpg",
+  },
+  {
+    title: "Lali Dalane",
+    format: "Single",
+    year: "2024",
+    platform: "Spotify",
+    href: "https://open.spotify.com/intl-id/album/3r5GTZnjOFsSfHx5YeANIS?si=9MJhKIkeRkmOBYMbtKP5wg",
+    image: "https://i.scdn.co/image/ab67616d0000aa54c24c088e7cda8fba473c8d5f",
+  },
+  {
+    title: "Pada Imut Aisyah Tak Belagu",
+    format: "Single",
+    year: "2025",
+    platform: "Apple Music",
+    href: "https://music.apple.com/id/song/pada-imut-aisyah-tak-belagu/1868511241?l=id",
+    image:
+      "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/f2/40/e5/f240e5cf-1a0f-bb1b-6a0b-1d772744ff30/698308345017_cover.jpg/632x632cc.webp",
+  },
+  {
+    title: "DJ Rantau Den Panjauah",
+    format: "Remix",
+    year: "2024",
+    platform: "Spotify",
+    href: "https://open.spotify.com/intl-id/track/32xyWKqnleBI5U56jvnGUa?si=b22bacdf3ab24e2e",
+    image: "https://i.scdn.co/image/ab67616d0000b273d769a33006faeb8803afc5da",
+  },
+  {
+    title: "Kamu Nanyeak",
+    format: "Single",
+    year: "2025",
+    platform: "Apple Music",
+    href: "https://music.apple.com/id/song/kamu-nanyeak/1821914972?l=id",
+    image:
+      "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/a0/a1/c2/a0a1c2d6-866a-0a82-fe62-8d643b320bf9/5063740331938_cover.jpg/1200x1200bb.jpg",
+  },
+  {
+    title: "ROSE & Bruno Mars — APT (Rmx)",
+    format: "Remix",
+    year: "2024",
+    platform: "SoundCloud",
+    href: "https://soundcloud.com/akbarnawasunda/rose-bruno-mars-apt-2024-dj-akbar-remix",
+    image:
+      "https://i1.sndcdn.com/artworks-5dZROzMX9gkyFfzy-8VIoSA-t500x500.jpg",
+  },
+  {
+    title: "Die With A Smile × Warga +62",
+    format: "Bootleg",
+    year: "2024",
+    platform: "SoundCloud",
+    href: "https://soundcloud.com/akbarnawasunda/dj-die-with-a-smile-x-warga-62-x-est-ce-que-tu-maimes-breakbeat-2024-dj-akbar-remix",
+    image:
+      "https://i1.sndcdn.com/artworks-Wsjyv1dXaUqLUexc-wVuSww-t500x500.jpg",
+  },
 ];
 
+/** Thumbnail resmi YouTube, supaya tiap video punya gambar sendiri (bukan satu gambar dipakai ulang). */
+export const youtubeThumbnail = (id: string) =>
+  `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+
 export const videos: Video[] = [
-  { title: "Garam dan Madu × Backpacker", label: "LATEST VISUAL", href: "https://youtu.be/rv4DK8nVWd0", image: officialBrand.socialPreview },
-  { title: "Akbar Nawasunda — Official Visual", label: "YOUTUBE PREMIERE", href: "https://youtu.be/BOTdDcx31Zc", image: officialBrand.socialPreview },
-  { title: "Breakbeat Session", label: "DJ AKBAR REMIX", href: "https://youtu.be/g37Cn8ajC6M", image: officialBrand.socialPreview },
+  {
+    title: "Garam dan Madu × Backpacker",
+    label: "VIDEO TERBARU",
+    href: "https://youtu.be/rv4DK8nVWd0",
+    image: youtubeThumbnail("rv4DK8nVWd0"),
+  },
+  {
+    title: "Akbar Nawasunda — Visual Resmi",
+    label: "KANAL YOUTUBE",
+    href: "https://youtu.be/BOTdDcx31Zc",
+    image: youtubeThumbnail("BOTdDcx31Zc"),
+  },
+  {
+    title: "Breakbeat Session",
+    label: "DJ AKBAR REMIX",
+    href: "https://youtu.be/g37Cn8ajC6M",
+    image: youtubeThumbnail("g37Cn8ajC6M"),
+  },
 ];
 
 export const futureModules = [
-  { number: "01", title: "RELEASE HUB", copy: "Structured for future singles, remixes, playlists, pre-saves, and platform smart links." },
-  { number: "02", title: "LIVE SIGNAL", copy: "Ready for announced shows, ticket links, city filters, and festival-ready event cards." },
-  { number: "03", title: "FAN ACCESS", copy: "A live email opt-in now, with room for gated drops, early access, and community tools later." },
+  {
+    number: "01",
+    title: "RELEASE HUB",
+    copy: "Structured for future singles, remixes, playlists, pre-saves, and platform smart links.",
+  },
+  {
+    number: "02",
+    title: "LIVE SIGNAL",
+    copy: "Ready for announced shows, ticket links, city filters, and festival-ready event cards.",
+  },
+  {
+    number: "03",
+    title: "FAN ACCESS",
+    copy: "A live email opt-in now, with room for gated drops, early access, and community tools later.",
+  },
 ];
+
+/**
+ * Minta ukuran kecil dari CDN artwork (SoundCloud / Spotify / Apple Music)
+ * untuk kartu katalog. Pola yang sama dipakai situs artis besar: satu master
+ * di CDN, lalu tiap slot meminta ukuran yang benar-benar dipakai.
+ * Kalau polanya tidak dikenal, URL asli dikembalikan apa adanya.
+ */
+export function artworkThumb(
+  url: string | undefined | null
+): string | undefined {
+  if (!url) return undefined;
+  // SoundCloud: ...-t500x500.jpg -> ...-t200x200.jpg
+  if (/i\d*\.sndcdn\.com/.test(url)) {
+    return url.replace(/-t\d+x\d+(\.\w+)$/, "-t200x200$1");
+  }
+  // Spotify: ab67616d0000b273 (640px) / ab67616d0000aa54 -> ab67616d00001e02 (300px)
+  if (/i\.scdn\.co\/image\//.test(url)) {
+    return url.replace(/ab67616d[0-9a-f]{8}/, "ab67616d00001e02");
+  }
+  // Apple Music (mzstatic): .../1200x1200bb.jpg -> .../300x300bb.webp
+  if (/mzstatic\.com/.test(url)) {
+    return url.replace(
+      /\/\d+x\d+([a-z]{2})\.(jpg|jpeg|png|webp)$/i,
+      "/300x300$1.webp"
+    );
+  }
+  return url;
+}

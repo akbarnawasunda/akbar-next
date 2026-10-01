@@ -68,7 +68,22 @@ pnpm build    # Build the frontend, server bundle, and API entry point
 pnpm format   # Format project files with Prettier
 ```
 
+Node 24 and pnpm 10 are expected; the exact pnpm version is pinned in the `packageManager` field of `package.json` and activated through Corepack (`corepack enable`). Editor defaults (UTF-8, LF, two-space indent) come from `.editorconfig`.
+
 Database-backed features require the project environment to provide the appropriate database, authentication, storage, and email configuration. Never commit `.env` files, passwords, API keys, session secrets, or database connection strings.
+
+## Testing
+
+Tests render the real pages through the production SSR entry point and assert
+on the HTML a visitor receives, instead of grepping source files. The policy,
+the stub-prefetch pattern, and the remaining legacy tests are documented in
+[`docs/notes/testing-policy.md`](docs/notes/testing-policy.md). A reference
+suite lives in `server/publicPageRendering.test.ts`.
+
+Every push and pull request runs `.github/workflows/quality.yml`: typecheck,
+tests, a full build, then a real production SSR server is booted and crawled by
+`scripts/verify-ssr.sh` to verify status codes, canonical tags, Open Graph
+metadata, redirects, and the 404 response.
 
 ## Public routes
 

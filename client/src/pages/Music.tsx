@@ -7,6 +7,7 @@ import { Reveal } from "@/components/Reveal";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import {
+  artworkThumb,
   currentRelease,
   formatPublicIndex,
   officialBrand,
@@ -49,9 +50,9 @@ export default function Music() {
   const editablePlatformLinks = publicPlatformLinks(cms.data);
   const cmsReleases = cms.data?.releases ?? [];
 
-  const cmsCatalog = cmsReleases.map((item) => {
+  const cmsCatalog = cmsReleases.map(item => {
     const archive = releases.find(
-      (release) =>
+      release =>
         release.title.trim().toLowerCase() === item.title.trim().toLowerCase()
     );
     return {
@@ -59,7 +60,8 @@ export default function Music() {
       format: item.format || archive?.format || "Single",
       year: item.year || archive?.year || "—",
       platform: item.platform || archive?.platform || "Official link",
-      href: item.url || archive?.href || "https://soundcloud.com/akbarnawasunda",
+      href:
+        item.url || archive?.href || "https://soundcloud.com/akbarnawasunda",
       image: item.artworkUrl || archive?.image || officialBrand.socialPreview,
     };
   });
@@ -67,23 +69,21 @@ export default function Music() {
   const catalog = [
     ...cmsCatalog,
     ...releases.filter(
-      (legacy) =>
+      legacy =>
         !cmsCatalog.some(
-          (current) =>
-            current.title.trim().toLowerCase() === legacy.title.trim().toLowerCase()
+          current =>
+            current.title.trim().toLowerCase() ===
+            legacy.title.trim().toLowerCase()
         )
     ),
   ];
 
-  const cmsCurrent = cmsReleases.find((item) => item.isCurrent) || cmsReleases[0];
+  const cmsCurrent = cmsReleases.find(item => item.isCurrent) || cmsReleases[0];
   const featured = cmsCurrent
     ? {
         ...currentRelease,
         title: cmsCurrent.title,
-        type:
-          cmsCurrent.platform ||
-          cmsCurrent.format ||
-          "CATALOG ENTRY",
+        type: cmsCurrent.platform || cmsCurrent.format || "CATALOG ENTRY",
         href: cmsCurrent.url || currentRelease.href,
         artwork: cmsCurrent.artworkUrl || currentRelease.image,
         story: cmsCurrent.story,
@@ -97,14 +97,20 @@ export default function Music() {
       };
 
   const embeddedDrops = cmsReleases
-    .filter((item) => item.embedUrl)
+    .filter(item => item.embedUrl)
     .slice(0, 2)
-    .map((item) => ({ title: item.title, url: item.embedUrl! }));
+    .map(item => ({ title: item.title, url: item.embedUrl! }));
 
   const players = embeddedDrops.length ? embeddedDrops : soundcloudDrops;
   const scrollCatalog = (direction: number) => {
-    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
-    catalogRef.current?.scrollBy({ left: direction * Math.min(catalogRef.current.clientWidth * 0.82, 520), behavior });
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)")
+      .matches
+      ? "auto"
+      : "smooth";
+    catalogRef.current?.scrollBy({
+      left: direction * Math.min(catalogRef.current.clientWidth * 0.82, 520),
+      behavior,
+    });
   };
 
   return (
@@ -126,12 +132,13 @@ export default function Music() {
               <br />
               <em>AKBAR.</em>
             </h1>
-            <p>Rilisan dan remix yang tersedia melalui kanal resmi Akbar Nawasunda.</p>
+            <p>
+              Rilisan dan remix yang tersedia melalui kanal resmi Akbar
+              Nawasunda.
+            </p>
           </div>
           <div className="nf-hero-note">
-            <span>
-              {cms.isLoading ? "MEMUAT RILISAN" : "RILISAN TERBARU"}
-            </span>
+            <span>{cms.isLoading ? "MEMUAT RILISAN" : "RILISAN TERBARU"}</span>
             <strong>{featured.title}</strong>
             <a
               className="nf-text-button"
@@ -145,35 +152,35 @@ export default function Music() {
         </section>
 
         <Reveal>
-        <section className="nf-section an-story-section">
-          <div className="an-story-art">
-            <ResilientArtworkImage
-              src={featured.artwork}
-              backupSrc={officialBrand.socialPreview}
-              alt={`Artwork ${featured.title}`}
-            />
-          </div>
-          <div className="an-story-copy">
-            <span className="an-story-label">
-              {featured.story ? "CATATAN RILISAN" : "RILISAN TERBARU"}
-            </span>
-            <h2>{featured.title}</h2>
-            <p>
-              {featured.story ||
-                "Dengarkan versi ini melalui kanal SoundCloud resmi Akbar Nawasunda."}
-            </p>
-            <div className="an-story-credits">
-              {featured.credits ||
-                "Lihat kredit rilisan di platform resmi jika tersedia."}
+          <section className="nf-section an-story-section">
+            <div className="an-story-art">
+              <ResilientArtworkImage
+                src={featured.artwork}
+                backupSrc={officialBrand.socialPreview}
+                alt={`Artwork ${featured.title}`}
+              />
             </div>
-            <Link
-              className="nf-text-button"
-              href={`/music/${releaseSlug(featured.title)}`}
-            >
-              DETAIL RILISAN <ArrowUpRight size={14} />
-            </Link>
-          </div>
-        </section>
+            <div className="an-story-copy">
+              <span className="an-story-label">
+                {featured.story ? "CATATAN RILISAN" : "RILISAN TERBARU"}
+              </span>
+              <h2>{featured.title}</h2>
+              <p>
+                {featured.story ||
+                  "Dengarkan versi ini melalui kanal SoundCloud resmi Akbar Nawasunda."}
+              </p>
+              <div className="an-story-credits">
+                {featured.credits ||
+                  "Lihat kredit rilisan di platform resmi jika tersedia."}
+              </div>
+              <Link
+                className="nf-text-button"
+                href={`/music/${releaseSlug(featured.title)}`}
+              >
+                DETAIL RILISAN <ArrowUpRight size={14} />
+              </Link>
+            </div>
+          </section>
         </Reveal>
 
         <section className="nf-platform-hub">
@@ -185,7 +192,7 @@ export default function Music() {
               TEMPATNYA.
             </h2>
             <div className="nf-platform-grid">
-              {editablePlatformLinks.map((platform) => (
+              {editablePlatformLinks.map(platform => (
                 <a
                   key={platform.label}
                   href={platform.href}
@@ -202,102 +209,118 @@ export default function Music() {
         </section>
 
         <Reveal>
-        <section className="nf-section">
-          <div className="nf-section-title">
-            <div>
-              <p className="nf-page-eyebrow">DENGAR LANGSUNG</p>
-              <h2>
-                DENGAR
-                <br />
-                LANGSUNG.
-              </h2>
+          <section className="nf-section">
+            <div className="nf-section-title">
+              <div>
+                <p className="nf-page-eyebrow">DENGAR LANGSUNG</p>
+                <h2>
+                  DENGAR
+                  <br />
+                  LANGSUNG.
+                </h2>
+              </div>
+              <p>
+                Pilih satu rilisan untuk mulai mendengar. Tautan resmi tetap
+                tersedia kalau player tidak dibutuhkan.
+              </p>
             </div>
-            <p>
-              Pilih satu rilisan untuk mulai mendengar. Tautan resmi tetap
-              tersedia kalau player tidak dibutuhkan.
-            </p>
-          </div>
-          <div className="nf-embed-grid">
-            {players.map((drop) => {
-              const known = catalog.find((release) =>
-                release.title
-                  .toLowerCase()
-                  .includes(drop.title.toLowerCase().split(" — ")[0])
-              );
-              return (
-                <OfficialMediaFrame
-                  key={drop.url}
-                  title={drop.title}
-                  provider="SoundCloud"
-                  sourceUrl={drop.url}
-                  embedUrl={soundcloudEmbed(drop.url)}
-                  artwork={known?.image || officialBrand.socialPreview}
-                  backupArtwork={officialBrand.socialPreview}
-                  description="Tautan resmi selalu tersedia."
-                />
-              );
-            })}
-          </div>
-        </section>
+            <div className="nf-embed-grid">
+              {players.map(drop => {
+                const known = catalog.find(release =>
+                  release.title
+                    .toLowerCase()
+                    .includes(drop.title.toLowerCase().split(" — ")[0])
+                );
+                return (
+                  <OfficialMediaFrame
+                    key={drop.url}
+                    title={drop.title}
+                    provider="SoundCloud"
+                    sourceUrl={drop.url}
+                    embedUrl={soundcloudEmbed(drop.url)}
+                    artwork={known?.image || officialBrand.socialPreview}
+                    backupArtwork={officialBrand.socialPreview}
+                    description="Tautan resmi selalu tersedia."
+                  />
+                );
+              })}
+            </div>
+          </section>
         </Reveal>
 
         <Reveal>
-        <section className="nf-section dark-panel">
-          <div className="nf-section-title">
-            <div>
-              <p className="nf-page-eyebrow">KATALOG</p>
-              <h2>
-                SEMUA
-                <br />
-                RILISAN.
-              </h2>
+          <section className="nf-section dark-panel">
+            <div className="nf-section-title">
+              <div>
+                <p className="nf-page-eyebrow">KATALOG</p>
+                <h2>
+                  SEMUA
+                  <br />
+                  RILISAN.
+                </h2>
+              </div>
+              <p>
+                {cmsReleases.length
+                  ? "Rilisan yang sedang dikelola dan arsip resmi."
+                  : "Kumpulan rilisan Akbar Nawasunda."}
+              </p>
             </div>
-            <p>
-              {cmsReleases.length
-                ? "Rilisan yang sedang dikelola dan arsip resmi."
-                : "Kumpulan rilisan Akbar Nawasunda."}
-            </p>
-          </div>
-          <div className="nf-catalog-frame">
-            <div className="nf-catalog-toolbar">
-              <span>GESER UNTUK MENJELAJAH</span>
-              <div className="nf-catalog-controls" aria-label="Kontrol katalog rilisan">
-                <button type="button" aria-label="Rilisan sebelumnya" onClick={() => scrollCatalog(-1)}>
-                  <ArrowLeft size={15} />
-                </button>
-                <button type="button" aria-label="Rilisan berikutnya" onClick={() => scrollCatalog(1)}>
-                  <ArrowRight size={15} />
-                </button>
+            <div className="nf-catalog-frame">
+              <div className="nf-catalog-toolbar">
+                <span>GESER UNTUK MENJELAJAH</span>
+                <div
+                  className="nf-catalog-controls"
+                  aria-label="Kontrol katalog rilisan"
+                >
+                  <button
+                    type="button"
+                    aria-label="Rilisan sebelumnya"
+                    onClick={() => scrollCatalog(-1)}
+                  >
+                    <ArrowLeft size={15} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Rilisan berikutnya"
+                    onClick={() => scrollCatalog(1)}
+                  >
+                    <ArrowRight size={15} />
+                  </button>
+                </div>
+              </div>
+              <div
+                className="nf-catalog"
+                ref={catalogRef}
+                tabIndex={0}
+                aria-label="Katalog rilisan Akbar Nawasunda"
+              >
+                {catalog.map((release, index) => (
+                  <Link
+                    key={`${release.title}-${index}`}
+                    className="nf-catalog-card"
+                    href={`/music/${releaseSlug(release.title)}`}
+                  >
+                    <ResilientArtworkImage
+                      className="nf-catalog-art"
+                      src={artworkThumb(release.image)}
+                      backupSrc={release.image}
+                      alt={`Artwork ${release.title}`}
+                    />
+                    <span className="index">{formatPublicIndex(index)}</span>
+                    <PlatformIcon label={release.platform} />
+                    <p>
+                      {release.format} · {release.year}
+                    </p>
+                    <h3>{release.title}</h3>
+                    <b>
+                      {release.platform}
+                      <ArrowUpRight size={13} />
+                    </b>
+                  </Link>
+                ))}
               </div>
             </div>
-            <div className="nf-catalog" ref={catalogRef} tabIndex={0} aria-label="Katalog rilisan Akbar Nawasunda">
-              {catalog.map((release, index) => (
-                <Link
-                  key={`${release.title}-${index}`}
-                  className="nf-catalog-card"
-                  href={`/music/${releaseSlug(release.title)}`}
-                >
-                  <ResilientArtworkImage
-                    className="nf-catalog-art"
-                    src={release.image}
-                    backupSrc={officialBrand.socialPreview}
-                    alt={`Artwork ${release.title}`}
-                  />
-                  <span className="index">{formatPublicIndex(index)}</span>
-                  <PlatformIcon label={release.platform} />
-                  <p>
-                    {release.format} · {release.year}
-                  </p>
-                  <h3>{release.title}</h3>
-                  <b>
-                    {release.platform}
-                    <ArrowUpRight size={13} />
-                  </b>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
+          </section>
         </Reveal>
 
         <section className="nf-section">
@@ -313,7 +336,7 @@ export default function Music() {
             <a
               className="nf-button"
               href={
-                editablePlatformLinks.find((link) => link.label === "Spotify")
+                editablePlatformLinks.find(link => link.label === "Spotify")
                   ?.href ||
                 "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw"
               }

@@ -14,7 +14,7 @@ import "./EcosystemPages.css";
 
 const officialVideos = [
   { id: "rv4DK8nVWd0", title: "Garam dan Madu × Backpacker" },
-  { id: "BOTdDcx31Zc", title: "Akbar Nawasunda — Official Visual" },
+  { id: "BOTdDcx31Zc", title: "Akbar Nawasunda — Visual Resmi" },
 ];
 
 const thumbnailFor = (id: string) =>
@@ -25,15 +25,15 @@ export default function Visuals() {
   const cmsVisuals = cms.data?.visuals ?? [];
 
   const embedded = cmsVisuals
-    .filter((item) => item.youtubeId)
+    .filter(item => item.youtubeId)
     .slice(0, 2)
-    .map((item) => ({ id: item.youtubeId!, title: item.title }));
+    .map(item => ({ id: item.youtubeId!, title: item.title }));
   const players = embedded.length ? embedded : officialVideos;
 
   const portraitContent = publicPortraitStudies(cms.data);
 
   const archive = cmsVisuals.length
-    ? cmsVisuals.map((item) => ({
+    ? cmsVisuals.map(item => ({
         title: item.title,
         label: item.label || "VIDEO RESMI",
         href:
@@ -48,7 +48,7 @@ export default function Visuals() {
           ? thumbnailFor(item.youtubeId)
           : officialBrand.socialPreview,
       }))
-    : videos.map((video) => ({
+    : videos.map(video => ({
         ...video,
         backupImage: officialBrand.socialPreview,
       }));
@@ -100,12 +100,10 @@ export default function Visuals() {
                 KARYANYA.
               </h2>
             </div>
-            <p>
-              Tekan play untuk memuat player, atau buka YouTube langsung.
-            </p>
+            <p>Tekan play untuk memuat player, atau buka YouTube langsung.</p>
           </div>
           <div className="nf-video-embed-grid">
-            {players.map((video) => (
+            {players.map(video => (
               <OfficialMediaFrame
                 key={video.id}
                 title={video.title}
@@ -141,7 +139,7 @@ export default function Visuals() {
             </p>
           </div>
           <div className="nf-visual-grid">
-            {archive.map((video) => (
+            {archive.map(video => (
               <a
                 key={video.title}
                 className="nf-visual-card"

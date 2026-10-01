@@ -1,18 +1,32 @@
-import { ArrowUpRight, CalendarDays, MapPin, Radio, Ticket } from "lucide-react";
+import {
+  ArrowUpRight,
+  CalendarDays,
+  MapPin,
+  Radio,
+  Ticket,
+} from "lucide-react";
 import FanSignalInline from "@/components/FanSignalInline";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
-import { publicUpcomingEvents, usePublicArtistContent } from "@/content/publicContent";
+import {
+  publicUpcomingEvents,
+  usePublicArtistContent,
+} from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./Live.css";
 
 const formatDate = (value: string, time?: string) => {
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
-  const dateText = new Intl.DateTimeFormat("id-ID", { dateStyle: "medium" }).format(parsed);
+  const dateText = new Intl.DateTimeFormat("id-ID", {
+    dateStyle: "medium",
+  }).format(parsed);
   return time
     ? `${dateText} · ${time}`
-    : new Intl.DateTimeFormat("id-ID", { dateStyle: "medium", timeStyle: "short" }).format(parsed);
+    : new Intl.DateTimeFormat("id-ID", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(parsed);
 };
 
 const inquiryHref = (type: string) =>
@@ -23,9 +37,9 @@ const inquiryHref = (type: string) =>
 export default function Live() {
   const cms = usePublicArtistContent();
   const events = publicUpcomingEvents(cms.data).filter(
-    (event) => !/no date announced|tba/i.test(event.title)
+    event => !/no date announced|tba/i.test(event.title)
   );
-  const featured = events.find((event) => event.isFeatured) || events[0];
+  const featured = events.find(event => event.isFeatured) || events[0];
   const signal = cms.data?.live;
 
   return (
@@ -53,8 +67,12 @@ export default function Live() {
             </p>
           </div>
           <div className="nf-hero-note">
-            <span>{featured ? "SHOW BERIKUTNYA" : "AVAILABLE FOR INQUIRY"}</span>
-            <strong>{featured ? featured.title : "BOOKING / REMIX / COLLAB"}</strong>
+            <span>
+              {featured ? "SHOW BERIKUTNYA" : "TERBUKA UNTUK BOOKING"}
+            </span>
+            <strong>
+              {featured ? featured.title : "BOOKING / REMIX / KOLABORASI"}
+            </strong>
             {featured?.ticketUrl ? (
               <a
                 className="nf-text-button"
@@ -65,7 +83,10 @@ export default function Live() {
                 TIKET <ArrowUpRight size={14} />
               </a>
             ) : (
-              <a className="nf-text-button" href={inquiryHref("Booking inquiry")}>
+              <a
+                className="nf-text-button"
+                href={inquiryHref("Booking inquiry")}
+              >
                 HUBUNGI STUDIO <ArrowUpRight size={14} />
               </a>
             )}
@@ -88,7 +109,7 @@ export default function Live() {
               </span>
             </div>
             <div className="an-event-grid">
-              {events.map((event) => (
+              {events.map(event => (
                 <article className="an-event-card" key={event._id}>
                   <div className="an-event-date">
                     <CalendarDays size={16} />
@@ -124,7 +145,11 @@ export default function Live() {
                   </div>
                   <div className="an-event-actions">
                     {event.ticketUrl && (
-                      <a href={event.ticketUrl} target="_blank" rel="noreferrer">
+                      <a
+                        href={event.ticketUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         <Ticket size={12} /> TICKETS
                       </a>
                     )}
@@ -153,7 +178,7 @@ export default function Live() {
                 diinginkan.
               </p>
               <a className="nf-button" href={inquiryHref("Booking inquiry")}>
-                BOOKING PERFORMANCE <ArrowUpRight size={14} />
+                AJUKAN BOOKING <ArrowUpRight size={14} />
               </a>
             </div>
             <div className="an-booking-options">
@@ -162,7 +187,7 @@ export default function Live() {
                 href={inquiryHref("Custom remix inquiry")}
               >
                 <span>01</span>
-                <strong>CUSTOM REMIX</strong>
+                <strong>REMIX CUSTOM</strong>
                 <small>
                   Remix, aransemen, dan produksi musik untuk proyek atau konten.
                 </small>
@@ -173,8 +198,10 @@ export default function Live() {
                 href={inquiryHref("Collaboration inquiry")}
               >
                 <span>02</span>
-                <strong>COLLABORATION</strong>
-                <small>Kolaborasi rilisan, visual, dan performance bersama.</small>
+                <strong>KOLABORASI</strong>
+                <small>
+                  Kolaborasi rilisan, visual, dan performance bersama.
+                </small>
                 <ArrowUpRight size={15} />
               </a>
             </div>
@@ -187,11 +214,14 @@ export default function Live() {
               <Radio size={13} /> KABAR &amp; RILISAN
             </p>
             <h2>
-              FOLLOW
+              IKUTI
               <br />
-              UPDATE.
+              KABARNYA.
             </h2>
-            <p>Info rilisan, video, dan jadwal dari kanal resmi.</p>
+            <p>
+              Info rilisan, video, dan jadwal manggung — langsung dari kanal
+              resmi.
+            </p>
           </div>
           <FanSignalInline source="footer" />
         </section>

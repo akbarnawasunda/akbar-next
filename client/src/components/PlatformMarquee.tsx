@@ -46,7 +46,11 @@ function MarqueeRow({
   );
 }
 
-export function PlatformMarquee({ links = allPlatformLinks }: { links?: PlatformLink[] }) {
+export function PlatformMarquee({
+  links = allPlatformLinks,
+}: {
+  links?: PlatformLink[];
+}) {
   const marqueeRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -56,7 +60,7 @@ export function PlatformMarquee({ links = allPlatformLinks }: { links?: Platform
 
     const observer = new IntersectionObserver(
       ([entry]) => setIsVisible(entry?.isIntersecting ?? true),
-      { threshold: 0, rootMargin: "160px 0px" },
+      { threshold: 0, rootMargin: "160px 0px" }
     );
     observer.observe(element);
     return () => observer.disconnect();
@@ -84,13 +88,18 @@ export function SectionIndex({
   number,
   label,
 }: {
-  number: string;
+  number?: string;
   label: string;
 }) {
+  const hasNumber = Boolean(number && number.trim());
   return (
     <div className="an-section-index" aria-hidden="true">
-      <span>{number}</span>
-      <i />
+      {hasNumber ? (
+        <>
+          <span>{number}</span>
+          <i />
+        </>
+      ) : null}
       <span>{label}</span>
     </div>
   );

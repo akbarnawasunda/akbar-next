@@ -25,7 +25,8 @@ describe("AN Archive", () => {
   it("renames the public navigation label while preserving the established universe route", () => {
     const chrome = source("client/src/components/NightFrequencyChrome.tsx");
     const home = source("client/src/pages/Home.tsx");
-    expect(chrome).toContain('{ href: "/universe", label: "ARCHIVE" }');
-    expect(home).toContain('href="/universe">ARCHIVE');
+    // Label is Indonesian on the id/ locale; the /universe route must stay stable.
+    expect(chrome).toContain('{ href: "/universe", label: "ARSIP" }');
+    expect(home).toContain('href="/universe"');
   });
 });

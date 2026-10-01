@@ -17,13 +17,13 @@ import "./PublicMotion.css";
 export { MobileNav, MobileSlideMenu, useLockBodyScroll };
 
 const navItems = [
-  { href: "/music", label: "MUSIC" },
-  { href: "/visuals", label: "VISUALS" },
-  { href: "/live", label: "LIVE" },
-  { href: "/universe", label: "ARCHIVE" },
-  { href: "/about", label: "ABOUT" },
+  { href: "/music", label: "MUSIK" },
+  { href: "/visuals", label: "VISUAL" },
+  { href: "/live", label: "JADWAL" },
+  { href: "/universe", label: "ARSIP" },
+  { href: "/about", label: "TENTANG" },
   { href: "/epk", label: "EPK" },
-  { href: "/inquire", label: "CONTACT" },
+  { href: "/inquire", label: "KONTAK" },
 ];
 
 function DesktopStageHud() {
@@ -54,19 +54,19 @@ function DesktopStageHud() {
     <div className="nf-desktop-hud" aria-hidden="true">
       <div className="nf-hud-left">
         <span className="nf-hud-live-dot" />
-        <span className="nf-hud-badge">STAGE ACTIVE</span>
+        <span className="nf-hud-badge">BANDUNG BARAT</span>
         <span className="nf-hud-sep">·</span>
         <span className="nf-hud-time">{wibTime || "LIVE WIB"}</span>
         <span className="nf-hud-sep">·</span>
-        <span>BANDUNG (UTC+7)</span>
+        <span>WIB (UTC+7)</span>
       </div>
       <div className="nf-hud-center">
-        <span>AKBAR NAWASUNDA // 130 BPM · BREAKBEAT · INDO BASS</span>
+        <span>AKBAR NAWASUNDA // BREAKBEAT · INDO BASS · JEDAG JEDUG</span>
       </div>
       <div className="nf-hud-right">
         <span className="nf-hud-kbd-hint">HOTKEYS:</span>
-        <kbd>[M] MUSIC</kbd>
-        <kbd>[V] VISUALS</kbd>
+        <kbd>[M] MUSIK</kbd>
+        <kbd>[V] VISUAL</kbd>
         <kbd>[E] EPK</kbd>
       </div>
     </div>
@@ -76,14 +76,26 @@ function DesktopStageHud() {
 function LanguageSwitcher({ pathname }: { pathname: string }) {
   const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
   const idPath = isEnglish ? pathname.replace(/^\/en/, "") || "/" : pathname;
-  const englishPath = isEnglish ? pathname : pathname === "/" ? "/en" : `/en${pathname}`;
+  const englishPath = isEnglish
+    ? pathname
+    : pathname === "/"
+      ? "/en"
+      : `/en${pathname}`;
   return (
     <div className="an-language-switcher" aria-label="Pilihan bahasa">
-      <Link className={!isEnglish ? "is-active" : ""} href={idPath} aria-current={!isEnglish ? "page" : undefined}>
+      <Link
+        className={!isEnglish ? "is-active" : ""}
+        href={idPath}
+        aria-current={!isEnglish ? "page" : undefined}
+      >
         ID
       </Link>
       <span aria-hidden="true">/</span>
-      <Link className={isEnglish ? "is-active" : ""} href={englishPath} aria-current={isEnglish ? "page" : undefined}>
+      <Link
+        className={isEnglish ? "is-active" : ""}
+        href={englishPath}
+        aria-current={isEnglish ? "page" : undefined}
+      >
         EN
       </Link>
     </div>
@@ -93,14 +105,23 @@ function LanguageSwitcher({ pathname }: { pathname: string }) {
 export function NightHeader({ active }: { active?: string }) {
   const [pathname, navigate] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const activeRoute = active ??
-    (pathname.startsWith("/music") ? "/music" :
-      pathname.startsWith("/visuals") ? "/visuals" :
-        pathname.startsWith("/live") ? "/live" :
-          pathname.startsWith("/universe") ? "/universe" :
-            pathname.startsWith("/about") ? "/about" :
-              pathname.startsWith("/epk") ? "/epk" :
-                pathname.startsWith("/inquire") ? "/inquire" : undefined);
+  const activeRoute =
+    active ??
+    (pathname.startsWith("/music")
+      ? "/music"
+      : pathname.startsWith("/visuals")
+        ? "/visuals"
+        : pathname.startsWith("/live")
+          ? "/live"
+          : pathname.startsWith("/universe")
+            ? "/universe"
+            : pathname.startsWith("/about")
+              ? "/about"
+              : pathname.startsWith("/epk")
+                ? "/epk"
+                : pathname.startsWith("/inquire")
+                  ? "/inquire"
+                  : undefined);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   // Desktop keyboard hotkeys for instant navigation
@@ -142,11 +163,14 @@ export function NightHeader({ active }: { active?: string }) {
       <DesktopStageHud />
       <header className="nf-nav">
         <Link className="nf-wordmark nf-wordmark-official" href="/">
-          <ResilientBrandImage className="nf-brand-logo" alt="Akbar Nawasunda" />
+          <ResilientBrandImage
+            className="nf-brand-logo"
+            alt="Akbar Nawasunda"
+          />
           <span>AKBAR NAWASUNDA</span>
         </Link>
         <nav aria-label="Navigasi utama">
-          {navItems.map((item) => (
+          {navItems.map(item => (
             <Link
               key={item.href}
               className={activeRoute === item.href ? "is-active" : ""}
@@ -164,7 +188,7 @@ export function NightHeader({ active }: { active?: string }) {
           ref={triggerRef}
           className="nf-menu-toggle"
           type="button"
-          onClick={() => setIsOpen((value) => !value)}
+          onClick={() => setIsOpen(value => !value)}
           aria-label={isOpen ? "Tutup navigasi" : "Buka navigasi"}
           aria-expanded={isOpen}
           aria-controls="night-mobile-menu"
@@ -196,39 +220,40 @@ export function NightFooter() {
         />
         <strong>AKBAR NAWASUNDA</strong>
         <p>PRODUCER / REMIXER / INDONESIA</p>
-        <Link className="nf-footer-mascot" href="/" aria-label="Kembali ke homepage">
-          <img src="/assets/akbar-mascot-doodle.webp" alt="Maskot doodle Akbar Nawasunda" width={92} height={92} loading="lazy" decoding="async" />
-          <span>BACK TO SIGNAL <ArrowUpRight size={12} /></span>
+        <Link
+          className="nf-footer-mascot"
+          href="/"
+          aria-label="Kembali ke homepage"
+        >
+          <img
+            src="/assets/akbar-mascot-doodle.webp"
+            alt="Maskot doodle Akbar Nawasunda"
+            width={92}
+            height={92}
+            loading="lazy"
+            decoding="async"
+          />
+          <span>
+            KEMBALI KE BERANDA <ArrowUpRight size={12} />
+          </span>
         </Link>
       </div>
       <div className="nf-footer-column">
-        <span>LIHAT-LIHAT</span>
-        <Link href="/music">
-          Music <ArrowUpRight size={13} />
-        </Link>
-        <Link href="/visuals">
-          Visuals <ArrowUpRight size={13} />
-        </Link>
-        <Link href="/live">
-          Live <ArrowUpRight size={13} />
-        </Link>
-        <Link href="/universe">
-          Archive <ArrowUpRight size={13} />
-        </Link>
-        <Link href="/about">
-          About <ArrowUpRight size={13} />
-        </Link>
+        <span>JELAJAHI</span>
+        <Link href="/music">Musik</Link>
+        <Link href="/visuals">Visual</Link>
+        <Link href="/live">Jadwal</Link>
+        <Link href="/universe">Arsip</Link>
+        <Link href="/about">Tentang</Link>
       </div>
       <div className="nf-footer-column">
         <span>HUBUNGI</span>
-        {links.map((link) => (
+        {links.map(link => (
           <a key={link.label} href={link.href} target="_blank" rel="noreferrer">
             {link.label} <ArrowUpRight size={13} />
           </a>
         ))}
-        <Link href="/epk">
-          EPK / Booking <ArrowUpRight size={13} />
-        </Link>
+        <Link href="/epk">EPK / Booking</Link>
       </div>
       <p className="footer-bottom">
         © {new Date().getFullYear()} AKBAR NAWASUNDA
