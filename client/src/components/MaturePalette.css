@@ -47,10 +47,9 @@
 
 .nf-page .nf-nav,
 .nf-header {
-  background: color-mix(in srgb, var(--ink) 92%, transparent) !important;
+  background: var(--ink) !important;
   border-color: var(--ink-line) !important;
   box-shadow: none !important;
-  backdrop-filter: blur(14px) saturate(120%);
 }
 .nf-page .nf-nav::after,
 .nf-header::after { content: none !important; display: none !important; }
@@ -122,10 +121,9 @@
 
 .nf-page .nf-hero-note {
   border: 1px solid var(--ink-line) !important;
-  background: color-mix(in srgb, var(--paper) 3%, transparent) !important;
+  background: var(--ink-soft) !important;
   border-radius: 0 !important;
   box-shadow: none !important;
-  backdrop-filter: none !important;
 }
 .nf-page .nf-hero-note span {
   font-family: var(--font-mono);
@@ -427,7 +425,7 @@
 
 .nf-page .nf-signal-form button:hover:not(:disabled),
 .nf-page .nf-signal-block .nf-button:hover {
-  background: #38e1ff !important;
+  background: var(--cyan-light) !important;
   color: var(--ink) !important;
   transform: translateY(-1px) !important;
 }
@@ -684,16 +682,5 @@
     aspect-ratio: 16 / 9;
     height: auto;
     min-height: 200px;
-  }
-}
-
-
-/* Blur header mahal di mobile; latar solid memberi hasil visual setara. */
-@media (max-width: 1024px) {
-  .nf-page .nf-nav,
-  .nf-header {
-    background: var(--ink) !important;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
   }
 }

@@ -15,7 +15,8 @@ import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { MusicEmbed } from "@/components/MusicEmbed";
 import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
-import FanSignalInline from "@/components/FanSignalInline";
+import FanSignalSection from "@/components/FanSignalSection";
+import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { Reveal } from "@/components/Reveal";
 import { HeroDots } from "@/components/HeroDots";
 import { NightHeader, NightFooter } from "@/components/NightFrequencyChrome";
@@ -828,24 +829,19 @@ export default function Home() {
             </section>
           ) : null}
 
-          <section className="signal-section" id="signal">
-            <SectionIndex label="NEWS" />
-            <div>
-              <p className="eyebrow">
-                <Sparkles size={13} /> KABAR TERBARU
-              </p>
-              <h2>
+          <FanSignalSection
+            source={FAN_SIGNAL_SOURCES.home}
+            indexLabel="NEWS"
+            eyebrow="KABAR TERBARU"
+            title={
+              <>
                 JANGAN
                 <br />
                 KETINGGALAN.
-              </h2>
-              <p>
-                Rilisan baru, video, dan jadwal manggung — dikirim langsung ke
-                email kamu, tanpa spam.
-              </p>
-            </div>
-            <FanSignalInline source="home" />
-          </section>
+              </>
+            }
+            description="Rilisan baru, video, dan jadwal manggung — dikirim langsung ke email kamu, tanpa spam."
+          />
         </main>
 
         <NightFooter />

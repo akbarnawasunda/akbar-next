@@ -69,12 +69,11 @@
   height: 2.2rem;
   place-items: center;
   border: 1px solid rgba(255, 255, 255, 0.38);
-  background: rgba(7, 8, 10, 0.55);
+  background: var(--ink-soft);
   color: rgba(255, 255, 255, 0.82);
   font-family: var(--font-mono, monospace);
   font-size: 0.65rem;
   letter-spacing: 0.12em;
-  backdrop-filter: blur(12px);
 }
 
 .portrait-gallery-card-copy {

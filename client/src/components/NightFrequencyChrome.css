@@ -37,9 +37,7 @@
 .nf-mobile-drawer-backdrop {
   position: absolute;
   inset: 0;
-  background-color: rgba(4, 6, 9, 0.74);
-  backdrop-filter: blur(10px) saturate(120%);
-  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  background-color: var(--ink);
   cursor: pointer;
 }
 
@@ -612,11 +610,11 @@
     justify-content: space-between;
     height: 28px;
     padding-inline: var(--gutter, clamp(20px, 4.5vw, 64px));
-    background: #090a0e;
+    background: var(--ink);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     font-family: var(--font-mono, monospace);
     font-size: 0.58rem;
-    color: #7b788a;
+    color: var(--mute-soft);
     letter-spacing: 0.12em;
     user-select: none;
   }
@@ -630,28 +628,28 @@
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: #00ffd5;
-    box-shadow: 0 0 6px #00ffd5;
+    background: var(--mint);
+    box-shadow: 0 0 6px var(--mint);
     display: inline-block;
     animation: hx-blink 1.4s ease-in-out infinite;
   }
   .nf-hud-badge {
-    color: #00ffd5;
+    color: var(--mint);
     font-weight: 600;
   }
   .nf-hud-time {
-    color: #e8e6f0;
+    color: var(--paper-soft);
     font-weight: 600;
   }
   .nf-hud-sep {
     opacity: 0.4;
   }
   .nf-hud-center {
-    color: #a29fb2;
+    color: var(--mute);
     font-weight: 500;
   }
   .nf-hud-kbd-hint {
-    color: #5f5c6c;
+    color: var(--mute-soft);
   }
   .nf-hud-right kbd {
     display: inline-block;
@@ -659,7 +657,7 @@
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 2px;
-    color: #d6d3e3;
+    color: var(--paper-soft);
     font-size: 0.54rem;
     font-family: inherit;
   }
@@ -677,8 +675,7 @@
   min-height: 68px;
   padding: env(safe-area-inset-top) var(--gutter, clamp(20px, 4.5vw, 64px)) 0;
   border-bottom: 1px solid var(--paper-line);
-  background: color-mix(in srgb, var(--ink) 92%, transparent);
-  backdrop-filter: blur(14px) saturate(120%);
+  background: var(--ink);
 }
 .nf-wordmark {
   display: inline-flex;
@@ -755,14 +752,4 @@
 @media (prefers-reduced-motion: reduce) {
   .nf-nav nav a,
   .nf-nav nav a::after { transition: none; }
-}
-
-
-/* Blur pada header sticky mahal di perangkat mobile: pakai latar solid saja. */
-@media (max-width: 1024px) {
-  .nf-nav {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: var(--ink, #0a0b10);
-  }
 }

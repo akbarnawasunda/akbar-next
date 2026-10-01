@@ -37,8 +37,7 @@
   height: 68px;
   padding-inline: var(--gutter, clamp(20px, 4.5vw, 64px));
   border-bottom: 1px solid var(--ink-line);
-  background: color-mix(in srgb, var(--ink) 88%, transparent);
-  backdrop-filter: blur(14px) saturate(120%);
+  background: var(--ink);
 }
 
 .nf-wordmark {

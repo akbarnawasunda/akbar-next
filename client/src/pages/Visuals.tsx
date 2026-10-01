@@ -1,6 +1,8 @@
 import { ArrowUpRight, Play } from "lucide-react";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
+import FanSignalSection from "@/components/FanSignalSection";
+import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { officialBrand, videos } from "@/content/artistPlatform";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import VisualPortraitStudies from "@/components/VisualPortraitStudies";
@@ -163,6 +165,19 @@ export default function Visuals() {
             ))}
           </div>
         </section>
+
+        <FanSignalSection
+          source={FAN_SIGNAL_SOURCES.visuals}
+          eyebrow="KABAR VISUAL"
+          title={
+            <>
+              LIHAT YANG
+              <br />
+              BERIKUTNYA.
+            </>
+          }
+          description="Video resmi, artwork, dan catatan visual baru langsung ke email kamu."
+        />
       </main>
       <NightFooter />
     </div>

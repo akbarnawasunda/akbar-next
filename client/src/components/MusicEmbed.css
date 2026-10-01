@@ -16,8 +16,8 @@
 }
 
 .an-music-embed:hover {
-  border-color: rgba(0, 212, 255, 0.35);
-  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.55), 0 0 20px rgba(0, 212, 255, 0.08);
+  border-color: var(--acid);
+  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.55), 0 0 20px color-mix(in srgb, var(--acid) 8%, transparent);
 }
 
 .an-embed-frame-wrap {
@@ -25,61 +25,38 @@
   width: 100%;
   min-width: 0;
   overflow: hidden;
-  background: #090a0e;
+  background: var(--ink);
+}
+
+:root {
+  --an-embed-audio-h: 166px;
 }
 
 /* -- Platform-aware container heights and aspect ratios -- */
 
 /* Spotify */
-.an-embed-spotify {
-  border-color: rgba(30, 215, 96, 0.2);
-}
-.an-embed-spotify:hover {
-  border-color: rgba(30, 215, 96, 0.45);
-  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.55), 0 0 20px rgba(30, 215, 96, 0.1);
-}
 .an-embed-spotify .an-embed-frame-wrap {
-  height: 152px;
-}
-.an-embed-spotify.is-compact .an-embed-frame-wrap {
-  height: 80px;
+  height: var(--an-embed-audio-h);
 }
 .an-embed-spotify iframe {
   width: 100%;
-  height: 152px;
+  height: var(--an-embed-audio-h);
   border: 0;
   display: block;
 }
-.an-embed-spotify.is-compact iframe {
-  height: 80px;
-}
 
 /* SoundCloud */
-.an-embed-soundcloud {
-  border-color: rgba(255, 85, 0, 0.2);
-}
-.an-embed-soundcloud:hover {
-  border-color: rgba(255, 85, 0, 0.45);
-  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.55), 0 0 20px rgba(255, 85, 0, 0.1);
-}
 .an-embed-soundcloud .an-embed-frame-wrap {
-  height: 166px;
+  height: var(--an-embed-audio-h);
 }
 .an-embed-soundcloud iframe {
   width: 100%;
-  height: 166px;
+  height: var(--an-embed-audio-h);
   border: 0;
   display: block;
 }
 
 /* YouTube (Requires strict 16:9 ratio) */
-.an-embed-youtube {
-  border-color: rgba(255, 40, 40, 0.2);
-}
-.an-embed-youtube:hover {
-  border-color: rgba(255, 40, 40, 0.45);
-  box-shadow: 0 12px 38px rgba(0, 0, 0, 0.55), 0 0 20px rgba(255, 40, 40, 0.1);
-}
 .an-embed-youtube .an-embed-frame-wrap {
   position: relative;
   width: 100%;
@@ -386,7 +363,7 @@
   padding: 8px 16px;
   border-radius: 4px;
   background: var(--acid);
-  color: #0c0d12;
+  color: var(--ink);
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 600;

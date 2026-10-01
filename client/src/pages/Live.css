@@ -92,7 +92,7 @@
   transition: background 160ms ease, transform 140ms ease;
 }
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form button:hover:not(:disabled) {
-  background: #38e1ff;
+  background: var(--cyan-light);
   transform: translateY(-1px);
 }
 .route-motion[data-route="/live"] .nf-page main > section.nf-signal-block.an-motion-band .nf-signal-form button:disabled {

@@ -1,8 +1,10 @@
-import FanSignalInline from "@/components/FanSignalInline";
+import FanSignalSection from "@/components/FanSignalSection";
+import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { ArrowLeft, ArrowUpRight, ArrowRight } from "lucide-react";
 import { useRef } from "react";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
+import { soundcloudEmbedUrl } from "@/components/MusicEmbed";
 import { Reveal } from "@/components/Reveal";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
@@ -30,11 +32,6 @@ const soundcloudDrops = [
     url: "https://soundcloud.com/akbarnawasunda/ngertenono_ati_medium_hall_mbfrecords",
   },
 ];
-
-const soundcloudEmbed = (url: string) =>
-  `https://w.soundcloud.com/player/?url=${encodeURIComponent(
-    url
-  )}&color=%230a1737&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
 
 const releaseSlug = (value: string) =>
   value
@@ -237,7 +234,7 @@ export default function Music() {
                     title={drop.title}
                     provider="SoundCloud"
                     sourceUrl={drop.url}
-                    embedUrl={soundcloudEmbed(drop.url)}
+                    embedUrl={soundcloudEmbedUrl(drop.url)}
                     artwork={known?.image || officialBrand.socialPreview}
                     backupArtwork={officialBrand.socialPreview}
                     description="Tautan resmi selalu tersedia."
@@ -348,18 +345,18 @@ export default function Music() {
           </div>
         </section>
 
-        <section className="nf-signal-block" id="signal">
-          <div>
-            <p className="nf-page-eyebrow">KABAR TERBARU</p>
-            <h2>
-              JANGAN
+        <FanSignalSection
+          source={FAN_SIGNAL_SOURCES.music}
+          eyebrow="KABAR RILISAN"
+          title={
+            <>
+              DENGARKAN
               <br />
-              KETINGGALAN.
-            </h2>
-            <p>Kabar rilisan dan jadwal dari kanal resmi.</p>
-          </div>
-          <FanSignalInline />
-        </section>
+              BERIKUTNYA.
+            </>
+          }
+          description="Catatan rilisan, remix, dan jadwal dari kanal resmi langsung ke email kamu."
+        />
       </main>
       <NightFooter />
     </div>

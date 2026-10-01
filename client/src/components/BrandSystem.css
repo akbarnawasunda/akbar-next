@@ -7,7 +7,7 @@
 
 :root {
   --an-plasma: var(--signal);
-  --an-plasma-rgb: 255, 74, 28;
+  --an-plasma-rgb: 0, 212, 255;
   --an-graphite: var(--ink);
   --an-plum: var(--ink-soft);
   --an-bone: var(--paper);

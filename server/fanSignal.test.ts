@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
+import type { FanSignalSource } from "@shared/types";
 
 const mocks = vi.hoisted(() => ({
-  createFanSignal: vi.fn(async (signal: { email: string; source: "home" | "footer" }) => signal),
+  createFanSignal: vi.fn(async (signal: { email: string; source: FanSignalSource }) => signal),
   syncFanSignalContact: vi.fn(async () => ({ configured: true, synced: true, contactId: "contact-1" })),
   getResendReadiness: vi.fn(() => ({ configured: true, fromEmail: "news@example.com", segmentConfigured: true })),
   createResendBroadcast: vi.fn(),

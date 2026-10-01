@@ -132,6 +132,35 @@ describe("halaman publik yang dirender server", () => {
     }
   });
 
+  it("merender satu sumber Fan Signal yang sesuai di lima halaman publik", async () => {
+    const pageSources = [
+      ["/", "home", "JANGAN KETINGGALAN."] as const,
+      ["/music", "music", "DENGARKAN BERIKUTNYA."] as const,
+      ["/live", "footer", "IKUTI KABARNYA."] as const,
+      ["/visuals", "visuals", "LIHAT YANG BERIKUTNYA."] as const,
+      ["/universe", "universe", "TETAP DI FREKUENSI."] as const,
+    ];
+
+    for (const [route, source, heading] of pageSources) {
+      const { html, text } = await renderPage(route);
+      expect(html.match(new RegExp(`data-fan-signal-source="${source}"`, "g")))
+        .toHaveLength(1);
+      expect(html).toContain(`id="fan-email-${source}"`);
+      expect(text).toContain(heading);
+    }
+  });
+
+  it("memakai satu konfigurasi SoundCloud audio yang tidak visual", async () => {
+    for (const route of ["/music", "/en/music"]) {
+      const { html } = await renderPage(route);
+      expect(html).toMatch(
+        /data-embed-url="https:\/\/w\.soundcloud\.com\/player\/[^\"]*visual=false/
+      );
+      expect(html).not.toContain("%230a1737");
+      expect(html).not.toContain("visual=true");
+    }
+  });
+
   it("tidak merender penanda section yang kosong", async () => {
     const { html } = await renderPage("/");
     expect(html).not.toMatch(/class="an-section-index"[^>]*>\s*<span><\/span>/);

@@ -5,15 +5,15 @@
    ================================================================ */
 
 :root {
-  --ref-bg: #05090f;
-  --ref-bg-2: #08111b;
-  --ref-panel: #0b1622;
-  --ref-panel-2: #0f1c29;
-  --ref-ink: #eef3f7;
-  --ref-muted: #8997a5;
-  --ref-faint: #52616f;
-  --ref-cyan: #1ee8ff;
-  --ref-blue: #1f6dca;
+  --ref-bg: var(--ink);
+  --ref-bg-2: var(--ink-soft);
+  --ref-panel: var(--ink-soft);
+  --ref-panel-2: var(--ink-card);
+  --ref-ink: var(--paper);
+  --ref-muted: var(--mute);
+  --ref-faint: var(--mute-soft);
+  --ref-cyan: var(--cyan-bright);
+  --ref-blue: var(--blue);
   --ref-line: rgba(210, 231, 242, 0.2);
   --ref-line-soft: rgba(210, 231, 242, 0.1);
   --ref-serif-display: "Syne", "Arial Narrow", sans-serif;
@@ -55,8 +55,7 @@ body::before {
   grid-template-columns: auto minmax(0, 1fr) auto auto !important;
   gap: clamp(16px, 3vw, 38px) !important;
   border-bottom: 1px solid var(--ref-line) !important;
-  background: rgba(5, 9, 15, 0.9) !important;
-  backdrop-filter: blur(18px) !important;
+  background: var(--ref-bg) !important;
 }
 .nf-wordmark {
   gap: 8px !important;
@@ -332,7 +331,7 @@ body::before {
   border-radius: 0 !important;
   border-color: var(--ref-cyan) !important;
   background: var(--ref-cyan) !important;
-  color: #041017 !important;
+  color: var(--ink) !important;
   font-family: var(--ref-mono) !important;
   letter-spacing: 0.12em !important;
 }
@@ -375,7 +374,7 @@ body::before {
 .an-site .home-hero-portrait { height: min(78vh, 720px) !important; border: 0 !important; box-shadow: var(--ref-shadow) !important; }
 .an-site .home-hero-portrait::after { content: "01 / 08  THE SIGNAL" !important; right: 18px; bottom: 16px; padding: 0 !important; border: 0 !important; background: transparent !important; color: var(--ref-cyan) !important; font-size: 0.56rem !important; }
 .an-site .home-hero-portrait img { filter: saturate(0.62) contrast(1.2) brightness(0.76) !important; object-position: 50% 22% !important; }
-.an-site .button-primary { padding: 13px 16px !important; background: var(--ref-cyan) !important; color: #041017 !important; font-family: var(--ref-mono) !important; font-size: 0.59rem !important; letter-spacing: 0.12em !important; }
+.an-site .button-primary { padding: 13px 16px !important; background: var(--ref-cyan) !important; color: var(--ink) !important; font-family: var(--ref-mono) !important; font-size: 0.59rem !important; letter-spacing: 0.12em !important; }
 .an-site .button-quiet { padding: 13px 0 !important; border-bottom-color: var(--ref-line) !important; color: var(--ref-ink) !important; font-size: 0.59rem !important; }
 .an-site .hero-signal-link { font-size: 0.58rem !important; color: var(--ref-muted) !important; }
 .an-site .section,
@@ -393,7 +392,7 @@ body::before {
 .an-site .home-platform-copy strong { color: var(--ref-ink) !important; font-size: 1.25rem !important; }
 .an-site .home-platform-arrow { grid-column: 4 !important; color: var(--ref-cyan) !important; }
 .an-site .release-cover { border: 1px solid var(--ref-line) !important; box-shadow: 14px 14px 0 rgba(30,232,255,0.14) !important; }
-.an-site .release-cover::after { background: var(--ref-cyan) !important; color: #041017 !important; }
+.an-site .release-cover::after { background: var(--ref-cyan) !important; color: var(--ink) !important; }
 .an-site .release-cover img { filter: saturate(0.66) contrast(1.17) brightness(0.78) !important; }
 .an-site .release-detail h3 { font-size: clamp(2.4rem, 5vw, 5rem) !important; line-height: 0.94 !important; }
 .an-site .release-detail-actions { border-top-color: var(--ref-line) !important; }
@@ -411,7 +410,7 @@ body::before {
 .an-site .video-card > img { filter: saturate(0.55) contrast(1.18) brightness(0.68) !important; }
 .an-site .video-overlay { background: linear-gradient(0deg, rgba(5,9,15,0.94), transparent 72%) !important; }
 .an-site .video-content span { color: var(--ref-cyan) !important; font-family: var(--ref-mono) !important; }
-.an-site .round-play { border-color: var(--ref-cyan) !important; background: var(--ref-cyan) !important; color: #041017 !important; }
+.an-site .round-play { border-color: var(--ref-cyan) !important; background: var(--ref-cyan) !important; color: var(--ink) !important; }
 .an-site .live-section { min-height: 560px !important; background-color: var(--ref-bg-2) !important; }
 .an-site .live-backdrop { opacity: 0.38 !important; filter: saturate(0.55) contrast(1.16) brightness(0.58) !important; }
 .an-site .live-copy h2 { font-size: clamp(2.7rem, 6vw, 6.5rem) !important; }
@@ -659,14 +658,14 @@ body::before {
    ALL PUBLIC PAGES — shared cinematic editorial system
    ============================================================ */
 :root {
-  --public-bg: #070b10;
-  --public-surface: #0d141d;
-  --public-surface-2: #111c27;
-  --public-ink: #f2f6f8;
-  --public-muted: #8f9ca7;
+  --public-bg: var(--ink);
+  --public-surface: var(--ink-soft);
+  --public-surface-2: var(--ink-card);
+  --public-ink: var(--paper);
+  --public-muted: var(--mute);
   --public-line: rgba(204, 224, 235, 0.16);
   --public-line-strong: rgba(204, 224, 235, 0.3);
-  --public-accent: #18d7f2;
+  --public-accent: var(--cyan);
   --public-shadow: 0 22px 72px rgba(2, 23, 35, 0.42);
 }
 
@@ -674,7 +673,7 @@ body::before {
 .en-page {
   background:
     radial-gradient(circle at 82% 8%, rgba(24, 215, 242, 0.08), transparent 28rem),
-    linear-gradient(180deg, var(--public-bg) 0%, #081018 52%, var(--public-bg) 100%) !important;
+    linear-gradient(180deg, var(--public-bg) 0%, var(--ink-soft) 52%, var(--public-bg) 100%) !important;
   color: var(--public-ink) !important;
   overflow-x: clip;
 }
@@ -759,9 +758,8 @@ body::before {
 .en-page .nf-hero-note {
   border: 1px solid var(--public-line-strong) !important;
   border-radius: 0 !important;
-  background: rgba(5, 12, 19, 0.72) !important;
+  background: var(--ref-bg-2) !important;
   box-shadow: var(--public-shadow);
-  backdrop-filter: blur(10px);
 }
 .nf-page .nf-section,
 .en-page .nf-section {
@@ -803,7 +801,7 @@ body::before {
   border: 1px solid var(--public-accent) !important;
   border-radius: 0 !important;
   background: var(--public-accent) !important;
-  color: #041016 !important;
+  color: var(--ink) !important;
   font-family: var(--ref-mono, var(--font-mono)) !important;
   font-size: 0.66rem !important;
   font-weight: 700 !important;
@@ -816,7 +814,7 @@ body::before {
 .en-page .nf-button:focus-visible,
 .nf-page .an-inquiry-submit:hover,
 .nf-page .an-inquiry-submit:focus-visible {
-  background: #7cecff !important;
+  background: var(--cyan-soft) !important;
   box-shadow: 0 10px 32px rgba(24, 215, 242, 0.18);
   transform: translateY(-2px);
 }

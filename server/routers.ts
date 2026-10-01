@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
@@ -133,7 +134,13 @@ export const appRouter = router({
     subscribe: publicProcedure
       .input(z.object({
         email: z.string().trim().toLowerCase().email().max(320),
-        source: z.enum(["home", "footer"]).default("home"),
+        source: z.enum([
+          FAN_SIGNAL_SOURCES.home,
+          FAN_SIGNAL_SOURCES.music,
+          FAN_SIGNAL_SOURCES.live,
+          FAN_SIGNAL_SOURCES.visuals,
+          FAN_SIGNAL_SOURCES.universe,
+        ]).default(FAN_SIGNAL_SOURCES.home),
       }))
       .mutation(async ({ input }) => {
         const stored = await createFanSignal(input);

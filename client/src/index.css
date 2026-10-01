@@ -89,20 +89,44 @@
   --paper:      #f4f6fa;
   --paper-soft: #e2e6f0;
 
-  /* Accents: Electric Cyan & Blue-Violet */
+  /* Accents: one electric cyan system, with named shades for legacy layers. */
   --acid:       #00d4ff;
-  --signal:     #4f46e5;
-  --accent-violet: #8b5cf6;
+  --signal:     var(--acid);
+  --accent-violet: var(--acid);
+  --cyan-bright: #1ee8ff;
+  --cyan:        #18d7f2;
+  --cyan-soft:   #7cecff;
+  --cyan-light:  #38e1ff;
+  --mint:        #00ffd5;
+  --blue:        #1f6dca;
   --mute:       #a2abb9;
   --mute-soft:  #7a8494;
   --mute-ink:   #8f98a8;
 
+  /* Editorial sepia tokens used by the portrait study layer. */
+  --sepia-bg:        #151414;
+  --sepia-dark:      #121111;
+  --sepia-shadow:    #0d0e13;
+  --sepia-panel:     #0b0c0f;
+  --sepia-line:      #e4d9c4;
+  --sepia-accent:    #e7c7a4;
+  --sepia-copy:      #ebe4d9;
+  --sepia-muted:     #e7dfd2;
+  --sepia-deep:      #101012;
+  --sepia-ink:       #f2eadf;
+  --sepia-paper:     #f4eadb;
+  --sepia-highlight: #fff9ef;
+
+  /* Status colors stay explicit so feedback never borrows an accent. */
+  --state-ok:  #7cf2a4;
+  --state-err: #ff7b72;
+
   --ink-line:   rgba(255, 255, 255, 0.10);
   --paper-line: rgba(255, 255, 255, 0.12);
-  --gradient-accent: linear-gradient(135deg, #00d4ff 0%, #4f46e5 100%);
-  --gradient-signal: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 100%);
-  --gradient-night: linear-gradient(135deg, #141722 0%, #0c0d12 100%);
-  --gradient-horizon: linear-gradient(110deg, #4f46e5 0%, #00d4ff 100%);
+  --gradient-accent: linear-gradient(135deg, var(--acid) 0%, var(--acid) 100%);
+  --gradient-signal: linear-gradient(135deg, var(--acid) 0%, var(--acid) 100%);
+  --gradient-night: linear-gradient(135deg, var(--ink-soft) 0%, var(--ink) 100%);
+  --gradient-horizon: linear-gradient(110deg, var(--acid) 0%, var(--acid) 100%);
   --glow-accent: 0 0 24px rgba(0, 212, 255, 0.22);
 
   --shadow-text:  0 2px 8px rgba(0, 0, 0, 0.75);

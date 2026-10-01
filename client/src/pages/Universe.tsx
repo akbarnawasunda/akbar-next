@@ -1,5 +1,7 @@
 import { ArrowUpRight, Disc3, Music2, Sparkles } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
+import FanSignalSection from "@/components/FanSignalSection";
+import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import {
   artworkThumb,
   officialBrand,
@@ -229,6 +231,19 @@ export default function Universe() {
             </div>
           </div>
         </section>
+
+        <FanSignalSection
+          source={FAN_SIGNAL_SOURCES.universe}
+          eyebrow="KABAR DARI ARSIP"
+          title={
+            <>
+              TETAP DI
+              <br />
+              FREKUENSI.
+            </>
+          }
+          description="Ikuti perjalanan, rilisan, dan kolaborasi baru Akbar Nawasunda dari satu kanal resmi."
+        />
       </main>
       <NightFooter />
     </div>

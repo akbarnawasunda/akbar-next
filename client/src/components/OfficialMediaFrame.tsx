@@ -63,6 +63,7 @@ export function OfficialMediaFrame({
       className={`an-official-media an-official-media-provider-${providerClass}${
         playerRequested ? " is-player-open" : ""
       }`}
+      data-embed-url={embedUrl || sourceUrl}
     >
       <a
         className="an-official-media-art"

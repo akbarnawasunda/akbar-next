@@ -38,8 +38,7 @@
   width: 42px;
   height: 42px;
   border-color: color-mix(in srgb, var(--paper) 72%, transparent);
-  background: color-mix(in srgb, var(--ink) 52%, transparent);
-  backdrop-filter: blur(10px);
+  background: var(--ink-soft);
   transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1), background 180ms ease;
 }
 .an-official-media:hover .an-official-media-art i {
