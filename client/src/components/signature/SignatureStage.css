@@ -6,13 +6,14 @@
   color: var(--paper);
 }
 
-/* Jalur scroll. Tingginya memberi ruang bagi tiga kata untuk saling
+/* Jalur scroll. Tingginya memberi ruang bagi dua kata untuk saling
    berganti; posisinya dibaca runtime sebagai progres 0..1. */
 .an-signature-stage-track {
   position: relative;
-  /* Tiga kata butuh ruang gulir, tapi jangan sampai halaman terasa
-     disandera. Di layar kecil jalurnya dipendekkan (lihat media query). */
-  min-height: 240vh;
+  /* Dua kata, bukan tiga: jalur 140vh berarti ~40vh perjalanan nyata —
+     cukup untuk satu pergantian kata lalu titik dilepas, tanpa membuat
+     halaman terasa disandera satu efek. */
+  min-height: 140vh;
 }
 
 .an-signature-stage-sticky {
@@ -21,8 +22,11 @@
   display: grid;
   align-content: center;
   gap: clamp(14px, 2vw, 22px);
-  min-height: 100svh;
-  padding: clamp(40px, 7vh, 88px) var(--hx-gutter, clamp(20px, 5vw, 88px));
+  /* 72svh, bukan satu layar penuh: section berikutnya selalu mengintip dari
+     bawah, jadi panggung terasa bagian dari halaman — bukan ruangan khusus
+     partikel. */
+  min-height: 72svh;
+  padding: clamp(28px, 5vh, 64px) var(--hx-gutter, clamp(20px, 5vw, 88px));
 }
 
 /* Tanpa particle field (reduced motion, hemat data, perangkat lemah, atau
@@ -42,7 +46,7 @@
   position: relative;
   display: grid;
   place-items: center;
-  min-height: clamp(220px, 38vh, 420px);
+  min-height: clamp(180px, 26vh, 320px);
   border-top: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
 }
@@ -76,22 +80,89 @@
   overflow-wrap: anywhere;
 }
 
+/* Konteks panggung: satu baris era + tiga angka katalog. Isinya fakta
+   tentang musiknya, bukan keterangan tentang efeknya. */
+.an-signature-stage-context {
+  display: grid;
+  gap: clamp(14px, 2.4vw, 26px);
+  justify-items: center;
+  text-align: center;
+}
+
+.an-signature-stage-eras {
+  display: grid;
+  max-width: 62ch;
+}
+
+.an-signature-stage-era {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0 10px;
+  font-family: var(--font-mono);
+  font-size: clamp(0.62rem, 1.5vw, 0.72rem);
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+.an-signature-stage-era-year {
+  color: var(--acid);
+  letter-spacing: 0.2em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Efek hidup → baris konteks ikut berganti bersama kata yang disusun
+   partikel; keduanya tetap menempati sel yang sama agar tidak ada lompatan
+   tinggi saat bertukar. */
+.an-signature-stage[data-live="true"] .an-signature-stage-era {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity 420ms ease;
+}
+
+.an-signature-stage[data-live="true"]
+  .an-signature-stage-era[data-active="true"] {
+  opacity: 1;
+}
+
+.an-signature-stage-stats {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(22px, 6vw, 72px);
+}
+
+.an-signature-stage-stats div {
+  display: grid;
+}
+
+.an-signature-stage-stats dd {
+  margin: 0;
+}
+
 @media (max-width: 900px) {
   .an-signature-stage-track {
-    min-height: 200vh;
+    min-height: 130vh;
   }
 }
 
 @media (max-width: 640px) {
   .an-signature-stage-track {
-    min-height: 170vh;
+    min-height: 115vh;
   }
   .an-signature-stage-sticky {
     gap: 12px;
     padding-block: clamp(28px, 5vh, 56px);
   }
   .an-signature-stage-field {
-    min-height: clamp(170px, 30vh, 280px);
+    min-height: clamp(150px, 24vh, 240px);
+  }
+  .an-signature-stage-stats {
+    gap: 18px 26px;
   }
 }
 
@@ -110,9 +181,15 @@
     position: static;
     min-height: 0;
   }
-  /* Tidak ada partikel → wordmark tetap tampil sebagai teks penuh. */
+  /* Tidak ada partikel → wordmark tetap tampil sebagai teks penuh, dan
+     kedua baris konteks berdiri sendiri-sendiri. */
   .an-signature-stage[data-live="true"] .an-signature-stage-word {
     opacity: 1;
+  }
+  .an-signature-stage[data-live="true"] .an-signature-stage-era {
+    grid-area: auto;
+    opacity: 1;
+    transition: none;
   }
   .an-signature-stage-word {
     transition: none;

@@ -12,7 +12,13 @@ import { describe, expect, it } from "vitest";
 import { render } from "../client/src/entry-server";
 import { buildHeadTags, composeHtml } from "./_core/ssrHtml";
 import { particleBudget } from "../client/src/signature/capability";
+import { attachPointerSignal } from "../client/src/signature/pointerSignal";
 import { routeInfo, isPublicRoute } from "../client/src/signature/routeSignal";
+import {
+  createSignatureStore,
+  INITIAL_SNAPSHOT,
+} from "../client/src/signature/signatureStore";
+import { phraseFor } from "../client/src/signature/stagePhrases";
 import type { SignatureCapability } from "../client/src/signature/types";
 
 const source = (path: string) =>
@@ -272,9 +278,16 @@ describe("kontrak runtime yang tidak muncul di HTML", () => {
       /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.an-signature-stage-track \{\s*min-height: 0;/
     );
     // Layar kecil tidak boleh kebagian jalur sepanjang desktop.
-    expect(css).toMatch(/@media \(max-width: 640px\)[\s\S]*?min-height: 170vh;/);
-    // Sticky memakai svh supaya bilah URL mobile tidak memotong panggung.
-    expect(css).toContain("min-height: 100svh");
+    expect(css).toMatch(/@media \(max-width: 640px\)[\s\S]*?min-height: 115vh;/);
+    // Sticky memakai svh supaya bilah URL mobile tidak memotong panggung,
+    // dan tingginya di bawah satu layar penuh supaya section berikutnya
+    // selalu mengintip — panggung bukan ruangan khusus partikel.
+    const sticky = /\.an-signature-stage-sticky \{[\s\S]*?min-height: (\d+)svh;/.exec(css);
+    expect(sticky, "tinggi sticky panggung").toBeTruthy();
+    expect(Number(sticky?.[1])).toBeLessThanOrEqual(80);
+    // Jalur desktop juga tidak boleh kembali sepanjang dua layar lebih.
+    const track = /\.an-signature-stage-track \{[\s\S]*?min-height: (\d+)vh;/.exec(css);
+    expect(Number(track?.[1])).toBeLessThanOrEqual(150);
   });
 
   it("memakai metadata rute bersama untuk label tirai", () => {
@@ -286,5 +299,141 @@ describe("kontrak runtime yang tidak muncul di HTML", () => {
     expect(routeInfo("/").mode).toBe("wordmark");
     expect(isPublicRoute("/studio")).toBe(false);
     expect(isPublicRoute("/en/live")).toBe(true);
+  });
+});
+
+/**
+ * Sinyal gulir diuji sebagai modul: angkanya tidak pernah muncul di HTML
+ * (canvas dibuat setelah mount), tapi perilakunya adalah kontrak — engine
+ * partikel memakai `scrollVelocity` untuk menentukan kekuatan dorongan.
+ */
+describe("sinyal gulir", () => {
+  function harness() {
+    const listeners = new Map<string, (event: unknown) => void>();
+    const frames: (() => void)[] = [];
+    const page = { scrollY: 0, trackTop: 0 };
+
+    const globals = globalThis as unknown as Record<string, unknown>;
+    const previous = {
+      window: globals.window,
+      document: globals.document,
+      performance: globals.performance,
+    };
+    let clock = 0;
+
+    globals.performance = { now: () => (clock += 16) };
+    globals.window = {
+      get scrollY() {
+        return page.scrollY;
+      },
+      innerHeight: 900,
+      addEventListener: (type: string, handler: (event: unknown) => void) => {
+        listeners.set(type, handler);
+      },
+      removeEventListener: () => undefined,
+      requestAnimationFrame: (callback: () => void) => {
+        frames.push(callback);
+        return frames.length;
+      },
+      cancelAnimationFrame: () => undefined,
+    };
+    globals.document = {
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+      querySelector: (selector: string) => {
+        if (selector === "[data-signal-stage]") {
+          return {
+            getBoundingClientRect: () => ({
+              left: 120,
+              top: 300,
+              width: 1200,
+              height: 320,
+            }),
+          };
+        }
+        if (selector === "[data-signal-stage-track]") {
+          return {
+            getBoundingClientRect: () => ({
+              top: page.trackTop,
+              height: 1400,
+            }),
+          };
+        }
+        return null;
+      },
+    };
+
+    const store = createSignatureStore({ ...INITIAL_SNAPSHOT });
+    const detach = attachPointerSignal(store);
+
+    const pump = (count = 1) => {
+      for (let i = 0; i < count; i++) {
+        const next = frames.shift();
+        if (!next) break;
+        next();
+      }
+    };
+    const scrollTo = (y: number, trackTop = page.trackTop) => {
+      page.scrollY = y;
+      page.trackTop = trackTop;
+      listeners.get("scroll")?.({});
+      pump();
+    };
+
+    return {
+      store,
+      scrollTo,
+      pump,
+      stop() {
+        detach();
+        globals.window = previous.window;
+        globals.document = previous.document;
+        globals.performance = previous.performance;
+      },
+    };
+  }
+
+  it("mengukur kecepatan gulir dan meluruhkannya sendiri", () => {
+    const run = harness();
+    expect(run.store.signals.scrollVelocity).toBe(0);
+
+    // Gulir pelan lalu gulir kencang: dorongannya harus berbeda.
+    run.scrollTo(40);
+    const slow = run.store.signals.scrollVelocity;
+    expect(slow).toBeGreaterThan(0);
+
+    run.scrollTo(640);
+    const fast = run.store.signals.scrollVelocity;
+    expect(fast).toBeGreaterThan(slow * 3);
+
+    // Tanpa gulir baru, nilainya meluruh sampai nol — bukan angka basi yang
+    // terus mendorong partikel.
+    run.pump(60);
+    expect(run.store.signals.scrollVelocity).toBe(0);
+    run.stop();
+  });
+
+  it("mengganti frasa panggung lewat state diskret, bukan tiap frame", () => {
+    const run = harness();
+    // Jalur 1400px, viewport 900px → 500px perjalanan.
+    run.scrollTo(0, 0);
+    expect(run.store.getSnapshot().stagePhrase).toBe(0);
+
+    let renders = 0;
+    run.store.subscribe(() => {
+      renders++;
+    });
+
+    // Pertengahan jalur: masih frasa pertama.
+    run.scrollTo(100, -100);
+    expect(run.store.getSnapshot().stagePhrase).toBe(phraseFor(0.2));
+
+    // Lewat ambang: frasa kedua, dan hanya satu notifikasi React.
+    run.scrollTo(400, -400);
+    expect(run.store.getSnapshot().stagePhrase).toBe(1);
+    run.scrollTo(420, -420);
+    run.scrollTo(440, -440);
+    expect(renders).toBe(1);
+    run.stop();
   });
 });

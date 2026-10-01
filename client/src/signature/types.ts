@@ -110,6 +110,12 @@ export type SignatureSnapshot = {
   audio: SignatureAudio;
   frequency: SignatureFrequency;
   era: SignatureEra;
+  /**
+   * Frasa yang sedang disusun partikel di panggung beranda (indeks
+   * `STAGE_PHRASES`). State diskret — baris konteks panggung ikut berganti,
+   * dan hanya itu yang membuat React render ulang saat panggung digulir.
+   */
+  stagePhrase: number;
   /** Canvas sudah boleh dimuat (hero terlihat / idle terlewati). */
   fieldReady: boolean;
 };
@@ -132,6 +138,12 @@ export type SignatureSignals = {
   interactive: boolean;
   magnetic: boolean;
   scrollY: number;
+  /**
+   * Kecepatan gulir dalam px/ms, bertanda (positif = turun), dihaluskan EMA
+   * 0,15 dan meluruh sendiri beberapa frame setelah gulir berhenti.
+   * Dipakai engine partikel: gulir cepat mendorong titik lebih kuat.
+   */
+  scrollVelocity: number;
   /** 0 di puncak hero, 1 setelah hero terlewati. */
   heroProgress: number;
   /** 0..1. Dari AnalyserNode bila analyzable, selain itu deterministik. */

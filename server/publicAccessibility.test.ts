@@ -171,9 +171,10 @@ describe("panggung signature", () => {
   });
 
   it("tidak memakai judul bagian, nomor indeks, atau keterangan efek", async () => {
-    // Panggung ini hanya menampilkan nama. Label "00 — SIGNATURE" dan
-    // paragraf yang menjelaskan efeknya sendiri membuat halaman terasa
-    // seperti demo, bukan situs milik seseorang.
+    // Panggung boleh punya isi — tapi isinya fakta tentang musiknya, bukan
+    // label "00 — SIGNATURE" atau paragraf yang menjelaskan efeknya sendiri.
+    // Yang kedua membuat halaman terasa seperti demo, bukan situs milik
+    // seseorang.
     for (const route of ["/", "/en"]) {
       const markup = await html(route);
       const marker = markup.indexOf("an-signature-stage");
@@ -185,14 +186,36 @@ describe("panggung signature", () => {
       expect(section, `${route} nomor indeks`).not.toContain("stage-index");
       expect(section, `${route} keterangan`).not.toContain("stage-note");
       expect(section, `${route} label SIGNATURE`).not.toContain("SIGNATURE");
+      expect(section, `${route} eyebrow`).not.toContain("eyebrow");
 
-      // Teks yang benar-benar terlihat di panggung hanyalah namanya.
       const visible = section
         .replace(/<p[^>]*class="sr-only"[^>]*>[\s\S]*?<\/p>/g, " ")
+        .replace(/<dt[^>]*class="sr-only"[^>]*>[\s\S]*?<\/dt>/g, " ")
         .replace(/<[^>]+>/g, " ")
         .replace(/\s+/g, " ")
         .trim();
-      expect(visible, `${route} teks panggung`).toBe("AKBAR NAWASUNDA");
+
+      // Nama tetap jadi teks sungguhan di panggung.
+      expect(visible, `${route} nama`).toContain("AKBAR NAWASUNDA");
+      // Satu baris konteks per frasa, bersumber dari era yang sama dengan
+      // timeline arsip — jadi panggungnya bercerita, bukan sekadar nama.
+      expect(visible, `${route} era sekarang`).toMatch(
+        route === "/en" ? /NOW|TODAY|SEKARANG/i : /SEKARANG/i
+      );
+      expect(visible, `${route} era awal`).toContain("2020");
+      expect(visible, `${route} alias era`).toMatch(/DJ Akbar Remix/i);
+      // Tiga angka katalog yang menghitung naik saat panggung masuk layar;
+      // nilai finalnya tetap ada di HTML untuk pembaca tanpa JavaScript.
+      expect(visible, `${route} angka`).toMatch(
+        route === "/en"
+          ? /RELEASES[\s\S]*SINCE[\s\S]*PLATFORMS/i
+          : /RILISAN[\s\S]*MULAI[\s\S]*PLATFORM/i
+      );
+
+      // Dan tidak ada satu kata pun tentang cara efeknya bekerja.
+      expect(visible.toLowerCase(), `${route} penjelasan efek`).not.toMatch(
+        /partikel|particle|canvas|scroll|gulir|animasi|animation/
+      );
     }
   });
 
