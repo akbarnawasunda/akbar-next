@@ -24,6 +24,12 @@
   to { opacity: 0; clip-path: inset(0 0 100% 0); }
 }
 
+/* Partikel yang menuliskan labelnya → teks tirai dipadamkan. */
+.an-route-signal[data-particles="true"] .an-route-signal-mark,
+.an-route-signal[data-particles="true"] .an-route-signal-target {
+  opacity: 0;
+}
+
 .an-route-signal-inner {
   display: grid;
   justify-items: center;

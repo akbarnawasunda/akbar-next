@@ -23,6 +23,9 @@ export function SignatureBackground() {
   const mode = useSignatureState(snapshot =>
     snapshot.frequency.active ? "frequency" : snapshot.route.mode
   );
+  const transit = useSignatureState(
+    snapshot => snapshot.transition.phase !== "idle"
+  );
 
   useEffect(() => {
     if (!ready || tier === "off") return;
@@ -40,6 +43,8 @@ export function SignatureBackground() {
           frequency: snapshot.frequency.active,
           era: { index: snapshot.era.index, total: snapshot.era.total },
           transition: snapshot.transition.phase,
+          // Label tujuan dibentuk partikel selama perpindahan halaman.
+          transitLabel: snapshot.transition.targetLabel,
         };
       });
     });
@@ -58,6 +63,7 @@ export function SignatureBackground() {
       className="an-signature-field"
       data-signature-mode={mode}
       data-signature-tier={tier}
+      data-signature-transit={transit}
       aria-hidden="true"
     >
       <canvas ref={canvasRef} aria-hidden="true" />

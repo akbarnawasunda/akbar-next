@@ -15,12 +15,18 @@ export function RouteSignalCurtain() {
   const phase = useSignatureState(snapshot => snapshot.transition.phase);
   const label = useSignatureState(snapshot => snapshot.transition.targetLabel);
   const reduced = useSignatureState(snapshot => snapshot.capability.reducedMotion);
+  const tier = useSignatureState(snapshot => snapshot.capability.tier);
+  const fieldReady = useSignatureState(snapshot => snapshot.fieldReady);
+  // Bila particle field hidup, dialah yang menuliskan nama tujuan; tirai
+  // cukup jadi sapuan tinta di belakangnya supaya tidak ada teks ganda.
+  const particles = fieldReady && tier !== "off";
 
   if (reduced || phase === "idle" || !label) return null;
 
   return (
     <div
       className={`an-route-signal is-${phase}`}
+      data-particles={particles}
       role="status"
       aria-live="polite"
       aria-label={label}

@@ -216,6 +216,7 @@ function runWordmark(
       frequency: false,
       era: { index: 0, total: 0 },
       transition: "idle" as const,
+      transitLabel: "",
     })
   );
 
@@ -377,6 +378,7 @@ describe("particle field", () => {
         frequency: false,
         era: { index: 0, total: 0 },
         transition: "idle" as const,
+        transitLabel: "",
       })
     );
 
@@ -421,6 +423,66 @@ describe("particle field", () => {
     };
   });
 
+  it("menulis label tujuan di tengah layar saat pindah halaman", () => {
+    // Panggung tetap ada di bawah layar, tapi selama transisi label tujuan
+    // yang menang: huruf harus muncul di tengah viewport.
+    const stage = {
+      x: 720,
+      y: 820,
+      w: 1200,
+      h: 300,
+      visibility: 1,
+      progress: 0,
+    };
+    const dom = setupDom(1440, 900);
+    const phase = { value: "sweep" as "idle" | "sweep" | "settle" };
+    const field = createParticleField(
+      dom.canvas as unknown as HTMLCanvasElement,
+      signalsStub(stage),
+      () => ({
+        mode: "wordmark" as const,
+        capability: capability("full"),
+        frequency: false,
+        era: { index: 0, total: 0 },
+        transition: phase.value,
+        transitLabel: "MUSIK",
+      })
+    );
+
+    const run = (frames: number, from: number) => {
+      for (let i = 0; i < frames; i++) {
+        const next = dom.frames.pop();
+        dom.frames.length = 0;
+        if (!next) break;
+        dom.drawn.length = 0;
+        next((from + i) * 16.67);
+      }
+    };
+
+    run(70, 0);
+    const middle = dom.drawn.filter(
+      point => point.y > 900 * 0.3 && point.y < 900 * 0.65
+    );
+    expect(dom.drawn.length).toBeGreaterThan(500);
+    expect(middle.length / dom.drawn.length).toBeGreaterThan(0.85);
+
+    // Nyaris tidak ada titik yang tertinggal di panggung bawah layar.
+    const atStage = dom.drawn.filter(point => point.y > 700);
+    expect(atStage.length / dom.drawn.length).toBeLessThan(0.05);
+
+    // Fase settle: label meluruh sebelum halaman baru tampil.
+    phase.value = "settle";
+    run(2, 70);
+    const beforeSettle = dom.drawn.length;
+    run(28, 72);
+    expect(dom.drawn.length).toBeLessThan(beforeSettle);
+
+    teardown = () => {
+      field.destroy();
+      dom.restore();
+    };
+  });
+
   it("tidak menggambar apa pun saat tier off", () => {
     const dom = setupDom(1440, 900);
     const field = createParticleField(
@@ -432,6 +494,7 @@ describe("particle field", () => {
         frequency: false,
         era: { index: 0, total: 0 },
         transition: "idle" as const,
+        transitLabel: "",
       })
     );
     dom.frames.forEach(frame => frame(16));

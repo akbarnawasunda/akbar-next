@@ -24,6 +24,13 @@
 .an-signature-field[data-signature-mode="quiet"] { opacity: 0.26; }
 .an-signature-field[data-signature-mode="frequency"] { opacity: 0.9; }
 
+/* Selama perpindahan halaman, label tujuan digambar partikel — lapisannya
+   naik ke atas tirai supaya huruf itu yang terbaca, bukan tirainya. */
+.an-signature-field[data-signature-transit="true"] {
+  z-index: 59;
+  opacity: 1;
+}
+
 /* Perangkat lite memakai kerapatan rendah; turunkan juga intensitasnya agar
    teks tetap kontras di layar kecil. */
 .an-signature-field[data-signature-tier="lite"] { opacity: 0.5; }

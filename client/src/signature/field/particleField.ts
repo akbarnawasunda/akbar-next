@@ -22,6 +22,8 @@ export type FieldStateReader = () => {
   frequency: boolean;
   era: { index: number; total: number };
   transition: "idle" | "sweep" | "settle";
+  /** Label tujuan saat berpindah halaman (MUSIK/VISUAL/ARSIP/…). */
+  transitLabel: string;
 };
 
 type Point = {
@@ -69,10 +71,13 @@ const WORDMARK_FONT = '"Clash Display", "General Sans", sans-serif';
 const TAU = Math.PI * 2;
 
 /** Mode yang menyusun huruf; butuh titik lebih banyak agar terbaca. */
-const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency"];
+const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency", "transit"];
 
 /** Lama titik berkumpul menjadi huruf (ms). */
 const FORMATION_MS = 2100;
+/** Versi cepat saat berpindah halaman — harus selesai dalam satu sapuan. */
+const TRANSIT_FORMATION_MS = 420;
+const TRANSIT_SETTLE_MS = 420;
 
 function readToken(name: string, fallback: string) {
   if (typeof window === "undefined") return fallback;
@@ -128,6 +133,8 @@ export function createParticleField(
   let stageWidth = 0;
   let stageHeight = 0;
   let phraseIndex = 0;
+  let transitLabel = "";
+  let settleStart = -1;
   let lastTransition: "idle" | "sweep" | "settle" = "idle";
 
   // Warna diambil dari token tema (client/src/index.css) supaya palet
@@ -148,6 +155,13 @@ export function createParticleField(
     rgbaFrom(paper, 0.4, "rgba(236,234,229,0.4)"),
     rgbaFrom(paper, 0.6, "rgba(236,234,229,0.6)"),
   ];
+
+  /** Saat berpindah halaman, label tujuan mengambil alih mode rute. */
+  function resolveMode(state: ReturnType<FieldStateReader>): SignatureFieldMode {
+    return state.transition !== "idle" && state.transitLabel
+      ? "transit"
+      : state.mode;
+  }
 
   /* ---------------------------------------------------------------- targets */
 
@@ -263,6 +277,10 @@ export function createParticleField(
           boxHeight
         );
       }
+      case "transit": {
+        // Label tujuan selalu di tengah viewport, bukan di panggung.
+        return sampleTextTargets([transitLabel], 0.74, 0.5, wanted);
+      }
       case "signal": {
         const list: { x: number; y: number }[] = [];
         const baseline = height * 0.46;
@@ -313,17 +331,14 @@ export function createParticleField(
 
   function buildPoints() {
     const state = readState();
-    const count = countFor(state.mode, state.capability);
+    const mode = resolveMode(state);
+    transitLabel = state.transitLabel;
+    const count = countFor(mode, state.capability);
     budget = count;
-    const targets = targetsFor(
-      state.mode,
-      state.era.index,
-      state.era.total,
-      count
-    );
-    const textMode = TEXT_MODES.includes(state.mode);
+    const targets = targetsFor(mode, state.era.index, state.era.total, count);
+    const textMode = TEXT_MODES.includes(mode);
     const stage = signals.stage;
-    const anchored = textMode && Boolean(stage);
+    const anchored = textMode && mode !== "transit" && Boolean(stage);
     stageWidth = stage ? stage.w : 0;
     stageHeight = stage ? stage.h : 0;
     stageOffsetX = stage ? stage.x - stage.w / 2 : 0;
@@ -364,24 +379,20 @@ export function createParticleField(
     }
     points = next;
     activeCount = next.length;
-    currentMode = state.mode;
+    currentMode = mode;
     currentEra = state.era.index;
     formationStart = -1;
   }
 
   function retarget() {
     const state = readState();
-    const desired = countFor(state.mode, state.capability);
+    const mode = resolveMode(state);
+    const desired = countFor(mode, state.capability);
     if (Math.abs(desired - points.length) > Math.max(1, desired * 0.2)) {
       buildPoints();
       return;
     }
-    const targets = targetsFor(
-      state.mode,
-      state.era.index,
-      state.era.total,
-      desired
-    );
+    const targets = targetsFor(mode, state.era.index, state.era.total, desired);
     points.forEach((point, index) => {
       const target = targets.length
         ? targets[Math.floor((index / points.length) * targets.length) % targets.length]
@@ -393,7 +404,7 @@ export function createParticleField(
     stageWidth = stage ? stage.w : 0;
     stageHeight = stage ? stage.h : 0;
     budget = desired;
-    currentMode = state.mode;
+    currentMode = mode;
     currentEra = state.era.index;
     activeCount = Math.min(points.length, desired);
     formationStart = -1;
@@ -406,13 +417,9 @@ export function createParticleField(
   function morphTo(next: number) {
     phraseIndex = next;
     const state = readState();
-    const desired = countFor(state.mode, state.capability);
-    const targets = targetsFor(
-      state.mode,
-      state.era.index,
-      state.era.total,
-      desired
-    );
+    const mode = resolveMode(state);
+    const desired = countFor(mode, state.capability);
+    const targets = targetsFor(mode, state.era.index, state.era.total, desired);
     if (!targets.length) return;
     const boxWidth = stageWidth || width;
     for (let i = 0; i < points.length; i++) {
@@ -477,8 +484,20 @@ export function createParticleField(
       return;
     }
 
-    if (state.mode !== currentMode || state.era.index !== currentEra) {
+    const mode = resolveMode(state);
+    if (mode === "transit" && state.transitLabel !== transitLabel) {
+      // Tujuan baru → huruf lama pecah, huruf tujuan dirakit.
+      transitLabel = state.transitLabel;
+      currentMode = null;
+    }
+    if (mode !== currentMode || state.era.index !== currentEra) {
       retarget();
+    }
+
+    if (state.transition === "settle") {
+      if (settleStart < 0) settleStart = time;
+    } else {
+      settleStart = -1;
     }
 
     if (state.transition !== lastTransition) {
@@ -494,10 +513,10 @@ export function createParticleField(
     const hero = signals.heroProgress;
     const frequency = state.frequency;
 
-    const textMode = TEXT_MODES.includes(state.mode);
+    const textMode = TEXT_MODES.includes(mode);
     const colors = textMode ? textColors : ambientColors;
     const stage = signals.stage;
-    const anchored = textMode && Boolean(stage);
+    const anchored = textMode && mode !== "transit" && Boolean(stage);
 
     if (anchored && stage) {
       // Panggung berubah ukuran (resize / layout) → susun ulang hurufnya.
@@ -538,7 +557,11 @@ export function createParticleField(
     if (formationStart < 0) formationStart = time;
     const formation = Math.max(
       0,
-      Math.min(1, (time - formationStart) / FORMATION_MS)
+      Math.min(
+        1,
+        (time - formationStart) /
+          (mode === "transit" ? TRANSIT_FORMATION_MS : FORMATION_MS)
+      )
     );
     const pointerX = signals.pointerActive ? signals.pointerX : -9999;
     const pointerY = signals.pointerActive ? signals.pointerY : -9999;
@@ -551,11 +574,18 @@ export function createParticleField(
       anchored && stage && stage.progress > 0.9
         ? (stage.progress - 0.9) / 0.1
         : 0;
-    const disperse = anchored && stage
-      ? Math.max((1 - stage.visibility) * 0.85, exitRamp)
-      : state.mode === "wordmark"
-        ? hero
-        : hero * 0.4;
+    const settleRamp =
+      settleStart >= 0
+        ? Math.max(0, Math.min(1, (time - settleStart) / TRANSIT_SETTLE_MS))
+        : 0;
+    const disperse =
+      mode === "transit"
+        ? settleRamp
+        : anchored && stage
+          ? Math.max((1 - stage.visibility) * 0.85, exitRamp)
+          : mode === "wordmark"
+            ? hero
+            : hero * 0.4;
     const sweep = sweepEnergy;
 
     // Jejak gerak. Selama titik masih terbang masuk, buyar, atau disapu
@@ -672,7 +702,7 @@ export function createParticleField(
           if (hash > 14) targetY += (hash - 15) * 2.4;
         }
 
-        if (state.mode === "signal") {
+        if (mode === "signal") {
           targetY += Math.sin(time * 0.002 + point.tx * 0.01) * amplitude * 48;
         }
 

@@ -13,7 +13,9 @@ export type SignatureFieldMode =
   | "dust"
   | "era"
   | "quiet"
-  | "frequency";
+  | "frequency"
+  /** Hanya selama perpindahan halaman: partikel menyusun label tujuan. */
+  | "transit";
 
 /** Seberapa jauh runtime boleh bekerja di perangkat ini. */
 export type SignatureTier = "off" | "lite" | "full";
