@@ -51,7 +51,10 @@ describe("homepage enhancement contract", () => {
     expect(home).toContain("const cmsCurrentRelease");
     expect(home).toContain("const displayReleases");
     expect(home).toContain("const activeRelease = cmsCurrentRelease");
-    expect(home).toContain("/assets/akbar-night-frequency-hero-optimized.webp");
+    // Latar live memakai turunan ringan (900px) supaya hemat bandwidth.
+    expect(home).toContain(
+      "/assets/akbar-night-frequency-hero-mobile-optimized.webp"
+    );
     expect(home).toContain("/assets/akbar-night-frequency-stage-optimized.webp");
     expect(home).not.toContain("MANAGED RELEASE");
   });

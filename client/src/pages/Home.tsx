@@ -244,7 +244,7 @@ export default function Home() {
                   type="image/webp"
                 />
                 <source
-                  srcSet="/assets/akbar-nawasunda-official-portrait.webp"
+                  srcSet="/assets/akbar-nawasunda-official-portrait-1000.webp"
                   type="image/webp"
                 />
                 <img
@@ -307,8 +307,8 @@ export default function Home() {
               <img
                 src="/assets/akbar-mascot-doodle.webp"
                 alt="Maskot doodle Akbar Nawasunda"
-                width={1254}
-                height={1254}
+                width={420}
+                height={420}
                 loading="lazy"
                 fetchPriority="low"
                 decoding="async"
@@ -658,7 +658,7 @@ export default function Home() {
                 className="live-backdrop"
                 style={{
                   backgroundImage:
-                    "url(/assets/akbar-night-frequency-hero-optimized.webp)",
+                    "url(/assets/akbar-night-frequency-hero-mobile-optimized.webp)",
                 }}
               />
               <div className="live-copy">

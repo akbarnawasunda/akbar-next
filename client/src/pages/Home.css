@@ -306,21 +306,7 @@
   transform: translate(-8px, -8px);
   box-shadow: 16px 16px 0 var(--acid);
 }
-.an-site .home-hero-portrait::after {
-  content: "23:47";
-  position: absolute;
-  right: 20px;
-  bottom: 16px;
-  z-index: 2;
-  padding: 6px 12px;
-  background: var(--ink);
-  border: 1px solid var(--paper);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  color: var(--acid);
-}
+
 .an-site .home-hero-portrait img {
   width: 100%;
   height: 100%;
@@ -2595,5 +2581,22 @@
   }
   .desktop-vinyl-disc {
     animation: none;
+  }
+}
+
+/* ============================================================
+   Hemat beban render di layar kecil / perangkat lemah
+   ============================================================ */
+/* Overlay noise full-screen memaksa compositing tiap frame saat scroll.
+   Di mobile manfaat visualnya kecil, biayanya besar. */
+@media (max-width: 1024px) {
+  .an-site::before {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site::before {
+    display: none;
   }
 }

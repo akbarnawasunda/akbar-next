@@ -756,3 +756,13 @@
   .nf-nav nav a,
   .nf-nav nav a::after { transition: none; }
 }
+
+
+/* Blur pada header sticky mahal di perangkat mobile: pakai latar solid saja. */
+@media (max-width: 1024px) {
+  .nf-nav {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--ink, #0a0b10);
+  }
+}
