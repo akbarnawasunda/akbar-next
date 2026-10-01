@@ -18,14 +18,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      # pnpm dipasang sebelum setup-node karena setup-node v5 membaca field
+      # "packageManager" dan menyiapkan cache pnpm — jadi binary-nya harus
+      # sudah ada. Versinya tetap mengikuti package.json.
+      - name: Enable pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Set up Node.js 24
         uses: actions/setup-node@v5
         with:
           node-version: 24
-
-      - name: Enable pnpm
-        # Versi pnpm diambil dari field "packageManager" di package.json.
-        run: corepack enable
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
