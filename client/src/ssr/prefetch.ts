@@ -3,8 +3,16 @@ import { getQueryKey } from "@trpc/react-query";
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "../../../server/routers";
 import { trpc } from "@/lib/trpc";
-import { customDocumentsToPublicContent, publicPlatformLinks, publicUpcomingEvents } from "@/content/publicContent";
-import { officialBrand, releases, verifiedArtistProfile } from "@/content/artistPlatform";
+import {
+  customDocumentsToPublicContent,
+  publicPlatformLinks,
+  publicUpcomingEvents,
+} from "@/content/publicContent";
+import {
+  officialBrand,
+  releases,
+  verifiedArtistProfile,
+} from "@/content/artistPlatform";
 import { publicMediaUrl } from "@/lib/publicMedia";
 
 export type HeadMeta = {
@@ -40,8 +48,10 @@ const VERIFIED_IDENTITY_LINKS = [
   "https://musicbrainz.org/artist/bb843d35-fc0a-4d3b-b445-390b9b299812",
   "https://www.wikidata.org/wiki/Q141049199",
 ] as const;
-const ID_DESCRIPTION = "Website resmi Akbar Nawasunda — produser, remixer, dan DJ asal Bandung Barat, Indonesia.";
-const EN_DESCRIPTION = "Official website of Akbar Nawasunda — Indonesian music artist, producer, remixer, and DJ from West Bandung.";
+const ID_DESCRIPTION =
+  "Website resmi Akbar Nawasunda — produser, remixer, dan DJ asal Bandung Barat, Indonesia.";
+const EN_DESCRIPTION =
+  "Official website of Akbar Nawasunda — Indonesian music artist, producer, remixer, and DJ from West Bandung.";
 
 const idTitles: Record<string, string> = {
   "/": SITE_NAME,
@@ -83,7 +93,9 @@ const slugify = (value: string) =>
 
 const absoluteUrl = (value: string) => {
   const normalized = publicMediaUrl(value) || value;
-  return normalized.startsWith("http") ? normalized : `${SITE_ORIGIN}${normalized === "/" ? "/" : normalized}`;
+  return normalized.startsWith("http")
+    ? normalized
+    : `${SITE_ORIGIN}${normalized === "/" ? "/" : normalized}`;
 };
 
 function decodedPath(url: string) {
@@ -96,9 +108,11 @@ function decodedPath(url: string) {
   return path.replace(/\/+$/, "") || "/";
 }
 
-function publicArtistGraph(content: ReturnType<typeof customDocumentsToPublicContent>) {
+function publicArtistGraph(
+  content: ReturnType<typeof customDocumentsToPublicContent>
+) {
   const artistLinks = publicPlatformLinks(content).filter(({ label }) =>
-    ["Spotify", "YouTube", "SoundCloud", "Instagram"].includes(label),
+    ["Spotify", "YouTube", "SoundCloud", "Instagram"].includes(label)
   );
   return {
     "@type": "MusicGroup",
@@ -107,13 +121,21 @@ function publicArtistGraph(content: ReturnType<typeof customDocumentsToPublicCon
     alternateName: verifiedArtistProfile.aliases,
     description: content?.profile?.shortBio || verifiedArtistProfile.shortBio,
     url: `${SITE_ORIGIN}/`,
-    image: [absoluteUrl(content?.siteSettings?.socialPreviewUrl || officialBrand.socialPreview)],
+    image: [
+      absoluteUrl(
+        content?.siteSettings?.socialPreviewUrl || officialBrand.socialPreview
+      ),
+    ],
     logo: absoluteUrl(officialBrand.logo),
-    genre: content?.profile?.genres?.length ? content.profile.genres : verifiedArtistProfile.genres,
-    sameAs: Array.from(new Set([
-      ...artistLinks.map(link => link.href),
-      ...VERIFIED_IDENTITY_LINKS,
-    ])),
+    genre: content?.profile?.genres?.length
+      ? content.profile.genres
+      : verifiedArtistProfile.genres,
+    sameAs: Array.from(
+      new Set([
+        ...artistLinks.map(link => link.href),
+        ...VERIFIED_IDENTITY_LINKS,
+      ])
+    ),
     location: {
       "@type": "Place",
       name: content?.profile?.location || verifiedArtistProfile.location,
@@ -126,7 +148,11 @@ function publicArtistGraph(content: ReturnType<typeof customDocumentsToPublicCon
   };
 }
 
-function buildStructuredData(path: string, isEnglish: boolean, content: ReturnType<typeof customDocumentsToPublicContent>) {
+function buildStructuredData(
+  path: string,
+  isEnglish: boolean,
+  content: ReturnType<typeof customDocumentsToPublicContent>
+) {
   const pathWithoutLanguage = path.replace(/^\/en(?=\/|$)/, "") || "/";
   const graph: Record<string, unknown>[] = [
     {
@@ -134,7 +160,12 @@ function buildStructuredData(path: string, isEnglish: boolean, content: ReturnTy
       "@id": `${SITE_ORIGIN}/#website`,
       url: `${SITE_ORIGIN}/`,
       name: SITE_NAME,
-      alternateName: "Akbar Nawasunda",
+      alternateName: [
+        "Akbar Nawasunda",
+        "DJ Akbar Remix",
+        "akbarnawasunda.my.id",
+      ],
+      inLanguage: isEnglish ? "en" : "id",
       publisher: { "@id": `${SITE_ORIGIN}/#artist` },
     },
     publicArtistGraph(content),
@@ -143,7 +174,9 @@ function buildStructuredData(path: string, isEnglish: boolean, content: ReturnTy
   const releaseMatch = pathWithoutLanguage.match(/^\/music\/([a-z0-9-]+)$/i);
   if (releaseMatch) {
     const slug = releaseMatch[1];
-    const cmsRelease = content?.releases.find(item => slugify(item.title) === slug);
+    const cmsRelease = content?.releases.find(
+      item => slugify(item.title) === slug
+    );
     const fallbackRelease = releases.find(item => slugify(item.title) === slug);
     const title = cmsRelease?.title || fallbackRelease?.title;
     const href = cmsRelease?.url || fallbackRelease?.href;
@@ -154,7 +187,10 @@ function buildStructuredData(path: string, isEnglish: boolean, content: ReturnTy
         "@id": `${SITE_ORIGIN}${path}#recording`,
         name: title,
         url: absoluteUrl(path),
-        sameAs: [href, ...(cmsRelease?.platformLinks?.map(link => link.href) || [])],
+        sameAs: [
+          href,
+          ...(cmsRelease?.platformLinks?.map(link => link.href) || []),
+        ],
         byArtist: { "@id": `${SITE_ORIGIN}/#artist` },
         ...(year ? { datePublished: year } : {}),
       });
@@ -163,7 +199,9 @@ function buildStructuredData(path: string, isEnglish: boolean, content: ReturnTy
 
   if (pathWithoutLanguage === "/live") {
     publicUpcomingEvents(content).forEach(event => {
-      const eventLocation = [event.venue, event.city, event.country].filter(Boolean).join(", ") || "Indonesia";
+      const eventLocation =
+        [event.venue, event.city, event.country].filter(Boolean).join(", ") ||
+        "Indonesia";
       graph.push({
         "@type": "MusicEvent",
         "@id": `${SITE_ORIGIN}${path}#event-${event._id}`,
@@ -171,8 +209,12 @@ function buildStructuredData(path: string, isEnglish: boolean, content: ReturnTy
         startDate: event.date,
         performer: { "@id": `${SITE_ORIGIN}/#artist` },
         location: { "@type": "Place", name: eventLocation },
-        ...(event.ticketUrl ? { offers: { "@type": "Offer", url: event.ticketUrl } } : {}),
-        ...(event.status === "cancelled" ? { eventStatus: "https://schema.org/EventCancelled" } : {}),
+        ...(event.ticketUrl
+          ? { offers: { "@type": "Offer", url: event.ticketUrl } }
+          : {}),
+        ...(event.status === "cancelled"
+          ? { eventStatus: "https://schema.org/EventCancelled" }
+          : {}),
       });
     });
   }
@@ -185,22 +227,43 @@ function buildStructuredData(path: string, isEnglish: boolean, content: ReturnTy
 }
 
 async function seed(queryClient: QueryClient, input: PublicDocuments) {
-  queryClient.setQueryData(getQueryKey(trpc.content.documents, undefined, "query"), input);
+  queryClient.setQueryData(
+    getQueryKey(trpc.content.documents, undefined, "query"),
+    input
+  );
 }
 
 export async function prefetchForPath(
   url: string,
   queryClient: QueryClient,
-  prefetch: SsrPrefetch,
+  prefetch: SsrPrefetch
 ): Promise<HeadMeta> {
   const path = decodedPath(url);
   const isEnglish = path === "/en" || path.startsWith("/en/");
   const pathWithoutLanguage = path.replace(/^\/en(?=\/|$)/, "") || "/";
-  const publicRoute = path === "/" || path === "/en" || [
-    "/music", "/visuals", "/visuals/portraits", "/live", "/universe", "/about", "/inquire", "/licensing", "/game/jedag-run", "/epk", "/privacy",
-  ].includes(pathWithoutLanguage);
+  const publicRoute =
+    path === "/" ||
+    path === "/en" ||
+    [
+      "/music",
+      "/visuals",
+      "/visuals/portraits",
+      "/live",
+      "/universe",
+      "/about",
+      "/inquire",
+      "/licensing",
+      "/game/jedag-run",
+      "/epk",
+      "/privacy",
+    ].includes(pathWithoutLanguage);
 
-  if (path === "/studio" || path.startsWith("/studio/") || path === "/assets" || path === "/admin") {
+  if (
+    path === "/studio" ||
+    path.startsWith("/studio/") ||
+    path === "/assets" ||
+    path === "/admin"
+  ) {
     return { title: SITE_NAME, description: ID_DESCRIPTION, noindex: true };
   }
 
@@ -208,28 +271,52 @@ export async function prefetchForPath(
     return { title: SITE_NAME, description: ID_DESCRIPTION, notFound: true };
   }
 
-  if (!publicRoute && !/^\/en?\/music\//i.test(path) && !/^\/music\//i.test(path)) {
+  if (
+    !publicRoute &&
+    !/^\/en?\/music\//i.test(path) &&
+    !/^\/music\//i.test(path)
+  ) {
     return { title: SITE_NAME, description: ID_DESCRIPTION, notFound: true };
   }
 
   const documents = await prefetch.documents();
   await seed(queryClient, documents);
-  const content = customDocumentsToPublicContent(documents as Parameters<typeof customDocumentsToPublicContent>[0]);
-  const siteTitle = !isEnglish ? content?.siteSettings?.siteTitle || undefined : undefined;
-  const defaultTitle = (isEnglish ? enTitles[pathWithoutLanguage] : idTitles[pathWithoutLanguage]) || SITE_NAME;
-  const gameTitle = content?.game?.title ? `${content.game.title} | Akbar Nawasunda` : defaultTitle;
-  const title = siteTitle && pathWithoutLanguage === "/" ? siteTitle : pathWithoutLanguage === "/game/jedag-run" ? gameTitle : defaultTitle;
-  const description = pathWithoutLanguage === "/game/jedag-run"
-    ? content?.game?.intro || (isEnglish ? "Play JEDAG RUN — NIGHT FREQUENCY, an original browser game by Akbar Nawasunda." : "Mainkan JEDAG RUN — NIGHT FREQUENCY, game browser orisinal dari Akbar Nawasunda.")
-    : isEnglish
-      ? EN_DESCRIPTION
-      : content?.siteSettings?.metaDescription || ID_DESCRIPTION;
+  const content = customDocumentsToPublicContent(
+    documents as Parameters<typeof customDocumentsToPublicContent>[0]
+  );
+  const siteTitle = !isEnglish
+    ? content?.siteSettings?.siteTitle || undefined
+    : undefined;
+  const defaultTitle =
+    (isEnglish
+      ? enTitles[pathWithoutLanguage]
+      : idTitles[pathWithoutLanguage]) || SITE_NAME;
+  const gameTitle = content?.game?.title
+    ? `${content.game.title} | Akbar Nawasunda`
+    : defaultTitle;
+  const title =
+    siteTitle && pathWithoutLanguage === "/"
+      ? siteTitle
+      : pathWithoutLanguage === "/game/jedag-run"
+        ? gameTitle
+        : defaultTitle;
+  const description =
+    pathWithoutLanguage === "/game/jedag-run"
+      ? content?.game?.intro ||
+        (isEnglish
+          ? "Play JEDAG RUN — NIGHT FREQUENCY, an original browser game by Akbar Nawasunda."
+          : "Mainkan JEDAG RUN — NIGHT FREQUENCY, game browser orisinal dari Akbar Nawasunda.")
+      : isEnglish
+        ? EN_DESCRIPTION
+        : content?.siteSettings?.metaDescription || ID_DESCRIPTION;
   const structuredData = buildStructuredData(path, isEnglish, content);
   const base: HeadMeta = {
     title,
     description,
     ogType: "website",
-    ogImage: publicMediaUrl(content?.siteSettings?.socialPreviewUrl) || officialBrand.socialPreview,
+    ogImage:
+      publicMediaUrl(content?.siteSettings?.socialPreviewUrl) ||
+      officialBrand.socialPreview,
     ogImageWidth: 1000,
     ogImageHeight: 1000,
     ogImageAlt: "Akbar Nawasunda official website artwork",
@@ -241,16 +328,23 @@ export async function prefetchForPath(
   const releaseMatch = pathWithoutLanguage.match(/^\/music\/([^/]+)$/i);
   if (releaseMatch) {
     const slug = releaseMatch[1];
-    const cmsRelease = content?.releases.find(item => slugify(item.title) === slug);
+    const cmsRelease = content?.releases.find(
+      item => slugify(item.title) === slug
+    );
     const fallbackRelease = releases.find(item => slugify(item.title) === slug);
     const releaseTitle = cmsRelease?.title || fallbackRelease?.title;
     if (!releaseTitle) return { ...base, notFound: true };
     return {
       ...base,
       title: `${releaseTitle} | Akbar Nawasunda`,
-      description: cmsRelease?.story || `${releaseTitle} — official release by Akbar Nawasunda.`,
+      description:
+        cmsRelease?.story ||
+        `${releaseTitle} — official release by Akbar Nawasunda.`,
       ogType: "article",
-      ogImage: publicMediaUrl(cmsRelease?.artworkUrl) || publicMediaUrl(fallbackRelease?.image) || base.ogImage,
+      ogImage:
+        publicMediaUrl(cmsRelease?.artworkUrl) ||
+        publicMediaUrl(fallbackRelease?.image) ||
+        base.ogImage,
       ogImageAlt: `Artwork for ${releaseTitle}`,
     };
   }

@@ -376,6 +376,7 @@ export default function Home() {
                 data-no-scramble="true"
                 aria-label={displayHeroTitle}
               >
+                <span className="sr-only">{displayHeroTitle}</span>
                 <span aria-hidden="true">
                   {heroTitleWords.map((word, index) => (
                     <span

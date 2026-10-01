@@ -1,5 +1,12 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { createElement, lazy, Suspense, useEffect, useMemo, useRef } from "react";
+import {
+  createElement,
+  lazy,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -145,6 +152,7 @@ import { ScrollProgress } from "./components/ScrollProgress";
 import { SmoothScroll } from "./components/SmoothScroll";
 import { MotionOrchestrator } from "./components/MotionOrchestrator";
 import { NightFrequencySignature } from "./components/NightFrequencySignature";
+import { CommandPalette } from "./components/CommandPalette";
 import { StructuredData } from "./components/StructuredData";
 import { trpc } from "./lib/trpc";
 import { customDocumentsToPublicContent } from "./content/publicContent";
