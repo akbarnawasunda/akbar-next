@@ -1,5 +1,5 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { createElement, lazy, Suspense, useEffect, useMemo } from "react";
+import { createElement, lazy, Suspense, useEffect, useMemo, useRef } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -17,11 +17,11 @@ function lazyWithPreload<T extends React.ComponentType<any>>(
   const load = () => {
     if (!promise) {
       promise = loader().then(
-        (module) => {
+        module => {
           loaded = module.default;
           return module;
         },
-        (error) => {
+        error => {
           promise = null;
           throw error;
         }
@@ -41,7 +41,9 @@ function lazyWithPreload<T extends React.ComponentType<any>>(
 const Home = lazyWithPreload(() => import("./pages/Home"));
 const Music = lazyWithPreload(() => import("./pages/Music"));
 const Visuals = lazyWithPreload(() => import("./pages/Visuals"));
-const VisualPortraitGallery = lazyWithPreload(() => import("./pages/VisualPortraitGallery"));
+const VisualPortraitGallery = lazyWithPreload(
+  () => import("./pages/VisualPortraitGallery")
+);
 const Live = lazyWithPreload(() => import("./pages/Live"));
 const Universe = lazyWithPreload(() => import("./pages/Universe"));
 const PressKit = lazyWithPreload(() => import("./pages/PressKit"));
@@ -51,27 +53,51 @@ const Inquiry = lazyWithPreload(() => import("./pages/Inquiry"));
 const Licensing = lazyWithPreload(() => import("./pages/Licensing"));
 const GameJedagRun = lazyWithPreload(() => import("./pages/GameJedagRun"));
 const EnglishGameJedagRun = lazyWithPreload(() =>
-  import("./pages/GameJedagRun").then((module) => ({ default: module.EnglishGameJedagRun }))
+  import("./pages/GameJedagRun").then(module => ({
+    default: module.EnglishGameJedagRun,
+  }))
 );
 const GameJedagRunRoute = () => <GameJedagRun />;
 const EnglishGameJedagRunRoute = () => <EnglishGameJedagRun />;
 const PrivacyPolicy = lazyWithPreload(() => import("./pages/PrivacyPolicy"));
 const EnglishPages = () => import("./pages/EnglishPages");
-const EnglishHome = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishHome })));
-const EnglishMusic = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishMusic })));
-const EnglishVisuals = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishVisuals })));
-const EnglishVisualPortraitGallery = lazyWithPreload(() =>
-  import("./pages/VisualPortraitGallery").then((module) => ({ default: module.EnglishVisualPortraitGallery }))
+const EnglishHome = lazyWithPreload(() =>
+  EnglishPages().then(module => ({ default: module.EnglishHome }))
 );
-const EnglishLive = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishLive })));
-const EnglishUniverse = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishUniverse })));
-const EnglishAbout = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishAbout })));
-const EnglishEpk = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishEpk })));
-const EnglishInquiry = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishInquiry })));
-const EnglishLicensing = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishLicensing })));
-const EnglishPrivacy = lazyWithPreload(() => EnglishPages().then((module) => ({ default: module.EnglishPrivacy })));
+const EnglishMusic = lazyWithPreload(() =>
+  EnglishPages().then(module => ({ default: module.EnglishMusic }))
+);
+const EnglishVisuals = lazyWithPreload(() =>
+  EnglishPages().then(module => ({ default: module.EnglishVisuals }))
+);
+const EnglishVisualPortraitGallery = lazyWithPreload(() =>
+  import("./pages/VisualPortraitGallery").then(module => ({
+    default: module.EnglishVisualPortraitGallery,
+  }))
+);
+const EnglishLive = lazyWithPreload(() =>
+  EnglishPages().then(module => ({ default: module.EnglishLive }))
+);
+const EnglishUniverse = lazyWithPreload(() =>
+  EnglishPages().then(module => ({ default: module.EnglishUniverse }))
+);
+const EnglishAbout = lazyWithPreload(() =>
+  EnglishPages().then(module => ({ default: module.EnglishAbout }))
+);
+const EnglishEpk = lazyWithPreload(() =>
+  EnglishPages().then(module => ({ default: module.EnglishEpk }))
+);
+const EnglishInquiry = lazyWithPreload(() =>
+  EnglishPages().then(module => ({ default: module.EnglishInquiry }))
+);
+const EnglishLicensing = lazyWithPreload(() =>
+  EnglishPages().then(module => ({ default: module.EnglishLicensing }))
+);
+const EnglishPrivacy = lazyWithPreload(() =>
+  EnglishPages().then(module => ({ default: module.EnglishPrivacy }))
+);
 const EnglishReleaseDetail = lazyWithPreload(() =>
-  EnglishPages().then((module) => ({ default: module.EnglishReleaseDetail }))
+  EnglishPages().then(module => ({ default: module.EnglishReleaseDetail }))
 );
 
 const ContentStudio = lazy(() => import("./pages/ContentStudio"));
@@ -83,7 +109,8 @@ const BroadcastStudio = lazy(() => import("./pages/BroadcastStudio"));
 export async function preloadPublicRoute(pathname: string) {
   const path = pathname.split("?")[0] || "/";
   const jobs: Promise<unknown>[] = [];
-  const add = (component: PreloadableComponent<React.ComponentType<any>>) => jobs.push(component.preload());
+  const add = (component: PreloadableComponent<React.ComponentType<any>>) =>
+    jobs.push(component.preload());
   if (path === "/") add(Home);
   else if (path === "/music") add(Music);
   else if (path.startsWith("/music/")) add(ReleaseDetail);
@@ -126,6 +153,7 @@ import { publicMediaUrl } from "./lib/publicMedia";
 import "./components/MaturePalette.css";
 import "./components/BrandSystem.css";
 import "./components/RouteMotion.css";
+import { PageLoading, RouteProgress } from "./components/RouteTransition";
 import "./components/NightFrequencySignature.css";
 
 function Router() {
@@ -153,7 +181,10 @@ function Router() {
       <Route path={"/en/music/:slug"} component={EnglishReleaseDetail} />
       <Route path={"/en/music"} component={EnglishMusic} />
       <Route path={"/en/visuals"} component={EnglishVisuals} />
-      <Route path={"/en/visuals/portraits"} component={EnglishVisualPortraitGallery} />
+      <Route
+        path={"/en/visuals/portraits"}
+        component={EnglishVisualPortraitGallery}
+      />
       <Route path={"/en/live"} component={EnglishLive} />
       <Route path={"/en/universe"} component={EnglishUniverse} />
       <Route path={"/en/about"} component={EnglishAbout} />
@@ -162,8 +193,17 @@ function Router() {
       <Route path={"/en/game/jedag-run"} component={EnglishGameJedagRunRoute} />
       <Route path={"/en/epk"} component={EnglishEpk} />
       <Route path={"/en/privacy"} component={EnglishPrivacy} />
-      <Route path={"/404"} component={() => <LegacyDocument source="/legacy/404.html" scripts="none" />} />
-      <Route component={() => <LegacyDocument source="/legacy/404.html" scripts="none" />} />
+      <Route
+        path={"/404"}
+        component={() => (
+          <LegacyDocument source="/legacy/404.html" scripts="none" />
+        )}
+      />
+      <Route
+        component={() => (
+          <LegacyDocument source="/legacy/404.html" scripts="none" />
+        )}
+      />
     </Switch>
   );
 }
@@ -242,14 +282,18 @@ function CmsMetadata() {
   const settings = useMemo(
     () =>
       customDocumentsToPublicContent(
-        customContent.data as Parameters<typeof customDocumentsToPublicContent>[0]
+        customContent.data as Parameters<
+          typeof customDocumentsToPublicContent
+        >[0]
       )?.siteSettings ?? null,
     [customContent.data]
   );
 
   useEffect(() => {
     const isEnglish = location === "/en" || location.startsWith("/en/");
-    const siteOrigin = (settings?.canonicalUrl || "https://akbarnawasunda.my.id").replace(/\/$/, "");
+    const siteOrigin = (
+      settings?.canonicalUrl || "https://akbarnawasunda.my.id"
+    ).replace(/\/$/, "");
     const pathname = location || "/";
     const pair = languagePair(pathname);
     const releaseTitleFromPath =
@@ -258,7 +302,7 @@ function CmsMetadata() {
             .split("/")
             .pop()
             ?.split("-")
-            .map((word) => (word ? word[0].toUpperCase() + word.slice(1) : word))
+            .map(word => (word ? word[0].toUpperCase() + word.slice(1) : word))
             .join(" ")
         : undefined;
     const defaultTitle = isEnglish
@@ -275,8 +319,11 @@ function CmsMetadata() {
       : "Website resmi Akbar Nawasunda — producer, remixer, dan electronic bass artist dari Bandung Barat, Indonesia.";
     const setMeta = (selector: string, value: string) => {
       const existing = document.head.querySelector<HTMLMetaElement>(selector);
-      const meta = existing || document.head.appendChild(document.createElement("meta"));
-      const identity = selector.match(/meta\[(name|property)=["']([^"']+)["']\]/);
+      const meta =
+        existing || document.head.appendChild(document.createElement("meta"));
+      const identity = selector.match(
+        /meta\[(name|property)=["']([^"']+)["']\]/
+      );
       if (identity) meta.setAttribute(identity[1], identity[2]);
       meta.setAttribute("content", value);
     };
@@ -289,18 +336,22 @@ function CmsMetadata() {
         attributes.hreflang ? `[hreflang="${attributes.hreflang}"]` : ""
       }`;
       const existing = document.head.querySelector<HTMLLinkElement>(selector);
-      const link = existing || document.head.appendChild(document.createElement("link"));
+      const link =
+        existing || document.head.appendChild(document.createElement("link"));
       link.rel = rel;
       link.href = href;
-      Object.entries(attributes).forEach(([key, value]) => link.setAttribute(key, value));
+      Object.entries(attributes).forEach(([key, value]) =>
+        link.setAttribute(key, value)
+      );
     };
 
     document.documentElement.lang = isEnglish ? "en" : "id";
     const isHome = pathname === "/" || pathname === "/en";
     const resolvedTitle = isEnglish
       ? defaultTitle
-      : (isHome ? settings?.ogTitle?.trim() || settings?.siteTitle?.trim() : undefined) ||
-        defaultTitle;
+      : (isHome
+          ? settings?.ogTitle?.trim() || settings?.siteTitle?.trim()
+          : undefined) || defaultTitle;
     const resolvedDescription = isEnglish
       ? defaultDescription
       : settings?.ogDescription?.trim() ||
@@ -315,16 +366,23 @@ function CmsMetadata() {
     setMeta('meta[property="og:title"]', resolvedTitle);
     setMeta('meta[property="og:description"]', resolvedDescription);
     setMeta('meta[property="og:image"]', resolvedImage);
-    setMeta('meta[property="og:url"]', `${siteOrigin}${pathname === "/" ? "/" : pathname}`);
+    setMeta(
+      'meta[property="og:url"]',
+      `${siteOrigin}${pathname === "/" ? "/" : pathname}`
+    );
     setMeta('meta[name="twitter:title"]', resolvedTitle);
     setMeta('meta[name="twitter:description"]', resolvedDescription);
     setMeta('meta[name="twitter:image"]', resolvedImage);
     setLink("canonical", `${siteOrigin}${pathname === "/" ? "/" : pathname}`);
 
-    const robots = document.head.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    const robots = document.head.querySelector<HTMLMetaElement>(
+      'meta[name="robots"]'
+    );
     if (robots && isSupportedLanguagePath(pathname)) robots.remove();
 
-    document.head.querySelectorAll('link[data-language-link="true"]').forEach((link) => link.remove());
+    document.head
+      .querySelectorAll('link[data-language-link="true"]')
+      .forEach(link => link.remove());
     if (pair) {
       const idUrl = `${siteOrigin}${pair.id === "/" ? "/" : pair.id}`;
       const enUrl = `${siteOrigin}${pair.en}`;
@@ -348,14 +406,22 @@ function CmsMetadata() {
 
 function RouteMotion() {
   const [location] = useLocation();
+  const firstLocation = useRef(location);
+  // Halaman pertama tidak dianimasikan supaya LCP tidak tertunda; animasi
+  // masuk hanya untuk perpindahan halaman setelahnya.
+  const isNavigation = location !== firstLocation.current;
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [location]);
 
   return (
-    <div className="route-motion" key={location} data-route={location}>
-      <Suspense fallback={<div className="route-loading" role="status">MEMUAT HALAMAN…</div>}>
+    <div
+      className={`route-motion${isNavigation ? " is-navigation" : ""}`}
+      key={location}
+      data-route={location}
+    >
+      <Suspense fallback={<PageLoading />}>
         <Router />
       </Suspense>
     </div>
@@ -369,6 +435,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <ScrollProgress />
+          <RouteProgress />
           <SmoothScroll />
           <CmsMetadata />
           <StructuredData />
