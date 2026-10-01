@@ -58,7 +58,6 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
     <main className={english ? "en-content" : undefined}>
       <section className="nf-page-hero portrait-gallery-hero">
         <div>
-          <p className="nf-page-eyebrow">{english ? "VISUALS / PORTRAIT STUDIES" : "VISUAL / STUDI POTRET"}</p>
           <h1>{english ? <>PHOTO<br /><em>STUDIES.</em></> : <>STUDI<br /><em>POTRET.</em></>}</h1>
           <p>{english ? "A still-image archive from the Akbar Nawasunda visual language." : "Arsip foto dari bahasa visual Akbar Nawasunda."}</p>
         </div>
@@ -73,7 +72,6 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
       <section className="nf-section portrait-gallery-intro">
         <div className="nf-section-title">
           <div>
-            <p className="nf-page-eyebrow">{english ? "THE STILL FRAME" : "FRAME YANG DITAHAN"}</p>
             <h2>{english ? <>SEE THE<br /><em>DETAIL.</em></> : <>LIHAT<br /><em>DETAILNYA.</em></>}</h2>
           </div>
           <p>{english ? "Each frame is presented as a study, not a product gallery. The image stays inside the site while the story remains close to the work." : "Setiap frame ditampilkan sebagai studi, bukan etalase produk. Fotonya tetap berada di dalam pengalaman website, sementara ceritanya tetap dekat dengan karya."}</p>
@@ -117,7 +115,6 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
       </section>
       <section className="nf-section dark-panel portrait-gallery-close">
         <div>
-          <p className="nf-page-eyebrow">{english ? "KEEP EXPLORING" : "LANJUT MENJELAJAH"}</p>
           <h2>{english ? <>MOVE THROUGH<br /><em>THE ARCHIVE.</em></> : <>LANJUT KE<br /><em>ARSIPNYA.</em></>}</h2>
         </div>
         <div className="portrait-gallery-close-actions">

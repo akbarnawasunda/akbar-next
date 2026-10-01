@@ -236,22 +236,6 @@
   }
 }
 
-/* Broadcast bar di atas hero */
-.an-site .hero-copy::before {
-  content: "NIGHT FREQUENCY · BROADCAST 001 · SIGNAL ACTIVE";
-  grid-column: 1 / -1;
-  display: block;
-  padding-bottom: 20px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid var(--paper);
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  color: var(--paper);
-  text-transform: uppercase;
-}
-
 .an-site .hero-copy {
   position: relative;
   z-index: 2;

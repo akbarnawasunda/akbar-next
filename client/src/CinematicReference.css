@@ -373,7 +373,6 @@ body::before {
 .an-site .hero-copy .hero-title-mask { padding: 0 !important; }
 .an-site .hero-description { max-width: 34ch !important; margin: 28px 0 30px !important; color: var(--ref-muted) !important; font-family: var(--ref-mono) !important; font-size: 0.69rem !important; line-height: 1.8 !important; }
 .an-site .home-hero-portrait { height: min(78vh, 720px) !important; border: 0 !important; box-shadow: var(--ref-shadow) !important; }
-.an-site .home-hero-portrait::after { content: "01 / 08  THE SIGNAL" !important; right: 18px; bottom: 16px; padding: 0 !important; border: 0 !important; background: transparent !important; color: var(--ref-cyan) !important; font-size: 0.56rem !important; }
 .an-site .home-hero-portrait img { filter: saturate(0.62) contrast(1.2) brightness(0.76) !important; object-position: 50% 22% !important; }
 .an-site .button-primary { padding: 13px 16px !important; background: var(--ref-cyan) !important; color: var(--ink) !important; font-family: var(--ref-mono) !important; font-size: 0.59rem !important; letter-spacing: 0.12em !important; }
 .an-site .button-quiet { padding: 13px 0 !important; border-bottom-color: var(--ref-line) !important; color: var(--ref-ink) !important; font-size: 0.59rem !important; }

@@ -122,7 +122,6 @@ export default function Inquiry() {
       <NightHeader />
       <main>
         <section className="an-inquiry-hero">
-          <p className="nf-page-eyebrow">{current.kicker}</p>
           <h1>{current.title}</h1>
           <p>{current.intro}</p>
           <div className="an-inquiry-signal">

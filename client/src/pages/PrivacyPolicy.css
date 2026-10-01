@@ -21,18 +21,6 @@
   background: var(--ink) !important;
   border-bottom: 1px solid var(--ink-line);
 }
-.an-privacy-hero::after {
-  position: absolute;
-  right: var(--gutter, clamp(22px, 7vw, 110px));
-  bottom: 30px;
-  content: "AN / DATA NOTE";
-  color: var(--mute-soft);
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
 
 .an-privacy-hero-copy,
 .an-privacy-posture {

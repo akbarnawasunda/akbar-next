@@ -8,7 +8,7 @@ import FanSignalSection from "@/components/FanSignalSection";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { officialBrand, videos } from "@/content/artistPlatform";
 import { InteractiveArtworkCard } from "@/components/signature/InteractiveArtworkCard";
-import { SignalHeading, SignalIndex } from "@/components/signature/SignalType";
+import { SignalHeading } from "@/components/signature/SignalType";
 import VisualPortraitStudies from "@/components/VisualPortraitStudies";
 import { ArtistPhotoStorySection } from "@/components/ArtistEditorialSections";
 import {
@@ -88,7 +88,6 @@ export default function Visuals() {
           }
         >
           <div>
-            <p className="nf-page-eyebrow">VISUAL</p>
             <h1>
               VIDEO
               <br />
@@ -113,7 +112,6 @@ export default function Visuals() {
         <section className="nf-section">
           <div className="nf-section-title">
             <div>
-              <p className="nf-page-eyebrow">PILIHAN VIDEO</p>
               <h2>
                 LIHAT
                 <br />
@@ -145,7 +143,6 @@ export default function Visuals() {
         <section className="nf-section dark-panel">
           <div className="nf-section-title">
             <div>
-              <SignalIndex index="02" label="ARSIP VIDEO" />
               <SignalHeading as="h2" lines={["SEMUA", "VIDEO."]} />
             </div>
             <p>
@@ -176,7 +173,6 @@ export default function Visuals() {
         </section>
 
         <CtaPanel
-          eyebrow="VISUAL / KOLABORASI"
           title={
             <>
               BIKIN VISUAL
@@ -199,7 +195,6 @@ export default function Visuals() {
 
         <FanSignalSection
           source={FAN_SIGNAL_SOURCES.visuals}
-          eyebrow="KABAR VISUAL"
           title={
             <>
               LIHAT YANG

@@ -10,7 +10,7 @@ import {
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { PlatformIcon } from "@/components/PlatformIcon";
-import { PlatformMarquee, SectionIndex } from "@/components/PlatformMarquee";
+import { PlatformMarquee } from "@/components/PlatformMarquee";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { MusicEmbed } from "@/components/MusicEmbed";
@@ -431,8 +431,6 @@ export default function Home() {
 
           <EditorialSection
             id="signal"
-            index="01 — SINYAL"
-            eyebrow="CURRENT SIGNAL"
             title={
               <>
                 YANG SEDANG
@@ -451,7 +449,6 @@ export default function Home() {
             id="platforms"
             aria-labelledby="signal-deck-title"
           >
-            <SectionIndex label="MUSIK" />
             <div className="home-signal-copy">
               <p className="eyebrow">
                 <span /> PLATFORM RESMI
@@ -492,7 +489,6 @@ export default function Home() {
 
           <Reveal>
             <section className="section section-current" id="music">
-              <SectionIndex label="SOROTAN" />
               <div className="section-heading">
                 <div>
                   <h2>
@@ -574,7 +570,6 @@ export default function Home() {
 
           <Reveal>
             <section className="section release-section">
-              <SectionIndex label="KATALOG" />
               <div className="section-inline">
                 <div>
                   <p className="eyebrow">
@@ -693,7 +688,6 @@ export default function Home() {
           </Reveal>
 
           <section className="section visual-section" id="visuals">
-            <SectionIndex label="VIDEO" />
             <div className="section-heading">
               <div>
                 <p className="eyebrow">VISUAL</p>
@@ -732,7 +726,6 @@ export default function Home() {
 
           <Reveal>
             <section className="section live-section" id="live">
-              <SectionIndex label="PANGGUNG" />
               <div
                 className="live-backdrop"
                 style={{
@@ -874,7 +867,6 @@ export default function Home() {
               id="game"
               aria-labelledby="game-teaser-title"
             >
-              <SectionIndex label="GAME" />
               <div className="game-teaser-art" aria-hidden="true">
                 <div className="game-teaser-scanline" />
                 <span className="game-teaser-sun" />
@@ -908,7 +900,6 @@ export default function Home() {
 
           <CtaPanel
             id="booking"
-            eyebrow="BOOKING / KOLABORASI"
             title={
               <>
                 BAWA SUARA INI
@@ -932,8 +923,6 @@ export default function Home() {
           <FanSignalSection
             source={FAN_SIGNAL_SOURCES.home}
             anchorId="fan-signal"
-            indexLabel="NEWS"
-            eyebrow="KABAR TERBARU"
             title={
               <>
                 JANGAN

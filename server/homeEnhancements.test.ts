@@ -33,10 +33,13 @@ describe("beranda yang dilihat pengunjung", () => {
     expect(home).toMatch(/aria-busy="(true|false)"/);
   });
 
-  it("memasang progress scroll, marquee platform, dan penanda section", () => {
+  it("memasang progress scroll dan marquee platform", () => {
     expect(home).toContain('class="an-scroll-progress"');
     expect(home).toContain("an-platform-marquee-track");
-    expect(home).toContain('class="an-section-index"');
+    // Penanda section ("MUSIK", "SOROTAN", …) sengaja dibuang: setiap
+    // section sudah punya judulnya sendiri, label di atasnya hanya
+    // mengulang dan membuat halaman terasa seperti template.
+    expect(home).not.toContain('class="an-section-index"');
   });
 
   it("memakai turunan gambar ringan untuk latar panggung", () => {

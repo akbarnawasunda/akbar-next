@@ -29,12 +29,12 @@ describe("official media fallback and online EPK", () => {
     const epkStyles = source("client/src/pages/EpkReady.css");
     const live = source("client/src/pages/Live.tsx");
     expect(epk).toContain("SAVE / PRINT EPK");
-    expect(epk).toContain("ASET RESMI");
+    expect(epk).toContain("Aset yang tersedia secara resmi");
     expect(epk).not.toContain("PHOTO PACK");
     expect(epk).not.toContain("TECH RIDER");
     expect(epkStyles).toContain(".nf-page .an-epk-contact-panel");
     expect(epkStyles).toContain("background: var(--paper) !important");
     expect(epkStyles).toContain("color: var(--ink) !important");
-    expect(live).toContain("BOOKING / LIVE");
+    expect(live).toContain("BOOKING / REMIX / KOLABORASI");
   });
 });

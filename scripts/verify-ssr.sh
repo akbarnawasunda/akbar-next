@@ -292,15 +292,15 @@ echo "== SSR crawler verification against $BASE =="
 check "/"                                      "DENGARKAN KARYA"                    "Akbar Nawasunda | Official Website" state,ogimage
 check "/music"                                "RILISAN TERBARU"                  "Music by Akbar Nawasunda" state,ogimage
 check "/about"                                "PERJALANAN"                      "About the Artist | Akbar Nawasunda" state,ogimage
-check "/visuals"                              "PILIHAN VIDEO"                   "Videos by Akbar Nawasunda" state,ogimage
-check "/live"                                 "BOOKING / LIVE"                  "Live Dates | Akbar Nawasunda" state,ogimage
+check "/visuals"                              "BIKIN VISUAL"                    "Videos by Akbar Nawasunda" state,ogimage
+check "/live"                                 "AJUKAN BOOKING"                  "Live Dates | Akbar Nawasunda" state,ogimage
 check "/universe"                             "PERJALANAN"                      "About the Work | Akbar Nawasunda" state,ogimage
 check "/inquire?type=licensing&source=release" "KIRIM INQUIRY"                  "Inquire | Akbar Nawasunda" state,ogimage
-check "/en"                                   "OFFICIAL PLATFORMS"              "Akbar Nawasunda | Official Website" state,ogimage
+check "/en"                                   "Masih Mencintainya"              "Akbar Nawasunda | Official Website" state,ogimage
 check "/en/about"                             "ARTIST PROFILE"                  "About the Artist | Akbar Nawasunda" state,ogimage
 check "/en/live"                              "No confirmed show is public yet"  "Live Dates | Akbar Nawasunda" state,ogimage
-check "/music/masih-mencintainya-papinka"     "TENTANG RILISAN"                 "Masih Mencintainya" state,ogimage
-check "/en/music/masih-mencintainya-papinka"  "ABOUT THE RELEASE"               "Masih Mencintainya" state,ogimage
+check "/music/masih-mencintainya-papinka"     "Masih Mencintainya"              "Masih Mencintainya" state,ogimage
+check "/en/music/masih-mencintainya-papinka"  "Masih Mencintainya"              "Masih Mencintainya" state,ogimage
 # Gated route: code-split and never indexable. It intentionally has no canonical.
 check "/admin"                               "data-route=\"/admin\""              "Akbar Nawasunda | Official Website" nocanon,noindex
 # Redirect layer and true 404 behavior.

@@ -62,7 +62,6 @@ export default function ReleaseDetail() {
         <NightHeader active="/music" />
         <main>
           <section className="nf-section an-release-missing">
-            <p className="nf-page-eyebrow">RILISAN TIDAK DITEMUKAN</p>
             <h1>
               RILISAN
               <br />
@@ -107,9 +106,6 @@ export default function ReleaseDetail() {
             <Link className="an-back-link" href="/music">
               <ArrowLeft size={13} /> KEMBALI KE MUSIC
             </Link>
-            <p className="nf-page-eyebrow">
-              RILISAN / {release?.format || "MEMUAT"}
-            </p>
             <h1>{release?.title || "MEMUAT RILISAN…"}</h1>
             <p>
               {release
@@ -142,7 +138,6 @@ export default function ReleaseDetail() {
             </span>
           </div>
           <div className="an-release-copy">
-            <p className="nf-page-eyebrow">TENTANG RILISAN</p>
             <h2>{release?.title || "RILISAN."}</h2>
             <p>
               {release?.story ||
@@ -161,7 +156,6 @@ export default function ReleaseDetail() {
         <section className="nf-section dark-panel">
           <div className="nf-section-title">
             <div>
-              <p className="nf-page-eyebrow">DENGAR DI</p>
               <h2>
                 PLATFORM
                 <br />

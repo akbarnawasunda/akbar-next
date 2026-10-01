@@ -11,7 +11,7 @@ type SignalStatus =
 
 type FanSignalSectionProps = {
   source: FanSignalSource;
-  eyebrow: string;
+  eyebrow?: string;
   title: ReactNode;
   description: string;
   indexLabel?: string;
@@ -89,7 +89,7 @@ export default function FanSignalSection({
       ) : null}
 
       <div className="fan-signal-copy">
-        <p className="fan-signal-eyebrow">{eyebrow}</p>
+        {eyebrow ? <p className="fan-signal-eyebrow">{eyebrow}</p> : null}
         <h2 id={headingId}>{title}</h2>
         <p>{description}</p>
       </div>

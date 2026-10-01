@@ -128,7 +128,6 @@ export default function Music() {
           }
         >
           <div>
-            <p className="nf-page-eyebrow">MUSIK</p>
             <h1>
               MUSIK
               <br />
@@ -187,7 +186,6 @@ export default function Music() {
 
         <section className="nf-platform-hub">
           <div className="nf-platform-hub-copy">
-            <p className="nf-page-eyebrow">DENGARKAN DI SINI</p>
             <h2>
               PILIH
               <br />
@@ -214,7 +212,6 @@ export default function Music() {
           <section className="nf-section">
             <div className="nf-section-title">
               <div>
-                <p className="nf-page-eyebrow">DENGAR LANGSUNG</p>
                 <h2>
                   DENGAR
                   <br />
@@ -262,7 +259,6 @@ export default function Music() {
           <section className="nf-section dark-panel">
             <div className="nf-section-title">
               <div>
-                <p className="nf-page-eyebrow">KATALOG</p>
                 <h2>
                   SEMUA
                   <br />
@@ -337,7 +333,6 @@ export default function Music() {
         <section className="nf-section">
           <div className="nf-section-title">
             <div>
-              <p className="nf-page-eyebrow">LINK UTAMA</p>
               <h2>
                 DENGAR
                 <br />
@@ -360,7 +355,6 @@ export default function Music() {
         </section>
 
         <CtaPanel
-          eyebrow="LISENSI / REMIX"
           title={
             <>
               PAKAI KARYANYA
@@ -383,7 +377,6 @@ export default function Music() {
 
         <FanSignalSection
           source={FAN_SIGNAL_SOURCES.music}
-          eyebrow="KABAR RILISAN"
           title={
             <>
               DENGARKAN

@@ -131,7 +131,6 @@ export default function PressKit() {
         <section className="nf-epk-hero an-epk-hero-enhanced">
           <div className="an-epk-hero-grid">
             <div>
-              <p className="nf-page-eyebrow">AKBAR NAWASUNDA / ONLINE EPK</p>
               <h1>
                 PRESS &amp;
                 <br />
@@ -191,7 +190,6 @@ export default function PressKit() {
         <section className="nf-section an-epk-sheet-section">
           <div className="an-epk-document">
             <div>
-              <p className="nf-page-eyebrow">ARTIST SNAPSHOT</p>
               <h2>AKBAR NAWASUNDA.</h2>
               <p>{bio}</p>
               <div className="an-epk-genre-row">
@@ -224,7 +222,6 @@ export default function PressKit() {
         <section className="nf-section dark-panel an-epk-capabilities">
           <div className="nf-section-title">
             <div>
-              <p className="nf-page-eyebrow">CAPABILITIES</p>
               <h2>
                 BUILT FOR
                 <br />
@@ -259,7 +256,6 @@ export default function PressKit() {
         <section className="nf-section">
           <div className="nf-section-title">
             <div>
-              <p className="nf-page-eyebrow">ASET RESMI</p>
               <h2>
                 ASET
                 <br />
@@ -304,7 +300,6 @@ export default function PressKit() {
         <section className="nf-section dark-panel">
           <div className="nf-section-title">
             <div>
-              <p className="nf-page-eyebrow">RILISAN PILIHAN</p>
               <h2>
                 RILISAN
                 <br />
@@ -344,7 +339,6 @@ export default function PressKit() {
         <section className="nf-section an-epk-contact-panel">
           <div className="an-booking-grid">
             <div>
-              <p className="nf-page-eyebrow">BOOKING / COLLABORATION</p>
               <h2>
                 KONTAK
                 <br />
@@ -373,7 +367,6 @@ export default function PressKit() {
         <section className="nf-section">
           <div className="nf-section-title">
             <div>
-              <p className="nf-page-eyebrow">KANAL RESMI</p>
               <h2>
                 PLATFORM
                 <br />

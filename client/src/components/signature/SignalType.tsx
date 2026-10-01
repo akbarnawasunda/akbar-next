@@ -56,26 +56,6 @@ export function SignalHeading({
   );
 }
 
-export function SignalIndex({
-  index,
-  label,
-  className = "",
-}: {
-  index: string | number;
-  label: string;
-  className?: string;
-}) {
-  const formatted =
-    typeof index === "number" ? String(index).padStart(2, "0") : index;
-  return (
-    <p className={`an-signal-index ${className}`.trim()}>
-      <span className="an-signal-index-number">{formatted}</span>
-      <i aria-hidden="true" />
-      <span className="an-signal-index-label">{label}</span>
-    </p>
-  );
-}
-
 export function RevealLines({
   children,
   className = "",

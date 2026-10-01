@@ -95,25 +95,27 @@ describe("rute publik sesudah redesign", () => {
   it("menampilkan papan Current Signal di beranda ID dan EN", async () => {
     const home = await renderPage("/");
     expect(home.html).toContain('id="signal"');
-    expect(home.text).toContain("CURRENT SIGNAL");
+    // Label "CURRENT SIGNAL" di atas judul sudah dibuang; isi papannya
+    // yang harus tetap ada.
     expect(home.text).toContain("RILISAN TERBARU");
+    expect(home.text).toContain("STATUS BOOKING");
     expect(home.html).toContain("ed-signal-board");
 
     const english = await renderPage("/en");
-    expect(english.text).toContain("CURRENT SIGNAL");
     expect(english.text).toContain("LATEST RELEASE");
+    expect(english.text).toContain("BOOKING STATUS");
     expect(english.html).toContain("ed-signal-board");
   });
 
   it("menampilkan panel CTA booking di beranda kedua bahasa", async () => {
     const home = await renderPage("/");
     expect(home.html).toContain("ed-cta");
-    expect(home.text).toContain("BOOKING / KOLABORASI");
+    expect(home.text).toContain("BAWA SUARA INI");
     expect(home.html).toContain('href="/inquire?source=home"');
 
     const english = await renderPage("/en");
     expect(english.html).toContain("ed-cta");
-    expect(english.text).toContain("BOOKING / COLLABORATION");
+    expect(english.text).toContain("BRING THIS SOUND");
     expect(english.html).toContain('href="/en/inquire?source=home"');
   });
 

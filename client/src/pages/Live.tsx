@@ -63,7 +63,6 @@ export default function Live() {
           }
         >
           <div>
-            <p className="nf-page-eyebrow">BOOKING / LIVE</p>
             <h1>
               BOOKING
               <br />
@@ -104,8 +103,6 @@ export default function Live() {
         {featured ? (
           <EditorialSection
             id="next-show"
-            index="01 — SHOW BERIKUTNYA"
-            eyebrow="NEXT ON STAGE"
             title={featured.title}
             lede={[
               formatDate(featured.date, featured.time),
@@ -163,8 +160,6 @@ export default function Live() {
         ) : (
           <EditorialSection
             id="next-show"
-            index="01 — STATUS"
-            eyebrow="STATUS BOOKING"
             title={
               <>
                 KALENDER
@@ -190,7 +185,6 @@ export default function Live() {
           <section className="nf-section an-event-section">
             <div className="an-event-head">
               <div>
-                <p className="nf-page-eyebrow">JADWAL LIVE</p>
                 <h2>
                   SHOW
                   <br />
@@ -259,7 +253,6 @@ export default function Live() {
         ) : (
           <section className="nf-section an-booking-grid">
             <div>
-              <p className="nf-page-eyebrow">INQUIRY RESMI</p>
               <h2>
                 BOOKING
                 <br />
@@ -303,7 +296,6 @@ export default function Live() {
 
         <CtaPanel
           id="booking"
-          eyebrow="JALUR RESMI"
           title={
             <>
               AJUKAN TANGGAL
@@ -327,7 +319,6 @@ export default function Live() {
         <FanSignalSection
           source={FAN_SIGNAL_SOURCES.live}
           className="fan-signal-section--motion"
-          eyebrow="KABAR & RILISAN"
           title={
             <>
               IKUTI
