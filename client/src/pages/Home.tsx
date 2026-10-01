@@ -427,12 +427,7 @@ export default function Home() {
             </a>
           </section>
 
-          <SignatureStage
-            index="00 — SIGNATURE"
-            caption="NIGHT FREQUENCY"
-            note="Nama ini disusun ribuan titik yang bereaksi pada kursor, sentuhan, dan gulir halaman. Terus gulir: namanya berganti sendiri."
-            alsoKnownAs="Juga dikenal sebagai DJ Akbar Remix dan akbarnawasunda.my.id."
-          />
+          <SignatureStage alsoKnownAs="Juga dikenal sebagai DJ Akbar Remix dan akbarnawasunda.my.id." />
 
           <EditorialSection
             id="signal"

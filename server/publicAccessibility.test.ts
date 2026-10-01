@@ -170,6 +170,32 @@ describe("panggung signature", () => {
     }
   });
 
+  it("tidak memakai judul bagian, nomor indeks, atau keterangan efek", async () => {
+    // Panggung ini hanya menampilkan nama. Label "00 — SIGNATURE" dan
+    // paragraf yang menjelaskan efeknya sendiri membuat halaman terasa
+    // seperti demo, bukan situs milik seseorang.
+    for (const route of ["/", "/en"]) {
+      const markup = await html(route);
+      const marker = markup.indexOf("an-signature-stage");
+      const section = markup.slice(
+        markup.lastIndexOf("<section", marker),
+        markup.indexOf("</section>", marker)
+      );
+      expect(section, `${route} label bagian`).not.toContain("stage-head");
+      expect(section, `${route} nomor indeks`).not.toContain("stage-index");
+      expect(section, `${route} keterangan`).not.toContain("stage-note");
+      expect(section, `${route} label SIGNATURE`).not.toContain("SIGNATURE");
+
+      // Teks yang benar-benar terlihat di panggung hanyalah namanya.
+      const visible = section
+        .replace(/<p[^>]*class="sr-only"[^>]*>[\s\S]*?<\/p>/g, " ")
+        .replace(/<[^>]+>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      expect(visible, `${route} teks panggung`).toBe("AKBAR NAWASUNDA");
+    }
+  });
+
   it("tidak muncul di halaman selain beranda", async () => {
     for (const route of ["/music", "/en/music", "/universe", "/en/about"]) {
       const markup = await html(route);

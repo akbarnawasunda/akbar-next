@@ -123,7 +123,6 @@ export function GlobalAudioPlayer() {
           collapse: "Minimise player",
           close: "Close player",
           open: "Open on SoundCloud",
-          note: "Waveform follows a deterministic beat — third-party embeds cannot be analysed.",
           idle: "Latest release",
         }
       : {
@@ -134,7 +133,6 @@ export function GlobalAudioPlayer() {
           collapse: "Kecilkan player",
           close: "Tutup player",
           open: "Buka di SoundCloud",
-          note: "Waveform memakai ketukan deterministik — embed pihak ketiga tidak bisa dianalisis.",
           idle: "Rilisan terbaru",
         };
 
@@ -236,7 +234,6 @@ export function GlobalAudioPlayer() {
               }}
             />
           ) : null}
-          <p className="an-global-player-note">{copy.note}</p>
         </div>
       </div>
     </aside>

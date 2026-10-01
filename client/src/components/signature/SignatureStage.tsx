@@ -17,21 +17,15 @@ import "./SignatureStage.css";
  * Semuanya `position: sticky` biasa, jadi keyboard, roda, dan assistive
  * technology bekerja seperti halaman normal.
  *
+ * Panggung ini sengaja tanpa judul bagian, nomor indeks, atau keterangan
+ * yang menjelaskan efeknya sendiri: yang muncul hanya namanya. Efek yang
+ * perlu dijelaskan di sebelahnya biasanya memang belum bekerja.
+ *
  * Tanpa JavaScript, saat runtime mematuhi reduced motion / hemat data, atau
  * di perangkat yang terlalu lemah, jalur panjangnya runtuh jadi satu section
  * biasa dan teksnya tampil utuh.
  */
-export function SignatureStage({
-  index,
-  caption,
-  note,
-  alsoKnownAs,
-}: {
-  index: string;
-  caption: string;
-  note: string;
-  alsoKnownAs: string;
-}) {
+export function SignatureStage({ alsoKnownAs }: { alsoKnownAs: string }) {
   const tier = useSignatureState(snapshot => snapshot.capability.tier);
   const ready = useSignatureState(snapshot => snapshot.fieldReady);
   const live = ready && tier !== "off";
@@ -40,11 +34,6 @@ export function SignatureStage({
     <section className="an-signature-stage" data-live={live}>
       <div className="an-signature-stage-track" data-signal-stage-track>
         <div className="an-signature-stage-sticky">
-          <div className="an-signature-stage-head">
-            <span className="an-signature-stage-index">{index}</span>
-            <span className="an-signature-stage-caption">{caption}</span>
-          </div>
-
           <div className="an-signature-stage-field" data-signal-stage>
             <h2 className="an-signature-stage-word">
               <span>AKBAR</span> <span>NAWASUNDA</span>
@@ -53,8 +42,6 @@ export function SignatureStage({
                 tetap ada di DOM supaya terbaca screen reader dan crawler. */}
             <p className="sr-only">{alsoKnownAs}</p>
           </div>
-
-          <p className="an-signature-stage-note">{note}</p>
         </div>
       </div>
     </section>

@@ -36,23 +36,6 @@
   min-height: 0;
 }
 
-.an-signature-stage-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--mute);
-}
-
-.an-signature-stage-index {
-  color: var(--acid);
-}
-
 /* Kotak yang diukur Signature Runtime. Tingginya sengaja besar supaya
    wordmark partikel punya ruang dan benar-benar terbaca. */
 .an-signature-stage-field {
@@ -86,16 +69,6 @@
   opacity: 0;
 }
 
-.an-signature-stage-note {
-  margin: 0;
-  max-width: 54ch;
-  font-family: var(--font-mono);
-  font-size: 0.62rem;
-  line-height: 1.7;
-  letter-spacing: 0.08em;
-  color: var(--mute);
-}
-
 .an-signature-stage-word span {
   display: inline-block;
   max-width: 100%;
@@ -119,10 +92,6 @@
   }
   .an-signature-stage-field {
     min-height: clamp(170px, 30vh, 280px);
-  }
-  .an-signature-stage-head {
-    font-size: 0.52rem;
-    letter-spacing: 0.18em;
   }
 }
 

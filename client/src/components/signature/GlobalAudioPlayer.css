@@ -131,15 +131,6 @@
   border-top: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
 }
 
-.an-global-player-note {
-  margin: 0;
-  padding: 8px 12px 10px;
-  font-size: 0.54rem;
-  line-height: 1.5;
-  letter-spacing: 0.08em;
-  color: var(--mute-soft);
-}
-
 @media (max-width: 640px) {
   .an-global-player {
     left: 12px;

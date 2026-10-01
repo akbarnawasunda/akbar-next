@@ -330,12 +330,7 @@ export function EnglishHome() {
           </div>
         </section>
 
-        <SignatureStage
-          index="00 — SIGNATURE"
-          caption="NIGHT FREQUENCY"
-          note="The name is drawn by thousands of points that react to your cursor, your touch, and the scroll. Keep scrolling: the name rewrites itself."
-          alsoKnownAs="Also known as DJ Akbar Remix and akbarnawasunda.my.id."
-        />
+        <SignatureStage alsoKnownAs="Also known as DJ Akbar Remix and akbarnawasunda.my.id." />
 
         <section
           className="home-signal-deck"
