@@ -149,6 +149,8 @@ export type SignatureSignals = {
     w: number;
     h: number;
     visibility: number;
+    /** 0..1 sepanjang jalur scroll panggung; dipakai mengganti kata. */
+    progress: number;
   } | null;
 };
 

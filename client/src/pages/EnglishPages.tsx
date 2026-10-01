@@ -333,7 +333,8 @@ export function EnglishHome() {
         <SignatureStage
           index="00 — SIGNATURE"
           caption="NIGHT FREQUENCY"
-          note="The name is drawn by thousands of points that react to your cursor, your touch, and the scroll. Move the pointer across it to break the particles apart."
+          note="The name is drawn by thousands of points that react to your cursor, your touch, and the scroll. Keep scrolling: the name rewrites itself."
+          alsoKnownAs="Also known as DJ Akbar Remix and akbarnawasunda.my.id."
         />
 
         <section

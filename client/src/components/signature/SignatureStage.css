@@ -1,12 +1,37 @@
 /* Panggung wordmark: bidang kosong tempat partikel menyusun nama. */
 .an-signature-stage {
   position: relative;
-  display: grid;
-  gap: clamp(14px, 2vw, 22px);
-  padding: clamp(40px, 7vh, 88px) var(--hx-gutter, clamp(20px, 5vw, 88px));
   border-bottom: 1.5px solid var(--paper);
   background: var(--ink);
   color: var(--paper);
+}
+
+/* Jalur scroll. Tingginya memberi ruang bagi tiga kata untuk saling
+   berganti; posisinya dibaca runtime sebagai progres 0..1. */
+.an-signature-stage-track {
+  position: relative;
+  min-height: 240vh;
+}
+
+.an-signature-stage-sticky {
+  position: sticky;
+  top: 0;
+  display: grid;
+  align-content: center;
+  gap: clamp(14px, 2vw, 22px);
+  min-height: 100svh;
+  padding: clamp(40px, 7vh, 88px) var(--hx-gutter, clamp(20px, 5vw, 88px));
+}
+
+/* Tanpa particle field (reduced motion, hemat data, perangkat lemah, atau
+   JS mati) jalur panjangnya tidak ada gunanya — runtuh jadi section biasa. */
+.an-signature-stage[data-live="false"] .an-signature-stage-track {
+  min-height: 0;
+}
+
+.an-signature-stage[data-live="false"] .an-signature-stage-sticky {
+  position: static;
+  min-height: 0;
 }
 
 .an-signature-stage-head {
@@ -76,6 +101,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .an-signature-stage-track {
+    min-height: 0;
+  }
+  .an-signature-stage-sticky {
+    position: static;
+    min-height: 0;
+  }
   /* Tidak ada partikel → wordmark tetap tampil sebagai teks penuh. */
   .an-signature-stage[data-live="true"] .an-signature-stage-word {
     opacity: 1;

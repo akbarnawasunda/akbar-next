@@ -48,6 +48,23 @@ function flowAngle(x: number, y: number, t: number) {
 }
 
 const WORDMARK = ["AKBAR", "NAWASUNDA"];
+
+/**
+ * Kata yang disusun partikel, berurutan mengikuti scroll.
+ * Sama persis dengan `alternateName` di JSON-LD — jadi yang dilihat
+ * pengunjung dan yang dibaca mesin pencari menyebut nama yang sama.
+ */
+const PHRASES: string[][] = [
+  ["AKBAR", "NAWASUNDA"],
+  ["DJ AKBAR", "REMIX"],
+  ["AKBARNAWASUNDA", ".MY.ID"],
+];
+
+function phraseFor(progress: number) {
+  if (progress < 0.34) return 0;
+  if (progress < 0.68) return 1;
+  return 2;
+}
 const WORDMARK_FONT = '"Clash Display", "General Sans", sans-serif';
 const TAU = Math.PI * 2;
 
@@ -110,6 +127,7 @@ export function createParticleField(
   let stageOffsetY = 0;
   let stageWidth = 0;
   let stageHeight = 0;
+  let phraseIndex = 0;
   let lastTransition: "idle" | "sweep" | "settle" = "idle";
 
   // Warna diambil dari token tema (client/src/index.css) supaya palet
@@ -235,8 +253,9 @@ export function createParticleField(
         const boxWidth = stage ? stage.w : width;
         const boxHeight = stage ? stage.h : height;
         const compact = boxWidth < 900;
+        const phrase = stage ? PHRASES[phraseIndex] || WORDMARK : WORDMARK;
         return sampleTextTargets(
-          compact ? WORDMARK : [WORDMARK.join(" ")],
+          compact ? phrase : [phrase.join(" ").replace(" .", ".")],
           compact ? 0.92 : 0.9,
           stage ? 0.5 : compact ? 0.36 : 0.44,
           wanted,
@@ -380,7 +399,56 @@ export function createParticleField(
     formationStart = -1;
   }
 
+  /**
+   * Ganti kata yang sedang disusun: huruf lama pecah dulu (tiap titik dapat
+   * dorongan acak), lalu sapuan kiri→kanan diputar ulang untuk kata baru.
+   */
+  function morphTo(next: number) {
+    phraseIndex = next;
+    const state = readState();
+    const desired = countFor(state.mode, state.capability);
+    const targets = targetsFor(
+      state.mode,
+      state.era.index,
+      state.era.total,
+      desired
+    );
+    if (!targets.length) return;
+    const boxWidth = stageWidth || width;
+    for (let i = 0; i < points.length; i++) {
+      const point = points[i];
+      const target =
+        targets[Math.floor((i / points.length) * targets.length) % targets.length];
+      point.tx = target.x + (Math.random() - 0.5) * 2.2;
+      point.ty = target.y + (Math.random() - 0.5) * 2.2;
+      point.delay = Math.min(
+        0.62,
+        (target.x / Math.max(1, boxWidth)) * 0.5 + Math.random() * 0.12
+      );
+      const angle = Math.random() * TAU;
+      const kick = 4 + Math.random() * 7;
+      point.vx += Math.cos(angle) * kick;
+      point.vy += Math.sin(angle) * kick;
+    }
+    formationStart = -1;
+  }
+
   /* ------------------------------------------------------------------ frame */
+
+  /** Scanline tipis yang menyapu turun — hanya di mode frequency. */
+  function drawScanline(time: number, amplitude: number) {
+    const span = height * 0.14;
+    const y = ((time * 0.00022) % 1) * (height + span) - span;
+    const band = ctx.createLinearGradient(0, y, 0, y + span);
+    band.addColorStop(0, rgbaFrom(acid, 0, "rgba(143,178,192,0)"));
+    band.addColorStop(
+      0.5,
+      rgbaFrom(acid, 0.1 + amplitude * 0.16, "rgba(143,178,192,0.16)")
+    );
+    band.addColorStop(1, rgbaFrom(acid, 0, "rgba(143,178,192,0)"));
+    ctx.fillStyle = band;
+    ctx.fillRect(0, y, width, span);
+  }
 
   function drawGrid(amplitude: number) {
     ctx.strokeStyle = rgbaFrom(acid, 0.06 + amplitude * 0.1, "rgba(143,178,192,0.1)");
@@ -453,6 +521,10 @@ export function createParticleField(
         stageOffsetX = nextX;
         stageOffsetY = nextY;
       }
+      // Kata berganti mengikuti posisi scroll di jalur panggung.
+      const nextPhrase = phraseFor(stage.progress);
+      if (nextPhrase !== phraseIndex) morphTo(nextPhrase);
+
       // Panggung sudah jauh dari layar: tidak ada gunanya menggambar.
       if (stage.visibility <= 0.02) {
         frame = requestAnimationFrame(step);
@@ -475,8 +547,12 @@ export function createParticleField(
     const damping = 0.82;
     // Dengan panggung, "buyar" mengikuti posisi panggung di layar; tanpa
     // panggung tetap mengikuti progres hero seperti sebelumnya.
+    const exitRamp =
+      anchored && stage && stage.progress > 0.9
+        ? (stage.progress - 0.9) / 0.1
+        : 0;
     const disperse = anchored && stage
-      ? (1 - stage.visibility) * 0.85
+      ? Math.max((1 - stage.visibility) * 0.85, exitRamp)
       : state.mode === "wordmark"
         ? hero
         : hero * 0.4;
@@ -511,7 +587,10 @@ export function createParticleField(
       ctx.restore();
     }
 
-    if (frequency) drawGrid(amplitude);
+    if (frequency) {
+      drawGrid(amplitude);
+      drawScanline(time, amplitude);
+    }
 
     // Denyut halus: bernapas pelan saat senyap, mengikuti amplitudo saat ada
     // audio yang benar-benar bisa dianalisis.
@@ -528,6 +607,11 @@ export function createParticleField(
     const dragFade = Math.max(0, 1 - pointerAge / 160);
     const dragX = Math.max(-26, Math.min(26, signals.pointerVX)) * dragFade;
     const dragY = Math.max(-26, Math.min(26, signals.pointerVY)) * dragFade;
+
+    // Glitch per kolom untuk mode frequency: kolom-kolom huruf tergeser
+    // sesaat dan berganti tiap ~140ms, seperti sinyal yang pecah.
+    const glitchTick = Math.floor(time / 140);
+    const glitchAmount = frequency ? 7 + amplitude * 26 : 0;
 
     // Burst dari tap/drag/klik: satu kali impuls radial.
     const bursts = signals.bursts.splice(0, signals.bursts.length);
@@ -579,6 +663,13 @@ export function createParticleField(
 
         if (sweep > 0.01) {
           targetX += Math.sin(point.seed) * width * 0.35 * sweep;
+        }
+
+        if (glitchAmount > 0) {
+          const column = Math.floor((point.tx + stageOffsetX) / 34);
+          const hash = (column * 7919 + glitchTick * 104729) % 17;
+          targetX += (hash - 8) * 0.14 * glitchAmount;
+          if (hash > 14) targetY += (hash - 15) * 2.4;
         }
 
         if (state.mode === "signal") {

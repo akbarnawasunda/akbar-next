@@ -105,12 +105,24 @@ export function attachPointerSignal(store: SignatureStore) {
     const raw = 1 - Math.abs(center - viewport / 2) / span;
     // Tahan penuh selama panggung masih memenuhi layar, lalu turun mulus.
     const eased = Math.max(0, Math.min(1, raw * 1.45));
+
+    // Jalur scroll (section pembungkus yang sticky) menentukan progres
+    // 0..1 — dipakai untuk mengganti kata tanpa pernah membajak scroll.
+    const track = document.querySelector("[data-signal-stage-track]");
+    let progress = 0;
+    if (track) {
+      const trackRect = track.getBoundingClientRect();
+      const travel = Math.max(1, trackRect.height - viewport);
+      progress = Math.max(0, Math.min(1, -trackRect.top / travel));
+    }
+
     signals.stage = {
       x: rect.left + rect.width / 2,
       y: center,
       w: rect.width,
       h: rect.height,
       visibility: eased * eased * (3 - 2 * eased),
+      progress,
     };
   };
   const readScroll = () => {

@@ -304,6 +304,7 @@ describe("particle field", () => {
       w: 1200,
       h: 360,
       visibility: 1,
+      progress: 0,
     };
     const dom = runWordmark(1440, 900, "full", stage);
 
@@ -322,7 +323,7 @@ describe("particle field", () => {
   });
 
   it("membentuk huruf menyapu dari kiri ke kanan", () => {
-    const stage = { x: 720, y: 450, w: 1200, h: 360, visibility: 1 };
+    const stage = { x: 720, y: 450, w: 1200, h: 360, visibility: 1, progress: 0 };
     const dom = runWordmark(1440, 900, "full", stage);
 
     // Hanya hitung titik yang benar-benar di dalam panggung — titik yang
@@ -354,6 +355,70 @@ describe("particle field", () => {
     const rightFinal = dom.drawn.filter(rightOf).length;
     expect(leftFinal).toBeGreaterThan(40);
     expect(rightFinal).toBeGreaterThan(leftFinal * 0.6);
+  });
+
+  it("mengganti kata yang disusun saat jalur panggung digulir", () => {
+    const stage = {
+      x: 720,
+      y: 450,
+      w: 1200,
+      h: 360,
+      visibility: 1,
+      progress: 0,
+    };
+    const dom = setupDom(1440, 900);
+    const signals = signalsStub(stage);
+    const field = createParticleField(
+      dom.canvas as unknown as HTMLCanvasElement,
+      signals,
+      () => ({
+        mode: "wordmark" as const,
+        capability: capability("full"),
+        frequency: false,
+        era: { index: 0, total: 0 },
+        transition: "idle" as const,
+      })
+    );
+
+    const run = (frames: number, from: number) => {
+      for (let i = 0; i < frames; i++) {
+        const next = dom.frames.pop();
+        dom.frames.length = 0;
+        if (!next) break;
+        dom.drawn.length = 0;
+        next((from + i) * 16.67);
+      }
+    };
+
+    run(170, 0);
+    const first = dom.drawn.map(point => `${Math.round(point.x)}:${Math.round(point.y)}`);
+
+    // Gulir ke sepertiga kedua jalur → kata berganti.
+    if (signals.stage) signals.stage.progress = 0.5;
+    run(10, 170);
+    const breaking = dom.drawn.length;
+    run(170, 180);
+    const second = dom.drawn.map(point => `${Math.round(point.x)}:${Math.round(point.y)}`);
+
+    expect(breaking).toBeGreaterThan(0);
+    // Susunan titiknya benar-benar berbeda: huruf yang dibentuk berganti.
+    const shared = second.filter(key => first.includes(key)).length;
+    expect(shared / second.length).toBeLessThan(0.5);
+
+    // Dan tetap rapi di dalam panggung.
+    const inside = dom.drawn.filter(
+      point =>
+        point.x > stage.x - stage.w / 2 - 8 &&
+        point.x < stage.x + stage.w / 2 + 8 &&
+        point.y > stage.y - stage.h / 2 - 8 &&
+        point.y < stage.y + stage.h / 2 + 8
+    );
+    expect(inside.length / dom.drawn.length).toBeGreaterThan(0.9);
+
+    teardown = () => {
+      field.destroy();
+      dom.restore();
+    };
   });
 
   it("tidak menggambar apa pun saat tier off", () => {
