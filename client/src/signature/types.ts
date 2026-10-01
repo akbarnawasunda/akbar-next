@@ -133,6 +133,11 @@ export type SignatureSignals = {
   beat: number;
   /** Burst dari tap/drag/click yang belum dikonsumsi engine. */
   bursts: { x: number; y: number; strength: number; at: number }[];
+  /**
+   * Kotak teks yang tidak boleh ditimpa partikel (judul hero).
+   * Diukur dari elemen ber-`data-signal-shield`.
+   */
+  shield: { x: number; y: number; w: number; h: number } | null;
 };
 
 export type SignatureStore = {

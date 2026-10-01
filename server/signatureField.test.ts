@@ -59,6 +59,15 @@ function setupDom(viewportWidth: number, viewportHeight: number) {
     lineTo: () => undefined,
     stroke: () => undefined,
     fillRect: (x: number, y: number) => drawn.push({ x, y }),
+    save: () => undefined,
+    restore: () => undefined,
+    translate: () => undefined,
+    scale: () => undefined,
+    arc: () => undefined,
+    fill: () => undefined,
+    createRadialGradient: () => ({ addColorStop: () => undefined }),
+    globalAlpha: 1,
+    globalCompositeOperation: "source-over",
     fillStyle: "",
     strokeStyle: "",
     lineWidth: 1,
@@ -157,6 +166,7 @@ function signalsStub(): SignatureSignals {
     amplitude: 0,
     beat: 0,
     bursts: [],
+    shield: null,
   };
 }
 
@@ -186,10 +196,12 @@ function runWordmark(
   );
 
   // 160 frame ≈ 2,7 detik: cukup untuk titik mengunci ke posisi hurufnya.
+  const early: Drawn[] = [];
   for (let i = 0; i < 160; i++) {
     const next = dom.frames.pop();
     dom.frames.length = 0;
     if (!next) break;
+    if (i === 12) early.push(...dom.drawn);
     if (i > 140) dom.drawn.length = 0; // simpan hanya frame terakhir
     next(i * 16.67);
   }
@@ -198,7 +210,7 @@ function runWordmark(
     field.destroy();
     dom.restore();
   };
-  return dom;
+  return { ...dom, early };
 }
 
 describe("particle field", () => {
@@ -224,6 +236,20 @@ describe("particle field", () => {
     // Wordmark tidak terpotong di tepi layar.
     expect(left).toBeGreaterThan(1440 * 0.1);
     expect(right).toBeLessThan(1440 * 0.9);
+  });
+
+  it("menerbangkan titik dari luar layar lalu mengunci jadi huruf", () => {
+    const dom = runWordmark(1440, 900);
+    const bandEarly = dom.early.filter(
+      point => point.y > 900 * 0.3 && point.y < 900 * 0.65
+    );
+    const bandLate = dom.drawn.filter(
+      point => point.y > 900 * 0.3 && point.y < 900 * 0.65
+    );
+    // Di awal sebagian besar titik masih dalam perjalanan masuk…
+    expect(bandEarly.length / Math.max(1, dom.early.length)).toBeLessThan(0.6);
+    // …dan di akhir hampir semuanya sudah membentuk wordmark.
+    expect(bandLate.length / dom.drawn.length).toBeGreaterThan(0.9);
   });
 
   it("tetap memetakan wordmark dengan benar di layar sangat lebar", () => {

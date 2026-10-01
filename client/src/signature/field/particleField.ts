@@ -33,6 +33,8 @@ type Point = {
   ty: number;
   seed: number;
   bucket: number;
+  /** Jeda masuk 0..0.55 — bikin titik berdatangan bergelombang. */
+  delay: number;
 };
 
 const WORDMARK = ["AKBAR", "NAWASUNDA"];
@@ -41,6 +43,9 @@ const TAU = Math.PI * 2;
 
 /** Mode yang menyusun huruf; butuh titik lebih banyak agar terbaca. */
 const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency"];
+
+/** Lama titik berkumpul menjadi huruf (ms). */
+const FORMATION_MS = 1700;
 
 function readToken(name: string, fallback: string) {
   if (typeof window === "undefined") return fallback;
@@ -90,7 +95,7 @@ export function createParticleField(
   let lastTime = 0;
   let frameCost = 4;
   let sweepEnergy = 0;
-  let formation = 0;
+  let formationStart = -1;
   let lastTransition: "idle" | "sweep" | "settle" = "idle";
 
   // Warna diambil dari token tema (client/src/index.css) supaya palet
@@ -100,10 +105,10 @@ export function createParticleField(
 
   // Huruf harus benar-benar terbaca; mode ambient tetap tipis.
   const textColors = [
-    rgbaFrom(acid, 0.42, "rgba(143,178,192,0.42)"),
-    rgbaFrom(acid, 0.62, "rgba(143,178,192,0.62)"),
-    rgbaFrom(paper, 0.6, "rgba(236,234,229,0.6)"),
-    rgbaFrom(paper, 0.88, "rgba(236,234,229,0.88)"),
+    rgbaFrom(acid, 0.55, "rgba(143,178,192,0.55)"),
+    rgbaFrom(acid, 0.78, "rgba(143,178,192,0.78)"),
+    rgbaFrom(paper, 0.74, "rgba(236,234,229,0.74)"),
+    rgbaFrom(paper, 1, "rgba(236,234,229,1)"),
   ];
   const ambientColors = [
     rgbaFrom(acid, 0.2, "rgba(143,178,192,0.2)"),
@@ -273,28 +278,36 @@ export function createParticleField(
       state.era.total,
       count
     );
+    const textMode = TEXT_MODES.includes(state.mode);
     const next: Point[] = [];
+    const radius = Math.max(width, height);
     for (let i = 0; i < count; i++) {
       const target = targets.length
         ? targets[Math.floor((i / count) * targets.length) % targets.length]
         : { x: Math.random() * width, y: Math.random() * height };
       const jitter = targets.length ? 2.2 : 0;
+      // Mode teks: titik lahir di luar layar lalu terbang masuk membentuk
+      // nama. Mode ambient tetap lahir di tempatnya agar tidak ada "sapuan"
+      // besar di halaman dalam.
+      const angle = Math.random() * TAU;
+      const distance = radius * (0.62 + Math.random() * 0.5);
       next.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
+        x: textMode ? width / 2 + Math.cos(angle) * distance : Math.random() * width,
+        y: textMode ? height / 2 + Math.sin(angle) * distance : Math.random() * height,
         vx: 0,
         vy: 0,
         tx: target.x + (Math.random() - 0.5) * jitter,
         ty: target.y + (Math.random() - 0.5) * jitter,
         seed: Math.random() * TAU,
         bucket: i % 4,
+        delay: textMode ? Math.random() * 0.55 : 0,
       });
     }
     points = next;
     activeCount = next.length;
     currentMode = state.mode;
     currentEra = state.era.index;
-    formation = 1;
+    formationStart = -1;
   }
 
   function retarget() {
@@ -321,7 +334,7 @@ export function createParticleField(
     currentMode = state.mode;
     currentEra = state.era.index;
     activeCount = Math.min(points.length, desired);
-    formation = 0.6;
+    formationStart = -1;
   }
 
   /* ------------------------------------------------------------------ frame */
@@ -375,12 +388,15 @@ export function createParticleField(
 
     const textMode = TEXT_MODES.includes(state.mode);
     const colors = textMode ? textColors : ambientColors;
+    if (formationStart < 0) formationStart = time;
+    const formation = Math.max(
+      0,
+      Math.min(1, (time - formationStart) / FORMATION_MS)
+    );
     const pointerX = signals.pointerActive ? signals.pointerX : -9999;
     const pointerY = signals.pointerActive ? signals.pointerY : -9999;
     const repelRadius = state.capability.tier === "lite" ? 90 : 130;
-    // Saat baru terbentuk, tarikan sedikit lebih lembut supaya titik terlihat
-    // berkumpul menjadi huruf, bukan muncul begitu saja.
-    const spring = (0.055 + amplitude * 0.02) * (1 - formation * 0.55);
+    const spring = 0.055 + amplitude * 0.02;
     const damping = 0.82;
     const disperse = state.mode === "wordmark" ? hero : hero * 0.4;
     const sweep = sweepEnergy;
@@ -388,8 +404,8 @@ export function createParticleField(
     // Burst dari tap/drag/klik: satu kali impuls radial.
     const bursts = signals.bursts.splice(0, signals.bursts.length);
 
-    const base = state.capability.tier === "lite" ? 1.9 : 1.7;
-    const size = textMode ? base : base * 0.85;
+    const base = state.capability.tier === "lite" ? 2.1 : 2;
+    const size = textMode ? base : base * 0.7;
     let bucket = -1;
     const limit = Math.min(activeCount, points.length);
     const visible = Math.max(
@@ -397,8 +413,14 @@ export function createParticleField(
       Math.round(limit * (1 - disperse * 0.55))
     );
 
+    // Saat hero ditinggalkan, wordmark tidak cuma menyebar tapi juga meredup.
+    ctx.globalAlpha = Math.max(0.12, 1 - disperse * 0.7);
+
     for (let b = 0; b < colors.length; b++) {
       ctx.fillStyle = colors[b];
+      // Satu dari empat kelompok sedikit lebih besar supaya huruf punya
+      // "inti" yang terbaca, bukan kabut rata.
+      const dotSize = b === colors.length - 1 ? size + 0.7 : size;
       bucket = b;
       for (let i = 0; i < visible; i++) {
         const point = points[i];
@@ -425,8 +447,17 @@ export function createParticleField(
           targetY += Math.sin(time * 0.002 + point.tx * 0.01) * amplitude * 48;
         }
 
-        point.vx += (targetX - point.x) * spring;
-        point.vy += (targetY - point.y) * spring;
+        // Koreografi masuk: tiap titik punya jeda sendiri, lalu tarikannya
+        // menguat mulus (smoothstep) sampai mengunci di posisi hurufnya.
+        const local = Math.max(
+          0,
+          Math.min(1, (formation - point.delay) / Math.max(0.2, 1 - point.delay))
+        );
+        const ramp = textMode ? local * local * (3 - 2 * local) : 1;
+        const pull = spring * (0.12 + 0.88 * ramp);
+
+        point.vx += (targetX - point.x) * pull;
+        point.vy += (targetY - point.y) * pull;
 
         const dx = point.x - pointerX;
         const dy = point.y - pointerY;
@@ -454,11 +485,34 @@ export function createParticleField(
         point.x += point.vx * delta;
         point.y += point.vy * delta;
 
-        ctx.fillRect(point.x, point.y, size, size);
+        ctx.fillRect(point.x, point.y, dotSize, dotSize);
       }
     }
 
-    if (formation > 0.001) formation *= 0.965;
+    ctx.globalAlpha = 1;
+
+    // Perisai judul: partikel memudar lembut di area teks hero supaya
+    // headline (yang juga dibaca mesin pencari dan screen reader) tetap
+    // kontras. Satu gradient per frame, tanpa membaca DOM di sini.
+    const shield = signals.shield;
+    if (textMode && shield && disperse < 0.9) {
+      const radius = Math.max(shield.w, shield.h) * 0.62;
+      const squeeze = Math.max(0.28, Math.min(2.6, shield.h / shield.w));
+      const fade = ctx.createRadialGradient(0, 0, radius * 0.2, 0, 0, radius);
+      fade.addColorStop(0, "rgba(0,0,0,0.95)");
+      fade.addColorStop(0.62, "rgba(0,0,0,0.78)");
+      fade.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.save();
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.translate(shield.x, shield.y);
+      ctx.scale(1, squeeze);
+      ctx.fillStyle = fade;
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, TAU);
+      ctx.fill();
+      ctx.restore();
+    }
+
     if (sweepEnergy > 0.001) sweepEnergy *= 0.9;
 
     const cost = performance.now() - started;

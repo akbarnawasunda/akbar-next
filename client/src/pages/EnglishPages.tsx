@@ -277,7 +277,7 @@ export function EnglishHome() {
             />
           </div>
 
-          <div className="hero-copy">
+          <div className="hero-copy" data-signal-shield>
             <p className="eyebrow">
               <span /> AKBAR NAWASUNDA
             </p>

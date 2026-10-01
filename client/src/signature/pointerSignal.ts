@@ -73,12 +73,33 @@ export function attachPointerSignal(store: SignatureStore) {
   };
 
   let scrollFrame = 0;
+  const readShield = () => {
+    // Satu elemen per halaman (judul hero). Diukur hanya saat scroll/resize
+    // yang sudah dibatasi rAF, jadi tidak memicu layout tiap frame.
+    const element = document.querySelector("[data-signal-shield]");
+    if (!element) {
+      signals.shield = null;
+      return;
+    }
+    const rect = element.getBoundingClientRect();
+    if (!rect.width || !rect.height) {
+      signals.shield = null;
+      return;
+    }
+    signals.shield = {
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+      w: rect.width,
+      h: rect.height,
+    };
+  };
   const readScroll = () => {
     scrollFrame = 0;
     const y = window.scrollY || window.pageYOffset || 0;
     signals.scrollY = y;
     const viewport = window.innerHeight || 1;
     signals.heroProgress = Math.max(0, Math.min(1, y / (viewport * 0.9)));
+    readShield();
   };
   const onScroll = () => {
     if (scrollFrame) return;

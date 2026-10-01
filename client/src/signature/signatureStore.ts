@@ -37,6 +37,7 @@ function createSignals(): SignatureSignals {
     amplitude: 0,
     beat: 0,
     bursts: [],
+    shield: null,
   };
 }
 
