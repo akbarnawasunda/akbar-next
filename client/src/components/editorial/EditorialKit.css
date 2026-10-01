@@ -569,6 +569,24 @@
   border: 1px solid var(--ink-line);
   background: var(--ink-card);
 }
+.ed-player__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+.ed-player__chevron { color: var(--acid); font-family: var(--font-mono); font-size: 1.2rem; }
+.ed-player__shelf { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 280ms var(--ease); }
+.ed-player__shelf > .ed-player__body { min-height: 0; overflow: hidden; }
+.ed-player:not(:has(.ed-player__shelf [data-embed-url])) .ed-player__shelf { contain: layout; }
+.ed-player:has(.ed-player__shelf[aria-hidden="true"]) .ed-player__shelf { grid-template-rows: 0fr; }
+.ed-player .ed-player__shelf[data-player-shelf="true"] { grid-template-rows: 1fr; }
+.ed-player:has(.ed-player__toggle[aria-expanded="false"]) .ed-player__shelf { grid-template-rows: 0fr; }
+.ed-player:has(.ed-player__toggle[aria-expanded="false"]) .ed-player__body { padding-block: 0; }
+.ed-player[data-player-state="loading"] .ed-wave span { animation-play-state: running; }
 .ed-player__bar {
   display: flex;
   align-items: center;

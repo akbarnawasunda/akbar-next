@@ -2,6 +2,7 @@ import { ArrowUpRight } from "lucide-react";
 import {
   type ReactNode,
   useEffect,
+  useId,
   useMemo,
   useState,
   type CSSProperties,
@@ -144,7 +145,9 @@ export function CurrentSignalBoard({
           <div>
             <span className="ed-signal-row__label">{row.label}</span>
             <p className="ed-signal-row__value">{row.value}</p>
-            {row.note ? <p className="ed-signal-row__note">{row.note}</p> : null}
+            {row.note ? (
+              <p className="ed-signal-row__note">{row.note}</p>
+            ) : null}
           </div>
           {row.href ? (
             <SmartLink className="ed-signal-row__go" href={row.href}>
@@ -261,15 +264,30 @@ export function AudioPlayerShell({
   provider: string;
   children: ReactNode;
 }) {
+  const [open, setOpen] = useState(true);
+  const panelId = `audio-shelf-${useId()}`;
   return (
-    <div className="ed-player">
+    <div className="ed-player" data-player-state={open ? "loading" : "idle"}>
       <div className="ed-player__bar">
-        <p className="ed-player__title">
-          {provider} — {title}
-        </p>
+        <button
+          className="ed-player__toggle"
+          type="button"
+          aria-controls={panelId}
+          aria-expanded={open}
+          onClick={() => setOpen(value => !value)}
+        >
+          <span className="ed-player__title">
+            {provider} — {title}
+          </span>
+          <span aria-hidden="true" className="ed-player__chevron">
+            {open ? "−" : "+"}
+          </span>
+        </button>
         <Waveform bars={10} />
       </div>
-      <div className="ed-player__body">{children}</div>
+      <div id={panelId} className="ed-player__shelf" data-player-shelf="true">
+        <div className="ed-player__body">{children}</div>
+      </div>
     </div>
   );
 }
@@ -359,7 +377,10 @@ export function EditorialTimeline({
         const isOpen = open === index;
         const panelId = `ed-timeline-panel-${index}`;
         return (
-          <li className="ed-timeline__item" key={`${entry.year}-${entry.title}`}>
+          <li
+            className="ed-timeline__item"
+            key={`${entry.year}-${entry.title}`}
+          >
             <button
               type="button"
               className="ed-timeline__button"
@@ -373,11 +394,7 @@ export function EditorialTimeline({
                 {isOpen ? closeLabel : openLabel}
               </span>
             </button>
-            <div
-              className="ed-timeline__panel"
-              id={panelId}
-              hidden={!isOpen}
-            >
+            <div className="ed-timeline__panel" id={panelId} hidden={!isOpen}>
               <p className="ed-timeline__copy">{entry.copy}</p>
               {entry.links?.length ? (
                 <div className="ed-timeline__links">
