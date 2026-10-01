@@ -1,0 +1,181 @@
+/* Fan Signal is a single, solid panel shared by every public Indonesian page. */
+.fan-signal-section {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
+  align-items: end;
+  gap: clamp(40px, 8vw, 120px);
+  padding: clamp(72px, 9vw, 120px) var(--gutter, clamp(20px, 4.5vw, 64px));
+  overflow: hidden;
+  border-top: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--ink-line);
+  background: var(--ink-soft);
+  color: var(--paper);
+}
+
+.fan-signal-index {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ink-line);
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.fan-signal-index span:first-child { color: var(--paper); }
+.fan-signal-index i {
+  display: block;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--paper-line) 0 2px,
+    transparent 2px 6px
+  );
+}
+
+.fan-signal-copy,
+.fan-signal-form {
+  position: relative;
+  z-index: 1;
+}
+.fan-signal-copy h2 {
+  max-width: 12ch;
+  margin: 24px 0 28px;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 4rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+}
+.fan-signal-copy > p:last-child {
+  max-width: 44ch;
+  margin: 0;
+  color: var(--mute);
+  line-height: 1.68;
+}
+.fan-signal-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.fan-signal-eyebrow::before {
+  content: "";
+  width: 16px;
+  height: 1px;
+  background: var(--acid);
+}
+
+.fan-signal-form {
+  width: 100%;
+  max-width: 540px;
+  justify-self: end;
+}
+.fan-signal-form label {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.fan-signal-input-row {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--paper-line);
+  border-radius: var(--r-sm, 4px);
+  background: var(--ink);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.fan-signal-input-row:focus-within {
+  border-color: var(--acid);
+  box-shadow: 0 0 0 1px var(--acid);
+}
+.fan-signal-input-row > svg {
+  display: block;
+  flex-shrink: 0;
+  margin-left: 16px;
+  color: var(--mute);
+}
+.fan-signal-input-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 18px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--paper);
+  font: inherit;
+  font-size: 0.95rem;
+}
+.fan-signal-input-row input::placeholder { color: var(--mute); }
+.fan-signal-input-row button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  padding: 16px 24px;
+  border: 0;
+  border-left: 1px solid var(--paper-line);
+  background: var(--acid);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 160ms ease, transform 140ms ease;
+}
+.fan-signal-input-row button:hover:not(:disabled) {
+  background: var(--acid);
+  transform: translateY(-1px);
+}
+.fan-signal-input-row button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.fan-signal-note {
+  display: block;
+  min-height: 1.5em;
+  margin-top: 14px;
+  color: var(--mute);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+.fan-signal-note.is-success { color: var(--state-ok); }
+.fan-signal-note.is-error { color: var(--state-err); }
+
+@media (max-width: 820px) {
+  .fan-signal-section { grid-template-columns: 1fr; gap: 32px; }
+  .fan-signal-form { justify-self: stretch; max-width: none; }
+}
+
+@media (max-width: 560px) {
+  .fan-signal-input-row { flex-wrap: wrap; }
+  .fan-signal-input-row input { min-height: 52px; }
+  .fan-signal-input-row button {
+    width: 100%;
+    justify-content: center;
+    border-top: 1px solid var(--paper-line);
+    border-left: 0;
+  }
+}

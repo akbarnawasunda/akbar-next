@@ -2,10 +2,10 @@ import {
   ArrowUpRight,
   CalendarDays,
   MapPin,
-  Radio,
   Ticket,
 } from "lucide-react";
-import FanSignalInline from "@/components/FanSignalInline";
+import FanSignalSection from "@/components/FanSignalSection";
+import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
 import {
@@ -208,23 +208,19 @@ export default function Live() {
           </section>
         )}
 
-        <section className="nf-signal-block an-motion-band" id="signal">
-          <div>
-            <p className="nf-page-eyebrow">
-              <Radio size={13} /> KABAR &amp; RILISAN
-            </p>
-            <h2>
+        <FanSignalSection
+          source={FAN_SIGNAL_SOURCES.live}
+          className="fan-signal-section--motion"
+          eyebrow="KABAR & RILISAN"
+          title={
+            <>
               IKUTI
               <br />
               KABARNYA.
-            </h2>
-            <p>
-              Info rilisan, video, dan jadwal manggung — langsung dari kanal
-              resmi.
-            </p>
-          </div>
-          <FanSignalInline source="footer" />
-        </section>
+            </>
+          }
+          description="Info rilisan, video, dan jadwal manggung — langsung dari kanal resmi."
+        />
       </main>
       <NightFooter />
     </div>

@@ -1,4 +1,5 @@
-import FanSignalInline from "@/components/FanSignalInline";
+import FanSignalSection from "@/components/FanSignalSection";
+import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { ArrowLeft, ArrowUpRight, ArrowRight } from "lucide-react";
 import { useRef } from "react";
@@ -348,18 +349,18 @@ export default function Music() {
           </div>
         </section>
 
-        <section className="nf-signal-block" id="signal">
-          <div>
-            <p className="nf-page-eyebrow">KABAR TERBARU</p>
-            <h2>
-              JANGAN
+        <FanSignalSection
+          source={FAN_SIGNAL_SOURCES.music}
+          eyebrow="KABAR RILISAN"
+          title={
+            <>
+              DENGARKAN
               <br />
-              KETINGGALAN.
-            </h2>
-            <p>Kabar rilisan dan jadwal dari kanal resmi.</p>
-          </div>
-          <FanSignalInline />
-        </section>
+              BERIKUTNYA.
+            </>
+          }
+          description="Catatan rilisan, remix, dan jadwal dari kanal resmi langsung ke email kamu."
+        />
       </main>
       <NightFooter />
     </div>

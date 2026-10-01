@@ -1,3 +1,4 @@
+import type { FanSignalSource } from "@shared/types";
 import { ENV } from "./_core/env";
 
 const RESEND_API_URL = "https://api.resend.com";
@@ -58,7 +59,7 @@ function throwResendError(result: ResendResult, fallback: string): never {
   throw new ResendApiError(result.response.status, providerMessage);
 }
 
-function contactPayload(email: string, source: "home" | "footer") {
+function contactPayload(email: string, source: FanSignalSource) {
   const payload: Record<string, unknown> = {
     email,
     unsubscribed: false,
@@ -77,7 +78,7 @@ function contactPayload(email: string, source: "home" | "footer") {
 
 export async function syncFanSignalContact(
   email: string,
-  source: "home" | "footer",
+  source: FanSignalSource,
 ) {
   if (!ENV.resendApiKey) {
     console.warn("[Resend] API key is not configured; keeping Fan Signal in the local database only");
