@@ -6,6 +6,25 @@ import { pathToFileURL } from "node:url";
 // server/routers.ts
 import { z as z2 } from "zod";
 
+// shared/_core/errors.ts
+var HttpError = class extends Error {
+  constructor(statusCode, message) {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = "HttpError";
+  }
+};
+var ForbiddenError = (msg) => new HttpError(403, msg);
+
+// shared/types.ts
+var FAN_SIGNAL_SOURCES = {
+  home: "home",
+  music: "music",
+  live: "footer",
+  visuals: "visuals",
+  universe: "universe"
+};
+
 // shared/const.ts
 var COOKIE_NAME = "app_session_id";
 var ONE_YEAR_MS = 1e3 * 60 * 60 * 24 * 365;
@@ -1044,16 +1063,6 @@ async function storagePut(relKey, data, contentType = "application/octet-stream"
 import { createHash as createHash2, timingSafeEqual as timingSafeEqual2 } from "node:crypto";
 import { TRPCError as TRPCError3 } from "@trpc/server";
 
-// shared/_core/errors.ts
-var HttpError = class extends Error {
-  constructor(statusCode, message) {
-    super(message);
-    this.statusCode = statusCode;
-    this.name = "HttpError";
-  }
-};
-var ForbiddenError = (msg) => new HttpError(403, msg);
-
 // server/_core/sdk.ts
 import axios from "axios";
 import { parse as parseCookieHeader } from "cookie";
@@ -1556,7 +1565,13 @@ var appRouter = router({
   fanSignal: router({
     subscribe: publicProcedure.input(z2.object({
       email: z2.string().trim().toLowerCase().email().max(320),
-      source: z2.enum(["home", "footer"]).default("home")
+      source: z2.enum([
+        FAN_SIGNAL_SOURCES.home,
+        FAN_SIGNAL_SOURCES.music,
+        FAN_SIGNAL_SOURCES.live,
+        FAN_SIGNAL_SOURCES.visuals,
+        FAN_SIGNAL_SOURCES.universe
+      ]).default(FAN_SIGNAL_SOURCES.home)
     })).mutation(async ({ input }) => {
       const stored = await createFanSignal(input);
       try {

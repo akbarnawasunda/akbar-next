@@ -7,6 +7,14 @@ import {
 import FanSignalSection from "@/components/FanSignalSection";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
+import {
+  CtaPanel,
+  EditorialSection,
+  EmptyState,
+  EventCountdown,
+  SignalIndicator,
+} from "@/components/editorial/EditorialKit";
+import { Link } from "wouter";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
 import {
   publicUpcomingEvents,
@@ -92,6 +100,91 @@ export default function Live() {
             )}
           </div>
         </section>
+
+        {featured ? (
+          <EditorialSection
+            id="next-show"
+            index="01 — SHOW BERIKUTNYA"
+            eyebrow="NEXT ON STAGE"
+            title={featured.title}
+            lede={[
+              formatDate(featured.date, featured.time),
+              featured.venue,
+              featured.city,
+              featured.country,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+            aside={
+              <>
+                <SignalIndicator
+                  label={`STATUS: ${featured.status?.toUpperCase() || "ANNOUNCED"}`}
+                />
+                <EventCountdown
+                  target={featured.date}
+                  labels={["HARI", "JAM", "MENIT", "DETIK"]}
+                  idleLabel="Hitung mundur menuju show berikutnya"
+                />
+                <div className="ed-cta__actions">
+                  {featured.ticketUrl ? (
+                    <a
+                      className="ed-button"
+                      href={featured.ticketUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Ticket size={13} /> AMBIL TIKET
+                    </a>
+                  ) : null}
+                  {featured.rsvpUrl ? (
+                    <a
+                      className="ed-button--ghost"
+                      href={featured.rsvpUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      RSVP <ArrowUpRight size={13} />
+                    </a>
+                  ) : null}
+                  {featured.mapsUrl ? (
+                    <a
+                      className="ed-button--ghost"
+                      href={featured.mapsUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <MapPin size={13} /> LIHAT PETA
+                    </a>
+                  ) : null}
+                </div>
+              </>
+            }
+          />
+        ) : (
+          <EditorialSection
+            id="next-show"
+            index="01 — STATUS"
+            eyebrow="STATUS BOOKING"
+            title={
+              <>
+                KALENDER
+                <br />
+                SEDANG TERBUKA.
+              </>
+            }
+            lede="Belum ada tanggal publik yang dikonfirmasi, tapi slot panggung dan studio masih bisa diambil."
+          >
+            <EmptyState
+              title="BELUM ADA JADWAL PUBLIK"
+              copy="Begitu ada show yang dikonfirmasi, tanggal, venue, zona waktu, dan tautan tiketnya akan tampil di sini lebih dulu."
+              action={
+                <a className="ed-button" href={inquiryHref("Booking inquiry")}>
+                  AJUKAN TANGGAL <ArrowUpRight size={13} />
+                </a>
+              }
+            />
+          </EditorialSection>
+        )}
 
         {events.length ? (
           <section className="nf-section an-event-section">
@@ -207,6 +300,29 @@ export default function Live() {
             </div>
           </section>
         )}
+
+        <CtaPanel
+          id="booking"
+          eyebrow="JALUR RESMI"
+          title={
+            <>
+              AJUKAN TANGGAL
+              <br />
+              DAN KONSEPNYA.
+            </>
+          }
+          copy="Kirim tanggal, lokasi, durasi set, dan konteks acara. Setiap inquiry dibaca langsung oleh studio."
+          actions={
+            <>
+              <Link className="ed-button" href="/inquire?type=booking&source=live">
+                FORM INQUIRY <ArrowUpRight size={14} />
+              </Link>
+              <a className="ed-button--ghost" href={inquiryHref("Booking inquiry")}>
+                EMAIL STUDIO <ArrowUpRight size={14} />
+              </a>
+            </>
+          }
+        />
 
         <FanSignalSection
           source={FAN_SIGNAL_SOURCES.live}

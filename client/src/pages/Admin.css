@@ -440,3 +440,42 @@
     transition: none;
   }
 }
+/* ============================================================
+   STUDIO SHELL — konsistensi dengan design system publik.
+   Hanya tampilan: tidak mengubah permission atau alur bisnis.
+   ============================================================ */
+.studio-shell,
+.admin-shell,
+[data-studio-shell] {
+  --studio-panel: var(--ink-card);
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-body);
+}
+.studio-shell h1,
+.studio-shell h2,
+.studio-shell h3,
+.admin-shell h1,
+.admin-shell h2,
+.admin-shell h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+}
+.studio-shell input,
+.studio-shell textarea,
+.studio-shell select,
+.admin-shell input,
+.admin-shell textarea,
+.admin-shell select {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--ink-line);
+  background: var(--ink);
+  color: var(--paper);
+}
+.studio-shell input:focus-visible,
+.studio-shell textarea:focus-visible,
+.admin-shell input:focus-visible,
+.admin-shell textarea:focus-visible {
+  border-color: var(--acid);
+}

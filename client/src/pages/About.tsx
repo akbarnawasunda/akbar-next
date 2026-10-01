@@ -1,4 +1,5 @@
 import { ArrowUpRight, MapPin, Radio, Sparkles } from "lucide-react";
+import { CtaPanel } from "@/components/editorial/EditorialKit";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
 import { publicJourney, usePublicArtistContent } from "@/content/publicContent";
@@ -99,6 +100,28 @@ export default function About() {
             </div>
           </div>
         </section>
+
+        <CtaPanel
+          eyebrow="KERJA SAMA"
+          title={
+            <>
+              MULAI SATU
+              <br />
+              PROYEK BARU.
+            </>
+          }
+          copy="Booking panggung, remix custom, lisensi, atau kolaborasi rilisan — semuanya masuk lewat satu jalur inquiry resmi."
+          actions={
+            <>
+              <a className="ed-button" href="/inquire?source=about">
+                KIRIM INQUIRY <ArrowUpRight size={14} />
+              </a>
+              <a className="ed-button--ghost" href="/live">
+                JADWAL LIVE <ArrowUpRight size={14} />
+              </a>
+            </>
+          }
+        />
 
         <section className="nf-section dark-panel an-about-path">
           <div>

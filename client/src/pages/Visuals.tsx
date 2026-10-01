@@ -1,4 +1,7 @@
 import { ArrowUpRight, Play } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Link } from "wouter";
+import { CtaPanel, FilterBar } from "@/components/editorial/EditorialKit";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import FanSignalSection from "@/components/FanSignalSection";
@@ -54,6 +57,20 @@ export default function Visuals() {
         ...video,
         backupImage: officialBrand.socialPreview,
       }));
+
+  const groups = useMemo(() => {
+    const labels = Array.from(
+      new Set(archive.map(item => (item.label || "VIDEO").toUpperCase()))
+    );
+    return ["SEMUA", ...labels];
+  }, [archive]);
+  const [group, setGroup] = useState("SEMUA");
+  const visibleArchive =
+    group === "SEMUA"
+      ? archive
+      : archive.filter(
+          item => (item.label || "VIDEO").toUpperCase() === group
+        );
 
   return (
     <div className="nf-page">
@@ -140,8 +157,14 @@ export default function Visuals() {
                 : "Video dari channel resmi."}
             </p>
           </div>
+          <FilterBar
+            options={groups}
+            value={group}
+            onChange={setGroup}
+            label="Saring arsip visual"
+          />
           <div className="nf-visual-grid">
-            {archive.map(video => (
+            {visibleArchive.map(video => (
               <a
                 key={video.title}
                 className="nf-visual-card"
@@ -165,6 +188,28 @@ export default function Visuals() {
             ))}
           </div>
         </section>
+
+        <CtaPanel
+          eyebrow="VISUAL / KOLABORASI"
+          title={
+            <>
+              BIKIN VISUAL
+              <br />
+              BERIKUTNYA BARENG.
+            </>
+          }
+          copy="Video musik, visualizer, dokumentasi panggung, atau artwork rilisan — kirim konsepnya dan kita susun dari awal."
+          actions={
+            <>
+              <Link className="ed-button" href="/inquire?type=visual&source=visuals">
+                AJUKAN PROYEK <ArrowUpRight size={14} />
+              </Link>
+              <Link className="ed-button--ghost" href="/visuals/portraits">
+                LIHAT PORTRAIT <ArrowUpRight size={14} />
+              </Link>
+            </>
+          }
+        />
 
         <FanSignalSection
           source={FAN_SIGNAL_SOURCES.visuals}

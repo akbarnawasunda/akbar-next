@@ -27,9 +27,9 @@ describe("splash pembuka", () => {
   });
 
   it("memakai palet brand, bukan neon acak", () => {
-    expect(indexHtml).toContain("#0c0d12"); // ink
-    expect(indexHtml).toContain("#4f46e5"); // signal
-    for (const aiNeon of ["#00ffd5", "#ffd319", "#ff0055"]) {
+    expect(indexHtml).toContain("#0a0b0c"); // ink
+    expect(indexHtml).toContain("#8fb2c0"); // signal
+    for (const aiNeon of ["#00ffd5", "#ffd319", "#ff0055", "#00d4ff"]) {
       expect(indexHtml).not.toContain(aiNeon);
     }
   });

@@ -82,26 +82,27 @@
   --font-mono:    "Azeret Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Nocturnal Electronic Artist Palette */
-  --ink:        #0c0d12;
-  --ink-soft:   #141722;
-  --ink-card:   #1a1e2b;
-  --ink-hover:  #222738;
-  --paper:      #f4f6fa;
-  --paper-soft: #e2e6f0;
+  --ink:        #0a0b0c;
+  --ink-soft:   #111214;
+  --ink-card:   #16181b;
+  --ink-hover:  #1e2126;
+  --paper:      #eceae5;
+  --paper-soft: #cfcdc7;
 
   /* Accents: one electric cyan system, with named shades for legacy layers. */
-  --acid:       #00d4ff;
+  --acid:       #8fb2c0;
+  --acid-rgb:   143, 178, 192;
   --signal:     var(--acid);
   --accent-violet: var(--acid);
-  --cyan-bright: #1ee8ff;
-  --cyan:        #18d7f2;
-  --cyan-soft:   #7cecff;
-  --cyan-light:  #38e1ff;
-  --mint:        #00ffd5;
-  --blue:        #1f6dca;
-  --mute:       #a2abb9;
-  --mute-soft:  #7a8494;
-  --mute-ink:   #8f98a8;
+  --cyan-bright: #a7c5d0;
+  --cyan:        #8fb2c0;
+  --cyan-soft:   #b9ccd4;
+  --cyan-light:  #9dbcc8;
+  --mint:        #8fb2c0;
+  --blue:        #4a6f84;
+  --mute:       #9b9b97;
+  --mute-soft:  #74746f;
+  --mute-ink:   #87877f;
 
   /* Editorial sepia tokens used by the portrait study layer. */
   --sepia-bg:        #151414;
@@ -127,7 +128,7 @@
   --gradient-signal: linear-gradient(135deg, var(--acid) 0%, var(--acid) 100%);
   --gradient-night: linear-gradient(135deg, var(--ink-soft) 0%, var(--ink) 100%);
   --gradient-horizon: linear-gradient(110deg, var(--acid) 0%, var(--acid) 100%);
-  --glow-accent: 0 0 24px rgba(0, 212, 255, 0.22);
+  --glow-accent: 0 0 0 1px rgba(var(--acid-rgb), 0.22);
 
   --shadow-text:  0 2px 8px rgba(0, 0, 0, 0.75);
   --shadow-soft:  0 4px 14px rgba(0, 0, 0, 0.45);
@@ -151,7 +152,7 @@
 
 :root {
   --an-plasma: var(--acid);
-  --an-plasma-rgb: 0, 212, 255;
+  --an-plasma-rgb: var(--acid-rgb);
   --an-graphite: var(--ink);
   --an-plum: var(--ink-soft);
   --an-bone: var(--paper);
@@ -352,4 +353,72 @@ svg {
   body { font-size: 0.97rem; }
   h1, h2, h3, h4 { text-wrap: balance; }
   p { line-height: 1.68; }
+}
+
+/* ============================================================
+   EDITORIAL LAYOUT POLISH — dipakai lintas halaman ID & EN.
+   Tujuan: desktop memakai lebar layar dengan baik, mobile punya
+   komposisi sendiri, dan tidak ada konten yang terpotong.
+   ============================================================ */
+
+/* Gutter aman untuk notch iOS tanpa menambah scroll horizontal. */
+.nf-page .nf-section,
+.nf-page .nf-nav,
+.an-site .section,
+.ed-section {
+  padding-inline-start: max(var(--gutter), env(safe-area-inset-left));
+  padding-inline-end: max(var(--gutter), env(safe-area-inset-right));
+}
+
+/* Lebar layar besar: konten dibingkai, bukan melebar tanpa batas. */
+.nf-page .nf-section > * {
+  max-width: var(--max);
+  margin-inline: auto;
+  min-width: 0;
+}
+
+/* Target sentuh minimal 44px untuk semua tautan teks utilitas. */
+.nf-text-button,
+.nf-nav nav a,
+.nf-signal,
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* Embed tidak boleh memotong layout di mana pun. */
+.nf-page iframe,
+.an-site iframe,
+.ed-player iframe {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+}
+
+/* Heading panjang tidak boleh keluar viewport di layar 320px. */
+@media (max-width: 420px) {
+  .nf-page h1,
+  .an-site h1 {
+    font-size: clamp(2rem, 11vw, 2.9rem);
+  }
+  .nf-page h2,
+  .an-site h2 {
+    font-size: clamp(1.6rem, 8.5vw, 2.3rem);
+  }
+  .ed-head__title,
+  .ed-cta__title {
+    font-size: clamp(1.7rem, 9vw, 2.4rem);
+  }
+  .ed-section,
+  .nf-page .nf-section {
+    padding-block: clamp(48px, 14vw, 72px);
+  }
+}
+
+/* Footer area tetap bernapas di perangkat dengan home indicator. */
+.nf-page footer,
+.an-site footer {
+  padding-bottom: max(clamp(28px, 4vw, 56px), env(safe-area-inset-bottom));
 }

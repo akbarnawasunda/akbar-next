@@ -153,7 +153,11 @@ import { publicMediaUrl } from "./lib/publicMedia";
 import "./components/MaturePalette.css";
 import "./components/BrandSystem.css";
 import "./components/RouteMotion.css";
-import { PageLoading, RouteProgress } from "./components/RouteTransition";
+import {
+  PageLoading,
+  RouteCurtain,
+  RouteProgress,
+} from "./components/RouteTransition";
 import "./components/NightFrequencySignature.css";
 
 function Router() {
@@ -436,6 +440,7 @@ function App() {
           <Toaster />
           <ScrollProgress />
           <RouteProgress />
+          <RouteCurtain />
           <SmoothScroll />
           <CmsMetadata />
           <StructuredData />

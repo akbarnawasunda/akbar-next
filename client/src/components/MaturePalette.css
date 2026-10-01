@@ -394,7 +394,7 @@
 
 .nf-page .nf-signal-form > div:focus-within {
   border-color: var(--acid) !important;
-  box-shadow: 0 0 0 1px var(--acid), 0 4px 16px rgba(0, 212, 255, 0.12) !important;
+  box-shadow: 0 0 0 1px var(--acid), 0 4px 16px rgba(var(--acid-rgb), 0.12) !important;
 }
 
 .nf-page .nf-signal-form input,

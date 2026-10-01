@@ -54,10 +54,10 @@
   flex-direction: column;
   background-color: var(--ink);
   background-image:
-    radial-gradient(ellipse 90% 45% at 100% 0%, rgba(0, 212, 255, 0.07), transparent 70%),
+    radial-gradient(ellipse 90% 45% at 100% 0%, rgba(var(--acid-rgb), 0.07), transparent 70%),
     radial-gradient(ellipse 80% 40% at 0% 100%, rgba(79, 70, 229, 0.05), transparent 70%);
   border-left: 1px solid var(--paper-line);
-  box-shadow: -16px 0 48px rgba(0, 0, 0, 0.78), 0 0 1px rgba(0, 212, 255, 0.2);
+  box-shadow: -16px 0 48px rgba(0, 0, 0, 0.78), 0 0 1px rgba(var(--acid-rgb), 0.2);
   color: var(--paper);
   will-change: transform;
   overflow: hidden;
@@ -131,7 +131,7 @@
 .nf-mobile-drawer-close:focus-visible {
   border-color: var(--acid);
   color: var(--acid);
-  background: rgba(0, 212, 255, 0.05);
+  background: rgba(var(--acid-rgb), 0.05);
 }
 .nf-mobile-drawer-close:active {
   transform: scale(0.96);
@@ -198,7 +198,7 @@
   padding-left: 18px;
 }
 .nf-mobile-drawer-link.is-active {
-  background: rgba(0, 212, 255, 0.08);
+  background: rgba(var(--acid-rgb), 0.08);
   border-left-color: var(--acid);
   color: var(--paper);
 }
@@ -281,9 +281,9 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 14px;
-  border: 1px solid rgba(0, 212, 255, 0.35);
+  border: 1px solid rgba(var(--acid-rgb), 0.35);
   border-radius: 4px;
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(13, 16, 23, 0.8) 100%);
+  background: linear-gradient(135deg, rgba(var(--acid-rgb), 0.08) 0%, rgba(13, 16, 23, 0.8) 100%);
   color: var(--paper);
   text-decoration: none;
   transition: border-color 160ms ease, background 160ms ease, transform 140ms ease;
@@ -291,7 +291,7 @@
 .nf-mobile-drawer-signal-btn:hover,
 .nf-mobile-drawer-signal-btn:focus-visible {
   border-color: var(--acid);
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.14) 0%, rgba(13, 16, 23, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(var(--acid-rgb), 0.14) 0%, rgba(13, 16, 23, 0.95) 100%);
   transform: translateY(-1px);
 }
 .nf-mobile-drawer-signal-left {
@@ -456,7 +456,7 @@
   padding: clamp(56px, 7vw, 88px) clamp(20px, 4.5vw, 64px) 26px;
   border-top: 1px solid var(--paper-line);
   background-color: var(--ink);
-  background-image: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(0, 212, 255, 0.025), transparent 60%);
+  background-image: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(var(--acid-rgb), 0.025), transparent 60%);
   color: var(--mute);
 }
 .nf-footer-brand strong {

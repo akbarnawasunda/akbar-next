@@ -20,6 +20,11 @@ import {
   usePublicArtistContent,
 } from "@/content/publicContent";
 import { Link } from "wouter";
+import {
+  AudioPlayerShell,
+  CtaPanel,
+  SignalIndicator,
+} from "@/components/editorial/EditorialKit";
 import "./EcosystemPages.css";
 
 const soundcloudDrops = [
@@ -216,10 +221,13 @@ export default function Music() {
                   LANGSUNG.
                 </h2>
               </div>
-              <p>
-                Pilih satu rilisan untuk mulai mendengar. Tautan resmi tetap
-                tersedia kalau player tidak dibutuhkan.
-              </p>
+              <div>
+                <SignalIndicator label="PLAYER SIAP" />
+                <p>
+                  Pilih satu rilisan untuk mulai mendengar. Tautan resmi tetap
+                  tersedia kalau player tidak dibutuhkan.
+                </p>
+              </div>
             </div>
             <div className="nf-embed-grid">
               {players.map(drop => {
@@ -229,8 +237,12 @@ export default function Music() {
                     .includes(drop.title.toLowerCase().split(" — ")[0])
                 );
                 return (
-                  <OfficialMediaFrame
+                  <AudioPlayerShell
                     key={drop.url}
+                    title={drop.title}
+                    provider="SoundCloud"
+                  >
+                  <OfficialMediaFrame
                     title={drop.title}
                     provider="SoundCloud"
                     sourceUrl={drop.url}
@@ -239,6 +251,7 @@ export default function Music() {
                     backupArtwork={officialBrand.socialPreview}
                     description="Tautan resmi selalu tersedia."
                   />
+                  </AudioPlayerShell>
                 );
               })}
             </div>
@@ -344,6 +357,28 @@ export default function Music() {
             </a>
           </div>
         </section>
+
+        <CtaPanel
+          eyebrow="LISENSI / REMIX"
+          title={
+            <>
+              PAKAI KARYANYA
+              <br />
+              DI PROYEKMU.
+            </>
+          }
+          copy="Butuh track untuk film, iklan, konten, atau ingin remix custom? Jalur lisensi dan brief produksi ada di satu tempat."
+          actions={
+            <>
+              <Link className="ed-button" href="/licensing">
+                LISENSI MUSIK <ArrowUpRight size={14} />
+              </Link>
+              <Link className="ed-button--ghost" href="/inquire?type=remix&source=music">
+                MINTA REMIX <ArrowRight size={14} />
+              </Link>
+            </>
+          }
+        />
 
         <FanSignalSection
           source={FAN_SIGNAL_SOURCES.music}
