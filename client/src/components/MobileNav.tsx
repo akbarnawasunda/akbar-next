@@ -14,18 +14,22 @@ export interface MobileNavItem {
 }
 
 export const defaultIdNavItems: MobileNavItem[] = [
-  { href: "/music", label: "MUSIC", desc: "Diskografi & rilisan resmi" },
-  { href: "/visuals", label: "VISUALS", desc: "Video musik & galeri artwork" },
-  { href: "/live", label: "LIVE", desc: "Jadwal panggung & arsip" },
-  { href: "/universe", label: "ARCHIVE", desc: "Ekosistem & arsip komplit" },
-  { href: "/about", label: "ABOUT", desc: "Profil & perjalanan musisi" },
-  { href: "/epk", label: "EPK", desc: "Press kit resmi & kurasi" },
-  { href: "/inquire", label: "CONTACT", desc: "Booking & inquiry langsung" },
+  { href: "/music", label: "MUSIK", desc: "Diskografi & rilisan resmi" },
+  { href: "/visuals", label: "VISUAL", desc: "Video musik & galeri artwork" },
+  { href: "/live", label: "JADWAL", desc: "Jadwal panggung & arsipnya" },
+  { href: "/universe", label: "ARSIP", desc: "Perjalanan & arsip lengkap" },
+  { href: "/about", label: "TENTANG", desc: "Profil & cerita di balik nama" },
+  { href: "/epk", label: "EPK", desc: "Press kit resmi" },
+  { href: "/inquire", label: "KONTAK", desc: "Booking & kerja sama" },
 ];
 
 export const defaultEnNavItems: MobileNavItem[] = [
   { href: "/en/music", label: "MUSIC", desc: "Official discography & tracks" },
-  { href: "/en/visuals", label: "VISUALS", desc: "Music videos & visual artwork" },
+  {
+    href: "/en/visuals",
+    label: "VISUALS",
+    desc: "Music videos & visual artwork",
+  },
   { href: "/en/live", label: "LIVE", desc: "Stage tour dates & archive" },
   { href: "/universe", label: "ARCHIVE", desc: "Complete ecosystem catalog" },
   { href: "/en/about", label: "ABOUT", desc: "Artist biography & statement" },
@@ -51,10 +55,17 @@ function MobileLanguageToggle({
 }) {
   const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
   const idPath = isEnglish ? pathname.replace(/^\/en/, "") || "/" : pathname;
-  const englishPath = isEnglish ? pathname : pathname === "/" ? "/en" : `/en${pathname}`;
+  const englishPath = isEnglish
+    ? pathname
+    : pathname === "/"
+      ? "/en"
+      : `/en${pathname}`;
 
   return (
-    <div className="nf-mobile-drawer-lang-toggle" aria-label="Language selection / Pilihan bahasa">
+    <div
+      className="nf-mobile-drawer-lang-toggle"
+      aria-label="Language selection / Pilihan bahasa"
+    >
       <Link
         className={`nf-mobile-lang-btn ${!isEnglish ? "is-active" : ""}`}
         href={idPath}
@@ -63,7 +74,9 @@ function MobileLanguageToggle({
       >
         ID
       </Link>
-      <span className="nf-mobile-lang-divider" aria-hidden="true">/</span>
+      <span className="nf-mobile-lang-divider" aria-hidden="true">
+        /
+      </span>
       <Link
         className={`nf-mobile-lang-btn ${isEnglish ? "is-active" : ""}`}
         href={englishPath}
@@ -167,7 +180,9 @@ export function MobileNav({
           className="nf-mobile-drawer-root is-open"
           role="dialog"
           aria-modal="true"
-          aria-label={lang === "en" ? "Mobile Navigation Menu" : "Menu Navigasi Mobile"}
+          aria-label={
+            lang === "en" ? "Mobile Navigation Menu" : "Menu Navigasi Mobile"
+          }
         >
           {/* Backdrop Scrim */}
           <motion.div
@@ -200,7 +215,9 @@ export function MobileNav({
                 />
                 <div className="nf-mobile-drawer-brand-text">
                   <strong>AKBAR NAWASUNDA</strong>
-                  <span>{lang === "en" ? "OFFICIAL PORTAL" : "SITUS RESMI"}</span>
+                  <span>
+                    {lang === "en" ? "OFFICIAL PORTAL" : "SITUS RESMI"}
+                  </span>
                 </div>
               </div>
 
@@ -209,7 +226,9 @@ export function MobileNav({
                 className="nf-mobile-drawer-close"
                 type="button"
                 onClick={onClose}
-                aria-label={lang === "en" ? "Close navigation" : "Tutup navigasi"}
+                aria-label={
+                  lang === "en" ? "Close navigation" : "Tutup navigasi"
+                }
               >
                 <X size={16} aria-hidden="true" />
                 <span>{lang === "en" ? "CLOSE" : "TUTUP"}</span>
@@ -219,16 +238,25 @@ export function MobileNav({
             {/* Scrollable Body */}
             <div className="nf-mobile-drawer-body">
               <div className="nf-mobile-drawer-eyebrow">
-                <span>{lang === "en" ? "NAVIGATION · DIRECT ROUTES" : "NAVIGASI · JALUR UTAMA"}</span>
+                <span>
+                  {lang === "en"
+                    ? "NAVIGATION · DIRECT ROUTES"
+                    : "NAVIGASI · JALUR UTAMA"}
+                </span>
               </div>
 
               {/* Navigation Links */}
               <nav
                 className="nf-mobile-drawer-nav"
-                aria-label={lang === "en" ? "Primary mobile navigation" : "Navigasi mobile"}
+                aria-label={
+                  lang === "en"
+                    ? "Primary mobile navigation"
+                    : "Navigasi mobile"
+                }
               >
                 {navItems.map((item, index) => {
-                  const isActive = active === item.href || pathname === item.href;
+                  const isActive =
+                    active === item.href || pathname === item.href;
                   return (
                     <Link
                       key={item.href}
@@ -238,7 +266,10 @@ export function MobileNav({
                       aria-current={isActive ? "page" : undefined}
                     >
                       <div className="nf-mobile-drawer-link-main">
-                        <span className="nf-mobile-drawer-link-index" aria-hidden="true">
+                        <span
+                          className="nf-mobile-drawer-link-index"
+                          aria-hidden="true"
+                        >
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         <div className="nf-mobile-drawer-link-info">
@@ -270,10 +301,15 @@ export function MobileNav({
                   onClick={onClose}
                 >
                   <div className="nf-mobile-drawer-signal-left">
-                    <span className="nf-signal-live-beacon" aria-hidden="true" />
+                    <span
+                      className="nf-signal-live-beacon"
+                      aria-hidden="true"
+                    />
                     <Radio size={15} aria-hidden="true" />
                     <div className="nf-mobile-drawer-signal-copy">
-                      <strong>{lang === "en" ? "FAN SIGNAL" : "KABAR TERBARU"}</strong>
+                      <strong>
+                        {lang === "en" ? "FAN SIGNAL" : "KABAR TERBARU"}
+                      </strong>
                       <small>
                         {lang === "en"
                           ? "Direct drops, tour dates & secret audio"
@@ -296,7 +332,9 @@ export function MobileNav({
               </div>
 
               <div className="nf-mobile-drawer-footer-bottom">
-                <span className="nf-mobile-drawer-meta-sub">PRODUCER / INDONESIA</span>
+                <span className="nf-mobile-drawer-meta-sub">
+                  PRODUCER / INDONESIA
+                </span>
               </div>
             </div>
           </motion.aside>

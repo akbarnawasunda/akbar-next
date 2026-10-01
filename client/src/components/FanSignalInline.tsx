@@ -1,4 +1,4 @@
-import { ArrowUpRight, Mail } from "lucide-react";
+import { ArrowRight, Mail } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { trpc } from "@/lib/trpc";
 
@@ -21,19 +21,21 @@ export default function FanSignalInline({
       setEmail("");
       setStatus({
         type: "success",
-        message: result.delivery === "synced"
-          ? "Alamatmu sudah terdaftar. Kabar berikutnya akan dikirim ke email ini."
-          : "Alamatmu sudah tersimpan. Pengiriman akan aktif saat kanal email siap.",
+        message:
+          result.delivery === "synced"
+            ? "Alamatmu sudah terdaftar. Kabar berikutnya akan dikirim ke email ini."
+            : "Alamatmu sudah tersimpan. Pengiriman akan aktif saat kanal email siap.",
       });
     },
     onError: error => {
       console.error("FanSignal error:", error);
       const message = error.message.toLowerCase();
-      const friendlyMessage = message.includes("database") || message.includes("connect")
-        ? "Daftar update sedang bermasalah di server. Coba lagi beberapa saat."
-        : message.includes("invalid") || message.includes("email")
-          ? "Format email belum benar. Cek lagi alamatnya."
-          : "Belum berhasil mendaftarkan alamat ini. Coba lagi beberapa saat.";
+      const friendlyMessage =
+        message.includes("database") || message.includes("connect")
+          ? "Daftar update sedang bermasalah di server. Coba lagi beberapa saat."
+          : message.includes("invalid") || message.includes("email")
+            ? "Format email belum benar. Cek lagi alamatnya."
+            : "Belum berhasil mendaftarkan alamat ini. Coba lagi beberapa saat.";
       setStatus({ type: "error", message: friendlyMessage });
     },
   });
@@ -71,11 +73,16 @@ export default function FanSignalInline({
         />
         <button type="submit" disabled={subscribe.isPending}>
           {subscribe.isPending ? "MENGIRIM" : "DAFTAR"}
-          <ArrowUpRight size={16} aria-hidden="true" />
+          <ArrowRight size={16} aria-hidden="true" />
         </button>
       </div>
-      <small id={`fan-email-note-${source}`} className={`nf-signal-note ${status ? `is-${status.type}` : ""}`} aria-live="polite">
-        {status?.message || "Kabar musik, video, dan jadwal. Berhenti kapan saja."}
+      <small
+        id={`fan-email-note-${source}`}
+        className={`nf-signal-note ${status ? `is-${status.type}` : ""}`}
+        aria-live="polite"
+      >
+        {status?.message ||
+          "Kabar musik, video, dan jadwal. Berhenti kapan saja."}
       </small>
     </form>
   );

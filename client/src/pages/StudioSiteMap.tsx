@@ -286,7 +286,7 @@ const sitePages: SitePage[] = [
   },
   {
     route: "/game/jedag-run",
-    marker: "PLAYABLE SIGNAL",
+    marker: "GAME MINI",
     title: "JEDAG RUN",
     summary:
       "Game browser Night Frequency dengan BGM, SFX, score, combo, dan Drop Meter.",

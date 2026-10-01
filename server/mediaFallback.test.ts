@@ -7,8 +7,11 @@ const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf
 describe("official media fallback and online EPK", () => {
   it("keeps an explicit official source action when an embedded provider is slow or blocked", () => {
     const media = source("client/src/components/OfficialMediaFrame.tsx");
-    expect(media).toContain("OPEN {provider.toUpperCase()}");
+    // Copy is localized (id/en), so assert the behaviour, not one literal string.
+    expect(media).toContain("{t.open(provider.toUpperCase())}");
     expect(media).toContain("Player belum merespons di browser ini");
+    expect(media).toContain("Player not responding in this browser");
+    expect(media).toContain("PUTAR DI SINI");
     expect(media).toContain("PLAY HERE");
   });
 

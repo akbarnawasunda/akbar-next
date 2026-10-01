@@ -2412,11 +2412,36 @@
     padding: 14px 18px;
     z-index: 5;
     box-shadow: 0 20px 48px rgba(0, 0, 0, 0.72);
+    text-decoration: none;
+    color: inherit;
+    transition:
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.3s ease,
+      background 0.3s ease;
+  }
+  .desktop-stage-deck:hover,
+  .desktop-stage-deck:focus-visible {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(10, 11, 16, 0.98);
+  }
+  .desktop-vinyl-go {
+    margin-left: auto;
+    flex-shrink: 0;
+    color: var(--mute);
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  .desktop-stage-deck:hover .desktop-vinyl-go {
+    transform: translate(2px, -2px);
+    color: var(--paper);
   }
   .desktop-vinyl-badge {
     display: flex;
     align-items: center;
     gap: 14px;
+  }
+  .desktop-stage-deck:hover .desktop-vinyl-disc {
+    animation-duration: 2.4s;
   }
   .desktop-vinyl-disc {
     width: 40px;
@@ -2525,4 +2550,50 @@
   }
   .an-site .hero-copy .hero-title-mask:not(:last-child) { margin-right: 0; }
   .an-site .hero-copy .hero-title-break-mobile { display: block !important; }
+}
+
+/* ============================================================
+   Featured release — inline player (dengarkan tanpa keluar situs)
+   ============================================================ */
+.an-site .release-detail-actions {
+  flex-wrap: wrap;
+}
+
+.an-site .release-play-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.an-site .release-play-toggle:hover,
+.an-site .release-play-toggle:focus-visible {
+  background: var(--paper);
+  color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.an-site .release-player {
+  margin-top: 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .release-play-toggle,
+  .desktop-stage-deck,
+  .desktop-vinyl-go {
+    transition: none;
+  }
+  .desktop-vinyl-disc {
+    animation: none;
+  }
 }

@@ -499,7 +499,7 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
   ],
   visual: [
     { key: "title", label: "Visual title" },
-    { key: "label", label: "Label", placeholder: "LATEST VISUAL" },
+    { key: "label", label: "Label", placeholder: "VIDEO TERBARU" },
     { key: "youtubeId", label: "YouTube ID", placeholder: "e.g. rv4DK8nVWd0" },
     { key: "url", label: "Official visual URL", type: "url" },
     { key: "imageUrl", label: "Thumbnail URL", type: "url", media: true },
@@ -572,13 +572,13 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
     {
       key: "kicker",
       label: "Kicker",
-      placeholder: "PLAYABLE SIGNAL",
+      placeholder: "GAME MINI",
     },
     {
       key: "intro",
       label: "Intro game",
       multiline: true,
-      placeholder: "Run the signal, collect the notes, and chase the drop.",
+      placeholder: "Lari ikut ketukan, kumpulkan not, dan kejar drop-nya.",
     },
     {
       key: "bgmUrl",
@@ -750,8 +750,8 @@ function fallbackPayload(type: DocumentType): EditorPayload {
   if (type === "game")
     return {
       title: "JEDAG RUN — NIGHT FREQUENCY",
-      kicker: "PLAYABLE SIGNAL",
-      intro: "Run the signal, collect the notes, and chase the drop.",
+      kicker: "GAME MINI",
+      intro: "Lari ikut ketukan, kumpulkan not, dan kejar drop-nya.",
       isEnabled: true,
       shareLabel: "SHARE SCORE",
     };

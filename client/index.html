@@ -130,7 +130,18 @@
         height: 100%;
         width: 0%;
         background: #ffffff;
-        transition: width 0.12s linear;
+        transition: width 0.2s ease;
+      }
+      .an-progress-bar.is-indeterminate {
+        width: 40%;
+        animation: an-loader-sweep 1s ease-in-out infinite;
+      }
+      @keyframes an-loader-sweep {
+        0% { transform: translateX(-110%); }
+        100% { transform: translateX(260%); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .an-progress-bar.is-indeterminate { animation: none; width: 100%; opacity: 0.4; }
       }
       .an-telemetry-row {
         display: flex;
@@ -182,92 +193,58 @@
           <div id="an-loader-bar" class="an-progress-bar"></div>
         </div>
         <div class="an-telemetry-row">
-          <span id="an-loader-status">STREAM CONNECTING</span>
-          <span id="an-loader-pct" class="an-telemetry-pct">0%</span>
+          <span id="an-loader-status">MEMUAT</span>
         </div>
       </div>
     </div>
 
     <script id="akbar-preloader-script">
-      (function() {
+      (function () {
         var preloader = document.getElementById('akbar-preloader');
         var bar = document.getElementById('an-loader-bar');
         var status = document.getElementById('an-loader-status');
-        var pct = document.getElementById('an-loader-pct');
         var dismissed = false;
-        var progress = 10;
 
-        // Real Network Adaptive Detection
-        var navConn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        var netType = navConn ? (navConn.effectiveType || '4g') : '4g';
-        var rtt = navConn ? (navConn.rtt || 60) : 60;
-        var downlink = navConn ? (navConn.downlink || 10) : 10;
-        
-        var isFast = netType === '4g' || (downlink >= 4 && rtt <= 120);
-        var isSlow = netType === '2g' || netType === 'slow-2g' || rtt > 350;
-        
-        var speedLabel = isFast ? '4G STREAM' : isSlow ? '2G STREAM' : '3G STREAM';
-        if (status) {
-          status.textContent = speedLabel + ' · CONNECTING';
-        }
+        // Indeterminate bar: no fake percentage, no fake network telemetry.
+        if (bar) bar.classList.add('is-indeterminate');
 
-        // Stereo VU meter tick simulation
         var bars = document.querySelectorAll('#akbar-preloader .an-eq-bar');
-        var vuTimer = setInterval(function() {
+        var vuTimer = setInterval(function () {
           if (dismissed) return;
           var level = Math.random();
-          bars.forEach(function(b) {
+          bars.forEach(function (b) {
             var seg = parseInt(b.getAttribute('data-seg') || '1', 10);
-            var shouldLight = (seg / 6) <= (level * 0.9 + (progress / 120));
-            b.className = 'an-eq-bar' + (shouldLight ? (seg <= 4 ? ' is-lit-green' : seg === 5 ? ' is-lit-yellow' : ' is-lit-red') : '');
+            var lit = seg / 6 <= level * 0.95;
+            b.className =
+              'an-eq-bar' +
+              (lit ? (seg <= 4 ? ' is-lit-green' : seg === 5 ? ' is-lit-yellow' : ' is-lit-red') : '');
           });
-        }, 90);
+        }, 110);
 
-        function updateProgress(val, customStatus) {
-          if (!bar || !pct) return;
-          var clamped = Math.min(100, Math.round(val));
-          bar.style.width = clamped + '%';
-          pct.textContent = clamped + '%';
-          if (status && customStatus) {
-            status.textContent = customStatus;
-          }
-        }
-
-        // Network paced interval
-        var stepInterval = isFast ? 40 : isSlow ? 110 : 70;
-        var progressTimer = setInterval(function() {
-          if (dismissed) return;
-          if (progress < 90) {
-            progress += isFast ? (Math.random() * 18 + 8) : isSlow ? (Math.random() * 6 + 2) : (Math.random() * 10 + 4);
-            updateProgress(progress);
-          }
-        }, stepInterval);
-
-        window.__dismissAkbarPreloader = function() {
+        window.__dismissAkbarPreloader = function () {
           if (dismissed) return;
           dismissed = true;
-          clearInterval(progressTimer);
           clearInterval(vuTimer);
-          updateProgress(100, speedLabel + ' · READY');
-          
-          setTimeout(function() {
-            if (!preloader) return;
-            preloader.classList.add('an-fade-out');
-            setTimeout(function() {
-              if (preloader && preloader.parentNode) {
-                preloader.parentNode.removeChild(preloader);
-              }
-            }, 420);
-          }, isFast ? 80 : 160);
+          if (bar) {
+            bar.classList.remove('is-indeterminate');
+            bar.style.width = '100%';
+          }
+          if (status) status.textContent = 'SIAP';
+          if (!preloader) return;
+          preloader.classList.add('an-fade-out');
+          setTimeout(function () {
+            if (preloader && preloader.parentNode) {
+              preloader.parentNode.removeChild(preloader);
+            }
+          }, 320);
         };
 
-        // Safety timeout adapted to network condition
-        var maxWait = isFast ? 1800 : isSlow ? 3200 : 2400;
-        setTimeout(function() {
+        // Safety net only: the splash never blocks content longer than this.
+        setTimeout(function () {
           if (typeof window.__dismissAkbarPreloader === 'function') {
             window.__dismissAkbarPreloader();
           }
-        }, maxWait);
+        }, 1200);
       })();
     </script>
 

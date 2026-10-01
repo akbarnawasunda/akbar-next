@@ -245,8 +245,8 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
     } : undefined,
     game: game ? {
       title: stringValue(payloadOf(game).title) || "JEDAG RUN — NIGHT FREQUENCY",
-      kicker: stringValue(payloadOf(game).kicker) || "PLAYABLE SIGNAL",
-      intro: stringValue(payloadOf(game).intro) || stringValue(payloadOf(game).body) || "Run the signal, collect the notes, and chase the drop.",
+      kicker: stringValue(payloadOf(game).kicker) || "GAME MINI",
+      intro: stringValue(payloadOf(game).intro) || stringValue(payloadOf(game).body) || "Lari ikut ketukan, kumpulkan not, dan kejar drop-nya.",
       bgmUrl: publicMediaUrl(stringValue(payloadOf(game).bgmUrl)),
       jumpSfxUrl: publicMediaUrl(stringValue(payloadOf(game).jumpSfxUrl)),
       collectSfxUrl: publicMediaUrl(stringValue(payloadOf(game).collectSfxUrl)),

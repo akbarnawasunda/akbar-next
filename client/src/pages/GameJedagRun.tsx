@@ -1,4 +1,12 @@
-import { ArrowLeft, ArrowUpRight, Gamepad2, Loader2, Radio, ShieldCheck, Trophy } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Gamepad2,
+  Loader2,
+  Radio,
+  ShieldCheck,
+  Trophy,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import JedagRunCanvas from "@/components/JedagRunCanvas";
@@ -38,19 +46,29 @@ function clearSavedUsername() {
 
 const fallbackGameConfig: PublicGameConfig = {
   title: "JEDAG RUN — NIGHT FREQUENCY",
-  kicker: "PLAYABLE SIGNAL",
-  intro: "Run the signal, collect the notes, and chase the drop.",
+  kicker: "GAME MINI",
+  intro: "Lari ikut ketukan, kumpulkan not, dan kejar drop-nya.",
   isEnabled: true,
   shareLabel: "SHARE SCORE",
 };
 
-export default function GameJedagRun({ english = false }: { english?: boolean }) {
+export default function GameJedagRun({
+  english = false,
+}: {
+  english?: boolean;
+}) {
   const publicContent = usePublicArtistContent();
-  const config = useMemo(() => ({
-    ...fallbackGameConfig,
-    ...(publicContent.data?.game ?? {}),
-  } satisfies PublicGameConfig), [publicContent.data?.game]);
-  const topScores = trpc.leaderboard.top.useQuery(undefined, { staleTime: 30_000 });
+  const config = useMemo(
+    () =>
+      ({
+        ...fallbackGameConfig,
+        ...(publicContent.data?.game ?? {}),
+      }) satisfies PublicGameConfig,
+    [publicContent.data?.game]
+  );
+  const topScores = trpc.leaderboard.top.useQuery(undefined, {
+    staleTime: 30_000,
+  });
   const startRun = trpc.leaderboard.start.useMutation();
   const submitScore = trpc.leaderboard.submit.useMutation();
   const initialUsername = readSavedUsername();
@@ -62,53 +80,64 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
   const [showUsernameGate, setShowUsernameGate] = useState(!initialUsername);
   const [runKey, setRunKey] = useState(0);
   const autoStartAttempted = useRef(false);
-  const [lastSubmittedScore, setLastSubmittedScore] = useState<number | null>(null);
+  const [lastSubmittedScore, setLastSubmittedScore] = useState<number | null>(
+    null
+  );
 
   const copy = english
     ? {
         back: "Back to archive",
-        eyebrow: "PLAYABLE SIGNAL / 01",
-        title: "RUN THE SIGNAL.",
-        body: "A small playable frequency from the Akbar Nawasunda universe. Collect notes, keep the combo alive, and chase the drop.",
+        eyebrow: "MINI GAME / 01",
+        title: "CHASE THE DROP.",
+        body: "A small browser game from the Akbar Nawasunda world. Collect the notes, keep the combo alive, and chase the final drop.",
         note: "Enter a public username before starting. It will appear only if your score reaches the Top 10.",
         sideLabel: "NIGHT FREQUENCY",
-        sideCopy: "A browser game built around signal, rhythm, and a little bit of controlled noise.",
+        sideCopy:
+          "Built around rhythm, bass, and a little bit of controlled noise.",
         music: "Music archive",
         home: "Official website",
-        gateTitle: "NAME YOUR SIGNAL.",
-        gateCopy: "Choose a public display name before you run. Do not use an email address or personal information.",
-        gatePrivacy: "Your username and score are public when they appear on the board.",
-        begin: "ENTER THE RUN",
+        gateTitle: "PICK A NAME.",
+        gateCopy:
+          "Choose a public display name before you run. Do not use an email address or personal information.",
+        gatePrivacy:
+          "Your username and score are public when they appear on the board.",
+        begin: "START RUN",
         boardKicker: "GLOBAL BOARD",
         boardTitle: "TOP TEN.",
-        boardCopy: "The ten highest signals from this game. Open slots begin at score 00000.",
-        openSlot: "OPEN SIGNAL",
+        boardCopy: "The ten highest scores so far. Open slots start at 00000.",
+        openSlot: "SLOT KOSONG",
         refresh: "REFRESH",
         submitted: "Score submitted to the global board.",
-        unavailable: "Score saved locally, but the global board is temporarily unavailable.",
+        unavailable:
+          "Score saved locally, but the global board is temporarily unavailable.",
         changeUsername: "CHANGE USERNAME",
       }
     : {
         back: "Kembali ke archive",
-        eyebrow: "PLAYABLE SIGNAL / 01",
-        title: "KEJAR SIGNAL.",
-        body: "Satu frekuensi kecil yang bisa dimainkan dari semesta Akbar Nawasunda. Kumpulkan note, jaga combo, dan kejar drop terakhir.",
+        eyebrow: "GAME MINI / 01",
+        title: "KEJAR DROP-NYA.",
+        body: "Game kecil dari dunia Akbar Nawasunda. Kumpulkan not, jaga combo, dan kejar drop terakhir.",
         note: "Masukkan username publik sebelum mulai. Username hanya tampil jika skor masuk Top 10.",
         sideLabel: "NIGHT FREQUENCY",
-        sideCopy: "Game browser yang dibangun dari signal, ritme, dan sedikit noise yang terkontrol.",
+        sideCopy:
+          "Game browser yang dibangun dari ritme, bass, dan sedikit noise yang terkontrol.",
         music: "Arsip musik",
         home: "Website resmi",
-        gateTitle: "TULIS NAMA SIGNAL.",
-        gateCopy: "Pilih nama publik sebelum bermain. Jangan masukkan email atau informasi pribadi.",
-        gatePrivacy: "Username dan skor bersifat publik jika masuk ke papan peringkat.",
-        begin: "MASUK KE RUN",
+        gateTitle: "TULIS NAMA KAMU.",
+        gateCopy:
+          "Pilih nama publik sebelum bermain. Jangan masukkan email atau informasi pribadi.",
+        gatePrivacy:
+          "Username dan skor bersifat publik jika masuk ke papan peringkat.",
+        begin: "MULAI MAIN",
         boardKicker: "PAPAN GLOBAL",
         boardTitle: "TOP SEPULUH.",
-        boardCopy: "Sepuluh signal dengan skor tertinggi. Slot kosong dimulai dari skor 00000.",
-        openSlot: "OPEN SIGNAL",
+        boardCopy:
+          "Sepuluh skor tertinggi sejauh ini. Slot kosong dimulai dari 00000.",
+        openSlot: "SLOT KOSONG",
         refresh: "SEGARKAN",
         submitted: "Skor berhasil masuk ke papan global.",
-        unavailable: "Skor tersimpan lokal, tetapi papan global sedang tidak tersedia.",
+        unavailable:
+          "Skor tersimpan lokal, tetapi papan global sedang tidak tersedia.",
         changeUsername: "GANTI USERNAME",
       };
 
@@ -124,12 +153,19 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
   };
 
   useEffect(() => {
-    if (!config.isEnabled || !savedUsername || autoStartAttempted.current) return;
+    if (!config.isEnabled || !savedUsername || autoStartAttempted.current)
+      return;
     autoStartAttempted.current = true;
-    startRun.mutate({ username: savedUsername }, {
-      onSuccess: activateRun,
-      onError: error => setGateMessage(error.message || "Username belum bisa dipakai. Coba nama lain."),
-    });
+    startRun.mutate(
+      { username: savedUsername },
+      {
+        onSuccess: activateRun,
+        onError: error =>
+          setGateMessage(
+            error.message || "Username belum bisa dipakai. Coba nama lain."
+          ),
+      }
+    );
   }, [config.isEnabled, savedUsername]);
 
   const beginRun = (event: FormEvent<HTMLFormElement>) => {
@@ -141,22 +177,31 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
     }
     setGateMessage("");
     autoStartAttempted.current = true;
-    startRun.mutate({ username: normalized.value }, {
-      onSuccess: activateRun,
-      onError: error => setGateMessage(error.message || "Username belum bisa dipakai. Coba nama lain."),
-    });
+    startRun.mutate(
+      { username: normalized.value },
+      {
+        onSuccess: activateRun,
+        onError: error =>
+          setGateMessage(
+            error.message || "Username belum bisa dipakai. Coba nama lain."
+          ),
+      }
+    );
   };
 
   const handleGameOver = (score: number) => {
     if (!runToken || !activeUsername || lastSubmittedScore !== null) return;
     setLastSubmittedScore(score);
-    submitScore.mutate({ username: activeUsername, score, runToken }, {
-      onSuccess: result => {
-        setGateMessage(result.submitted ? copy.submitted : copy.unavailable);
-        void topScores.refetch();
-      },
-      onError: () => setGateMessage(copy.unavailable),
-    });
+    submitScore.mutate(
+      { username: activeUsername, score, runToken },
+      {
+        onSuccess: result => {
+          setGateMessage(result.submitted ? copy.submitted : copy.unavailable);
+          void topScores.refetch();
+        },
+        onError: () => setGateMessage(copy.unavailable),
+      }
+    );
   };
 
   const handleRestart = () => {
@@ -177,12 +222,14 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
 
   const slots = Array.from({ length: 10 }, (_, index) => {
     const row = topScores.data?.[index];
-    return row ? { ...row, isEmpty: false } : {
-      rank: index + 1,
-      username: copy.openSlot,
-      score: 0,
-      isEmpty: true,
-    };
+    return row
+      ? { ...row, isEmpty: false }
+      : {
+          rank: index + 1,
+          username: copy.openSlot,
+          score: 0,
+          isEmpty: true,
+        };
   });
 
   return (
@@ -193,21 +240,39 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
           <span>AKBAR NAWASUNDA</span>
         </Link>
         <div className="game-page-header-links">
-          <Link href={english ? "/en/universe" : "/universe"}>{copy.back} <ArrowLeft size={14} /></Link>
-          <span className="game-page-status"><Radio size={13} /> {copy.sideLabel}</span>
+          <Link href={english ? "/en/universe" : "/universe"}>
+            {copy.back} <ArrowLeft size={14} />
+          </Link>
+          <span className="game-page-status">
+            <Radio size={13} /> {copy.sideLabel}
+          </span>
         </div>
       </header>
 
       <section className="game-page-intro" aria-labelledby="game-page-title">
         <div className="game-page-copy">
-          <p className="game-page-eyebrow"><Gamepad2 size={14} /> {copy.eyebrow}</p>
+          <p className="game-page-eyebrow">
+            <Gamepad2 size={14} /> {copy.eyebrow}
+          </p>
           <h1 id="game-page-title">{copy.title}</h1>
           <p className="game-page-body">{copy.body}</p>
           <p className="game-page-note">{copy.note}</p>
           <div className="game-page-links">
-            <Link href={english ? "/en/music" : "/music"}>{copy.music} <ArrowUpRight size={14} /></Link>
-            <Link href={english ? "/en" : "/"}>{copy.home} <ArrowUpRight size={14} /></Link>
-            {activeUsername ? <button type="button" className="game-change-username" onClick={handleChangeUsername}>{copy.changeUsername}</button> : null}
+            <Link href={english ? "/en/music" : "/music"}>
+              {copy.music} <ArrowUpRight size={14} />
+            </Link>
+            <Link href={english ? "/en" : "/"}>
+              {copy.home} <ArrowUpRight size={14} />
+            </Link>
+            {activeUsername ? (
+              <button
+                type="button"
+                className="game-change-username"
+                onClick={handleChangeUsername}
+              >
+                {copy.changeUsername}
+              </button>
+            ) : null}
           </div>
         </div>
         <div className="game-page-side-note">
@@ -220,13 +285,19 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
         {showUsernameGate && config.isEnabled ? (
           <div className="game-username-gate">
             <div className="game-username-gate-copy">
-              <span className="game-page-eyebrow"><ShieldCheck size={14} /> PRIVATE HANDLE / PUBLIC SCORE</span>
+              <span className="game-page-eyebrow">
+                <ShieldCheck size={14} /> PRIVATE HANDLE / PUBLIC SCORE
+              </span>
               <h2>{copy.gateTitle}</h2>
               <p>{copy.gateCopy}</p>
               <small>{copy.gatePrivacy}</small>
             </div>
             <form className="game-username-form" onSubmit={beginRun}>
-              <label htmlFor={english ? "game-username-en" : "game-username-id"}>USERNAME</label>
+              <label
+                htmlFor={english ? "game-username-en" : "game-username-id"}
+              >
+                USERNAME
+              </label>
               <input
                 id={english ? "game-username-en" : "game-username-id"}
                 value={username}
@@ -242,41 +313,88 @@ export default function GameJedagRun({ english = false }: { english?: boolean })
                 required
               />
               <button type="submit" disabled={startRun.isPending}>
-                {startRun.isPending ? <Loader2 size={15} className="animate-spin" /> : <Gamepad2 size={15} />}
+                {startRun.isPending ? (
+                  <Loader2 size={15} className="animate-spin" />
+                ) : (
+                  <Gamepad2 size={15} />
+                )}
                 {copy.begin}
               </button>
-              <small id="game-username-help">2–20 karakter · huruf, angka, spasi, `_`, atau `-`</small>
-              {savedUsername ? <small className="game-username-saved">Tersimpan di browser ini. Edit nama di atas bila ingin menggantinya.</small> : null}
-              {gateMessage ? <p className="game-leaderboard-message" role="status">{gateMessage}</p> : null}
+              <small id="game-username-help">
+                2–20 karakter · huruf, angka, spasi, `_`, atau `-`
+              </small>
+              {savedUsername ? (
+                <small className="game-username-saved">
+                  Tersimpan di browser ini. Edit nama di atas bila ingin
+                  menggantinya.
+                </small>
+              ) : null}
+              {gateMessage ? (
+                <p className="game-leaderboard-message" role="status">
+                  {gateMessage}
+                </p>
+              ) : null}
             </form>
           </div>
         ) : (
-          <JedagRunCanvas key={runKey} config={config} onGameOver={handleGameOver} onRestart={handleRestart} />
+          <JedagRunCanvas
+            key={runKey}
+            config={config}
+            onGameOver={handleGameOver}
+            onRestart={handleRestart}
+          />
         )}
       </section>
 
-      <section className="game-leaderboard" aria-labelledby="global-board-title">
+      <section
+        className="game-leaderboard"
+        aria-labelledby="global-board-title"
+      >
         <div className="game-leaderboard-intro">
-          <p className="game-page-eyebrow"><Trophy size={14} /> {copy.boardKicker}</p>
+          <p className="game-page-eyebrow">
+            <Trophy size={14} /> {copy.boardKicker}
+          </p>
           <h2 id="global-board-title">{copy.boardTitle}</h2>
           <p>{copy.boardCopy}</p>
-          <button type="button" className="game-leaderboard-refresh" onClick={() => void topScores.refetch()} disabled={topScores.isFetching}>
-            {topScores.isFetching ? <Loader2 size={13} className="animate-spin" /> : null} {copy.refresh}
+          <button
+            type="button"
+            className="game-leaderboard-refresh"
+            onClick={() => void topScores.refetch()}
+            disabled={topScores.isFetching}
+          >
+            {topScores.isFetching ? (
+              <Loader2 size={13} className="animate-spin" />
+            ) : null}{" "}
+            {copy.refresh}
           </button>
         </div>
-        <div className="game-leaderboard-table" role="table" aria-label={copy.boardTitle}>
+        <div
+          className="game-leaderboard-table"
+          role="table"
+          aria-label={copy.boardTitle}
+        >
           {slots.map(row => (
-            <div className={`game-leaderboard-row${row.isEmpty ? " is-empty" : ""}`} role="row" key={row.rank}>
-              <span className="game-leaderboard-rank">{String(row.rank).padStart(2, "0")}</span>
+            <div
+              className={`game-leaderboard-row${row.isEmpty ? " is-empty" : ""}`}
+              role="row"
+              key={row.rank}
+            >
+              <span className="game-leaderboard-rank">
+                {String(row.rank).padStart(2, "0")}
+              </span>
               <strong>{row.username}</strong>
-              <span className="game-leaderboard-score">{String(row.score).padStart(5, "0")}</span>
+              <span className="game-leaderboard-score">
+                {String(row.score).padStart(5, "0")}
+              </span>
             </div>
           ))}
         </div>
       </section>
 
       <footer className="game-page-footer">
-        <span>JEDAG RUN // {english ? "ENGLISH ROUTE" : "INDONESIAN ROUTE"}</span>
+        <span>
+          JEDAG RUN // {english ? "ENGLISH ROUTE" : "INDONESIAN ROUTE"}
+        </span>
         <span>AKBAR NAWASUNDA / 2026</span>
       </footer>
     </main>

@@ -49,7 +49,7 @@ export function ArtistJourneySection({
   return (
     <section ref={ref} className="artist-editorial-section artist-journey-section reveal-target" data-artist-story-panel="journey" id={locale === "en" ? "artist-journey" : "perjalanan"}>
       <span className="artist-editorial-atmosphere" aria-hidden="true" />
-      <SectionIndex number="03" label={locale === "en" ? "ARTIST JOURNEY" : "PERJALANAN ARTIS"} />
+      <SectionIndex label={locale === "en" ? "ARTIST JOURNEY" : "PERJALANAN ARTIS"} />
       <div className="artist-editorial-heading">
         <div>
           <p className="nf-page-eyebrow">{locale === "en" ? "FROM HERE" : "DARI SINI"}</p>
@@ -104,7 +104,7 @@ export function ArtistPhotoStorySection({
   return (
     <section ref={ref} className="artist-editorial-section artist-photo-story-section reveal-target" data-artist-story-panel="photo" id={locale === "en" ? "visual-story" : "cerita-visual"}>
       <span className="artist-editorial-atmosphere" aria-hidden="true" />
-      <SectionIndex number="04" label={locale === "en" ? "PORTRAIT ARCHIVE" : "ARSIP POTRET"} />
+      <SectionIndex label={locale === "en" ? "PORTRAIT ARCHIVE" : "ARSIP POTRET"} />
       <div className="artist-editorial-heading artist-photo-story-heading">
         <div>
           <p className="nf-page-eyebrow">{locale === "en" ? "VISUAL STUDIES" : "STUDI VISUAL"}</p>
