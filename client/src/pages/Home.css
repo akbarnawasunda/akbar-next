@@ -1637,7 +1637,7 @@
   cursor: not-allowed;
 }
 .an-site .signal-section .nf-signal-form button:hover:not(:disabled) {
-  background: #38e1ff;
+  background: var(--cyan-light);
   transform: translateY(-1px);
 }
 .an-site .signal-section .nf-signal-form small {

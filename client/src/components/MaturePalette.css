@@ -425,7 +425,7 @@
 
 .nf-page .nf-signal-form button:hover:not(:disabled),
 .nf-page .nf-signal-block .nf-button:hover {
-  background: #38e1ff !important;
+  background: var(--cyan-light) !important;
   color: var(--ink) !important;
   transform: translateY(-1px) !important;
 }

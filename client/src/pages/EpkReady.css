@@ -359,8 +359,8 @@
   color: var(--acid) !important;
 }
 
-.nf-signal-note.is-success { color: #3d7a4a; }
-.nf-signal-note.is-error { color: #8b3028; }
+.nf-signal-note.is-success { color: var(--state-ok); }
+.nf-signal-note.is-error { color: var(--state-err); }
 
 @media (max-width: 820px) {
   .an-epk-hero-grid { grid-template-columns: 1fr; gap: 38px; }
