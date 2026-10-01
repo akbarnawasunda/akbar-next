@@ -1954,7 +1954,7 @@
 
 @media (max-width: 480px) {
   .an-site .hero-copy .hero-title-editorial {
-    font-size: clamp(2.8rem, 14vw, 4.5rem) !important;
+    font-size: clamp(2rem, 12vw, 4rem) !important;
   }
   .an-site .home-platform-card {
     grid-template-columns: 36px 28px minmax(0, 1fr) auto;
@@ -3092,7 +3092,9 @@
 }
 @media (max-width: 767.98px) {
   .an-site .hero-copy .hero-title-editorial {
-    font-size: clamp(2.7rem, 11vw, 4rem) !important;
+    /* Kata judul dipaksa nowrap, jadi ukurannya harus ikut lebar layar.
+       Lantai rem tetap membuat "NAWASUNDA." terpotong di layar 320px. */
+    font-size: clamp(2rem, 12vw, 4rem) !important;
     letter-spacing: -0.06em !important;
   }
   .an-site .hero-copy .hero-title-word {

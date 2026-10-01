@@ -72,6 +72,27 @@ export function GlobalAudioPlayer() {
     }
   }, [actions]);
 
+  // Penanda di root: layar kecil memakai ini untuk menyisakan ruang bawah,
+  // supaya bilah player yang melayang tidak menimbun footer.
+  useEffect(() => {
+    if (!mounted) return;
+    const root = document.documentElement;
+    if (state === "closed") {
+      delete root.dataset.anPlayer;
+      delete root.dataset.anPlayerShelf;
+      return;
+    }
+    root.dataset.anPlayer = "visible";
+    root.dataset.anPlayerShelf =
+      state === "loading" || state === "playing" || state === "paused"
+        ? "open"
+        : "closed";
+    return () => {
+      delete root.dataset.anPlayer;
+      delete root.dataset.anPlayerShelf;
+    };
+  }, [mounted, state]);
+
   // Amplitudo → CSS var, dibaca waveform tanpa render React.
   useEffect(() => {
     if (!mounted) return;

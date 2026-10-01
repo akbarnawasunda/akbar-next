@@ -2,7 +2,8 @@
 .an-global-player {
   position: fixed;
   right: clamp(12px, 3vw, 28px);
-  bottom: clamp(12px, 3vw, 24px);
+  /* Area aman: bilah gestur Android dan home indicator iOS. */
+  bottom: calc(clamp(12px, 3vw, 24px) + env(safe-area-inset-bottom, 0px));
   z-index: 48;
   width: min(420px, calc(100vw - 24px));
   border: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
@@ -147,6 +148,30 @@
   }
   .an-global-player-link {
     display: none;
+  }
+}
+
+/* Jempol butuh sasaran yang lebih besar daripada kursor mouse. */
+@media (pointer: coarse) {
+  .an-global-player-toggle,
+  .an-global-player-icon {
+    width: 44px;
+    height: 44px;
+  }
+  .an-global-player-bar {
+    gap: 8px;
+    padding: 8px 10px;
+  }
+}
+
+/* Player melayang di atas konten; sisakan ruang supaya bagian bawah halaman
+   (footer, tombol terakhir) tidak pernah tertimbun permanen di layar kecil. */
+@media (max-width: 640px) {
+  html[data-an-player="visible"] body {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+  }
+  html[data-an-player="visible"][data-an-player-shelf="open"] body {
+    padding-bottom: calc(76px + var(--an-embed-audio-h, 166px) + env(safe-area-inset-bottom, 0px));
   }
 }
 
