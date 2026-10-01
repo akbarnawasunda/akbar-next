@@ -37,7 +37,6 @@
   padding-inline: var(--hx-gutter);
   border-bottom: var(--hx-rule) solid var(--paper) !important;
   background: var(--ink) !important;
-  backdrop-filter: none;
   box-shadow: none !important;
 }
 .an-site .an-nav::after {

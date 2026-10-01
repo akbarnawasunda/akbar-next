@@ -55,8 +55,7 @@ body::before {
   grid-template-columns: auto minmax(0, 1fr) auto auto !important;
   gap: clamp(16px, 3vw, 38px) !important;
   border-bottom: 1px solid var(--ref-line) !important;
-  background: rgba(5, 9, 15, 0.9) !important;
-  backdrop-filter: blur(18px) !important;
+  background: var(--ref-bg) !important;
 }
 .nf-wordmark {
   gap: 8px !important;
@@ -759,9 +758,8 @@ body::before {
 .en-page .nf-hero-note {
   border: 1px solid var(--public-line-strong) !important;
   border-radius: 0 !important;
-  background: rgba(5, 12, 19, 0.72) !important;
+  background: var(--ref-bg-2) !important;
   box-shadow: var(--public-shadow);
-  backdrop-filter: blur(10px);
 }
 .nf-page .nf-section,
 .en-page .nf-section {

@@ -21,9 +21,10 @@ describe("Night Frequency signature", () => {
   it("keeps the signature lightweight and reduced-motion safe", () => {
     const css = source("client/src/components/NightFrequencySignature.css");
     expect(css).toContain("@media (prefers-reduced-motion: reduce)");
-    // Signature rail boleh punya backdrop-filter, tapi tidak boleh
-    // filter: blur() besar — itu mahal di GPU dan bikin janky.
-    expect(css).toContain("backdrop-filter");
+    // Seluruh permukaan publik harus solid; tidak ada kaca atau blur yang
+    // membuat teks dan panel bergantung pada komposisi GPU.
+    expect(css).not.toContain("backdrop-filter");
+    expect(css).not.toContain("-webkit-backdrop-filter");
     expect(css).not.toMatch(/filter:\s*blur\((?:[2-9]\d|\d{3,})px\)/);
   });
 });

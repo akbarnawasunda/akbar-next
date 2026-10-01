@@ -123,10 +123,9 @@
   width: 142px;
   padding: 14px 12px;
   border: 1px solid var(--ink-line);
-  background: color-mix(in srgb, var(--ink) 88%, transparent);
+  background: var(--ink-soft);
   box-shadow: none;
   opacity: 0.48;
-  backdrop-filter: blur(8px);
   transform: translate3d(0, -50%, 0);
   transition: opacity 220ms var(--ease, ease), border-color 220ms var(--ease, ease), background-color 220ms var(--ease, ease);
 }
