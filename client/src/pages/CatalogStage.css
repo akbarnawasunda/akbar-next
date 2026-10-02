@@ -163,9 +163,12 @@
 
 .an-public-shell.an-editorial .an-cat-listen-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* Dua pemutar berdampingan dengan lebar sama, `stretch` supaya kedua
+     kartu berakhir di garis yang sama (dulu `align-items: start` bikin
+     salah satu kolom menggantung lebih pendek). */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
   gap: clamp(16px, 2vw, 28px);
-  align-items: start;
+  align-items: stretch;
 }
 
 /* -- Strip ajakan platform ------------------------------------ */

@@ -116,9 +116,12 @@
 
 .an-public-shell.an-editorial .an-vis-screening-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.32fr) minmax(0, 1fr);
+  /* Dua video = dua kolom sama lebar. Sebelumnya 1.32fr/1fr sehingga
+     kartu kanan lebih sempit, artwork-nya lebih pendek, dan tepi bawah
+     kedua kartu tidak pernah rata. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   gap: clamp(16px, 2vw, 28px);
-  align-items: start;
+  align-items: stretch;
 }
 
 /* -- Arsip visual: kolom berirama, bukan kotak seragam --------- */
@@ -131,12 +134,25 @@
   margin-top: var(--space-lg);
 }
 
+/* Ritme lebar 3,3,2,2,2: dua kartu lebar lalu tiga kartu normal. Pola ini
+   mengisi 6 kolom tanpa sisa untuk 2, 3, 5, dan 8 kartu — pola 3,2,2,2
+   sebelumnya meninggalkan lubang 1 kolom di baris pertama begitu jumlah
+   kartunya bukan kelipatan 4. */
 .an-public-shell.an-editorial .an-vis-archive > * {
   grid-column: span 2;
 }
 
-.an-public-shell.an-editorial .an-vis-archive > :nth-child(4n + 1) {
+.an-public-shell.an-editorial .an-vis-archive > :nth-child(5n + 1),
+.an-public-shell.an-editorial .an-vis-archive > :nth-child(5n + 2) {
   grid-column: span 3;
+}
+
+/* Thumbnail arsip ini berasal dari YouTube (`hqdefault.jpg`), yang berbentuk
+   4:3 dengan bilah hitam di atas dan bawah untuk video 16:9. Bingkai persegi
+   1:1 menampilkan bilah itu; bingkai 16:9 memotongnya persis di garis gambar
+   — dan 16:9 memang bentuk asli video yang ditautkan. */
+.an-public-shell.an-editorial .an-vis-archive .an-artwork-card-media {
+  aspect-ratio: 16 / 9;
 }
 
 .an-public-shell.an-editorial .an-vis-archive-head {
@@ -402,7 +418,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
   .an-public-shell.an-editorial .an-vis-archive > *,
-  .an-public-shell.an-editorial .an-vis-archive > :nth-child(4n + 1) {
+  .an-public-shell.an-editorial .an-vis-archive > :nth-child(5n + 1),
+  .an-public-shell.an-editorial .an-vis-archive > :nth-child(5n + 2) {
     grid-column: span 3;
   }
 }
@@ -422,8 +439,7 @@
     max-width: none;
     aspect-ratio: 3 / 4;
   }
-  .an-public-shell.an-editorial .an-vis-archive > *,
-  .an-public-shell.an-editorial .an-vis-archive > :nth-child(4n + 1) {
+  .an-public-shell.an-editorial .an-vis-archive > * {
     grid-column: span 6;
   }
   .an-public-shell.an-editorial .an-live-index .an-live-row {

@@ -72,6 +72,8 @@ const copy = {
     channelAria: (label: string) => `Buka Akbar Nawasunda di ${label}`,
     listenTitle: "Dengar langsung.",
     listenMeta: "Player resmi · SoundCloud",
+    playerUnit: (index: number) =>
+      `Pemutar ${String(index + 1).padStart(2, "0")}`,
     listenCopy:
       "Pilih satu rilisan untuk mulai mendengar. Tautan resmi tetap tersedia kalau player tidak dibutuhkan.",
     playerFallback: "Tautan resmi selalu tersedia.",
@@ -131,6 +133,8 @@ const copy = {
     channelAria: (label: string) => `Open Akbar Nawasunda on ${label}`,
     listenTitle: "Listen now.",
     listenMeta: "Official player · SoundCloud",
+    playerUnit: (index: number) =>
+      `Player ${String(index + 1).padStart(2, "0")}`,
     listenCopy:
       "Pick a release to start listening. The official links stay available if you do not need the player.",
     playerFallback: "Official links are always available.",
@@ -367,7 +371,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               <p className="an-cat-lede">{t.listenCopy}</p>
             </header>
             <div className="an-cat-listen-grid">
-              {players.map(drop => {
+              {players.map((drop, index) => {
                 const known = catalog.find(release =>
                   release.title
                     .toLowerCase()
@@ -376,7 +380,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
                 return (
                   <AudioPlayerShell
                     key={drop.url}
-                    title={drop.title}
+                    title={t.playerUnit(index)}
                     provider="SoundCloud"
                   >
                     <OfficialMediaFrame

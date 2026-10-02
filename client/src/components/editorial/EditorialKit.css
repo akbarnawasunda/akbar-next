@@ -566,8 +566,20 @@
 
 /* -- Audio player shell ---------------------------------------- */
 .ed-player {
+  /* Satu token padding untuk bar dan isi shelf, supaya tepi kiri judul di
+     bar rata dengan tepi kiri isi kartu media di bawahnya. */
+  --ed-player-pad: clamp(14px, 1.6vw, 20px);
+  display: grid;
+  grid-template-rows: auto auto;
   border: 1px solid var(--ink-line);
   background: var(--ink-card);
+}
+/* Shelf yang sedang terbuka ikut meregang mengisi tinggi baris grid /music,
+   jadi dua pemutar berdampingan berakhir di garis yang sama. Saat tertutup,
+   shell tetap setinggi bar-nya sendiri (tidak ada ruang kosong menggantung). */
+.ed-player:has(.ed-player__toggle[aria-expanded="true"]) {
+  grid-template-rows: auto 1fr;
+  height: 100%;
 }
 .ed-player__toggle {
   display: flex;
@@ -579,7 +591,7 @@
   text-align: left;
 }
 .ed-player__chevron { color: var(--acid); font-family: var(--font-mono); font-size: 1.2rem; }
-.ed-player__shelf { display: grid; grid-template-rows: 1fr; transition: grid-template-rows 280ms var(--ease); }
+.ed-player__shelf { display: grid; grid-template-rows: 1fr; min-height: 0; transition: grid-template-rows 280ms var(--ease); }
 .ed-player__shelf > .ed-player__body { min-height: 0; overflow: hidden; }
 .ed-player:not(:has(.ed-player__shelf [data-embed-url])) .ed-player__shelf { contain: layout; }
 .ed-player:has(.ed-player__shelf[aria-hidden="true"]) .ed-player__shelf { grid-template-rows: 0fr; }
@@ -592,7 +604,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 12px clamp(12px, 1.6vw, 20px);
+  padding: 12px var(--ed-player-pad);
   border-bottom: 1px solid var(--ink-line);
 }
 .ed-player__title {
@@ -606,7 +618,7 @@
   overflow-wrap: anywhere;
 }
 .ed-player__body {
-  padding: clamp(12px, 1.6vw, 20px);
+  padding: var(--ed-player-pad);
 }
 
 /* -- Form fields ------------------------------------------------ */
