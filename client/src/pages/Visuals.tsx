@@ -6,6 +6,7 @@ import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import FanSignalSection from "@/components/FanSignalSection";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
+import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { officialBrand, videos } from "@/content/artistPlatform";
 import { InteractiveArtworkCard } from "@/components/signature/InteractiveArtworkCard";
 import { SignalHeading } from "@/components/signature/SignalType";
@@ -17,6 +18,7 @@ import {
   usePublicArtistContent,
 } from "@/content/publicContent";
 import "./EcosystemPages.css";
+import "./ShowcaseStage.css";
 
 const officialVideos = [
   { id: "rv4DK8nVWd0", title: "Garam dan Madu × Backpacker" },
@@ -73,54 +75,86 @@ export default function Visuals() {
           item => (item.label || "VIDEO").toUpperCase() === group
         );
 
+  const heroPhoto =
+    portraitContent[0]?.imageUrl || officialBrand.portrait;
+
   return (
     <div className="nf-page">
       <NightHeader active="/visuals" />
       <main id="main-content" tabIndex={-1}>
-        <section
-          className="nf-page-hero"
-          style={
-            {
-              "--page-image": `url(${
-                portraitContent[0]?.imageUrl || officialBrand.portrait
-              })`,
-            } as React.CSSProperties
-          }
-        >
-          <div>
-            <h1>
-              VIDEO
-              <br />
-              RESMI.
-            </h1>
-            <p>Video dan DJ remix dari kanal resmi Akbar Nawasunda.</p>
+        {/* Dinding galeri: satu foto memegang panggung, tipografi jadi
+            keterangannya. */}
+        <section className="an-vis-hero" aria-labelledby="visuals-title">
+          <div className="an-vis-hero-copy">
+            <p className="an-kicker">
+              <span className="an-kicker-dot" aria-hidden="true" />
+              Kanal visual resmi
+            </p>
+            <h1 id="visuals-title">Video &amp; potret.</h1>
+            <p className="an-vis-lede">
+              {cms.isLoading
+                ? "Memuat arsip visual."
+                : "Video musik, visualizer, dan studi potret dari kanal resmi Akbar Nawasunda."}
+            </p>
+            <div className="an-vis-hero-actions">
+              <a
+                className="an-btn an-btn--solid"
+                href="https://www.youtube.com/@akbarnawasunda"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Buka YouTube <ArrowUpRight size={14} />
+              </a>
+              <Link className="an-btn an-btn--quiet" href="/visuals/portraits">
+                Studi potret <ArrowUpRight size={14} />
+              </Link>
+            </div>
+            <dl className="an-vis-facts">
+              <div>
+                <dt>Video</dt>
+                <dd>{archive.length}</dd>
+              </div>
+              <div>
+                <dt>Studi potret</dt>
+                <dd>{portraitContent.length}</dd>
+              </div>
+              <div>
+                <dt>Kanal</dt>
+                <dd>YouTube</dd>
+              </div>
+            </dl>
           </div>
-          <div className="nf-hero-note">
-            <span>{cms.isLoading ? "MEMUAT VIDEO" : "KANAL RESMI"}</span>
-            <strong>AKBAR NAWASUNDA</strong>
-            <a
-              className="nf-text-button"
-              href="https://www.youtube.com/@akbarnawasunda"
-              target="_blank"
-              rel="noreferrer"
-            >
-              YOUTUBE <ArrowUpRight size={14} />
-            </a>
-          </div>
+          <figure className="an-vis-hero-plate">
+            <ResilientArtworkImage
+              src={heroPhoto}
+              backupSrc={officialBrand.portraitFallback}
+              alt="Potret resmi Akbar Nawasunda"
+              loading="eager"
+              fetchPriority="high"
+            />
+            <figcaption>
+              <span>Studio portrait</span>
+              <strong>Bandung Barat</strong>
+            </figcaption>
+          </figure>
         </section>
 
-        <section className="nf-section">
-          <div className="nf-section-title">
+        {/* Ruang tayang: dua player resmi, yang pertama lebih besar. */}
+        <section className="an-section" aria-labelledby="screening-title">
+          <header className="an-head an-head--row">
             <div>
-              <h2>
-                LIHAT
-                <br />
-                KARYANYA.
+              <h2 id="screening-title" className="an-title">
+                Tayangan resmi.
               </h2>
+              <p className="an-meta">
+                {players.length} video · player dimuat saat ditekan
+              </p>
             </div>
-            <p>Tekan play untuk memuat player, atau buka YouTube langsung.</p>
-          </div>
-          <div className="nf-video-embed-grid">
+            <p className="an-vis-lede">
+              Tekan play untuk memuat player, atau buka YouTube langsung.
+            </p>
+          </header>
+          <div className="an-vis-screening-grid">
             {players.map(video => (
               <OfficialMediaFrame
                 key={video.id}
@@ -140,24 +174,30 @@ export default function Visuals() {
 
         <ArtistPhotoStorySection photoStories={publicPhotoStories(cms.data)} />
 
-        <section className="nf-section dark-panel">
-          <div className="nf-section-title">
+        {/* Arsip visual: kolom berirama (dense grid), bukan kotak seragam. */}
+        <section
+          className="an-section dark-panel"
+          aria-labelledby="archive-title"
+        >
+          <header className="an-vis-archive-head">
             <div>
-              <SignalHeading as="h2" lines={["SEMUA", "VIDEO."]} />
+              <h2 id="archive-title" className="an-title">
+                Arsip visual.
+              </h2>
+              <p className="an-meta">
+                {cmsVisuals.length
+                  ? "Dikelola di CMS"
+                  : `${visibleArchive.length} entri dari kanal resmi`}
+              </p>
             </div>
-            <p>
-              {cmsVisuals.length
-                ? "Arsip dari CMS Akbar Nawasunda."
-                : "Video dari channel resmi."}
-            </p>
-          </div>
-          <FilterBar
-            options={groups}
-            value={group}
-            onChange={setGroup}
-            label="Saring arsip visual"
-          />
-          <div className="nf-visual-grid">
+            <FilterBar
+              options={groups}
+              value={group}
+              onChange={setGroup}
+              label="Saring arsip visual"
+            />
+          </header>
+          <div className="an-vis-archive">
             {visibleArchive.map(video => (
               <InteractiveArtworkCard
                 key={video.title}

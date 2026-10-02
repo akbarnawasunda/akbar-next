@@ -293,7 +293,7 @@ check "/"                                      "DENGARKAN KARYA"                
 check "/music"                                "Dengar di kanal resminya."         "Music by Akbar Nawasunda" state,ogimage
 check "/about"                                "PERJALANAN"                      "About the Artist | Akbar Nawasunda" state,ogimage
 check "/visuals"                              "BIKIN VISUAL"                    "Videos by Akbar Nawasunda" state,ogimage
-check "/live"                                 "AJUKAN BOOKING"                  "Live Dates | Akbar Nawasunda" state,ogimage
+check "/live"                                 "BOOKING / REMIX / KOLABORASI"    "Live Dates | Akbar Nawasunda" state,ogimage
 check "/universe"                             "PERJALANAN"                      "About the Work | Akbar Nawasunda" state,ogimage
 check "/inquire?type=licensing&source=release" "KIRIM INQUIRY"                  "Inquire | Akbar Nawasunda" state,ogimage
 check "/en"                                   "Masih Mencintainya"              "Akbar Nawasunda | Official Website" state,ogimage

@@ -7,13 +7,7 @@ import {
 import FanSignalSection from "@/components/FanSignalSection";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
-import {
-  CtaPanel,
-  EditorialSection,
-  EmptyState,
-  EventCountdown,
-  SignalIndicator,
-} from "@/components/editorial/EditorialKit";
+import { CtaPanel, EventCountdown } from "@/components/editorial/EditorialKit";
 import { Link } from "wouter";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
 import {
@@ -22,6 +16,7 @@ import {
 } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./Live.css";
+import "./ShowcaseStage.css";
 
 const formatDate = (value: string, time?: string) => {
   const parsed = new Date(value);
@@ -54,159 +49,213 @@ export default function Live() {
     <div className="nf-page">
       <NightHeader active="/live" />
       <main id="main-content" tabIndex={-1}>
-        <section
-          className="nf-page-hero"
-          style={
-            {
-              "--page-image": `url(${featured?.posterUrl || officialBrand.socialPreview})`,
-            } as React.CSSProperties
-          }
-        >
-          <div>
-            <h1>
-              BOOKING
-              <br />
-              DAN KOLABORASI.
-            </h1>
-            <p>
+        {/* Panggung: foto pertunjukan sebagai latar penuh, tipografi di
+            atas scrim. */}
+        <section className="an-live-hero" aria-labelledby="live-title">
+          {featured?.posterUrl ? (
+            <img
+              className="an-live-hero-bg"
+              src={featured.posterUrl}
+              alt=""
+              aria-hidden="true"
+              loading="eager"
+              decoding="async"
+            />
+          ) : (
+            <picture className="an-live-hero-bg">
+              <source
+                media="(max-width: 640px)"
+                srcSet="/assets/akbar-night-frequency-stage-mobile-optimized.webp"
+                type="image/webp"
+              />
+              <source
+                srcSet="/assets/akbar-night-frequency-stage-optimized.webp"
+                type="image/webp"
+              />
+              <img
+                src="/assets/akbar-night-frequency-stage-optimized.webp"
+                alt=""
+                aria-hidden="true"
+                width={1440}
+                height={1440}
+                loading="eager"
+                decoding="async"
+              />
+            </picture>
+          )}
+          <span className="an-live-hero-scrim" aria-hidden="true" />
+          <div className="an-live-hero-copy">
+            <p className="an-kicker">
+              <span className="an-kicker-dot" aria-hidden="true" />
+              {featured ? "Show berikutnya" : "Terbuka untuk booking"}
+            </p>
+            <h1 id="live-title">Booking &amp; panggung.</h1>
+            <p className="an-meta">BOOKING / REMIX / KOLABORASI</p>
+            <p className="an-vis-lede">
               {signal?.message ||
                 "Untuk booking penampilan, remix custom, dan kolaborasi, kirim detail proyek lewat email."}
             </p>
-          </div>
-          <div className="nf-hero-note">
-            <span>
-              {featured ? "SHOW BERIKUTNYA" : "TERBUKA UNTUK BOOKING"}
-            </span>
-            <strong>
-              {featured ? featured.title : "BOOKING / REMIX / KOLABORASI"}
-            </strong>
-            {featured?.ticketUrl ? (
+            <div className="an-live-hero-actions">
+              {featured?.ticketUrl ? (
+                <a
+                  className="an-btn an-btn--solid"
+                  href={featured.ticketUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Ticket size={14} /> Ambil tiket
+                </a>
+              ) : (
+                <a
+                  className="an-btn an-btn--solid"
+                  href={inquiryHref("Booking inquiry")}
+                >
+                  <Ticket size={14} /> Kirim brief booking
+                </a>
+              )}
               <a
-                className="nf-text-button"
-                href={featured.ticketUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                TIKET <ArrowUpRight size={14} />
-              </a>
-            ) : (
-              <a
-                className="nf-text-button"
+                className="an-btn an-btn--quiet"
                 href={inquiryHref("Booking inquiry")}
               >
-                HUBUNGI STUDIO <ArrowUpRight size={14} />
+                Email studio <ArrowUpRight size={14} />
               </a>
-            )}
+            </div>
           </div>
         </section>
 
+        {/* Show berikutnya sebagai dokumen: tanggal besar, detail venue,
+            hitung mundur, dan aksi. */}
         {featured ? (
-          <EditorialSection
+          <section
+            className="an-section an-live-next"
             id="next-show"
-            title={featured.title}
-            lede={[
-              formatDate(featured.date, featured.time),
-              featured.venue,
-              featured.city,
-              featured.country,
-            ]
-              .filter(Boolean)
-              .join(" · ")}
-            aside={
-              <>
-                <SignalIndicator
-                  label={`STATUS: ${featured.status?.toUpperCase() || "ANNOUNCED"}`}
-                />
-                <EventCountdown
-                  target={featured.date}
-                  labels={["HARI", "JAM", "MENIT", "DETIK"]}
-                  idleLabel="Hitung mundur menuju show berikutnya"
-                />
-                <div className="ed-cta__actions">
-                  {featured.ticketUrl ? (
-                    <a
-                      className="ed-button"
-                      href={featured.ticketUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Ticket size={13} /> AMBIL TIKET
-                    </a>
-                  ) : null}
-                  {featured.rsvpUrl ? (
-                    <a
-                      className="ed-button--ghost"
-                      href={featured.rsvpUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      RSVP <ArrowUpRight size={13} />
-                    </a>
-                  ) : null}
-                  {featured.mapsUrl ? (
-                    <a
-                      className="ed-button--ghost"
-                      href={featured.mapsUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <MapPin size={13} /> LIHAT PETA
-                    </a>
-                  ) : null}
-                </div>
-              </>
-            }
-          />
-        ) : (
-          <EditorialSection
-            id="next-show"
-            title={
-              <>
-                KALENDER
-                <br />
-                SEDANG TERBUKA.
-              </>
-            }
-            lede="Belum ada tanggal publik yang dikonfirmasi, tapi slot panggung dan studio masih bisa diambil."
+            aria-labelledby="next-show-title"
           >
-            <EmptyState
-              title="BELUM ADA JADWAL PUBLIK"
-              copy="Begitu ada show yang dikonfirmasi, tanggal, venue, zona waktu, dan tautan tiketnya akan tampil di sini lebih dulu."
-              action={
-                <a className="ed-button" href={inquiryHref("Booking inquiry")}>
-                  AJUKAN TANGGAL <ArrowUpRight size={13} />
+            <div className="an-live-next-copy">
+              <p className="an-meta">Show berikutnya</p>
+              <p className="an-live-date">
+                {formatDate(featured.date, featured.time)}
+              </p>
+              <h2 id="next-show-title" className="an-title">
+                {featured.title}
+              </h2>
+              <p className="an-live-place">
+                {featured.venue ? <span>{featured.venue}</span> : null}
+                {featured.city ? <span>{featured.city}</span> : null}
+                {featured.country ? <span>{featured.country}</span> : null}
+              </p>
+              <div className="an-live-next-actions">
+                {featured.ticketUrl ? (
+                  <a
+                    className="an-btn an-btn--solid"
+                    href={featured.ticketUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Ticket size={13} /> Ambil tiket
+                  </a>
+                ) : null}
+                {featured.rsvpUrl ? (
+                  <a
+                    className="an-btn an-btn--quiet"
+                    href={featured.rsvpUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    RSVP <ArrowUpRight size={13} />
+                  </a>
+                ) : null}
+                {featured.mapsUrl ? (
+                  <a
+                    className="an-btn an-btn--quiet"
+                    href={featured.mapsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <MapPin size={13} /> Lihat peta
+                  </a>
+                ) : null}
+              </div>
+            </div>
+            <div className="an-live-next-side">
+              <p className="an-meta">
+                Status: {featured.status?.toUpperCase() || "ANNOUNCED"}
+              </p>
+              <EventCountdown
+                target={featured.date}
+                labels={["HARI", "JAM", "MENIT", "DETIK"]}
+                idleLabel="Hitung mundur menuju show berikutnya"
+              />
+            </div>
+          </section>
+        ) : (
+          <section
+            className="an-section an-live-next"
+            id="next-show"
+            aria-labelledby="next-show-title"
+          >
+            <div className="an-live-next-copy">
+              <p className="an-meta">Kalender</p>
+              <h2 id="next-show-title" className="an-title">
+                Belum ada tanggal publik.
+              </h2>
+              <p className="an-live-place">
+                <span>Slot panggung &amp; studio masih terbuka</span>
+              </p>
+              <p className="an-vis-lede">
+                Begitu ada show yang dikonfirmasi, tanggal, venue, zona waktu,
+                dan tautan tiketnya akan tampil di sini lebih dulu.
+              </p>
+              <div className="an-live-next-actions">
+                <a
+                  className="an-btn an-btn--solid"
+                  href={inquiryHref("Booking inquiry")}
+                >
+                  Ajukan tanggal <ArrowUpRight size={13} />
                 </a>
-              }
-            />
-          </EditorialSection>
+              </div>
+            </div>
+          </section>
         )}
 
+        {/* Jadwal terkonfirmasi sebagai indeks. */}
         {events.length ? (
-          <section className="nf-section an-event-section">
-            <div className="an-event-head">
-              <div>
-                <h2>
-                  SHOW
-                  <br />
-                  BERIKUTNYA.
-                </h2>
-              </div>
-              <span className="nf-page-eyebrow">
-                {events.length} EVENT TERKONFIRMASI
-              </span>
-            </div>
-            <div className="an-event-grid">
-              {events.map(event => (
-                <article className="an-event-card" key={event._id}>
-                  <div className="an-event-date">
-                    <CalendarDays size={16} />
-                    <br />
-                    {formatDate(event.date, event.time)}
-                  </div>
-                  <div>
-                    <span>{event.status?.toUpperCase() || "ANNOUNCED"}</span>
-                    <h3>{event.title}</h3>
-                    <p>
+          <section className="an-section" aria-labelledby="live-index-title">
+            <header className="an-head">
+              <h2 id="live-index-title" className="an-title">
+                Jadwal terkonfirmasi.
+              </h2>
+              <p className="an-meta">
+                {events.length} event · waktu lokal venue
+              </p>
+            </header>
+            <ul className="an-index an-live-index">
+              {events.map(event => {
+                const eventHref =
+                  event.ticketUrl || event.rsvpUrl || inquiryHref("Booking inquiry");
+                const place = [event.venue, event.city, event.country]
+                  .filter(Boolean)
+                  .join(", ");
+                return (
+                  <li className="an-live-row" key={event._id}>
+                    <span className="an-live-row-date">
+                      {formatDate(event.date, event.time)}
+                    </span>
+                    {eventHref ? (
+                      <a
+                        className="an-live-row-title"
+                        href={eventHref}
+                        target={eventHref.startsWith("http") ? "_blank" : undefined}
+                        rel={
+                          eventHref.startsWith("http") ? "noreferrer" : undefined
+                        }
+                      >
+                        {event.title}
+                      </a>
+                    ) : (
+                      <span className="an-live-row-title">{event.title}</span>
+                    )}
+                    <span className="an-live-row-place">
                       {event.mapsUrl ? (
                         <a
                           className="an-event-location-link"
@@ -214,83 +263,89 @@ export default function Live() {
                           target="_blank"
                           rel="noreferrer"
                         >
-                          <MapPin size={12} />{" "}
-                          {event.venue ? `${event.venue}, ` : ""}
-                          {event.city || ""}
-                          {event.country ? ` · ${event.country}` : ""}
-                          <ArrowUpRight size={11} />
+                          <MapPin size={12} aria-hidden="true" />{" "}
+                          {place || "Detail venue menyusul"}{" "}
+                          <ArrowUpRight size={11} aria-hidden="true" />
                         </a>
                       ) : (
                         <>
-                          <MapPin size={12} />{" "}
-                          {event.venue ? `${event.venue}, ` : ""}
-                          {event.city || ""}
-                          {event.country ? ` · ${event.country}` : ""}
+                          <MapPin size={12} aria-hidden="true" />{" "}
+                          {place || "Detail venue menyusul"}
                         </>
                       )}
-                    </p>
-                  </div>
-                  <div className="an-event-actions">
-                    {event.ticketUrl && (
-                      <a
-                        href={event.ticketUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <Ticket size={12} /> TICKETS
-                      </a>
-                    )}
-                    {event.rsvpUrl && (
-                      <a href={event.rsvpUrl} target="_blank" rel="noreferrer">
-                        RSVP <ArrowUpRight size={12} />
-                      </a>
-                    )}
-                  </div>
-                </article>
-              ))}
-            </div>
+                    </span>
+                    <a
+                      className="an-live-row-action"
+                      href={eventHref}
+                      target={eventHref.startsWith("http") ? "_blank" : undefined}
+                      rel={eventHref.startsWith("http") ? "noreferrer" : undefined}
+                      aria-label={`${event.title} — buka sumber resmi`}
+                    >
+                      {event.ticketUrl ? "Tiket" : event.rsvpUrl ? "RSVP" : "Info"}{" "}
+                      <ArrowUpRight size={13} aria-hidden="true" />
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
           </section>
         ) : (
-          <section className="nf-section an-booking-grid">
-            <div>
-              <h2>
-                BOOKING
-                <br />
-                DAN KERJA SAMA.
+          <section
+            className="an-section an-live-booking"
+            aria-labelledby="booking-options-title"
+          >
+            <div className="an-live-booking-copy">
+              <p className="an-meta">Booking</p>
+              <h2 id="booking-options-title" className="an-title">
+                Booking dan kolaborasi.
               </h2>
               <p>
                 Belum ada jadwal publik yang dikonfirmasi. Untuk performa, remix
                 custom, atau kolaborasi, kirim konteks proyek dan tanggal yang
                 diinginkan.
               </p>
-              <a className="nf-button" href={inquiryHref("Booking inquiry")}>
-                AJUKAN BOOKING <ArrowUpRight size={14} />
-              </a>
+              <div className="an-live-next-actions">
+                <a
+                  className="an-btn an-btn--solid"
+                  href={inquiryHref("Booking inquiry")}
+                >
+                  Kirim brief booking <ArrowUpRight size={14} />
+                </a>
+              </div>
             </div>
-            <div className="an-booking-options">
-              <a
-                className="an-booking-option"
-                href={inquiryHref("Custom remix inquiry")}
-              >
-                <span>01</span>
-                <strong>REMIX CUSTOM</strong>
-                <small>
-                  Remix, aransemen, dan produksi musik untuk proyek atau konten.
-                </small>
-                <ArrowUpRight size={15} />
-              </a>
-              <a
-                className="an-booking-option"
-                href={inquiryHref("Collaboration inquiry")}
-              >
-                <span>02</span>
-                <strong>KOLABORASI</strong>
-                <small>
-                  Kolaborasi rilisan, visual, dan performance bersama.
-                </small>
-                <ArrowUpRight size={15} />
-              </a>
-            </div>
+            <ul className="an-index an-live-booking-options">
+              <li>
+                <a
+                  className="an-index-row"
+                  href={inquiryHref("Custom remix inquiry")}
+                >
+                  <span className="an-meta">01</span>
+                  <span className="an-live-option-copy">
+                    <strong>Remix custom</strong>
+                    <small>
+                      Remix, aransemen, dan produksi musik untuk proyek atau
+                      konten.
+                    </small>
+                  </span>
+                  <ArrowUpRight size={15} aria-hidden="true" />
+                </a>
+              </li>
+              <li>
+                <a
+                  className="an-index-row"
+                  href={inquiryHref("Collaboration inquiry")}
+                >
+                  <span className="an-meta">02</span>
+                  <span className="an-live-option-copy">
+                    <strong>Kolaborasi</strong>
+                    <small>
+                      Kolaborasi rilisan, visual, dan performance bersama.
+                    </small>
+                  </span>
+                  <ArrowUpRight size={15} aria-hidden="true" />
+                </a>
+              </li>
+            </ul>
           </section>
         )}
 
