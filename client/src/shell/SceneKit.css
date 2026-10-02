@@ -358,6 +358,14 @@
 
 /* -- Ritme section dalam halaman ----------------------------- */
 
+/* Lebar maksimum halaman: dulu token ini hanya hidup di `.an-site`
+   (Home.css), jadi di rute `.nf-page` — katalog, visual, arsip, profil —
+   `max-width: var(--hx-max)` tidak pernah resolves dan section melebar
+   tanpa batas di layar besar. Satu definisi, semua halaman publik. */
+.an-public-shell.an-editorial :is(.an-site, .nf-page, .en-page) {
+  --hx-max: 1560px;
+}
+
 .an-public-shell.an-editorial :is(.nf-page, .an-site) .an-section {
   position: relative;
   padding: var(--section-y) var(--hx-gutter);

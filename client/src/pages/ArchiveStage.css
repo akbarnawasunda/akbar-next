@@ -1,0 +1,734 @@
+/* ============================================================
+   ARCHIVE STAGE — /universe (arsip) dan /about (profil)
+   ------------------------------------------------------------
+   Dua halaman yang isinya teks panjang: kronologi dan biografi.
+   Karena itu komposisinya bukan dinding gambar, tapi halaman
+   editorial — kolom baca yang terukur, potret sebagai jangkar,
+   dan linimasa babak sebagai isi utama. Primitif bersama
+   (.an-meta, .an-title, .an-btn, .an-index, .an-rise) dan
+   background-nya datang dari SceneKit.css.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Primitif lokal: daftar fakta (dipakai kedua halaman)
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--space-md);
+  margin: 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--editorial-rule);
+}
+
+.an-public-shell.an-editorial .an-facts > div {
+  display: grid;
+  gap: 6px;
+}
+
+.an-public-shell.an-editorial .an-facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-facts dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------
+   /universe — pembuka arsip
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-arc-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+  align-items: end;
+  gap: clamp(28px, 5vw, 76px);
+  max-width: var(--hx-max);
+  margin-inline: auto;
+  padding: calc(var(--chrome-h, 78px) + var(--space-xl)) var(--hx-gutter)
+    var(--space-xl);
+}
+
+.an-public-shell.an-editorial .an-arc-hero-plate {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--ink-soft);
+}
+
+.an-public-shell.an-editorial .an-arc-hero-plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 32%;
+}
+
+.an-public-shell.an-editorial .an-arc-hero-plate figcaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 10px 16px;
+  background: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-arc-hero-copy {
+  display: grid;
+  gap: var(--space-md);
+  align-content: end;
+}
+
+.an-public-shell.an-editorial .an-arc-hero-copy h1 {
+  margin: 0;
+  max-width: 16ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5.6vw, 5rem);
+  font-weight: 500;
+  letter-spacing: -0.038em;
+  line-height: 0.98;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-arc-lede {
+  margin: 0;
+  max-width: 46ch;
+  font-size: var(--text-lede);
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.an-public-shell.an-editorial .an-arc-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ------------------------------------------------------------
+   /universe — asal & konteks: teks jadi subjek, kolom sempit
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-arc-origin {
+  display: grid;
+  grid-template-columns: minmax(0, 0.44fr) minmax(0, 0.56fr);
+  align-items: start;
+  gap: clamp(28px, 5vw, 72px);
+}
+
+.an-public-shell.an-editorial .an-arc-origin-head {
+  position: sticky;
+  top: calc(var(--chrome-h, 78px) + 24px);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.an-public-shell.an-editorial .an-arc-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.an-public-shell.an-editorial .an-arc-genres li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-arc-genres li::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--acid) 70%, transparent);
+}
+
+.an-public-shell.an-editorial .an-arc-intro {
+  margin: 0;
+  max-width: 62ch;
+  font-size: clamp(1.02rem, 1.3vw, 1.24rem);
+  line-height: 1.86;
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.an-public-shell.an-editorial .an-arc-detail {
+  display: grid;
+  gap: 6px;
+  margin: var(--space-lg) 0 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--editorial-rule);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  line-height: 1.8;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+/* ------------------------------------------------------------
+   /universe — catatan studio (gambar + keterangan)
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-arc-studio {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 64px);
+}
+
+.an-public-shell.an-editorial .an-arc-studio-plate {
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--ink-soft);
+}
+
+.an-public-shell.an-editorial .an-arc-studio-plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 24%;
+}
+
+.an-public-shell.an-editorial .an-arc-studio-copy {
+  display: grid;
+  gap: var(--space-sm);
+  align-content: center;
+}
+
+.an-public-shell.an-editorial .an-arc-studio-copy p {
+  margin: 0;
+  max-width: 44ch;
+  font-size: var(--text-body);
+  line-height: 1.78;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.an-public-shell.an-editorial .an-arc-note {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+/* ------------------------------------------------------------
+   /universe — dinding artwork: 6 rilisan, lebar bergantian
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-arc-wall-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: start;
+  gap: clamp(14px, 2vw, 30px) clamp(12px, 1.6vw, 24px);
+}
+
+.an-public-shell.an-editorial .an-arc-wall-item {
+  display: grid;
+  gap: 10px;
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.an-public-shell.an-editorial .an-arc-wall-art {
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--ink-soft);
+  transition: transform 420ms var(--ease, ease);
+}
+
+/* Rantai <picture> dari ResilientArtworkImage: tanpa ini `height: 100%`
+   pada <img> tidak punya acuan, sehingga bingkai 4/5 atau 4/3 tidak
+   pernah benar-benar memotong artwork. */
+.an-public-shell.an-editorial .an-arc-wall-art > picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.an-public-shell.an-editorial .an-arc-wall-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.an-public-shell.an-editorial .an-arc-wall-item:hover .an-arc-wall-art,
+.an-public-shell.an-editorial .an-arc-wall-item:focus-visible .an-arc-wall-art {
+  transform: translateY(-6px);
+}
+
+.an-public-shell.an-editorial .an-arc-wall-item:nth-child(1) {
+  grid-column: span 5;
+}
+.an-public-shell.an-editorial .an-arc-wall-item:nth-child(2) {
+  grid-column: span 3;
+  align-self: end;
+}
+.an-public-shell.an-editorial .an-arc-wall-item:nth-child(3),
+.an-public-shell.an-editorial .an-arc-wall-item:nth-child(4) {
+  grid-column: span 4;
+}
+.an-public-shell.an-editorial .an-arc-wall-item:nth-child(5) {
+  grid-column: span 3;
+  align-self: end;
+}
+.an-public-shell.an-editorial .an-arc-wall-item:nth-child(6) {
+  grid-column: span 5;
+}
+
+.an-public-shell.an-editorial .an-arc-wall-item:nth-child(1) .an-arc-wall-art,
+.an-public-shell.an-editorial .an-arc-wall-item:nth-child(6) .an-arc-wall-art {
+  aspect-ratio: 4 / 5;
+}
+
+.an-public-shell.an-editorial .an-arc-wall-item:nth-child(3) .an-arc-wall-art {
+  aspect-ratio: 3 / 4;
+}
+
+.an-public-shell.an-editorial .an-arc-wall-item:nth-child(4) .an-arc-wall-art {
+  aspect-ratio: 4 / 3;
+}
+
+.an-public-shell.an-editorial .an-arc-wall-meta {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.an-public-shell.an-editorial .an-arc-wall-meta small {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-arc-wall-meta strong {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.18;
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------
+   /universe — jalur resmi sebagai indeks
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-arc-routes {
+  display: grid;
+  grid-template-columns: minmax(0, 0.38fr) minmax(0, 0.62fr);
+  align-items: start;
+  gap: clamp(24px, 4vw, 64px);
+}
+
+.an-public-shell.an-editorial .an-arc-route-head {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.an-public-shell.an-editorial .an-arc-route-head p {
+  margin: 0;
+  max-width: 34ch;
+  font-size: var(--text-body);
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+.an-public-shell.an-editorial .an-arc-route-list .an-index-row {
+  grid-template-columns: 2.4rem minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.an-public-shell.an-editorial .an-arc-route-copy {
+  display: grid;
+  gap: 5px;
+}
+
+.an-public-shell.an-editorial .an-arc-route-copy strong {
+  font-family: var(--font-display);
+  font-size: 1.12rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-arc-route-copy small {
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--mute);
+}
+
+/* ------------------------------------------------------------
+   /about — potret & identitas
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-ab-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+  align-items: end;
+  gap: clamp(28px, 5vw, 76px);
+  max-width: var(--hx-max);
+  margin-inline: auto;
+  padding: calc(var(--chrome-h, 78px) + var(--space-xl)) var(--hx-gutter)
+    var(--space-xl);
+}
+
+.an-public-shell.an-editorial .an-ab-hero-plate {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--ink-soft);
+}
+
+.an-public-shell.an-editorial .an-ab-hero-plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 26%;
+}
+
+.an-public-shell.an-editorial .an-ab-hero-plate figcaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 10px 16px;
+  background: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-ab-hero-copy {
+  display: grid;
+  gap: var(--space-md);
+  align-content: end;
+}
+
+.an-public-shell.an-editorial .an-ab-hero-copy h1 {
+  margin: 0;
+  max-width: 15ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5.6vw, 5rem);
+  font-weight: 500;
+  letter-spacing: -0.038em;
+  line-height: 0.98;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-ab-lede {
+  margin: 0;
+  max-width: 46ch;
+  font-size: var(--text-lede);
+  line-height: 1.72;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.an-public-shell.an-editorial .an-ab-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ------------------------------------------------------------
+   /about — biografi sebagai halaman baca
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-ab-bio {
+  display: grid;
+  grid-template-columns: minmax(0, 0.32fr) minmax(0, 0.68fr);
+  align-items: start;
+  gap: clamp(28px, 5vw, 76px);
+}
+
+.an-public-shell.an-editorial .an-ab-bio-aside {
+  position: sticky;
+  top: calc(var(--chrome-h, 78px) + 24px);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.an-public-shell.an-editorial .an-ab-bio-body {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.an-public-shell.an-editorial .an-ab-long {
+  margin: 0;
+  max-width: 64ch;
+  font-size: clamp(1.02rem, 1.3vw, 1.22rem);
+  line-height: 1.9;
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.an-public-shell.an-editorial .an-ab-quote {
+  margin: var(--space-sm) 0 0;
+  padding-left: clamp(16px, 2.2vw, 32px);
+  max-width: 42ch;
+  border-left: 2px solid color-mix(in srgb, var(--acid) 55%, transparent);
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.3vw, 2rem);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: -0.024em;
+  line-height: 1.26;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-ab-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+  margin: 0;
+  padding: var(--space-md) 0 0;
+  border-top: 1px solid var(--editorial-rule);
+  list-style: none;
+}
+
+.an-public-shell.an-editorial .an-ab-genres li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+/* ------------------------------------------------------------
+   /about — pita potret penuh lebar
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-ab-band {
+  margin-top: var(--section-y);
+}
+
+.an-public-shell.an-editorial .an-ab-band-plate {
+  margin: 0;
+  height: clamp(320px, 46vw, 560px);
+  overflow: hidden;
+  background: var(--ink-soft);
+}
+
+.an-public-shell.an-editorial .an-ab-band-plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+.an-public-shell.an-editorial .an-ab-band-caption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  max-width: var(--hx-max);
+  margin-inline: auto;
+  padding: var(--space-md) var(--hx-gutter) 0;
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+/* ------------------------------------------------------------
+   /about — jalur lanjut
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-ab-path-grid {
+  display: grid;
+}
+
+.an-public-shell.an-editorial .an-ab-path-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-md);
+  padding: clamp(16px, 2vw, 24px) 0;
+  border-top: 1px solid var(--editorial-rule);
+  color: var(--paper);
+  text-decoration: none;
+  transition: padding-left 260ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .an-ab-path-item:last-child {
+  border-bottom: 1px solid var(--editorial-rule);
+}
+
+.an-public-shell.an-editorial .an-ab-path-item:hover,
+.an-public-shell.an-editorial .an-ab-path-item:focus-visible {
+  padding-left: 14px;
+}
+
+.an-public-shell.an-editorial .an-ab-path-item span {
+  display: grid;
+  gap: 6px;
+}
+
+.an-public-shell.an-editorial .an-ab-path-item strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1.9vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-ab-path-item small {
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--mute);
+  max-width: 52ch;
+}
+
+/* ------------------------------------------------------------
+   BREAKPOINT
+   ------------------------------------------------------------ */
+
+@media (max-width: 1024px) {
+  .an-public-shell.an-editorial .an-arc-hero,
+  .an-public-shell.an-editorial .an-ab-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-lg);
+    align-items: start;
+  }
+
+  .an-public-shell.an-editorial .an-arc-hero-plate,
+  .an-public-shell.an-editorial .an-ab-hero-plate {
+    aspect-ratio: 4 / 3;
+  }
+
+  .an-public-shell.an-editorial .an-arc-origin,
+  .an-public-shell.an-editorial .an-arc-studio,
+  .an-public-shell.an-editorial .an-arc-routes,
+  .an-public-shell.an-editorial .an-ab-bio {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .an-public-shell.an-editorial .an-arc-origin-head,
+  .an-public-shell.an-editorial .an-ab-bio-aside {
+    position: static;
+  }
+
+  .an-public-shell.an-editorial .an-arc-wall-item:nth-child(1),
+  .an-public-shell.an-editorial .an-arc-wall-item:nth-child(6) {
+    grid-column: span 6;
+  }
+  .an-public-shell.an-editorial .an-arc-wall-item:nth-child(2),
+  .an-public-shell.an-editorial .an-arc-wall-item:nth-child(5) {
+    grid-column: span 3;
+  }
+  .an-public-shell.an-editorial .an-arc-wall-item:nth-child(3),
+  .an-public-shell.an-editorial .an-arc-wall-item:nth-child(4) {
+    grid-column: span 3;
+  }
+  .an-public-shell.an-editorial .an-arc-wall-item:nth-child(3) .an-arc-wall-art,
+  .an-public-shell.an-editorial .an-arc-wall-item:nth-child(4) .an-arc-wall-art {
+    aspect-ratio: 1 / 1;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .an-public-shell.an-editorial .an-arc-hero,
+  .an-public-shell.an-editorial .an-ab-hero {
+    padding: calc(var(--chrome-h, 58px) + var(--space-lg)) var(--hx-gutter)
+      var(--space-lg);
+  }
+
+  .an-public-shell.an-editorial .an-arc-hero-plate,
+  .an-public-shell.an-editorial .an-ab-hero-plate {
+    aspect-ratio: 3 / 4;
+  }
+
+  .an-public-shell.an-editorial .an-arc-hero-copy h1,
+  .an-public-shell.an-editorial .an-ab-hero-copy h1 {
+    font-size: clamp(2.1rem, 9.6vw, 3.2rem);
+  }
+
+  .an-public-shell.an-editorial .an-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .an-public-shell.an-editorial .an-arc-studio-plate {
+    aspect-ratio: 1 / 1;
+  }
+
+  .an-public-shell.an-editorial .an-arc-wall-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 12px;
+  }
+
+  .an-public-shell.an-editorial .an-arc-wall-item:nth-child(n) {
+    grid-column: span 1;
+    align-self: stretch;
+  }
+
+  .an-public-shell.an-editorial .an-arc-wall-item:nth-child(n) .an-arc-wall-art {
+    aspect-ratio: 1 / 1;
+  }
+
+  .an-public-shell.an-editorial .an-arc-wall-meta strong {
+    font-size: 0.94rem;
+  }
+
+  .an-public-shell.an-editorial .an-arc-route-list .an-index-row {
+    grid-template-columns: 1.9rem minmax(0, 1fr) auto;
+  }
+
+  .an-public-shell.an-editorial .an-ab-band-plate {
+    height: clamp(300px, 92vw, 440px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-public-shell.an-editorial .an-arc-wall-art,
+  .an-public-shell.an-editorial .an-ab-path-item {
+    transition: none;
+  }
+
+  .an-public-shell.an-editorial .an-arc-wall-item:hover .an-arc-wall-art,
+  .an-public-shell.an-editorial .an-arc-wall-item:focus-visible .an-arc-wall-art {
+    transform: none;
+  }
+
+  .an-public-shell.an-editorial .an-ab-path-item:hover,
+  .an-public-shell.an-editorial .an-ab-path-item:focus-visible {
+    padding-left: 0;
+  }
+}
