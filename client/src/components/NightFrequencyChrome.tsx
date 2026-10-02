@@ -6,6 +6,7 @@ import {
   publicPlatformLinks,
 } from "@/content/publicContent";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
+import { BirthdayChip, StudioClock } from "./StudioClock";
 import { MobileNav } from "./MobileNav";
 import { MobileSlideMenu } from "./MobileSlideMenu";
 import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
@@ -159,6 +160,7 @@ export function NightHeader({ active }: { active?: string }) {
           ))}
         </nav>
         <div className="nf-nav-tools">
+          <BirthdayChip />
           <LanguageSwitcher pathname={pathname} />
           {/* CTA utama header: membuka halaman musik, bukan anchor #signal yang
               hanya ada di beranda (dulu jadi tautan mati di halaman lain). */}
@@ -238,7 +240,11 @@ export function NightFooter() {
         <Link href="/epk">EPK / Booking</Link>
       </div>
       <p className="footer-bottom">
-        © {new Date().getFullYear()} AKBAR NAWASUNDA
+        <span>© {new Date().getFullYear()} AKBAR NAWASUNDA</span>
+        <span className="footer-bottom__clock">
+          <StudioClock />
+          <BirthdayChip />
+        </span>
       </p>
     </footer>
   );

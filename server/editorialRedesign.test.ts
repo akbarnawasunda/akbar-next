@@ -164,26 +164,13 @@ describe("rute publik sesudah redesign", () => {
     expect(visuals.html).toMatch(/alt="Artwork [^"]+"/);
   });
 
-  it("menjaga Fan Signal tetap satu per halaman dengan source yang benar", async () => {
-    const pairs: [string, string][] = [
-      ["/", "home"],
-      ["/music", "music"],
-      ["/live", "footer"],
-      ["/visuals", "visuals"],
-      ["/universe", "universe"],
-    ];
-    for (const [route, source] of pairs) {
+  it("tidak mengulang formulir langganan di banyak halaman", async () => {
+    const home = await renderPage("/");
+    expect(home.html).toContain('data-fan-signal-source="home"');
+
+    for (const route of ["/music", "/live", "/visuals", "/universe"]) {
       const page = await renderPage(route);
-      const forms = page.html.match(/fan-signal-section/g) ?? [];
-      expect(forms.length, `jumlah Fan Signal di ${route}`).toBeGreaterThan(0);
-      const sections = page.html.match(/class="[^"]*fan-signal-section[^"]*"/g);
-      expect(
-        new Set(sections).size,
-        `Fan Signal unik di ${route}`
-      ).toBeLessThanOrEqual(2);
-      expect(page.html, `source Fan Signal ${route}`).toContain(
-        `data-fan-signal-source="${source}"`
-      );
+      expect(page.html.match(/fan-signal-section/g) ?? [], route).toHaveLength(0);
     }
   });
 
@@ -204,8 +191,10 @@ describe("aset statis redesign", () => {
     const indexHtml = read("client/index.html");
     expect(indexHtml).toContain("an-splash-seen");
     expect(indexHtml).toContain("sessionStorage");
-    expect(indexHtml).toContain("MIN_VISIBLE = 1200");
-    expect(indexHtml).toContain("MAX_VISIBLE = 1800");
+    // Batas durasi splash: minimal 1.4 detik agar sekuens tanda tangan
+    // terbaca, maksimal 2.2 detik sebagai jaring pengaman.
+    expect(indexHtml).toContain("MIN_VISIBLE = 1400");
+    expect(indexHtml).toContain("MAX_VISIBLE = 2200");
     expect(indexHtml).toMatch(/prefers-reduced-motion: reduce/);
   });
 

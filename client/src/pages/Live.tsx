@@ -4,8 +4,6 @@ import {
   MapPin,
   Ticket,
 } from "lucide-react";
-import FanSignalSection from "@/components/FanSignalSection";
-import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { CtaPanel, EventCountdown } from "@/components/editorial/EditorialKit";
 import { Link } from "wouter";
@@ -489,16 +487,9 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
           }
         />
 
-        {/* Formulir FanSignal masih berbahasa Indonesia, jadi hanya dipasang
-            di rute ID (kontrak signatureRuntime.test.ts). */}
-        {locale === "id" ? (
-          <FanSignalSection
-            source={FAN_SIGNAL_SOURCES.live}
-            className="fan-signal-section--motion"
-            title={t.signalTitle}
-            description={t.signalCopy}
-          />
-        ) : null}
+        {/* Formulir langganan hanya ada di beranda. Dulu section yang sama
+            dipasang di lima halaman, jadi pengunjung melihat blok yang sama
+            berulang kali. Sekarang satu pemilik: beranda. */}
     </main>
   );
 }

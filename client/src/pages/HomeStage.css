@@ -24,19 +24,17 @@
 .an-site .an-hero-scene,
 .an-site .an-channels,
 .an-site .an-feature,
-.an-site .an-catalog,
-.an-site .an-screening,
-.an-site .an-stage {
+.an-site .an-catalog {
   position: relative;
 }
 
-.an-site :is(.an-channels, .an-feature, .an-catalog, .an-screening) {
+.an-site :is(.an-channels, .an-feature, .an-catalog) {
   padding: var(--section-y) var(--hx-gutter);
   max-width: var(--hx-max);
   margin-inline: auto;
 }
 
-.an-site :is(.an-channels, .an-feature, .an-catalog, .an-screening, .an-stage) h2 {
+.an-site :is(.an-channels, .an-feature, .an-catalog) h2 {
   margin: 0;
   max-width: 20ch;
   font-family: var(--font-display);
@@ -193,70 +191,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-}
-
-/* Artefak rilisan terbaru — data nyata dari CMS/katalog. */
-.an-site .an-hero-artifact {
-  display: grid;
-  grid-template-columns: 72px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--space-sm);
-  max-width: 32rem;
-  padding: 10px 16px 10px 10px;
-  border: 1px solid var(--editorial-rule);
-  background: color-mix(in srgb, var(--ink) 74%, transparent);
-  color: var(--paper);
-  text-decoration: none;
-  transition:
-    border-color 220ms var(--ease, ease),
-    background-color 220ms var(--ease, ease);
-}
-
-.an-site .an-hero-artifact:hover,
-.an-site .an-hero-artifact:focus-visible {
-  border-color: color-mix(in srgb, var(--acid) 54%, transparent);
-  background: color-mix(in srgb, var(--ink) 86%, transparent);
-}
-
-.an-site .an-hero-artifact-art {
-  display: block;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  background: var(--ink-soft);
-}
-
-.an-site .an-hero-artifact-copy {
-  display: grid;
-  gap: 3px;
-  min-width: 0;
-}
-
-.an-site .an-hero-artifact-copy small {
-  font-family: var(--font-mono);
-  font-size: 0.5rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--acid);
-}
-
-.an-site .an-hero-artifact-copy strong {
-  font-family: var(--font-display);
-  font-size: 1.02rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: var(--paper);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.an-site .an-hero-artifact-copy em {
-  font-family: var(--font-mono);
-  font-size: 0.54rem;
-  font-style: normal;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--mute);
 }
 
 .an-site .an-hero-facts {
@@ -438,288 +372,9 @@
   margin-top: var(--space-sm);
 }
 
-.an-site .an-catalog-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-lg);
-  margin-bottom: var(--space-lg);
-}
-
-.an-site .an-catalog-head > div:first-child {
-  display: grid;
-  gap: var(--space-sm);
-}
-
-.an-site .an-catalog-tools {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
 .an-site .an-rail {
   /* Rail beranda: kartu lebih besar karena hanya menampilkan rilisan. */
   grid-auto-columns: clamp(230px, 25vw, 340px);
-}
-
-/* ------------------------------------------------------------
-   ADEGAN 6 — RUANG TAYANG
-   ------------------------------------------------------------ */
-
-.an-site .an-screening-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-md);
-  margin-bottom: var(--space-lg);
-}
-
-.an-site .an-screening-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.62fr) minmax(0, 0.9fr);
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: clamp(12px, 1.6vw, 24px);
-}
-
-.an-site .an-frame {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  background: var(--ink-soft);
-  color: var(--paper);
-  text-decoration: none;
-  min-height: 220px;
-}
-
-.an-site .an-frame--lead {
-  grid-row: span 2;
-  min-height: clamp(320px, 46vw, 640px);
-}
-
-.an-site .an-frame-art {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
-
-.an-site .an-frame-scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    0deg,
-    color-mix(in srgb, var(--ink) 88%, transparent) 0%,
-    color-mix(in srgb, var(--ink) 18%, transparent) 46%,
-    transparent 78%
-  );
-  transition: opacity 300ms var(--ease, ease);
-}
-
-.an-site .an-frame-copy {
-  position: absolute;
-  left: clamp(14px, 1.6vw, 22px);
-  right: clamp(14px, 1.6vw, 22px);
-  bottom: clamp(14px, 1.6vw, 22px);
-  display: grid;
-  gap: 6px;
-}
-
-.an-site .an-frame-copy small {
-  font-family: var(--font-mono);
-  font-size: 0.5rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--acid);
-}
-
-.an-site .an-frame-copy strong {
-  font-family: var(--font-display);
-  font-size: clamp(1.05rem, 1.8vw, 1.6rem);
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.an-site .an-frame-play {
-  position: absolute;
-  right: clamp(14px, 1.6vw, 22px);
-  top: clamp(14px, 1.6vw, 22px);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--paper) 42%, transparent);
-  color: var(--paper);
-  transition:
-    background-color 240ms var(--ease, ease),
-    color 240ms var(--ease, ease),
-    transform 240ms var(--ease, ease);
-}
-
-.an-site .an-frame:hover .an-frame-play,
-.an-site .an-frame:focus-visible .an-frame-play {
-  background: var(--acid);
-  border-color: var(--acid);
-  color: var(--ink);
-  transform: scale(1.06);
-}
-
-.an-site .an-frame:hover .an-frame-scrim,
-.an-site .an-frame:focus-visible .an-frame-scrim {
-  opacity: 0.82;
-}
-
-/* ------------------------------------------------------------
-   ADEGAN 7 — PANGGUNG / JADWAL
-   ------------------------------------------------------------ */
-
-.an-site .an-stage {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  align-items: end;
-  gap: clamp(28px, 4vw, 72px);
-  min-height: clamp(560px, 82svh, 900px);
-  padding: var(--space-2xl) var(--hx-gutter);
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.an-site .an-stage-bg {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 34%;
-}
-
-.an-site .an-stage-scrim {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--ink) 94%, transparent) 0%,
-      color-mix(in srgb, var(--ink) 74%, transparent) 52%,
-      color-mix(in srgb, var(--ink) 42%, transparent) 100%
-    ),
-    linear-gradient(
-      0deg,
-      color-mix(in srgb, var(--ink) 88%, transparent) 0%,
-      transparent 62%
-    );
-}
-
-.an-site .an-stage-copy {
-  display: grid;
-  gap: var(--space-md);
-  max-width: 34rem;
-}
-
-.an-site .an-stage-lede {
-  margin: 0;
-  max-width: 44ch;
-  font-size: var(--text-lede);
-  line-height: 1.66;
-  color: color-mix(in srgb, var(--paper) 82%, transparent);
-}
-
-.an-site .an-stage-copy .an-btn {
-  justify-self: start;
-}
-
-.an-site .an-stage-board {
-  display: grid;
-  gap: var(--space-xs);
-  align-self: end;
-  padding: var(--space-lg) var(--space-md);
-  border: 1px solid var(--editorial-rule);
-  background: color-mix(in srgb, var(--ink) 76%, transparent);
-}
-
-.an-site .an-stage-board-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.06;
-  color: var(--paper);
-}
-
-.an-site .an-stage-board-when {
-  font-family: var(--font-mono);
-  font-size: 0.56rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--acid);
-}
-
-.an-site .an-stage-index {
-  grid-column: 1 / -1;
-  display: grid;
-  gap: 0;
-  margin: var(--space-lg) 0 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
-}
-
-.an-site .an-stage-index li {
-  display: grid;
-  grid-template-columns: 7.5rem minmax(0, 1.4fr) minmax(0, 1fr) auto;
-  align-items: baseline;
-  gap: var(--space-md);
-  padding: 14px 2px;
-  border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
-}
-
-.an-site .an-stage-date {
-  font-family: var(--font-mono);
-  font-size: 0.54rem;
-  letter-spacing: 0.18em;
-  color: color-mix(in srgb, var(--paper) 70%, transparent);
-}
-
-.an-site .an-stage-index strong {
-  font-family: var(--font-display);
-  font-size: 1.08rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: var(--paper);
-}
-
-.an-site .an-stage-index small {
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  color: color-mix(in srgb, var(--paper) 66%, transparent);
-}
-
-.an-site .an-stage-index a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.an-site .an-stage-index .an-event-location-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.an-site .an-stage-source {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  justify-self: end;
-  font-family: var(--font-mono);
-  font-size: 0.52rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--acid);
 }
 
 /* ------------------------------------------------------------
@@ -738,38 +393,6 @@
   }
   .an-site .an-hero-plate {
     width: min(66%, 760px);
-  }
-  .an-site .an-stage {
-    grid-template-columns: minmax(0, 1fr);
-    align-items: start;
-  }
-  .an-site .an-stage-board {
-    justify-self: start;
-    min-width: min(100%, 26rem);
-  }
-}
-
-/* ------------------------------------------------------------
-   BREAKPOINT — satu kolom (ponsel & tablet kecil)
-   ------------------------------------------------------------ */
-
-@media (max-width: 900px) {
-  .an-site .an-screening-grid {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: none;
-  }
-  .an-site .an-frame--lead {
-    grid-row: auto;
-    min-height: clamp(220px, 56vw, 420px);
-  }
-  .an-site .an-frame {
-    min-height: clamp(200px, 46vw, 320px);
-  }
-  .an-site .an-stage-index li {
-    grid-template-columns: 6.5rem minmax(0, 1fr) auto;
-  }
-  .an-site .an-stage-index small {
-    grid-column: 2 / -1;
   }
 }
 
@@ -832,15 +455,6 @@
     line-height: 0.96;
   }
 
-  .an-site .an-hero-artifact {
-    grid-template-columns: 62px minmax(0, 1fr) auto;
-    padding: 10px 12px 10px 10px;
-  }
-
-  .an-site .an-hero-artifact-copy strong {
-    font-size: 0.96rem;
-  }
-
   .an-site .an-hero-facts {
     gap: var(--space-md) var(--space-lg);
   }
@@ -849,7 +463,7 @@
     display: none; /* di sentuh, gulir sudah jelas tanpa petunjuk */
   }
 
-  .an-site :is(.an-channels, .an-feature, .an-catalog, .an-screening) {
+  .an-site :is(.an-channels, .an-feature, .an-catalog) {
     padding-inline: var(--hx-gutter);
   }
 
@@ -880,40 +494,6 @@
        supaya kartu terakhir tidak menempel ke tepi layar. */
     padding-right: var(--hx-gutter);
   }
-
-
-  .an-site .an-catalog-tools {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-
-  .an-site .an-stage {
-    min-height: 0;
-    padding: var(--space-2xl) var(--hx-gutter);
-    gap: var(--space-xl);
-  }
-
-  .an-site .an-stage-bg {
-    object-position: 52% 30%;
-  }
-
-  .an-site .an-stage-index li {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 6px var(--space-sm);
-  }
-
-  .an-site .an-stage-index .an-stage-date {
-    grid-column: 1 / -1;
-  }
-
-  .an-site .an-stage-index strong {
-    font-size: 1rem;
-  }
-
-  .an-site .an-stage-board {
-    padding: var(--space-md);
-  }
 }
 
 /* ------------------------------------------------------------
@@ -924,10 +504,6 @@
   .an-site .an-hero-plate {
     aspect-ratio: 3 / 4;
     max-height: 62svh;
-  }
-
-  .an-site .an-hero-artifact {
-    grid-template-columns: 54px minmax(0, 1fr) auto;
   }
 
   .an-site .an-hero-facts dd {
@@ -958,9 +534,5 @@
   .an-site .an-hero-artifact,
   .an-site .an-hero-scroll {
     transition: none;
-  }
-  .an-site .an-frame:hover .an-frame-play,
-  .an-site .an-frame:focus-visible .an-frame-play {
-    transform: none;
   }
 }

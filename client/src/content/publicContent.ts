@@ -246,7 +246,7 @@ export function customDocumentsToPublicContent(documents: CustomDocument[] | und
     game: game ? {
       title: stringValue(payloadOf(game).title) || "JEDAG RUN — NIGHT FREQUENCY",
       kicker: stringValue(payloadOf(game).kicker) || "GAME MINI",
-      intro: stringValue(payloadOf(game).intro) || stringValue(payloadOf(game).body) || "Lari ikut ketukan, kumpulkan not, dan kejar drop-nya.",
+      intro: stringValue(payloadOf(game).intro) || stringValue(payloadOf(game).body) || "Lari ikut ketukan, kumpulkan not, kejar drop-nya.",
       bgmUrl: publicMediaUrl(stringValue(payloadOf(game).bgmUrl)),
       jumpSfxUrl: publicMediaUrl(stringValue(payloadOf(game).jumpSfxUrl)),
       collectSfxUrl: publicMediaUrl(stringValue(payloadOf(game).collectSfxUrl)),
@@ -282,11 +282,14 @@ export function publicPlatformLinks(content: CmsArtistContent | null | undefined
 const verifiedJourneyFallback: CmsJourney = {
   title: "PERJALANAN MUSIK.",
   titleEn: "MUSIC JOURNEY.",
-  intro: "Perjalanan musik Akbar Nawasunda dimulai pada 2020 sebagai bedroom producer independen dengan nama DJ Akbar Remix. Eksperimennya membawa lagu-lagu populer ke wilayah Breakbeat, Jedag Jedug, dan Jungle Dutch bergaya Bandung. Kini, di bawah nama Akbar Nawasunda, ia merilis karya orisinal yang memadukan melodi pop, electronic bass, dan energi remix untuk platform musik digital global.",
-  introEn: "Akbar Nawasunda's musical journey began in 2020 as an independent bedroom producer known as DJ Akbar Remix. His experiments brought popular songs into a Bandung-rooted space of Breakbeat, Jedag Jedug, and Jungle Dutch. Today, he releases original work shaped by pop melody, electronic bass, and remix energy.",
+  // Pengantar halaman karya: fokus pada era dan rilisan. Biografi lengkap
+  // hanya ada di /about, dan bio singkat untuk pers ada di /epk — tidak
+  // diulang di sini.
+  intro: "Perjalanan ini dibaca lewat era dan rilisan: dari reinterpretasi lagu populer sebagai DJ Akbar Remix sampai karya orisinal sebagai Akbar Nawasunda.",
+  introEn: "The journey reads through eras and releases: from reinterpreting popular songs as DJ Akbar Remix to original work as Akbar Nawasunda.",
   milestones: [
     { year: "2020", title: "DJ Akbar Remix", body: "Awal perjalanan sebagai bedroom producer independen dengan fokus pada reinterpretasi lagu populer.", titleEn: "DJ Akbar Remix", bodyEn: "The beginning as an independent bedroom producer focused on reinterpreting popular songs." },
-    { year: "SEKARANG", title: "Akbar Nawasunda", body: "Karya orisinal dan remix yang membawa energi electronic bass ke platform musik digital.", titleEn: "Akbar Nawasunda", bodyEn: "Original work and remixes carrying electronic bass energy across digital music platforms." },
+    { year: "SEKARANG", title: "Akbar Nawasunda", body: "Karya orisinal dan remix bergaya breakbeat dan electronic bass.", titleEn: "Akbar Nawasunda", bodyEn: "Original tracks and remixes in a breakbeat and electronic bass style." },
   ],
 };
 

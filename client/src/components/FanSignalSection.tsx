@@ -126,7 +126,7 @@ export default function FanSignalSection({
           aria-live="polite"
         >
           {status?.message ||
-            "Kabar musik, video, dan jadwal. Berhenti kapan saja."}
+            "Berhenti kapan saja."}
         </small>
       </form>
     </section>

@@ -102,8 +102,13 @@ describe("halaman publik yang dirender server", () => {
     expect(text).not.toContain("JADWAL");
   });
 
-  it("memberi setiap video thumbnail-nya sendiri", async () => {
-    const { html } = await renderPage("/");
+  it("memberi setiap video thumbnail-nya sendiri di /visuals", async () => {
+    // Daftar video tinggal di satu tempat: /visuals. Beranda tidak lagi
+    // mengulang video yang sama.
+    const home = await renderPage("/");
+    expect(home.html.match(/i\.ytimg\.com/g) ?? []).toHaveLength(0);
+
+    const { html } = await renderPage("/visuals");
     const thumbnails = [
       ...html.matchAll(/https:\/\/i\.ytimg\.com\/vi\/([\w-]+)\//g),
     ].map(match => match[1]);
@@ -111,42 +116,34 @@ describe("halaman publik yang dirender server", () => {
     expect(new Set(thumbnails).size).toBe(thumbnails.length);
   });
 
-  it("meminta turunan kecil ke CDN untuk artwork katalog", async () => {
-    const { html } = await renderPage("/");
+  it("meminta turunan kecil ke CDN untuk artwork katalog di /music", async () => {
+    const { html } = await renderPage("/music");
     const small = html.match(/-t200x200\./g) ?? [];
-    const full = html.match(/-t500x500\./g) ?? [];
 
     expect(small.length).toBeGreaterThanOrEqual(2);
-    // Hanya cover rilisan unggulan yang boleh memakai master ukuran penuh.
-    expect(full.length).toBeLessThanOrEqual(1);
     expect(html).not.toMatch(/\/1200x1200bb\./);
     expect(html).toContain("ab67616d00001e02");
   });
 
-  it("menampilkan seluruh katalog rilisan di beranda", async () => {
-    const { text } = await renderPage("/");
+  it("menampilkan seluruh katalog rilisan di /music, bukan lagi di beranda", async () => {
+    const { text } = await renderPage("/music");
     for (const release of releases) {
-      expect(text, `rilisan "${release.title}" hilang dari beranda`).toContain(
+      expect(text, `rilisan "${release.title}" hilang dari /music`).toContain(
         release.title
       );
     }
   });
 
-  it("merender satu sumber Fan Signal yang sesuai di lima halaman publik", async () => {
-    const pageSources = [
-      ["/", "home", "JANGAN KETINGGALAN."] as const,
-      ["/music", "music", "DENGARKAN BERIKUTNYA."] as const,
-      ["/live", "footer", "IKUTI KABARNYA."] as const,
-      ["/visuals", "visuals", "LIHAT YANG BERIKUTNYA."] as const,
-      ["/universe", "universe", "TETAP DI FREKUENSI."] as const,
-    ];
+  it("merender formulir langganan satu kali saja, di beranda", async () => {
+    const home = await renderPage("/");
+    expect(
+      home.html.match(/data-fan-signal-source="home"/g)
+    ).toHaveLength(1);
+    expect(home.text).toContain("JANGAN KETINGGALAN.");
 
-    for (const [route, source, heading] of pageSources) {
-      const { html, text } = await renderPage(route);
-      expect(html.match(new RegExp(`data-fan-signal-source="${source}"`, "g")))
-        .toHaveLength(1);
-      expect(html).toContain(`id="fan-email-${source}"`);
-      expect(text).toContain(heading);
+    for (const route of ["/music", "/live", "/visuals", "/universe"]) {
+      const { html } = await renderPage(route);
+      expect(html.match(/data-fan-signal-source=/g), route).toBeNull();
     }
   });
 

@@ -341,9 +341,9 @@
   transition: transform 420ms var(--ease, ease);
 }
 
-.an-public-shell.an-editorial .an-release:nth-child(3n + 2) .an-release-art {
-  aspect-ratio: 4 / 5;
-}
+/* Artwork rilisan selalu persegi. Sebelumnya setiap kartu ke-3 dipaksa
+   4/5 sehingga artwork persegi (semua rilisan di sini) terpotong kiri-kanan.
+   Ritme rak tetap ada lewat lebar kartu, bukan lewat rasio yang berbeda. */
 
 .an-public-shell.an-editorial .an-release:hover .an-release-art,
 .an-public-shell.an-editorial .an-release:focus-visible .an-release-art {
@@ -529,9 +529,7 @@
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-lg);
   }
-  .an-public-shell.an-editorial .an-doc-art {
-    aspect-ratio: 4 / 3;
-  }
+  /* Artwork tetap persegi di ponsel; 4/3 memotong atas-bawah cover. */
 }
 
 @media (prefers-reduced-motion: reduce) {

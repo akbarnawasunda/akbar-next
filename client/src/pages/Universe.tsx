@@ -1,8 +1,6 @@
 import { ArrowDown, ArrowUpRight, Disc3, Music2, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
-import FanSignalSection from "@/components/FanSignalSection";
-import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { slugify } from "@shared/slug";
 import {
   artworkThumb,
@@ -419,15 +417,9 @@ export function UniverseView({ locale = "id" }: { locale?: "id" | "en" }) {
           </ul>
         </section>
 
-        {/* Halaman Inggris sengaja tidak memasang FanSignal: formulirnya
-            masih berbahasa Indonesia (lihat signatureRuntime.test.ts). */}
-        {locale === "id" ? (
-          <FanSignalSection
-            source={FAN_SIGNAL_SOURCES.universe}
-            title={t.signalTitle}
-            description={t.signalCopy}
-          />
-        ) : null}
+        {/* Formulir langganan hanya ada di beranda. Dulu section yang sama
+            dipasang di lima halaman, jadi pengunjung melihat blok yang sama
+            berulang kali. Sekarang satu pemilik: beranda. */}
     </main>
   );
 }

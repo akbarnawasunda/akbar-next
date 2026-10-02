@@ -397,10 +397,12 @@ body::before {
   .an-site .home-platform-number { font-size: 0.58rem !important; }
   .an-site .feature-release { grid-template-columns: 1fr !important; gap: 32px !important; }
   .an-site .release-cover { max-width: 430px; }
-  .an-site .video-grid { min-height: 0 !important; display: grid !important; grid-template-columns: 1fr 1fr !important; grid-template-rows: 300px 220px !important; }
-  .an-site .video-card:first-child { grid-column: 1 / -1 !important; grid-row: 1 / 2 !important; }
-  .an-site .video-card { border-right: 1px solid var(--ref-line) !important; }
-  .an-site .video-card:last-child { border-right: 0 !important; }
+  /* Satu kolom, setiap kartu video 4:3 (rasio sumber thumbnail 480x360) —
+     geometri seragam, tanpa baris berpiksel tetap yang bikin kartu
+     panjang sebelah atau terpotong. */
+  .an-site .video-grid { min-height: 0 !important; display: grid !important; grid-template-columns: minmax(0, 1fr) !important; grid-template-rows: none !important; grid-auto-rows: auto !important; gap: 14px !important; }
+  .an-site .video-card { aspect-ratio: 4 / 3; border-right: 1px solid var(--ref-line) !important; }
+  .an-site .video-card:first-child { grid-column: auto !important; grid-row: auto !important; }
   .an-site .live-section { min-height: 570px !important; }
 }
 @media (max-width: 480px) {
@@ -413,7 +415,6 @@ body::before {
   .an-site .home-hero-portrait { height: 330px !important; }
   .an-site .hero-copy .hero-title-editorial { font-size: clamp(2rem, 12vw, 4rem) !important; }
   .an-site .section h2, .an-site .home-signal-copy h2 { font-size: clamp(2.7rem, 15vw, 5rem) !important; }
-  .an-site .video-grid { grid-template-rows: 250px 180px !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }

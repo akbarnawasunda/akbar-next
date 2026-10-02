@@ -43,7 +43,9 @@ describe("high-performance image optimization & non-Google typography", () => {
   });
 
   it("memakai ukuran intrinsik untuk gambar aset lokal", async () => {
-    const page = await render("/", prefetch);
+    // Studi potret pindah ke /universe (tidak diulang di beranda), jadi
+    // kontrak ukuran intrinsik diperiksa di halaman pemiliknya.
+    const page = await render("/universe", prefetch);
     const images = page.html.match(/<img[^>]*an-opt-img-element[^>]*>/g) || [];
     const sized = images.filter(img => /width="\d+"/.test(img) && /height="\d+"/.test(img));
     expect(sized.length, "tidak ada gambar dengan ukuran intrinsik").toBeGreaterThan(0);

@@ -74,21 +74,21 @@ describe("komposisi beranda", () => {
     expect(plate).toContain("aspect-ratio: 4 / 5");
   });
 
-  it("menjaga kolom tetap artefak rilisan muat di 360px", () => {
+  it("menjaga fakta hero tetap muat di 360px tanpa lebar tetap", () => {
+    // Artefak rilisan di hero sudah tidak ada (rilisan cukup diumumkan di
+    // papan sinyal + seksi pemutar). Yang dikunci sekarang: fakta hero tetap
+    // membungkus dan tidak ada lebar piksel tetap di hero versi ponsel.
+    const facts = block(css, ".an-site .an-hero-facts {");
+    expect(facts).toContain("flex-wrap: wrap");
+    expect(facts).not.toMatch(/width:\s*\d+px/);
+
     const mobile = css.slice(css.indexOf("@media (max-width: 767.98px)"));
-    const artifact = block(mobile, ".an-site .an-hero-artifact {");
-    const art = Number.parseFloat(
-      artifact.match(/grid-template-columns:\s*([\d.]+)px/)?.[1] ?? "0"
+    expect(block(mobile, ".an-site .an-hero-facts {")).toContain(
+      "gap: var(--space-md) var(--space-lg)"
     );
-    const arrow = 16; // ikon panah
-    const gap = 12; // --space-sm pada layar kecil
-    const inner = 360 - 22 * 2; // --editorial-gutter
-    const left = inner - (art + gap * 2 + arrow);
-    expect(art, "lebar artwork artefak terbaca").toBeGreaterThan(0);
-    expect(
-      left,
-      `teks artefak hanya kebagian ${left.toFixed(0)}px`
-    ).toBeGreaterThanOrEqual(140);
+    const plate = block(mobile, ".an-site .an-hero-plate {");
+    expect(plate).toContain("width: 100%");
+    expect(plate).not.toMatch(/width:\s*\d+px/);
   });
 
   it("menjaga baris kanal resmi tidak melipat di 360px", () => {
