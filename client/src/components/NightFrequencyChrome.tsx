@@ -140,6 +140,7 @@ export function NightHeader({ active }: { active?: string }) {
           <ResilientBrandImage
             className="nf-brand-logo"
             alt="Akbar Nawasunda"
+            priority
           />
           <span className="nf-wordmark-text">
             <strong>Akbar Nawasunda</strong>

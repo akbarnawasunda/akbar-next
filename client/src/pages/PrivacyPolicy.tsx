@@ -42,12 +42,12 @@ const collectionPoints = [
 ];
 
 const thirdParties = [
-  ["Vercel", "hosting & delivery"],
-  ["Google Fonts", "typefaces"],
-  ["First-party gallery counter", "anonymous aggregate access"],
-  ["Site backend and database", "subscriber dan inquiry storage"],
-  ["Spotify / YouTube / SoundCloud", "embedded players setelah klik"],
-  ["Apple iTunes Search", "cover art dan 30s previews"],
+  ["Vercel", "hosting & pengiriman"],
+  ["Fontshare", "file font di-host di domain ini"],
+  ["Penghitung galeri (first-party)", "akses agregat anonim"],
+  ["Backend & database situs", "penyimpanan subscriber dan inquiry"],
+  ["Spotify / YouTube / SoundCloud", "player tertanam setelah klik"],
+  ["Apple iTunes Search", "cover art dan preview 30 detik"],
 ];
 
 const sections = [

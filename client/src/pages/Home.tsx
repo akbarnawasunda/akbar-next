@@ -309,6 +309,7 @@ export default function Home() {
                 <img
                   src={portraitSrc}
                   alt="Portrait resmi Akbar Nawasunda"
+                  loading="eager"
                   fetchPriority="high"
                   decoding="async"
                   width={800}

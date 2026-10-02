@@ -177,6 +177,7 @@ export default function PressKit() {
                 alt="Potret editorial Akbar Nawasunda"
                 width={667}
                 height={1000}
+                loading="eager"
                 fetchPriority="high"
                 decoding="async"
                 onError={() => {

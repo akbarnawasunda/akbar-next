@@ -268,14 +268,28 @@ export function EnglishHome() {
       <main id="top" tabIndex={-1} className="en-content en-home-parity">
         <section className="an-hero">
           <div className="home-hero-portrait">
-            <img
-              src={officialBrand.portrait}
-              alt="Portrait of Akbar Nawasunda"
-              width={800}
-              height={1000}
-              fetchPriority="high"
-              decoding="async"
-            />
+            {/* Varian responsif yang sama dengan hero beranda ID: master 396 KB
+                hanya dipakai sebagai fallback, bukan sumber utama. */}
+            <picture className="home-hero-picture">
+              <source
+                media="(max-width: 640px)"
+                srcSet="/assets/akbar-official-portrait-optimized.webp"
+                type="image/webp"
+              />
+              <source
+                srcSet="/assets/akbar-nawasunda-official-portrait-1000.webp"
+                type="image/webp"
+              />
+              <img
+                src={officialBrand.portrait}
+                alt="Portrait of Akbar Nawasunda"
+                width={1122}
+                height={1402}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+              />
+            </picture>
           </div>
 
           <div className="hero-copy">
@@ -2132,7 +2146,10 @@ export function EnglishPrivacy() {
                 </h2>
                 <ul>
                   <li>Vercel for hosting and delivery.</li>
-                  <li>Google Fonts for typefaces.</li>
+                  <li>
+                    Fontshare typefaces, self-hosted on this domain — no
+                    third-party font service receives requests.
+                  </li>
                   <li>
                     First-party gallery counter for anonymous aggregate access
                     totals.

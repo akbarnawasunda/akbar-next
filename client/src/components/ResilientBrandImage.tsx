@@ -4,9 +4,11 @@ import { officialBrand } from "@/content/artistPlatform";
 type Props = {
   className: string;
   alt: string;
+  /** Logo di masthead: di atas fold, jadi dimuat lebih awal. */
+  priority?: boolean;
 };
 
-export function ResilientBrandImage({ className, alt }: Props) {
+export function ResilientBrandImage({ className, alt, priority = false }: Props) {
   const [src, setSrc] = useState(officialBrand.logo);
 
   return (
@@ -14,6 +16,10 @@ export function ResilientBrandImage({ className, alt }: Props) {
       className={className}
       src={src}
       alt={alt}
+      width={512}
+      height={357}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
       onError={event => {
         if (src !== officialBrand.logoFallback) {
           setSrc(officialBrand.logoFallback);

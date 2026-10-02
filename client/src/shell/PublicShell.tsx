@@ -7,7 +7,7 @@ import { GlobalAudioPlayer } from "@/components/signature/GlobalAudioPlayer";
 import { RouteSignalCurtain } from "@/components/signature/RouteSignalCurtain";
 import { SignatureBackground } from "@/components/signature/SignatureBackground";
 import { SignatureProvider } from "@/signature/SignatureProvider";
-import { isPublicRoute, languageOf } from "@/signature/routeSignal";
+import { languageOf } from "@/signature/routeSignal";
 import { useSignatureState } from "@/signature/useSignature";
 import "./PublicShell.css";
 import "./EditorialRefresh.css";
@@ -59,8 +59,12 @@ function ShellSurfaces() {
 function ShellBody({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const lang = languageOf(location);
-  const isEditorialRoute =
-    isPublicRoute(location) && !/^(?:\/en)?\/game(?:\/|$)/.test(location);
+  // Rute tak dikenal tetap bagian situs: halaman 404 resmi memakai partikel,
+  // cursor, player, dan command palette yang sama. Yang benar-benar di luar
+  // lapisan editorial hanya studio/admin/aset dan game.
+  const isStudioRoute = /^\/(?:studio|admin|assets)(?:\/|$)/.test(location);
+  const isGameRoute = /^(?:\/en)?\/game(?:\/|$)/.test(location);
+  const isEditorialRoute = !isStudioRoute && !isGameRoute;
   const path = location.split(/[?#]/, 1)[0] || "/";
   const skipTarget = path === "/" || path === "/en" ? "#top" : "#main-content";
 

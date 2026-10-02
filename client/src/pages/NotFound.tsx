@@ -1,109 +1,104 @@
 import { ArrowUpRight } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { EnglishFooter, EnglishHeader } from "@/components/EnglishChrome";
+import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
+import { OptimizedEditorialImage } from "@/components/OptimizedEditorialImage";
+import { officialBrand } from "@/content/artistPlatform";
+import "./NotFoundStage.css";
 
-export default function NotFound() {
+type Props = {
+  /** Rute 404 berbahasa Inggris memakai chrome dan salinan EN. */
+  locale?: "id" | "en";
+};
+
+/**
+ * Halaman 404 resmi.
+ *
+ * Sebelumnya rute tak dikenal memuat `/legacy/404.html` lewat fetch di client:
+ * HTML SSR-nya kosong, stylesheet legacy ikut menyuntik `body{cursor:none}`,
+ * `overflow:hidden`, dan palet ungu yang tidak dipakai situs ini. Komposisi di
+ * bawah memakai scene kit yang sama dengan halaman publik lain — satu kolom
+ * salinan + satu plate potret resmi — sehingga 404 tetap terasa bagian situs.
+ */
+export default function NotFound({ locale = "id" }: Props) {
+  const [location] = useLocation();
+  const english = locale === "en";
+  const home = english ? "/en" : "/";
+  const music = english ? "/en/music" : "/music";
+  const requested =
+    (location.split(/[?#]/, 1)[0] || "/").replace(/\/+$/, "") || "/";
+
+  const copy = english
+    ? {
+        kicker: "ERROR 404 · SIGNAL LOST",
+        title: "This page is not on the frequency.",
+        lede:
+          "The address you requested is not part of this site. It may be mistyped, or the page has moved. Every official route stays open from the header and footer.",
+        primary: "Back to home",
+        secondary: "Listen to music",
+        routeLabel: "Requested route",
+        statusLabel: "Status",
+        caption: "Akbar Nawasunda · Bandung Barat, Indonesia",
+      }
+    : {
+        kicker: "ERROR 404 · SINYAL HILANG",
+        title: "Halaman ini tidak ada di frekuensi.",
+        lede:
+          "Alamat yang diminta bukan bagian dari situs ini. Mungkin salah ketik, atau halaman sudah dipindahkan. Semua jalur resmi tetap terbuka dari header dan footer.",
+        primary: "Kembali ke beranda",
+        secondary: "Lihat musik",
+        routeLabel: "Rute diminta",
+        statusLabel: "Status",
+        caption: "Akbar Nawasunda · Bandung Barat, Indonesia",
+      };
+
   return (
-    <main
-      style={{
-        minHeight: "100dvh",
-        display: "grid",
-        placeItems: "center",
-        background: "var(--ink)",
-        color: "var(--paper)",
-        padding: "clamp(24px, 6vw, 80px)",
-        fontFamily: "var(--font-body)",
-      }}
-    >
-      <div style={{ maxWidth: "560px", width: "100%" }}>
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.62rem",
-            fontWeight: 600,
-            letterSpacing: "0.24em",
-            color: "var(--acid)",
-            textTransform: "uppercase",
-            margin: 0,
-          }}
-        >
-          ERROR 404 · SIGNAL LOST
-        </p>
-        <h1
-          style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 400,
-            fontSize: "clamp(3rem, 12vw, 8rem)",
-            lineHeight: 0.86,
-            letterSpacing: "-0.05em",
-            margin: "20px 0 24px",
-            color: "var(--paper)",
-          }}
-        >
-          Halaman
-          <br />
-          tidak
-          <br />
-          ditemukan.
-        </h1>
-        <p
-          style={{
-            color: "var(--mute)",
-            fontSize: "1rem",
-            lineHeight: 1.7,
-            margin: "0 0 40px",
-            maxWidth: "42ch",
-          }}
-        >
-          Frekuensi ini tidak aktif. Mungkin URL salah ketik, atau
-          halaman sudah dipindahkan.
-        </p>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "16px 28px",
-            borderTop: "1px solid var(--paper)",
-            paddingTop: "28px",
-          }}
-        >
-          <Link
-            href="/"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "10px",
-              padding: "16px 22px",
-              background: "var(--acid)",
-              color: "var(--ink)",
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.66rem",
-              fontWeight: 700,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-            }}
-          >
-            KEMBALI KE HOME
-          </Link>
-          <Link
-            href="/music"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "10px",
-              paddingBottom: "8px",
-              borderBottom: "1px solid var(--paper)",
-              color: "var(--paper)",
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.66rem",
-              fontWeight: 600,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-            }}
-          >
-            LIHAT MUSIK <ArrowUpRight size={14} />
-          </Link>
-        </div>
-      </div>
-    </main>
+    <div className={`nf-page an-notfound-page${english ? " en-page" : ""}`}>
+      {english ? <EnglishHeader /> : <NightHeader />}
+      <main id="main-content" tabIndex={-1}>
+        <section className="an-page-hero">
+          <div className="an-page-hero-copy">
+            <p className="an-kicker">{copy.kicker}</p>
+            <h1>{copy.title}</h1>
+            <p className="an-lede">{copy.lede}</p>
+            <div className="an-actions">
+              <Link className="an-btn an-btn--solid" href={home}>
+                {copy.primary} <ArrowUpRight size={14} aria-hidden="true" />
+              </Link>
+              <Link className="an-btn an-btn--quiet" href={music}>
+                {copy.secondary}
+              </Link>
+            </div>
+            <dl className="an-facts">
+              <div>
+                <dt>{copy.routeLabel}</dt>
+                <dd>{requested}</dd>
+              </div>
+              <div>
+                <dt>{copy.statusLabel}</dt>
+                <dd>404</dd>
+              </div>
+            </dl>
+          </div>
+          <figure className="an-notfound-plate">
+            <OptimizedEditorialImage
+              src={officialBrand.portrait}
+              backupSrc={officialBrand.portraitFallback}
+              alt={
+                english
+                  ? "Official portrait of Akbar Nawasunda"
+                  : "Potret resmi Akbar Nawasunda"
+              }
+              width={1122}
+              height={1402}
+              sizes="(max-width: 1023.98px) 100vw, 46vw"
+              objectFit="cover"
+            />
+            <figcaption>{copy.caption}</figcaption>
+          </figure>
+        </section>
+      </main>
+      {english ? <EnglishFooter /> : <NightFooter />}
+    </div>
   );
 }
