@@ -78,9 +78,54 @@ export type ImageSizePreset = keyof typeof IMAGE_SIZES;
 
 const DEFAULT_BREAKPOINT = "(max-width: 640px)";
 
+/**
+ * Ukuran intrinsik artwork platform (URL jarak jauh).
+ *
+ * Dimensinya diturunkan dari pola URL yang penyedia memang pakai — bukan
+ * tebakan: SoundCloud menaruh ukuran di sufiks nama file, mzstatic di segmen
+ * path, Spotify selalu bujur sangkar (token 300 atau 640), dan YouTube punya
+ * tabel tetap per varian. Dipakai supaya gambar artwork dari CMS tetap
+ * mengirim `width`/`height` dan tidak menggeser layout saat datang.
+ */
+export function remoteIntrinsicSize(
+  src?: string | null
+): readonly [number, number] | undefined {
+  if (!src) return undefined;
+
+  if (/sndcdn\.com/.test(src)) {
+    const sized = src.match(/-t(\d+)x(\d+)(?:\.\w+)?$/);
+    if (sized) return [Number(sized[1]), Number(sized[2])];
+    if (/\/avatars-/.test(src)) return [500, 500];
+  }
+
+  if (/i\.scdn\.co\/image\//.test(src)) {
+    return /ab67616d00001e02/.test(src) ? [300, 300] : [640, 640];
+  }
+
+  if (/mzstatic\.com/.test(src)) {
+    const sized = src.match(/\/(\d+)x(\d+)[a-z]{2}\.(?:jpg|jpeg|png|webp)$/i);
+    if (sized) return [Number(sized[1]), Number(sized[2])];
+  }
+
+  if (/(?:ytimg\.com|youtube\.com)/.test(src)) {
+    const variant = src.match(/\/(mq|hq|sd|maxres)default\.(?:jpg|jpeg|webp)$/i);
+    if (variant) {
+      const table = {
+        mq: [320, 180],
+        hq: [480, 360],
+        sd: [640, 480],
+        maxres: [1280, 720],
+      } as const;
+      return table[variant[1].toLowerCase() as keyof typeof table];
+    }
+  }
+
+  return undefined;
+}
+
 export function intrinsicSize(src?: string | null) {
   if (!src) return undefined;
-  return INTRINSIC_SIZES[src];
+  return INTRINSIC_SIZES[src] ?? remoteIntrinsicSize(src);
 }
 
 /** Rasio lebar/tinggi dari ukuran intrinsik; `undefined` kalau tidak diketahui. */
