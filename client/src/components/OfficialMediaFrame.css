@@ -25,7 +25,10 @@
   --media-gap: clamp(12px, 1.4vw, 18px);
   --media-rule: var(--editorial-rule, var(--ink-line));
   --media-surface: #141715;
-  --media-thumb: clamp(84px, 22%, 148px);
+  /* Artwork audio (SoundCloud/Spotify) ditampilkan sebagai kotak persegi
+     yang besar — bukan thumbnail kecil di pojok. Rasio 1:1-nya berasal
+     dari provider, jadi bingkai mengikuti artwork, bukan sebaliknya. */
+  --media-thumb: clamp(112px, 28%, 184px);
 
   position: relative;
   display: grid;
@@ -190,6 +193,9 @@
   grid-column: 2;
   grid-row: 1;
   padding: 2px 0 0 var(--media-gap);
+  /* Teks duduk sejajar tengah terhadap artwork persegi di sebelahnya —
+     tidak menggantung di atas dengan ruang kosong di bawah. */
+  align-self: center;
 }
 
 .an-official-media-copy p {
@@ -243,7 +249,9 @@
   justify-content: center;
   gap: 7px;
   min-width: 0;
-  max-width: 100%;
+  /* Tombol tidak meregang jadi dua balok selebar kartu: lebarnya berhenti
+     di 260px (di layar kecil tetap penuh) dan barisnya rata kiri. */
+  max-width: min(100%, 260px);
   min-height: 44px;
   padding: 0 16px;
   border: 1px solid var(--media-rule);
@@ -354,10 +362,15 @@
 /* -- Layar kecil ---------------------------------------------- */
 
 @media (max-width: 640px) {
+  .an-official-media-actions a,
+  .an-official-media-actions button {
+    max-width: 100%;
+  }
+
   .an-official-media {
     --media-pad: 14px;
     --media-gap: 12px;
-    --media-thumb: clamp(76px, 26%, 104px);
+    --media-thumb: clamp(92px, 30%, 128px);
   }
 
   .an-official-media-copy h3 {
@@ -372,7 +385,7 @@
 
 @media (max-width: 380px) {
   .an-official-media {
-    --media-thumb: 72px;
+    --media-thumb: 88px;
   }
 }
 

@@ -11,9 +11,7 @@ import { officialBrand, videos } from "@/content/artistPlatform";
 import { InteractiveArtworkCard } from "@/components/signature/InteractiveArtworkCard";
 import { SignalHeading } from "@/components/signature/SignalType";
 import VisualPortraitStudies from "@/components/VisualPortraitStudies";
-import { ArtistPhotoStorySection } from "@/components/ArtistEditorialSections";
 import {
-  publicPhotoStories,
   publicPortraitStudies,
   usePublicArtistContent,
 } from "@/content/publicContent";
@@ -271,11 +269,6 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
         <VisualPortraitStudies
           english={locale === "en"}
           studies={portraitContent}
-        />
-
-        <ArtistPhotoStorySection
-          photoStories={publicPhotoStories(cms.data)}
-          locale={locale}
         />
 
         {/* Arsip visual: kolom berirama (dense grid), bukan kotak seragam. */}

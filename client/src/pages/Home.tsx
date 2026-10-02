@@ -747,8 +747,8 @@ export default function Home() {
                 src="/assets/akbar-night-frequency-hero-mobile-optimized.webp"
                 alt=""
                 aria-hidden="true"
-                width={1200}
-                height={800}
+                width={900}
+                height={900}
                 loading="lazy"
                 decoding="async"
               />
