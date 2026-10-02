@@ -5,7 +5,7 @@ import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { Reveal } from "@/components/Reveal";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
-import { publicJourney, usePublicArtistContent } from "@/content/publicContent";
+import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./ArchiveStage.css";
 
@@ -125,11 +125,12 @@ export function AboutView({ locale = "id" }: { locale?: "id" | "en" }) {
     locale === "en"
       ? verifiedArtistProfile.shortBioEn
       : profile?.shortBio || verifiedArtistProfile.shortBio;
-  const journey = publicJourney(cms.data);
+  // /about adalah pemilik biografi panjang; halaman lain memakai versi
+  // singkatnya sendiri supaya tidak ada paragraf yang diulang antarhalaman.
   const longBio =
     locale === "en"
-      ? journey.introEn || verifiedArtistProfile.longBioEn
-      : journey.intro || profile?.longBio || verifiedArtistProfile.longBio;
+      ? verifiedArtistProfile.longBioEn
+      : profile?.longBio || verifiedArtistProfile.longBio;
   const genres = profile?.genres?.length
     ? profile.genres
     : verifiedArtistProfile.genres;

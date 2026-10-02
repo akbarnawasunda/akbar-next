@@ -27,6 +27,7 @@
 .an-public-shell.an-editorial .an-arc-hero-plate {
   position: relative;
   margin: 0;
+  /* Sumbernya potret editorial 4:5 (800x1000) — bingkainya sama. */
   aspect-ratio: 4 / 5;
   overflow: hidden;
   background: var(--ink-soft);
@@ -266,18 +267,12 @@
   grid-column: span 5;
 }
 
-.an-public-shell.an-editorial .an-arc-wall-item:nth-child(1) .an-arc-wall-art,
-.an-public-shell.an-editorial .an-arc-wall-item:nth-child(6) .an-arc-wall-art {
-  aspect-ratio: 4 / 5;
-}
+/* Semua artwork di dinding arsip persegi: ritmenya dari lebar kolom,
+   bukan dari rasio yang memotong cover. */
 
-.an-public-shell.an-editorial .an-arc-wall-item:nth-child(3) .an-arc-wall-art {
-  aspect-ratio: 3 / 4;
-}
 
-.an-public-shell.an-editorial .an-arc-wall-item:nth-child(4) .an-arc-wall-art {
-  aspect-ratio: 4 / 3;
-}
+
+
 
 .an-public-shell.an-editorial .an-arc-wall-meta {
   display: grid;
@@ -369,7 +364,9 @@
 .an-public-shell.an-editorial .an-ab-hero-plate {
   position: relative;
   margin: 0;
-  aspect-ratio: 4 / 5;
+  /* Potret /about berukuran 2:3 (667x1000); bingkai 4/5 memotong
+     sekitar 17% lebar foto. Sama dengan sumbernya = tanpa crop. */
+  aspect-ratio: 2 / 3;
   overflow: hidden;
   background: var(--ink-soft);
 }

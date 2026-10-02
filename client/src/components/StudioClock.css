@@ -1,0 +1,151 @@
+/* ============================================================
+   Jam studio + aksen hari ulang tahun (1 November, waktu Jakarta)
+   ============================================================
+   Jam hanya muncul setelah mount (lihat StudioClock.tsx), jadi tidak ada
+   jam basi di HTML hasil SSR. Aksen ulang tahun memakai satu warna kuningan
+   hangat; sisa situs tetap memakai palet gelap-biru yang sama. */
+
+.nf-clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 15ch;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+  white-space: nowrap;
+}
+
+.nf-clock__pulse {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--signal) 16%, transparent);
+  animation: nf-clock-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes nf-clock-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.nf-clock__date {
+  color: var(--mute);
+}
+
+.nf-clock__time {
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.14em;
+}
+
+/* Footer berdesakan di layar sempit: cukup jamnya saja. */
+@media (max-width: 640px) {
+  .nf-clock {
+    min-width: 0;
+  }
+  .nf-clock__date {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-clock__pulse {
+    animation: none;
+    opacity: 0.8;
+  }
+}
+
+/* Baris bawah footer: copyright di kiri, jam studio di kanan. */
+.nf-footer .footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.footer-bottom__clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ---------- Aksen hari ulang tahun ---------- */
+
+:root {
+  --an-birthday: #dcb573;
+}
+
+.nf-birthday-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  border: 1px solid color-mix(in srgb, var(--an-birthday) 46%, transparent);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--an-birthday);
+  white-space: nowrap;
+}
+
+/* Header di ponsel sudah padat: lencana cukup di layar lebar, dan
+   perayaannya tetap ada di hero, footer, serta splash. */
+@media (max-width: 900px) {
+  .nf-birthday-chip {
+    display: none;
+  }
+}
+
+.nf-birthday-note {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 48ch;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.7;
+  color: var(--an-birthday);
+}
+
+.nf-birthday-note__rule {
+  width: 34px;
+  height: 1px;
+  flex: none;
+  background: color-mix(in srgb, var(--an-birthday) 70%, transparent);
+}
+
+/* Aksen tipis di chrome: garis header/footer dan satu kata di wordmark. */
+[data-birthday="on"] .nf-nav {
+  border-bottom-color: color-mix(in srgb, var(--an-birthday) 42%, transparent);
+}
+
+[data-birthday="on"] .nf-footer {
+  border-top-color: color-mix(in srgb, var(--an-birthday) 32%, transparent);
+}
+
+[data-birthday="on"] .nf-wordmark-text small {
+  color: var(--an-birthday);
+}
+
+[data-birthday="on"] .nf-clock__pulse {
+  background: var(--an-birthday);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--an-birthday) 18%, transparent);
+}

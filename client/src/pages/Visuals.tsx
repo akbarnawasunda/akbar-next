@@ -4,8 +4,6 @@ import { Link } from "wouter";
 import { CtaPanel, FilterBar } from "@/components/editorial/EditorialKit";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
-import FanSignalSection from "@/components/FanSignalSection";
-import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { officialBrand, videos } from "@/content/artistPlatform";
 import { InteractiveArtworkCard } from "@/components/signature/InteractiveArtworkCard";
@@ -34,11 +32,7 @@ const thumbnailFor = (id: string) =>
 const copy = {
   id: {
     kicker: "Kanal visual resmi",
-    title: (
-      <>
-        Video &amp; potret.
-      </>
-    ),
+    title: <>Video &amp; potret.</>,
     loading: "Memuat arsip visual.",
     lede: "Video musik, visualizer, dan studi potret dari kanal resmi Akbar Nawasunda.",
     youtubeCta: "Buka YouTube",
@@ -49,12 +43,12 @@ const copy = {
     screeningTitle: "Tayangan resmi.",
     screeningMeta: (count: number) =>
       `${count} video · player dimuat saat ditekan`,
-    screeningCopy: "Tekan play untuk memuat player, atau buka YouTube langsung.",
+    screeningCopy:
+      "Tekan play untuk memuat player, atau buka YouTube langsung.",
     screeningDescription: "Video dari channel resmi Akbar Nawasunda.",
     archiveTitle: "Arsip visual.",
     archiveManaged: "Dikelola di CMS",
-    archiveFromChannel: (count: number) =>
-      `${count} entri dari kanal resmi`,
+    archiveFromChannel: (count: number) => `${count} entri dari kanal resmi`,
     archiveFilter: "Saring arsip visual",
     archiveAll: "SEMUA",
     openVideo: "BUKA VIDEO",
@@ -83,16 +77,16 @@ const copy = {
   },
   en: {
     kicker: "Official visual channel",
-    title: (
-      <>
-        Video &amp; portraits.
-      </>
-    ),
+    title: <>Video &amp; portraits.</>,
     loading: "Loading the visual archive.",
     lede: "Music videos, visualizers, and portrait studies from the official Akbar Nawasunda channel.",
     youtubeCta: "Open YouTube",
     portraitsCta: "Portrait studies",
-    facts: { videos: "Videos", portraits: "Portrait studies", channel: "Channel" },
+    facts: {
+      videos: "Videos",
+      portraits: "Portrait studies",
+      channel: "Channel",
+    },
     portraitAlt: "Official portrait of Akbar Nawasunda",
     plateNote: "Studio portrait",
     screeningTitle: "Official screenings.",
@@ -102,7 +96,8 @@ const copy = {
     screeningDescription: "Video from the official Akbar Nawasunda channel.",
     archiveTitle: "Visual archive.",
     archiveManaged: "Managed in the CMS",
-    archiveFromChannel: (count: number) => `${count} entries from the official channel`,
+    archiveFromChannel: (count: number) =>
+      `${count} entries from the official channel`,
     archiveFilter: "Filter the visual archive",
     archiveAll: "ALL",
     openVideo: "OPEN VIDEO",
@@ -165,113 +160,121 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
         backupImage: officialBrand.socialPreview,
       }));
 
+  /* Video yang sudah tampil di seksi tayangan tidak diulang lagi di arsip:
+     satu video cukup sekali per halaman. */
+  const playerVideoIds = new Set(players.map(item => item.id));
+  const videoIdOf = (value?: string) =>
+    value?.match(/(?:youtu\.be\/|\/vi\/|[?&]v=)([\w-]{6,})/)?.[1];
+  const archiveItems = archive.filter(item => {
+    const id = videoIdOf(item.href) || videoIdOf(item.image);
+    return !id || !playerVideoIds.has(id);
+  });
+
   const groups = useMemo(() => {
     const labels = Array.from(
-      new Set(archive.map(item => (item.label || "VIDEO").toUpperCase()))
+      new Set(archiveItems.map(item => (item.label || "VIDEO").toUpperCase()))
     );
     return [t.archiveAll, ...labels];
-  }, [archive, t.archiveAll]);
+  }, [archiveItems, t.archiveAll]);
   const [group, setGroup] = useState<string>(t.archiveAll);
   const visibleArchive =
     group === t.archiveAll
-      ? archive
-      : archive.filter(
-          item => (item.label || "VIDEO").toUpperCase() === group
-        );
+      ? archiveItems
+      : archive.filter(item => (item.label || "VIDEO").toUpperCase() === group);
 
-  const heroPhoto =
-    portraitContent[0]?.imageUrl || officialBrand.portrait;
+  const heroPhoto = portraitContent[0]?.imageUrl || officialBrand.portrait;
 
   return (
     <main id="main-content" tabIndex={-1}>
-        {/* Dinding galeri: satu foto memegang panggung, tipografi jadi
+      {/* Dinding galeri: satu foto memegang panggung, tipografi jadi
             keterangannya. */}
-        <section className="an-vis-hero" aria-labelledby="visuals-title">
-          <div className="an-vis-hero-copy">
-            <p className="an-kicker">
-              <span className="an-kicker-dot" aria-hidden="true" />
-              {t.kicker}
-            </p>
-            <h1 id="visuals-title">{t.title}</h1>
-            <p className="an-vis-lede">
-              {cms.isLoading ? t.loading : t.lede}
-            </p>
-            <div className="an-vis-hero-actions">
-              <a
-                className="an-btn an-btn--solid"
-                href="https://www.youtube.com/@akbarnawasunda"
-                target="_blank"
-                rel="noreferrer"
-              >
-                {t.youtubeCta} <ArrowUpRight size={14} />
-              </a>
-              <Link className="an-btn an-btn--quiet" href={t.portraitsHref}>
-                {t.portraitsCta} <ArrowUpRight size={14} />
-              </Link>
-            </div>
-            <dl className="an-vis-facts">
-              <div>
-                <dt>{t.facts.videos}</dt>
-                <dd>{archive.length}</dd>
-              </div>
-              <div>
-                <dt>{t.facts.portraits}</dt>
-                <dd>{portraitContent.length}</dd>
-              </div>
-              <div>
-                <dt>{t.facts.channel}</dt>
-                <dd>YouTube</dd>
-              </div>
-            </dl>
+      <section className="an-vis-hero" aria-labelledby="visuals-title">
+        <div className="an-vis-hero-copy">
+          <p className="an-kicker">
+            <span className="an-kicker-dot" aria-hidden="true" />
+            {t.kicker}
+          </p>
+          <h1 id="visuals-title">{t.title}</h1>
+          <p className="an-vis-lede">{cms.isLoading ? t.loading : t.lede}</p>
+          <div className="an-vis-hero-actions">
+            <a
+              className="an-btn an-btn--solid"
+              href="https://www.youtube.com/@akbarnawasunda"
+              target="_blank"
+              rel="noreferrer"
+            >
+              {t.youtubeCta} <ArrowUpRight size={14} />
+            </a>
+            <Link className="an-btn an-btn--quiet" href={t.portraitsHref}>
+              {t.portraitsCta} <ArrowUpRight size={14} />
+            </Link>
           </div>
-          <figure className="an-vis-hero-plate">
-            <ResilientArtworkImage
-              src={heroPhoto}
-              backupSrc={officialBrand.portraitFallback}
-              alt={t.portraitAlt}
-              loading="eager"
-              fetchPriority="high"
-            />
-            <figcaption>
-              <span>{t.plateNote}</span>
-              <strong>Bandung Barat</strong>
-            </figcaption>
-          </figure>
-        </section>
-
-        {/* Ruang tayang: dua player resmi, yang pertama lebih besar. */}
-        <section className="an-section" aria-labelledby="screening-title">
-          <header className="an-head an-head--row">
+          <dl className="an-vis-facts">
             <div>
-              <h2 id="screening-title" className="an-title">
-                {t.screeningTitle}
-              </h2>
-              <p className="an-meta">{t.screeningMeta(players.length)}</p>
+              <dt>{t.facts.videos}</dt>
+              <dd>{archive.length}</dd>
             </div>
-            <p className="an-vis-lede">{t.screeningCopy}</p>
-          </header>
-          <div className="an-vis-screening-grid">
-            {players.map(video => (
-              <OfficialMediaFrame
-                key={video.id}
-                title={video.title}
-                provider="YouTube"
-                sourceUrl={`https://youtu.be/${video.id}`}
-                embedUrl={`https://www.youtube-nocookie.com/embed/${video.id}`}
-                artwork={thumbnailFor(video.id)}
-                backupArtwork={officialBrand.socialPreview}
-                description={t.screeningDescription}
-              />
-            ))}
+            <div>
+              <dt>{t.facts.portraits}</dt>
+              <dd>{portraitContent.length}</dd>
+            </div>
+            <div>
+              <dt>{t.facts.channel}</dt>
+              <dd>YouTube</dd>
+            </div>
+          </dl>
+        </div>
+        <figure className="an-vis-hero-plate">
+          <ResilientArtworkImage
+            src={heroPhoto}
+            backupSrc={officialBrand.portraitFallback}
+            alt={t.portraitAlt}
+            loading="eager"
+            fetchPriority="high"
+          />
+          <figcaption>
+            <span>{t.plateNote}</span>
+            <strong>Bandung Barat</strong>
+          </figcaption>
+        </figure>
+      </section>
+
+      {/* Ruang tayang: dua player resmi, yang pertama lebih besar. */}
+      <section className="an-section" aria-labelledby="screening-title">
+        <header className="an-head an-head--row">
+          <div>
+            <h2 id="screening-title" className="an-title">
+              {t.screeningTitle}
+            </h2>
+            <p className="an-meta">{t.screeningMeta(players.length)}</p>
           </div>
-        </section>
+          <p className="an-vis-lede">{t.screeningCopy}</p>
+        </header>
+        <div className="an-vis-screening-grid">
+          {players.map(video => (
+            <OfficialMediaFrame
+              key={video.id}
+              title={video.title}
+              provider="YouTube"
+              sourceUrl={`https://youtu.be/${video.id}`}
+              embedUrl={`https://www.youtube-nocookie.com/embed/${video.id}`}
+              artwork={thumbnailFor(video.id)}
+              backupArtwork={officialBrand.socialPreview}
+              description={t.screeningDescription}
+            />
+          ))}
+        </div>
+      </section>
 
-        <VisualPortraitStudies
-          english={locale === "en"}
-          studies={portraitContent}
-        />
+      <VisualPortraitStudies
+        english={locale === "en"}
+        studies={portraitContent}
+      />
 
-        {/* Arsip visual: kolom berirama (dense grid), bukan kotak seragam. */}
+      {/* Arsip visual: kolom berirama (dense grid), bukan kotak seragam.
+            Kalau semua video sudah tampil sebagai tayangan, bagian ini
+            disembunyikan supaya tidak ada daftar kosong atau pengulangan. */}
+      {archiveItems.length > 0 && (
         <section
           className="an-section dark-panel"
           aria-labelledby="archive-title"
@@ -308,30 +311,26 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
             ))}
           </div>
         </section>
+      )}
 
-        <CtaPanel
-          title={t.ctaTitle}
-          copy={t.ctaCopy}
-          actions={
-            <>
-              <Link className="ed-button" href={t.ctaHref}>
-                {t.ctaPrimary} <ArrowUpRight size={14} />
-              </Link>
-              <Link className="ed-button--ghost" href={t.portraitsHref}>
-                {t.ctaSecondary} <ArrowUpRight size={14} />
-              </Link>
-            </>
-          }
-        />
+      <CtaPanel
+        title={t.ctaTitle}
+        copy={t.ctaCopy}
+        actions={
+          <>
+            <Link className="ed-button" href={t.ctaHref}>
+              {t.ctaPrimary} <ArrowUpRight size={14} />
+            </Link>
+            <Link className="ed-button--ghost" href={t.portraitsHref}>
+              {t.ctaSecondary} <ArrowUpRight size={14} />
+            </Link>
+          </>
+        }
+      />
 
-        {/* Formulir FanSignal masih berbahasa Indonesia: hanya rute ID. */}
-        {locale === "id" ? (
-          <FanSignalSection
-            source={FAN_SIGNAL_SOURCES.visuals}
-            title={t.signalTitle}
-            description={t.signalCopy}
-          />
-        ) : null}
+      {/* Formulir langganan hanya ada di beranda. Dulu section yang sama
+            dipasang di lima halaman, jadi pengunjung melihat blok yang sama
+            berulang kali. Sekarang satu pemilik: beranda. */}
     </main>
   );
 }

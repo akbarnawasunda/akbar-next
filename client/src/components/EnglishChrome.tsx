@@ -2,6 +2,7 @@ import { ArrowUpRight, Mail, Menu, Radio, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
+import { BirthdayChip, StudioClock } from "./StudioClock";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import {
   publicPlatformLinks,
@@ -84,6 +85,7 @@ export function EnglishHeader({ active }: { active?: string }) {
             </Link>
           ))}
         </nav>
+        <BirthdayChip locale="en" />
         <LanguageSwitcher pathname={pathname} />
         <Link className="nf-signal" href="/en/inquire">
           <Mail size={14} /> INQUIRE
@@ -151,6 +153,10 @@ export function EnglishFooter() {
       </div>
       <div className="en-footer-bottom">
         <span>© {new Date().getFullYear()} AKBAR NAWASUNDA</span>
+        <span className="footer-bottom__clock">
+          <StudioClock locale="en" />
+          <BirthdayChip locale="en" />
+        </span>
         <LanguageSwitcher pathname="/en" />
       </div>
     </footer>

@@ -113,6 +113,14 @@
   animation: an-page-loading-sweep 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 }
 
+.an-page-loading-elapsed {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--mute);
+  font-variant-numeric: tabular-nums;
+}
+
 @keyframes an-page-loading-sweep {
   0% {
     transform: translateX(-100%);

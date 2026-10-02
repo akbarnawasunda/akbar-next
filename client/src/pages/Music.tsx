@@ -1,5 +1,3 @@
-import FanSignalSection from "@/components/FanSignalSection";
-import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { ArrowLeft, ArrowUpRight, ArrowRight, Play } from "lucide-react";
 import { useRef } from "react";
@@ -500,14 +498,9 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
           }
         />
 
-        {/* Formulir FanSignal masih berbahasa Indonesia: hanya rute ID. */}
-        {locale === "id" ? (
-          <FanSignalSection
-            source={FAN_SIGNAL_SOURCES.music}
-            title={t.signalTitle}
-            description={t.signalCopy}
-          />
-        ) : null}
+        {/* Formulir langganan hanya ada di beranda. Dulu section yang sama
+            dipasang di lima halaman, jadi pengunjung melihat blok yang sama
+            berulang kali. Sekarang satu pemilik: beranda. */}
     </main>
   );
 }

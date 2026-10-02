@@ -94,6 +94,8 @@ export function RouteProgress() {
 const LOADING_WORD = "MEMUAT";
 
 export function PageLoading() {
+  const [elapsed, setElapsed] = useState(0);
+
   useEffect(() => {
     pendingCount += 1;
     emit();
@@ -101,6 +103,15 @@ export function PageLoading() {
       pendingCount -= 1;
       emit();
     };
+  }, []);
+
+  // Durasi nyata: berapa lama halaman ini benar-benar ditunggu.
+  useEffect(() => {
+    const startedAt = Date.now();
+    const timer = window.setInterval(() => {
+      setElapsed(Date.now() - startedAt);
+    }, 100);
+    return () => window.clearInterval(timer);
   }, []);
 
   return (
@@ -116,6 +127,9 @@ export function PageLoading() {
         ))}
       </p>
       <span className="an-page-loading-rule" aria-hidden="true" />
+      <span className="an-page-loading-elapsed" aria-hidden="true">
+        {(elapsed / 1000).toFixed(1)}s
+      </span>
     </div>
   );
 }

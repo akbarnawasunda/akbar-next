@@ -81,7 +81,9 @@
 .an-public-shell.an-editorial .an-vis-hero-plate {
   position: relative;
   margin: 0;
-  aspect-ratio: 4 / 5;
+  /* Sumber hero adalah potret 3:4 (3016x4032); bingkai 3/4 menampilkannya
+     utuh — 4/5 memotong sisi kiri-kanan. */
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   background: var(--ink-soft);
 }

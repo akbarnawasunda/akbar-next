@@ -159,6 +159,7 @@ import "./components/MaturePalette.css";
 import "./components/BrandSystem.css";
 import "./components/RouteMotion.css";
 import { PageLoading, RouteProgress } from "./components/RouteTransition";
+import { BirthdayMode } from "./components/StudioClock";
 
 function NotFoundRoute() {
   const [location] = useLocation();
@@ -440,6 +441,8 @@ function App() {
             <Toaster />
             <ScrollProgress />
             <RouteProgress />
+            {/* Menyalakan aksen 1 November (waktu Jakarta) tanpa reload. */}
+            <BirthdayMode />
             <CmsMetadata />
             <StructuredData />
             <RouteMotion />

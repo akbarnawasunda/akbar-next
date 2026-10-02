@@ -111,23 +111,20 @@ describe("rute publik tetap halaman penuh di SSR", () => {
     }
   });
 
-  it("menjaga satu FanSignal per halaman dengan source dari shared/types", async () => {
-    const pairs: [string, string][] = [
-      ["/", "home"],
-      ["/music", "music"],
-      ["/live", "footer"],
-      ["/visuals", "visuals"],
-      ["/universe", "universe"],
-    ];
-    for (const [route, expected] of pairs) {
+  it("menjaga formulir langganan hanya di beranda, bukan diulang di tiap halaman", async () => {
+    // Satu pemilik: beranda. Sebelumnya blok yang sama dipasang di lima
+    // halaman sehingga pengunjung melihat section yang sama berulang.
+    const home = await renderPage("/");
+    const matches = home.html.match(/data-fan-signal-source="([a-z]+)"/g) || [];
+    expect(matches.length).toBe(1);
+    expect(matches[0]).toBe('data-fan-signal-source="home"');
+
+    for (const route of ["/music", "/live", "/visuals", "/universe"]) {
       const page = await renderPage(route);
-      const matches =
-        page.html.match(/data-fan-signal-source="([a-z]+)"/g) || [];
-      expect(matches.length, `jumlah FanSignal ${route}`).toBe(1);
-      expect(matches[0]).toBe(`data-fan-signal-source="${expected}"`);
+      expect(page.html.match(/data-fan-signal-source=/g), route).toBeNull();
     }
 
-    // Halaman Inggris sengaja tidak memasang FanSignal (form berbahasa ID).
+    // Halaman Inggris juga tidak memasangnya (form berbahasa ID).
     for (const route of ["/en", "/en/music", "/en/live"]) {
       const page = await renderPage(route);
       expect(page.html.match(/data-fan-signal-source=/g), route).toBeNull();
