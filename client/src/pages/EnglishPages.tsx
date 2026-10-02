@@ -41,6 +41,7 @@ import VisualPortraitStudies from "@/components/VisualPortraitStudies";
 import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
 import { PrivacyView } from "./PrivacyPolicy";
 import { LiveView } from "./Live";
+import { InquiryView } from "./Inquiry";
 import { LicensingView } from "./Licensing";
 import { PlatformMarquee } from "@/components/PlatformMarquee";
 import {
@@ -1726,75 +1727,7 @@ const inquiryServices = [
 export function EnglishInquiry() {
   return (
     <EnglishFrame>
-      <main id="main-content" tabIndex={-1} className="en-content">
-        <section className="nf-page-hero en-hero">
-          <div>
-            <h1>
-              MAKE A
-              <br />
-              <em>REQUEST.</em>
-            </h1>
-            <p>
-              Tell the studio what you are building, when it needs to happen, and
-              what kind of response you need.
-            </p>
-          </div>
-          <div className="nf-hero-note">
-            <span>OFFICIAL ROUTE</span>
-            <strong>EMAIL THE STUDIO</strong>
-            <a className="nf-text-button" href={`mailto:${bookingEmail}`}>
-              SEND A BRIEF <ArrowUpRight size={14} />
-            </a>
-          </div>
-        </section>
-
-        <section className="nf-section">
-          <div className="en-section-intro">
-            <h2>
-              START WITH
-              <br />
-              <em>CONTEXT.</em>
-            </h2>
-            <p>
-              A strong first message includes the project, date or timeline,
-              location, budget range when relevant, and the exact deliverable you
-              are asking about.
-            </p>
-          </div>
-          <div className="en-service-grid">
-            {inquiryServices.map(([number, title, copy]) => (
-              <article className="en-service-card" key={title}>
-                <span>{number}</span>
-                <h3>{title}</h3>
-                <p>{copy}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="nf-section dark-panel">
-          <div className="en-contact-panel">
-            <div>
-              <h2>
-                DIRECT IS
-                <br />
-                <em>BETTER.</em>
-              </h2>
-              <p>
-                Use the official address below. This route opens your mail client
-                so you keep control of the message and attachments.
-              </p>
-              <div className="en-email">{bookingEmail}</div>
-            </div>
-            <a
-              className="nf-button"
-              href={`mailto:${bookingEmail}?subject=Akbar%20Nawasunda%20inquiry`}
-            >
-              <Mail size={14} /> OPEN EMAIL <ArrowUpRight size={14} />
-            </a>
-          </div>
-        </section>
-      </main>
+      <InquiryView locale="en" />
     </EnglishFrame>
   );
 }
