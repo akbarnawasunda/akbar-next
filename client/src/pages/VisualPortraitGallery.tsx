@@ -43,18 +43,29 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
   }, []);
   const studies = publicPortraitStudies(cms.data);
   const lightbox = useLightbox();
-  const lightboxItems: LightboxItem[] = studies.map(study => {
-    const title = english ? study.titleEn || study.title : study.title;
-    return {
-      id: study._id,
-      src: study.imageUrl || officialBrand.socialPreview,
-      alt: english
-        ? study.altEn || study.altId || title
-        : study.altId || study.altEn || title,
-      caption: title,
-      meta: study.label || (english ? "PORTRAIT STUDY" : "STUDI POTRET"),
-    };
-  });
+
+  /** Susun item lightbox untuk satu daftar studi. */
+  const lightboxFor = (items: typeof studies): LightboxItem[] =>
+    items.map(study => {
+      const title = english ? study.titleEn || study.title : study.title;
+      return {
+        id: study._id,
+        src: study.imageUrl || officialBrand.socialPreview,
+        alt: english
+          ? study.altEn || study.altId || title
+          : study.altId || study.altEn || title,
+        caption: title,
+        meta: study.label || (english ? "PORTRAIT STUDY" : "STUDI POTRET"),
+      };
+    });
+
+  /* Foto yang sudah tampil besar di hero tidak diulang di grid: satu potret
+     cukup sekali per halaman. Kalau CMS hanya punya satu studi, grid tetap
+     menampilkannya supaya halaman tidak kosong. */
+  const duplicateOfLead: string | undefined = studies[0]?.imageUrl;
+  const deduped = studies.filter(study => study.imageUrl !== duplicateOfLead);
+  const gridStudies = deduped.length ? deduped : studies;
+  const gridLightboxItems: LightboxItem[] = lightboxFor(gridStudies);
   const lead = studies[0];
   const leadTitle: string = lead
     ? ((english ? lead.titleEn || lead.title : lead.title || lead.titleEn) ??
@@ -153,7 +164,7 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
           </p>
         </header>
         <div className="portrait-gallery-grid an-pg-grid">
-          {studies.map((study, index) => {
+          {gridStudies.map((study, index) => {
             const title =
               (english ? study.titleEn || study.title : study.title || study.titleEn) ??
               (english ? "Portrait study" : "Studi potret");
@@ -165,7 +176,7 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
                   <button
                     type="button"
                     className="portrait-gallery-trigger"
-                    onClick={() => lightbox.open(lightboxItems, index)}
+                    onClick={() => lightbox.open(gridLightboxItems, index)}
                     aria-label={english ? `Open ${title} in the image viewer` : `Buka ${title} di penampil gambar`}
                     data-signal-interactive
                   >

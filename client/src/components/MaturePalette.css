@@ -382,6 +382,39 @@
   background: var(--acid) !important;
 }
 
+/* Panel kontak EPK memakai permukaan gelap (`--ink-soft`), tetapi warna
+   tautan di dalamnya masih memakai token `--ink` yang dirancang untuk
+   panel terang — judul tautannya ("Booking inquiry", dst.) jadi nyaris tak
+   terbaca dan garis pemisahnya hilang. Warnanya di sini diselaraskan
+   dengan permukaan gelap di atas. */
+.nf-page .an-epk-contact-panel .an-press-contact-link,
+.nf-page .an-epk-contact-panel .an-press-contact-link strong,
+.nf-page .en-contact-panel .an-press-contact-link,
+.nf-page .en-contact-panel .an-press-contact-link strong {
+  color: var(--paper) !important;
+}
+
+.nf-page .an-epk-contact-panel .an-press-contact-link small,
+.nf-page .an-epk-contact-panel .an-press-contact-link svg,
+.nf-page .en-contact-panel .an-press-contact-link small,
+.nf-page .en-contact-panel .an-press-contact-link svg {
+  color: var(--mute) !important;
+}
+
+.nf-page .an-epk-contact-panel .an-press-contact-link,
+.nf-page .an-epk-contact-panel .an-press-contact-link:last-child,
+.nf-page .en-contact-panel .an-press-contact-link,
+.nf-page .en-contact-panel .an-press-contact-link:last-child {
+  border-color: var(--paper-line) !important;
+}
+
+.nf-page .an-epk-contact-panel .an-press-contact-link:hover strong,
+.nf-page .an-epk-contact-panel .an-press-contact-link:focus-visible strong,
+.nf-page .en-contact-panel .an-press-contact-link:hover strong,
+.nf-page .en-contact-panel .an-press-contact-link:focus-visible strong {
+  color: var(--acid) !important;
+}
+
 .nf-page .nf-signal-form > div {
   border: 1px solid var(--paper-line) !important;
   border-radius: 4px !important;

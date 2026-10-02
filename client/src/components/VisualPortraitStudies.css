@@ -154,7 +154,11 @@
   }
 
   .an-portrait-studies-surface {
-    min-height: 25rem;
+    /* Panel ini jendela untuk potret di belakangnya; 25rem menyisakan
+       ±200px ruang kosong di ponsel sebelum teks di bawahnya. Tingginya
+       diturunkan supaya panel tetap terasa seperti jendela tanpa
+       menggantung kosong. */
+    min-height: clamp(12rem, 44vw, 18rem);
     align-items: flex-end;
     padding: 1.25rem;
     background: linear-gradient(180deg, color-mix(in srgb, var(--sepia-panel) 8%, transparent), color-mix(in srgb, var(--sepia-panel) 84%, transparent));
