@@ -1,25 +1,107 @@
-import { ArrowLeft, ArrowUpRight, Disc3, Headphones, Music2 } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Disc3, Music2, Play } from "lucide-react";
 import { Link, useParams } from "wouter";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
+import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { officialBrand, releases } from "@/content/artistPlatform";
 import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
 import "./ReleaseDetail.css";
+import "./CatalogStage.css";
 import { slugify } from "@shared/slug";
 
-const rightsLabel = (format?: string) =>
+const rightsLabel = (
+  format: string | undefined,
+  labels: { bootleg: string; remix: string; catalog: string }
+) =>
   /bootleg/i.test(format || "")
-    ? "UNOFFICIAL EDIT · CLEARANCE REQUIRED"
+    ? labels.bootleg
     : /remix|rmx/i.test(format || "")
-      ? "REMIX · CLEARANCE REQUIRED"
-      : "CATALOG ENTRY";
+      ? labels.remix
+      : labels.catalog;
 
-const rightsAction = (format?: string) =>
-  /bootleg/i.test(format || "")
-    ? "CLEARANCE / ASK FIRST"
-    : "LICENSING / ASK FIRST";
+const rightsAction = (
+  format: string | undefined,
+  labels: { bootleg: string; other: string }
+) => (/bootleg/i.test(format || "") ? labels.bootleg : labels.other);
 
-export default function ReleaseDetail() {
+/**
+ * Salinan halaman rilisan dua bahasa. `ReleaseDetailView` dipakai
+ * `/music/:slug` dan `/en/music/:slug`, jadi hero artwork, catatan, daftar
+ * tautan, dan jalur lisensi selalu satu komposisi.
+ */
+const copy = {
+  id: {
+    missingMeta: "Rilisan tidak ditemukan",
+    missingTitle: "Rilisan ini tidak ada di katalog.",
+    back: "Kembali ke musik",
+    loadingTitle: "Memuat rilisan…",
+    loadingMeta: "Memuat katalog resmi Akbar Nawasunda.",
+    rights: {
+      bootleg: "UNOFFICIAL EDIT · CLEARANCE REQUIRED",
+      remix: "REMIX · CLEARANCE REQUIRED",
+      catalog: "CATALOG ENTRY",
+    },
+    rightsAction: {
+      bootleg: "CLEARANCE / ASK FIRST",
+      other: "LICENSING / ASK FIRST",
+    },
+    listen: "Dengar rilisan",
+    license: "Lisensi & izin pakai",
+    artworkAlt: (title: string) => `Artwork ${title}`,
+    artworkFallbackAlt: "Artwork rilisan",
+    chipFallback: "Rilisan",
+    storyMeta: "Catatan & kredit",
+    storyFallback: "Buka rilisan ini melalui tautan resmi yang tersedia.",
+    creditsFallback:
+      "Lihat kredit rilisan di platform resmi jika tersedia.",
+    linksTitle: "Dengar & pakai.",
+    linksMeta: (count: number) =>
+      `${count} tautan resmi · lisensi lewat studio`,
+    linkKind: "Dengar",
+    licenseKind: "Lisensi",
+    otherMeta: "Rilisan lain",
+    allMusic: "Lihat semua musik",
+    musicHref: "/music",
+    licenseHref: "/inquire?type=licensing&source=release",
+  },
+  en: {
+    missingMeta: "Release not found",
+    missingTitle: "This release is not in the catalog.",
+    back: "Back to music",
+    loadingTitle: "Loading release…",
+    loadingMeta: "Loading the official Akbar Nawasunda catalog.",
+    rights: {
+      bootleg: "UNOFFICIAL EDIT · CLEARANCE REQUIRED",
+      remix: "REMIX · CLEARANCE REQUIRED",
+      catalog: "CATALOG ENTRY",
+    },
+    rightsAction: {
+      bootleg: "CLEARANCE / ASK FIRST",
+      other: "LICENSING / ASK FIRST",
+    },
+    listen: "Listen to the release",
+    license: "Licensing & permission",
+    artworkAlt: (title: string) => `Artwork for ${title}`,
+    artworkFallbackAlt: "Release artwork",
+    chipFallback: "Release",
+    storyMeta: "Notes & credits",
+    storyFallback: "Open this release through the official link that exists.",
+    creditsFallback:
+      "Check the release credits on the official platform where available.",
+    linksTitle: "Listen & use.",
+    linksMeta: (count: number) =>
+      `${count} official links · licensing through the studio`,
+    linkKind: "Listen",
+    licenseKind: "Licensing",
+    otherMeta: "More releases",
+    allMusic: "See all music",
+    musicHref: "/en/music",
+    licenseHref: "/en/inquire?type=licensing&source=release",
+  },
+} as const;
+
+export function ReleaseDetailView({ locale = "id" }: { locale?: "id" | "en" }) {
+  const t = copy[locale];
   const { slug = "" } = useParams<{ slug: string }>();
   const cms = usePublicArtistContent();
   const cmsRelease = (cms.data?.releases ?? []).find(
@@ -58,22 +140,13 @@ export default function ReleaseDetail() {
 
   if (!release && !cms.isLoading) {
     return (
-      <div className="nf-page">
-        <NightHeader active="/music" />
-        <main id="main-content" tabIndex={-1}>
-          <section className="nf-section an-release-missing">
-            <h1>
-              RILISAN
-              <br />
-              TIDAK TERSEDIA.
-            </h1>
-            <Link className="nf-button" href="/music">
-              <ArrowLeft size={14} /> KEMBALI KE MUSIC
-            </Link>
-          </section>
-        </main>
-        <NightFooter />
-      </div>
+      <section className="an-rel-missing">
+        <p className="an-meta">{t.missingMeta}</p>
+        <h1>{t.missingTitle}</h1>
+        <Link className="an-btn an-btn--quiet" href={t.musicHref}>
+          <ArrowLeft size={14} /> {t.back}
+        </Link>
+      </section>
     );
   }
 
@@ -91,108 +164,133 @@ export default function ReleaseDetail() {
     : [];
 
   return (
-    <div className="nf-page">
-      <NightHeader active="/music" />
-      <main id="main-content" tabIndex={-1}>
-        <section
-          className="nf-page-hero an-release-detail-hero"
-          style={
-            {
-              "--page-image": `url(${release?.artwork || officialBrand.socialPreview})`,
-            } as React.CSSProperties
-          }
-        >
-          <div>
-            <Link className="an-back-link" href="/music">
-              <ArrowLeft size={13} /> KEMBALI KE MUSIC
+    <main id="main-content" tabIndex={-1}>
+        {/* Artwork rilisan adalah subjek halaman ini: satu plate besar
+            berdampingan dengan judul, metadata, dan aksi mendengarkan. */}
+        <section className="an-rel-hero" aria-labelledby="release-title">
+          <div className="an-rel-hero-copy">
+            <Link className="an-back-link" href={t.musicHref}>
+              <ArrowLeft size={13} /> {t.back}
             </Link>
-            <h1>{release?.title || "MEMUAT RILISAN…"}</h1>
-            <p>
-              {release
-                ? `${release.format} · ${release.year} · ${release.platform}`
-                : "Memuat katalog resmi Akbar Nawasunda."}
+            <h1 id="release-title">
+              {release?.title || t.loadingTitle}
+            </h1>
+            <p className="an-rel-meta">
+              {release ? (
+                <>
+                  <span>{release.format}</span>
+                  <span>{release.year}</span>
+                  <span>{release.platform}</span>
+                  <span>{rightsLabel(release.format, t.rights)}</span>
+                </>
+              ) : (
+                <span>{t.loadingMeta}</span>
+              )}
             </p>
-          </div>
-          <div className="nf-hero-note">
-            <span>{rightsLabel(release?.format)}</span>
-            <strong>{release?.year || "—"}</strong>
-            <a
-              className="nf-text-button"
-              href={release?.href || "/music"}
-              target={release ? "_blank" : undefined}
-              rel={release ? "noreferrer" : undefined}
-            >
-              DENGAR <ArrowUpRight size={14} />
-            </a>
-          </div>
-        </section>
-
-        <section className="nf-section an-release-detail-grid">
-          <div className="an-release-art">
-            <img
-              src={release?.artwork || officialBrand.socialPreview}
-              alt={release ? `Artwork ${release.title}` : "Release artwork loading"}
-            />
-            <span>
-              <Disc3 size={17} /> {release?.format || "RELEASE"}
-            </span>
-          </div>
-          <div className="an-release-copy">
-            <h2>{release?.title || "RILISAN."}</h2>
-            <p>
-              {release?.story ||
-                "Buka rilisan ini melalui tautan resmi yang tersedia."}
-            </p>
-            <div className="an-release-credits">
-              <span>CREDIT</span>
-              <p>
-                {release?.credits ||
-                  "Lihat kredit rilisan di platform resmi jika tersedia."}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="nf-section dark-panel">
-          <div className="nf-section-title">
-            <div>
-              <h2>
-                PLATFORM
-                <br />
-                RESMI.
-              </h2>
-            </div>
-          </div>
-          <div className="an-release-links release-platform-links">
-            {links.map((link) => (
+            <div className="an-rel-actions">
               <a
-                key={`${link.label}-${link.href}`}
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
+                className="an-btn an-btn--solid"
+                href={release?.href || t.musicHref}
+                target={release ? "_blank" : undefined}
+                rel={release ? "noreferrer" : undefined}
               >
-                <span>{link.label}</span>
-                <Headphones size={16} />
-                <ArrowUpRight size={14} />
+                <Play size={13} fill="currentColor" /> {t.listen}
               </a>
-            ))}
-            <Link href={`/inquire?type=licensing&source=release`}>
-              <span>{rightsAction(release?.format)}</span>
-              <Headphones size={16} />
-              <ArrowUpRight size={14} />
-            </Link>
+              <Link
+                className="an-btn an-btn--quiet"
+                href={t.licenseHref}
+              >
+                {t.license} <ArrowUpRight size={14} />
+              </Link>
+            </div>
+          </div>
+          <figure className="an-rel-plate">
+            <ResilientArtworkImage
+              src={release?.artwork || officialBrand.socialPreview}
+              backupSrc={officialBrand.socialPreview}
+              alt={
+                release
+                  ? t.artworkAlt(release.title)
+                  : t.artworkFallbackAlt
+              }
+              loading="eager"
+              fetchPriority="high"
+            />
+            <figcaption className="an-rel-chip">
+              <Disc3 size={15} aria-hidden="true" />{" "}
+              {release?.format || t.chipFallback}
+            </figcaption>
+          </figure>
+        </section>
+
+        {/* Catatan & kredit: label kiri, teks kanan. */}
+        <section className="an-section an-rel-story">
+          <p className="an-meta">{t.storyMeta}</p>
+          <div className="an-rel-story-copy">
+            <p>
+              {release?.story || t.storyFallback}
+            </p>
+            <div className="an-rel-credits">
+              {release?.credits || t.creditsFallback}
+            </div>
           </div>
         </section>
 
-        <section className="nf-section an-release-next">
-          <p className="nf-page-eyebrow">
-            <Music2 size={13} /> RILISAN LAIN
+        {/* Tautan resmi per platform + jalur izin pakai. */}
+        <section className="an-section" aria-labelledby="release-links-title">
+          <header className="an-head">
+            <h2 id="release-links-title" className="an-title">
+              {t.linksTitle}
+            </h2>
+            <p className="an-meta">{t.linksMeta(links.length)}</p>
+          </header>
+          <ul className="an-index an-rel-links">
+            {links.map((link) => (
+              <li key={`${link.label}-${link.href}`}>
+                <a
+                  className="an-index-row"
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <span className="an-rel-link-label">{link.label}</span>
+                  <span className="an-rel-link-kind">{t.linkKind}</span>
+                  <ArrowUpRight size={16} aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+            <li>
+              <Link
+                className="an-index-row"
+                href={t.licenseHref}
+              >
+                <span className="an-rel-link-label">
+                  {rightsAction(release?.format, t.rightsAction)}
+                </span>
+                <span className="an-rel-link-kind">{t.licenseKind}</span>
+                <ArrowUpRight size={16} aria-hidden="true" />
+              </Link>
+            </li>
+          </ul>
+        </section>
+
+        <section className="an-section an-rel-foot">
+          <p className="an-meta">
+            <Music2 size={13} aria-hidden="true" /> {t.otherMeta}
           </p>
-          <Link className="nf-button" href="/music">
-            LIHAT MUSIC <ArrowUpRight size={14} />
+          <Link className="an-btn an-btn--quiet" href={t.musicHref}>
+            {t.allMusic} <ArrowUpRight size={14} />
           </Link>
         </section>
-      </main>
+    </main>
+  );
+}
+
+export default function ReleaseDetail() {
+  return (
+    <div className="nf-page">
+      <NightHeader active="/music" />
+      <ReleaseDetailView locale="id" />
       <NightFooter />
     </div>
   );

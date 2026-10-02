@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 import { officialBrand } from "@/content/artistPlatform";
+import {
+  IMAGE_SIZES,
+  fallbackChain,
+  intrinsicSize,
+  pictureSourcesFor,
+  srcSetFor,
+  type ImageSizePreset,
+} from "@/lib/responsiveImage";
 import "./ResilientArtworkImage.css";
 
 type ResilientArtworkImageProps = {
@@ -11,22 +19,17 @@ type ResilientArtworkImageProps = {
   decoding?: "async" | "sync" | "auto";
   fetchPriority?: "high" | "low" | "auto";
   sizes?: string;
+  /** Preset `sizes`; dipakai kalau `sizes` tidak diberikan eksplisit. */
+  sizePreset?: ImageSizePreset;
 };
 
-const LOCAL_FALLBACK = officialBrand.logoFallback;
-
-// High-efficiency mapping for mobile data savings without quality degradation
-const MOBILE_OPTIMIZED_VARIANTS: Record<string, string> = {
-  "/assets/akbar-night-frequency-stage-optimized.webp": "/assets/akbar-night-frequency-stage-mobile-optimized.webp",
-  "/assets/akbar-night-frequency-stage.webp": "/assets/akbar-night-frequency-stage-mobile-optimized.webp",
-  "/assets/akbar-night-frequency-hero-optimized.webp": "/assets/akbar-night-frequency-hero-mobile-optimized.webp",
-  "/assets/akbar-night-frequency-hero.webp": "/assets/akbar-night-frequency-hero-mobile-optimized.webp",
-  "/assets/akbar-nawasunda-official-portrait.webp": "/assets/akbar-official-portrait-optimized.webp",
-  "/assets/akbar-nawasunda-official-portrait.jpg": "/assets/akbar-official-portrait-optimized.webp",
-  "/assets/akbar-official-portrait.webp": "/assets/akbar-official-portrait-optimized.webp",
-  "/assets/akbar-social-preview.webp": "/assets/akbar-social-preview-optimized.webp",
-};
-
+/**
+ * Gambar artwork dengan rantai fallback.
+ *
+ * Urutan: `src` → `backupSrc` → aset brand lokal. Ukuran intrinsik diambil
+ * dari manifest `lib/responsiveImage`, jadi `width`/`height` selalu ikut
+ * terkirim dan layout tidak bergeser saat gambar datang (CLS).
+ */
 export function ResilientArtworkImage({
   src,
   backupSrc,
@@ -35,46 +38,61 @@ export function ResilientArtworkImage({
   loading = "lazy",
   decoding = "async",
   fetchPriority = "low",
-  sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px",
+  sizes,
+  sizePreset = "artwork",
 }: ResilientArtworkImageProps) {
-  const initialSource = src || backupSrc || LOCAL_FALLBACK;
-  const [source, setSource] = useState(initialSource);
-  const [fallbackMode, setFallbackMode] = useState<"none" | "backup" | "local">(
-    initialSource === LOCAL_FALLBACK ? "local" : "none",
-  );
+  const chain = fallbackChain(src, backupSrc, officialBrand.logoFallback);
+  const [sourceIndex, setSourceIndex] = useState(0);
 
   useEffect(() => {
-    const nextSource = src || backupSrc || LOCAL_FALLBACK;
-    setSource(nextSource);
-    setFallbackMode(nextSource === LOCAL_FALLBACK ? "local" : "none");
+    setSourceIndex(0);
   }, [backupSrc, src]);
 
-  const mobileSource = MOBILE_OPTIMIZED_VARIANTS[source];
+  const source = chain[Math.min(sourceIndex, chain.length - 1)];
+  const known = intrinsicSize(source);
+  const sources = pictureSourcesFor(source);
+  const srcSet = srcSetFor(source);
+  const fallbackMode: "none" | "backup" | "local" =
+    sourceIndex === 0
+      ? "none"
+      : sourceIndex >= chain.length - 1
+        ? "local"
+        : "backup";
 
-  if (mobileSource && fallbackMode === "none") {
+  const advance = () =>
+    setSourceIndex(index => (index < chain.length - 1 ? index + 1 : index));
+
+  const sizesAttribute =
+    sizes ?? (srcSet || sources.length ? IMAGE_SIZES[sizePreset] : undefined);
+
+  const imageProps = {
+    alt,
+    width: known?.[0],
+    height: known?.[1],
+    srcSet,
+    sizes: sizesAttribute,
+    loading,
+    decoding,
+    fetchPriority,
+    "data-image-state": fallbackMode,
+  } as const;
+
+  if (sources.length) {
     return (
       <picture className="an-resilient-picture">
-        <source media="(max-width: 640px)" srcSet={mobileSource} type="image/webp" />
+        {sources.map(item => (
+          <source
+            key={`${item.media}-${item.srcSet}`}
+            media={item.media}
+            srcSet={item.srcSet}
+            type={item.type}
+          />
+        ))}
         <img
+          {...imageProps}
           className={`an-resilient-artwork ${className}`}
           src={source}
-          alt={alt}
-          loading={loading}
-          decoding={decoding}
-          fetchPriority={fetchPriority}
-          sizes={sizes}
-          data-image-state={fallbackMode}
-          onError={() => {
-            if (backupSrc && source !== backupSrc) {
-              setSource(backupSrc);
-              setFallbackMode("backup");
-              return;
-            }
-            if (source !== LOCAL_FALLBACK) {
-              setSource(LOCAL_FALLBACK);
-              setFallbackMode("local");
-            }
-          }}
+          onError={advance}
         />
       </picture>
     );
@@ -82,25 +100,10 @@ export function ResilientArtworkImage({
 
   return (
     <img
+      {...imageProps}
       className={`an-resilient-artwork ${fallbackMode !== "none" ? "is-fallback" : ""} ${className}`}
       src={source}
-      alt={alt}
-      loading={loading}
-      decoding={decoding}
-      fetchPriority={fetchPriority}
-      sizes={sizes}
-      data-image-state={fallbackMode}
-      onError={() => {
-        if (fallbackMode === "none" && backupSrc && source !== backupSrc) {
-          setSource(backupSrc);
-          setFallbackMode("backup");
-          return;
-        }
-        if (source !== LOCAL_FALLBACK) {
-          setSource(LOCAL_FALLBACK);
-          setFallbackMode("local");
-        }
-      }}
+      onError={advance}
     />
   );
 }

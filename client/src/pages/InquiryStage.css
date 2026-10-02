@@ -1,0 +1,398 @@
+/* ============================================================
+   INQUIRY STAGE — /inquire (booking, remix, kolaborasi, lisensi)
+   ------------------------------------------------------------
+   Halaman ini harus terasa tenang dan jelas: tipografi yang
+   memimpin, satu formulir yang mudah diisi, dan konteks yang
+   membantu sebelum mengirim. Tidak ada kartu dekoratif di sini —
+   yang penting label, urutan field, dan keadaan setelah kirim.
+   Primitif bersama (.an-meta, .an-kicker, .an-facts, .an-btn,
+   .an-rise) datang dari SceneKit.css.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Pembuka
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-inq-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  align-items: end;
+  gap: clamp(28px, 4.4vw, 72px);
+  max-width: var(--hx-max, 1560px);
+  margin-inline: auto;
+  padding: calc(var(--chrome-h, 78px) + var(--space-xl)) var(--hx-gutter)
+    var(--space-xl);
+}
+
+.an-public-shell.an-editorial .an-inq-hero-copy {
+  display: grid;
+  gap: var(--space-md);
+  align-content: end;
+}
+
+.an-public-shell.an-editorial .an-inq-hero-copy h1 {
+  margin: 0;
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5.6vw, 4.6rem);
+  font-weight: 500;
+  letter-spacing: -0.038em;
+  line-height: 0.98;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-inq-lede {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-lede);
+  line-height: 1.72;
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
+}
+
+.an-public-shell.an-editorial .an-inq-facts dd a {
+  color: var(--acid);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------------
+   Shell: konteks di kiri, formulir di kanan
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-inq-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 0.44fr) minmax(0, 0.56fr);
+  align-items: start;
+  gap: clamp(28px, 4.6vw, 72px);
+}
+
+.an-public-shell.an-editorial .an-inq-context {
+  position: sticky;
+  top: calc(var(--chrome-h, 78px) + 24px);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.an-public-shell.an-editorial .an-inq-context-title {
+  margin: 0;
+  max-width: 26ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.1vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.028em;
+  line-height: 1.1;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-inq-roles {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  line-height: 1.9;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-inq-email {
+  justify-self: start;
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+  color: var(--acid);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--acid) 42%, transparent);
+  overflow-wrap: anywhere;
+}
+
+.an-public-shell.an-editorial .an-inq-email:hover,
+.an-public-shell.an-editorial .an-inq-email:focus-visible {
+  border-bottom-color: var(--acid);
+}
+
+/* ------------------------------------------------------------
+   Formulir
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-inq-form {
+  display: grid;
+  gap: var(--space-lg);
+  padding: clamp(20px, 2.6vw, 34px);
+  border: 1px solid var(--editorial-rule);
+  background: color-mix(in srgb, var(--ink-soft) 78%, transparent);
+}
+
+.an-public-shell.an-editorial .an-inq-form-head {
+  display: grid;
+  gap: 8px;
+}
+
+.an-public-shell.an-editorial .an-inq-form-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.028em;
+  line-height: 1.06;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-inq-type-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.an-public-shell.an-editorial .an-inq-type-row button {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--editorial-rule);
+  border-radius: 999px;
+  background: transparent;
+  color: color-mix(in srgb, var(--paper) 74%, transparent);
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  text-transform: capitalize;
+  cursor: pointer;
+  transition:
+    border-color 200ms var(--ease, ease),
+    background-color 200ms var(--ease, ease),
+    color 200ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .an-inq-type-row button:hover,
+.an-public-shell.an-editorial .an-inq-type-row button:focus-visible {
+  border-color: var(--acid);
+  color: var(--acid);
+}
+
+.an-public-shell.an-editorial .an-inq-type-row button.is-active {
+  border-color: var(--acid);
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.an-public-shell.an-editorial .an-inq-fieldset {
+  display: grid;
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.an-public-shell.an-editorial .an-inq-fieldset legend {
+  padding: 0;
+}
+
+.an-public-shell.an-editorial .an-inq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+}
+
+.an-public-shell.an-editorial .an-inq-full {
+  grid-column: 1 / -1;
+}
+
+.an-public-shell.an-editorial .an-inq-grid label,
+.an-public-shell.an-editorial .an-inq-full {
+  display: grid;
+  gap: 8px;
+}
+
+.an-public-shell.an-editorial .an-inq-grid label > span,
+.an-public-shell.an-editorial .an-inq-full > span {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--paper) 88%, transparent);
+}
+
+.an-public-shell.an-editorial .an-inq-optional {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-inq-grid input,
+.an-public-shell.an-editorial .an-inq-full input,
+.an-public-shell.an-editorial .an-inq-full textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--editorial-rule);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--ink) 76%, transparent);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  transition:
+    border-color 200ms var(--ease, ease),
+    background-color 200ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .an-inq-full textarea {
+  min-height: 156px;
+  resize: vertical;
+}
+
+.an-public-shell.an-editorial .an-inq-grid input::placeholder,
+.an-public-shell.an-editorial .an-inq-full input::placeholder,
+.an-public-shell.an-editorial .an-inq-full textarea::placeholder {
+  color: color-mix(in srgb, var(--paper) 40%, transparent);
+}
+
+.an-public-shell.an-editorial .an-inq-grid input:hover,
+.an-public-shell.an-editorial .an-inq-full input:hover,
+.an-public-shell.an-editorial .an-inq-full textarea:hover {
+  border-color: color-mix(in srgb, var(--paper) 26%, transparent);
+}
+
+.an-public-shell.an-editorial .an-inq-grid input:focus-visible,
+.an-public-shell.an-editorial .an-inq-full input:focus-visible,
+.an-public-shell.an-editorial .an-inq-full textarea:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--acid) 60%, transparent);
+  outline-offset: 2px;
+  border-color: var(--acid);
+}
+
+.an-public-shell.an-editorial .an-inq-submit-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--editorial-rule);
+}
+
+.an-public-shell.an-editorial .an-inq-submit:disabled {
+  opacity: 0.62;
+  cursor: progress;
+}
+
+.an-public-shell.an-editorial .an-inq-note {
+  margin: 0;
+  max-width: 42ch;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--mute);
+}
+
+/* ------------------------------------------------------------
+   Keadaan setelah kirim
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-inq-feedback {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--editorial-rule);
+  border-left-width: 3px;
+}
+
+.an-public-shell.an-editorial .an-inq-feedback.is-success {
+  border-left-color: var(--acid);
+  background: color-mix(in srgb, var(--acid) 8%, transparent);
+}
+
+.an-public-shell.an-editorial .an-inq-feedback.is-error {
+  border-left-color: var(--paper);
+  background: color-mix(in srgb, var(--paper) 7%, transparent);
+}
+
+.an-public-shell.an-editorial .an-inq-feedback strong {
+  font-family: var(--font-display);
+  font-size: 1.04rem;
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-inq-feedback span {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.an-public-shell.an-editorial .an-inq-feedback button {
+  justify-self: start;
+  min-height: 40px;
+  margin-top: 6px;
+  padding: 0 15px;
+  border: 1px solid var(--editorial-rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+
+.an-public-shell.an-editorial .an-inq-feedback button:hover,
+.an-public-shell.an-editorial .an-inq-feedback button:focus-visible {
+  border-color: var(--acid);
+  color: var(--acid);
+}
+
+/* ------------------------------------------------------------
+   BREAKPOINT
+   ------------------------------------------------------------ */
+
+@media (max-width: 1024px) {
+  .an-public-shell.an-editorial .an-inq-hero,
+  .an-public-shell.an-editorial .an-inq-shell {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-lg);
+  }
+
+  .an-public-shell.an-editorial .an-inq-context {
+    position: static;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .an-public-shell.an-editorial .an-inq-hero {
+    padding: calc(var(--chrome-h, 58px) + var(--space-lg)) var(--hx-gutter)
+      var(--space-lg);
+  }
+
+  .an-public-shell.an-editorial .an-inq-hero-copy h1 {
+    font-size: clamp(2rem, 9.4vw, 3.1rem);
+  }
+
+  .an-public-shell.an-editorial .an-inq-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .an-public-shell.an-editorial .an-inq-form {
+    padding: 18px 16px;
+  }
+
+  .an-public-shell.an-editorial .an-inq-type-row button {
+    flex: 1 1 auto;
+  }
+}
+
+@media (pointer: coarse) {
+  .an-public-shell.an-editorial .an-inq-submit,
+  .an-public-shell.an-editorial .an-inq-feedback button {
+    min-height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-public-shell.an-editorial .an-inq-type-row button,
+  .an-public-shell.an-editorial .an-inq-grid input,
+  .an-public-shell.an-editorial .an-inq-full input,
+  .an-public-shell.an-editorial .an-inq-full textarea {
+    transition: none;
+  }
+}

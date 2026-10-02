@@ -1,4 +1,4 @@
-import { ArrowUpRight, Menu, Radio, X } from "lucide-react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
@@ -58,6 +58,7 @@ function LanguageSwitcher({ pathname }: { pathname: string }) {
 export function NightHeader({ active }: { active?: string }) {
   const [pathname, navigate] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const activeRoute =
     active ??
     (pathname.startsWith("/music")
@@ -76,6 +77,16 @@ export function NightHeader({ active }: { active?: string }) {
                   ? "/inquire"
                   : undefined);
   const triggerRef = useRef<HTMLButtonElement>(null);
+
+  // Header jadi solid setelah pengunjung mulai menggulir. Di beranda, header
+  // transparan di posisi paling atas supaya foto hero terbaca sebagai satu
+  // adegan penuh; setelah lewat ambang itu bar-nya menutup diri jadi tipis.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 32);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Desktop keyboard hotkeys for instant navigation
   useEffect(() => {
@@ -124,15 +135,19 @@ export function NightHeader({ active }: { active?: string }) {
 
   return (
     <>
-      <header className="nf-nav">
-        <Link className="nf-wordmark nf-wordmark-official" href="/">
+      <header className="nf-nav" data-scrolled={scrolled ? "true" : "false"}>
+        <Link className="nf-wordmark" href="/">
           <ResilientBrandImage
             className="nf-brand-logo"
             alt="Akbar Nawasunda"
+            priority
           />
-          <span>AKBAR NAWASUNDA</span>
+          <span className="nf-wordmark-text">
+            <strong>Akbar Nawasunda</strong>
+            <small>Producer · Remixer · Bandung Barat</small>
+          </span>
         </Link>
-        <nav aria-label="Navigasi utama">
+        <nav className="nf-nav-links" aria-label="Navigasi utama">
           {navItems.map(item => (
             <Link
               key={item.href}
@@ -143,21 +158,25 @@ export function NightHeader({ active }: { active?: string }) {
             </Link>
           ))}
         </nav>
-        <LanguageSwitcher pathname={pathname} />
-        <a className="nf-signal" href="#signal">
-          <Radio size={14} /> KABAR TERBARU
-        </a>
-        <button
-          ref={triggerRef}
-          className="nf-menu-toggle"
-          type="button"
-          onClick={() => setIsOpen(value => !value)}
-          aria-label={isOpen ? "Tutup navigasi" : "Buka navigasi"}
-          aria-expanded={isOpen}
-          aria-controls="night-mobile-menu"
-        >
-          {isOpen ? <X size={18} /> : <Menu size={18} />}
-        </button>
+        <div className="nf-nav-tools">
+          <LanguageSwitcher pathname={pathname} />
+          {/* CTA utama header: membuka halaman musik, bukan anchor #signal yang
+              hanya ada di beranda (dulu jadi tautan mati di halaman lain). */}
+          <Link className="nf-signal" href="/music">
+            Dengarkan <ArrowUpRight size={13} aria-hidden="true" />
+          </Link>
+          <button
+            ref={triggerRef}
+            className="nf-menu-toggle"
+            type="button"
+            onClick={() => setIsOpen(value => !value)}
+            aria-label={isOpen ? "Tutup navigasi" : "Buka navigasi"}
+            aria-expanded={isOpen}
+            aria-controls="night-mobile-menu"
+          >
+            {isOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
       </header>
 
       <MobileNav

@@ -10,7 +10,7 @@
   background: var(--ink);
   color: var(--paper);
   font-family: var(--font-body);
-  overflow-x: clip;
+  /* overflow dipegang satu kali oleh .an-public-shell (PublicShell.css). */
 }
 .nf-page *,
 .nf-page *::before,
@@ -1548,8 +1548,6 @@
 .nf-page main,
 .nf-page section,
 .nf-section-title,
-.nf-embed-grid,
-.nf-video-embed-grid,
 .nf-catalog-frame,
 .nf-catalog,
 .nf-visual-grid,
@@ -1563,30 +1561,9 @@
   min-width: 0;
   max-width: 100%;
 }
-.nf-page .nf-embed-grid,
-.nf-page .nf-video-embed-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-  width: min(100%, 1080px);
-  min-width: 0;
-  margin-inline: auto;
-  align-items: start;
-  overflow: visible;
-}
-@media (max-width: 768px) {
-  .nf-page .nf-embed-grid,
-  .nf-page .nf-video-embed-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    width: 100%;
-  }
-}
-.nf-page .nf-embed-grid > *,
-.nf-page .nf-video-embed-grid > * {
-  min-width: 0;
-  max-width: 100%;
-}
+/* Grid `.nf-embed-grid` / `.nf-video-embed-grid` sudah tidak dirender
+   komponen mana pun; kartu media resmi punya gridnya sendiri
+   (`.an-cat-listen-grid` dan `.an-vis-screening-grid`). */
 .nf-page .nf-catalog {
   max-width: 100%;
   overscroll-behavior-inline: contain;
@@ -1605,15 +1582,6 @@
   overflow: hidden;
 }
 @media (max-width: 720px) {
-  .nf-page .nf-embed-grid,
-  .nf-page .nf-video-embed-grid {
-    gap: 18px;
-  }
-  .nf-page .nf-embed-grid .an-official-media,
-  .nf-page .nf-video-embed-grid .an-official-media {
-    width: 100%;
-    max-width: 100%;
-  }
   .nf-page .nf-section-title > p {
     max-width: 100%;
     font-size: 0.96rem;

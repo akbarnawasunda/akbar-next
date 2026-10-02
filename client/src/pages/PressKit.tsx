@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Download, Mail, Printer } from "lucide-react";
+import { Link } from "wouter";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
@@ -10,8 +11,216 @@ import {
   verifiedArtistProfile,
 } from "@/content/artistPlatform";
 import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
+import { Reveal } from "@/components/Reveal";
 import "./EcosystemPages.css";
 import "./EpkReady.css";
+import "./PressStage.css";
+
+const capabilityType = ["remix", "remix", "collaboration", "licensing"] as const;
+
+/**
+ * Salinan EPK dua bahasa. `PressView` dipakai `/epk` dan `/en/epk`, jadi
+ * lembar fakta, daftar aset, rail rilisan, dan panel kontak selalu satu
+ * komposisi di kedua bahasa.
+ */
+const copy = {
+  id: {
+    kicker: "Press & booking",
+    title: "Akbar Nawasunda.",
+    ledeFallback:
+      "Informasi untuk promoter, media, playlist editor, dan kolaborator.",
+    contactCta: "Kontak press",
+    printCta: "SAVE / PRINT EPK",
+    sheetLabel: "Fact sheet artis",
+    sheetFacts: {
+      basedIn: "Berbasis di",
+      alias: "Alias",
+      role: "Peran",
+      roleValue: "Producer / Remixer",
+      contact: "Kontak",
+    },
+    portraitAlt: "Potret editorial Akbar Nawasunda",
+    summaryMeta: "Ringkasan",
+    summaryTitle: "Tentang Akbar Nawasunda.",
+    workFormatsMeta: "Format kerja",
+    capabilitiesFallback:
+      "Format kerja yang tersedia untuk performance, produksi, kolaborasi, dan penggunaan musik.",
+    capabilityCopy: [
+      "Request remix dengan brief, referensi, dan target rilis yang jelas.",
+      "Aransemen khusus untuk memperkuat karakter lagu dan kebutuhan konten.",
+      "Bangun karya bersama dari ide awal sampai materi siap dipublikasikan.",
+      "Lisensi musik untuk kebutuhan konten, partner, dan penggunaan komersial.",
+    ],
+    licensingLabel: "LICENSING NOTE",
+    assetsMeta: "Aset",
+    assetsTitle: "Aset yang tersedia secara resmi.",
+    assetsNotePublished:
+      "Aset yang tersedia secara resmi dapat diakses langsung dari baris di bawah.",
+    assetsNoteRequest:
+      "Aset yang tersedia secara resmi untuk event tambahan dapat diminta melalui kontak press resmi.",
+    assetsRequestAction: "Request by email",
+    assetsOpenAction: "Open official asset",
+    releasesMeta: "Rilisan pilihan",
+    releasesTitle: "Tautan resmi untuk editor dan promotor.",
+    releasesCta: "Buka katalog",
+    releasesHref: "/music",
+    contactLabel: "Kontak",
+    contactTitle: "Kontak proyek.",
+    contactCopy:
+      "Kirim konteks untuk performance, remix, kolaborasi, atau licensing. Ketersediaan dan tarif dikonfirmasi setelah inquiry ditinjau.",
+    contactLinks: {
+      bookingTitle: "Booking inquiry",
+      bookingCopy: "Performance, acara, dan festival.",
+      remixTitle: "Remix / collaborate",
+      remixCopy: "Remix, aransemen, dan kolaborasi rilisan.",
+      pressTitle: "Press contact",
+      pressCopy: "Materi publikasi, wawancara, dan kebutuhan media.",
+    },
+    platformsMeta: "Platform resmi",
+    platformsTitle: "Dengar di kanal resminya.",
+    mailSubjects: {
+      pressInquiry: "Press / booking inquiry",
+      pressMaterial: "Press material request",
+    },
+    coreAssets: [
+      {
+        label: "BRAND MARK",
+        title: "Official logo",
+        copy: "Logo resmi Akbar Nawasunda untuk kebutuhan pengenalan dan materi publikasi.",
+      },
+      {
+        label: "IDENTITY VISUAL",
+        title: "Official visual",
+        copy: "Visual identitas resmi yang dapat dilihat sebagai referensi publikasi digital.",
+      },
+      {
+        label: "PRESS CONTACT",
+        title: "Request material",
+        copy: "Untuk materi beresolusi tinggi atau kebutuhan khusus event, hubungi jalur resmi.",
+      },
+    ],
+    cmsAssets: [
+      {
+        label: "ONE SHEET",
+        title: "Artist one sheet",
+        copy: "Ringkasan artis untuk kebutuhan editorial dan booking.",
+      },
+      {
+        label: "PRESS IMAGES",
+        title: "Press image set",
+        copy: "Materi visual resmi untuk publikasi dan promosi.",
+      },
+      {
+        label: "BRAND KIT",
+        title: "Logo package",
+        copy: "Paket logo resmi untuk kebutuhan partner dan media.",
+      },
+      {
+        label: "SHOW NOTES",
+        title: "Event requirements",
+        copy: "Dokumen kebutuhan teknis untuk koordinasi pertunjukan.",
+      },
+    ],
+  },
+  en: {
+    kicker: "Press & booking",
+    title: "Akbar Nawasunda.",
+    ledeFallback:
+      "Information for promoters, media, playlist editors, and collaborators.",
+    contactCta: "Press contact",
+    printCta: "SAVE / PRINT EPK",
+    sheetLabel: "Artist fact sheet",
+    sheetFacts: {
+      basedIn: "Based in",
+      alias: "Alias",
+      role: "Role",
+      roleValue: "Producer / Remixer",
+      contact: "Contact",
+    },
+    portraitAlt: "Editorial portrait of Akbar Nawasunda",
+    summaryMeta: "Overview",
+    summaryTitle: "About Akbar Nawasunda.",
+    workFormatsMeta: "Working formats",
+    capabilitiesFallback:
+      "Working formats available for performance, production, collaboration, and music usage.",
+    capabilityCopy: [
+      "Request a remix with a clear brief, references, and release target.",
+      "Custom arrangement to strengthen a song's character and content needs.",
+      "Build a work together from the first idea through publishable material.",
+      "Music licensing for content, partner, and commercial use.",
+    ],
+    licensingLabel: "LICENSING NOTE",
+    assetsMeta: "Assets",
+    assetsTitle: "Officially available assets.",
+    assetsNotePublished:
+      "Officially published assets open directly from the rows below.",
+    assetsNoteRequest:
+      "Available on request. Additional official event assets can be requested through the official press contact.",
+    assetsRequestAction: "Request by email",
+    assetsOpenAction: "Open official asset",
+    releasesMeta: "Selected releases",
+    releasesTitle: "Official links for editors and promoters.",
+    releasesCta: "Open catalog",
+    releasesHref: "/en/music",
+    contactLabel: "Contact",
+    contactTitle: "Project contact.",
+    contactCopy:
+      "Send the context for a performance, remix, collaboration, or licensing request. Availability and terms are confirmed after the inquiry is reviewed.",
+    contactLinks: {
+      bookingTitle: "Booking inquiry",
+      bookingCopy: "Performance, events, and festivals.",
+      remixTitle: "Remix / collaborate",
+      remixCopy: "Remix, arrangement, and release collaboration.",
+      pressTitle: "Press contact",
+      pressCopy: "Publication material, interviews, and media needs.",
+    },
+    platformsMeta: "Official platforms",
+    platformsTitle: "Listen on the official channels.",
+    mailSubjects: {
+      pressInquiry: "Press / booking inquiry",
+      pressMaterial: "Press material request",
+    },
+    coreAssets: [
+      {
+        label: "BRAND MARK",
+        title: "Official logo",
+        copy: "The official Akbar Nawasunda logo for recognition and publication material.",
+      },
+      {
+        label: "IDENTITY VISUAL",
+        title: "Official visual",
+        copy: "The official identity visual, usable as a reference for digital publication.",
+      },
+      {
+        label: "PRESS CONTACT",
+        title: "Request material",
+        copy: "For high-resolution material or special event needs, use the official route.",
+      },
+    ],
+    cmsAssets: [
+      {
+        label: "ONE SHEET",
+        title: "Artist one sheet",
+        copy: "Artist summary for editorial and booking use.",
+      },
+      {
+        label: "PRESS IMAGES",
+        title: "Press image set",
+        copy: "Official visual material for publication and promotion.",
+      },
+      {
+        label: "BRAND KIT",
+        title: "Logo package",
+        copy: "Official logo package for partners and media.",
+      },
+      {
+        label: "SHOW NOTES",
+        title: "Event requirements",
+        copy: "Technical requirement document for show coordination.",
+      },
+    ],
+  },
+} as const;
 
 const mail = (address: string, subject: string) =>
   `mailto:${address}?subject=${encodeURIComponent(subject)}`;
@@ -22,7 +231,8 @@ const externalProps = (href: string) => ({
   rel: href.startsWith("mailto:") ? undefined : "noreferrer",
 });
 
-export default function PressKit() {
+export function PressView({ locale = "id" }: { locale?: "id" | "en" }) {
+  const t = copy[locale];
   const cms = usePublicArtistContent();
   const press = cms.data?.pressKit;
   const profile = cms.data?.profile;
@@ -65,9 +275,7 @@ export default function PressKit() {
       ? profile.genres
       : verifiedArtistProfile.genres;
   const alias = press?.snapshotAlias || verifiedArtistProfile.aliases.join(" / ");
-  const capabilitiesIntro =
-    press?.capabilitiesIntro ||
-    "Format kerja yang tersedia untuk performance, produksi, kolaborasi, dan penggunaan musik.";
+  const capabilitiesIntro = press?.capabilitiesIntro || t.capabilitiesFallback;
   const licensingNote = press?.licensingNote || verifiedArtistProfile.licensing;
 
   useEffect(() => {
@@ -75,322 +283,315 @@ export default function PressKit() {
   }, [portrait]);
 
   const coreAssets = [
+    { ...t.coreAssets[0], href: officialBrand.logo },
+    { ...t.coreAssets[1], href: officialBrand.socialPreview },
     {
-      label: "BRAND MARK",
-      title: "Official logo",
-      copy: "Logo resmi Akbar Nawasunda untuk kebutuhan pengenalan dan materi publikasi.",
-      href: officialBrand.logo,
-    },
-    {
-      label: "IDENTITY VISUAL",
-      title: "Official visual",
-      copy: "Visual identitas resmi yang dapat dilihat sebagai referensi publikasi digital.",
-      href: officialBrand.socialPreview,
-    },
-    {
-      label: "PRESS CONTACT",
-      title: "Request material",
-      copy: "Untuk materi beresolusi tinggi atau kebutuhan khusus event, hubungi jalur resmi.",
-      href: mail(pressEmail, "Press material request"),
+      ...t.coreAssets[2],
+      href: mail(pressEmail, t.mailSubjects.pressMaterial),
     },
   ];
 
   const cmsAssets = [
-    {
-      label: "ONE SHEET",
-      title: "Artist one sheet",
-      copy: "Ringkasan artis untuk kebutuhan editorial dan booking.",
-      href: press?.oneSheetUrl,
-    },
-    {
-      label: "PRESS IMAGES",
-      title: "Press image set",
-      copy: "Materi visual resmi untuk publikasi dan promosi.",
-      href: press?.photoPackUrl,
-    },
-    {
-      label: "BRAND KIT",
-      title: "Logo package",
-      copy: "Paket logo resmi untuk kebutuhan partner dan media.",
-      href: press?.logoPackUrl,
-    },
-    {
-      label: "SHOW NOTES",
-      title: "Event requirements",
-      copy: "Dokumen kebutuhan teknis untuk koordinasi pertunjukan.",
-      href: press?.technicalRiderUrl,
-    },
+    { ...t.cmsAssets[0], href: press?.oneSheetUrl },
+    { ...t.cmsAssets[1], href: press?.photoPackUrl },
+    { ...t.cmsAssets[2], href: press?.logoPackUrl },
+    { ...t.cmsAssets[3], href: press?.technicalRiderUrl },
   ].filter((asset): asset is typeof asset & { href: string } => Boolean(asset.href));
 
   const assets = [...coreAssets, ...cmsAssets];
 
   return (
-    <div className="nf-page an-epk-ready">
-      <NightHeader active="/epk" />
-      <main id="main-content" tabIndex={-1}>
-        <section className="nf-epk-hero an-epk-hero-enhanced">
-          <div className="an-epk-hero-grid">
-            <div>
-              <h1>
-                PRESS &amp;
-                <br />
-                BOOKING.
-              </h1>
-              <p>
-                {press?.intro ||
-                  "Informasi untuk promoter, media, playlist editor, dan kolaborator."}
-              </p>
-              <div className="an-epk-hero-actions">
-                <a
-                  className="nf-button"
-                  {...externalProps(mail(pressEmail, "Press / booking inquiry"))}
-                >
-                  <Mail size={15} /> CONTACT PRESS
-                </a>
-                <button
-                  className="an-epk-print"
-                  type="button"
-                  onClick={() => window.print()}
-                >
-                  <Printer size={14} /> SAVE / PRINT EPK
-                </button>
-              </div>
-            </div>
-            <aside className="an-epk-hero-card">
-              <div className="an-epk-hero-image">
-                <img
-                  src={portraitSrc}
-                  alt="Editorial portrait artwork of Akbar Nawasunda"
-                  width={667}
-                  height={1000}
-                  fetchPriority="high"
-                  decoding="async"
-                  onError={() => {
-                    if (portraitSrc !== officialBrand.portraitFallback) {
-                      setPortraitSrc(officialBrand.portraitFallback);
-                    }
-                  }}
-                />
-              </div>
-              <div className="an-epk-hero-card-copy">
-                <span>EDITORIAL / PRESS</span>
-                <strong>
-                  AKBAR
-                  <br />
-                  NAWASUNDA
-                </strong>
-                <small>
-                  {location} · {alias}
-                </small>
-              </div>
-            </aside>
-          </div>
-        </section>
-
-        <section className="nf-section an-epk-sheet-section">
-          <div className="an-epk-document">
-            <div>
-              <h2>AKBAR NAWASUNDA.</h2>
-              <p>{bio}</p>
-              <div className="an-epk-genre-row">
-                {genres.map((genre) => (
-                  <span key={genre}>{genre}</span>
-                ))}
-              </div>
-            </div>
-            <aside className="an-epk-facts">
-              <div>
-                <span>BASED IN</span>
-                <b>{location}</b>
-              </div>
-              <div>
-                <span>ALIAS</span>
-                <b>{alias}</b>
-              </div>
-              <div>
-                <span>WORK</span>
-                <b>Producer / Remixer</b>
-              </div>
-              <div>
-                <span>CONTACT</span>
-                <b>{pressEmail}</b>
-              </div>
-            </aside>
-          </div>
-        </section>
-
-        <section className="nf-section dark-panel an-epk-capabilities">
-          <div className="nf-section-title">
-            <div>
-              <h2>
-                BUILT FOR
-                <br />
-                THE DROP.
-              </h2>
-            </div>
-            <p>{capabilitiesIntro}</p>
-          </div>
-          <div className="an-epk-capability-grid">
-            {verifiedArtistProfile.services.map((service, index) => (
-              <article key={service} className="an-epk-capability">
-                <span>{formatPublicIndex(index)}</span>
-                <h3>{service}</h3>
-                <p>
-                  {index === 0
-                    ? "Request remix dengan brief, referensi, dan target rilis yang jelas."
-                    : index === 1
-                      ? "Aransemen khusus untuk memperkuat karakter lagu dan kebutuhan konten."
-                      : index === 2
-                        ? "Bangun karya bersama dari ide awal sampai materi siap dipublikasikan."
-                        : "Lisensi musik untuk kebutuhan konten, partner, dan penggunaan komersial."}
-                </p>
-              </article>
-            ))}
-          </div>
-          <p className="an-epk-licensing-note">
-            <strong>LICENSING NOTE</strong>
-            {licensingNote}
-          </p>
-        </section>
-
-        <section className="nf-section">
-          <div className="nf-section-title">
-            <div>
-              <h2>
-                ASET
-                <br />
-                RESMI.
-              </h2>
-            </div>
-            <p>
-              {cmsAssets.length
-                ? "Aset yang tersedia secara resmi dapat diakses langsung dari kartu di bawah."
-                : "Aset yang tersedia secara resmi untuk event tambahan dapat diminta melalui kontak press resmi."}
+    <main id="main-content" tabIndex={-1}>
+        {/* EPK dibuka seperti lembar fakta: identitas di kiri, fact sheet
+            dengan foto dan kontak di kanan. Printer tetap di baris pertama. */}
+        <section className="an-press-hero" aria-labelledby="press-title">
+          <div className="an-press-hero-copy">
+            <p className="an-kicker">
+              <span className="an-kicker-dot" aria-hidden="true" />
+              {t.kicker}
             </p>
-          </div>
-          <div
-            className={`an-epk-assets${
-              assets.length > 3 ? " has-extended-assets" : ""
-            }`}
-          >
-            {assets.map((asset) => (
+            <h1 id="press-title">{t.title}</h1>
+            <p className="an-press-lede">{press?.intro || t.ledeFallback}</p>
+            <div className="an-press-hero-actions">
               <a
-                className="an-epk-asset"
-                {...externalProps(asset.href)}
-                key={asset.title}
+                className="an-btn an-btn--solid"
+                {...externalProps(mail(pressEmail, t.mailSubjects.pressInquiry))}
               >
-                <span>{asset.label}</span>
-                <h3>{asset.title}</h3>
-                <p>{asset.copy}</p>
-                <b>
-                  {asset.href.startsWith("mailto:")
-                    ? "REQUEST BY EMAIL"
-                    : "OPEN OFFICIAL ASSET"}
-                  {asset.href.startsWith("mailto:") ? (
-                    <Mail size={13} />
-                  ) : (
-                    <Download size={13} />
-                  )}
-                </b>
+                <Mail size={14} aria-hidden="true" /> {t.contactCta}
               </a>
-            ))}
+              <button
+                className="an-btn an-btn--quiet an-press-print"
+                type="button"
+                onClick={() => window.print()}
+              >
+                <Printer size={14} aria-hidden="true" /> {t.printCta}
+              </button>
+            </div>
           </div>
+          <aside className="an-press-sheet" aria-label={t.sheetLabel}>
+            <figure className="an-press-sheet-plate">
+              <img
+                src={portraitSrc}
+                alt={t.portraitAlt}
+                width={667}
+                height={1000}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                onError={() => {
+                  if (portraitSrc !== officialBrand.portraitFallback) {
+                    setPortraitSrc(officialBrand.portraitFallback);
+                  }
+                }}
+              />
+            </figure>
+            <dl className="an-press-sheet-facts">
+              <div>
+                <dt>{t.sheetFacts.basedIn}</dt>
+                <dd>{location}</dd>
+              </div>
+              <div>
+                <dt>{t.sheetFacts.alias}</dt>
+                <dd>{alias}</dd>
+              </div>
+              <div>
+                <dt>{t.sheetFacts.role}</dt>
+                <dd>{t.sheetFacts.roleValue}</dd>
+              </div>
+              <div>
+                <dt>{t.sheetFacts.contact}</dt>
+                <dd>
+                  <a href={mail(pressEmail, t.mailSubjects.pressInquiry)}>
+                    {pressEmail}
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </aside>
         </section>
 
-        <section className="nf-section dark-panel">
-          <div className="nf-section-title">
+        {/* Ringkasan dan format kerja: teks di kiri, indeks format di kanan. */}
+        <Reveal>
+          <section
+            className="an-section an-press-summary"
+            aria-labelledby="press-summary-title"
+          >
+            <div className="an-press-summary-copy an-rise">
+              <p className="an-meta">{t.summaryMeta}</p>
+              <h2 id="press-summary-title" className="an-title">
+                {t.summaryTitle}
+              </h2>
+              <p className="an-press-bio">{bio}</p>
+              <ul className="an-press-genres">
+                {genres.map(genre => (
+                  <li key={genre}>{genre}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="an-press-summary-side an-rise">
+              <p className="an-meta">{t.workFormatsMeta}</p>
+              <p className="an-press-capabilities-intro">{capabilitiesIntro}</p>
+              <ol className="an-index an-press-capability-list">
+                {verifiedArtistProfile.services.map((service, index) => (
+                  <li key={service}>
+                    <Link
+                      className="an-index-row"
+                      href={`${locale === "en" ? "/en" : ""}/inquire?type=${
+                        capabilityType[index] ?? "collaboration"
+                      }&source=epk`}
+                    >
+                      <span className="an-meta">
+                        {formatPublicIndex(index)}
+                      </span>
+                      <span className="an-press-capability-copy">
+                        <strong>{service}</strong>
+                        <small>
+                          {t.capabilityCopy[index] ?? t.capabilityCopy[0]}
+                        </small>
+                      </span>
+                      <ArrowUpRight size={15} aria-hidden="true" />
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+              <p className="an-press-licensing-note">
+                <strong>{t.licensingLabel}</strong> {licensingNote}
+              </p>
+            </div>
+          </section>
+        </Reveal>
+
+        {/* Aset resmi sebagai baris yang bisa dibuka/diminta — bukan kartu. */}
+        <section
+          className="an-section an-press-assets"
+          aria-labelledby="press-assets-title"
+        >
+          <header className="an-head an-head--row">
             <div>
-              <h2>
-                RILISAN
-                <br />
-                PILIHAN.
+              <p className="an-meta">{t.assetsMeta}</p>
+              <h2 id="press-assets-title" className="an-title">
+                {t.assetsTitle}
               </h2>
             </div>
-            <p>Tautan resmi untuk editor, promotor, dan kolaborator.</p>
-          </div>
-          <div className="an-epk-release-list">
-            {selectedReleases.map((release) => (
+            <p className="an-press-note">
+              {cmsAssets.length
+                ? t.assetsNotePublished
+                : t.assetsNoteRequest}
+            </p>
+          </header>
+          <ul className="an-index an-press-asset-list">
+            {assets.map(asset => (
+              <li key={asset.title}>
+                <a
+                  className="an-index-row an-press-asset"
+                  {...externalProps(asset.href)}
+                >
+                  <span className="an-meta">{asset.label}</span>
+                  <span className="an-press-asset-copy">
+                    <strong>{asset.title}</strong>
+                    <small>{asset.copy}</small>
+                  </span>
+                  <span className="an-press-asset-action">
+                    {asset.href.startsWith("mailto:") ? (
+                      <>
+                        {t.assetsRequestAction}{" "}
+                        <Mail size={13} aria-hidden="true" />
+                      </>
+                    ) : (
+                      <>
+                        {t.assetsOpenAction}{" "}
+                        <Download size={13} aria-hidden="true" />
+                      </>
+                    )}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Rilisan pilihan sebagai rail, sama seperti katalog di beranda. */}
+        <section
+          className="an-section an-press-releases"
+          aria-labelledby="press-releases-title"
+        >
+          <header className="an-head an-head--row">
+            <div>
+              <p className="an-meta">{t.releasesMeta}</p>
+              <h2 id="press-releases-title" className="an-title">
+                {t.releasesTitle}
+              </h2>
+            </div>
+            <Link className="an-btn an-btn--quiet" href={t.releasesHref}>
+              {t.releasesCta} <ArrowUpRight size={14} aria-hidden="true" />
+            </Link>
+          </header>
+          <div className="an-rail an-press-release-rail">
+            {selectedReleases.map(release => (
               <a
-                className="an-epk-release"
+                className="an-release"
                 key={release.title}
                 href={release.href}
                 target="_blank"
                 rel="noreferrer"
               >
-                <ResilientArtworkImage
-                  src={release.image}
-                  backupSrc={officialBrand.socialPreview}
-                  alt={`Artwork ${release.title}`}
-                />
-                <div>
-                  <span>
+                <span className="an-release-art">
+                  <ResilientArtworkImage
+                    src={release.image}
+                    backupSrc={officialBrand.socialPreview}
+                    alt={`Artwork ${release.title}`}
+                  />
+                </span>
+                <span className="an-release-meta">
+                  <small>
                     {release.platform} · {release.year}
-                  </span>
-                  <h3>{release.title}</h3>
-                  <p>
-                    {release.format} <ArrowUpRight size={11} />
-                  </p>
-                </div>
+                  </small>
+                  <strong>{release.title}</strong>
+                  <em>
+                    {release.format} <ArrowUpRight size={12} aria-hidden="true" />
+                  </em>
+                </span>
               </a>
             ))}
           </div>
         </section>
 
-        <section className="nf-section an-epk-contact-panel">
-          <div className="an-booking-grid">
-            <div>
-              <h2>
-                KONTAK
-                <br />
-                PROYEK.
-              </h2>
-              <p>
-                Kirim konteks untuk performance, remix, kolaborasi, atau
-                licensing. Ketersediaan dan tarif dikonfirmasi setelah inquiry
-                ditinjau.
-              </p>
+        {/* Panel kontak: satu-satunya permukaan terang di halaman ini. */}
+        <section
+          className="an-section an-epk-contact-panel"
+          aria-labelledby="press-contact-title"
+        >
+          <div className="an-press-contact">
+            <div className="an-press-contact-copy">
+              <p className="an-press-contact-label">{t.contactLabel}</p>
+              <h2 id="press-contact-title">{t.contactTitle}</h2>
+              <p>{t.contactCopy}</p>
             </div>
-            <div className="an-booking-actions">
-              <a href="/inquire?type=booking&source=epk">
-                BOOKING INQUIRY <ArrowUpRight size={15} />
-              </a>
-              <a href="/inquire?type=remix&source=epk">
-                REMIX / COLLABORATE <ArrowUpRight size={15} />
-              </a>
-              <a {...externalProps(mail(pressEmail, "Press material request"))}>
-                PRESS CONTACT <Mail size={15} />
+            <div className="an-press-contact-actions">
+              <Link
+                className="an-press-contact-link"
+                href={`${locale === "en" ? "/en" : ""}/inquire?type=booking&source=epk`}
+              >
+                <strong>{t.contactLinks.bookingTitle}</strong>
+                <small>{t.contactLinks.bookingCopy}</small>
+                <ArrowUpRight size={15} aria-hidden="true" />
+              </Link>
+              <Link
+                className="an-press-contact-link"
+                href={`${locale === "en" ? "/en" : ""}/inquire?type=remix&source=epk`}
+              >
+                <strong>{t.contactLinks.remixTitle}</strong>
+                <small>{t.contactLinks.remixCopy}</small>
+                <ArrowUpRight size={15} aria-hidden="true" />
+              </Link>
+              <a
+                className="an-press-contact-link"
+                {...externalProps(mail(pressEmail, t.mailSubjects.pressMaterial))}
+              >
+                <strong>{t.contactLinks.pressTitle}</strong>
+                <small>{t.contactLinks.pressCopy}</small>
+                <Mail size={15} aria-hidden="true" />
               </a>
             </div>
           </div>
         </section>
 
-        <section className="nf-section">
-          <div className="nf-section-title">
-            <div>
-              <h2>
-                PLATFORM
-                <br />
-                RESMI.
-              </h2>
-            </div>
-            <div className="an-epk-genre-row">
-              {editablePlatformLinks.slice(0, 5).map((link) => (
+        <section
+          className="an-section an-press-platforms"
+          aria-labelledby="press-platforms-title"
+        >
+          <header className="an-head">
+            <p className="an-meta">{t.platformsMeta}</p>
+            <h2 id="press-platforms-title" className="an-title">
+              {t.platformsTitle}
+            </h2>
+          </header>
+          <ul className="an-press-platform-list">
+            {editablePlatformLinks.slice(0, 6).map(link => (
+              <li key={link.label}>
                 <a
-                  className="nf-text-button"
+                  className="an-press-platform"
                   href={link.href}
                   target="_blank"
                   rel="noreferrer"
-                  key={link.label}
                 >
                   <PlatformIcon label={link.label} />
-                  {link.label}
-                  <ArrowUpRight size={13} />
+                  <span>{link.label}</span>
+                  <ArrowUpRight size={13} aria-hidden="true" />
                 </a>
-              ))}
-            </div>
-          </div>
+              </li>
+            ))}
+          </ul>
         </section>
-      </main>
+    </main>
+  );
+}
+
+export default function PressKit() {
+  return (
+    <div className="nf-page an-epk-ready">
+      <NightHeader active="/epk" />
+      <PressView locale="id" />
       <NightFooter />
     </div>
   );

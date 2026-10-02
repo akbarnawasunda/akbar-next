@@ -418,7 +418,7 @@
   margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid var(--paper-line);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.58rem;
   letter-spacing: 0.16em;
   color: var(--mute);
@@ -430,7 +430,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -470,7 +470,7 @@
 }
 .nf-footer-brand p {
   margin: 6px 0 0;
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.58rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -490,7 +490,7 @@
   gap: 12px;
 }
 .nf-footer-column > span {
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.16em;
@@ -519,7 +519,7 @@
   margin: 40px 0 0;
   padding-top: 20px;
   border-top: 1px solid var(--paper-line);
-  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 0.58rem;
   letter-spacing: 0.14em;
   color: var(--mute-soft);

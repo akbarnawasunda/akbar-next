@@ -56,13 +56,16 @@
   display: block;
 }
 
-/* YouTube (Requires strict 16:9 ratio) */
+/* YouTube — rasio 16:9 murni.
+   Dulu ada `min-height: 220px` (dan 190px di layar kecil) yang membuat
+   kotak video lebih tinggi daripada rasionya: di ponsel 360px video
+   jadi 1,58:1 dan gambar tampak gepeng dengan bar hitam. `aspect-ratio`
+   sendirian sudah menjamin kotak tidak pernah salah bentuk. */
 .an-embed-youtube .an-embed-frame-wrap {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
   height: auto;
-  min-height: 220px;
 }
 .an-embed-youtube iframe {
   position: absolute;
@@ -434,8 +437,5 @@
   }
   .an-embed-card-player-shelf {
     padding: 0 16px 16px;
-  }
-  .an-embed-youtube .an-embed-frame-wrap {
-    min-height: 190px;
   }
 }

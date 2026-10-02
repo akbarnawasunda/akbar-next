@@ -382,6 +382,39 @@
   background: var(--acid) !important;
 }
 
+/* Panel kontak EPK memakai permukaan gelap (`--ink-soft`), tetapi warna
+   tautan di dalamnya masih memakai token `--ink` yang dirancang untuk
+   panel terang — judul tautannya ("Booking inquiry", dst.) jadi nyaris tak
+   terbaca dan garis pemisahnya hilang. Warnanya di sini diselaraskan
+   dengan permukaan gelap di atas. */
+.nf-page .an-epk-contact-panel .an-press-contact-link,
+.nf-page .an-epk-contact-panel .an-press-contact-link strong,
+.nf-page .en-contact-panel .an-press-contact-link,
+.nf-page .en-contact-panel .an-press-contact-link strong {
+  color: var(--paper) !important;
+}
+
+.nf-page .an-epk-contact-panel .an-press-contact-link small,
+.nf-page .an-epk-contact-panel .an-press-contact-link svg,
+.nf-page .en-contact-panel .an-press-contact-link small,
+.nf-page .en-contact-panel .an-press-contact-link svg {
+  color: var(--mute) !important;
+}
+
+.nf-page .an-epk-contact-panel .an-press-contact-link,
+.nf-page .an-epk-contact-panel .an-press-contact-link:last-child,
+.nf-page .en-contact-panel .an-press-contact-link,
+.nf-page .en-contact-panel .an-press-contact-link:last-child {
+  border-color: var(--paper-line) !important;
+}
+
+.nf-page .an-epk-contact-panel .an-press-contact-link:hover strong,
+.nf-page .an-epk-contact-panel .an-press-contact-link:focus-visible strong,
+.nf-page .en-contact-panel .an-press-contact-link:hover strong,
+.nf-page .en-contact-panel .an-press-contact-link:focus-visible strong {
+  color: var(--acid) !important;
+}
+
 .nf-page .nf-signal-form > div {
   border: 1px solid var(--paper-line) !important;
   border-radius: 4px !important;
@@ -606,81 +639,5 @@
     animation: none;
     opacity: 1;
     transform: none;
-  }
-}
-
-
-/* Compact embedded players: readable cards instead of full-width posters. */
-.nf-page .nf-embed-grid,
-.nf-page .nf-video-embed-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
-  width: min(100%, 980px);
-  margin-inline: auto;
-  align-items: start;
-}
-.nf-page .nf-embed-grid .an-official-media,
-.nf-page .nf-video-embed-grid .an-official-media {
-  min-width: 0;
-  width: 100%;
-  box-shadow: var(--shadow-soft) !important;
-}
-.nf-page .nf-embed-grid .an-official-media:hover,
-.nf-page .nf-video-embed-grid .an-official-media:hover {
-  box-shadow: 6px 6px 0 var(--acid) !important;
-  transform: translate(-3px, -3px) !important;
-}
-.nf-page .nf-embed-grid .an-official-media-art,
-.nf-page .nf-video-embed-grid .an-official-media-art {
-  aspect-ratio: 16 / 8;
-}
-.nf-page .nf-embed-grid .an-official-media-copy,
-.nf-page .nf-video-embed-grid .an-official-media-copy {
-  padding: 14px 15px 2px;
-}
-.nf-page .nf-embed-grid .an-official-media-copy h3,
-.nf-page .nf-video-embed-grid .an-official-media-copy h3 {
-  font-size: clamp(1rem, 1.5vw, 1.35rem) !important;
-  line-height: 1.08;
-}
-.nf-page .nf-embed-grid .an-official-media-actions,
-.nf-page .nf-video-embed-grid .an-official-media-actions {
-  padding: 14px 18px 16px;
-}
-.nf-page .nf-embed-grid .an-official-media-actions a,
-.nf-page .nf-embed-grid .an-official-media-actions button,
-.nf-page .nf-video-embed-grid .an-official-media-actions a,
-.nf-page .nf-video-embed-grid .an-official-media-actions button {
-  min-height: 38px;
-  padding-inline: 14px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-}
-.nf-page .nf-embed-grid .an-official-player iframe {
-  height: 166px;
-  width: 100%;
-}
-.nf-page .nf-video-embed-grid .an-official-player iframe {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  height: auto;
-  min-height: 240px;
-}
-@media (max-width: 720px) {
-  .nf-page .nf-embed-grid,
-  .nf-page .nf-video-embed-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    width: 100%;
-  }
-  .nf-page .nf-embed-grid .an-official-player iframe {
-    height: 166px;
-  }
-  .nf-page .nf-video-embed-grid .an-official-player iframe {
-    aspect-ratio: 16 / 9;
-    height: auto;
-    min-height: 200px;
   }
 }

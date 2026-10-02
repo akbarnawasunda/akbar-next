@@ -1,224 +1,402 @@
-.an-official-media{overflow:hidden;border:1px solid var(--ink-line);background:linear-gradient(145deg,var(--ink),var(--ink-soft));box-shadow:0 22px 68px rgba(0,0,0,.2)}.an-official-media-art{position:relative;display:block;aspect-ratio:16/8.5;overflow:hidden;background:var(--ink)}.an-official-media-art img{width:100%;height:100%;object-fit:cover;opacity:.78;transition:transform .38s cubic-bezier(.23,1,.32,1),opacity .38s}.an-official-media:hover .an-official-media-art img{transform:scale(1.035);opacity:1}.an-official-media-art:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,color-mix(in srgb, var(--ink) 76%, transparent),transparent 56%)}.an-official-media-art span{position:absolute;z-index:1;left:13px;bottom:12px;color:var(--paper);font:600 9px/1 var(--font-mono);letter-spacing:.14em}.an-official-media-art i{position:absolute;z-index:1;right:13px;bottom:10px;display:grid;place-items:center;width:33px;height:33px;border:1px solid var(--ink-line);border-radius:50%;color:var(--paper);font-style:normal}.an-official-media-copy{padding:17px 17px 3px}.an-official-media-copy p{margin:0;color:var(--acid);font:600 9px/1 var(--font-mono);letter-spacing:.12em}.an-official-media-copy h3{margin:9px 0 0;color:var(--paper);font:600 clamp(17px,2vw,25px)/1.02 var(--font-display);letter-spacing:-.045em}.an-official-media-copy small{display:block;margin-top:9px;color:var(--mute);font:13px/1.5 var(--font-display)}.an-official-media-actions{display:flex;gap:9px;padding:16px 17px 18px}.an-official-media-actions a,.an-official-media-actions button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;border:1px solid var(--ink-line);padding:0 11px;background:transparent;color:var(--paper);font:600 9px/1 var(--font-mono);letter-spacing:.07em;text-decoration:none}.an-official-media-actions a{background:var(--acid);color:var(--ink);border-color:var(--acid)}.an-official-media-actions button:hover{border-color:var(--acid);color:var(--acid)}.an-official-player{position:relative;border-top:1px solid var(--ink-line);background:var(--ink)}.an-official-player iframe{display:block;width:100%;height:174px;border:0}.an-official-player>span{position:absolute;inset:0;display:grid;place-items:center;color:var(--paper);font:600 10px var(--font-mono);letter-spacing:.1em;pointer-events:none}.an-official-player.is-loaded>span{display:none}.an-official-player p{margin:0;padding:12px 16px;color:var(--mute);font:12px/1.5 var(--font-display)}.an-official-player p strong{color:var(--paper);font-family:var(--font-mono);font-size:10px}@media(max-width:520px){.an-official-media-actions{flex-direction:column}.an-official-media-actions a,.an-official-media-actions button{width:100%}.an-official-player iframe{height:156px}}
+/* ============================================================
+   OFFICIAL MEDIA FRAME — satu sumber kebenaran untuk kartu media
+   resmi (SoundCloud / Spotify / YouTube) di /music dan /visuals,
+   versi Indonesia maupun Inggris.
 
-/* Modern provider-aware media chrome. */
+   Sebelumnya geometri kartu ini ditentukan dari beberapa berkas
+   sekaligus (CinematicReference, MaturePalette, EditorialRefresh)
+   dengan aturan yang saling menimpa. Akibatnya bingkai bertumpuk,
+   padding ganda, artwork persegi dipotong 16:9, dan tepi kartu
+   tidak rata. Semua aturan kartu itu sudah dihapus dari berkas
+   lain; berkas ini yang menentukan.
+
+   Kontraknya:
+   1. satu bingkai per kartu — di dalam shelf AudioPlayerShell,
+      shell-nya yang jadi bingkai, kartu tidak menambah bingkai;
+   2. artwork mengikuti bentuk aslinya: video 16:9, audio persegi
+      di samping teks, jadi tidak ada crop yang bikin gepeng;
+   3. tidak ada tinggi iframe yang dipaksa — rasio murni 16:9;
+   4. kartu mengisi tinggi baris grid supaya tepinya rata dan
+      baris tombol selalu duduk di dasar kartu.
+   ============================================================ */
+
 .an-official-media {
+  --media-pad: clamp(14px, 1.5vw, 20px);
+  --media-gap: clamp(12px, 1.4vw, 18px);
+  --media-rule: var(--editorial-rule, var(--ink-line));
+  --media-surface: #141715;
+  /* Artwork audio (SoundCloud/Spotify) ditampilkan sebagai kotak persegi
+     yang besar — bukan thumbnail kecil di pojok. Rasio 1:1-nya berasal
+     dari provider, jadi bingkai mengikuti artwork, bukan sebaliknya. */
+  --media-thumb: clamp(112px, 28%, 184px);
+
   position: relative;
-  isolation: isolate;
-  border-color: color-mix(in srgb, var(--acid) 28%, transparent);
-  background: linear-gradient(145deg, color-mix(in srgb, var(--ink-soft) 94%, transparent), color-mix(in srgb, var(--ink) 98%, transparent));
-  box-shadow: var(--shadow-lift);
-  transition: transform 220ms cubic-bezier(0.23, 1, 0.32, 1), border-color 220ms ease, box-shadow 220ms ease;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto auto;
+  align-content: start;
+  height: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--media-pad);
+  overflow: hidden;
+  contain: layout paint;
+  border: 1px solid var(--media-rule);
+  border-radius: 2px;
+  background: var(--media-surface);
+  transition: border-color 200ms ease;
 }
-.an-official-media::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background: radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--acid) 15%, transparent), transparent 36%);
-  pointer-events: none;
-}
+
 .an-official-media:hover {
-  transform: translateY(-4px);
-  border-color: color-mix(in srgb, var(--acid) 58%, transparent);
-  box-shadow: var(--shadow-hero);
+  border-color: color-mix(in srgb, var(--acid) 45%, transparent);
 }
+
+/* -- Media ---------------------------------------------------- */
+
 .an-official-media-art {
+  grid-column: 1 / -1;
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.an-official-media-provider-youtube .an-official-media-art {
   aspect-ratio: 16 / 9;
 }
+
+.an-official-media-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.94;
+  transition:
+    transform 420ms cubic-bezier(0.23, 1, 0.32, 1),
+    opacity 220ms ease;
+}
+
+.an-official-media:hover .an-official-media-art img {
+  transform: scale(1.03);
+  opacity: 1;
+}
+
 .an-official-media-art::after {
-  background: linear-gradient(0deg, color-mix(in srgb, var(--ink) 88%, transparent), color-mix(in srgb, var(--ink) 4%, transparent) 66%);
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--ink) 84%, transparent),
+    transparent 64%
+  );
+  pointer-events: none;
 }
-.an-official-media-art span,
-.an-official-media-copy p,
-.an-official-player > span,
-.an-official-player p strong {
+
+.an-official-media-art span {
+  position: absolute;
+  z-index: 1;
+  left: 14px;
+  bottom: 13px;
   color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
 }
+
 .an-official-media-art i {
-  width: 42px;
-  height: 42px;
-  border-color: color-mix(in srgb, var(--paper) 72%, transparent);
-  background: var(--ink-soft);
-  transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1), background 180ms ease;
+  position: absolute;
+  z-index: 1;
+  right: 14px;
+  bottom: 12px;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid color-mix(in srgb, var(--paper) 58%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ink) 66%, transparent);
+  color: var(--paper);
+  font-style: normal;
+  transition:
+    transform 200ms ease,
+    background 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
 }
+
 .an-official-media:hover .an-official-media-art i {
-  transform: scale(1.08);
+  transform: scale(1.06);
+  border-color: var(--acid);
   background: var(--acid);
   color: var(--ink);
 }
-.an-official-media-actions a,
-.an-official-media-actions button {
-  min-height: 42px;
-  border-radius: 2px;
-  transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background 160ms ease, border-color 160ms ease, color 160ms ease;
-}
-.an-official-media-actions a {
-  background: var(--acid);
-  border-color: var(--acid);
-}
-.an-official-media-actions button:hover {
-  border-color: var(--acid);
-  color: var(--acid);
-  transform: translateY(-2px);
-}
-.an-official-media-actions a:active,
-.an-official-media-actions button:active {
-  transform: scale(0.97);
-}
-.an-official-player {
-  border-top-color: color-mix(in srgb, var(--paper) 28%, transparent);
-}
-.an-official-player iframe {
-  background: var(--ink);
-}
-.an-official-player > span::after {
-  content: "";
-  width: 84px;
-  height: 2px;
-  position: absolute;
-  bottom: 22px;
-  background: linear-gradient(90deg, transparent, var(--acid), transparent);
-  animation: an-media-loading 1.15s ease-in-out infinite;
-}
-.an-official-media-provider-youtube,
-.an-official-media-provider-soundcloud {
-  --media-accent: var(--acid);
-}
-@keyframes an-media-loading {
-  0%, 100% { opacity: 0.28; transform: scaleX(0.55); }
-  50% { opacity: 1; transform: scaleX(1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .an-official-media,
-  .an-official-media:hover,
-  .an-official-media:hover .an-official-media-art i,
-  .an-official-media-actions a:active,
-  .an-official-media-actions button:active { transform: none; transition: none; }
-  .an-official-player > span::after { animation: none; }
+
+/* Audio: artwork persegi dari provider dipakai apa adanya, di samping
+   teks — bukan dipaksa jadi bendera 16:9 yang memotong 44% gambarnya. */
+
+.an-official-media-provider-soundcloud,
+.an-official-media-provider-spotify {
+  grid-template-columns: var(--media-thumb) minmax(0, 1fr);
+  grid-template-rows: 1fr auto auto;
 }
 
-
-/* RESPONSIVE MEDIA QA — contained, legible, and visually anchored */
-.an-official-media {
-  min-width: 0;
-  max-width: 100%;
-  overflow: hidden;
-  border-radius: var(--r-sm, 4px);
-  box-shadow: 0 24px 68px rgba(0, 0, 0, 0.54), 0 0 0 1px color-mix(in srgb, var(--acid) 18%, transparent);
+.an-official-media-provider-soundcloud .an-official-media-art,
+.an-official-media-provider-spotify .an-official-media-art {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  aspect-ratio: 1 / 1;
 }
+
+.an-official-media-provider-soundcloud .an-official-media-art::after,
+.an-official-media-provider-spotify .an-official-media-art::after {
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--ink) 52%, transparent),
+    transparent 72%
+  );
+}
+
+.an-official-media-provider-soundcloud .an-official-media-art span,
+.an-official-media-provider-spotify .an-official-media-art span {
+  display: none;
+}
+
+.an-official-media-provider-soundcloud .an-official-media-art i,
+.an-official-media-provider-spotify .an-official-media-art i {
+  inset: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: min(40px, 46%);
+  height: min(40px, 46%);
+}
+
+/* -- Teks ----------------------------------------------------- */
+
 .an-official-media-copy {
+  grid-column: 1 / -1;
   min-width: 0;
-  padding: 18px 18px 5px;
+  align-self: start;
+  padding-top: var(--media-gap);
+  color: var(--mute);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.55;
 }
+
+.an-official-media-provider-soundcloud .an-official-media-copy,
+.an-official-media-provider-spotify .an-official-media-copy {
+  grid-column: 2;
+  grid-row: 1;
+  padding: 2px 0 0 var(--media-gap);
+  /* Teks duduk sejajar tengah terhadap artwork persegi di sebelahnya —
+     tidak menggantung di atas dengan ruang kosong di bawah. */
+  align-self: center;
+}
+
 .an-official-media-copy p {
-  line-height: 1.35;
-  color: var(--acid) !important;
+  margin: 0;
+  color: var(--mute);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  text-transform: none;
 }
+
 .an-official-media-copy h3 {
-  max-width: 22ch;
-  margin-top: 10px;
-  color: var(--paper) !important;
+  margin: 7px 0 0;
+  max-width: 30ch;
+  color: var(--paper);
   font-family: var(--font-display);
-  font-size: clamp(1.12rem, 1.7vw, 1.55rem);
-  line-height: 1.04;
-  letter-spacing: -0.035em;
+  font-size: clamp(1.15rem, 1.5vw, 1.7rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.06;
   text-wrap: balance;
 }
+
 .an-official-media-copy small {
-  max-width: 42ch;
-  color: var(--mute) !important;
+  display: block;
+  margin-top: 7px;
+  max-width: 46ch;
+  color: var(--mute);
   font-family: var(--font-body);
-  font-size: 0.82rem;
-  line-height: 1.6;
+  font-size: 0.8rem;
+  line-height: 1.55;
 }
+
+/* -- Tombol --------------------------------------------------- */
+
 .an-official-media-actions {
-  min-width: 0;
+  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
   gap: 10px;
-  padding: 17px 18px 19px;
-}
-.an-official-media-actions a,
-.an-official-media-actions button {
-  min-width: 0;
-  max-width: 100%;
-  min-height: 42px;
-  overflow-wrap: normal;
-  word-break: normal;
-  white-space: nowrap;
-  line-height: 1.25;
-}
-.an-official-media-actions a { flex: 1 1 170px; }
-.an-official-media-actions button { flex: 1 1 140px; }
-.an-official-player-wrap {
-  padding: 12px 16px 16px;
-  border-top: 1px solid var(--ink-line);
-  background: var(--ink-soft);
-  animation: an-shelf-slide 220ms ease-out;
+  padding-top: var(--media-gap);
 }
 
-.an-official-player {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
+.an-official-media-actions a,
+.an-official-media-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
   min-width: 0;
-  overflow: hidden;
-  padding: 10px;
-  border-top: 1px solid color-mix(in srgb, var(--paper) 24%, transparent);
-  background: color-mix(in srgb, var(--ink) 94%, var(--ink-soft));
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--paper) 7%, transparent);
-}
-.an-official-player iframe {
-  display: block;
-  width: 100% !important;
-  max-width: 100% !important;
-  height: auto;
-  border: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
-  border-radius: 4px;
-  background: var(--ink);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.36), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
-.an-official-media-provider-youtube .an-official-player iframe {
-  aspect-ratio: 16 / 9;
-  min-height: 220px;
-}
-.an-official-media-provider-soundcloud .an-official-player iframe {
-  height: 166px;
-}
-.an-official-media-provider-spotify .an-official-player iframe {
-  height: 152px;
-}
-.an-official-player > span {
-  inset: 10px;
-  display: grid;
-  place-items: center;
-  padding: 12px;
+  /* Tombol tidak meregang jadi dua balok selebar kartu: lebarnya berhenti
+     di 260px (di layar kecil tetap penuh) dan barisnya rata kiri. */
+  max-width: min(100%, 260px);
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--media-rule);
+  border-radius: 2px;
+  background: transparent;
   color: var(--paper);
-  background: color-mix(in srgb, var(--ink) 44%, transparent);
-  font: 600 0.62rem/1.4 var(--font-mono);
-  letter-spacing: 0.12em;
-  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
 }
-.an-official-player p {
-  margin: 10px 2px 0;
-  color: var(--mute) !important;
+
+/* Kedua tombol memakai basis yang sama: sebelumnya `180px` vs `150px`
+   membuat tombol kiri selalu lebih lebar (±10%) sehingga tepi kanannya
+   tidak sejajar dengan tombol di sebelahnya. Dengan basis sama,
+   keduanya tumbuh seimbang dan tetap turun ke baris sendiri saat
+   kartu sempit. */
+.an-official-media-actions a {
+  flex: 1 1 160px;
+  border-color: var(--paper);
+  background: var(--paper);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.an-official-media-actions a:hover {
+  border-color: var(--acid);
+  background: color-mix(in srgb, var(--paper) 86%, var(--acid));
+}
+
+.an-official-media-actions button {
+  flex: 1 1 160px;
+}
+
+.an-official-media-actions button:hover {
+  border-color: var(--acid);
+  color: var(--acid);
+}
+
+/* -- Pemutar yang dibuka -------------------------------------- */
+
+.an-official-player-wrap {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 10px;
+  margin-top: var(--media-gap);
+  padding-top: var(--media-gap);
+  border-top: 1px solid var(--media-rule);
+}
+
+.an-official-player-hint {
+  margin: 0;
+  color: var(--mute);
   font-family: var(--font-body);
   font-size: 0.78rem;
   line-height: 1.55;
 }
-@media (max-width: 720px) {
-  .an-official-media-copy { padding: 16px 16px 4px; }
-  .an-official-media-copy h3 { max-width: 100%; font-size: 1.2rem; }
-  .an-official-media-actions { padding: 14px 16px 16px; }
-  .an-official-media-actions a,
-  .an-official-media-actions button { flex-basis: 100%; width: 100%; }
-  .an-official-player { padding: 8px; }
-  .an-official-player iframe { height: 132px !important; min-height: 132px; }
-  .an-official-player > span { inset: 8px; }
+
+/* MusicEmbed membawa bingkai sendiri (radius 8px + garis + bayangan).
+   Di dalam kartu bersudut 2px itu terbaca sebagai kartu di dalam kartu
+   yang tepinya tidak sejajar. Di dalam wrap ini chrome-nya dilepas;
+   yang tersisa hanya iframe-nya. */
+.an-official-player-wrap .an-music-embed {
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
 }
+
+.an-official-player-wrap .an-music-embed:hover {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Kartu video: thumbnail 16:9 dan iframe 16:9 tidak ditumpuk dua kali.
+   Saat player terbuka, thumbnail dilepas — kartu tidak jadi dua kali
+   lebih tinggi dari pasangannya di baris yang sama. */
+.an-official-media-provider-youtube.is-player-open .an-official-media-art {
+  display: none;
+}
+
+/* Tanpa thumbnail, teks naik ke baris pertama dan baris tombol tidak
+   boleh ikut meregang mengisi sisa `1fr` — tinggi mengikuti isi. */
+.an-official-media-provider-youtube.is-player-open {
+  grid-template-rows: auto auto auto auto;
+}
+
+/* -- Di dalam shelf AudioPlayerShell --------------------------
+   Shelf sudah punya bingkai dan padding sendiri. Kartu di dalamnya
+   karena itu tampil tanpa bingkai kedua dan tanpa padding ganda,
+   supaya tepi kiri judul di bar dan isi kartu benar-benar rata. */
+
+.ed-player__shelf .an-official-media {
+  --media-pad: 0;
+  border: 0;
+  background: none;
+}
+
+.ed-player__shelf .an-official-media:hover {
+  border-color: transparent;
+}
+
+/* -- Layar kecil ---------------------------------------------- */
+
+@media (max-width: 640px) {
+  .an-official-media-actions a,
+  .an-official-media-actions button {
+    max-width: 100%;
+  }
+
+  .an-official-media {
+    --media-pad: 14px;
+    --media-gap: 12px;
+    --media-thumb: clamp(92px, 30%, 128px);
+  }
+
+  .an-official-media-copy h3 {
+    max-width: 100%;
+    font-size: 1.15rem;
+  }
+
+  .an-official-media-copy small {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .an-official-media {
+    --media-thumb: 88px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .an-official-media,
   .an-official-media:hover,
-  .an-official-media:hover .an-official-media-art i { transform: none; transition: none; }
+  .an-official-media-art img,
+  .an-official-media:hover .an-official-media-art img,
+  .an-official-media-art i,
+  .an-official-media:hover .an-official-media-art i {
+    transform: none;
+    transition: none;
+  }
 }

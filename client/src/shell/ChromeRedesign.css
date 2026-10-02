@@ -1,0 +1,359 @@
+/* ============================================================
+   CHROME REDESIGN — masthead + footer
+   ------------------------------------------------------------
+   Lapisan ini dimuat SETELAH EditorialRefresh.css (lihat
+   PublicShell.tsx). Semua aturan hanya hidup di dalam
+   `.an-public-shell.an-editorial`, jadi studio/admin dan
+   /game/jedag-run — yang merender di luar shell ini — tidak
+   terpengaruh.
+
+   Arah desain:
+   - masthead = kepala surat majalah, bukan panel kontrol;
+   - wordmark display (Clash Display) + satu baris metadata mono;
+   - tautan nav = metadata mono kecil, bukan judul;
+   - satu CTA nyata ("Dengarkan" / "Inquire"), bukan anchor #signal
+     yang cuma ada di beranda;
+   - di beranda, bar-nya transparan di posisi paling atas supaya
+     foto hero terbaca penuh, lalu menutup jadi tipis saat digulir.
+   ============================================================ */
+
+.an-public-shell.an-editorial {
+  /* Tinggi masthead dipakai hero beranda untuk menghitung offset
+     (foto masuk ke bawah bar). */
+  --chrome-h: 78px;
+  --chrome-h-compact: 62px;
+  --chrome-rule: color-mix(in srgb, var(--paper) 12%, transparent);
+  --chrome-rule-strong: color-mix(in srgb, var(--paper) 20%, transparent);
+}
+
+/* -- Bar ------------------------------------------------------ */
+
+/* Empat kolom: header ID punya 3 anak (wordmark, nav, tools) dan header
+   Inggris punya 4 (wordmark, nav, bahasa, CTA) — keduanya pas di kisi yang
+   sama tanpa baris kedua. */
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-nav {
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto auto;
+  gap: clamp(14px, 2vw, 32px);
+  min-height: var(--chrome-h);
+  padding: env(safe-area-inset-top) var(--editorial-gutter) 0;
+  border: 0;
+  border-bottom: 1px solid var(--chrome-rule);
+  background: color-mix(in srgb, var(--ink) 94%, transparent);
+  transition:
+    min-height 260ms var(--ease, ease),
+    background-color 260ms var(--ease, ease),
+    border-color 260ms var(--ease, ease);
+}
+
+/* Beranda saja: bar transparan di paling atas, di atas foto hero. Halaman
+   dalam (termasuk /en yang juga memakai `.an-site`) tetap bar solid, karena
+   di sana foto hero-nya tidak ditarik ke bawah masthead. */
+.an-public-shell.an-editorial .an-site[data-page="home"] .nf-nav[data-scrolled="false"] {
+  background: transparent;
+  border-bottom-color: transparent;
+}
+
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-nav[data-scrolled="true"] {
+  min-height: var(--chrome-h-compact);
+  background: color-mix(in srgb, var(--ink) 96%, transparent);
+  border-bottom-color: var(--chrome-rule);
+}
+
+/* -- Wordmark ------------------------------------------------- */
+
+.an-public-shell.an-editorial .nf-nav .nf-wordmark {
+  gap: 12px;
+  min-width: 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  line-height: 1;
+  text-transform: none;
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-wordmark-text {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-wordmark-text strong {
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  color: var(--paper);
+  white-space: nowrap;
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-wordmark-text small {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+  white-space: nowrap;
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-wordmark .nf-brand-logo {
+  display: block;
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-brand-logo {
+  width: 32px;
+  height: 32px;
+  padding: 3px;
+  border: 1px solid var(--chrome-rule-strong);
+  border-radius: 0;
+  background: transparent;
+  object-fit: contain;
+  transition: border-color 200ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-wordmark:hover .nf-brand-logo,
+.an-public-shell.an-editorial .nf-nav .nf-wordmark:focus-visible .nf-brand-logo {
+  border-color: var(--acid);
+}
+
+/* -- Tautan utama -------------------------------------------- */
+
+.an-public-shell.an-editorial .nf-nav nav {
+  gap: clamp(16px, 1.9vw, 30px);
+}
+
+.an-public-shell.an-editorial .nf-nav nav a {
+  padding: 12px 0;
+  color: color-mix(in srgb, var(--paper) 58%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: color 180ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .nf-nav nav a::after {
+  height: 1px;
+  background: var(--acid);
+  transform-origin: left center;
+}
+
+.an-public-shell.an-editorial .nf-nav nav a:hover,
+.an-public-shell.an-editorial .nf-nav nav a:focus-visible {
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .nf-nav nav a.is-active {
+  color: var(--paper);
+}
+
+/* Titik penanda halaman aktif — pengganti garis bawah penuh. */
+.an-public-shell.an-editorial .nf-nav nav a.is-active::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin-top: -2px;
+  background: var(--acid);
+}
+
+.an-public-shell.an-editorial .nf-nav nav a.is-active::after {
+  transform: scaleX(0);
+}
+
+/* -- Bahasa + CTA -------------------------------------------- */
+
+.an-public-shell.an-editorial .nf-nav-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 20px);
+  justify-self: end;
+}
+
+.an-public-shell.an-editorial .nf-nav .an-language-switcher {
+  gap: 6px;
+  color: color-mix(in srgb, var(--paper) 46%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+}
+
+.an-public-shell.an-editorial .nf-nav .an-language-switcher a {
+  padding: 10px 2px;
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-signal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--chrome-rule-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    border-color 200ms var(--ease, ease),
+    color 200ms var(--ease, ease),
+    background-color 200ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-signal svg {
+  width: 13px;
+  height: 13px;
+  stroke-width: 1.6;
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-signal:hover,
+.an-public-shell.an-editorial .nf-nav .nf-signal:focus-visible {
+  border-color: var(--acid);
+  background: color-mix(in srgb, var(--acid) 10%, transparent);
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .nf-menu-toggle {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--chrome-rule-strong);
+  border-radius: 0;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .nf-menu-toggle:hover,
+.an-public-shell.an-editorial .nf-menu-toggle:focus-visible {
+  border-color: var(--acid);
+  color: var(--acid);
+}
+
+/* -- Footer --------------------------------------------------- */
+
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-footer {
+  gap: clamp(28px, 4vw, 64px);
+  padding: clamp(48px, 7vw, 92px) var(--editorial-gutter) clamp(28px, 4vw, 44px);
+  border-top: 1px solid var(--chrome-rule);
+  background: var(--ink);
+}
+
+.an-public-shell.an-editorial .nf-footer-brand strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .nf-footer-brand p {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .nf-footer-column > span {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.22em;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .nf-footer-column a {
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  color: color-mix(in srgb, var(--paper) 74%, transparent);
+}
+
+.an-public-shell.an-editorial .nf-footer-column a:hover,
+.an-public-shell.an-editorial .nf-footer-column a:focus-visible {
+  color: var(--acid);
+}
+
+.an-public-shell.an-editorial .nf-footer .footer-bottom {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  color: var(--mute);
+}
+
+/* -- Drawer mobile (dipakai NightHeader & EnglishChrome) ------ */
+
+.an-public-shell.an-editorial .nf-mobile-drawer-panel {
+  background-color: var(--ink);
+  border-left: 1px solid var(--chrome-rule);
+}
+
+.an-public-shell.an-editorial .nf-mobile-drawer-link-title {
+  font-family: var(--font-display);
+  font-size: 1.06rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.an-public-shell.an-editorial .nf-mobile-drawer-link-desc {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--mute);
+}
+
+/* -- Breakpoints --------------------------------------------- */
+
+@media (max-width: 1080px) {
+  .an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-nav {
+    grid-template-columns: minmax(0, 1fr) auto;
+    min-height: var(--chrome-h-compact);
+    gap: 12px;
+  }
+  .an-public-shell.an-editorial .nf-nav-tools {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .an-public-shell.an-editorial {
+    --chrome-h: 66px;
+    --chrome-h-compact: 58px;
+  }
+  .an-public-shell.an-editorial .nf-nav .nf-wordmark-text strong {
+    font-size: 0.9rem;
+  }
+  .an-public-shell.an-editorial .nf-nav .nf-wordmark-text small {
+    font-size: 0.46rem;
+    letter-spacing: 0.16em;
+  }
+  .an-public-shell.an-editorial .nf-nav .nf-brand-logo {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 420px) {
+  .an-public-shell.an-editorial .nf-nav .nf-wordmark-text small {
+    display: none; /* logam metadata ditanggalkan; nama tetap terbaca penuh */
+  }
+  .an-public-shell.an-editorial .nf-nav .nf-brand-logo {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-nav,
+  .an-public-shell.an-editorial .nf-nav .nf-brand-logo,
+  .an-public-shell.an-editorial .nf-nav .nf-signal {
+    transition: none;
+  }
+}

@@ -69,6 +69,7 @@ export function EnglishHeader({ active }: { active?: string }) {
           <ResilientBrandImage
             className="nf-brand-logo"
             alt="Akbar Nawasunda"
+            priority
           />
           <span>AKBAR NAWASUNDA</span>
         </Link>

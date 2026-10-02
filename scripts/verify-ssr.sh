@@ -290,10 +290,10 @@ echo "== SSR crawler verification against $BASE =="
 #   - 5th arg (paginated rows): substring the canonical href VALUE must contain,
 #     so a canonical collapsing back to page 1 turns the row red.
 check "/"                                      "DENGARKAN KARYA"                    "Akbar Nawasunda | Official Website" state,ogimage
-check "/music"                                "RILISAN TERBARU"                  "Music by Akbar Nawasunda" state,ogimage
-check "/about"                                "PERJALANAN"                      "About the Artist | Akbar Nawasunda" state,ogimage
+check "/music"                                "Dengar di kanal resminya."         "Music by Akbar Nawasunda" state,ogimage
+check "/about"                                "Profil artis"                    "About the Artist | Akbar Nawasunda" state,ogimage
 check "/visuals"                              "BIKIN VISUAL"                    "Videos by Akbar Nawasunda" state,ogimage
-check "/live"                                 "AJUKAN BOOKING"                  "Live Dates | Akbar Nawasunda" state,ogimage
+check "/live"                                 "BOOKING / REMIX / KOLABORASI"    "Live Dates | Akbar Nawasunda" state,ogimage
 check "/universe"                             "PERJALANAN"                      "About the Work | Akbar Nawasunda" state,ogimage
 check "/inquire?type=licensing&source=release" "KIRIM INQUIRY"                  "Inquire | Akbar Nawasunda" state,ogimage
 check "/en"                                   "Masih Mencintainya"              "Akbar Nawasunda | Official Website" state,ogimage

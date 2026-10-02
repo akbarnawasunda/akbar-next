@@ -148,7 +148,7 @@ export async function preloadPublicRoute(pathname: string) {
   await Promise.all(jobs);
 }
 
-import LegacyDocument from "./components/LegacyDocument";
+import NotFound from "./pages/NotFound";
 import { PublicShell } from "./shell/PublicShell";
 import { StructuredData } from "./components/StructuredData";
 import { trpc } from "./lib/trpc";
@@ -159,6 +159,12 @@ import "./components/MaturePalette.css";
 import "./components/BrandSystem.css";
 import "./components/RouteMotion.css";
 import { PageLoading, RouteProgress } from "./components/RouteTransition";
+
+function NotFoundRoute() {
+  const [location] = useLocation();
+  const english = location === "/en" || location.startsWith("/en/");
+  return <NotFound locale={english ? "en" : "id"} />;
+}
 
 function Router() {
   return (
@@ -197,17 +203,10 @@ function Router() {
       <Route path={"/en/game/jedag-run"} component={EnglishGameJedagRunRoute} />
       <Route path={"/en/epk"} component={EnglishEpk} />
       <Route path={"/en/privacy"} component={EnglishPrivacy} />
-      <Route
-        path={"/404"}
-        component={() => (
-          <LegacyDocument source="/legacy/404.html" scripts="none" />
-        )}
-      />
-      <Route
-        component={() => (
-          <LegacyDocument source="/legacy/404.html" scripts="none" />
-        )}
-      />
+      <Route path={"/404"} component={NotFoundRoute} />
+      {/* Rute tak dikenal: halaman 404 resmi, bukan dokumen legacy yang
+          dimuat lewat fetch (SSR kosong + stylesheet ungu legacy). */}
+      <Route component={NotFoundRoute} />
     </Switch>
   );
 }

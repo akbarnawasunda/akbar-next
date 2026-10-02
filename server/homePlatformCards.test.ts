@@ -1,26 +1,49 @@
+/**
+ * Kontrak kanal resmi di beranda.
+ *
+ * Di redesign, deretan kartu identik diganti daftar kanal tipografis
+ * (`.an-channel`). Yang dijaga tetap sama: setiap tautan platform resmi
+ * tampil, punya nama platform yang terbaca, dan punya aria-label yang jelas.
+ */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { render } from "../client/src/entry-server";
+import { publicPlatformLinks } from "../client/src/content/publicContent";
 
 const source = (path: string) =>
   readFileSync(resolve(process.cwd(), path), "utf8");
 
-describe("homepage platform cards and portrait exposure", () => {
-  it("renders official platform links as accessible brand-colored cards", () => {
-    const home = source("client/src/pages/Home.tsx");
-    expect(home).toContain("home-platform-card platform-");
-    expect(home).toContain(
-      "aria-label={`Buka Akbar Nawasunda di ${platform.label}`}"
-    );
+describe("kanal resmi di beranda", () => {
+  it("merender setiap tautan platform resmi dengan aria-label yang jelas", async () => {
+    const home = (await render("/", { documents: async () => [] as never }))
+      .html;
+    for (const platform of publicPlatformLinks(undefined)) {
+      expect(home, `kanal ${platform.label} hilang`).toContain(
+        `aria-label="Buka Akbar Nawasunda di ${platform.label}"`
+      );
+      expect(home, `nama kanal ${platform.label} tidak terbaca`).toContain(
+        `>${platform.label}<`
+      );
+      expect(home).toContain(
+        platform.href.replace(/&/g, "&amp;")
+      );
+    }
+    expect(home).toContain("an-channel");
   });
 
-  it("keeps the official portrait bright enough without removing copy contrast", () => {
+  it("tetap memakai kelas brand per platform untuk warna identitas", async () => {
+    const home = (await render("/", { documents: async () => [] as never }))
+      .html;
+    expect(home).toMatch(/an-channel platform-[a-z0-9-]+/);
+  });
+
+  it("menjaga eksposur potret resmi beserta fallback-nya", () => {
     const home = source("client/src/pages/Home.tsx");
-    const brand = source("client/src/content/artistPlatform.ts");
     expect(home).toContain("src={portraitSrc}");
     expect(home).toContain("setPortraitSrc(officialBrand.portraitFallback)");
-    expect(brand).toContain(
-      'portraitFallback: "/assets/akbar-nawasunda-official-portrait.jpg"'
-    );
+    expect(
+      source("client/src/content/artistPlatform.ts")
+    ).toContain('portraitFallback: "/assets/akbar-nawasunda-official-portrait.jpg"');
   });
 });

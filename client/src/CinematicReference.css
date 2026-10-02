@@ -16,9 +16,13 @@
   --ref-blue: var(--blue);
   --ref-line: rgba(210, 231, 242, 0.2);
   --ref-line-soft: rgba(210, 231, 242, 0.1);
-  --ref-serif-display: "Syne", "Arial Narrow", sans-serif;
-  --ref-body: "Plus Jakarta Sans", Arial, sans-serif;
-  --ref-mono: "JetBrains Mono", monospace;
+  /* Font: satu-satunya keluarga yang benar-benar di-self-host adalah
+     Clash Display / General Sans / Azeret Mono (lihat @font-face di
+     index.css). Nama font lain di sini tidak pernah diunduh dan membuat
+     seluruh hierarki turun ke font sistem tanpa terlihat rusak. */
+  --ref-serif-display: var(--font-display);
+  --ref-body: var(--font-body);
+  --ref-mono: var(--font-mono);
   --ref-shadow: 0 24px 80px rgba(0, 0, 0, 0.54);
   --ref-gutter: clamp(18px, 4vw, 64px);
 }
@@ -48,86 +52,12 @@ body::before {
     radial-gradient(circle at 8% 80%, rgba(14, 64, 115, 0.1), transparent 28%);
 }
 
-/* Global chrome */
-.nf-nav {
-  min-height: 70px !important;
-  padding: 0 var(--ref-gutter) !important;
-  grid-template-columns: auto minmax(0, 1fr) auto auto !important;
-  gap: clamp(16px, 3vw, 38px) !important;
-  border-bottom: 1px solid var(--ref-line) !important;
-  background: var(--ref-bg) !important;
-}
-.nf-wordmark {
-  gap: 8px !important;
-  color: var(--ref-ink) !important;
-  font-family: var(--ref-mono) !important;
-  font-size: 0.67rem !important;
-  letter-spacing: 0.08em !important;
-}
-.nf-wordmark::before { content: "•"; color: var(--ref-cyan); font-size: 0.9rem; }
-.nf-wordmark .nf-brand-logo { display: none !important; }
-.nf-nav nav { gap: clamp(13px, 2vw, 30px) !important; }
-.nf-nav nav a,
-.an-language-switcher,
-.nf-signal {
-  font-family: var(--ref-mono) !important;
-  font-size: 0.56rem !important;
-  letter-spacing: 0.12em !important;
-}
-.nf-nav nav a { color: var(--ref-muted) !important; }
-.nf-nav nav a:hover,
-.nf-nav nav a.is-active,
-.an-language-switcher a.is-active { color: var(--ref-ink) !important; }
-.nf-nav nav a::after { background: var(--ref-cyan) !important; }
-.nf-signal {
-  padding: 8px 10px !important;
-  border: 0 !important;
-  border-left: 1px solid var(--ref-cyan) !important;
-  color: var(--ref-ink) !important;
-  background: transparent !important;
-}
-.nf-signal svg { color: var(--ref-cyan) !important; }
-.nf-menu-toggle {
-  width: 38px !important;
-  height: 38px !important;
-  border-color: var(--ref-line) !important;
-  color: var(--ref-ink) !important;
-}
-.nf-menu-toggle:hover { border-color: var(--ref-cyan) !important; color: var(--ref-cyan) !important; }
-
-.nf-footer {
-  position: relative;
-  grid-template-columns: 1.4fr 0.8fr 0.9fr !important;
-  gap: clamp(28px, 6vw, 96px) !important;
-  padding: clamp(64px, 8vw, 118px) var(--ref-gutter) 28px !important;
-  border-top: 1px solid var(--ref-line) !important;
-  background: var(--ref-bg) !important;
-}
-.nf-footer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(21, 119, 190, 0.08), transparent);
-  opacity: 0.7;
-}
-.nf-footer > * { position: relative; z-index: 1; }
-.nf-footer-brand strong,
-.nf-footer-column a { color: var(--ref-ink) !important; }
-.nf-footer-brand p,
-.nf-footer-column > span,
-.nf-footer-column a { font-family: var(--ref-mono) !important; }
-.nf-footer-column a { font-size: 0.62rem !important; letter-spacing: 0.1em; text-transform: uppercase; }
-.nf-footer-column a:hover { color: var(--ref-cyan) !important; }
-.nf-footer .footer-bottom { border-color: var(--ref-line) !important; color: var(--ref-faint) !important; }
-
 /* Public inner pages */
 .nf-page {
   min-height: 100vh;
   min-height: 100svh;
   color: var(--ref-ink) !important;
   background: var(--ref-bg) !important;
-  overflow-x: clip !important;
 }
 .nf-page main,
 .an-site main { position: relative; }
@@ -145,7 +75,14 @@ body::before {
   text-wrap: balance;
 }
 .nf-page p,
-.an-site p { overflow-wrap: normal !important; word-break: normal !important; }
+.an-site p {
+  /* Jangan pernah mengunci pemenggalan kata jadi `normal`: alamat email,
+     URL, dan nama panjang tanpa spasi akan keluar dari viewport 360px, lalu
+     hanya tertutup `overflow-x: clip`. `break-word` hanya memenggal kata yang
+     memang tidak muat, jadi tipografi normal tidak berubah. */
+  overflow-wrap: break-word !important;
+  word-break: normal !important;
+}
 .nf-page-eyebrow,
 .nf-page .mono-label,
 .nf-page .an-story-label,
@@ -244,7 +181,7 @@ body::before {
   letter-spacing: 0.1em !important;
   text-transform: uppercase;
 }
-.nf-platform-grid a:hover { background: rgba(30, 232, 255, 0.06) !important; color: var(--ref-cyan) !important; }
+.nf-platform-grid a:hover { background: color-mix(in srgb, var(--acid) 6%, transparent) !important; color: var(--ref-cyan) !important; }
 
 .an-story-section { grid-template-columns: minmax(250px, 0.78fr) minmax(0, 1.22fr) !important; gap: clamp(34px, 8vw, 140px) !important; }
 .an-story-art,
@@ -296,22 +233,11 @@ body::before {
 .nf-universe-card h3 { margin-top: 80px !important; font-size: 1.9rem !important; }
 .nf-universe-card span { color: var(--ref-cyan) !important; }
 
-/* Embedded media: hard containment */
-.nf-embed-grid,
-.nf-video-embed-grid { min-width: 0 !important; }
-.an-official-media,
-.nf-embed-grid > *,
-.nf-video-embed-grid > * {
-  min-width: 0 !important;
-  max-width: 100% !important;
-  overflow: hidden !important;
-  border: 1px solid var(--ref-line) !important;
-  background: var(--ref-panel) !important;
-  box-shadow: 0 18px 52px rgba(0,0,0,0.42) !important;
-}
+/* Embedded media: containment (min-width/max-width/overflow/border/background)
+   ada di components/OfficialMediaFrame.css — tidak diduplikasi di sini lagi. */
 .an-official-media iframe,
 .an-official-media embed,
-.an-official-media video { display: block; max-width: 100% !important; width: 100% !important; }
+.an-official-media video { display: block; max-width: 100%; width: 100%; }
 
 /* Events / booking / inquiry */
 .an-event-grid,
@@ -322,7 +248,7 @@ body::before {
 .nf-event-card,
 .an-booking-option { border-color: var(--ref-line) !important; background: transparent !important; }
 .an-event-card:hover,
-.an-booking-option:hover { background: rgba(30, 232, 255, 0.045) !important; }
+.an-booking-option:hover { background: color-mix(in srgb, var(--acid) 4.5%, transparent) !important; }
 .an-event-card h3,
 .an-booking-option > strong { color: var(--ref-ink) !important; font-family: var(--ref-serif-display) !important; }
 .an-event-actions a,
@@ -418,17 +344,10 @@ body::before {
 
 /* Responsive guardrails */
 @media (max-width: 1120px) {
-  .nf-nav nav { gap: 12px !important; }
-  .nf-nav nav a { font-size: 0.52rem !important; }
   .an-site .an-hero { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) !important; }
 }
 @media (max-width: 767.98px) {
   :root { --ref-gutter: 20px; }
-  .nf-nav { grid-template-columns: auto 1fr auto !important; min-height: 62px !important; }
-  .nf-nav .nf-signal { display: none !important; }
-  .nf-menu-toggle { display: inline-flex !important; justify-self: end; }
-  .nf-footer { grid-template-columns: 1fr 1fr !important; padding: 54px 20px 24px !important; gap: 34px 22px !important; }
-  .nf-footer-brand, .nf-footer .footer-bottom { grid-column: 1 / -1; }
   .nf-page-hero {
     min-height: 690px !important;
     display: flex !important;
@@ -439,7 +358,7 @@ body::before {
     padding: 92px var(--ref-gutter) 42px !important;
     background-position: 63% center !important;
   }
-  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(3.1rem, 16vw, 5.8rem) !important; }
+  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(2.4rem, 11.5vw, 4rem) !important; }
   .nf-hero-note { align-self: stretch !important; max-width: none !important; }
   .nf-section, .nf-platform-hub { padding-block: 70px !important; }
   .nf-section-title { display: block !important; }
@@ -460,8 +379,6 @@ body::before {
   .an-booking-grid { grid-template-columns: 1fr !important; gap: 42px !important; }
   .an-inquiry-shell { grid-template-columns: 1fr !important; }
   .an-inquiry-grid { grid-template-columns: 1fr !important; }
-  .nf-page .nf-embed-grid, .nf-page .nf-video-embed-grid { grid-template-columns: 1fr !important; }
-  .an-official-media { width: 100% !important; }
   .an-site .an-hero {
     min-height: 720px !important;
     display: flex !important;
@@ -487,11 +404,8 @@ body::before {
   .an-site .live-section { min-height: 570px !important; }
 }
 @media (max-width: 480px) {
-  .nf-wordmark { font-size: 0.55rem !important; letter-spacing: 0.05em !important; }
-  .nf-footer { grid-template-columns: 1fr !important; }
-  .nf-footer-brand, .nf-footer .footer-bottom { grid-column: auto; }
   .nf-page-hero { min-height: 640px !important; }
-  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(3rem, 17vw, 5rem) !important; }
+  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(2.4rem, 11.5vw, 4rem) !important; }
   .nf-platform-grid { grid-template-columns: 1fr !important; }
   .nf-visual-grid { grid-template-rows: 260px 190px !important; }
   .nf-catalog-card { flex-basis: min(78vw, 290px) !important; min-height: 350px !important; }
@@ -551,7 +465,7 @@ body::before {
 }
 .music-reference-page .an-story-art {
   aspect-ratio: 1 / 1 !important;
-  box-shadow: 12px 12px 0 rgba(30, 232, 255, 0.08) !important;
+  box-shadow: 12px 12px 0 color-mix(in srgb, var(--acid) 8%, transparent) !important;
 }
 .music-reference-page .an-story-copy h2 {
   max-width: 8ch !important;
@@ -597,7 +511,7 @@ body::before {
     background-position: 66% center !important;
   }
   .music-reference-page .nf-page-hero::after { top: 78px; right: 20px; }
-  .music-reference-page .nf-page-hero h1 { font-size: clamp(3.8rem, 18vw, 6.2rem) !important; }
+  .music-reference-page .nf-page-hero h1 { font-size: clamp(2.4rem, 11.5vw, 4rem) !important; }
   .music-reference-page .an-story-section { padding-block: 62px !important; }
   .music-reference-page .an-story-copy h2 { max-width: 9ch !important; }
   .music-reference-page .nf-platform-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; max-width: none; }
@@ -606,7 +520,7 @@ body::before {
 @media (max-width: 480px) {
   .music-reference-page .nf-page-hero::after { display: none; }
   .music-reference-page .nf-page-hero { min-height: 640px !important; }
-  .music-reference-page .nf-page-hero h1 { font-size: clamp(3.55rem, 17vw, 5.2rem) !important; }
+  .music-reference-page .nf-page-hero h1 { font-size: clamp(2.4rem, 11.5vw, 4rem) !important; }
   .music-reference-page .nf-platform-grid { grid-template-columns: 1fr !important; }
 }
 
@@ -674,10 +588,9 @@ body::before {
 .nf-page,
 .en-page {
   background:
-    radial-gradient(circle at 82% 8%, rgba(24, 215, 242, 0.08), transparent 28rem),
+    radial-gradient(circle at 82% 8%, color-mix(in srgb, var(--acid) 8%, transparent), transparent 28rem),
     linear-gradient(180deg, var(--public-bg) 0%, var(--ink-soft) 52%, var(--public-bg) 100%) !important;
   color: var(--public-ink) !important;
-  overflow-x: clip;
 }
 .nf-page main,
 .en-page main {
@@ -817,7 +730,7 @@ body::before {
 .nf-page .an-inquiry-submit:hover,
 .nf-page .an-inquiry-submit:focus-visible {
   background: var(--cyan-soft) !important;
-  box-shadow: 0 10px 32px rgba(24, 215, 242, 0.18);
+  box-shadow: 0 10px 32px color-mix(in srgb, var(--acid) 18%, transparent);
   transform: translateY(-2px);
 }
 .nf-page .nf-text-button,
@@ -865,7 +778,7 @@ body::before {
 .en-page .an-booking-option:hover,
 .en-page .an-epk-capability:hover,
 .en-page .an-archive-route-list a:hover {
-  border-color: rgba(24, 215, 242, 0.62) !important;
+  border-color: color-mix(in srgb, var(--acid) 62%, transparent) !important;
   background: linear-gradient(145deg, rgba(22, 44, 59, 0.86), rgba(8, 15, 22, 0.9)) !important;
   transform: translateY(-4px);
 }
@@ -897,19 +810,6 @@ body::before {
 .en-page .an-booking-option p,
 .en-page .an-epk-capability p,
 .en-page .an-archive-route-list small { color: var(--public-muted) !important; line-height: 1.65 !important; }
-.nf-page .nf-embed-grid,
-.nf-page .nf-video-embed-grid,
-.en-page .nf-embed-grid,
-.en-page .nf-video-embed-grid {
-  gap: clamp(20px, 3vw, 42px) !important;
-}
-.nf-page .an-official-media,
-.en-page .an-official-media {
-  border: 1px solid var(--public-line-strong) !important;
-  border-radius: 0 !important;
-  box-shadow: var(--public-shadow);
-  overflow: hidden;
-}
 .nf-page .an-official-media iframe,
 .nf-page iframe,
 .en-page .an-official-media iframe,
@@ -934,7 +834,7 @@ body::before {
 .nf-page select:focus,
 .en-page input:focus,
 .en-page textarea:focus,
-.en-page select:focus { border-color: var(--public-accent) !important; box-shadow: 0 0 0 3px rgba(24, 215, 242, 0.1) !important; }
+.en-page select:focus { border-color: var(--public-accent) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--acid) 10%, transparent) !important; }
 .nf-page .an-release-art,
 .nf-page .an-archive-art-frame,
 .nf-page .an-epk-hero-image,
@@ -957,7 +857,7 @@ body::before {
   .nf-page .nf-epk-hero { min-height: 650px !important; }
   .nf-page .nf-page-hero h1,
   .en-page .nf-page-hero h1,
-  .nf-page .nf-epk-hero h1 { font-size: clamp(3.25rem, 17vw, 6rem) !important; line-height: 0.88 !important; }
+  .nf-page .nf-epk-hero h1 { font-size: clamp(2.4rem, 11.5vw, 4rem) !important; line-height: 0.92 !important; letter-spacing: -0.05em !important; }
   .nf-page .nf-section,
   .en-page .nf-section { padding-block: 64px !important; }
   .nf-page .nf-section-title,
@@ -967,7 +867,7 @@ body::before {
   .nf-page .an-story-copy h2,
   .en-page .an-story-copy h2 { font-size: clamp(2.7rem, 13vw, 4.7rem) !important; }
   .nf-page .nf-hero-note,
-  .en-page .nf-hero-note { max-width: calc(100vw - 40px); }
+  .en-page .nf-hero-note { max-width: calc(100% - 40px); }
   .nf-page .nf-visual-card:hover,
   .nf-page .nf-event-card:hover,
   .nf-page .nf-universe-card:hover,
@@ -1040,18 +940,48 @@ body::before {
 .nf-page:has(.an-about-actions) .nf-page-hero,
 .nf-page:has(.an-release-detail-grid) .nf-page-hero,
 .nf-page:has(.nf-catalog-frame) .nf-page-hero {
-  box-shadow: inset 7px 0 0 rgba(24, 215, 242, 0.72), inset 0 -120px 150px rgba(3, 9, 15, 0.5) !important;
+  box-shadow: inset 7px 0 0 color-mix(in srgb, var(--acid) 72%, transparent), inset 0 -120px 150px rgba(3, 9, 15, 0.5) !important;
 }
 .nf-page:has(.nf-video-embed-grid) .nf-section:nth-of-type(2) { background: linear-gradient(180deg, rgba(13, 31, 44, 0.45), transparent) !important; }
 .nf-page:has(.an-event-grid) .an-event-section { background: linear-gradient(110deg, rgba(15, 34, 47, 0.64), transparent 68%) !important; }
-.nf-page:has(.an-archive-origin) .an-archive-origin { border-left: 1px solid rgba(24, 215, 242, 0.42); padding-left: clamp(18px, 3vw, 42px); }
-.nf-page:has(.an-epk-capabilities) .nf-epk-hero { box-shadow: inset 7px 0 0 rgba(24, 215, 242, 0.72), inset 0 -120px 150px rgba(3, 9, 15, 0.5) !important; }
+.nf-page:has(.an-archive-origin) .an-archive-origin { border-left: 1px solid color-mix(in srgb, var(--acid) 42%, transparent); padding-left: clamp(18px, 3vw, 42px); }
+.nf-page:has(.an-epk-capabilities) .nf-epk-hero { box-shadow: inset 7px 0 0 color-mix(in srgb, var(--acid) 72%, transparent), inset 0 -120px 150px rgba(3, 9, 15, 0.5) !important; }
 .nf-page:has(.an-epk-capabilities) .an-epk-sheet-section { background: linear-gradient(90deg, rgba(11, 28, 41, 0.5), transparent 70%) !important; }
-.nf-page:has(.an-inquiry-shell) .an-inquiry-hero { box-shadow: inset 7px 0 0 rgba(24, 215, 242, 0.72), inset 0 -120px 150px rgba(3, 9, 15, 0.5) !important; }
-.nf-page:has(.an-inquiry-shell) .an-inquiry-form { box-shadow: 18px 18px 0 rgba(24, 215, 242, 0.06), var(--public-shadow) !important; }
+.nf-page:has(.an-inquiry-shell) .an-inquiry-hero { box-shadow: inset 7px 0 0 color-mix(in srgb, var(--acid) 72%, transparent), inset 0 -120px 150px rgba(3, 9, 15, 0.5) !important; }
+.nf-page:has(.an-inquiry-shell) .an-inquiry-form { box-shadow: 18px 18px 0 color-mix(in srgb, var(--acid) 6%, transparent), var(--public-shadow) !important; }
 .nf-page:has(.an-release-detail-grid) .an-release-detail-grid { background: linear-gradient(120deg, rgba(13, 31, 44, 0.54), transparent 65%) !important; }
 
 @media (max-width: 820px) {
   .nf-page .an-inquiry-email { max-width: min(100%, 32ch) !important; }
-  .nf-page:has(.an-archive-origin) .an-archive-origin { border-left: 0; border-top: 1px solid rgba(24, 215, 242, 0.42); padding-left: 0; padding-top: 20px; }
+  .nf-page:has(.an-archive-origin) .an-archive-origin { border-left: 0; border-top: 1px solid color-mix(in srgb, var(--acid) 42%, transparent); padding-left: 0; padding-top: 20px; }
+}
+
+/* ============================================================
+   MOBILE HEADING FIT — 360/375/390px
+
+   h1 hero halaman dalam dipatok `clamp(3.25rem, 17vw, 6rem)`.
+   Di 360px itu berarti ~61px, sementara kata terpanjang yang
+   benar-benar dipakai halaman ("NAWASUNDA." di /about dan
+   /universe) butuh ~6.96em lebar — sekitar 426px, jauh di atas
+   ruang 316px. Sebelumnya kata itu dipenggal `word-break`, jadi
+   judul terlihat terpotong.
+
+   Angka di bawah dihitung dari ruang nyata:
+   lebar tersedia = viewport − 2 × gutter(22px).
+   320px → 276px / 6.96em = 39.6px maksimum.
+   clamp(2.4rem, 11.5vw, 4rem) aman di 320–430px dan tetap besar
+   di layar lebar (batas atas 4rem). Aturan ini sengaja diletakkan
+   paling akhir supaya mengalahkan blok mobile sebelumnya yang
+   memakai specificity sama.
+   ============================================================ */
+@media (max-width: 767.98px) {
+  .nf-page .nf-page-hero h1,
+  .nf-page .nf-epk-hero h1,
+  .en-page .nf-page-hero h1,
+  .en-page .nf-epk-hero h1,
+  .nf-page .an-inquiry-hero h1,
+  .en-page .an-inquiry-hero h1 {
+    font-size: clamp(2.4rem, 11.5vw, 4rem) !important;
+    letter-spacing: -0.05em !important;
+  }
 }

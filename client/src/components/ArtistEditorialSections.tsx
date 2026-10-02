@@ -149,8 +149,6 @@ export function ArtistPhotoStorySection({
                 src={activeStory.imageUrl}
                 backupSrc={officialBrand.socialPreview}
                 alt={storyAlt}
-                width={800}
-                height={600}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 60vw, 750px"
               />
               <span className="artist-photo-story-index">{String(safeIndex + 1).padStart(2, "0")}</span>

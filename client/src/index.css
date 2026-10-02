@@ -148,6 +148,86 @@
   --r:    8px;
 
   color-scheme: dark;
+
+  /* ============================================================
+     DESIGN LANGUAGE — FONDASI REDESIGN
+     Satu bahasa visual untuk semua halaman. Nilai di bawah ini
+     adalah kontrak, bukan hiasan: halaman boleh punya komposisi
+     berbeda, tapi ritme, lebar, dan skalanya sama.
+     ============================================================ */
+
+  /* -- Container ------------------------------------------------
+     `--max` tetap untuk halaman penuh; dua lebar berikut dipakai
+     ketika konten butuh bingkai (editorial) atau measure baca. */
+  --container-max:   var(--max);            /* 1440px — shell halaman */
+  --container-frame: 1180px;                /* grid editorial */
+  --container-text:  62ch;                  /* blok baca */
+
+  /* -- Spacing scale -------------------------------------------
+     Skala 8px yang mengalir. Semua section baru wajib memakai ini
+     supaya ritme antar halaman tidak lagi ditentukan per file. */
+  --space-2xs: clamp(4px, 0.5vw, 6px);
+  --space-xs:  clamp(8px, 1vw, 12px);
+  --space-sm:  clamp(12px, 1.6vw, 18px);
+  --space-md:  clamp(18px, 2.4vw, 28px);
+  --space-lg:  clamp(28px, 3.6vw, 44px);
+  --space-xl:  clamp(44px, 5.5vw, 72px);
+  --space-2xl: clamp(64px, 8vw, 116px);
+  --space-3xl: clamp(88px, 11vw, 164px);
+
+  /* Jarak vertikal antar section (dipakai `.an-section`). */
+  --section-y: var(--space-2xl);
+
+  /* -- Type scale ----------------------------------------------
+     Nilai ini sama dengan clamp yang sudah dipakai h1/h2/h3 di
+     `@layer base`; sekarang satu sumber saja. `--text-meta` untuk
+     label mono kecil. */
+  --text-hero:  clamp(2.5rem, 6.5vw, 6.8rem);
+  --text-h2:    clamp(1.85rem, 4.2vw, 4rem);
+  --text-h3:    clamp(1.25rem, 2vw, 2rem);
+  --text-lede:  clamp(1rem, 1.25vw, 1.14rem);
+  --text-body:  1rem;
+  --text-small: 0.86rem;
+  --text-meta:  0.72rem;
+
+  /* -- Media / image system ------------------------------------- */
+  --ratio-square: 1 / 1;
+  --ratio-portrait: 4 / 5;
+  --ratio-photo: 3 / 2;
+  --ratio-editorial: 2 / 3;
+  --ratio-cinema: 16 / 9;
+  --image-surface: #0c0d12;                 /* placeholder sebelum gambar decode */
+  --image-fade: 320ms;
+
+  /* -- Z-index scale -------------------------------------------
+     Urutan lapisan global. Angka lama dipertahankan supaya tidak
+     ada elemen yang berpindah tumpukan; yang berubah hanya nama. */
+  --z-base:      1;
+  --z-field:     3;    /* particle field global */
+  --z-hint:      40;   /* shell hint */
+  --z-player:    48;   /* global audio player */
+  --z-curtain:   58;   /* route curtain */
+  --z-cursor:    60;   /* cursor signal */
+  --z-lightbox:  70;   /* lightbox */
+  --z-nav:       90;   /* sticky navigation */
+  --z-palette:   500;  /* command palette */
+  --z-transition: 9000; /* route progress (transient) */
+  --z-overlay:   9999; /* mobile drawer / overlay */
+  --z-splash:    999999; /* preloader (index.html) */
+
+  /* -- Breakpoints (dokumentasi; dipakai lewat media query) -----
+     360 / 375 / 390 = target mobile utama.
+     640  — kartu & player berubah jadi satu kolom
+     768  — navigasi pindah ke drawer
+     900  — hero halaman dalam jadi satu kolom
+     1080 — nav desktop disembunyikan
+     1440 — shell mencapai lebar maksimum. */
+  --bp-mobile-sm: 360px;
+  --bp-mobile: 390px;
+  --bp-sm: 640px;
+  --bp-md: 768px;
+  --bp-lg: 1080px;
+  --bp-xl: 1440px;
 }
 
 :root {
@@ -203,8 +283,9 @@
   }
 
   html {
-    overflow-x: clip;
-    /* 100vw ikut menghitung lebar scrollbar desktop, 100% tidak. */
+    /* 100vw ikut menghitung lebar scrollbar desktop, 100% tidak.
+       Tidak ada `overflow-x` di sini: containment policy ada di
+       PublicShell.css dan dijelaskan di blok CONTAINMENT POLICY. */
     max-width: 100%;
     box-sizing: border-box;
   }
@@ -214,7 +295,6 @@
   body {
     margin: 0;
     min-height: 100dvh;
-    overflow-x: clip;
     max-width: 100%;
     background: var(--ink);
     color: var(--paper);
@@ -235,9 +315,9 @@
     word-break: break-word;
     overflow-wrap: break-word;
   }
-  h1 { font-size: clamp(2.5rem, 6.5vw, 6.8rem); line-height: 1.05; letter-spacing: -0.035em; }
-  h2 { font-size: clamp(1.85rem, 4.2vw, 4rem); line-height: 1.08; }
-  h3 { font-size: clamp(1.25rem, 2vw, 2rem); line-height: 1.15; }
+  h1 { font-size: var(--text-hero); line-height: 1.05; letter-spacing: -0.035em; }
+  h2 { font-size: var(--text-h2); line-height: 1.08; }
+  h3 { font-size: var(--text-h3); line-height: 1.15; }
 
   p { margin: 0; max-width: 68ch; }
   a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
@@ -309,12 +389,25 @@ html.lenis body {
 }
 
 
-/* RESPONSIVE QA FOUNDATION — no accidental viewport escape */
+/* ============================================================
+   CONTAINMENT POLICY — no accidental viewport escape
+
+   Aturan: overflow TIDAK diselesaikan dengan menyembunyikannya.
+   Setiap elemen yang keluar viewport harus diperbaiki ukuran,
+   wrapping, posisi, atau logika komposisinya.
+
+   `html`/`body`/`#root` sengaja TIDAK memakai `overflow-x: hidden`
+   lagi: dulu lapisan itu menutupi kebocoran sehingga tidak pernah
+   terlihat saat dikembangkan. Yang tersisa hanya satu jaring
+   pengaman di level public shell (`.an-public-shell`, lihat
+   PublicShell.css) dan hanya untuk rute publik. Jaring itu tidak
+   boleh menutupi bug baru: pakai `pnpm audit:layout` + dua viewport
+   (360px dan 390px) sebelum menambah halaman baru.
+   ============================================================ */
 html,
 body,
 #root {
   max-width: 100%;
-  overflow-x: hidden;
 }
 
 #root,
@@ -354,6 +447,93 @@ svg {
   body { font-size: 0.97rem; }
   h1, h2, h3, h4 { text-wrap: balance; }
   p { line-height: 1.68; }
+}
+
+/* ============================================================
+   SHARED PRIMITIVES — kontrak komposisi untuk tahap redesign.
+
+   Halaman boleh punya komposisi berbeda, tapi semuanya memakai
+   container, ritme section, dan frame media yang sama. Primitif di
+   bawah ini generik (bukan layout halaman tertentu) dan sudah
+   dipakai komponen image bersama.
+   ============================================================ */
+
+.an-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline-start: max(var(--gutter), env(safe-area-inset-left));
+  padding-inline-end: max(var(--gutter), env(safe-area-inset-right));
+}
+.an-container--frame { max-width: var(--container-frame); }
+.an-container--text { max-width: var(--container-text); }
+
+.an-section { padding-block: var(--section-y); }
+.an-section--tight { padding-block: var(--space-xl); }
+
+.an-rule {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: var(--ink-line);
+}
+
+/* -- Image / media frame -------------------------------------
+   Frame ini yang menjaga layout shift: rasio sudah ditentukan
+   sebelum gambar selesai diunduh, jadi tinggi section tidak
+   berubah saat gambar datang. */
+.an-media {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  /* Tanpa modifier, rasio mengikuti gambar (auto) supaya frame ini aman
+     dipasang pada komponen yang tingginya sudah diatur parent. */
+  aspect-ratio: var(--media-ratio, auto);
+  background: var(--image-surface);
+}
+.an-media--square { --media-ratio: var(--ratio-square); }
+.an-media--portrait { --media-ratio: var(--ratio-portrait); }
+.an-media--photo { --media-ratio: var(--ratio-photo); }
+.an-media--editorial { --media-ratio: var(--ratio-editorial); }
+.an-media--cinema { --media-ratio: var(--ratio-cinema); }
+.an-media > img,
+.an-media > picture > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.an-media--contain > img,
+.an-media--contain > picture > img { object-fit: contain; }
+
+/* -- Motion utility ------------------------------------------
+   Selalu punya jalur reduced-motion yang membuat konten tetap
+   terlihat (tidak ada `opacity: 0` yang menggantung). */
+.an-fade-in { animation: an-fade-in var(--dur-slow) var(--ease) both; }
+.an-lift { transition: transform var(--dur) var(--ease); }
+
+@keyframes an-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .an-lift:hover { transform: translate3d(0, -3px, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Utilitas ini hanya menyasar class-nya sendiri, jadi tidak butuh
+     `!important`: blok ini datang setelah aturan hover di atasnya. */
+  .an-fade-in {
+    animation: none;
+    opacity: 1;
+  }
+  .an-lift,
+  .an-lift:hover {
+    transition: none;
+    transform: none;
+  }
 }
 
 /* ============================================================

@@ -19,7 +19,7 @@
 .an-site {
   background: var(--ink) !important;
   color: var(--paper);
-  overflow-x: clip;
+  /* overflow dipegang satu kali oleh .an-public-shell (PublicShell.css). */
 }
 
 /* ============================================================

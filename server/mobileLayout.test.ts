@@ -68,6 +68,9 @@ describe("layout layar kecil", () => {
     for (const path of [
       "client/src/CinematicReference.css",
       "client/src/pages/Home.css",
+      // Komposisi hero baru beranda (checkpoint A) memakai clamp sendiri;
+      // ikut diuji supaya tidak ada aturan yang lolos dari pemeriksaan.
+      "client/src/pages/HomeStage.css",
     ]) {
       const css = source(path);
       expect(
@@ -85,6 +88,44 @@ describe("layout layar kecil", () => {
           `${path}: clamp(${rule.min}rem, ${rule.vw}vw, ${rule.max}rem) → judul ${wordPx.toFixed(0)}px > ruang ${available}px di layar 320px`
         ).toBeLessThanOrEqual(available);
       }
+    }
+  });
+
+  it("menjaga judul halaman dalam tetap muat di layar 320px", () => {
+    // Judul hero halaman dalam memakai kata terpanjang "NAWASUNDA." pada
+    // /about dan /universe. Tanpa batas atas yang ikut lebar layar, kata itu
+    // dipenggal `word-break` — terlihat sebagai judul terpotong.
+    const css = source("client/src/CinematicReference.css");
+    const rules: { min: number; vw: number; max: number }[] = [];
+    const mediaRe = /@media\s*\(max-width:\s*([\d.]+)px\)\s*\{/g;
+    let media: RegExpExecArray | null;
+    while ((media = mediaRe.exec(css))) {
+      if (Number(media[1]) > 768) continue;
+      let depth = 1;
+      let i = media.index + media[0].length;
+      const start = i;
+      while (i < css.length && depth > 0) {
+        if (css[i] === "{") depth += 1;
+        else if (css[i] === "}") depth -= 1;
+        i += 1;
+      }
+      const body = css.slice(start, i - 1);
+      const ruleRe =
+        /(?:nf-page-hero|nf-epk-hero|an-inquiry-hero) h1[^{}]*\{[^}]*?font-size:\s*clamp\(\s*([\d.]+)rem\s*,\s*([\d.]+)vw\s*,\s*([\d.]+)rem\s*\)/g;
+      let rule: RegExpExecArray | null;
+      while ((rule = ruleRe.exec(body))) {
+        rules.push({ min: Number(rule[1]), vw: Number(rule[2]), max: Number(rule[3]) });
+      }
+    }
+    expect(rules.length, "aturan judul halaman dalam tidak ditemukan").toBeGreaterThan(0);
+    const available = SMALLEST_PHONE - GUTTER * 2;
+    for (const rule of rules) {
+      const fontPx = clampPx(rule.min, rule.vw, rule.max, SMALLEST_PHONE);
+      const wordPx = fontPx * HERO_WORD_EM;
+      expect(
+        wordPx,
+        `clamp(${rule.min}rem, ${rule.vw}vw, ${rule.max}rem) → judul ${wordPx.toFixed(0)}px > ruang ${available}px di layar 320px`
+      ).toBeLessThanOrEqual(available);
     }
   });
 

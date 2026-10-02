@@ -7,7 +7,13 @@
   background: var(--ink) !important;
   color: var(--paper) !important;
 }
-.an-privacy-page main { overflow: hidden; }
+.an-privacy-page main {
+  /* Dulu `overflow: hidden` di sini: menutupi overflow alih-alih
+     memperbaikinya, dan membuat main jadi scroll container sendiri
+     sehingga indeks sticky di dalamnya tidak pernah menempel. Root shell
+     sudah `overflow-x: clip` sebagai satu-satunya pengaman halaman. */
+  overflow: visible;
+}
 
 /* -- Hero -------------------------------------------------- */
 .an-privacy-hero {
@@ -330,11 +336,6 @@
     padding-top: 92px;
   }
   .an-privacy-hero-copy h1 { font-size: clamp(3.2rem, 15vw, 5.2rem); }
-  .an-privacy-hero::after {
-    right: 22px;
-    bottom: 20px;
-    font-size: 0.5rem;
-  }
   .an-privacy-posture { justify-self: stretch; }
   .an-privacy-index nav { grid-template-columns: 1fr; }
   .an-privacy-collection-grid { grid-template-columns: 1fr; }
