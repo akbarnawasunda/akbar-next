@@ -74,7 +74,17 @@
   background: var(--ink-soft);
 }
 
-.an-site .an-hero-plate img {
+/* Hanya foto potret di dalam <picture>. Selektor lamanya
+   (`.an-site .an-hero-plate img`, spesifisitas 0,2,1) juga mengenai maskot
+   yang juga <img> di dalam plate dan mengalahkan `.an-site .an-hero-mascot`
+   (0,2,0) — maskot jadi terentang 100% × 100% dan menutupi seluruh foto. */
+.an-site .an-hero-plate .home-hero-picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.an-site .an-hero-plate .home-hero-picture img {
   display: block;
   width: 100%;
   height: 100%;
@@ -103,12 +113,18 @@
   pointer-events: none;
 }
 
+/* Maskot = lencana kecil di sudut plate, bukan artwork hero. Ukurannya
+   dikunci di sini supaya tidak pernah ikut terentang oleh aturan foto. */
 .an-site .an-hero-mascot {
   position: absolute;
   top: clamp(18px, 3vh, 34px);
   left: clamp(18px, 3vw, 40px);
+  z-index: 2;
   width: clamp(56px, 7vw, 92px);
+  max-width: 26%;
   height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
   transform: rotate(-4deg);
   opacity: 0.92;
   pointer-events: none;

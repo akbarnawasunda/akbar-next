@@ -47,6 +47,22 @@ describe("komposisi beranda", () => {
     );
   });
 
+  it("menjaga maskot hero tetap lencana kecil, bukan menutupi foto", () => {
+    // Regresi nyata: `.an-site .an-hero-plate img` (0,2,1) mengalahkan
+    // `.an-site .an-hero-mascot` (0,2,0), jadi maskot ikut terentang
+    // 100% x 100% dan menutupi foto potret di plate.
+    const mascot = block(css, ".an-site .an-hero-mascot {");
+    expect(mascot).toContain("position: absolute");
+    expect(mascot).toContain("width: clamp(56px, 7vw, 92px)");
+    expect(mascot).toContain("max-width: 26%");
+    expect(mascot).toContain("object-fit: contain");
+    // Aturan ukuran penuh hanya boleh mengenai foto di dalam <picture>.
+    expect(css).not.toMatch(/\.an-site \.an-hero-plate img \{/);
+    expect(block(css, ".an-site .an-hero-plate .home-hero-picture img {")).toContain(
+      "object-fit: cover"
+    );
+  });
+
   it("mengubah foto hero jadi elemen mengalir di ponsel", () => {
     const mobile = css.slice(css.indexOf("@media (max-width: 767.98px)"));
     const plate = block(mobile, ".an-site .an-hero-plate {");
