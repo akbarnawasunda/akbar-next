@@ -4,8 +4,10 @@ import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { verifiedArtistProfile } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
 import { useSearch } from "wouter";
+import { Reveal } from "@/components/Reveal";
 import "./EcosystemPages.css";
 import "./Inquiry.css";
+import "./InquiryStage.css";
 
 type InquiryType = "booking" | "remix" | "collaboration" | "licensing";
 type InquirySource = "epk" | "release" | "universe" | "licensing";
@@ -26,25 +28,25 @@ const labels: Record<
   { kicker: string; title: string; intro: string }
 > = {
   booking: {
-    kicker: "BOOKING / PERFORMANCE",
-    title: "BOOKING\nINQUIRY.",
+    kicker: "Booking / performance",
+    title: "Booking inquiry.",
     intro:
       "Kirim kebutuhan performance, acara, atau set. Tanggal dan ketersediaan dikonfirmasi setelah inquiry ditinjau.",
   },
   remix: {
-    kicker: "REMIX / CUSTOM ARRANGEMENT",
-    title: "REMIX\nINQUIRY.",
+    kicker: "Remix / custom arrangement",
+    title: "Remix inquiry.",
     intro:
       "Kirim brief, referensi, dan konteks penggunaan agar arah kreatif dapat ditinjau.",
   },
   collaboration: {
-    kicker: "COLLABORATION",
-    title: "KOLABORASI.",
+    kicker: "Collaboration",
+    title: "Kolaborasi.",
     intro: "Jelaskan peran, karya, dan bentuk kerja sama yang kamu ajukan.",
   },
   licensing: {
-    kicker: "LICENSING / USAGE",
-    title: "MUSIC\nLICENSING.",
+    kicker: "Licensing / usage",
+    title: "Music licensing.",
     intro:
       "Ajukan penggunaan musik untuk konten, brand, event, atau proyek lain.",
   },
@@ -119,144 +121,234 @@ export default function Inquiry() {
     setForm(previous => ({ ...previous, [key]: value }));
   return (
     <div className="nf-page an-inquiry-page">
-      <NightHeader />
+      <NightHeader active="/inquire" />
       <main id="main-content" tabIndex={-1}>
-        <section className="an-inquiry-hero">
-          <h1>{current.title}</h1>
-          <p>{current.intro}</p>
-          <div className="an-inquiry-signal">
-            <span>STATUS</span>
-            <strong>AKAN DITINJAU</strong>
-          </div>
-        </section>
-        <section className="an-inquiry-shell">
-          <div className="an-inquiry-contact-column">
-            <p className="an-inquiry-column-label">CONTACT / WORK TOGETHER</p>
-            <h2>LET&apos;S MAKE<br />A SIGNAL.</h2>
-            <p className="an-inquiry-contact-copy">
-              Booking, remix, collaboration, press, and music licensing requests are reviewed directly.
+        {/* Tipografi yang memimpin: judul, penjelasan, lalu fakta yang
+            memang sudah berlaku — bukan janji waktu tinjauan. */}
+        <section className="an-inq-hero" aria-labelledby="inquiry-title">
+          <div className="an-inq-hero-copy">
+            <p className="an-kicker">
+              <span className="an-kicker-dot" aria-hidden="true" />
+              {current.kicker}
             </p>
-            <div className="an-inquiry-roles" aria-label="Jenis inquiry">
-              <span>BOOKING</span>
-              <span>COLLABORATION</span>
-              <span>PRESS</span>
-              <span>GENERAL</span>
-            </div>
-            <a className="an-inquiry-email" href={`mailto:${verifiedArtistProfile.bookingEmail}`}>
-              {verifiedArtistProfile.bookingEmail}
-            </a>
-            <p className="an-inquiry-contact-note">Bandung Barat — Indonesia</p>
+            <h1 id="inquiry-title">{current.title}</h1>
+            <p className="an-inq-lede">{current.intro}</p>
           </div>
-          <form className="an-inquiry-form" onSubmit={onSubmit}>
-            <div className="an-inquiry-form-heading">
-              <p className="an-inquiry-column-label">SEND A MESSAGE</p>
-              <h2>{current.title.replace("\n", " ")}</h2>
+          <dl className="an-facts an-inq-facts">
+            <div>
+              <dt>Status</dt>
+              <dd>Akan ditinjau</dd>
             </div>
-            <div className="an-inquiry-type-row">
-              {validTypes.map(option => (
+            <div>
+              <dt>Basis</dt>
+              <dd>Bandung Barat — Indonesia</dd>
+            </div>
+            <div>
+              <dt>Kontak langsung</dt>
+              <dd>
+                <a href={`mailto:${verifiedArtistProfile.bookingEmail}`}>
+                  {verifiedArtistProfile.bookingEmail}
+                </a>
+              </dd>
+            </div>
+          </dl>
+        </section>
+
+        <Reveal>
+          <section className="an-section an-inq-shell" aria-label="Formulir inquiry">
+            <aside className="an-inq-context an-rise">
+              <p className="an-meta">Sebelum mengirim</p>
+              <h2 className="an-inq-context-title">
+                Konteks singkat membuat brief cepat ditinjau.
+              </h2>
+              <ul className="an-inq-checklist">
+                <li>Tujuan proyek dan bentuk kerja samanya.</li>
+                <li>Referensi atau contoh yang paling dekat.</li>
+                <li>Timeline dan target penggunaan.</li>
+                <li>Deliverable yang diharapkan.</li>
+              </ul>
+              <p className="an-meta">Jenis inquiry</p>
+              <p className="an-inq-roles">
+                Booking · Remix · Kolaborasi · Licensing · Press
+              </p>
+              <a
+                className="an-inq-email"
+                href={`mailto:${verifiedArtistProfile.bookingEmail}`}
+              >
+                {verifiedArtistProfile.bookingEmail}
+              </a>
+            </aside>
+
+            <form className="an-inq-form an-rise" onSubmit={onSubmit}>
+              <div className="an-inq-form-head">
+                <p className="an-meta">Detail inquiry</p>
+                <h2 className="an-inq-form-title">{current.title}</h2>
+              </div>
+
+              <div
+                className="an-inq-type-row"
+                role="group"
+                aria-label="Jenis inquiry"
+              >
+                {validTypes.map(option => (
+                  <button
+                    key={option}
+                    type="button"
+                    className={type === option ? "is-active" : ""}
+                    aria-pressed={type === option}
+                    onClick={() => setType(option)}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+
+              <fieldset className="an-inq-fieldset">
+                <legend className="an-meta">Tentang kamu</legend>
+                <div className="an-inq-grid">
+                  <label>
+                    <span>Nama</span>
+                    <input
+                      required
+                      value={form.name}
+                      onChange={event => update("name", event.target.value)}
+                      placeholder="Nama kamu"
+                    />
+                  </label>
+                  <label>
+                    <span>Email</span>
+                    <input
+                      required
+                      type="email"
+                      value={form.email}
+                      onChange={event => update("email", event.target.value)}
+                      placeholder="nama@email.com"
+                    />
+                  </label>
+                  <label>
+                    <span>
+                      Organisasi / nama artis{" "}
+                      <small className="an-inq-optional">opsional</small>
+                    </span>
+                    <input
+                      value={form.organization}
+                      onChange={event =>
+                        update("organization", event.target.value)
+                      }
+                      placeholder="Label, brand, atau kolektif"
+                    />
+                  </label>
+                  <label>
+                    <span>Judul proyek / acara</span>
+                    <input
+                      required
+                      value={form.projectTitle}
+                      onChange={event =>
+                        update("projectTitle", event.target.value)
+                      }
+                      placeholder="Nama project atau event"
+                    />
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset className="an-inq-fieldset">
+                <legend className="an-meta">Rencana</legend>
+                <div className="an-inq-grid">
+                  <label>
+                    <span>
+                      Lokasi / pasar{" "}
+                      <small className="an-inq-optional">opsional</small>
+                    </span>
+                    <input
+                      value={form.location}
+                      onChange={event => update("location", event.target.value)}
+                      placeholder="Kota, negara, atau online"
+                    />
+                  </label>
+                  <label>
+                    <span>
+                      Timeline{" "}
+                      <small className="an-inq-optional">opsional</small>
+                    </span>
+                    <input
+                      value={form.timeline}
+                      onChange={event => update("timeline", event.target.value)}
+                      placeholder="Contoh: Mei 2026"
+                    />
+                  </label>
+                  <label className="an-inq-full">
+                    <span>
+                      Konteks budget{" "}
+                      <small className="an-inq-optional">opsional</small>
+                    </span>
+                    <input
+                      value={form.budgetContext}
+                      onChange={event =>
+                        update("budgetContext", event.target.value)
+                      }
+                      placeholder="Boleh jelaskan konteks atau tulis 'discuss'"
+                    />
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset className="an-inq-fieldset">
+                <legend className="an-meta">Brief</legend>
+                <label className="an-inq-full">
+                  <span>
+                    Kebutuhan, referensi, dan deliverable{" "}
+                    <small className="an-inq-optional">wajib</small>
+                  </span>
+                  <textarea
+                    required
+                    minLength={12}
+                    value={form.message}
+                    onChange={event => update("message", event.target.value)}
+                    placeholder="Jelaskan kebutuhan, referensi, link, deliverable, serta hal penting lain."
+                  />
+                </label>
+              </fieldset>
+
+              <div className="an-inq-submit-row">
                 <button
-                  key={option}
-                  type="button"
-                  className={type === option ? "is-active" : ""}
-                  onClick={() => setType(option)}
+                  className="an-btn an-btn--solid an-inq-submit"
+                  disabled={submit.isPending}
                 >
-                  {option}
+                  {submit.isPending ? "MENGIRIM…" : "KIRIM INQUIRY"}
                 </button>
-              ))}
-            </div>
-            <div className="an-inquiry-grid">
-              <label>
-                YOUR NAME
-                <input
-                  required
-                  value={form.name}
-                  onChange={event => update("name", event.target.value)}
-                  placeholder="Nama kamu"
-                />
-              </label>
-              <label>
-                EMAIL ADDRESS
-                <input
-                  required
-                  type="email"
-                  value={form.email}
-                  onChange={event => update("email", event.target.value)}
-                  placeholder="nama@email.com"
-                />
-              </label>
-              <label>
-                ORGANIZATION / ARTIST NAME
-                <input
-                  value={form.organization}
-                  onChange={event => update("organization", event.target.value)}
-                  placeholder="Opsional"
-                />
-              </label>
-              <label>
-                PROJECT / EVENT TITLE
-                <input
-                  required
-                  value={form.projectTitle}
-                  onChange={event => update("projectTitle", event.target.value)}
-                  placeholder="Nama project atau event"
-                />
-              </label>
-              <label>
-                LOCATION / MARKET
-                <input
-                  value={form.location}
-                  onChange={event => update("location", event.target.value)}
-                  placeholder="Kota, negara, atau online"
-                />
-              </label>
-              <label>
-                TIMELINE
-                <input
-                  value={form.timeline}
-                  onChange={event => update("timeline", event.target.value)}
-                  placeholder="Contoh: Mei 2026"
-                />
-              </label>
-            </div>
-            <label className="an-inquiry-full">
-              BUDGET CONTEXT{" "}
-              <input
-                value={form.budgetContext}
-                onChange={event => update("budgetContext", event.target.value)}
-                placeholder="Opsional — boleh jelaskan konteks atau tulis 'discuss'"
-              />
-            </label>
-            <label className="an-inquiry-full">
-              BRIEF / MESSAGE
-              <textarea
-                required
-                minLength={12}
-                value={form.message}
-                onChange={event => update("message", event.target.value)}
-                placeholder="Jelaskan kebutuhan, referensi, link, deliverable, serta hal penting lain."
-              />
-            </label>
-            <button className="an-inquiry-submit" disabled={submit.isPending}>
-              {submit.isPending ? "MENGIRIM…" : "KIRIM INQUIRY"}
-            </button>
-            {submissionState === "success" ? (
-              <div className="an-inquiry-feedback is-success" role="status" aria-live="polite">
-                <strong>MESSAGE RECEIVED.</strong>
-                <span>Terima kasih — pesanmu sudah masuk ke inbox Akbar Nawasunda.</span>
-                <button type="button" onClick={resetSubmission}>KIRIM PESAN LAIN</button>
+                <p className="an-inq-note">
+                  Konfirmasi diberikan setelah inquiry ditinjau.
+                </p>
               </div>
-            ) : null}
-            {submissionState === "error" ? (
-              <div className="an-inquiry-feedback is-error" role="alert">
-                <strong>MESSAGE COULDN&apos;T BE SENT.</strong>
-                <span>Coba lagi, atau kirim langsung ke {verifiedArtistProfile.bookingEmail}.</span>
-              </div>
-            ) : null}
-            <p className="an-inquiry-note">
-              Konfirmasi diberikan setelah inquiry ditinjau.
-            </p>
-          </form>
-        </section>
+
+              {submissionState === "success" ? (
+                <div
+                  className="an-inq-feedback is-success"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <strong>Pesan diterima.</strong>
+                  <span>
+                    Terima kasih — pesanmu sudah masuk ke inbox Akbar Nawasunda.
+                  </span>
+                  <button type="button" onClick={resetSubmission}>
+                    Kirim pesan lain
+                  </button>
+                </div>
+              ) : null}
+              {submissionState === "error" ? (
+                <div className="an-inq-feedback is-error" role="alert">
+                  <strong>Pesan belum terkirim.</strong>
+                  <span>
+                    Coba lagi, atau kirim langsung ke{" "}
+                    {verifiedArtistProfile.bookingEmail}.
+                  </span>
+                </div>
+              ) : null}
+            </form>
+          </section>
+        </Reveal>
       </main>
       <NightFooter />
     </div>

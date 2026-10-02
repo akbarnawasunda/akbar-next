@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Download, Mail, Printer } from "lucide-react";
+import { Link } from "wouter";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
@@ -10,8 +11,20 @@ import {
   verifiedArtistProfile,
 } from "@/content/artistPlatform";
 import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
+import { Reveal } from "@/components/Reveal";
 import "./EcosystemPages.css";
 import "./EpkReady.css";
+import "./PressStage.css";
+
+/** Salinan penjelasan per format kerja, sejajar dengan daftar layanan resmi. */
+const capabilityCopy = [
+  "Request remix dengan brief, referensi, dan target rilis yang jelas.",
+  "Aransemen khusus untuk memperkuat karakter lagu dan kebutuhan konten.",
+  "Bangun karya bersama dari ide awal sampai materi siap dipublikasikan.",
+  "Lisensi musik untuk kebutuhan konten, partner, dan penggunaan komersial.",
+];
+
+const capabilityType = ["remix", "remix", "collaboration", "licensing"] as const;
 
 const mail = (address: string, subject: string) =>
   `mailto:${address}?subject=${encodeURIComponent(subject)}`;
@@ -128,267 +141,292 @@ export default function PressKit() {
     <div className="nf-page an-epk-ready">
       <NightHeader active="/epk" />
       <main id="main-content" tabIndex={-1}>
-        <section className="nf-epk-hero an-epk-hero-enhanced">
-          <div className="an-epk-hero-grid">
-            <div>
-              <h1>
-                PRESS &amp;
-                <br />
-                BOOKING.
-              </h1>
-              <p>
-                {press?.intro ||
-                  "Informasi untuk promoter, media, playlist editor, dan kolaborator."}
-              </p>
-              <div className="an-epk-hero-actions">
-                <a
-                  className="nf-button"
-                  {...externalProps(mail(pressEmail, "Press / booking inquiry"))}
-                >
-                  <Mail size={15} /> CONTACT PRESS
-                </a>
-                <button
-                  className="an-epk-print"
-                  type="button"
-                  onClick={() => window.print()}
-                >
-                  <Printer size={14} /> SAVE / PRINT EPK
-                </button>
-              </div>
+        {/* EPK dibuka seperti lembar fakta: identitas di kiri, fact sheet
+            dengan foto dan kontak di kanan. Printer tetap di baris pertama. */}
+        <section className="an-press-hero" aria-labelledby="press-title">
+          <div className="an-press-hero-copy">
+            <p className="an-kicker">
+              <span className="an-kicker-dot" aria-hidden="true" />
+              Press &amp; booking
+            </p>
+            <h1 id="press-title">Akbar Nawasunda.</h1>
+            <p className="an-press-lede">
+              {press?.intro ||
+                "Informasi untuk promoter, media, playlist editor, dan kolaborator."}
+            </p>
+            <div className="an-press-hero-actions">
+              <a
+                className="an-btn an-btn--solid"
+                {...externalProps(mail(pressEmail, "Press / booking inquiry"))}
+              >
+                <Mail size={14} aria-hidden="true" /> Kontak press
+              </a>
+              <button
+                className="an-btn an-btn--quiet an-press-print"
+                type="button"
+                onClick={() => window.print()}
+              >
+                <Printer size={14} aria-hidden="true" /> SAVE / PRINT EPK
+              </button>
             </div>
-            <aside className="an-epk-hero-card">
-              <div className="an-epk-hero-image">
-                <img
-                  src={portraitSrc}
-                  alt="Editorial portrait artwork of Akbar Nawasunda"
-                  width={667}
-                  height={1000}
-                  fetchPriority="high"
-                  decoding="async"
-                  onError={() => {
-                    if (portraitSrc !== officialBrand.portraitFallback) {
-                      setPortraitSrc(officialBrand.portraitFallback);
-                    }
-                  }}
-                />
-              </div>
-              <div className="an-epk-hero-card-copy">
-                <span>EDITORIAL / PRESS</span>
-                <strong>
-                  AKBAR
-                  <br />
-                  NAWASUNDA
-                </strong>
-                <small>
-                  {location} · {alias}
-                </small>
-              </div>
-            </aside>
           </div>
+          <aside className="an-press-sheet" aria-label="Fact sheet artis">
+            <figure className="an-press-sheet-plate">
+              <img
+                src={portraitSrc}
+                alt="Potret editorial Akbar Nawasunda"
+                width={667}
+                height={1000}
+                fetchPriority="high"
+                decoding="async"
+                onError={() => {
+                  if (portraitSrc !== officialBrand.portraitFallback) {
+                    setPortraitSrc(officialBrand.portraitFallback);
+                  }
+                }}
+              />
+            </figure>
+            <dl className="an-press-sheet-facts">
+              <div>
+                <dt>Berbasis di</dt>
+                <dd>{location}</dd>
+              </div>
+              <div>
+                <dt>Alias</dt>
+                <dd>{alias}</dd>
+              </div>
+              <div>
+                <dt>Peran</dt>
+                <dd>Producer / Remixer</dd>
+              </div>
+              <div>
+                <dt>Kontak</dt>
+                <dd>
+                  <a href={mail(pressEmail, "Press / booking inquiry")}>
+                    {pressEmail}
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </aside>
         </section>
 
-        <section className="nf-section an-epk-sheet-section">
-          <div className="an-epk-document">
-            <div>
-              <h2>AKBAR NAWASUNDA.</h2>
-              <p>{bio}</p>
-              <div className="an-epk-genre-row">
-                {genres.map((genre) => (
-                  <span key={genre}>{genre}</span>
+        {/* Ringkasan dan format kerja: teks di kiri, indeks format di kanan. */}
+        <Reveal>
+          <section
+            className="an-section an-press-summary"
+            aria-labelledby="press-summary-title"
+          >
+            <div className="an-press-summary-copy an-rise">
+              <p className="an-meta">Ringkasan</p>
+              <h2 id="press-summary-title" className="an-title">
+                Tentang Akbar Nawasunda.
+              </h2>
+              <p className="an-press-bio">{bio}</p>
+              <ul className="an-press-genres">
+                {genres.map(genre => (
+                  <li key={genre}>{genre}</li>
                 ))}
-              </div>
+              </ul>
             </div>
-            <aside className="an-epk-facts">
-              <div>
-                <span>BASED IN</span>
-                <b>{location}</b>
-              </div>
-              <div>
-                <span>ALIAS</span>
-                <b>{alias}</b>
-              </div>
-              <div>
-                <span>WORK</span>
-                <b>Producer / Remixer</b>
-              </div>
-              <div>
-                <span>CONTACT</span>
-                <b>{pressEmail}</b>
-              </div>
-            </aside>
-          </div>
-        </section>
+            <div className="an-press-summary-side an-rise">
+              <p className="an-meta">Format kerja</p>
+              <p className="an-press-capabilities-intro">{capabilitiesIntro}</p>
+              <ol className="an-index an-press-capability-list">
+                {verifiedArtistProfile.services.map((service, index) => (
+                  <li key={service}>
+                    <Link
+                      className="an-index-row"
+                      href={`/inquire?type=${
+                        capabilityType[index] ?? "collaboration"
+                      }&source=epk`}
+                    >
+                      <span className="an-meta">
+                        {formatPublicIndex(index)}
+                      </span>
+                      <span className="an-press-capability-copy">
+                        <strong>{service}</strong>
+                        <small>
+                          {capabilityCopy[index] ?? capabilityCopy[0]}
+                        </small>
+                      </span>
+                      <ArrowUpRight size={15} aria-hidden="true" />
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+              <p className="an-press-licensing-note">
+                <strong>LICENSING NOTE</strong> {licensingNote}
+              </p>
+            </div>
+          </section>
+        </Reveal>
 
-        <section className="nf-section dark-panel an-epk-capabilities">
-          <div className="nf-section-title">
+        {/* Aset resmi sebagai baris yang bisa dibuka/diminta — bukan kartu. */}
+        <section
+          className="an-section an-press-assets"
+          aria-labelledby="press-assets-title"
+        >
+          <header className="an-head an-head--row">
             <div>
-              <h2>
-                BUILT FOR
-                <br />
-                THE DROP.
+              <p className="an-meta">Aset</p>
+              <h2 id="press-assets-title" className="an-title">
+                Aset yang tersedia secara resmi.
               </h2>
             </div>
-            <p>{capabilitiesIntro}</p>
-          </div>
-          <div className="an-epk-capability-grid">
-            {verifiedArtistProfile.services.map((service, index) => (
-              <article key={service} className="an-epk-capability">
-                <span>{formatPublicIndex(index)}</span>
-                <h3>{service}</h3>
-                <p>
-                  {index === 0
-                    ? "Request remix dengan brief, referensi, dan target rilis yang jelas."
-                    : index === 1
-                      ? "Aransemen khusus untuk memperkuat karakter lagu dan kebutuhan konten."
-                      : index === 2
-                        ? "Bangun karya bersama dari ide awal sampai materi siap dipublikasikan."
-                        : "Lisensi musik untuk kebutuhan konten, partner, dan penggunaan komersial."}
-                </p>
-              </article>
-            ))}
-          </div>
-          <p className="an-epk-licensing-note">
-            <strong>LICENSING NOTE</strong>
-            {licensingNote}
-          </p>
-        </section>
-
-        <section className="nf-section">
-          <div className="nf-section-title">
-            <div>
-              <h2>
-                ASET
-                <br />
-                RESMI.
-              </h2>
-            </div>
-            <p>
+            <p className="an-press-note">
               {cmsAssets.length
-                ? "Aset yang tersedia secara resmi dapat diakses langsung dari kartu di bawah."
+                ? "Aset yang tersedia secara resmi dapat diakses langsung dari baris di bawah."
                 : "Aset yang tersedia secara resmi untuk event tambahan dapat diminta melalui kontak press resmi."}
             </p>
-          </div>
-          <div
-            className={`an-epk-assets${
-              assets.length > 3 ? " has-extended-assets" : ""
-            }`}
-          >
-            {assets.map((asset) => (
-              <a
-                className="an-epk-asset"
-                {...externalProps(asset.href)}
-                key={asset.title}
-              >
-                <span>{asset.label}</span>
-                <h3>{asset.title}</h3>
-                <p>{asset.copy}</p>
-                <b>
-                  {asset.href.startsWith("mailto:")
-                    ? "REQUEST BY EMAIL"
-                    : "OPEN OFFICIAL ASSET"}
-                  {asset.href.startsWith("mailto:") ? (
-                    <Mail size={13} />
-                  ) : (
-                    <Download size={13} />
-                  )}
-                </b>
-              </a>
+          </header>
+          <ul className="an-index an-press-asset-list">
+            {assets.map(asset => (
+              <li key={asset.title}>
+                <a
+                  className="an-index-row an-press-asset"
+                  {...externalProps(asset.href)}
+                >
+                  <span className="an-meta">{asset.label}</span>
+                  <span className="an-press-asset-copy">
+                    <strong>{asset.title}</strong>
+                    <small>{asset.copy}</small>
+                  </span>
+                  <span className="an-press-asset-action">
+                    {asset.href.startsWith("mailto:") ? (
+                      <>
+                        Request by email{" "}
+                        <Mail size={13} aria-hidden="true" />
+                      </>
+                    ) : (
+                      <>
+                        Open official asset{" "}
+                        <Download size={13} aria-hidden="true" />
+                      </>
+                    )}
+                  </span>
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
 
-        <section className="nf-section dark-panel">
-          <div className="nf-section-title">
+        {/* Rilisan pilihan sebagai rail, sama seperti katalog di beranda. */}
+        <section
+          className="an-section an-press-releases"
+          aria-labelledby="press-releases-title"
+        >
+          <header className="an-head an-head--row">
             <div>
-              <h2>
-                RILISAN
-                <br />
-                PILIHAN.
+              <p className="an-meta">Rilisan pilihan</p>
+              <h2 id="press-releases-title" className="an-title">
+                Tautan resmi untuk editor dan promotor.
               </h2>
             </div>
-            <p>Tautan resmi untuk editor, promotor, dan kolaborator.</p>
-          </div>
-          <div className="an-epk-release-list">
-            {selectedReleases.map((release) => (
+            <Link className="an-btn an-btn--quiet" href="/music">
+              Buka katalog <ArrowUpRight size={14} aria-hidden="true" />
+            </Link>
+          </header>
+          <div className="an-rail an-press-release-rail">
+            {selectedReleases.map(release => (
               <a
-                className="an-epk-release"
+                className="an-release"
                 key={release.title}
                 href={release.href}
                 target="_blank"
                 rel="noreferrer"
               >
-                <ResilientArtworkImage
-                  src={release.image}
-                  backupSrc={officialBrand.socialPreview}
-                  alt={`Artwork ${release.title}`}
-                />
-                <div>
-                  <span>
+                <span className="an-release-art">
+                  <ResilientArtworkImage
+                    src={release.image}
+                    backupSrc={officialBrand.socialPreview}
+                    alt={`Artwork ${release.title}`}
+                  />
+                </span>
+                <span className="an-release-meta">
+                  <small>
                     {release.platform} · {release.year}
-                  </span>
-                  <h3>{release.title}</h3>
-                  <p>
-                    {release.format} <ArrowUpRight size={11} />
-                  </p>
-                </div>
+                  </small>
+                  <strong>{release.title}</strong>
+                  <em>
+                    {release.format} <ArrowUpRight size={12} aria-hidden="true" />
+                  </em>
+                </span>
               </a>
             ))}
           </div>
         </section>
 
-        <section className="nf-section an-epk-contact-panel">
-          <div className="an-booking-grid">
-            <div>
-              <h2>
-                KONTAK
-                <br />
-                PROYEK.
-              </h2>
+        {/* Panel kontak: satu-satunya permukaan terang di halaman ini. */}
+        <section
+          className="an-section an-epk-contact-panel"
+          aria-labelledby="press-contact-title"
+        >
+          <div className="an-press-contact">
+            <div className="an-press-contact-copy">
+              <p className="an-press-contact-label">Kontak</p>
+              <h2 id="press-contact-title">Kontak proyek.</h2>
               <p>
                 Kirim konteks untuk performance, remix, kolaborasi, atau
                 licensing. Ketersediaan dan tarif dikonfirmasi setelah inquiry
                 ditinjau.
               </p>
             </div>
-            <div className="an-booking-actions">
-              <a href="/inquire?type=booking&source=epk">
-                BOOKING INQUIRY <ArrowUpRight size={15} />
-              </a>
-              <a href="/inquire?type=remix&source=epk">
-                REMIX / COLLABORATE <ArrowUpRight size={15} />
-              </a>
-              <a {...externalProps(mail(pressEmail, "Press material request"))}>
-                PRESS CONTACT <Mail size={15} />
+            <div className="an-press-contact-actions">
+              <Link
+                className="an-press-contact-link"
+                href="/inquire?type=booking&source=epk"
+              >
+                <strong>Booking inquiry</strong>
+                <small>Performance, acara, dan festival.</small>
+                <ArrowUpRight size={15} aria-hidden="true" />
+              </Link>
+              <Link
+                className="an-press-contact-link"
+                href="/inquire?type=remix&source=epk"
+              >
+                <strong>Remix / collaborate</strong>
+                <small>Remix, aransemen, dan kolaborasi rilisan.</small>
+                <ArrowUpRight size={15} aria-hidden="true" />
+              </Link>
+              <a
+                className="an-press-contact-link"
+                {...externalProps(mail(pressEmail, "Press material request"))}
+              >
+                <strong>Press contact</strong>
+                <small>Materi publikasi, wawancara, dan kebutuhan media.</small>
+                <Mail size={15} aria-hidden="true" />
               </a>
             </div>
           </div>
         </section>
 
-        <section className="nf-section">
-          <div className="nf-section-title">
-            <div>
-              <h2>
-                PLATFORM
-                <br />
-                RESMI.
-              </h2>
-            </div>
-            <div className="an-epk-genre-row">
-              {editablePlatformLinks.slice(0, 5).map((link) => (
+        <section
+          className="an-section an-press-platforms"
+          aria-labelledby="press-platforms-title"
+        >
+          <header className="an-head">
+            <p className="an-meta">Platform resmi</p>
+            <h2 id="press-platforms-title" className="an-title">
+              Dengar di kanal resminya.
+            </h2>
+          </header>
+          <ul className="an-press-platform-list">
+            {editablePlatformLinks.slice(0, 6).map(link => (
+              <li key={link.label}>
                 <a
-                  className="nf-text-button"
+                  className="an-press-platform"
                   href={link.href}
                   target="_blank"
                   rel="noreferrer"
-                  key={link.label}
                 >
                   <PlatformIcon label={link.label} />
-                  {link.label}
-                  <ArrowUpRight size={13} />
+                  <span>{link.label}</span>
+                  <ArrowUpRight size={13} aria-hidden="true" />
                 </a>
-              ))}
-            </div>
-          </div>
+              </li>
+            ))}
+          </ul>
         </section>
       </main>
       <NightFooter />

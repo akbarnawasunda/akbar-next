@@ -1,0 +1,474 @@
+/* ============================================================
+   PRESS STAGE — /epk (press kit & booking)
+   ------------------------------------------------------------
+   Halaman ini dipakai orang yang butuh informasi cepat: promotor,
+   media, editor playlist. Karena itu komposisinya dokumen — fact
+   sheet terbaca, indeks format kerja, daftar aset yang jelas
+   aksinya — dan identitas visualnya dijaga oleh tipografi serta
+   satu panel terang di tengah halaman gelap.
+   Primitif bersama (.an-meta, .an-title, .an-btn, .an-index,
+   .an-rail, .an-rise) datang dari SceneKit.css.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   Pembuka + fact sheet
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-press-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(0, 0.96fr);
+  align-items: end;
+  gap: clamp(28px, 4.4vw, 72px);
+  max-width: var(--hx-max, 1560px);
+  margin-inline: auto;
+  padding: calc(var(--chrome-h, 78px) + var(--space-xl)) var(--hx-gutter)
+    var(--space-xl);
+}
+
+.an-public-shell.an-editorial .an-press-hero-copy {
+  display: grid;
+  gap: var(--space-md);
+  align-content: end;
+}
+
+.an-public-shell.an-editorial .an-press-hero-copy h1 {
+  margin: 0;
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5.4vw, 4.8rem);
+  font-weight: 500;
+  letter-spacing: -0.038em;
+  line-height: 0.98;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-press-lede {
+  margin: 0;
+  max-width: 46ch;
+  font-size: var(--text-lede);
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
+}
+
+.an-public-shell.an-editorial .an-press-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.an-public-shell.an-editorial .an-press-print {
+  font-family: var(--font-body);
+}
+
+.an-public-shell.an-editorial .an-press-sheet {
+  display: grid;
+  gap: var(--space-md);
+  padding: clamp(16px, 1.8vw, 24px);
+  border: 1px solid var(--editorial-rule);
+  background: color-mix(in srgb, var(--ink-soft) 82%, transparent);
+}
+
+.an-public-shell.an-editorial .an-press-sheet-plate {
+  margin: 0;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
+  background: var(--ink-soft);
+}
+
+.an-public-shell.an-editorial .an-press-sheet-plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 22%;
+}
+
+.an-public-shell.an-editorial .an-press-sheet-facts {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+
+.an-public-shell.an-editorial .an-press-sheet-facts > div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+  gap: 4px 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--editorial-rule);
+}
+
+.an-public-shell.an-editorial .an-press-sheet-facts > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.an-public-shell.an-editorial .an-press-sheet-facts dt {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-press-sheet-facts dd {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--paper);
+  overflow-wrap: anywhere;
+}
+
+.an-public-shell.an-editorial .an-press-sheet-facts dd a {
+  color: var(--acid);
+  text-decoration: none;
+}
+
+/* ------------------------------------------------------------
+   Ringkasan + format kerja
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-press-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 0.5fr) minmax(0, 0.5fr);
+  align-items: start;
+  gap: clamp(28px, 5vw, 76px);
+}
+
+.an-public-shell.an-editorial .an-press-summary-copy,
+.an-public-shell.an-editorial .an-press-summary-side {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.an-public-shell.an-editorial .an-press-bio {
+  margin: 0;
+  max-width: 62ch;
+  font-size: clamp(1rem, 1.24vw, 1.16rem);
+  line-height: 1.86;
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.an-public-shell.an-editorial .an-press-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px 18px;
+  margin: var(--space-sm) 0 0;
+  padding: var(--space-md) 0 0;
+  border-top: 1px solid var(--editorial-rule);
+  list-style: none;
+}
+
+.an-public-shell.an-editorial .an-press-genres li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-press-genres li::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--acid) 70%, transparent);
+}
+
+.an-public-shell.an-editorial .an-press-capabilities-intro {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 0.92rem;
+  line-height: 1.66;
+  color: color-mix(in srgb, var(--paper) 74%, transparent);
+}
+
+.an-public-shell.an-editorial .an-press-capability-list .an-index-row {
+  grid-template-columns: 2.2rem minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.an-public-shell.an-editorial .an-press-capability-copy {
+  display: grid;
+  gap: 5px;
+}
+
+.an-public-shell.an-editorial .an-press-capability-copy strong {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-press-capability-copy small {
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-press-licensing-note {
+  display: grid;
+  gap: 6px;
+  margin: var(--space-md) 0 0;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--editorial-rule);
+  font-size: 0.86rem;
+  line-height: 1.66;
+  color: color-mix(in srgb, var(--paper) 76%, transparent);
+}
+
+.an-public-shell.an-editorial .an-press-licensing-note strong {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--acid);
+}
+
+/* ------------------------------------------------------------
+   Aset resmi
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-press-note {
+  margin: 0;
+  max-width: 46ch;
+  font-size: 0.88rem;
+  line-height: 1.62;
+  color: color-mix(in srgb, var(--paper) 72%, transparent);
+}
+
+.an-public-shell.an-editorial .an-press-asset-list .an-index-row {
+  grid-template-columns: 10rem minmax(0, 1fr) auto;
+  align-items: start;
+}
+
+.an-public-shell.an-editorial .an-press-asset-copy {
+  display: grid;
+  gap: 5px;
+}
+
+.an-public-shell.an-editorial .an-press-asset-copy strong {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-press-asset-copy small {
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: var(--mute);
+  max-width: 56ch;
+}
+
+.an-public-shell.an-editorial .an-press-asset-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--acid) 84%, var(--paper));
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------
+   Rilisan pilihan
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-press-release-rail {
+  grid-auto-columns: clamp(190px, 21vw, 270px);
+}
+
+/* ------------------------------------------------------------
+   Panel kontak — satu-satunya permukaan terang di halaman
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-press-contact {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  align-items: start;
+  gap: clamp(24px, 3.6vw, 56px);
+}
+
+.an-public-shell.an-editorial .an-press-contact-copy {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.an-public-shell.an-editorial .an-press-contact-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 58%, transparent);
+}
+
+.an-public-shell.an-editorial .an-press-contact-copy h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 2.8vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  color: var(--ink);
+}
+
+.an-public-shell.an-editorial .an-press-contact-copy p {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.an-public-shell.an-editorial .an-press-contact-actions {
+  display: grid;
+}
+
+.an-public-shell.an-editorial .an-press-contact-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 18px;
+  padding: clamp(12px, 1.4vw, 18px) 0;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  color: var(--ink);
+  text-decoration: none;
+  transition: padding-left 240ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .an-press-contact-link:last-child {
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+}
+
+.an-public-shell.an-editorial .an-press-contact-link:hover,
+.an-public-shell.an-editorial .an-press-contact-link:focus-visible {
+  padding-left: 12px;
+}
+
+.an-public-shell.an-editorial .an-press-contact-link strong {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.an-public-shell.an-editorial .an-press-contact-link small {
+  grid-column: 1 / 2;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+}
+
+.an-public-shell.an-editorial .an-press-contact-link svg {
+  grid-row: 1 / 3;
+  grid-column: 2 / 3;
+}
+
+/* ------------------------------------------------------------
+   Platform resmi
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-press-platform-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.an-public-shell.an-editorial .an-press-platform {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--editorial-rule);
+  border-radius: 999px;
+  color: var(--paper);
+  text-decoration: none;
+  transition:
+    border-color 200ms var(--ease, ease),
+    color 200ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .an-press-platform:hover,
+.an-public-shell.an-editorial .an-press-platform:focus-visible {
+  border-color: var(--acid);
+  color: var(--acid);
+}
+
+.an-public-shell.an-editorial .an-press-platform span {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+}
+
+.an-public-shell.an-editorial .an-press-platform svg:last-child {
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
+}
+
+/* ------------------------------------------------------------
+   BREAKPOINT
+   ------------------------------------------------------------ */
+
+@media (max-width: 1024px) {
+  .an-public-shell.an-editorial .an-press-hero,
+  .an-public-shell.an-editorial .an-press-summary,
+  .an-public-shell.an-editorial .an-press-contact {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-lg);
+  }
+
+  .an-public-shell.an-editorial .an-press-sheet-plate {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .an-public-shell.an-editorial .an-press-hero {
+    padding: calc(var(--chrome-h, 58px) + var(--space-lg)) var(--hx-gutter)
+      var(--space-lg);
+  }
+
+  .an-public-shell.an-editorial .an-press-hero-copy h1 {
+    font-size: clamp(2rem, 9.4vw, 3.1rem);
+  }
+
+  .an-public-shell.an-editorial .an-press-asset-list .an-index-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .an-public-shell.an-editorial .an-press-asset-action {
+    white-space: normal;
+  }
+
+  .an-public-shell.an-editorial .an-press-sheet-facts > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-public-shell.an-editorial .an-press-contact-link,
+  .an-public-shell.an-editorial .an-press-platform {
+    transition: none;
+  }
+
+  .an-public-shell.an-editorial .an-press-contact-link:hover,
+  .an-public-shell.an-editorial .an-press-contact-link:focus-visible {
+    padding-left: 0;
+  }
+}
