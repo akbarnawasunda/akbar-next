@@ -155,11 +155,14 @@
 .artist-journey-timeline {
   position: relative;
 }
+/* Posisi garis = pusat titik node: kolom 78px + gap 26px + offset -28px
+   + setengah lebar titik 5px = 81px. Sebelumnya 62px, yaitu menggantung
+   di celah antara label dan titik sehingga tidak menyentuh node mana pun. */
 .artist-journey-timeline::before {
   position: absolute;
   top: 6px;
   bottom: 6px;
-  left: 62px;
+  left: 81px;
   width: 1px;
   content: "";
   background: var(--ink-line);
@@ -180,14 +183,22 @@
   padding-bottom: 0;
 }
 
+/* Label tahun harus muat di kolomnya: "SEKARANG" (8 huruf) dengan
+   tracking 0.16em selebar ±62px, sedangkan kolomnya 58px di ponsel dan
+   garis waktu berada di 48px — teksnya menabrak garis dan titik node.
+   Ukuran dan tracking-nya diturunkan sampai ada jarak aman di kedua
+   breakpoint, tanpa mengubah posisi kolom. */
 .artist-journey-year {
   padding-top: 4px;
+  max-width: 60px;
   color: var(--acid);
   font-family: var(--font-mono);
-  font-size: 0.64rem;
+  font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .artist-journey-timeline article > div {
@@ -606,9 +617,12 @@
     padding-block: 80px;
   }
 
-  .artist-journey-timeline::before { left: 48px; }
+  /* Sama: kolom 72px + gap 18px − offset 22px + 5px = 73px. */
+  .artist-journey-timeline::before { left: 73px; }
   .artist-journey-timeline article {
-    grid-template-columns: 58px minmax(0, 1fr);
+    /* 58px tidak cukup untuk label terpanjang ("SEKARANG"); dilebarkan
+       supaya label tidak menyentuh garis waktu di 48px. */
+    grid-template-columns: 72px minmax(0, 1fr);
     gap: 18px;
     padding-bottom: 32px;
     margin-bottom: 32px;
@@ -812,6 +826,7 @@
 .artist-journey-timeline::before { background: var(--paper-line); }
 .artist-journey-timeline article > div::before { background: var(--ink); border-color: var(--acid); }
 .artist-journey-timeline article:last-child > div::before { background: var(--acid); }
+.artist-journey-image,
 .artist-photo-story-image,
 .artist-photo-story-stage .artist-photo-story-image { background: var(--ink); }
 .artist-photo-story-copy b,
