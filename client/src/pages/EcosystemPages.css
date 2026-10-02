@@ -10,7 +10,7 @@
   background: var(--ink);
   color: var(--paper);
   font-family: var(--font-body);
-  overflow-x: clip;
+  /* overflow dipegang satu kali oleh .an-public-shell (PublicShell.css). */
 }
 .nf-page *,
 .nf-page *::before,

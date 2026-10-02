@@ -1,5 +1,15 @@
 import { useEffect, useState } from "react";
 import { officialBrand } from "@/content/artistPlatform";
+import {
+  IMAGE_SIZES,
+  aspectRatioOf,
+  fallbackChain,
+  intrinsicSize,
+  loadingPolicy,
+  pictureSourcesFor,
+  srcSetFor,
+  type ImageSizePreset,
+} from "@/lib/responsiveImage";
 import "./OptimizedEditorialImage.css";
 
 export type OptimizedEditorialImageProps = {
@@ -7,24 +17,16 @@ export type OptimizedEditorialImageProps = {
   backupSrc?: string;
   alt: string;
   className?: string;
+  /** Ukuran intrinsik; kalau kosong diambil dari manifest aset lokal. */
   width?: number;
   height?: number;
   aspectRatio?: string;
+  /** Hanya untuk gambar above-the-fold (hero). Default lazy. */
   priority?: boolean;
   sizes?: string;
+  /** Preset `sizes` supaya pemanggil tidak menebak nilai sendiri. */
+  sizePreset?: ImageSizePreset;
   objectFit?: "cover" | "contain" | "fill";
-};
-
-// Maps known high-res desktop images to mobile-optimized lighter WebP counterparts
-const MOBILE_OPTIMIZED_VARIANTS: Record<string, string> = {
-  "/assets/akbar-night-frequency-stage-optimized.webp": "/assets/akbar-night-frequency-stage-mobile-optimized.webp",
-  "/assets/akbar-night-frequency-stage.webp": "/assets/akbar-night-frequency-stage-mobile-optimized.webp",
-  "/assets/akbar-night-frequency-hero-optimized.webp": "/assets/akbar-night-frequency-hero-mobile-optimized.webp",
-  "/assets/akbar-night-frequency-hero.webp": "/assets/akbar-night-frequency-hero-mobile-optimized.webp",
-  "/assets/akbar-nawasunda-official-portrait.webp": "/assets/akbar-official-portrait-optimized.webp",
-  "/assets/akbar-nawasunda-official-portrait.jpg": "/assets/akbar-official-portrait-optimized.webp",
-  "/assets/akbar-official-portrait.webp": "/assets/akbar-official-portrait-optimized.webp",
-  "/assets/akbar-social-preview.webp": "/assets/akbar-social-preview-optimized.webp",
 };
 
 export function OptimizedEditorialImage({
@@ -36,63 +38,69 @@ export function OptimizedEditorialImage({
   height,
   aspectRatio,
   priority = false,
-  sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 800px",
+  sizes,
+  sizePreset = "artwork",
   objectFit = "cover",
 }: OptimizedEditorialImageProps) {
-  const initialSource = src || backupSrc || officialBrand.logoFallback;
-  const [currentSrc, setCurrentSrc] = useState(initialSource);
+  const chain = fallbackChain(src, backupSrc, officialBrand.logoFallback);
+  const [sourceIndex, setSourceIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    const next = src || backupSrc || officialBrand.logoFallback;
-    setCurrentSrc(next);
+    setSourceIndex(0);
     setIsLoaded(false);
-    setHasError(false);
   }, [src, backupSrc]);
 
-  const mobileSrc = MOBILE_OPTIMIZED_VARIANTS[currentSrc] || currentSrc;
+  const currentSrc = chain[Math.min(sourceIndex, chain.length - 1)];
+  const known = intrinsicSize(currentSrc);
+  const resolvedWidth = width ?? known?.[0];
+  const resolvedHeight = height ?? known?.[1];
+  const resolvedRatio =
+    aspectRatio ??
+    (resolvedWidth && resolvedHeight
+      ? `${resolvedWidth} / ${resolvedHeight}`
+      : aspectRatioOf(currentSrc));
+  const sources = pictureSourcesFor(currentSrc);
+  const srcSet = srcSetFor(currentSrc);
+  const { loading, fetchPriority } = loadingPolicy(priority);
+  const resolvedSizes =
+    sizes ?? (srcSet || sources.length ? IMAGE_SIZES[sizePreset] : undefined);
 
   return (
     <div
-      className={`an-opt-img-container ${isLoaded ? "is-loaded" : "is-loading"} ${className}`}
-      style={{
-        ...(aspectRatio ? { aspectRatio } : {}),
-        ...(width && height && !aspectRatio ? { aspectRatio: `${width} / ${height}` } : {}),
-      }}
+      className={`an-opt-img-container an-media ${isLoaded ? "is-loaded" : "is-loading"} ${className}`}
+      style={resolvedRatio ? { aspectRatio: resolvedRatio } : undefined}
     >
       {/* Micro-shimmer placeholder while decoding */}
       {!isLoaded && <div className="an-opt-img-shimmer" aria-hidden="true" />}
 
       <picture>
-        {mobileSrc !== currentSrc && (
+        {sources.map(source => (
           <source
-            media="(max-width: 640px)"
-            srcSet={mobileSrc}
-            type="image/webp"
+            key={`${source.media}-${source.srcSet}`}
+            media={source.media}
+            srcSet={source.srcSet}
+            type={source.type}
           />
-        )}
+        ))}
         <img
           src={currentSrc}
           alt={alt}
-          width={width}
-          height={height}
-          loading={priority ? "eager" : "lazy"}
+          width={resolvedWidth}
+          height={resolvedHeight}
+          srcSet={srcSet}
+          sizes={resolvedSizes}
+          loading={loading}
           decoding="async"
-          fetchPriority={priority ? "high" : "auto"}
-          sizes={sizes}
+          fetchPriority={fetchPriority}
           style={{ objectFit }}
           className={`an-opt-img-element ${isLoaded ? "has-faded-in" : ""}`}
           onLoad={() => setIsLoaded(true)}
           onError={() => {
-            if (!hasError && backupSrc && currentSrc !== backupSrc) {
-              setCurrentSrc(backupSrc);
-              setHasError(true);
-            } else if (currentSrc !== officialBrand.logoFallback) {
-              setCurrentSrc(officialBrand.logoFallback);
-              setHasError(true);
-            }
-            setIsLoaded(true);
+            setSourceIndex(index =>
+              index < chain.length - 1 ? index + 1 : index
+            );
+            if (sourceIndex >= chain.length - 1) setIsLoaded(true);
           }}
         />
       </picture>

@@ -6,12 +6,24 @@ import {
   usePublicArtistContent,
 } from "@/content/publicContent";
 import { STAGE_PHRASES } from "@/signature/stagePhrases";
+import { useSignatureState } from "@/signature/useSignature";
 import "./SignatureStage.css";
 
 /**
- * Static editorial signature section. The name stays as real, searchable text
- * instead of being replaced by a decorative particle canvas. Its short normal-
- * flow layout keeps the existing CMS-driven era notes and catalog facts intact.
+ * Panggung wordmark.
+ *
+ * Ini satu-satunya tempat partikel menyusun nama: sebuah bidang kosong milik
+ * sendiri, bukan tumpukan di belakang judul hero. Strukturnya dua lapis:
+ * `data-signal-stage-track` (jalur scroll yang tingginya dibaca runtime
+ * menjadi progres 0..1) dan `data-signal-stage` (kotak yang diukur partikel).
+ *
+ * `data-live` mengikuti runtime: hanya `true` kalau particle field benar-benar
+ * hidup di perangkat ini. Kalau tidak (reduced motion, hemat data, perangkat
+ * lemah, atau JS mati), jalur panjangnya runtuh jadi section biasa dan wordmark
+ * tetap terbaca sebagai teks di DOM untuk screen reader dan mesin pencari.
+ *
+ * Scroll tetap scroll: tidak ada event yang dicegat, semuanya `position:
+ * sticky` biasa.
  */
 
 type StageCopy = {
@@ -41,6 +53,10 @@ export function SignatureStage({
   alsoKnownAs: string;
   lang?: "id" | "en";
 }) {
+  const tier = useSignatureState(snapshot => snapshot.capability.tier);
+  const ready = useSignatureState(snapshot => snapshot.fieldReady);
+  const phrase = useSignatureState(snapshot => snapshot.stagePhrase);
+  const live = ready && tier !== "off";
   const copy = COPY[lang];
 
   const cms = usePublicArtistContent();
@@ -58,7 +74,7 @@ export function SignatureStage({
   });
 
   return (
-    <section className="an-signature-stage" data-live="false">
+    <section className="an-signature-stage" data-live={live}>
       <div className="an-signature-stage-track" data-signal-stage-track>
         <div className="an-signature-stage-sticky">
           <div className="an-signature-stage-field" data-signal-stage>
@@ -77,7 +93,12 @@ export function SignatureStage({
             <div className="an-signature-stage-eras">
               {notes.map((era, index) =>
                 era ? (
-                  <p className="an-signature-stage-era" key={era.id || index}>
+                  <p
+                    className="an-signature-stage-era"
+                    key={era.id || index}
+                    data-active={index === phrase}
+                    aria-hidden={live && index !== phrase ? "true" : undefined}
+                  >
                     <span className="an-signature-stage-era-year">
                       {era.year}
                     </span>

@@ -42,7 +42,6 @@
   --gutter: var(--editorial-gutter);
   --hx-gutter: var(--editorial-gutter);
   min-height: 100svh;
-  overflow-x: clip;
   color: var(--paper);
   background: var(--ink) !important;
   font-family: var(--font-body);

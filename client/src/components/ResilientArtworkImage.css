@@ -4,13 +4,21 @@
   height: 100%;
 }
 
+/* Fallback: brand mark lokal, bukan warna sisa palet lama. */
 .an-resilient-artwork.is-fallback {
   object-fit: contain !important;
   padding: clamp(22px, 7%, 56px);
   background:
-    radial-gradient(circle at 74% 24%, rgba(118, 239, 255, 0.16), transparent 34%),
-    radial-gradient(circle at 24% 78%, rgba(216, 255, 101, 0.12), transparent 32%),
-    #0b1020;
+    radial-gradient(
+      circle at 74% 24%,
+      color-mix(in srgb, var(--acid) 16%, transparent),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 24% 78%,
+      color-mix(in srgb, var(--blue) 22%, transparent),
+      transparent 32%
+    ),
+    var(--ink-soft, #111214);
   opacity: 0.86;
-  filter: saturate(0.9);
 }

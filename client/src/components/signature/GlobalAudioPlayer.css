@@ -5,7 +5,11 @@
   /* Area aman: bilah gestur Android dan home indicator iOS. */
   bottom: calc(clamp(12px, 3vw, 24px) + env(safe-area-inset-bottom, 0px));
   z-index: 48;
-  width: min(420px, calc(100vw - 24px));
+  /* `100%` pada elemen fixed diukur dari initial containing block (viewport
+     tanpa scrollbar), sedangkan `100vw` ikut menghitung scrollbar sehingga
+     bilah player bisa melewati tepi kanan. Di ≤640px lebar diganti
+     `left/right: 12px` + `width: auto`. */
+  width: min(420px, calc(100% - 24px));
   border: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
   background: var(--ink-card);
   color: var(--paper);

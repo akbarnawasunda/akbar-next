@@ -71,7 +71,7 @@
 
 .an-page-loading-word {
   margin: 0;
-  font-family: var(--font-mono, "JetBrains Mono", ui-monospace, monospace);
+  font-family: var(--font-mono, ui-monospace, monospace);
   font-size: clamp(0.72rem, 2.4vw, 0.85rem);
   letter-spacing: 0.42em;
   text-transform: uppercase;

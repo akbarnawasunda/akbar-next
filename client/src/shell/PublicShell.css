@@ -4,6 +4,16 @@
   position: relative;
   isolation: isolate;
   min-height: 100%;
+  /* Satu-satunya jaring pengaman overflow untuk rute publik (lihat
+     CONTAINMENT POLICY di index.css). `clip` dipakai, bukan `hidden`, supaya
+     tidak membuat scroll container — sticky nav dan posisi fixed tidak
+     terpengaruh. Elemen `position: fixed` (particle field, player, cursor)
+     tetap tidak terpotong karena containing block-nya viewport.
+
+     Jaring ini BUKAN cara memperbaiki layout: kalau `pnpm audit:layout`
+     menemukan elemen yang melewati tepi viewport pada 360/375/390, perbaiki
+     elemennya, jangan perluas cakupan aturan ini. */
+  overflow-x: clip;
 }
 
 /* Petunjuk command palette: terlihat di desktop, tidak mengganggu konten,

@@ -2,13 +2,27 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useLocation } from "wouter";
 import { CommandPalette } from "@/components/CommandPalette";
 import { LightboxProvider } from "@/components/signature/LightboxProvider";
+import { CursorSignal } from "@/components/signature/CursorSignal";
 import { GlobalAudioPlayer } from "@/components/signature/GlobalAudioPlayer";
+import { RouteSignalCurtain } from "@/components/signature/RouteSignalCurtain";
+import { SignatureBackground } from "@/components/signature/SignatureBackground";
 import { SignatureProvider } from "@/signature/SignatureProvider";
 import { isPublicRoute, languageOf } from "@/signature/routeSignal";
 import { useSignatureState } from "@/signature/useSignature";
 import "./PublicShell.css";
 import "./EditorialRefresh.css";
 
+/**
+ * Lapisan signature global.
+ *
+ * Urutan render = urutan z-index: partikel (di belakang konten) → tirai rute →
+ * cursor → player/menu di atasnya lewat z-index masing-masing. Semua lapisan
+ * hanya hidup di client (gate `mounted`), jadi tidak ada canvas di HTML SSR.
+ *
+ * Particle field, cursor, dan tirai rute adalah identitas situs ini — bukan
+ * dekorasi opsional. Jangan dilepas dari shell tanpa menggantinya dengan
+ * sistem motion lain yang setara.
+ */
 function ShellSurfaces() {
   const [mounted, setMounted] = useState(false);
   const mode = useSignatureState(snapshot => snapshot.route.mode);
@@ -28,6 +42,9 @@ function ShellSurfaces() {
 
   return (
     <>
+      <SignatureBackground />
+      <RouteSignalCurtain />
+      <CursorSignal />
       <GlobalAudioPlayer />
       <CommandPalette />
     </>
