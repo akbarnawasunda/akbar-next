@@ -1,7 +1,16 @@
+/* Komponen ini memasang width/height 100%, jadi TANPA object-fit setiap
+   gambar yang rasionya tidak sama persis dengan kotaknya akan diregangkan
+   (gepeng) — video 4:3 di bingkai lebar 2:1, artwork persegi di bingkai
+   4:3, potret 3:4 di bingkai 4:5. Sebelumnya tidak ada satu pun aturan
+   object-fit di sini; hanya varian fallback yang punya. Sekarang semua
+   gambar ditampilkan `cover` (dipotong rapi, rasio terjaga), sementara
+   fallback brand tetap `contain` supaya logonya utuh. */
 .an-resilient-artwork {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* Fallback: brand mark lokal, bukan warna sisa palet lama. */
