@@ -35,7 +35,10 @@ describe("portrait studies CMS and public gallery", () => {
     const sitemap = source("client/public/sitemap.xml");
     expect(app).toContain('path={"/visuals/portraits"}');
     expect(app).toContain('path={"/en/visuals/portraits"}');
-    expect(visuals).toContain("<VisualPortraitStudies studies={portraitContent} />");
+    // Komponen kini menerima bahasa lewat prop `english`; rute ID tetap
+    // memakai default (english=false).
+    expect(visuals).toContain("<VisualPortraitStudies");
+    expect(visuals).toContain("studies={portraitContent}");
     expect(component).toContain('"/en/visuals/portraits"');
     expect(gallery).toContain("PHOTO");
     expect(sitemap).toContain("https://akbarnawasunda.my.id/visuals/portraits");

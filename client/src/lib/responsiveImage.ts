@@ -28,6 +28,10 @@ export const INTRINSIC_SIZES: Record<string, readonly [number, number]> = {
   "/assets/akbar-night-frequency-stage-mobile-optimized.webp": [900, 900],
   "/assets/akbar-night-frequency-stage-optimized.webp": [1440, 1440],
   "/assets/akbar-official-portrait-optimized.webp": [720, 900],
+  // Potret studi (dilayani lewat proxy /media/portrait): ukuran diambil dari
+  // entri `portraitStudies` di artistPlatform, bukan tebakan.
+  "/media/portrait/neon-portrait.jpg": [3016, 4032],
+  "/media/portrait/kx07-portrait.jpg": [1055, 1491],
   "/assets/akbar-rmx-mark.webp": [900, 900],
   "/assets/akbar-social-preview-optimized.webp": [1000, 1000],
   "/assets/akbar-social-preview.webp": [1000, 1000],

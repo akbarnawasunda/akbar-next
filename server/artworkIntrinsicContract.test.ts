@@ -25,13 +25,23 @@ describe("artwork platform intrinsic sizing", () => {
     expect(intrinsicSize("https://i1.sndcdn.com/artworks-abc-t500x500.jpg")).toEqual([500, 500]);
   });
 
-  it("setiap gambar artwork jarak jauh di halaman katalog terkirim dengan dimensi", async () => {
-    for (const route of ["/music", "/visuals", "/universe", "/en/visuals"]) {
+  it("setiap gambar jarak jauh & media proxy terkirim dengan dimensi", async () => {
+    for (const route of [
+      "/music",
+      "/visuals",
+      "/visuals/portraits",
+      "/universe",
+      "/en/visuals",
+      "/en/visuals/portraits",
+    ]) {
       const page = await render(route, prefetch);
       const images = (page.html.match(/<img[^>]*>/g) || []).filter(img =>
-        /src="https?:\/\//.test(img)
+        /src="(?:https?:\/\/|\/media\/)/.test(img)
       );
-      expect(images.length, `${route} tanpa artwork jarak jauh`).toBeGreaterThan(0);
+      expect(
+        images.length,
+        `${route} tanpa gambar jarak jauh / media proxy`
+      ).toBeGreaterThan(0);
       for (const img of images) {
         const src = (img.match(/src="([^"]*)"/) || [])[1] || "";
         expect(img, `${route} ${src} tanpa width/height`).toMatch(/width="\d+"/);

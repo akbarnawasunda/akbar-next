@@ -9,19 +9,99 @@ import "./ReleaseDetail.css";
 import "./CatalogStage.css";
 import { slugify } from "@shared/slug";
 
-const rightsLabel = (format?: string) =>
+const rightsLabel = (
+  format: string | undefined,
+  labels: { bootleg: string; remix: string; catalog: string }
+) =>
   /bootleg/i.test(format || "")
-    ? "UNOFFICIAL EDIT · CLEARANCE REQUIRED"
+    ? labels.bootleg
     : /remix|rmx/i.test(format || "")
-      ? "REMIX · CLEARANCE REQUIRED"
-      : "CATALOG ENTRY";
+      ? labels.remix
+      : labels.catalog;
 
-const rightsAction = (format?: string) =>
-  /bootleg/i.test(format || "")
-    ? "CLEARANCE / ASK FIRST"
-    : "LICENSING / ASK FIRST";
+const rightsAction = (
+  format: string | undefined,
+  labels: { bootleg: string; other: string }
+) => (/bootleg/i.test(format || "") ? labels.bootleg : labels.other);
 
-export default function ReleaseDetail() {
+/**
+ * Salinan halaman rilisan dua bahasa. `ReleaseDetailView` dipakai
+ * `/music/:slug` dan `/en/music/:slug`, jadi hero artwork, catatan, daftar
+ * tautan, dan jalur lisensi selalu satu komposisi.
+ */
+const copy = {
+  id: {
+    missingMeta: "Rilisan tidak ditemukan",
+    missingTitle: "Rilisan ini tidak ada di katalog.",
+    back: "Kembali ke musik",
+    loadingTitle: "Memuat rilisan…",
+    loadingMeta: "Memuat katalog resmi Akbar Nawasunda.",
+    rights: {
+      bootleg: "UNOFFICIAL EDIT · CLEARANCE REQUIRED",
+      remix: "REMIX · CLEARANCE REQUIRED",
+      catalog: "CATALOG ENTRY",
+    },
+    rightsAction: {
+      bootleg: "CLEARANCE / ASK FIRST",
+      other: "LICENSING / ASK FIRST",
+    },
+    listen: "Dengar rilisan",
+    license: "Lisensi & izin pakai",
+    artworkAlt: (title: string) => `Artwork ${title}`,
+    artworkFallbackAlt: "Artwork rilisan",
+    chipFallback: "Rilisan",
+    storyMeta: "Catatan & kredit",
+    storyFallback: "Buka rilisan ini melalui tautan resmi yang tersedia.",
+    creditsFallback:
+      "Lihat kredit rilisan di platform resmi jika tersedia.",
+    linksTitle: "Dengar & pakai.",
+    linksMeta: (count: number) =>
+      `${count} tautan resmi · lisensi lewat studio`,
+    linkKind: "Dengar",
+    licenseKind: "Lisensi",
+    otherMeta: "Rilisan lain",
+    allMusic: "Lihat semua musik",
+    musicHref: "/music",
+    licenseHref: "/inquire?type=licensing&source=release",
+  },
+  en: {
+    missingMeta: "Release not found",
+    missingTitle: "This release is not in the catalog.",
+    back: "Back to music",
+    loadingTitle: "Loading release…",
+    loadingMeta: "Loading the official Akbar Nawasunda catalog.",
+    rights: {
+      bootleg: "UNOFFICIAL EDIT · CLEARANCE REQUIRED",
+      remix: "REMIX · CLEARANCE REQUIRED",
+      catalog: "CATALOG ENTRY",
+    },
+    rightsAction: {
+      bootleg: "CLEARANCE / ASK FIRST",
+      other: "LICENSING / ASK FIRST",
+    },
+    listen: "Listen to the release",
+    license: "Licensing & permission",
+    artworkAlt: (title: string) => `Artwork for ${title}`,
+    artworkFallbackAlt: "Release artwork",
+    chipFallback: "Release",
+    storyMeta: "Notes & credits",
+    storyFallback: "Open this release through the official link that exists.",
+    creditsFallback:
+      "Check the release credits on the official platform where available.",
+    linksTitle: "Listen & use.",
+    linksMeta: (count: number) =>
+      `${count} official links · licensing through the studio`,
+    linkKind: "Listen",
+    licenseKind: "Licensing",
+    otherMeta: "More releases",
+    allMusic: "See all music",
+    musicHref: "/en/music",
+    licenseHref: "/en/inquire?type=licensing&source=release",
+  },
+} as const;
+
+export function ReleaseDetailView({ locale = "id" }: { locale?: "id" | "en" }) {
+  const t = copy[locale];
   const { slug = "" } = useParams<{ slug: string }>();
   const cms = usePublicArtistContent();
   const cmsRelease = (cms.data?.releases ?? []).find(
@@ -60,19 +140,13 @@ export default function ReleaseDetail() {
 
   if (!release && !cms.isLoading) {
     return (
-      <div className="nf-page">
-        <NightHeader active="/music" />
-        <main id="main-content" tabIndex={-1}>
-          <section className="an-rel-missing">
-            <p className="an-meta">Rilisan tidak ditemukan</p>
-            <h1>Rilisan ini tidak ada di katalog.</h1>
-            <Link className="an-btn an-btn--quiet" href="/music">
-              <ArrowLeft size={14} /> Kembali ke musik
-            </Link>
-          </section>
-        </main>
-        <NightFooter />
-      </div>
+      <section className="an-rel-missing">
+        <p className="an-meta">{t.missingMeta}</p>
+        <h1>{t.missingTitle}</h1>
+        <Link className="an-btn an-btn--quiet" href={t.musicHref}>
+          <ArrowLeft size={14} /> {t.back}
+        </Link>
+      </section>
     );
   }
 
@@ -90,18 +164,16 @@ export default function ReleaseDetail() {
     : [];
 
   return (
-    <div className="nf-page">
-      <NightHeader active="/music" />
-      <main id="main-content" tabIndex={-1}>
+    <main id="main-content" tabIndex={-1}>
         {/* Artwork rilisan adalah subjek halaman ini: satu plate besar
             berdampingan dengan judul, metadata, dan aksi mendengarkan. */}
         <section className="an-rel-hero" aria-labelledby="release-title">
           <div className="an-rel-hero-copy">
-            <Link className="an-back-link" href="/music">
-              <ArrowLeft size={13} /> Kembali ke musik
+            <Link className="an-back-link" href={t.musicHref}>
+              <ArrowLeft size={13} /> {t.back}
             </Link>
             <h1 id="release-title">
-              {release?.title || "Memuat rilisan…"}
+              {release?.title || t.loadingTitle}
             </h1>
             <p className="an-rel-meta">
               {release ? (
@@ -109,26 +181,26 @@ export default function ReleaseDetail() {
                   <span>{release.format}</span>
                   <span>{release.year}</span>
                   <span>{release.platform}</span>
-                  <span>{rightsLabel(release.format)}</span>
+                  <span>{rightsLabel(release.format, t.rights)}</span>
                 </>
               ) : (
-                <span>Memuat katalog resmi Akbar Nawasunda.</span>
+                <span>{t.loadingMeta}</span>
               )}
             </p>
             <div className="an-rel-actions">
               <a
                 className="an-btn an-btn--solid"
-                href={release?.href || "/music"}
+                href={release?.href || t.musicHref}
                 target={release ? "_blank" : undefined}
                 rel={release ? "noreferrer" : undefined}
               >
-                <Play size={13} fill="currentColor" /> Dengar rilisan
+                <Play size={13} fill="currentColor" /> {t.listen}
               </a>
               <Link
                 className="an-btn an-btn--quiet"
-                href="/inquire?type=licensing&source=release"
+                href={t.licenseHref}
               >
-                Lisensi &amp; izin pakai <ArrowUpRight size={14} />
+                {t.license} <ArrowUpRight size={14} />
               </Link>
             </div>
           </div>
@@ -136,28 +208,30 @@ export default function ReleaseDetail() {
             <ResilientArtworkImage
               src={release?.artwork || officialBrand.socialPreview}
               backupSrc={officialBrand.socialPreview}
-              alt={release ? `Artwork ${release.title}` : "Artwork rilisan"}
+              alt={
+                release
+                  ? t.artworkAlt(release.title)
+                  : t.artworkFallbackAlt
+              }
               loading="eager"
               fetchPriority="high"
             />
             <figcaption className="an-rel-chip">
               <Disc3 size={15} aria-hidden="true" />{" "}
-              {release?.format || "Rilisan"}
+              {release?.format || t.chipFallback}
             </figcaption>
           </figure>
         </section>
 
         {/* Catatan & kredit: label kiri, teks kanan. */}
         <section className="an-section an-rel-story">
-          <p className="an-meta">Catatan &amp; kredit</p>
+          <p className="an-meta">{t.storyMeta}</p>
           <div className="an-rel-story-copy">
             <p>
-              {release?.story ||
-                "Buka rilisan ini melalui tautan resmi yang tersedia."}
+              {release?.story || t.storyFallback}
             </p>
             <div className="an-rel-credits">
-              {release?.credits ||
-                "Lihat kredit rilisan di platform resmi jika tersedia."}
+              {release?.credits || t.creditsFallback}
             </div>
           </div>
         </section>
@@ -166,11 +240,9 @@ export default function ReleaseDetail() {
         <section className="an-section" aria-labelledby="release-links-title">
           <header className="an-head">
             <h2 id="release-links-title" className="an-title">
-              Dengar &amp; pakai.
+              {t.linksTitle}
             </h2>
-            <p className="an-meta">
-              {links.length} tautan resmi · lisensi lewat studio
-            </p>
+            <p className="an-meta">{t.linksMeta(links.length)}</p>
           </header>
           <ul className="an-index an-rel-links">
             {links.map((link) => (
@@ -182,7 +254,7 @@ export default function ReleaseDetail() {
                   rel="noreferrer"
                 >
                   <span className="an-rel-link-label">{link.label}</span>
-                  <span className="an-rel-link-kind">Dengar</span>
+                  <span className="an-rel-link-kind">{t.linkKind}</span>
                   <ArrowUpRight size={16} aria-hidden="true" />
                 </a>
               </li>
@@ -190,12 +262,12 @@ export default function ReleaseDetail() {
             <li>
               <Link
                 className="an-index-row"
-                href="/inquire?type=licensing&source=release"
+                href={t.licenseHref}
               >
                 <span className="an-rel-link-label">
-                  {rightsAction(release?.format)}
+                  {rightsAction(release?.format, t.rightsAction)}
                 </span>
-                <span className="an-rel-link-kind">Lisensi</span>
+                <span className="an-rel-link-kind">{t.licenseKind}</span>
                 <ArrowUpRight size={16} aria-hidden="true" />
               </Link>
             </li>
@@ -204,13 +276,21 @@ export default function ReleaseDetail() {
 
         <section className="an-section an-rel-foot">
           <p className="an-meta">
-            <Music2 size={13} aria-hidden="true" /> Rilisan lain
+            <Music2 size={13} aria-hidden="true" /> {t.otherMeta}
           </p>
-          <Link className="an-btn an-btn--quiet" href="/music">
-            Lihat semua musik <ArrowUpRight size={14} />
+          <Link className="an-btn an-btn--quiet" href={t.musicHref}>
+            {t.allMusic} <ArrowUpRight size={14} />
           </Link>
         </section>
-      </main>
+    </main>
+  );
+}
+
+export default function ReleaseDetail() {
+  return (
+    <div className="nf-page">
+      <NightHeader active="/music" />
+      <ReleaseDetailView locale="id" />
       <NightFooter />
     </div>
   );

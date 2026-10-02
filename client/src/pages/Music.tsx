@@ -43,7 +43,134 @@ const releaseSlug = (value: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
-export default function Music() {
+/**
+ * Salinan katalog dua bahasa. `MusicView` dipakai `/music` dan `/en/music`,
+ * jadi pembuka, catatan rilisan, daftar kanal, pemutar, rail katalog, dan
+ * CTA selalu satu komposisi di kedua bahasa.
+ */
+const copy = {
+  id: {
+    heroKicker: (releases: number, channels: number) =>
+      `${releases} rilisan · ${channels} kanal`,
+    heroTitle: "Musik",
+    heroLede:
+      "Rilisan, remix, dan edit Akbar Nawasunda lewat kanal resmi. Setiap entri punya halaman sendiri: catatan, kredit, dan tautan platformnya.",
+    listenLatest: "Dengar rilisan terbaru",
+    openDetail: "Buka detail rilisan",
+    artworkAlt: (title: string) => `Artwork ${title}`,
+    loadingRelease: "Memuat rilisan",
+    latestRelease: "Rilisan terbaru",
+    noteMetaStory: "Catatan rilisan",
+    noteStoryFallback:
+      "Dengarkan versi ini melalui kanal SoundCloud resmi Akbar Nawasunda.",
+    creditsFallback:
+      "Lihat kredit rilisan di platform resmi jika tersedia.",
+    detailCta: "Detail rilisan",
+    channelsTitle: "Dengar di kanal resminya.",
+    channelsMeta: (count: number) =>
+      `${count} kanal resmi · rilisan, remix, set`,
+    channelAria: (label: string) => `Buka Akbar Nawasunda di ${label}`,
+    listenTitle: "Dengar langsung.",
+    listenMeta: "Player resmi · SoundCloud",
+    listenCopy:
+      "Pilih satu rilisan untuk mulai mendengar. Tautan resmi tetap tersedia kalau player tidak dibutuhkan.",
+    playerFallback: "Tautan resmi selalu tersedia.",
+    railTitle: "Semua rilisan.",
+    railMetaManaged: (count: number) => `${count} entri · dikelola di CMS`,
+    railMetaArchive: (count: number) => `${count} entri · arsip resmi`,
+    railControls: "Kontrol katalog rilisan",
+    railPrev: "Rilisan sebelumnya",
+    railNext: "Rilisan berikutnya",
+    railLabel: "Katalog rilisan Akbar Nawasunda",
+    bandTitle: "Rilisan ini juga tersedia di Spotify.",
+    bandCta: "Buka Spotify",
+    ctaTitle: (
+      <>
+        PAKAI KARYANYA
+        <br />
+        DI PROYEKMU.
+      </>
+    ),
+    ctaCopy:
+      "Butuh track untuk film, iklan, konten, atau ingin remix custom? Jalur lisensi dan brief produksi ada di satu tempat.",
+    ctaPrimary: "LISENSI MUSIK",
+    ctaSecondary: "MINTA REMIX",
+    licensingHref: "/licensing",
+    remixHref: "/inquire?type=remix&source=music",
+    musicHref: "/music",
+    signalTitle: (
+      <>
+        DENGARKAN
+        <br />
+        BERIKUTNYA.
+      </>
+    ),
+    signalCopy:
+      "Catatan rilisan, remix, dan jadwal dari kanal resmi langsung ke email kamu.",
+  },
+  en: {
+    heroKicker: (releases: number, channels: number) =>
+      `${releases} releases · ${channels} channels`,
+    heroTitle: "Music",
+    heroLede:
+      "Releases, remixes, and edits by Akbar Nawasunda through the official channels. Every entry has its own page: notes, credits, and platform links.",
+    listenLatest: "Hear the latest release",
+    openDetail: "Open release detail",
+    artworkAlt: (title: string) => `Artwork for ${title}`,
+    loadingRelease: "Loading release",
+    latestRelease: "Latest release",
+    noteMetaStory: "Release notes",
+    noteStoryFallback:
+      "Listen to this version through the official Akbar Nawasunda SoundCloud channel.",
+    creditsFallback:
+      "Check the release credits on the official platform where available.",
+    detailCta: "Release detail",
+    channelsTitle: "Listen on the official channels.",
+    channelsMeta: (count: number) =>
+      `${count} official channels · releases, remixes, sets`,
+    channelAria: (label: string) => `Open Akbar Nawasunda on ${label}`,
+    listenTitle: "Listen now.",
+    listenMeta: "Official player · SoundCloud",
+    listenCopy:
+      "Pick a release to start listening. The official links stay available if you do not need the player.",
+    playerFallback: "Official links are always available.",
+    railTitle: "All releases.",
+    railMetaManaged: (count: number) => `${count} entries · managed in the CMS`,
+    railMetaArchive: (count: number) => `${count} entries · official archive`,
+    railControls: "Release catalog controls",
+    railPrev: "Previous release",
+    railNext: "Next release",
+    railLabel: "Akbar Nawasunda release catalog",
+    bandTitle: "This release is also available on Spotify.",
+    bandCta: "Open Spotify",
+    ctaTitle: (
+      <>
+        USE THE WORK
+        <br />
+        IN YOUR PROJECT.
+      </>
+    ),
+    ctaCopy:
+      "Need a track for a film, ad, or content, or want a custom remix? The licensing route and the production brief live in one place.",
+    ctaPrimary: "MUSIC LICENSING",
+    ctaSecondary: "REQUEST A REMIX",
+    licensingHref: "/en/licensing",
+    remixHref: "/en/inquire?type=remix&source=music",
+    musicHref: "/en/music",
+    signalTitle: (
+      <>
+        HEAR WHAT
+        <br />
+        COMES NEXT.
+      </>
+    ),
+    signalCopy:
+      "Release notes, remixes, and dates from the official channel straight to your email.",
+  },
+} as const;
+
+export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
+  const t = copy[locale];
   const catalogRef = useRef<HTMLDivElement>(null);
   const cms = usePublicArtistContent();
   const editablePlatformLinks = publicPlatformLinks(cms.data);
@@ -117,23 +244,17 @@ export default function Music() {
     "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw";
 
   return (
-    <div className="nf-page music-reference-page">
-      <NightHeader active="/music" />
-      <main id="main-content" tabIndex={-1}>
+    <main id="main-content" tabIndex={-1}>
         {/* ADEGAN 1 — pembuka katalog. Artwork rilisan unggulan jadi subjek
             halaman, bukan latar belakang dekoratif di belakang judul. */}
         <section className="an-cat-hero" aria-labelledby="catalog-title">
           <div className="an-cat-hero-copy">
             <p className="an-kicker">
               <span className="an-kicker-dot" aria-hidden="true" />
-              {catalog.length} rilisan · {editablePlatformLinks.length} kanal
+              {t.heroKicker(catalog.length, editablePlatformLinks.length)}
             </p>
-            <h1 id="catalog-title">Musik</h1>
-            <p className="an-cat-lede">
-              Rilisan, remix, dan edit Akbar Nawasunda lewat kanal resmi.
-              Setiap entri punya halaman sendiri: catatan, kredit, dan tautan
-              platformnya.
-            </p>
+            <h1 id="catalog-title">{t.heroTitle}</h1>
+            <p className="an-cat-lede">{t.heroLede}</p>
             <div className="an-cat-hero-actions">
               <a
                 className="an-btn an-btn--solid"
@@ -141,13 +262,13 @@ export default function Music() {
                 target="_blank"
                 rel="noreferrer"
               >
-                <Play size={13} fill="currentColor" /> Dengar rilisan terbaru
+                <Play size={13} fill="currentColor" /> {t.listenLatest}
               </a>
               <Link
                 className="an-btn an-btn--quiet"
-                href={`/music/${releaseSlug(featured.title)}`}
+                href={`${t.musicHref}/${releaseSlug(featured.title)}`}
               >
-                Buka detail rilisan <ArrowUpRight size={14} />
+                {t.openDetail} <ArrowUpRight size={14} />
               </Link>
             </div>
           </div>
@@ -155,12 +276,12 @@ export default function Music() {
             <ResilientArtworkImage
               src={featured.artwork}
               backupSrc={officialBrand.socialPreview}
-              alt={`Artwork ${featured.title}`}
+              alt={t.artworkAlt(featured.title)}
               loading="eager"
               fetchPriority="high"
             />
             <figcaption>
-              <span>{cms.isLoading ? "Memuat rilisan" : "Rilisan terbaru"}</span>
+              <span>{cms.isLoading ? t.loadingRelease : t.latestRelease}</span>
               <strong>{featured.title}</strong>
             </figcaption>
           </figure>
@@ -170,24 +291,22 @@ export default function Music() {
         <Reveal>
           <section className="an-section an-cat-note">
             <p className="an-meta">
-              {featured.story ? "Catatan rilisan" : "Rilisan terbaru"}
+              {featured.story ? t.noteMetaStory : t.latestRelease}
             </p>
             <div className="an-cat-note-copy">
               <h2>{featured.title}</h2>
               <p>
-                {featured.story ||
-                  "Dengarkan versi ini melalui kanal SoundCloud resmi Akbar Nawasunda."}
+                {featured.story || t.noteStoryFallback}
               </p>
               <div className="an-rel-credits">
-                {featured.credits ||
-                  "Lihat kredit rilisan di platform resmi jika tersedia."}
+                {featured.credits || t.creditsFallback}
               </div>
               <div className="an-doc-actions">
                 <Link
                   className="an-btn an-btn--quiet"
-                  href={`/music/${releaseSlug(featured.title)}`}
+                  href={`${t.musicHref}/${releaseSlug(featured.title)}`}
                 >
-                  Detail rilisan <ArrowUpRight size={14} />
+                  {t.detailCta} <ArrowUpRight size={14} />
                 </Link>
               </div>
             </div>
@@ -201,10 +320,10 @@ export default function Music() {
         >
           <header className="an-head">
             <h2 id="channels-title" className="an-title">
-              Dengar di kanal resminya.
+              {t.channelsTitle}
             </h2>
             <p className="an-meta">
-              {editablePlatformLinks.length} kanal resmi · rilisan, remix, set
+              {t.channelsMeta(editablePlatformLinks.length)}
             </p>
           </header>
           <ul className="an-index">
@@ -215,7 +334,7 @@ export default function Music() {
                   href={platform.href}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
+                  aria-label={t.channelAria(platform.label)}
                 >
                   <span className="an-meta" aria-hidden="true">
                     {String(index + 1).padStart(2, "0")}
@@ -241,14 +360,11 @@ export default function Music() {
             <header className="an-head an-head--row">
               <div>
                 <h2 id="listen-title" className="an-title">
-                  Dengar langsung.
+                  {t.listenTitle}
                 </h2>
-                <p className="an-meta">Player resmi · SoundCloud</p>
+                <p className="an-meta">{t.listenMeta}</p>
               </div>
-              <p className="an-cat-lede">
-                Pilih satu rilisan untuk mulai mendengar. Tautan resmi tetap
-                tersedia kalau player tidak dibutuhkan.
-              </p>
+              <p className="an-cat-lede">{t.listenCopy}</p>
             </header>
             <div className="an-cat-listen-grid">
               {players.map(drop => {
@@ -270,7 +386,7 @@ export default function Music() {
                       embedUrl={soundcloudEmbedUrl(drop.url)}
                       artwork={known?.image || officialBrand.socialPreview}
                       backupArtwork={officialBrand.socialPreview}
-                      description="Tautan resmi selalu tersedia."
+                      description={t.playerFallback}
                     />
                   </AudioPlayerShell>
                 );
@@ -285,27 +401,28 @@ export default function Music() {
             <header className="an-head an-head--row">
               <div>
                 <h2 id="catalog-rail-title" className="an-title">
-                  Semua rilisan.
+                  {t.railTitle}
                 </h2>
                 <p className="an-meta">
-                  {catalog.length} entri ·{" "}
-                  {cmsReleases.length ? "dikelola di CMS" : "arsip resmi"}
+                  {cmsReleases.length
+                    ? t.railMetaManaged(catalog.length)
+                    : t.railMetaArchive(catalog.length)}
                 </p>
               </div>
               <div
                 className="an-catalog-controls"
-                aria-label="Kontrol katalog rilisan"
+                aria-label={t.railControls}
               >
                 <button
                   type="button"
-                  aria-label="Rilisan sebelumnya"
+                  aria-label={t.railPrev}
                   onClick={() => scrollCatalog(-1)}
                 >
                   <ArrowLeft size={15} />
                 </button>
                 <button
                   type="button"
-                  aria-label="Rilisan berikutnya"
+                  aria-label={t.railNext}
                   onClick={() => scrollCatalog(1)}
                 >
                   <ArrowRight size={15} />
@@ -316,20 +433,20 @@ export default function Music() {
               className="an-rail"
               ref={catalogRef}
               tabIndex={0}
-              aria-label="Katalog rilisan Akbar Nawasunda"
+              aria-label={t.railLabel}
             >
               {catalog.map((release, index) => (
                 <Link
                   key={`${release.title}-${index}`}
                   className="an-release"
-                  href={`/music/${releaseSlug(release.title)}`}
+                  href={`${t.musicHref}/${releaseSlug(release.title)}`}
                   data-signal-interactive
                 >
                   <span className="an-release-art">
                     <ResilientArtworkImage
                       src={artworkThumb(release.image)}
                       backupSrc={release.image}
-                      alt={`Artwork ${release.title}`}
+                      alt={t.artworkAlt(release.title)}
                     />
                   </span>
                   <span className="an-release-meta">
@@ -352,7 +469,7 @@ export default function Music() {
         {/* ADEGAN 6 — strip platform: satu ajakan, bukan satu section penuh. */}
         <section className="an-section an-cat-band" aria-labelledby="band-title">
           <h2 id="band-title" className="an-cat-band-title">
-            Rilisan ini juga tersedia di Spotify.
+            {t.bandTitle}
           </h2>
           <a
             className="an-btn an-btn--solid"
@@ -360,43 +477,42 @@ export default function Music() {
             target="_blank"
             rel="noreferrer"
           >
-            <PlatformIcon label="Spotify" /> Buka Spotify
+            <PlatformIcon label="Spotify" /> {t.bandCta}
           </a>
         </section>
 
         <CtaPanel
-          title={
-            <>
-              PAKAI KARYANYA
-              <br />
-              DI PROYEKMU.
-            </>
-          }
-          copy="Butuh track untuk film, iklan, konten, atau ingin remix custom? Jalur lisensi dan brief produksi ada di satu tempat."
+          title={t.ctaTitle}
+          copy={t.ctaCopy}
           actions={
             <>
-              <Link className="ed-button" href="/licensing">
-                LISENSI MUSIK <ArrowUpRight size={14} />
+              <Link className="ed-button" href={t.licensingHref}>
+                {t.ctaPrimary} <ArrowUpRight size={14} />
               </Link>
-              <Link className="ed-button--ghost" href="/inquire?type=remix&source=music">
-                MINTA REMIX <ArrowRight size={14} />
+              <Link className="ed-button--ghost" href={t.remixHref}>
+                {t.ctaSecondary} <ArrowRight size={14} />
               </Link>
             </>
           }
         />
 
-        <FanSignalSection
-          source={FAN_SIGNAL_SOURCES.music}
-          title={
-            <>
-              DENGARKAN
-              <br />
-              BERIKUTNYA.
-            </>
-          }
-          description="Catatan rilisan, remix, dan jadwal dari kanal resmi langsung ke email kamu."
-        />
-      </main>
+        {/* Formulir FanSignal masih berbahasa Indonesia: hanya rute ID. */}
+        {locale === "id" ? (
+          <FanSignalSection
+            source={FAN_SIGNAL_SOURCES.music}
+            title={t.signalTitle}
+            description={t.signalCopy}
+          />
+        ) : null}
+    </main>
+  );
+}
+
+export default function Music() {
+  return (
+    <div className="nf-page music-reference-page">
+      <NightHeader active="/music" />
+      <MusicView locale="id" />
       <NightFooter />
     </div>
   );
