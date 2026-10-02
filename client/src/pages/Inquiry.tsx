@@ -120,7 +120,7 @@ export default function Inquiry() {
   return (
     <div className="nf-page an-inquiry-page">
       <NightHeader />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section className="an-inquiry-hero">
           <h1>{current.title}</h1>
           <p>{current.intro}</p>

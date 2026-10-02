@@ -93,7 +93,7 @@ export default function Universe() {
   return (
     <div className="nf-page an-archive-page">
       <NightHeader active="/universe" />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section
           className="nf-page-hero an-archive-hero"
           style={

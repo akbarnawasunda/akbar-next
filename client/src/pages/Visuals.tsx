@@ -76,7 +76,7 @@ export default function Visuals() {
   return (
     <div className="nf-page">
       <NightHeader active="/visuals" />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section
           className="nf-page-hero"
           style={

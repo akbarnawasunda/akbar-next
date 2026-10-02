@@ -15,8 +15,7 @@ export interface MobileSlideMenuProps {
 }
 
 /**
- * MobileSlideMenu forwards to the Framer Motion powered MobileNav component
- * for smooth drawer animations and full accessibility.
+ * MobileSlideMenu forwards to MobileNav, whose drawer transition is CSS-based.
  */
 export function MobileSlideMenu({
   open,

@@ -10,6 +10,7 @@ import {
 import { Toaster } from "@/components/ui/sonner";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
+import { ScrollProgress } from "./components/ScrollProgress";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
 type PreloadableComponent<T extends React.ComponentType<any>> = T & {
@@ -148,10 +149,6 @@ export async function preloadPublicRoute(pathname: string) {
 }
 
 import LegacyDocument from "./components/LegacyDocument";
-import { ScrollProgress } from "./components/ScrollProgress";
-import { SmoothScroll } from "./components/SmoothScroll";
-import { MotionOrchestrator } from "./components/MotionOrchestrator";
-import { NightFrequencySignature } from "./components/NightFrequencySignature";
 import { PublicShell } from "./shell/PublicShell";
 import { StructuredData } from "./components/StructuredData";
 import { trpc } from "./lib/trpc";
@@ -162,7 +159,6 @@ import "./components/MaturePalette.css";
 import "./components/BrandSystem.css";
 import "./components/RouteMotion.css";
 import { PageLoading, RouteProgress } from "./components/RouteTransition";
-import "./components/NightFrequencySignature.css";
 
 function Router() {
   return (
@@ -445,12 +441,9 @@ function App() {
             <Toaster />
             <ScrollProgress />
             <RouteProgress />
-            <SmoothScroll />
             <CmsMetadata />
             <StructuredData />
-            <MotionOrchestrator />
             <RouteMotion />
-            <NightFrequencySignature />
           </PublicShell>
         </TooltipProvider>
       </ThemeProvider>

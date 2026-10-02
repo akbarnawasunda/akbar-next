@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { isWhiteLabelMediaPath, publicMediaUrl } from "../client/src/lib/publicMedia";
-import { sanitizePublicDocuments, whiteLabelMediaUrl } from "./publicMediaPolicy";
+import { localMediaFallback, sanitizePublicDocuments, whiteLabelMediaUrl } from "./publicMediaPolicy";
 
 const source = (path: string) =>
   readFileSync(resolve(process.cwd(), path), "utf8");
@@ -14,6 +14,12 @@ describe("white-label public media", () => {
     expect(publicMediaUrl("https://i1.sndcdn.com/artworks-demo.jpg")).toBe("https://i1.sndcdn.com/artworks-demo.jpg");
     expect(isWhiteLabelMediaPath("/media/portrait/neon-portrait.jpg")).toBe(true);
     expect(sanitizePublicDocuments([{ id: 1, payload: { heroImage: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663907101550/zMxYKACXxuHdtyVJ.jpg" } }])).toEqual([{ id: 1, payload: { heroImage: "/media/portrait/kx07-portrait.jpg" } }]);
+  });
+
+  it("uses existing local brand artwork when an upstream media host is unavailable", () => {
+    expect(localMediaFallback("/media/portrait/neon-portrait.jpg")).toBe("/assets/akbar-nawasunda-official-portrait.webp");
+    expect(localMediaFallback("/media/brand/rmx-mark.jpg")).toBe("/assets/akbar-rmx-mark.webp");
+    expect(localMediaFallback("/media/unknown.jpg")).toBeUndefined();
   });
 
   it("keeps the proxy allowlisted and ordered before the generic SSR route", () => {

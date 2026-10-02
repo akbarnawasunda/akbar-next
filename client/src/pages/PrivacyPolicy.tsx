@@ -73,7 +73,7 @@ export default function PrivacyPolicy() {
   return (
     <div className="nf-page an-privacy-page">
       <NightHeader />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section className="an-privacy-hero">
           <div className="an-privacy-hero-copy">
             <h1>PRIVACY<br />POLICY.</h1>

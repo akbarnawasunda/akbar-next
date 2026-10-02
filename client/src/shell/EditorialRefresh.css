@@ -1,0 +1,1281 @@
+/*
+ * Akbar Nawasunda — editorial refresh
+ * A quiet, image-led system shared by all public Indonesian and English routes.
+ * The existing locally hosted typefaces are kept; hierarchy and spacing do the work.
+ */
+.an-public-shell.an-editorial {
+  --ink: #101211;
+  --ink-soft: #171a18;
+  --ink-card: #1b1e1c;
+  --ink-hover: #232724;
+  --paper: #f1efe9;
+  --paper-soft: #d5d2ca;
+  --paper-line: rgb(241 239 233 / 14%);
+  --ink-line: rgb(241 239 233 / 13%);
+  --acid: #9bb9c1;
+  --acid-rgb: 155, 185, 193;
+  --signal: #9bb9c1;
+  --mute: #a6a69f;
+  --mute-soft: #777a74;
+  --font-display: "Clash Display", "General Sans", sans-serif;
+  --font-body:
+    "General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Azeret Mono", ui-monospace, SFMono-Regular, monospace;
+  --editorial-gutter: clamp(22px, 6vw, 104px);
+  --editorial-rule: rgb(241 239 233 / 14%);
+  --editorial-accent: #9bb9c1;
+  min-height: 100%;
+  color: var(--paper);
+  background: var(--ink);
+  font-family: var(--font-body);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.an-public-shell.an-editorial,
+.an-public-shell.an-editorial * {
+  box-sizing: border-box;
+}
+
+.an-public-shell.an-editorial :is(.an-site, .nf-page, .en-page) {
+  --gutter: var(--editorial-gutter);
+  --hx-gutter: var(--editorial-gutter);
+  min-height: 100svh;
+  overflow-x: clip;
+  color: var(--paper);
+  background: var(--ink) !important;
+  font-family: var(--font-body);
+}
+
+.an-public-shell.an-editorial :is(.an-site, .nf-page) p {
+  font-family: var(--font-body);
+  line-height: 1.7;
+}
+
+.an-public-shell.an-editorial :is(.nf-page, .an-site) :is(h1, h2, h3, h4) {
+  font-family: var(--font-display);
+  font-synthesis: none;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.an-public-shell.an-editorial :is(.nf-page, .an-site) :is(p, li) {
+  text-wrap: pretty;
+}
+
+.an-public-shell.an-editorial
+  :is(.nf-page, .an-site)
+  :is(a, button, input, select, textarea) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.an-public-shell.an-editorial
+  :is(.nf-page, .an-site)
+  :is(a, button):focus-visible,
+.an-public-shell.an-editorial
+  :is(.nf-page, .an-site)
+  :is(input, select, textarea):focus-visible {
+  outline: 2px solid var(--editorial-accent);
+  outline-offset: 4px;
+}
+
+.an-skip-link {
+  position: absolute;
+  z-index: 10000;
+  top: 12px;
+  left: 12px;
+  padding: 11px 15px;
+  transform: translateY(-160%);
+  border: 1px solid var(--paper-line);
+  background: var(--paper);
+  color: var(--ink);
+  font: 600 14px/1.2 var(--font-body);
+  text-decoration: none;
+  transition: transform 150ms ease;
+}
+.an-skip-link:focus {
+  transform: translateY(0);
+}
+
+#main-content:focus {
+  outline: none;
+}
+
+.an-public-shell.an-editorial .an-scroll-progress {
+  position: fixed;
+  z-index: 95;
+  inset: 0 0 auto;
+  height: 1px;
+  pointer-events: none;
+  background: transparent;
+}
+
+.an-public-shell.an-editorial .an-scroll-progress span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--editorial-accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.an-public-shell.an-editorial :is(#main-content, #top) {
+  scroll-margin-top: 84px;
+}
+
+.an-public-shell.an-editorial .an-site .an-reveal {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  will-change: auto !important;
+}
+
+/* Shared navigation: a calm editorial masthead, not a control panel. */
+.an-public-shell.an-editorial .nf-desktop-hud,
+.an-public-shell.an-editorial .an-shell-hint {
+  display: none !important;
+}
+
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-nav {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: clamp(16px, 2.5vw, 36px);
+  min-height: 76px;
+  height: auto;
+  padding: 0 var(--editorial-gutter);
+  border: 0;
+  border-bottom: 1px solid var(--editorial-rule);
+  background: rgb(16 18 17 / 97%) !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-wordmark {
+  gap: 11px;
+  min-width: 0;
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.075em;
+  text-transform: none;
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-brand-logo {
+  width: 34px;
+  height: 34px;
+  padding: 3px;
+  border: 1px solid var(--editorial-rule);
+  border-radius: 50%;
+  background: transparent;
+  object-fit: contain;
+}
+
+.an-public-shell.an-editorial .nf-nav nav {
+  display: flex;
+  justify-self: end;
+  gap: clamp(14px, 1.75vw, 28px);
+}
+
+.an-public-shell.an-editorial .nf-nav nav a {
+  position: relative;
+  padding: 9px 0;
+  color: var(--mute);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: color 160ms ease;
+}
+
+.an-public-shell.an-editorial .nf-nav nav a::after {
+  height: 1px;
+  background: var(--editorial-accent);
+  transform-origin: center;
+}
+
+.an-public-shell.an-editorial .nf-nav nav a:hover,
+.an-public-shell.an-editorial .nf-nav nav a:focus-visible,
+.an-public-shell.an-editorial .nf-nav nav a.is-active {
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-language-switcher {
+  gap: 7px;
+  color: var(--mute-soft);
+  font-family: var(--font-body);
+  font-size: 0.73rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.an-public-shell.an-editorial .an-language-switcher a {
+  padding: 6px 0;
+}
+
+.an-public-shell.an-editorial .an-language-switcher a.is-active,
+.an-public-shell.an-editorial .an-language-switcher a:hover {
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-signal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 13px;
+  border: 1px solid var(--editorial-rule) !important;
+  border-radius: 2px !important;
+  background: transparent !important;
+  color: var(--paper) !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.an-public-shell.an-editorial .nf-nav .nf-signal:hover,
+.an-public-shell.an-editorial .nf-nav .nf-signal:focus-visible {
+  border-color: var(--editorial-accent) !important;
+  background: rgb(155 185 193 / 8%) !important;
+  color: var(--paper) !important;
+}
+
+.an-public-shell.an-editorial .nf-menu-toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--editorial-rule);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--paper);
+}
+
+/* Shared page hero. Keep the photograph, remove the radial glow and grid. */
+.an-public-shell.an-editorial .nf-page .nf-page-hero,
+.an-public-shell.an-editorial .nf-page .nf-epk-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(210px, 0.55fr);
+  align-items: end;
+  gap: clamp(30px, 7vw, 112px);
+  min-height: min(710px, calc(100svh - 76px));
+  padding: clamp(72px, 10vw, 144px) var(--editorial-gutter)
+    clamp(48px, 7vh, 88px);
+  border: 0;
+  border-bottom: 1px solid var(--editorial-rule);
+  background-color: var(--ink) !important;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgb(16 18 17 / 93%) 0%,
+      rgb(16 18 17 / 76%) 42%,
+      rgb(16 18 17 / 24%) 100%
+    ),
+    linear-gradient(0deg, rgb(16 18 17 / 52%), transparent 52%),
+    var(--page-image, none) !important;
+  background-position: center;
+  background-size: cover;
+  box-shadow: none;
+}
+
+.an-public-shell.an-editorial .nf-page .nf-page-hero > div:first-child,
+.an-public-shell.an-editorial .nf-page .nf-epk-hero > div:first-child {
+  max-width: 760px;
+}
+
+.an-public-shell.an-editorial .nf-page :is(.nf-page-hero, .nf-epk-hero) h1 {
+  max-width: 12ch;
+  margin: 0 0 22px;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(3.6rem, 8vw, 7.8rem) !important;
+  font-weight: 500;
+  letter-spacing: -0.065em !important;
+  line-height: 0.88 !important;
+}
+
+.an-public-shell.an-editorial .nf-page :is(.nf-page-hero, .nf-epk-hero) h1 em {
+  color: var(--editorial-accent);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.an-public-shell.an-editorial
+  .nf-page
+  :is(.nf-page-hero, .nf-epk-hero)
+  p:not(.nf-page-eyebrow) {
+  max-width: 50ch;
+  margin: 0;
+  color: var(--paper-soft);
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.25vw, 1.13rem);
+  line-height: 1.7;
+}
+
+.an-public-shell.an-editorial
+  .nf-page
+  :is(
+    .nf-page-eyebrow,
+    .eyebrow,
+    .mono-label,
+    .an-section-index,
+    .release-number
+  ) {
+  color: var(--editorial-accent) !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.11em !important;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.an-public-shell.an-editorial .nf-page .nf-page-eyebrow::before {
+  background: var(--editorial-accent) !important;
+}
+
+.an-public-shell.an-editorial .nf-page .nf-hero-note {
+  justify-self: end;
+  align-self: end;
+  width: min(100%, 310px);
+  max-width: 310px;
+  padding: 0 0 0 18px;
+  border: 0 !important;
+  border-left: 1px solid var(--editorial-accent) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.an-public-shell.an-editorial .nf-page .nf-hero-note > span {
+  margin-bottom: 9px;
+  color: var(--editorial-accent) !important;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.an-public-shell.an-editorial .nf-page .nf-hero-note > strong {
+  margin-bottom: 16px;
+  color: var(--paper) !important;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.1vw, 1.8rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+/* Avoid forced GPU layers from the former transition-heavy page shell. */
+.an-public-shell.an-editorial .nf-page :is(.nf-section, .nf-page-hero) {
+  transform: none;
+  backface-visibility: visible;
+}
+
+/* Reading rhythm and section cadence across every public page. */
+.an-public-shell.an-editorial .nf-page .nf-section,
+.an-public-shell.an-editorial .nf-page .ed-section {
+  padding: clamp(68px, 8.6vw, 124px) var(--editorial-gutter) !important;
+  border-top: 1px solid var(--editorial-rule) !important;
+  background: var(--ink) !important;
+  background-image: none !important;
+}
+
+.an-public-shell.an-editorial .nf-page .nf-section.dark-panel,
+.an-public-shell.an-editorial .nf-page .dark-panel,
+.an-public-shell.an-editorial .nf-page .ed-section--panel {
+  background: #141715 !important;
+  background-image: none !important;
+}
+
+.an-public-shell.an-editorial .nf-page .nf-section-title {
+  gap: 20px 48px;
+  margin-bottom: clamp(30px, 4vw, 56px);
+}
+
+.an-public-shell.an-editorial .nf-page .nf-section-title h2,
+.an-public-shell.an-editorial .nf-page .ed-head__title,
+.an-public-shell.an-editorial .nf-page .ed-cta__title {
+  max-width: 14ch;
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 5rem) !important;
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 0.94;
+}
+
+.an-public-shell.an-editorial .nf-page .nf-section-title > p,
+.an-public-shell.an-editorial .nf-page .ed-head__lede,
+.an-public-shell.an-editorial .nf-page .ed-cta__copy {
+  max-width: 48ch;
+  margin: 0;
+  color: var(--mute);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.an-public-shell.an-editorial
+  .nf-page
+  :is(
+    .nf-catalog-card,
+    .nf-visual-card,
+    .nf-event-card,
+    .nf-universe-card,
+    .an-event-card,
+    .an-booking-card,
+    .an-license-grid article,
+    .an-privacy-collection-card,
+    .an-profile-fact,
+    .an-epk-capability,
+    .an-archive-route-list a
+  ),
+.an-public-shell.an-editorial
+  .an-site
+  :is(.release-card, .video-card, .home-live-event, .home-platform-card) {
+  border: 1px solid var(--editorial-rule) !important;
+  border-radius: 2px !important;
+  background: #141715 !important;
+  box-shadow: none !important;
+  transform: none;
+}
+
+.an-public-shell.an-editorial
+  .nf-page
+  :is(
+    .nf-catalog-card,
+    .nf-visual-card,
+    .nf-event-card,
+    .nf-universe-card,
+    .an-event-card,
+    .an-booking-card,
+    .an-license-grid article,
+    .an-privacy-collection-card,
+    .an-epk-capability,
+    .an-archive-route-list a
+  ):hover,
+.an-public-shell.an-editorial
+  .an-site
+  :is(.release-card, .video-card, .home-live-event, .home-platform-card):hover {
+  border-color: rgb(155 185 193 / 42%) !important;
+  box-shadow: none !important;
+  transform: translateY(-2px);
+}
+
+.an-public-shell.an-editorial .nf-page .nf-button,
+.an-public-shell.an-editorial .nf-page .nf-text-button,
+.an-public-shell.an-editorial .nf-page .an-inquiry-submit,
+.an-public-shell.an-editorial .nf-page .ed-button,
+.an-public-shell.an-editorial .nf-page .ed-button--ghost,
+.an-public-shell.an-editorial
+  .an-site
+  :is(
+    .button-primary,
+    .button-quiet,
+    .text-link,
+    .home-deck-cta,
+    .release-play-toggle
+  ) {
+  min-height: 42px;
+  border-radius: 2px !important;
+  box-shadow: none !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.045em;
+  line-height: 1.2;
+  text-transform: none;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.an-public-shell.an-editorial .nf-page .nf-button,
+.an-public-shell.an-editorial .nf-page .an-inquiry-submit,
+.an-public-shell.an-editorial .an-site .button-primary {
+  padding: 0 17px;
+  border: 1px solid var(--paper) !important;
+  background: var(--paper) !important;
+  color: var(--ink) !important;
+}
+
+.an-public-shell.an-editorial .nf-page .nf-button:hover,
+.an-public-shell.an-editorial .nf-page .an-inquiry-submit:hover,
+.an-public-shell.an-editorial .nf-page .an-inquiry-submit:focus-visible,
+.an-public-shell.an-editorial .an-site .button-primary:hover {
+  border-color: var(--editorial-accent) !important;
+  background: var(--editorial-accent) !important;
+  color: var(--ink) !important;
+  transform: translateY(-1px);
+}
+
+.an-public-shell.an-editorial .nf-page :is(.nf-text-button, .ed-button--ghost),
+.an-public-shell.an-editorial
+  .an-site
+  :is(.button-quiet, .text-link, .home-deck-cta) {
+  padding: 9px 0;
+  border: 0;
+  border-bottom: 1px solid var(--editorial-rule);
+  background: transparent !important;
+  color: var(--paper) !important;
+}
+
+.an-public-shell.an-editorial
+  .nf-page
+  :is(.nf-text-button, .ed-button--ghost):hover,
+.an-public-shell.an-editorial
+  .an-site
+  :is(.button-quiet, .text-link, .home-deck-cta):hover {
+  border-bottom-color: var(--editorial-accent);
+  color: var(--editorial-accent) !important;
+}
+
+/* Home and inner pages: remove decorative noise and ambient particle layers. */
+.an-public-shell.an-editorial .nf-page::before,
+.an-public-shell.an-editorial .nf-page .home-ambient-canvas {
+  display: none !important;
+  content: none !important;
+  opacity: 0 !important;
+}
+
+/* Home: portrait-led, one clear statement, no animated grid or noise overlay. */
+.an-public-shell.an-editorial .an-site::before {
+  display: none !important;
+  content: none !important;
+}
+
+.an-public-shell.an-editorial .an-site .an-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.8fr);
+  grid-template-rows: 1fr;
+  align-items: center;
+  gap: clamp(30px, 6vw, 96px);
+  min-height: min(820px, calc(100svh - 76px)) !important;
+  padding: clamp(48px, 7vw, 104px) var(--editorial-gutter)
+    clamp(56px, 7vw, 100px) !important;
+  border: 0 !important;
+  background: var(--ink) !important;
+  background-image: none !important;
+}
+
+.an-public-shell.an-editorial .an-site .an-hero::before,
+.an-public-shell.an-editorial .an-site .an-hero::after,
+.an-public-shell.an-editorial .an-site .an-hero-dots,
+.an-public-shell.an-editorial .an-site .hero-scroll-cue {
+  display: none !important;
+  content: none !important;
+  animation: none !important;
+}
+
+.an-public-shell.an-editorial .an-site .hero-copy {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  max-width: 740px;
+  padding: 0 !important;
+}
+
+.an-public-shell.an-editorial .an-site .hero-copy .eyebrow {
+  gap: 10px;
+  margin: 0 0 clamp(18px, 2.5vw, 32px);
+  color: var(--editorial-accent);
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  animation: none !important;
+}
+
+.an-public-shell.an-editorial .an-site .hero-copy .eyebrow > span {
+  width: 22px;
+  background: var(--editorial-accent);
+}
+
+.an-public-shell.an-editorial .an-site .hero-copy .hero-title-editorial {
+  max-width: 9ch;
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 8.4vw, 8.7rem) !important;
+  font-weight: 600;
+  letter-spacing: -0.075em;
+  line-height: 0.82 !important;
+  text-shadow: none;
+  text-transform: none;
+}
+
+.an-public-shell.an-editorial .an-site .hero-copy .hero-title-word,
+.an-public-shell.an-editorial .an-site .hero-copy .hero-title-mask {
+  opacity: 1;
+  transform: none;
+  animation: none !important;
+}
+
+.an-public-shell.an-editorial .an-site .hero-copy .hero-title-mask::after {
+  display: none !important;
+  content: none !important;
+}
+
+.an-public-shell.an-editorial .an-site .hero-description {
+  max-width: 44ch;
+  margin: clamp(24px, 3vw, 38px) 0 0;
+  color: var(--paper-soft);
+  font-size: clamp(1rem, 1.25vw, 1.14rem);
+  line-height: 1.75;
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+.an-public-shell.an-editorial .an-site .hero-actions {
+  gap: 10px 22px;
+  margin-top: 26px;
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+.an-public-shell.an-editorial .an-site .home-hero-portrait {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  width: min(100%, 510px) !important;
+  height: min(69vh, 680px) !important;
+  min-height: 400px;
+  border: 0 !important;
+  border-radius: 2px;
+  background: var(--ink-soft);
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.an-public-shell.an-editorial .an-site .home-hero-portrait:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.an-public-shell.an-editorial .an-site .home-hero-portrait img {
+  filter: none;
+  object-position: 50% 28%;
+}
+
+.an-public-shell.an-editorial .an-site .desktop-stage-deck {
+  inset: auto 0 0;
+  padding: 16px 18px;
+  border: 0;
+  border-top: 1px solid rgb(241 239 233 / 24%);
+  background: rgb(16 18 17 / 88%);
+  box-shadow: none;
+}
+
+.an-public-shell.an-editorial .an-site .desktop-stage-specs,
+.an-public-shell.an-editorial .an-site .hero-mascot-doodle {
+  display: none !important;
+}
+
+.an-public-shell.an-editorial
+  .an-site
+  :is(.section, .home-signal-deck, .signal-section) {
+  padding: clamp(64px, 8vw, 116px) var(--editorial-gutter) !important;
+  border-top: 1px solid var(--editorial-rule) !important;
+  background: var(--ink) !important;
+  background-image: none !important;
+}
+
+.an-public-shell.an-editorial .an-site .section h2,
+.an-public-shell.an-editorial .an-site .signal-section h2 {
+  max-width: 15ch;
+  margin: 0;
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(2.55rem, 5.5vw, 5.6rem) !important;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 0.9;
+  text-shadow: none;
+}
+
+.an-public-shell.an-editorial .an-site .section-heading,
+.an-public-shell.an-editorial .an-site .section-inline {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: clamp(28px, 4vw, 52px);
+}
+
+.an-public-shell.an-editorial .an-site .section-heading::after,
+.an-public-shell.an-editorial .an-site .section-inline::after {
+  display: none !important;
+  content: none !important;
+}
+
+.an-public-shell.an-editorial .an-site .eyebrow,
+.an-public-shell.an-editorial .an-site .mono-label {
+  color: var(--editorial-accent);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.an-public-shell.an-editorial .an-site .feature-release,
+.an-public-shell.an-editorial .nf-page .an-story-section {
+  gap: clamp(30px, 6vw, 92px);
+}
+
+.an-public-shell.an-editorial .an-site .release-cover,
+.an-public-shell.an-editorial .nf-page .an-story-art,
+.an-public-shell.an-editorial .nf-page .artist-photo-story-image {
+  border: 0;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.an-public-shell.an-editorial .an-site .release-detail h3,
+.an-public-shell.an-editorial .nf-page .an-story-copy h2 {
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.3vw, 4rem);
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+}
+
+.an-public-shell.an-editorial .an-site .home-platform-card {
+  min-height: 70px;
+  padding: 14px 16px;
+  border-radius: 2px !important;
+}
+
+.an-public-shell.an-editorial .an-site .home-platform-icon-shell {
+  border: 0;
+  background: transparent;
+}
+
+/* Embeds are deliberate listening choices, not glowing dashboard widgets. */
+.an-public-shell.an-editorial
+  :is(.nf-page, .an-site)
+  :is(
+    .an-official-media,
+    .an-music-embed,
+    .an-music-embed-card,
+    .an-music-embed-container
+  ) {
+  border: 1px solid var(--editorial-rule) !important;
+  border-radius: 2px !important;
+  background: #141715 !important;
+  box-shadow: none !important;
+  transform: none;
+}
+
+.an-public-shell.an-editorial .nf-page .an-official-media::before {
+  display: none !important;
+  content: none !important;
+}
+
+.an-public-shell.an-editorial .nf-page .an-official-media-art {
+  aspect-ratio: 16 / 9;
+  background: #0c0e0d;
+}
+
+.an-public-shell.an-editorial .nf-page .an-official-media-art img {
+  opacity: 0.96;
+  transition: opacity 180ms ease;
+}
+
+.an-public-shell.an-editorial .nf-page .an-official-media:hover {
+  border-color: rgb(155 185 193 / 45%) !important;
+  box-shadow: none !important;
+  transform: none;
+}
+
+.an-public-shell.an-editorial .nf-page .an-official-media-copy {
+  padding: 18px 20px 4px;
+}
+
+.an-public-shell.an-editorial .nf-page .an-official-media-copy :is(p, small) {
+  color: var(--mute) !important;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  letter-spacing: 0.015em;
+  line-height: 1.55;
+  text-transform: none;
+}
+
+.an-public-shell.an-editorial .nf-page .an-official-media-copy h3 {
+  color: var(--paper) !important;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+}
+
+.an-public-shell.an-editorial .nf-page .an-official-media-actions {
+  gap: 10px;
+  padding: 16px 20px 20px;
+}
+
+.an-public-shell.an-editorial
+  .nf-page
+  .an-official-media-actions
+  :is(a, button),
+.an-public-shell.an-editorial .nf-page .an-music-embed :is(a, button) {
+  min-height: 42px;
+  border-radius: 2px;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.an-public-shell.an-editorial .nf-page .an-official-media-actions a {
+  border-color: var(--paper);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.an-public-shell.an-editorial .nf-page .an-official-media-actions button {
+  border-color: var(--editorial-rule);
+  background: transparent;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .nf-page .an-official-player-wrap {
+  border-top-color: var(--editorial-rule);
+  background: var(--ink);
+}
+
+.an-public-shell.an-editorial :is(.nf-page, .an-site) .an-music-embed {
+  border-radius: 2px;
+  border-color: var(--editorial-rule);
+  background: #141715;
+  box-shadow: none;
+}
+
+.an-public-shell.an-editorial :is(.nf-page, .an-site) .an-music-embed:hover {
+  border-color: rgb(155 185 193 / 45%);
+  box-shadow: none;
+}
+
+.an-public-shell.an-editorial :is(.nf-page, .an-site) .an-embed-placeholder {
+  background: #141715;
+}
+
+.an-public-shell.an-editorial :is(.nf-page, .an-site) .an-embed-loading-text {
+  color: var(--mute);
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  letter-spacing: 0.015em;
+  text-transform: none;
+}
+
+.an-public-shell.an-editorial :is(.nf-page, .an-site) .an-eq-bar {
+  box-shadow: none;
+  animation: none;
+}
+
+/* Contact, licensing, EPK and privacy: readable forms and editorial panels. */
+.an-public-shell.an-editorial .nf-page :is(.an-inquiry-hero, .an-privacy-hero) {
+  padding: clamp(72px, 10vw, 140px) var(--editorial-gutter);
+  border-bottom: 1px solid var(--editorial-rule);
+  background: var(--ink);
+}
+
+.an-public-shell.an-editorial .nf-page .an-inquiry-hero h1,
+.an-public-shell.an-editorial .nf-page .an-privacy-hero h1 {
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 7vw, 6.4rem);
+  font-weight: 500;
+  letter-spacing: -0.065em;
+  line-height: 0.9;
+}
+
+.an-public-shell.an-editorial
+  .nf-page
+  :is(.an-inquiry-shell, .an-privacy-reading) {
+  padding: clamp(54px, 7vw, 96px) var(--editorial-gutter);
+  border-top: 1px solid var(--editorial-rule);
+  background: var(--ink) !important;
+  background-image: none !important;
+}
+
+.an-public-shell.an-editorial
+  .nf-page
+  :is(.an-inquiry-form, .an-inquiry-contact-column, .an-privacy-posture) {
+  border: 1px solid var(--editorial-rule);
+  border-radius: 2px;
+  background: #141715;
+  box-shadow: none;
+}
+
+.an-public-shell.an-editorial
+  .nf-page
+  :is(
+    .an-inquiry-form input,
+    .an-inquiry-form textarea,
+    .an-inquiry-form select
+  ) {
+  border: 1px solid var(--editorial-rule);
+  border-radius: 2px;
+  background: #0f1110;
+  color: var(--paper);
+  font-family: var(--font-body);
+}
+
+.an-public-shell.an-editorial .nf-page .an-inquiry-type-row button {
+  min-height: 38px;
+  padding: 0 13px;
+  border: 1px solid var(--editorial-rule);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--mute);
+  font-family: var(--font-body);
+  font-size: 0.76rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.an-public-shell.an-editorial .nf-page .an-inquiry-type-row button.is-active {
+  border-color: var(--editorial-accent);
+  background: #222826;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial
+  .nf-page
+  :is(
+    .an-inquiry-form label,
+    .an-inquiry-column-label,
+    .an-privacy-posture-label
+  ) {
+  color: var(--mute);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.an-public-shell.an-editorial
+  .nf-page
+  :is(.an-privacy-block, .an-license-terms, .an-privacy-collection-card) {
+  border-color: var(--editorial-rule);
+  box-shadow: none;
+}
+
+/* Footer: quiet close to the page rather than another card grid. */
+.an-public-shell.an-editorial .nf-page .nf-footer,
+.an-public-shell.an-editorial .an-site .nf-footer {
+  gap: 34px clamp(28px, 5vw, 76px);
+  padding: clamp(44px, 6vw, 78px) var(--editorial-gutter) 28px;
+  border-top: 1px solid var(--editorial-rule);
+  background: #0d0f0e;
+}
+
+.an-public-shell.an-editorial .nf-footer-column > span,
+.an-public-shell.an-editorial .nf-footer .footer-bottom {
+  color: var(--mute-soft);
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+}
+
+.an-public-shell.an-editorial .nf-footer-column a {
+  color: var(--paper-soft);
+  font-size: 0.88rem;
+}
+
+.an-public-shell.an-editorial .nf-footer-column a:hover {
+  color: var(--editorial-accent);
+  transform: none;
+}
+
+.an-public-shell.an-editorial .nf-footer-mascot,
+.an-public-shell.an-editorial .nf-footer-mascot img {
+  animation: none;
+  box-shadow: none;
+}
+
+/* The navigation drawer is portaled to document.body, so theme it locally. */
+.nf-mobile-drawer-root {
+  --ink: #101211;
+  --ink-soft: #171a18;
+  --paper: #f1efe9;
+  --paper-soft: #d5d2ca;
+  --paper-line: rgb(241 239 233 / 14%);
+  --acid: #9bb9c1;
+  --acid-rgb: 155, 185, 193;
+  --mute: #a6a69f;
+  --mute-soft: #777a74;
+  --font-display: "Clash Display", "General Sans", sans-serif;
+  --font-body:
+    "General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Azeret Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+.nf-mobile-drawer-root {
+  transition:
+    opacity 240ms ease,
+    visibility 0s linear;
+}
+
+.nf-mobile-drawer-root:not(.is-open) {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition-delay: 0s, 280ms;
+}
+
+.nf-mobile-drawer-root.is-open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition-delay: 0s, 0s;
+}
+
+.nf-mobile-drawer-backdrop {
+  background: rgb(8 10 9 / 72%) !important;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.nf-mobile-drawer-root.is-open .nf-mobile-drawer-backdrop {
+  opacity: 1;
+}
+
+.nf-mobile-drawer-root .nf-mobile-drawer-panel {
+  max-width: min(420px, 92vw);
+  border-left: 1px solid var(--paper-line);
+  background: #141715;
+  background-image: none;
+  box-shadow: none;
+  font-family: var(--font-body);
+  transform: translateX(100%);
+  transition: transform 280ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+
+.nf-mobile-drawer-root.is-open .nf-mobile-drawer-panel {
+  transform: translateX(0);
+}
+
+.nf-mobile-drawer-root .nf-mobile-drawer-header,
+.nf-mobile-drawer-root .nf-mobile-drawer-footer {
+  border-color: var(--paper-line);
+  background: #101211;
+}
+
+.nf-mobile-drawer-root .nf-mobile-drawer-link {
+  border-radius: 0;
+  border-bottom: 1px solid rgb(241 239 233 / 9%);
+  background: transparent;
+}
+
+.nf-mobile-drawer-root .nf-mobile-drawer-link:hover,
+.nf-mobile-drawer-root .nf-mobile-drawer-link:focus-visible {
+  background: rgb(241 239 233 / 4%);
+  color: var(--paper);
+}
+
+.nf-mobile-drawer-root .nf-mobile-drawer-link.is-active {
+  border-left-color: var(--acid);
+  background: rgb(155 185 193 / 8%);
+  color: var(--paper);
+}
+
+.nf-mobile-drawer-root .nf-mobile-drawer-link-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.nf-mobile-drawer-root .nf-mobile-drawer-close {
+  border-color: var(--paper-line);
+  border-radius: 2px;
+  color: var(--paper);
+  font-family: var(--font-body);
+  letter-spacing: 0.04em;
+}
+
+.nf-mobile-drawer-root .nf-mobile-drawer-signal-btn {
+  border-color: var(--paper-line);
+  border-radius: 2px;
+  background: transparent;
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  .nf-mobile-drawer-root .nf-mobile-drawer-panel {
+    max-width: min(420px, 92vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-mobile-drawer-root,
+  .nf-mobile-drawer-root .nf-mobile-drawer-backdrop,
+  .nf-mobile-drawer-root .nf-mobile-drawer-panel {
+    transition: none !important;
+  }
+}
+
+/* Mobile and tablet layouts: prioritize reading order and usable controls. */
+@media (max-width: 1080px) {
+  .an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-nav {
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+  }
+  .an-public-shell.an-editorial .nf-nav nav,
+  .an-public-shell.an-editorial .nf-nav .an-language-switcher,
+  .an-public-shell.an-editorial .nf-nav .nf-signal {
+    display: none !important;
+  }
+  .an-public-shell.an-editorial .nf-menu-toggle {
+    display: inline-flex !important;
+    justify-self: end;
+  }
+}
+
+@media (max-width: 900px) {
+  .an-public-shell.an-editorial .nf-page .nf-page-hero,
+  .an-public-shell.an-editorial .nf-page .nf-epk-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+    min-height: 0;
+    padding: 72px var(--editorial-gutter) 48px;
+    background-image:
+      linear-gradient(
+        0deg,
+        rgb(16 18 17 / 93%) 0%,
+        rgb(16 18 17 / 68%) 56%,
+        rgb(16 18 17 / 36%) 100%
+      ),
+      var(--page-image, none) !important;
+    background-position: center;
+  }
+  .an-public-shell.an-editorial .nf-page .nf-hero-note {
+    justify-self: start;
+    width: min(100%, 420px);
+    max-width: 420px;
+  }
+  .an-public-shell.an-editorial .an-site .an-hero {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    min-height: 0 !important;
+    gap: 28px;
+    padding-top: 36px !important;
+  }
+  .an-public-shell.an-editorial .an-site .home-hero-portrait {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    width: min(100%, 560px) !important;
+    height: clamp(300px, 72vw, 560px) !important;
+    min-height: 0;
+  }
+  .an-public-shell.an-editorial .an-site .hero-copy {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .an-public-shell.an-editorial .an-site .hero-copy .hero-title-editorial {
+    max-width: 10ch;
+    font-size: clamp(3.7rem, 12vw, 6.8rem) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .an-public-shell.an-editorial {
+    --editorial-gutter: 22px;
+  }
+  .an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-nav {
+    min-height: 66px;
+    padding-inline: var(--editorial-gutter);
+  }
+  .an-public-shell.an-editorial .nf-nav .nf-wordmark {
+    font-size: 0.7rem;
+  }
+  .an-public-shell.an-editorial .nf-page .nf-page-hero,
+  .an-public-shell.an-editorial .nf-page .nf-epk-hero {
+    padding-top: 60px;
+    padding-bottom: 38px;
+  }
+  .an-public-shell.an-editorial .nf-page :is(.nf-page-hero, .nf-epk-hero) h1 {
+    font-size: clamp(3rem, 15vw, 5.2rem) !important;
+  }
+  .an-public-shell.an-editorial .nf-page :is(.nf-section, .ed-section) {
+    padding: 58px var(--editorial-gutter) !important;
+  }
+  .an-public-shell.an-editorial .nf-page .nf-section-title {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .an-public-shell.an-editorial .nf-page .nf-section-title h2,
+  .an-public-shell.an-editorial .nf-page .ed-head__title,
+  .an-public-shell.an-editorial .nf-page .ed-cta__title,
+  .an-public-shell.an-editorial .an-site .section h2 {
+    font-size: clamp(2.45rem, 12vw, 4.2rem) !important;
+  }
+  .an-public-shell.an-editorial .an-site .an-hero {
+    padding: 24px var(--editorial-gutter) 58px !important;
+  }
+  .an-public-shell.an-editorial .an-site .home-hero-portrait {
+    width: min(100%, 460px) !important;
+    height: clamp(290px, 92vw, 480px) !important;
+  }
+  .an-public-shell.an-editorial .an-site .hero-copy .hero-title-editorial {
+    font-size: clamp(3.5rem, 15vw, 5.6rem) !important;
+    letter-spacing: -0.075em;
+  }
+  .an-public-shell.an-editorial .an-site .hero-actions {
+    align-items: flex-start;
+    gap: 8px 18px;
+  }
+  .an-public-shell.an-editorial .nf-page .an-official-media-actions {
+    flex-direction: column;
+  }
+  .an-public-shell.an-editorial
+    .nf-page
+    .an-official-media-actions
+    :is(a, button) {
+    width: 100%;
+  }
+  .an-public-shell.an-editorial .nf-mobile-drawer-panel {
+    max-width: min(420px, 92vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-public-shell.an-editorial *,
+  .an-public-shell.an-editorial *::before,
+  .an-public-shell.an-editorial *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -127,7 +127,7 @@ export default function PressKit() {
   return (
     <div className="nf-page an-epk-ready">
       <NightHeader active="/epk" />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section className="nf-epk-hero an-epk-hero-enhanced">
           <div className="an-epk-hero-grid">
             <div>

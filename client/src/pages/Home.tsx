@@ -25,7 +25,6 @@ import {
   SignalIndicator,
   type SignalRow,
 } from "@/components/editorial/EditorialKit";
-import { HeroDots } from "@/components/HeroDots";
 import { NightHeader, NightFooter } from "@/components/NightFrequencyChrome";
 import { trpc } from "@/lib/trpc";
 import {
@@ -286,9 +285,8 @@ export default function Home() {
         {/* Rute arsip tetap dipusatkan di NightHeader: href="/universe" (label "ARSIP"). */}
         <NightHeader />
 
-        <main id="top">
+        <main id="top" tabIndex={-1}>
           <section className="an-hero">
-            <HeroDots />
             <div className="home-hero-portrait">
               <picture className="home-hero-picture">
                 <source

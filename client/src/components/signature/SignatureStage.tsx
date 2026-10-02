@@ -6,33 +6,12 @@ import {
   usePublicArtistContent,
 } from "@/content/publicContent";
 import { STAGE_PHRASES } from "@/signature/stagePhrases";
-import { useSignatureState } from "@/signature/useSignature";
 import "./SignatureStage.css";
 
 /**
- * Panggung wordmark.
- *
- * Ini satu-satunya tempat partikel menyusun nama: sebuah bidang kosong milik
- * sendiri, bukan tumpukan di belakang judul hero (di sana partikel dan teks
- * sama-sama kalah terbaca).
- *
- * Strukturnya dua lapis:
- * - `data-signal-stage-track` — jalur scroll yang tinggi. Posisinya dibaca
- *   runtime menjadi progres 0..1 untuk mengganti kata yang disusun partikel.
- * - `data-signal-stage` — kotak sticky tempat huruf benar-benar digambar.
- *
- * Ruangnya tidak kosong: di bawah nama ada satu baris konteks yang berganti
- * mengikuti kata yang sedang disusun (sumbernya era di `content/eras.ts`,
- * yang sama dengan timeline arsip) dan tiga angka katalog. Keduanya fakta
- * tentang musiknya — bukan keterangan tentang efeknya sendiri.
- *
- * Scroll tetap scroll: tidak ada event yang dicegat, tidak ada scrolljacking.
- * Semuanya `position: sticky` biasa, jadi keyboard, roda, dan assistive
- * technology bekerja seperti halaman normal.
- *
- * Tanpa JavaScript, saat runtime mematuhi reduced motion / hemat data, atau
- * di perangkat yang terlalu lemah, jalur panjangnya runtuh jadi satu section
- * biasa, kedua baris konteks tampil berurutan, dan teksnya utuh.
+ * Static editorial signature section. The name stays as real, searchable text
+ * instead of being replaced by a decorative particle canvas. Its short normal-
+ * flow layout keeps the existing CMS-driven era notes and catalog facts intact.
  */
 
 type StageCopy = {
@@ -62,10 +41,6 @@ export function SignatureStage({
   alsoKnownAs: string;
   lang?: "id" | "en";
 }) {
-  const tier = useSignatureState(snapshot => snapshot.capability.tier);
-  const ready = useSignatureState(snapshot => snapshot.fieldReady);
-  const phrase = useSignatureState(snapshot => snapshot.stagePhrase);
-  const live = ready && tier !== "off";
   const copy = COPY[lang];
 
   const cms = usePublicArtistContent();
@@ -83,7 +58,7 @@ export function SignatureStage({
   });
 
   return (
-    <section className="an-signature-stage" data-live={live}>
+    <section className="an-signature-stage" data-live="false">
       <div className="an-signature-stage-track" data-signal-stage-track>
         <div className="an-signature-stage-sticky">
           <div className="an-signature-stage-field" data-signal-stage>
@@ -102,12 +77,7 @@ export function SignatureStage({
             <div className="an-signature-stage-eras">
               {notes.map((era, index) =>
                 era ? (
-                  <p
-                    className="an-signature-stage-era"
-                    key={era.id || index}
-                    data-active={index === phrase}
-                    aria-hidden={live && index !== phrase ? "true" : undefined}
-                  >
+                  <p className="an-signature-stage-era" key={era.id || index}>
                     <span className="an-signature-stage-era-year">
                       {era.year}
                     </span>

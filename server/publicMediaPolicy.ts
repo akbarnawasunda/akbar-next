@@ -63,3 +63,15 @@ export function publicMediaSource(pathname: string): string | undefined {
     "/media/brand/rmx-mark.jpg": "https://akbarfolio-424qdvsv.manus.space/manus-storage/akbar-nawasunda-rmx-mark_d59968bf.jpg",
   }[key];
 }
+
+const LOCAL_MEDIA_FALLBACKS = {
+  "/media/portrait/neon-portrait.jpg": "/assets/akbar-nawasunda-official-portrait.webp",
+  "/media/portrait/kx07-portrait.jpg": "/assets/akbar-nawasunda-official-portrait.webp",
+  "/media/portrait/official-portrait.jpg": "/assets/akbar-nawasunda-official-portrait.webp",
+  "/media/brand/rmx-mark.jpg": "/assets/akbar-rmx-mark.webp",
+} as const;
+
+/** Local brand artwork to use only when an allowlisted upstream file is down. */
+export function localMediaFallback(pathname: string): string | undefined {
+  return LOCAL_MEDIA_FALLBACKS[pathname as keyof typeof LOCAL_MEDIA_FALLBACKS];
+}
