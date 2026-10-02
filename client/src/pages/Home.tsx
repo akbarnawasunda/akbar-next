@@ -503,11 +503,11 @@ export default function Home() {
               besar, metadata mono, dan pemutar resmi di tempat yang sama. */}
           <Reveal>
             <section
-              className="an-feature"
+              className="an-feature an-doc"
               id="music"
               aria-labelledby="feature-title"
             >
-              <figure className="an-feature-art an-rise">
+              <figure className="an-doc-art an-rise">
                 <ResilientArtworkImage
                   src={activeRelease.image}
                   backupSrc={officialBrand.socialPreview}
@@ -522,14 +522,14 @@ export default function Home() {
                 </figcaption>
               </figure>
 
-              <div className="an-feature-copy an-rise">
+              <div className="an-doc-copy an-rise">
                 <p className="an-meta">Rilisan terbaru</p>
                 <h2 id="feature-title">{activeRelease.title}</h2>
-                <p className="an-feature-story">
+                <p className="an-doc-story">
                   {activeReleaseStory ||
                     "Putar langsung di sini, atau buka versi lengkapnya di platform resmi."}
                 </p>
-                <div className="an-feature-actions">
+                <div className="an-doc-actions">
                   <button
                     type="button"
                     className="an-btn an-btn--solid"
@@ -642,7 +642,7 @@ export default function Home() {
               </header>
 
               <div
-                className="an-catalog-rail"
+                className="an-rail"
                 ref={releaseCatalogRef}
                 tabIndex={0}
                 aria-busy={contentIsLoading}

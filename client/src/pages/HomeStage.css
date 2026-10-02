@@ -382,28 +382,11 @@
 
 /* ------------------------------------------------------------
    ADEGAN 4 — RILISAN TERBARU
+   Komposisi dasar (.an-doc) milik SceneKit; yang khusus beranda hanya
+   keterangan artwork, aksen judul, dan pemutar di tempat.
    ------------------------------------------------------------ */
 
-.an-site .an-feature {
-  display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(28px, 5vw, 84px);
-}
-
-/* Gerak masuk memakai utilitas `.an-rise` dari SceneKit (keyframes
-   `an-scene-rise`), ditempel di anak elemen supaya isi tetap terlihat
-   tanpa JS. */
-
-.an-site .an-feature-art {
-  position: relative;
-  margin: 0;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  background: var(--ink-soft);
-}
-
-.an-site .an-feature-art figcaption {
+.an-site .an-doc-art figcaption {
   position: absolute;
   left: 0;
   bottom: 0;
@@ -416,26 +399,11 @@
   color: var(--paper);
 }
 
-.an-site .an-feature-copy {
-  display: grid;
-  gap: var(--space-md);
-  align-content: center;
-}
-
-.an-site .an-feature-copy h2 {
+.an-site .an-doc-copy h2 {
   max-width: 24ch;
-  font-size: clamp(1.8rem, 3.4vw, 3.2rem);
 }
 
-.an-site .an-feature-story {
-  margin: 0;
-  max-width: 52ch;
-  font-size: var(--text-body);
-  line-height: 1.72;
-  color: color-mix(in srgb, var(--paper) 78%, transparent);
-}
-
-.an-site .an-feature-actions {
+.an-site .an-doc-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -453,10 +421,6 @@
 .an-site .an-feature-player {
   margin-top: var(--space-sm);
 }
-
-/* ------------------------------------------------------------
-   ADEGAN 5 — KATALOG (RAIL HORIZONTAL)
-   ------------------------------------------------------------ */
 
 .an-site .an-catalog-head {
   display: flex;
@@ -478,133 +442,9 @@
   gap: var(--space-sm);
 }
 
-.an-site .an-catalog-controls {
-  display: inline-flex;
-  gap: 6px;
-}
-
-.an-site .an-catalog-controls button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--editorial-rule);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--paper);
-  cursor: pointer;
-  transition:
-    border-color 200ms var(--ease, ease),
-    color 200ms var(--ease, ease);
-}
-
-.an-site .an-catalog-controls button:hover,
-.an-site .an-catalog-controls button:focus-visible {
-  border-color: var(--acid);
-  color: var(--acid);
-}
-
-.an-site .an-catalog-rail {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: clamp(210px, 23vw, 310px);
-  align-items: end;
-  gap: clamp(14px, 2vw, 30px);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x proximity;
-  padding-bottom: var(--space-sm);
-}
-
-.an-site .an-catalog-rail > .an-release {
-  scroll-snap-align: start;
-}
-
-.an-site .an-release {
-  display: grid;
-  gap: var(--space-sm);
-  color: var(--paper);
-  text-decoration: none;
-}
-
-.an-site .an-release-art {
-  display: block;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  background: var(--ink-soft);
-  transition: transform 420ms var(--ease, ease);
-}
-
-/* Ritme: setiap kartu ketiga lebih tinggi, jadi rail tidak terbaca sebagai
-   deretan kotak yang sama. */
-.an-site .an-release:nth-child(3n + 2) .an-release-art {
-  aspect-ratio: 4 / 5;
-}
-
-.an-site .an-release:hover .an-release-art,
-.an-site .an-release:focus-visible .an-release-art {
-  transform: translateY(-6px);
-}
-
-.an-site .an-release-meta {
-  display: grid;
-  gap: 4px;
-  min-width: 0;
-}
-
-.an-site .an-release-meta small {
-  font-family: var(--font-mono);
-  font-size: 0.5rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--mute);
-}
-
-.an-site .an-release-meta strong {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  line-height: 1.16;
-  color: var(--paper);
-}
-
-.an-site .an-release-meta em {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-family: var(--font-mono);
-  font-size: 0.52rem;
-  font-style: normal;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--acid) 82%, var(--paper));
-}
-
-.an-site .an-release.is-skeleton {
-  pointer-events: none;
-}
-
-.an-site .an-release.is-skeleton .skeleton-icon,
-.an-site .an-release.is-skeleton .skeleton-text,
-.an-site .an-release.is-skeleton .skeleton-title {
-  display: block;
-  background: color-mix(in srgb, var(--paper) 8%, transparent);
-}
-
-.an-site .an-release.is-skeleton .skeleton-icon {
-  aspect-ratio: 1 / 1;
-}
-
-.an-site .an-release.is-skeleton .skeleton-text {
-  width: 60%;
-  height: 9px;
-}
-
-.an-site .an-release.is-skeleton .skeleton-title {
-  width: 84%;
-  height: 15px;
+.an-site .an-rail {
+  /* Rail beranda: kartu lebih besar karena hanya menampilkan rilisan. */
+  grid-auto-columns: clamp(230px, 25vw, 340px);
 }
 
 /* ------------------------------------------------------------
@@ -898,13 +738,6 @@
    ------------------------------------------------------------ */
 
 @media (max-width: 900px) {
-  .an-site .an-feature {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-lg);
-  }
-  .an-site .an-feature-art {
-    aspect-ratio: 4 / 3;
-  }
   .an-site .an-screening-grid {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: none;
@@ -1024,7 +857,7 @@
     padding-left: 6px;
   }
 
-  .an-site .an-catalog-rail {
+  .an-site .an-rail {
     grid-auto-columns: min(74vw, 300px);
     gap: 14px;
     /* Rail tetap bisa digeser lewat sentuhan; tepi kanan diberi udara
@@ -1032,18 +865,12 @@
     padding-right: var(--hx-gutter);
   }
 
-  .an-site .an-release:nth-child(3n + 2) .an-release-art {
-    aspect-ratio: 1 / 1; /* tinggi seragam di satu baris ponsel */
-  }
 
   .an-site .an-catalog-tools {
     width: 100%;
     justify-content: space-between;
   }
 
-  .an-site .an-feature-actions .an-btn {
-    flex: 1 1 auto;
-  }
 
   .an-site .an-stage {
     min-height: 0;
@@ -1106,11 +933,6 @@
    ------------------------------------------------------------ */
 
 @media (prefers-reduced-motion: reduce) {
-  .an-site .an-reveal.is-visible :is(.an-feature-art, .an-feature-copy) {
-    animation: none;
-  }
-  .an-site .an-release-art,
-  .an-site .an-frame-play,
   .an-site .an-frame-scrim,
   .an-site .an-channel,
   .an-site .an-channel-arrow,
@@ -1121,8 +943,6 @@
   .an-site .an-hero-scroll {
     transition: none;
   }
-  .an-site .an-release:hover .an-release-art,
-  .an-site .an-release:focus-visible .an-release-art,
   .an-site .an-frame:hover .an-frame-play,
   .an-site .an-frame:focus-visible .an-frame-play {
     transform: none;

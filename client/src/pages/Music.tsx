@@ -1,7 +1,7 @@
 import FanSignalSection from "@/components/FanSignalSection";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
-import { ArrowLeft, ArrowUpRight, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, ArrowRight, Play } from "lucide-react";
 import { useRef } from "react";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { soundcloudEmbedUrl } from "@/components/MusicEmbed";
@@ -20,12 +20,9 @@ import {
   usePublicArtistContent,
 } from "@/content/publicContent";
 import { Link } from "wouter";
-import {
-  AudioPlayerShell,
-  CtaPanel,
-  SignalIndicator,
-} from "@/components/editorial/EditorialKit";
+import { AudioPlayerShell, CtaPanel } from "@/components/editorial/EditorialKit";
 import "./EcosystemPages.css";
+import "./CatalogStage.css";
 
 const soundcloudDrops = [
   {
@@ -115,118 +112,145 @@ export default function Music() {
     });
   };
 
+  const spotifyHref =
+    editablePlatformLinks.find(link => link.label === "Spotify")?.href ||
+    "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw";
+
   return (
     <div className="nf-page music-reference-page">
       <NightHeader active="/music" />
       <main id="main-content" tabIndex={-1}>
-        <section
-          className="nf-page-hero"
-          style={
-            {
-              "--page-image": `url(${officialBrand.portrait || featured.artwork || officialBrand.socialPreview})`,
-            } as React.CSSProperties
-          }
-        >
-          <div>
-            <h1>
-              MUSIK
-              <br />
-              <em>AKBAR.</em>
-            </h1>
-            <p>
-              Rilisan dan remix yang tersedia melalui kanal resmi Akbar
-              Nawasunda.
+        {/* ADEGAN 1 — pembuka katalog. Artwork rilisan unggulan jadi subjek
+            halaman, bukan latar belakang dekoratif di belakang judul. */}
+        <section className="an-cat-hero" aria-labelledby="catalog-title">
+          <div className="an-cat-hero-copy">
+            <p className="an-kicker">
+              <span className="an-kicker-dot" aria-hidden="true" />
+              {catalog.length} rilisan · {editablePlatformLinks.length} kanal
             </p>
+            <h1 id="catalog-title">Musik</h1>
+            <p className="an-cat-lede">
+              Rilisan, remix, dan edit Akbar Nawasunda lewat kanal resmi.
+              Setiap entri punya halaman sendiri: catatan, kredit, dan tautan
+              platformnya.
+            </p>
+            <div className="an-cat-hero-actions">
+              <a
+                className="an-btn an-btn--solid"
+                href={featured.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Play size={13} fill="currentColor" /> Dengar rilisan terbaru
+              </a>
+              <Link
+                className="an-btn an-btn--quiet"
+                href={`/music/${releaseSlug(featured.title)}`}
+              >
+                Buka detail rilisan <ArrowUpRight size={14} />
+              </Link>
+            </div>
           </div>
-          <div className="nf-hero-note">
-            <span>{cms.isLoading ? "MEMUAT RILISAN" : "RILISAN TERBARU"}</span>
-            <strong>{featured.title}</strong>
-            <a
-              className="nf-text-button"
-              href={featured.href}
-              target="_blank"
-              rel="noreferrer"
-            >
-              DENGAR <ArrowUpRight size={14} />
-            </a>
-          </div>
+          <figure className="an-cat-hero-art">
+            <ResilientArtworkImage
+              src={featured.artwork}
+              backupSrc={officialBrand.socialPreview}
+              alt={`Artwork ${featured.title}`}
+              loading="eager"
+              fetchPriority="high"
+            />
+            <figcaption>
+              <span>{cms.isLoading ? "Memuat rilisan" : "Rilisan terbaru"}</span>
+              <strong>{featured.title}</strong>
+            </figcaption>
+          </figure>
         </section>
 
+        {/* ADEGAN 2 — catatan rilisan: label di kiri, teks di kanan. */}
         <Reveal>
-          <section className="nf-section an-story-section">
-            <div className="an-story-art">
-              <ResilientArtworkImage
-                src={featured.artwork}
-                backupSrc={officialBrand.socialPreview}
-                alt={`Artwork ${featured.title}`}
-              />
-            </div>
-            <div className="an-story-copy">
-              <span className="an-story-label">
-                {featured.story ? "CATATAN RILISAN" : "RILISAN TERBARU"}
-              </span>
+          <section className="an-section an-cat-note">
+            <p className="an-meta">
+              {featured.story ? "Catatan rilisan" : "Rilisan terbaru"}
+            </p>
+            <div className="an-cat-note-copy">
               <h2>{featured.title}</h2>
               <p>
                 {featured.story ||
                   "Dengarkan versi ini melalui kanal SoundCloud resmi Akbar Nawasunda."}
               </p>
-              <div className="an-story-credits">
+              <div className="an-rel-credits">
                 {featured.credits ||
                   "Lihat kredit rilisan di platform resmi jika tersedia."}
               </div>
-              <Link
-                className="nf-text-button"
-                href={`/music/${releaseSlug(featured.title)}`}
-              >
-                DETAIL RILISAN <ArrowUpRight size={14} />
-              </Link>
+              <div className="an-doc-actions">
+                <Link
+                  className="an-btn an-btn--quiet"
+                  href={`/music/${releaseSlug(featured.title)}`}
+                >
+                  Detail rilisan <ArrowUpRight size={14} />
+                </Link>
+              </div>
             </div>
           </section>
         </Reveal>
 
-        <section className="nf-platform-hub">
-          <div className="nf-platform-hub-copy">
-            <h2>
-              PILIH
-              <br />
-              TEMPATNYA.
+        {/* ADEGAN 3 — kanal resmi sebagai baris, bukan grid kartu. */}
+        <section
+          className="an-section an-cat-channels"
+          aria-labelledby="channels-title"
+        >
+          <header className="an-head">
+            <h2 id="channels-title" className="an-title">
+              Dengar di kanal resminya.
             </h2>
-            <div className="nf-platform-grid">
-              {editablePlatformLinks.map(platform => (
+            <p className="an-meta">
+              {editablePlatformLinks.length} kanal resmi · rilisan, remix, set
+            </p>
+          </header>
+          <ul className="an-index">
+            {editablePlatformLinks.map((platform, index) => (
+              <li key={platform.label}>
                 <a
-                  key={platform.label}
+                  className="an-index-row"
                   href={platform.href}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
                 >
-                  <PlatformIcon label={platform.label} />
-                  <span>{platform.label}</span>
-                  <ArrowUpRight size={14} />
+                  <span className="an-meta" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="an-cat-channel-name">{platform.label}</span>
+                  <span className="an-cat-channel-mark" aria-hidden="true">
+                    <PlatformIcon label={platform.label} />
+                  </span>
+                  <ArrowUpRight
+                    className="an-cat-channel-arrow"
+                    size={16}
+                    aria-hidden="true"
+                  />
                 </a>
-              ))}
-            </div>
-          </div>
+              </li>
+            ))}
+          </ul>
         </section>
 
+        {/* ADEGAN 4 — pemutar resmi di tempatnya, bukan disembunyikan. */}
         <Reveal>
-          <section className="nf-section">
-            <div className="nf-section-title">
+          <section className="an-section" aria-labelledby="listen-title">
+            <header className="an-head an-head--row">
               <div>
-                <h2>
-                  DENGAR
-                  <br />
-                  LANGSUNG.
+                <h2 id="listen-title" className="an-title">
+                  Dengar langsung.
                 </h2>
+                <p className="an-meta">Player resmi · SoundCloud</p>
               </div>
-              <div>
-                <SignalIndicator label="PLAYER SIAP" />
-                <p>
-                  Pilih satu rilisan untuk mulai mendengar. Tautan resmi tetap
-                  tersedia kalau player tidak dibutuhkan.
-                </p>
-              </div>
-            </div>
-            <div className="nf-embed-grid">
+              <p className="an-cat-lede">
+                Pilih satu rilisan untuk mulai mendengar. Tautan resmi tetap
+                tersedia kalau player tidak dibutuhkan.
+              </p>
+            </header>
+            <div className="an-cat-listen-grid">
               {players.map(drop => {
                 const known = catalog.find(release =>
                   release.title
@@ -239,15 +263,15 @@ export default function Music() {
                     title={drop.title}
                     provider="SoundCloud"
                   >
-                  <OfficialMediaFrame
-                    title={drop.title}
-                    provider="SoundCloud"
-                    sourceUrl={drop.url}
-                    embedUrl={soundcloudEmbedUrl(drop.url)}
-                    artwork={known?.image || officialBrand.socialPreview}
-                    backupArtwork={officialBrand.socialPreview}
-                    description="Tautan resmi selalu tersedia."
-                  />
+                    <OfficialMediaFrame
+                      title={drop.title}
+                      provider="SoundCloud"
+                      sourceUrl={drop.url}
+                      embedUrl={soundcloudEmbedUrl(drop.url)}
+                      artwork={known?.image || officialBrand.socialPreview}
+                      backupArtwork={officialBrand.socialPreview}
+                      description="Tautan resmi selalu tersedia."
+                    />
                   </AudioPlayerShell>
                 );
               })}
@@ -255,103 +279,89 @@ export default function Music() {
           </section>
         </Reveal>
 
+        {/* ADEGAN 5 — rail katalog dengan lebar kartu bergantian. */}
         <Reveal>
-          <section className="nf-section dark-panel">
-            <div className="nf-section-title">
+          <section className="an-section" aria-labelledby="catalog-rail-title">
+            <header className="an-head an-head--row">
               <div>
-                <h2>
-                  SEMUA
-                  <br />
-                  RILISAN.
+                <h2 id="catalog-rail-title" className="an-title">
+                  Semua rilisan.
                 </h2>
-              </div>
-              <p>
-                {cmsReleases.length
-                  ? "Rilisan yang sedang dikelola dan arsip resmi."
-                  : "Kumpulan rilisan Akbar Nawasunda."}
-              </p>
-            </div>
-            <div className="nf-catalog-frame">
-              <div className="nf-catalog-toolbar">
-                <span>GESER UNTUK MENJELAJAH</span>
-                <div
-                  className="nf-catalog-controls"
-                  aria-label="Kontrol katalog rilisan"
-                >
-                  <button
-                    type="button"
-                    aria-label="Rilisan sebelumnya"
-                    onClick={() => scrollCatalog(-1)}
-                  >
-                    <ArrowLeft size={15} />
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Rilisan berikutnya"
-                    onClick={() => scrollCatalog(1)}
-                  >
-                    <ArrowRight size={15} />
-                  </button>
-                </div>
+                <p className="an-meta">
+                  {catalog.length} entri ·{" "}
+                  {cmsReleases.length ? "dikelola di CMS" : "arsip resmi"}
+                </p>
               </div>
               <div
-                className="nf-catalog"
-                ref={catalogRef}
-                tabIndex={0}
-                aria-label="Katalog rilisan Akbar Nawasunda"
+                className="an-catalog-controls"
+                aria-label="Kontrol katalog rilisan"
               >
-                {catalog.map((release, index) => (
-                  <Link
-                    key={`${release.title}-${index}`}
-                    className="nf-catalog-card"
-                    href={`/music/${releaseSlug(release.title)}`}
-                    data-signal-interactive
-                  >
+                <button
+                  type="button"
+                  aria-label="Rilisan sebelumnya"
+                  onClick={() => scrollCatalog(-1)}
+                >
+                  <ArrowLeft size={15} />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Rilisan berikutnya"
+                  onClick={() => scrollCatalog(1)}
+                >
+                  <ArrowRight size={15} />
+                </button>
+              </div>
+            </header>
+            <div
+              className="an-rail"
+              ref={catalogRef}
+              tabIndex={0}
+              aria-label="Katalog rilisan Akbar Nawasunda"
+            >
+              {catalog.map((release, index) => (
+                <Link
+                  key={`${release.title}-${index}`}
+                  className="an-release"
+                  href={`/music/${releaseSlug(release.title)}`}
+                  data-signal-interactive
+                >
+                  <span className="an-release-art">
                     <ResilientArtworkImage
-                      className="nf-catalog-art"
                       src={artworkThumb(release.image)}
                       backupSrc={release.image}
                       alt={`Artwork ${release.title}`}
                     />
-                    <span className="index">{formatPublicIndex(index)}</span>
-                    <PlatformIcon label={release.platform} />
-                    <p>
-                      {release.format} · {release.year}
-                    </p>
-                    <h3>{release.title}</h3>
-                    <b>
-                      {release.platform}
-                      <ArrowUpRight size={13} />
-                    </b>
-                  </Link>
-                ))}
-              </div>
+                  </span>
+                  <span className="an-release-meta">
+                    <small>
+                      {formatPublicIndex(index)} · {release.format} ·{" "}
+                      {release.year}
+                    </small>
+                    <strong>{release.title}</strong>
+                    <em>
+                      {release.platform}{" "}
+                      <ArrowUpRight size={12} aria-hidden="true" />
+                    </em>
+                  </span>
+                </Link>
+              ))}
             </div>
           </section>
         </Reveal>
 
-        <section className="nf-section">
-          <div className="nf-section-title">
-            <div>
-              <h2>
-                DENGAR
-                <br />
-                DI SPOTIFY.
-              </h2>
-            </div>
-            <a
-              className="nf-button"
-              href={
-                editablePlatformLinks.find(link => link.label === "Spotify")
-                  ?.href ||
-                "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw"
-              }
-              target="_blank"
-              rel="noreferrer"
-            >
-              <PlatformIcon label="Spotify" /> SPOTIFY
-            </a>
-          </div>
+        {/* ADEGAN 6 — strip platform: satu ajakan, bukan satu section penuh. */}
+        <section className="an-section an-cat-band" aria-labelledby="band-title">
+          <h2 id="band-title" className="an-cat-band-title">
+            Rilisan ini juga tersedia di Spotify.
+          </h2>
+          <a
+            className="an-btn an-btn--solid"
+            href={spotifyHref}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <PlatformIcon label="Spotify" /> Buka Spotify
+          </a>
         </section>
 
         <CtaPanel

@@ -187,3 +187,205 @@
     transition: none;
   }
 }
+
+/* -- Dokumen rilisan (artwork + catatan) ---------------------
+   Dipakai halaman musik, detail rilisan, dan beranda: satu artwork
+   besar berdampingan dengan teks, bukan kartu kecil di dalam grid. */
+
+.an-public-shell.an-editorial .an-doc {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 84px);
+}
+
+.an-public-shell.an-editorial .an-doc-art {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--ink-soft);
+}
+
+.an-public-shell.an-editorial .an-doc-copy {
+  display: grid;
+  gap: var(--space-md);
+  align-content: center;
+}
+
+.an-public-shell.an-editorial .an-doc-copy h2 {
+  margin: 0;
+  max-width: 24ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.4vw, 3.2rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  text-transform: none;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-doc-story {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-body);
+  line-height: 1.72;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.an-public-shell.an-editorial .an-doc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.an-public-shell.an-editorial .an-doc-credits {
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--editorial-rule);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  line-height: 1.7;
+  white-space: pre-line;
+  color: var(--mute);
+}
+
+/* -- Rail katalog (geser horizontal) -------------------------
+   Lebar kartu bergantian supaya terbaca sebagai rak rilisan, bukan
+   deretan kotak yang sama. */
+
+.an-public-shell.an-editorial .an-rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(210px, 23vw, 310px);
+  align-items: end;
+  gap: clamp(14px, 2vw, 30px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  padding-bottom: var(--space-sm);
+}
+
+.an-public-shell.an-editorial .an-rail > .an-release {
+  scroll-snap-align: start;
+}
+
+.an-public-shell.an-editorial .an-release {
+  display: grid;
+  gap: var(--space-sm);
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.an-public-shell.an-editorial .an-release-art {
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--ink-soft);
+  transition: transform 420ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .an-release:nth-child(3n + 2) .an-release-art {
+  aspect-ratio: 4 / 5;
+}
+
+.an-public-shell.an-editorial .an-release:hover .an-release-art,
+.an-public-shell.an-editorial .an-release:focus-visible .an-release-art {
+  transform: translateY(-6px);
+}
+
+.an-public-shell.an-editorial .an-release-meta {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.an-public-shell.an-editorial .an-release-meta small {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-release-meta strong {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.16;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-release-meta em {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-style: normal;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--acid) 82%, var(--paper));
+}
+
+.an-public-shell.an-editorial .an-catalog-controls {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.an-public-shell.an-editorial .an-catalog-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--editorial-rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  transition:
+    border-color 200ms var(--ease, ease),
+    color 200ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .an-catalog-controls button:hover,
+.an-public-shell.an-editorial .an-catalog-controls button:focus-visible {
+  border-color: var(--acid);
+  color: var(--acid);
+}
+
+/* -- Ritme section dalam halaman ----------------------------- */
+
+.an-public-shell.an-editorial :is(.nf-page, .an-site) .an-section {
+  position: relative;
+  padding: var(--section-y) var(--hx-gutter);
+  max-width: var(--hx-max);
+  margin-inline: auto;
+}
+
+.an-public-shell.an-editorial :is(.nf-page, .an-site) .an-section--full {
+  max-width: none;
+}
+
+@media (max-width: 900px) {
+  .an-public-shell.an-editorial .an-doc {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-lg);
+  }
+  .an-public-shell.an-editorial .an-doc-art {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-public-shell.an-editorial .an-release-art,
+  .an-public-shell.an-editorial .an-catalog-controls button {
+    transition: none;
+  }
+  .an-public-shell.an-editorial .an-release:hover .an-release-art,
+  .an-public-shell.an-editorial .an-release:focus-visible .an-release-art {
+    transform: none;
+  }
+}

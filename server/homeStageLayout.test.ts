@@ -84,8 +84,8 @@ describe("komposisi beranda", () => {
       // Pisahkan per nilai, bukan per spasi: `minmax(0, 1fr)` satu kolom.
       .match(/(?:minmax|min|max)\([^)]*\)|[^\s]+/g) ?? [];
     expect(columns).toHaveLength(4);
-    const index = px(Number.parseFloat(columns[0]));
-    const mark = px(Number.parseFloat(columns[1]));
+    const index = px(Number.parseFloat(columns[0] ?? "0"));
+    const mark = px(Number.parseFloat(columns[1] ?? "0"));
     const gap = 12; // --space-sm minimum pada 360px
     const arrow = 16; // ikon ArrowUpRight
     const inner = 360 - 22 * 2;
@@ -97,10 +97,12 @@ describe("komposisi beranda", () => {
 
   it("membatasi lebar kartu rail katalog", () => {
     const mobile = css.slice(css.indexOf("@media (max-width: 767.98px)"));
-    const rail = block(mobile, ".an-site .an-catalog-rail {");
+    const rail = block(mobile, ".an-site .an-rail {");
     const columns = rail.match(/grid-auto-columns:\s*min\((\d+)vw,\s*(\d+)px\)/);
     expect(columns, "rail katalog memakai lebar kolom tetap").toBeTruthy();
-    const width = Math.min((Number(columns![1]) / 100) * 360, Number(columns![2]));
+    const vw = Number(columns?.[1] ?? "0");
+    const cap = Number(columns?.[2] ?? "0");
+    const width = Math.min((vw / 100) * 360, cap);
     expect(width).toBeLessThanOrEqual(360 - 22);
   });
 
@@ -110,5 +112,47 @@ describe("komposisi beranda", () => {
       const count = (content.match(/!important/g) ?? []).length;
       expect(count, `${file} menambah !important`).toBe(0);
     }
+  });
+});
+
+describe("komposisi halaman katalog", () => {
+  const css = stripComments(source("client/src/pages/CatalogStage.css"));
+
+  it("menjaga baris kanal resmi katalog muat di 360px", () => {
+    const mobile = css.slice(css.indexOf("@media (max-width: 767.98px)"));
+    const row = block(mobile, ".an-cat-channels .an-index-row {");
+    const columns = (
+      row.match(/grid-template-columns:([^;]+);/)?.[1].trim() ?? ""
+    ).match(/(?:minmax|min|max)\([^)]*\)|[^\s]+/g) ?? [];
+    expect(columns).toHaveLength(4);
+    const index = px(Number.parseFloat(columns[0] ?? "0"));
+    const gap = 12; // --space-sm minimum
+    const mark = 20; // lambang platform
+    const arrow = 16;
+    const inner = 360 - 22 * 2;
+    const left = inner - (index + gap * 3 + mark + arrow);
+    expect(
+      left,
+      `nama kanal hanya kebagian ${left.toFixed(0)}px`
+    ).toBeGreaterThanOrEqual(150);
+  });
+
+  it("menumpuk hero katalog & detail rilisan jadi satu kolom di layar kecil", () => {
+    // Hero katalog sudah satu kolom sejak 1024px; blok catatan/kredit baru
+    // menumpuk di 768px. Keduanya harus eksplisit, bukan mengandalkan
+    // perilaku grid bawaan.
+    const tablet = css.slice(css.indexOf("@media (max-width: 1024px)"));
+    expect(block(tablet, ":is(.an-cat-hero, .an-rel-hero) {")).toContain(
+      "grid-template-columns: minmax(0, 1fr)"
+    );
+
+    const mobile = css.slice(css.indexOf("@media (max-width: 767.98px)"));
+    expect(block(mobile, ":is(.an-cat-note, .an-rel-story) {")).toContain(
+      "grid-template-columns: minmax(0, 1fr)"
+    );
+  });
+
+  it("tidak menambah `!important` di lapisan katalog", () => {
+    expect((css.match(/!important/g) ?? []).length).toBe(0);
   });
 });

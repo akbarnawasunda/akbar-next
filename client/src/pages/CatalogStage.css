@@ -1,0 +1,409 @@
+/* ============================================================
+   CATALOG STAGE — /music dan /music/:slug
+   ------------------------------------------------------------
+   Dimuat setelah EcosystemPages.css. Komposisi halaman katalog:
+   artwork besar sebagai subjek, metadata mono sebagai keterangan,
+   rail rilisan untuk menjelajah, dan baris platform resmi (bukan
+   grid kartu identik). Primitif bersama (.an-btn, .an-meta,
+   .an-index, .an-doc, .an-rail) datang dari SceneKit.css.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   /music — pembuka katalog
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-cat-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: end;
+  gap: clamp(28px, 5vw, 76px);
+  max-width: var(--hx-max);
+  margin-inline: auto;
+  padding: calc(var(--chrome-h, 78px) + var(--space-xl)) var(--hx-gutter)
+    var(--space-xl);
+}
+
+.an-public-shell.an-editorial .an-cat-hero-copy {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.an-public-shell.an-editorial .an-cat-hero-copy h1 {
+  font-size: clamp(2.8rem, 7vw, 6rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+  max-width: 14ch;
+}
+
+.an-public-shell.an-editorial .an-cat-lede {
+  margin: 0;
+  max-width: 46ch;
+  font-size: var(--text-lede);
+  line-height: 1.68;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.an-public-shell.an-editorial .an-cat-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.an-public-shell.an-editorial .an-cat-hero-art {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--ink-soft);
+}
+
+.an-public-shell.an-editorial .an-cat-hero-art figcaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: grid;
+  gap: 4px;
+  max-width: 86%;
+  padding: 10px 16px;
+  background: var(--ink);
+}
+
+.an-public-shell.an-editorial .an-cat-hero-art figcaption span {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+}
+
+.an-public-shell.an-editorial .an-cat-hero-art figcaption strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+}
+
+/* -- Catatan rilisan: label kiri, teks kanan ------------------ */
+
+.an-public-shell.an-editorial .an-cat-note {
+  display: grid;
+  grid-template-columns: minmax(0, 0.32fr) minmax(0, 1fr);
+  gap: clamp(18px, 4vw, 64px);
+  align-items: start;
+  border-top: 1px solid var(--editorial-rule);
+  padding-top: var(--space-lg);
+}
+
+.an-public-shell.an-editorial .an-cat-note-copy {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.an-public-shell.an-editorial .an-cat-note-copy h2 {
+  margin: 0;
+  max-width: 24ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-cat-note-copy p {
+  margin: 0;
+  max-width: 56ch;
+  font-size: var(--text-body);
+  line-height: 1.74;
+  color: color-mix(in srgb, var(--paper) 76%, transparent);
+}
+
+/* -- Baris kanal resmi ---------------------------------------- */
+
+.an-public-shell.an-editorial .an-cat-channels .an-index-row {
+  /* nomor · nama kanal · lambang · panah */
+  grid-template-columns: 2.4rem minmax(0, 1fr) auto auto;
+}
+
+.an-public-shell.an-editorial .an-cat-channel-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.2vw, 1.7rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--paper) 84%, transparent);
+  transition: color 220ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .an-index-row:hover .an-cat-channel-name,
+.an-public-shell.an-editorial .an-index-row:focus-visible .an-cat-channel-name {
+  color: var(--acid);
+}
+
+.an-public-shell.an-editorial .an-cat-channel-mark {
+  display: inline-flex;
+  align-items: center;
+  color: color-mix(in srgb, var(--paper) 60%, transparent);
+}
+
+.an-public-shell.an-editorial .an-cat-channel-arrow {
+  color: color-mix(in srgb, var(--paper) 40%, transparent);
+  transition:
+    transform 260ms var(--ease, ease),
+    color 220ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .an-index-row:hover .an-cat-channel-arrow,
+.an-public-shell.an-editorial .an-index-row:focus-visible .an-cat-channel-arrow {
+  transform: translate(3px, -3px);
+  color: var(--acid);
+}
+
+/* -- Pemutar resmi -------------------------------------------- */
+
+.an-public-shell.an-editorial .an-cat-listen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(16px, 2vw, 28px);
+  align-items: start;
+}
+
+/* -- Strip ajakan platform ------------------------------------ */
+
+.an-public-shell.an-editorial .an-cat-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-top: var(--space-2xl);
+  padding: var(--space-xl) var(--hx-gutter);
+  border-top: 1px solid var(--editorial-rule);
+  border-bottom: 1px solid var(--editorial-rule);
+  background: color-mix(in srgb, var(--acid) 5%, transparent);
+}
+
+.an-public-shell.an-editorial .an-cat-band-title {
+  margin: 0;
+  max-width: 26ch;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.8vw, 2.4rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------
+   /music/:slug — halaman detail rilisan
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-rel-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  align-items: end;
+  gap: clamp(28px, 5vw, 72px);
+  max-width: var(--hx-max);
+  margin-inline: auto;
+  padding: calc(var(--chrome-h, 78px) + var(--space-xl)) var(--hx-gutter)
+    var(--space-xl);
+}
+
+.an-public-shell.an-editorial .an-rel-hero-copy {
+  display: grid;
+  gap: var(--space-md);
+  align-content: end;
+}
+
+.an-public-shell.an-editorial .an-rel-hero-copy h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5.4vw, 4.6rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--paper);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.an-public-shell.an-editorial .an-rel-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-rel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.an-public-shell.an-editorial .an-rel-plate {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--ink-soft);
+}
+
+.an-public-shell.an-editorial .an-rel-chip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  background: var(--acid);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.an-public-shell.an-editorial .an-rel-story {
+  display: grid;
+  grid-template-columns: minmax(0, 0.32fr) minmax(0, 1fr);
+  gap: clamp(18px, 4vw, 64px);
+  align-items: start;
+}
+
+.an-public-shell.an-editorial .an-rel-story-copy {
+  display: grid;
+  gap: var(--space-md);
+}
+
+.an-public-shell.an-editorial .an-rel-story-copy p {
+  margin: 0;
+  max-width: 58ch;
+  font-size: var(--text-body);
+  line-height: 1.76;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.an-public-shell.an-editorial .an-rel-credits {
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--editorial-rule);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  line-height: 1.72;
+  white-space: pre-line;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-rel-links .an-index-row {
+  grid-template-columns: minmax(0, 1fr) auto auto;
+}
+
+.an-public-shell.an-editorial .an-rel-link-label {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-rel-link-kind {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-rel-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+/* Halaman rilisan yang tidak ketemu tetap terbaca sebagai halaman utuh. */
+
+.an-public-shell.an-editorial .an-rel-missing {
+  display: grid;
+  gap: var(--space-md);
+  align-content: center;
+  justify-items: start;
+  min-height: 62svh;
+  padding: calc(var(--chrome-h, 78px) + var(--space-2xl)) var(--hx-gutter)
+    var(--space-2xl);
+}
+
+.an-public-shell.an-editorial .an-rel-missing h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--paper);
+}
+
+/* ------------------------------------------------------------
+   BREAKPOINT
+   ------------------------------------------------------------ */
+
+@media (max-width: 1024px) {
+  .an-public-shell.an-editorial :is(.an-cat-hero, .an-rel-hero) {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .an-public-shell.an-editorial .an-cat-hero-art,
+  .an-public-shell.an-editorial .an-rel-plate {
+    max-width: 520px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .an-public-shell.an-editorial :is(.an-cat-hero, .an-rel-hero) {
+    padding-top: calc(var(--chrome-h, 66px) + var(--space-lg));
+    padding-bottom: var(--space-lg);
+    gap: var(--space-lg);
+  }
+  .an-public-shell.an-editorial .an-cat-hero-copy h1 {
+    font-size: clamp(2.4rem, 12vw, 3.6rem);
+  }
+  .an-public-shell.an-editorial .an-rel-hero-copy h1 {
+    font-size: clamp(1.9rem, 9vw, 2.8rem);
+  }
+  .an-public-shell.an-editorial .an-cat-hero-art,
+  .an-public-shell.an-editorial .an-rel-plate {
+    max-width: none;
+  }
+  .an-public-shell.an-editorial :is(.an-cat-note, .an-rel-story) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-md);
+  }
+  .an-public-shell.an-editorial .an-cat-listen-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .an-public-shell.an-editorial .an-cat-band {
+    padding-inline: var(--hx-gutter);
+    gap: var(--space-md);
+  }
+  .an-public-shell.an-editorial .an-cat-channels .an-index-row {
+    grid-template-columns: 1.9rem minmax(0, 1fr) auto auto;
+    gap: var(--space-sm);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-public-shell.an-editorial .an-cat-channel-name,
+  .an-public-shell.an-editorial .an-cat-channel-arrow {
+    transition: none;
+  }
+  .an-public-shell.an-editorial .an-index-row:hover .an-cat-channel-arrow,
+  .an-public-shell.an-editorial .an-index-row:focus-visible .an-cat-channel-arrow {
+    transform: none;
+  }
+}
