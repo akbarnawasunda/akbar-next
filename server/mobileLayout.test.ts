@@ -68,6 +68,9 @@ describe("layout layar kecil", () => {
     for (const path of [
       "client/src/CinematicReference.css",
       "client/src/pages/Home.css",
+      // Komposisi hero baru beranda (checkpoint A) memakai clamp sendiri;
+      // ikut diuji supaya tidak ada aturan yang lolos dari pemeriksaan.
+      "client/src/pages/HomeStage.css",
     ]) {
       const css = source(path);
       expect(

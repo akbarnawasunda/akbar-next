@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { render } from "../client/src/entry-server";
 
 const source = (path: string) =>
   readFileSync(resolve(process.cwd(), path), "utf8");
@@ -23,13 +24,16 @@ describe("lightweight RMX brand mark", () => {
     expect(chrome).not.toContain("BrandMotionMark");
   });
 
-  it("keeps the supplied portrait as the homepage hero visual", () => {
+  it("keeps the supplied portrait as the homepage hero visual", async () => {
     const brand = source("client/src/content/artistPlatform.ts");
-    const home = source("client/src/pages/Home.tsx");
     expect(brand).toContain(
       'portrait: "/assets/akbar-nawasunda-official-portrait.webp"'
     );
-    expect(home).toContain("home-hero-portrait");
-    expect(home).toContain("Portrait resmi Akbar Nawasunda");
+    // Panggung hero berubah nama kelas di redesign; yang dijaga adalah
+    // potretnya benar-benar terkirim di HTML beranda lengkap dengan alt-nya.
+    const home = await render("/", { documents: async () => [] as never });
+    expect(home.html).toContain("an-hero-plate");
+    expect(home.html).toContain("Portrait resmi Akbar Nawasunda");
+    expect(home.html).toContain('fetchPriority="high"');
   });
 });

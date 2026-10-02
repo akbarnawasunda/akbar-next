@@ -52,79 +52,6 @@ body::before {
     radial-gradient(circle at 8% 80%, rgba(14, 64, 115, 0.1), transparent 28%);
 }
 
-/* Global chrome */
-.nf-nav {
-  min-height: 70px !important;
-  padding: 0 var(--ref-gutter) !important;
-  grid-template-columns: auto minmax(0, 1fr) auto auto !important;
-  gap: clamp(16px, 3vw, 38px) !important;
-  border-bottom: 1px solid var(--ref-line) !important;
-  background: var(--ref-bg) !important;
-}
-.nf-wordmark {
-  gap: 8px !important;
-  color: var(--ref-ink) !important;
-  font-family: var(--ref-mono) !important;
-  font-size: 0.67rem !important;
-  letter-spacing: 0.08em !important;
-}
-.nf-wordmark::before { content: "•"; color: var(--ref-cyan); font-size: 0.9rem; }
-.nf-wordmark .nf-brand-logo { display: none !important; }
-.nf-nav nav { gap: clamp(13px, 2vw, 30px) !important; }
-.nf-nav nav a,
-.an-language-switcher,
-.nf-signal {
-  font-family: var(--ref-mono) !important;
-  font-size: 0.56rem !important;
-  letter-spacing: 0.12em !important;
-}
-.nf-nav nav a { color: var(--ref-muted) !important; }
-.nf-nav nav a:hover,
-.nf-nav nav a.is-active,
-.an-language-switcher a.is-active { color: var(--ref-ink) !important; }
-.nf-nav nav a::after { background: var(--ref-cyan) !important; }
-.nf-signal {
-  padding: 8px 10px !important;
-  border: 0 !important;
-  border-left: 1px solid var(--ref-cyan) !important;
-  color: var(--ref-ink) !important;
-  background: transparent !important;
-}
-.nf-signal svg { color: var(--ref-cyan) !important; }
-.nf-menu-toggle {
-  width: 38px !important;
-  height: 38px !important;
-  border-color: var(--ref-line) !important;
-  color: var(--ref-ink) !important;
-}
-.nf-menu-toggle:hover { border-color: var(--ref-cyan) !important; color: var(--ref-cyan) !important; }
-
-.nf-footer {
-  position: relative;
-  grid-template-columns: 1.4fr 0.8fr 0.9fr !important;
-  gap: clamp(28px, 6vw, 96px) !important;
-  padding: clamp(64px, 8vw, 118px) var(--ref-gutter) 28px !important;
-  border-top: 1px solid var(--ref-line) !important;
-  background: var(--ref-bg) !important;
-}
-.nf-footer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(21, 119, 190, 0.08), transparent);
-  opacity: 0.7;
-}
-.nf-footer > * { position: relative; z-index: 1; }
-.nf-footer-brand strong,
-.nf-footer-column a { color: var(--ref-ink) !important; }
-.nf-footer-brand p,
-.nf-footer-column > span,
-.nf-footer-column a { font-family: var(--ref-mono) !important; }
-.nf-footer-column a { font-size: 0.62rem !important; letter-spacing: 0.1em; text-transform: uppercase; }
-.nf-footer-column a:hover { color: var(--ref-cyan) !important; }
-.nf-footer .footer-bottom { border-color: var(--ref-line) !important; color: var(--ref-faint) !important; }
-
 /* Public inner pages */
 .nf-page {
   min-height: 100vh;
@@ -428,17 +355,10 @@ body::before {
 
 /* Responsive guardrails */
 @media (max-width: 1120px) {
-  .nf-nav nav { gap: 12px !important; }
-  .nf-nav nav a { font-size: 0.52rem !important; }
   .an-site .an-hero { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) !important; }
 }
 @media (max-width: 767.98px) {
   :root { --ref-gutter: 20px; }
-  .nf-nav { grid-template-columns: auto 1fr auto !important; min-height: 62px !important; }
-  .nf-nav .nf-signal { display: none !important; }
-  .nf-menu-toggle { display: inline-flex !important; justify-self: end; }
-  .nf-footer { grid-template-columns: 1fr 1fr !important; padding: 54px 20px 24px !important; gap: 34px 22px !important; }
-  .nf-footer-brand, .nf-footer .footer-bottom { grid-column: 1 / -1; }
   .nf-page-hero {
     min-height: 690px !important;
     display: flex !important;
@@ -497,9 +417,6 @@ body::before {
   .an-site .live-section { min-height: 570px !important; }
 }
 @media (max-width: 480px) {
-  .nf-wordmark { font-size: 0.55rem !important; letter-spacing: 0.05em !important; }
-  .nf-footer { grid-template-columns: 1fr !important; }
-  .nf-footer-brand, .nf-footer .footer-bottom { grid-column: auto; }
   .nf-page-hero { min-height: 640px !important; }
   .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(2.4rem, 11.5vw, 4rem) !important; }
   .nf-platform-grid { grid-template-columns: 1fr !important; }

@@ -1,0 +1,1130 @@
+/* ============================================================
+   HOME STAGE — komposisi beranda (redesign checkpoint A)
+   ------------------------------------------------------------
+   Dimuat SETELAH Home.css (lihat Home.tsx). Seluruh selektor di
+   sini memakai nama kelas baru (`an-*`) yang tidak dipakai kulit
+   lama, jadi komposisi baru tidak perlu bertarung dengan 3159
+   baris Home.css dan tidak menambah `!important` baru. Kulit lama
+   tetap hidup untuk blok yang belum disentuh (SignatureStage,
+   EditorialKit, game teaser, CTA, FanSignal).
+
+   Bahasa visual:
+   - satu adegan penuh untuk hero (foto + tipografi di atas scrim);
+   - heading sentence case dari Clash Display, metadata mono kecil;
+   - komposisi berbeda per bagian: daftar kanal, dokumen rilisan,
+     rail katalog, ruang tayang, dan panggung live;
+   - tidak ada kartu identik berulang, tidak ada uppercase di semua
+     elemen.
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   DASAR BERSAMA
+   ------------------------------------------------------------ */
+
+.an-site .an-hero-scene,
+.an-site .an-channels,
+.an-site .an-feature,
+.an-site .an-catalog,
+.an-site .an-screening,
+.an-site .an-stage {
+  position: relative;
+}
+
+.an-site :is(.an-channels, .an-feature, .an-catalog, .an-screening) {
+  padding: var(--section-y) var(--hx-gutter);
+  max-width: var(--hx-max);
+  margin-inline: auto;
+}
+
+.an-site :is(.an-channels, .an-feature, .an-catalog, .an-screening, .an-stage) h2 {
+  margin: 0;
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  text-transform: none;
+  color: var(--paper);
+}
+
+/* Tombol bersama: satu pill terang, satu garis tipis. */
+/* ------------------------------------------------------------
+   ADEGAN 1 — HERO
+   ------------------------------------------------------------ */
+
+.an-site .an-hero-scene {
+  display: grid;
+  align-items: end;
+  /* Tinggi = satu viewport penuh DITAMBAH tinggi masthead, karena bagian atas
+     adegan ini ditarik ke bawah bar yang transparan. Dengan begitu foto
+     menutup penuh layar pertama dan isi hero tetap berada di atas fold. */
+  min-height: calc(100svh + var(--chrome-h, 78px));
+  margin-top: calc(var(--chrome-h, 78px) * -1);
+  padding: calc(var(--chrome-h, 78px) + var(--space-lg)) var(--hx-gutter)
+    calc(var(--chrome-h, 78px) + clamp(26px, 5vh, 52px));
+}
+
+.an-site .an-hero-plate {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: min(62%, 940px);
+  margin: 0;
+  overflow: hidden;
+  background: var(--ink-soft);
+}
+
+.an-site .an-hero-plate img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+}
+
+/* Scrim: kiri gelap untuk tipografi, kanan dibiarkan bersih untuk wajah. */
+.an-site .an-hero-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      var(--ink) 0%,
+      color-mix(in srgb, var(--ink) 88%, transparent) 30%,
+      color-mix(in srgb, var(--ink) 34%, transparent) 66%,
+      transparent 100%
+    ),
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--ink) 78%, transparent) 0%,
+      transparent 34%
+    );
+  pointer-events: none;
+}
+
+.an-site .an-hero-mascot {
+  position: absolute;
+  top: clamp(18px, 3vh, 34px);
+  left: clamp(18px, 3vw, 40px);
+  width: clamp(56px, 7vw, 92px);
+  height: auto;
+  transform: rotate(-4deg);
+  opacity: 0.92;
+  pointer-events: none;
+}
+
+.an-site .an-hero-plate-note {
+  position: absolute;
+  right: clamp(14px, 2vw, 26px);
+  bottom: calc(var(--chrome-h, 78px) + clamp(14px, 2vw, 22px));
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 62%, transparent);
+}
+
+.an-site .an-hero-inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: var(--space-md);
+  align-content: end;
+  max-width: min(44rem, 54%);
+}
+
+/* Judul hero tetap memakai kelas kontrak `hero-title-editorial` /
+   `hero-title-mask` / `hero-title-word` (diuji di server/mobileLayout.test.ts
+   dan server/homeEnhancements.test.ts) — hanya tipografinya yang diubah. */
+.an-site .an-hero-inner .hero-title-editorial {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6.6vw, 6.4rem);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 0.94;
+  color: var(--paper);
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Dibatasi ke panggung hero baru: halaman /en memakai kelas judul yang sama
+   dengan komposisi lama, jadi aturan ini tidak boleh menyentuhnya. */
+.an-site .an-hero-inner .hero-title-mask {
+  display: inline-block;
+  overflow: visible;
+  padding-bottom: 0.08em;
+}
+
+.an-site .an-hero-inner .hero-title-word {
+  white-space: nowrap;
+}
+
+.an-site .an-hero-lede {
+  margin: 0;
+  max-width: 46ch;
+  font-family: var(--font-body);
+  font-size: var(--text-lede);
+  line-height: 1.66;
+  color: color-mix(in srgb, var(--paper) 80%, transparent);
+}
+
+.an-site .an-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* Artefak rilisan terbaru — data nyata dari CMS/katalog. */
+.an-site .an-hero-artifact {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-sm);
+  max-width: 32rem;
+  padding: 10px 16px 10px 10px;
+  border: 1px solid var(--editorial-rule);
+  background: color-mix(in srgb, var(--ink) 74%, transparent);
+  color: var(--paper);
+  text-decoration: none;
+  transition:
+    border-color 220ms var(--ease, ease),
+    background-color 220ms var(--ease, ease);
+}
+
+.an-site .an-hero-artifact:hover,
+.an-site .an-hero-artifact:focus-visible {
+  border-color: color-mix(in srgb, var(--acid) 54%, transparent);
+  background: color-mix(in srgb, var(--ink) 86%, transparent);
+}
+
+.an-site .an-hero-artifact-art {
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--ink-soft);
+}
+
+.an-site .an-hero-artifact-copy {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.an-site .an-hero-artifact-copy small {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+}
+
+.an-site .an-hero-artifact-copy strong {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.an-site .an-hero-artifact-copy em {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  font-style: normal;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-site .an-hero-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  margin: 0;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--editorial-rule);
+}
+
+.an-site .an-hero-facts dt {
+  margin-bottom: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-site .an-hero-facts dd {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  color: var(--paper);
+}
+
+.an-site .an-hero-scroll {
+  position: absolute;
+  left: var(--hx-gutter);
+  bottom: calc(var(--chrome-h, 78px) + clamp(18px, 3vh, 30px));
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--paper) 58%, transparent);
+  text-decoration: none;
+  transition: color 200ms var(--ease, ease);
+}
+
+.an-site .an-hero-scroll:hover,
+.an-site .an-hero-scroll:focus-visible {
+  color: var(--acid);
+}
+
+/* ------------------------------------------------------------
+   ADEGAN 3 — KANAL RESMI
+   ------------------------------------------------------------ */
+
+.an-site .an-channels-head {
+  display: grid;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.an-site .an-channels-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--editorial-rule);
+}
+
+.an-site .an-channel {
+  display: grid;
+  grid-template-columns: 3.2rem 2.1rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-md);
+  padding: clamp(14px, 1.6vw, 20px) 4px;
+  border-bottom: 1px solid var(--editorial-rule);
+  color: var(--paper);
+  text-decoration: none;
+  transition:
+    padding-left 260ms var(--ease, ease),
+    background-color 260ms var(--ease, ease);
+}
+
+.an-site .an-channel-index {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.16em;
+  color: var(--mute);
+}
+
+.an-site .an-channel-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: color-mix(in srgb, var(--paper) 66%, transparent);
+  transition: color 220ms var(--ease, ease);
+}
+
+.an-site .an-channel-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.6vw, 2.1rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: color-mix(in srgb, var(--paper) 84%, transparent);
+  transition: color 220ms var(--ease, ease);
+}
+
+.an-site .an-channel-arrow {
+  color: color-mix(in srgb, var(--paper) 40%, transparent);
+  transition:
+    transform 260ms var(--ease, ease),
+    color 220ms var(--ease, ease);
+}
+
+.an-site .an-channel:hover,
+.an-site .an-channel:focus-visible {
+  padding-left: 14px;
+  background: color-mix(in srgb, var(--paper) 4%, transparent);
+}
+
+.an-site .an-channel:hover .an-channel-name,
+.an-site .an-channel:focus-visible .an-channel-name,
+.an-site .an-channel:hover .an-channel-mark,
+.an-site .an-channel:focus-visible .an-channel-mark {
+  color: var(--acid);
+}
+
+.an-site .an-channel:hover .an-channel-arrow,
+.an-site .an-channel:focus-visible .an-channel-arrow {
+  transform: translate(3px, -3px);
+  color: var(--acid);
+}
+
+.an-site .an-channels-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+}
+
+/* ------------------------------------------------------------
+   ADEGAN 4 — RILISAN TERBARU
+   ------------------------------------------------------------ */
+
+.an-site .an-feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 84px);
+}
+
+/* Gerak masuk memakai utilitas `.an-rise` dari SceneKit (keyframes
+   `an-scene-rise`), ditempel di anak elemen supaya isi tetap terlihat
+   tanpa JS. */
+
+.an-site .an-feature-art {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--ink-soft);
+}
+
+.an-site .an-feature-art figcaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 9px 14px;
+  background: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+
+.an-site .an-feature-copy {
+  display: grid;
+  gap: var(--space-md);
+  align-content: center;
+}
+
+.an-site .an-feature-copy h2 {
+  max-width: 24ch;
+  font-size: clamp(1.8rem, 3.4vw, 3.2rem);
+}
+
+.an-site .an-feature-story {
+  margin: 0;
+  max-width: 52ch;
+  font-size: var(--text-body);
+  line-height: 1.72;
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.an-site .an-feature-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.an-site .an-feature-type {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-site .an-feature-player {
+  margin-top: var(--space-sm);
+}
+
+/* ------------------------------------------------------------
+   ADEGAN 5 — KATALOG (RAIL HORIZONTAL)
+   ------------------------------------------------------------ */
+
+.an-site .an-catalog-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.an-site .an-catalog-head > div:first-child {
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.an-site .an-catalog-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.an-site .an-catalog-controls {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.an-site .an-catalog-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--editorial-rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  transition:
+    border-color 200ms var(--ease, ease),
+    color 200ms var(--ease, ease);
+}
+
+.an-site .an-catalog-controls button:hover,
+.an-site .an-catalog-controls button:focus-visible {
+  border-color: var(--acid);
+  color: var(--acid);
+}
+
+.an-site .an-catalog-rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(210px, 23vw, 310px);
+  align-items: end;
+  gap: clamp(14px, 2vw, 30px);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  padding-bottom: var(--space-sm);
+}
+
+.an-site .an-catalog-rail > .an-release {
+  scroll-snap-align: start;
+}
+
+.an-site .an-release {
+  display: grid;
+  gap: var(--space-sm);
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.an-site .an-release-art {
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--ink-soft);
+  transition: transform 420ms var(--ease, ease);
+}
+
+/* Ritme: setiap kartu ketiga lebih tinggi, jadi rail tidak terbaca sebagai
+   deretan kotak yang sama. */
+.an-site .an-release:nth-child(3n + 2) .an-release-art {
+  aspect-ratio: 4 / 5;
+}
+
+.an-site .an-release:hover .an-release-art,
+.an-site .an-release:focus-visible .an-release-art {
+  transform: translateY(-6px);
+}
+
+.an-site .an-release-meta {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.an-site .an-release-meta small {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-site .an-release-meta strong {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.16;
+  color: var(--paper);
+}
+
+.an-site .an-release-meta em {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-style: normal;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--acid) 82%, var(--paper));
+}
+
+.an-site .an-release.is-skeleton {
+  pointer-events: none;
+}
+
+.an-site .an-release.is-skeleton .skeleton-icon,
+.an-site .an-release.is-skeleton .skeleton-text,
+.an-site .an-release.is-skeleton .skeleton-title {
+  display: block;
+  background: color-mix(in srgb, var(--paper) 8%, transparent);
+}
+
+.an-site .an-release.is-skeleton .skeleton-icon {
+  aspect-ratio: 1 / 1;
+}
+
+.an-site .an-release.is-skeleton .skeleton-text {
+  width: 60%;
+  height: 9px;
+}
+
+.an-site .an-release.is-skeleton .skeleton-title {
+  width: 84%;
+  height: 15px;
+}
+
+/* ------------------------------------------------------------
+   ADEGAN 6 — RUANG TAYANG
+   ------------------------------------------------------------ */
+
+.an-site .an-screening-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.an-site .an-screening-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.62fr) minmax(0, 0.9fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 1.6vw, 24px);
+}
+
+.an-site .an-frame {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--ink-soft);
+  color: var(--paper);
+  text-decoration: none;
+  min-height: 220px;
+}
+
+.an-site .an-frame--lead {
+  grid-row: span 2;
+  min-height: clamp(320px, 46vw, 640px);
+}
+
+.an-site .an-frame-art {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.an-site .an-frame-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--ink) 88%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 18%, transparent) 46%,
+    transparent 78%
+  );
+  transition: opacity 300ms var(--ease, ease);
+}
+
+.an-site .an-frame-copy {
+  position: absolute;
+  left: clamp(14px, 1.6vw, 22px);
+  right: clamp(14px, 1.6vw, 22px);
+  bottom: clamp(14px, 1.6vw, 22px);
+  display: grid;
+  gap: 6px;
+}
+
+.an-site .an-frame-copy small {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+}
+
+.an-site .an-frame-copy strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.8vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.an-site .an-frame-play {
+  position: absolute;
+  right: clamp(14px, 1.6vw, 22px);
+  top: clamp(14px, 1.6vw, 22px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--paper) 42%, transparent);
+  color: var(--paper);
+  transition:
+    background-color 240ms var(--ease, ease),
+    color 240ms var(--ease, ease),
+    transform 240ms var(--ease, ease);
+}
+
+.an-site .an-frame:hover .an-frame-play,
+.an-site .an-frame:focus-visible .an-frame-play {
+  background: var(--acid);
+  border-color: var(--acid);
+  color: var(--ink);
+  transform: scale(1.06);
+}
+
+.an-site .an-frame:hover .an-frame-scrim,
+.an-site .an-frame:focus-visible .an-frame-scrim {
+  opacity: 0.82;
+}
+
+/* ------------------------------------------------------------
+   ADEGAN 7 — PANGGUNG / JADWAL
+   ------------------------------------------------------------ */
+
+.an-site .an-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: end;
+  gap: clamp(28px, 4vw, 72px);
+  min-height: clamp(560px, 82svh, 900px);
+  padding: var(--space-2xl) var(--hx-gutter);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.an-site .an-stage-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 34%;
+}
+
+.an-site .an-stage-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--ink) 94%, transparent) 0%,
+      color-mix(in srgb, var(--ink) 74%, transparent) 52%,
+      color-mix(in srgb, var(--ink) 42%, transparent) 100%
+    ),
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--ink) 88%, transparent) 0%,
+      transparent 62%
+    );
+}
+
+.an-site .an-stage-copy {
+  display: grid;
+  gap: var(--space-md);
+  max-width: 34rem;
+}
+
+.an-site .an-stage-lede {
+  margin: 0;
+  max-width: 44ch;
+  font-size: var(--text-lede);
+  line-height: 1.66;
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+}
+
+.an-site .an-stage-copy .an-btn {
+  justify-self: start;
+}
+
+.an-site .an-stage-board {
+  display: grid;
+  gap: var(--space-xs);
+  align-self: end;
+  padding: var(--space-lg) var(--space-md);
+  border: 1px solid var(--editorial-rule);
+  background: color-mix(in srgb, var(--ink) 76%, transparent);
+}
+
+.an-site .an-stage-board-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  color: var(--paper);
+}
+
+.an-site .an-stage-board-when {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--acid);
+}
+
+.an-site .an-stage-index {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 0;
+  margin: var(--space-lg) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+}
+
+.an-site .an-stage-index li {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1.4fr) minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--space-md);
+  padding: 14px 2px;
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
+}
+
+.an-site .an-stage-date {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.18em;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
+}
+
+.an-site .an-stage-index strong {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+}
+
+.an-site .an-stage-index small {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--paper) 66%, transparent);
+}
+
+.an-site .an-stage-index a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.an-site .an-stage-index .an-event-location-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.an-site .an-stage-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-self: end;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--acid);
+}
+
+/* ------------------------------------------------------------
+   MOTION — hiasi isi yang sudah terlihat, jangan sembunyikan isi
+   (`.an-site .an-reveal` dipaksa terlihat oleh EditorialRefresh;
+   jadi animasinya ada di anak elemen, bukan di kontainer).
+   ------------------------------------------------------------ */
+
+/* ------------------------------------------------------------
+   BREAKPOINT — tablet besar
+   ------------------------------------------------------------ */
+
+@media (max-width: 1080px) {
+  .an-site .an-hero-inner {
+    max-width: min(38rem, 68%);
+  }
+  .an-site .an-hero-plate {
+    width: min(66%, 760px);
+  }
+  .an-site .an-stage {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .an-site .an-stage-board {
+    justify-self: start;
+    min-width: min(100%, 26rem);
+  }
+}
+
+/* ------------------------------------------------------------
+   BREAKPOINT — satu kolom (ponsel & tablet kecil)
+   ------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+  .an-site .an-feature {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-lg);
+  }
+  .an-site .an-feature-art {
+    aspect-ratio: 4 / 3;
+  }
+  .an-site .an-screening-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+  .an-site .an-frame--lead {
+    grid-row: auto;
+    min-height: clamp(220px, 56vw, 420px);
+  }
+  .an-site .an-frame {
+    min-height: clamp(200px, 46vw, 320px);
+  }
+  .an-site .an-stage-index li {
+    grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  }
+  .an-site .an-stage-index small {
+    grid-column: 2 / -1;
+  }
+}
+
+/* ------------------------------------------------------------
+   BREAKPOINT — ponsel (360/375/390 target utama)
+   ------------------------------------------------------------ */
+
+@media (max-width: 767.98px) {
+  /* Hero jadi urutan vertikal: foto lebih dulu sebagai pembuka, lalu
+     tipografi. Foto dibuat full-bleed ke tepi layar. */
+  .an-site .an-hero-scene {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-lg);
+    align-items: start;
+    min-height: 0;
+    padding: calc(var(--chrome-h, 66px) + var(--space-md)) 0 var(--space-2xl);
+  }
+
+  .an-site .an-hero-plate {
+    position: relative;
+    inset: auto;
+    order: -1;
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 4 / 5;
+    max-height: 68svh;
+  }
+
+  .an-site .an-hero-plate::after {
+    background: linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--ink) 62%, transparent) 0%,
+      transparent 42%
+    );
+  }
+
+  .an-site .an-hero-plate-note {
+    right: auto;
+    left: clamp(16px, 5vw, 24px);
+    bottom: clamp(12px, 3vw, 18px);
+  }
+
+  .an-site .an-hero-mascot {
+    top: clamp(14px, 4vw, 22px);
+    left: clamp(14px, 4vw, 22px);
+    width: 54px;
+  }
+
+  .an-site .an-hero-inner {
+    max-width: none;
+    gap: var(--space-md);
+    padding-inline: var(--hx-gutter);
+  }
+
+  /* clamp ini ikut diuji server/mobileLayout.test.ts: kata terpanjang
+     "NAWASUNDA." harus muat di 320px (36,8px × 6,963em ≈ 256px ≤ 280px). */
+  .an-site .an-hero-inner .hero-title-editorial {
+    font-size: clamp(2.4rem, 11.5vw, 4rem);
+    letter-spacing: -0.05em;
+    line-height: 0.96;
+  }
+
+  .an-site .an-hero-artifact {
+    grid-template-columns: 62px minmax(0, 1fr) auto;
+    padding: 10px 12px 10px 10px;
+  }
+
+  .an-site .an-hero-artifact-copy strong {
+    font-size: 0.96rem;
+  }
+
+  .an-site .an-hero-facts {
+    gap: var(--space-md) var(--space-lg);
+  }
+
+  .an-site .an-hero-scroll {
+    display: none; /* di sentuh, gulir sudah jelas tanpa petunjuk */
+  }
+
+  .an-site :is(.an-channels, .an-feature, .an-catalog, .an-screening) {
+    padding-inline: var(--hx-gutter);
+  }
+
+  .an-site .an-channels-head,
+  .an-site .an-screening-head {
+    margin-bottom: var(--space-lg);
+  }
+
+  .an-site .an-channel {
+    grid-template-columns: 2rem 1.9rem minmax(0, 1fr) auto;
+    gap: var(--space-sm);
+    padding-block: 14px;
+  }
+
+  .an-site .an-channel-name {
+    font-size: 1.2rem;
+  }
+
+  .an-site .an-channel:hover,
+  .an-site .an-channel:focus-visible {
+    padding-left: 6px;
+  }
+
+  .an-site .an-catalog-rail {
+    grid-auto-columns: min(74vw, 300px);
+    gap: 14px;
+    /* Rail tetap bisa digeser lewat sentuhan; tepi kanan diberi udara
+       supaya kartu terakhir tidak menempel ke tepi layar. */
+    padding-right: var(--hx-gutter);
+  }
+
+  .an-site .an-release:nth-child(3n + 2) .an-release-art {
+    aspect-ratio: 1 / 1; /* tinggi seragam di satu baris ponsel */
+  }
+
+  .an-site .an-catalog-tools {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .an-site .an-feature-actions .an-btn {
+    flex: 1 1 auto;
+  }
+
+  .an-site .an-stage {
+    min-height: 0;
+    padding: var(--space-2xl) var(--hx-gutter);
+    gap: var(--space-xl);
+  }
+
+  .an-site .an-stage-bg {
+    object-position: 52% 30%;
+  }
+
+  .an-site .an-stage-index li {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px var(--space-sm);
+  }
+
+  .an-site .an-stage-index .an-stage-date {
+    grid-column: 1 / -1;
+  }
+
+  .an-site .an-stage-index strong {
+    font-size: 1rem;
+  }
+
+  .an-site .an-stage-board {
+    padding: var(--space-md);
+  }
+}
+
+/* ------------------------------------------------------------
+   BREAKPOINT — ponsel kecil (360 dan di bawah)
+   ------------------------------------------------------------ */
+
+@media (max-width: 480px) {
+  .an-site .an-hero-plate {
+    aspect-ratio: 3 / 4;
+    max-height: 62svh;
+  }
+
+  .an-site .an-hero-artifact {
+    grid-template-columns: 54px minmax(0, 1fr) auto;
+  }
+
+  .an-site .an-hero-facts dd {
+    font-size: 0.8rem;
+  }
+
+  .an-site .an-channels-foot {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .an-site .an-channels-foot .an-btn {
+    justify-self: start;
+  }
+}
+
+/* ------------------------------------------------------------
+   PREFERS-REDUCED-MOTION
+   ------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .an-reveal.is-visible :is(.an-feature-art, .an-feature-copy) {
+    animation: none;
+  }
+  .an-site .an-release-art,
+  .an-site .an-frame-play,
+  .an-site .an-frame-scrim,
+  .an-site .an-channel,
+  .an-site .an-channel-arrow,
+  .an-site .an-channel-name,
+  .an-site .an-channel-mark,
+  .an-site .an-btn,
+  .an-site .an-hero-artifact,
+  .an-site .an-hero-scroll {
+    transition: none;
+  }
+  .an-site .an-release:hover .an-release-art,
+  .an-site .an-release:focus-visible .an-release-art,
+  .an-site .an-frame:hover .an-frame-play,
+  .an-site .an-frame:focus-visible .an-frame-play {
+    transform: none;
+  }
+}

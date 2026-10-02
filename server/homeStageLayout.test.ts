@@ -1,0 +1,114 @@
+/**
+ * Kontrak komposisi beranda (redesign checkpoint A).
+ *
+ * Overflow sungguhan hanya terlihat di browser, tapi dua hal bisa dikunci
+ * dari sini: (1) lebar kolom tetap pada komposisi baru harus muat di layar
+ * 360px, dan (2) aturan strukturalnya tidak boleh dibalik tanpa disadari
+ * (foto hero jadi elemen mengalir di ponsel, hero menutup satu viewport
+ * penuh di desktop). Semua angka diambil dari file CSS-nya sendiri, jadi
+ * tes ikut berubah kalau nilainya memang diubah.
+ */
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { describe, expect, it } from "vitest";
+
+const source = (path: string) =>
+  readFileSync(resolve(process.cwd(), path), "utf8");
+
+/** Buang komentar supaya teks dokumentasi tidak terbaca sebagai aturan. */
+const stripComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, "");
+
+const HOME_STAGE = "client/src/pages/HomeStage.css";
+const CHROME = "client/src/shell/ChromeRedesign.css";
+
+/** Isi blok `selector { ... }` pertama yang cocok. */
+function block(css: string, selector: string) {
+  const index = css.indexOf(selector);
+  if (index < 0) throw new Error(`selector tidak ditemukan: ${selector}`);
+  const start = css.indexOf("{", index);
+  const end = css.indexOf("}", start);
+  return css.slice(start + 1, end);
+}
+
+const px = (value: number) => value * 16;
+
+describe("komposisi beranda", () => {
+  const css = stripComments(source(HOME_STAGE));
+
+  it("menutup satu viewport penuh di desktop tanpa menaruh isi di bawah fold", () => {
+    const hero = block(css, ".an-site .an-hero-scene {");
+    // Foto ditarik ke bawah masthead, jadi tingginya harus ikut ditambah.
+    expect(hero).toContain("min-height: calc(100svh + var(--chrome-h");
+    expect(hero).toContain("margin-top: calc(var(--chrome-h");
+    // Padding bawah + petunjuk gulir mengimbangi bagian yang tertutup bar.
+    expect(hero).toContain("calc(var(--chrome-h, 78px) + clamp(26px, 5vh, 52px))");
+    expect(block(css, ".an-site .an-hero-scroll {")).toContain(
+      "bottom: calc(var(--chrome-h, 78px) + clamp(18px, 3vh, 30px))"
+    );
+  });
+
+  it("mengubah foto hero jadi elemen mengalir di ponsel", () => {
+    const mobile = css.slice(css.indexOf("@media (max-width: 767.98px)"));
+    const plate = block(mobile, ".an-site .an-hero-plate {");
+    expect(plate).toContain("position: relative");
+    expect(plate).toContain("inset: auto");
+    expect(plate).toContain("width: 100%");
+    expect(plate).toContain("max-height: 68svh");
+    // Tanpa aspect-ratio, `max-height` saja membuat foto jadi kolom tipis.
+    expect(plate).toContain("aspect-ratio: 4 / 5");
+  });
+
+  it("menjaga kolom tetap artefak rilisan muat di 360px", () => {
+    const mobile = css.slice(css.indexOf("@media (max-width: 767.98px)"));
+    const artifact = block(mobile, ".an-site .an-hero-artifact {");
+    const art = Number.parseFloat(
+      artifact.match(/grid-template-columns:\s*([\d.]+)px/)?.[1] ?? "0"
+    );
+    const arrow = 16; // ikon panah
+    const gap = 12; // --space-sm pada layar kecil
+    const inner = 360 - 22 * 2; // --editorial-gutter
+    const left = inner - (art + gap * 2 + arrow);
+    expect(art, "lebar artwork artefak terbaca").toBeGreaterThan(0);
+    expect(
+      left,
+      `teks artefak hanya kebagian ${left.toFixed(0)}px`
+    ).toBeGreaterThanOrEqual(140);
+  });
+
+  it("menjaga baris kanal resmi tidak melipat di 360px", () => {
+    const mobile = css.slice(css.indexOf("@media (max-width: 767.98px)"));
+    const row = block(mobile, ".an-site .an-channel {");
+    const columns = (
+      row.match(/grid-template-columns:([^;]+);/)?.[1].trim() ?? ""
+    )
+      // Pisahkan per nilai, bukan per spasi: `minmax(0, 1fr)` satu kolom.
+      .match(/(?:minmax|min|max)\([^)]*\)|[^\s]+/g) ?? [];
+    expect(columns).toHaveLength(4);
+    const index = px(Number.parseFloat(columns[0]));
+    const mark = px(Number.parseFloat(columns[1]));
+    const gap = 12; // --space-sm minimum pada 360px
+    const arrow = 16; // ikon ArrowUpRight
+    const inner = 360 - 22 * 2;
+    const left = inner - (index + mark + gap * 2 + arrow);
+    expect(left, `nama kanal hanya kebagian ${left.toFixed(0)}px`).toBeGreaterThanOrEqual(
+      150
+    );
+  });
+
+  it("membatasi lebar kartu rail katalog", () => {
+    const mobile = css.slice(css.indexOf("@media (max-width: 767.98px)"));
+    const rail = block(mobile, ".an-site .an-catalog-rail {");
+    const columns = rail.match(/grid-auto-columns:\s*min\((\d+)vw,\s*(\d+)px\)/);
+    expect(columns, "rail katalog memakai lebar kolom tetap").toBeTruthy();
+    const width = Math.min((Number(columns![1]) / 100) * 360, Number(columns![2]));
+    expect(width).toBeLessThanOrEqual(360 - 22);
+  });
+
+  it("tidak menambah `!important` baru di lapisan redesign", () => {
+    for (const file of [HOME_STAGE, CHROME]) {
+      const content = stripComments(source(file));
+      const count = (content.match(/!important/g) ?? []).length;
+      expect(count, `${file} menambah !important`).toBe(0);
+    }
+  });
+});

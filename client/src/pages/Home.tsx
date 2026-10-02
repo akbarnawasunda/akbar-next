@@ -45,6 +45,10 @@ import {
 import { SignatureStage } from "@/components/signature/SignatureStage";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
+// Komposisi baru beranda (checkpoint A). Dimuat setelah Home.css: nama kelas
+// `.an-*` di dalamnya tidak dipakai kulit lama, jadi tidak ada perang
+// spesifisitas dan tidak ada `!important` baru.
+import "./HomeStage.css";
 
 const formatEventDate = (date: string) => {
   const parsed = new Date(date);
@@ -281,13 +285,17 @@ export default function Home() {
 
   return (
     <>
-      <div className="an-site">
+      <div className="an-site" data-page="home">
         {/* Rute arsip tetap dipusatkan di NightHeader: href="/universe" (label "ARSIP"). */}
         <NightHeader />
 
         <main id="top" tabIndex={-1}>
-          <section className="an-hero">
-            <div className="home-hero-portrait">
+          {/* ADEGAN 1 — pembuka sinematik: satu foto resmi sebagai panggung,
+              tipografi masuk dari kiri bawah di atas scrim gelap, dan rilisan
+              terbaru hadir sebagai artefak yang bisa diklik. Semua isinya data
+              nyata dari CMS/katalog. */}
+          <section className="an-hero-scene" aria-labelledby="hero-title">
+            <figure className="an-hero-plate">
               <picture className="home-hero-picture">
                 <source
                   media="(max-width: 640px)"
@@ -312,66 +320,32 @@ export default function Home() {
                   }}
                 />
               </picture>
-              {/* Kartu rilisan terbaru — seluruh isinya data nyata dari CMS/katalog. */}
-              <a
-                className="desktop-stage-deck"
-                href={activeRelease.href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <div className="desktop-vinyl-badge">
-                  <div className="desktop-vinyl-disc" aria-hidden="true" />
-                  <div className="desktop-vinyl-meta">
-                    <span className="desktop-vinyl-cat">RILISAN TERBARU</span>
-                    <strong className="desktop-vinyl-track">
-                      {activeRelease.title}
-                    </strong>
-                    <span className="desktop-vinyl-spec">{heroDeckSpec}</span>
-                  </div>
-                  <ArrowUpRight className="desktop-vinyl-go" size={16} />
-                </div>
-                <div className="desktop-stage-specs">
-                  <div className="desktop-spec-item">
-                    <span>BASIS</span>
-                    <strong>BANDUNG BARAT</strong>
-                  </div>
-                  <div className="desktop-spec-item">
-                    <span>SEJAK</span>
-                    <strong>2020</strong>
-                  </div>
-                  <div className="desktop-spec-item">
-                    <span>GENRE</span>
-                    <strong>BREAKBEAT / INDO BASS</strong>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <picture className="hero-mascot-doodle">
-              <source
-                srcSet="/assets/akbar-mascot-doodle.avif"
-                type="image/avif"
-              />
-              <source
-                srcSet="/assets/akbar-mascot-doodle.webp"
-                type="image/webp"
-              />
               <img
+                className="an-hero-mascot"
                 src="/assets/akbar-mascot-doodle.webp"
-                alt="Maskot doodle Akbar Nawasunda"
-                width={420}
-                height={420}
+                alt=""
+                aria-hidden="true"
+                width={168}
+                height={168}
                 loading="lazy"
                 fetchPriority="low"
                 decoding="async"
               />
-            </picture>
+              <figcaption className="an-hero-plate-note">
+                <span>Portrait resmi</span>
+                <span aria-hidden="true">·</span>
+                <span>Bandung Barat</span>
+              </figcaption>
+            </figure>
 
-            <div className="hero-copy">
-              <p className="eyebrow">
-                <span /> {heroKicker}
+            <div className="an-hero-inner">
+              <p className="an-kicker">
+                <span className="an-kicker-dot" aria-hidden="true" />
+                {heroKicker}
               </p>
               <h1
                 className="hero-title-editorial"
+                id="hero-title"
                 data-no-scramble="true"
                 aria-label={displayHeroTitle}
               >
@@ -389,39 +363,70 @@ export default function Home() {
                   ))}
                 </span>
               </h1>
-              <p className="hero-description">{heroBody}</p>
-              <div className="hero-actions">
+              <p className="an-hero-lede">{heroBody}</p>
+
+              <div className="an-hero-cta">
                 <a
-                  className="button-primary"
+                  className="an-btn an-btn--solid"
                   href={heroActionUrl}
                   target="_blank"
                   rel="noreferrer"
                   data-signal-magnetic
                   data-signal-interactive
                 >
-                  <Play size={14} fill="currentColor" />
+                  <Play size={13} fill="currentColor" />
                   <span>{heroActionLabel}</span>
                 </a>
-                <Link
-                  className="button-quiet"
-                  href="/visuals"
-                  data-signal-magnetic
-                >
-                  LIHAT VISUAL <ArrowRight size={15} />
+                <Link className="an-btn an-btn--quiet" href="/visuals" data-signal-magnetic>
+                  Lihat visual <ArrowRight size={15} />
                 </Link>
-                <a className="hero-signal-link" href="#signal">
-                  KABAR TERBARU <ArrowDownRight size={13} />
-                </a>
               </div>
+
+              <a
+                className="an-hero-artifact"
+                href={activeRelease.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="an-hero-artifact-art">
+                  {/* thumbnail 72px: minta turunan kecil, bukan master */}
+                  <ResilientArtworkImage
+                    src={artworkThumb(activeRelease.image)}
+                    backupSrc={officialBrand.socialPreview}
+                    alt={`Artwork ${activeRelease.title}`}
+                  />
+                </span>
+                <span className="an-hero-artifact-copy">
+                  <small>Rilis terbaru</small>
+                  <strong>{activeRelease.title}</strong>
+                  <em>{heroDeckSpec}</em>
+                </span>
+                <ArrowUpRight size={16} aria-hidden="true" />
+              </a>
+
+              <dl className="an-hero-facts">
+                <div>
+                  <dt>Basis</dt>
+                  <dd>Bandung Barat</dd>
+                </div>
+                <div>
+                  <dt>Sejak</dt>
+                  <dd>2020</dd>
+                </div>
+                <div>
+                  <dt>Genre</dt>
+                  <dd>Breakbeat / Indo Bass</dd>
+                </div>
+              </dl>
             </div>
 
             <a
-              className="hero-scroll-cue"
-              href="#platforms"
-              aria-label="Scroll untuk menjelajah"
+              className="an-hero-scroll"
+              href="#signal"
+              aria-label="Lihat kabar terbaru dari studio"
             >
-              <span>SCROLL</span>
-              <ArrowDownRight size={14} />
+              <span aria-hidden="true">Gulir</span>
+              <ArrowDownRight size={15} aria-hidden="true" />
             </a>
           </section>
 
@@ -442,120 +447,124 @@ export default function Home() {
             <CurrentSignalBoard rows={currentSignalRows} />
           </EditorialSection>
 
+          {/* ADEGAN 3 — kanal resmi sebagai daftar tipografis, bukan deretan
+              kartu identik. Marquee di bawahnya tetap dipakai sebagai ritme. */}
           <section
-            className="home-signal-deck"
+            className="an-channels"
             id="platforms"
-            aria-labelledby="signal-deck-title"
+            aria-labelledby="channels-title"
           >
-            <div className="home-signal-copy">
-              <p className="eyebrow">
-                <span /> PLATFORM RESMI
+            <header className="an-channels-head">
+              <h2 id="channels-title">Dengar di kanal resminya.</h2>
+              <p className="an-meta">
+                {editablePlatformLinks.length} kanal resmi · rilisan, remix,
+                dan set
               </p>
-              <h2 id="signal-deck-title">
-                DENGAR
-                <br />
-                KARYANYA.
-              </h2>
-              <Link className="home-deck-cta" href="/music">
-                LIHAT MUSIK <ArrowRight size={14} />
+            </header>
+
+            <ul className="an-channels-list">
+              {editablePlatformLinks.map((platform, index) => (
+                <li key={platform.label}>
+                  <a
+                    className={`an-channel platform-${platform.label
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}`}
+                    href={platform.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
+                  >
+                    <span className="an-channel-index" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="an-channel-mark" aria-hidden="true">
+                      <PlatformIcon label={platform.label} />
+                    </span>
+                    <span className="an-channel-name">{platform.label}</span>
+                    <ArrowUpRight
+                      className="an-channel-arrow"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div className="an-channels-foot">
+              <PlatformMarquee links={editablePlatformLinks} />
+              <Link className="an-btn an-btn--quiet" href="/music">
+                Buka katalog musik <ArrowRight size={14} />
               </Link>
             </div>
-            <div className="home-platform-rack">
-              {editablePlatformLinks.map(platform => (
-                <a
-                  className={`home-platform-card platform-${platform.label
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")}`}
-                  key={platform.label}
-                  href={platform.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
-                >
-                  <span className="home-platform-icon-shell">
-                    <PlatformIcon label={platform.label} />
-                  </span>
-                  <span className="home-platform-copy">
-                    <strong>{platform.label}</strong>
-                  </span>
-                  <ArrowUpRight className="home-platform-arrow" size={14} />
-                </a>
-              ))}
-            </div>
-            <PlatformMarquee links={editablePlatformLinks} />
           </section>
 
+          {/* ADEGAN 4 — rilisan terbaru sebagai satu dokumen utuh: artwork
+              besar, metadata mono, dan pemutar resmi di tempat yang sama. */}
           <Reveal>
-            <section className="section section-current" id="music">
-              <div className="section-heading">
-                <div>
-                  <h2>
-                    RILIS
-                    <br />
-                    TERBARU.
-                  </h2>
+            <section
+              className="an-feature"
+              id="music"
+              aria-labelledby="feature-title"
+            >
+              <figure className="an-feature-art an-rise">
+                <ResilientArtworkImage
+                  src={activeRelease.image}
+                  backupSrc={officialBrand.socialPreview}
+                  alt={`Artwork ${activeRelease.title}`}
+                />
+                <figcaption>
+                  {cmsCurrentRelease
+                    ? [cmsCurrentRelease.format || cmsCurrentRelease.platform, cmsCurrentRelease.year]
+                        .filter(Boolean)
+                        .join(" · ")
+                    : managedRelease?.label || currentRelease.eyebrow}
+                </figcaption>
+              </figure>
+
+              <div className="an-feature-copy an-rise">
+                <p className="an-meta">Rilisan terbaru</p>
+                <h2 id="feature-title">{activeRelease.title}</h2>
+                <p className="an-feature-story">
+                  {activeReleaseStory ||
+                    "Putar langsung di sini, atau buka versi lengkapnya di platform resmi."}
+                </p>
+                <div className="an-feature-actions">
+                  <button
+                    type="button"
+                    className="an-btn an-btn--solid"
+                    aria-expanded={playerOpen}
+                    onClick={() => setPlayerOpen(open => !open)}
+                  >
+                    {playerOpen ? (
+                      "Tutup player"
+                    ) : (
+                      <>
+                        <Play size={13} fill="currentColor" /> Putar di sini
+                      </>
+                    )}
+                  </button>
+                  <a
+                    className="an-btn an-btn--quiet"
+                    href={activeRelease.href}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Buka rilisan <ArrowUpRight size={14} />
+                  </a>
+                  <span className="an-feature-type">{activeRelease.type}</span>
                 </div>
-              </div>
-              {contentIsLoading && (
-                <p className="content-state">MEMUAT RILISAN…</p>
-              )}
-              <div className="feature-release">
-                <div className="release-cover">
-                  <ResilientArtworkImage
-                    src={activeRelease.image}
-                    backupSrc={officialBrand.socialPreview}
-                    alt={`Artwork ${activeRelease.title}`}
-                  />
-                </div>
-                <div className="release-detail">
-                  <p className="mono-label">
-                    {cmsCurrentRelease
-                      ? `${cmsCurrentRelease.format || cmsCurrentRelease.platform || "RELEASE"}${
-                          cmsCurrentRelease.year
-                            ? ` · ${cmsCurrentRelease.year}`
-                            : ""
-                        }`
-                      : managedRelease?.label || currentRelease.eyebrow}
-                  </p>
-                  <h3>{activeRelease.title}</h3>
-                  <p>
-                    {activeReleaseStory ||
-                      "Putar langsung di sini, atau buka versi lengkapnya di platform resmi."}
-                  </p>
-                  <div className="release-detail-actions">
-                    <button
-                      type="button"
-                      className="release-play-toggle"
-                      aria-expanded={playerOpen}
-                      onClick={() => setPlayerOpen(open => !open)}
-                    >
-                      {playerOpen ? (
-                        <>TUTUP PLAYER</>
-                      ) : (
-                        <>
-                          <Play size={12} fill="currentColor" /> PUTAR DI SINI
-                        </>
-                      )}
-                    </button>
-                    <a
-                      className="text-link"
-                      href={activeRelease.href}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      BUKA RILISAN <ArrowUpRight size={14} />
-                    </a>
-                    <span>{activeRelease.type}</span>
+                {playerOpen ? (
+                  <div className="an-feature-player">
+                    <MusicEmbed
+                      url={activeRelease.href}
+                      title={activeRelease.title}
+                    />
                   </div>
-                  {playerOpen ? (
-                    <div className="release-player">
-                      <MusicEmbed
-                        url={activeRelease.href}
-                        title={activeRelease.title}
-                      />
-                    </div>
-                  ) : null}
-                </div>
+                ) : null}
+                {contentIsLoading && (
+                  <p className="an-meta">Memuat rilisan…</p>
+                )}
               </div>
             </section>
           </Reveal>
@@ -566,38 +575,34 @@ export default function Home() {
             showJourney={false}
           />
 
+          {/* ADEGAN 5 — katalog sebagai rail horizontal: lebar & tinggi
+              artwork bergantian supaya ritmenya tidak seperti grid toko. */}
           <Reveal>
-            <section className="section release-section">
-              <div className="section-inline">
+            <section className="an-catalog" aria-labelledby="catalog-title">
+              <header className="an-catalog-head">
                 <div>
-                  <p className="eyebrow">
-                    {displayReleases.length} RILISAN · 2024—2025
+                  <p className="an-meta">
+                    {displayReleases.length} rilisan · 2024—2025
                   </p>
-                  <h2>
-                    KATALOG
-                    <br />
-                    LENGKAP.
-                  </h2>
+                  <h2 id="catalog-title">Katalog lengkap.</h2>
                 </div>
-                <a
-                  className="text-link"
-                  href={
-                    editablePlatformLinks.find(link => link.label === "Spotify")
-                      ?.href ||
-                    "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw"
-                  }
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  SPOTIFY <PlatformIcon label="Spotify" />{" "}
-                  <ArrowUpRight size={14} />
-                </a>
-              </div>
-              <div className="home-release-carousel">
-                <div className="home-release-carousel-toolbar">
-                  <span>GESER UNTUK MENJELAJAH</span>
+                <div className="an-catalog-tools">
+                  <a
+                    className="an-btn an-btn--quiet"
+                    href={
+                      editablePlatformLinks.find(
+                        link => link.label === "Spotify"
+                      )?.href ||
+                      "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw"
+                    }
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Spotify <PlatformIcon label="Spotify" />{" "}
+                    <ArrowUpRight size={14} />
+                  </a>
                   <div
-                    className="home-release-carousel-controls"
+                    className="an-catalog-controls"
                     aria-label="Kontrol katalog rilisan"
                   >
                     <button
@@ -634,111 +639,123 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
-                <div
-                  className="release-grid"
-                  ref={releaseCatalogRef}
-                  tabIndex={0}
-                  aria-busy={contentIsLoading}
-                  aria-label="Katalog rilisan Akbar Nawasunda"
-                >
-                  {contentIsLoading
-                    ? [1, 2, 3, 4].map(index => (
-                        <div
-                          className="release-card skeleton"
-                          key={index}
-                          aria-hidden="true"
-                        >
-                          <div className="skeleton-icon" />
+              </header>
+
+              <div
+                className="an-catalog-rail"
+                ref={releaseCatalogRef}
+                tabIndex={0}
+                aria-busy={contentIsLoading}
+                aria-label="Katalog rilisan Akbar Nawasunda"
+              >
+                {contentIsLoading
+                  ? [1, 2, 3, 4].map(index => (
+                      <div
+                        className="an-release is-skeleton"
+                        key={index}
+                        aria-hidden="true"
+                      >
+                        <span className="an-release-art skeleton-icon" />
+                        <span className="an-release-meta">
                           <span className="skeleton-text" />
                           <span className="skeleton-title" />
-                        </div>
-                      ))
-                    : displayReleases.map(release => (
-                        <a
-                          key={release.title}
-                          className="release-card"
-                          href={release.href}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          {release.image && (
-                            <div className="release-card-art">
-                              <ResilientArtworkImage
-                                src={artworkThumb(release.image)}
-                                backupSrc={release.image}
-                                alt={`Artwork ${release.title}`}
-                              />
-                            </div>
-                          )}
-                          <PlatformIcon label={release.platform} />
-                          <p>
-                            {release.format} · {release.year}
-                          </p>
-                          <h3>{release.title}</h3>
-                          <span className="release-platform-line">
-                            {release.platform} <ArrowUpRight size={13} />
+                        </span>
+                      </div>
+                    ))
+                  : displayReleases.map(release => (
+                      <a
+                        key={release.title}
+                        className="an-release"
+                        href={release.href}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {release.image && (
+                          <span className="an-release-art">
+                            <ResilientArtworkImage
+                              src={artworkThumb(release.image)}
+                              backupSrc={release.image}
+                              alt={`Artwork ${release.title}`}
+                            />
                           </span>
-                        </a>
-                      ))}
-                </div>
+                        )}
+                        <span className="an-release-meta">
+                          <small>
+                            {release.format} · {release.year}
+                          </small>
+                          <strong>{release.title}</strong>
+                          <em>
+                            {release.platform}{" "}
+                            <ArrowUpRight size={12} aria-hidden="true" />
+                          </em>
+                        </span>
+                      </a>
+                    ))}
               </div>
             </section>
           </Reveal>
 
-          <section className="section visual-section" id="visuals">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">VISUAL</p>
-                <h2>
-                  VIDEO
-                  <br />& REMIX.
-                </h2>
-              </div>
-            </div>
-            <div className="video-grid">
+          {/* ADEGAN 6 — ruang tayang: satu film besar sebagai anchor, dua
+              lainya lebih kecil di sampingnya. Bukan grid thumbnail seragam. */}
+          <section
+            className="an-screening"
+            id="visuals"
+            aria-labelledby="screening-title"
+          >
+            <header className="an-screening-head">
+              <h2 id="screening-title">Visual &amp; remix.</h2>
+              <p className="an-meta">
+                {activeVideos.length} video resmi · kanal YouTube
+              </p>
+            </header>
+            <div className="an-screening-grid">
               {activeVideos.map((video, index) => (
                 <a
                   key={video.title}
-                  className={`video-card video-${index + 1}`}
+                  className={`an-frame${index === 0 ? " an-frame--lead" : ""}`}
                   href={video.href}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <ResilientArtworkImage
-                    src={video.image}
-                    backupSrc={officialBrand.socialPreview}
-                    alt={`${video.title} — visual resmi`}
-                  />
-                  <div className="video-overlay" />
-                  <div className="video-content">
-                    <span>{video.label}</span>
-                    <h3>{video.title}</h3>
-                    <div className="round-play">
-                      <Play size={15} fill="currentColor" />
-                    </div>
-                  </div>
+                  <span className="an-frame-art">
+                    <ResilientArtworkImage
+                      src={video.image}
+                      backupSrc={officialBrand.socialPreview}
+                      alt={`${video.title} — visual resmi`}
+                    />
+                  </span>
+                  <span className="an-frame-scrim" aria-hidden="true" />
+                  <span className="an-frame-copy">
+                    <small>{video.label}</small>
+                    <strong>{video.title}</strong>
+                  </span>
+                  <span className="an-frame-play" aria-hidden="true">
+                    <Play size={15} fill="currentColor" />
+                  </span>
                 </a>
               ))}
             </div>
           </section>
 
+          {/* ADEGAN 7 — panggung: satu foto pertunjukan sebagai latar penuh,
+              tanggal besar di atasnya, dan daftar jadwal sebagai indeks. */}
           <Reveal>
-            <section className="section live-section" id="live">
-              <div
-                className="live-backdrop"
-                style={{
-                  backgroundImage:
-                    "url(/assets/akbar-night-frequency-hero-mobile-optimized.webp)",
-                }}
+            <section className="an-stage" id="live" aria-labelledby="stage-title">
+              <img
+                className="an-stage-bg"
+                src="/assets/akbar-night-frequency-hero-mobile-optimized.webp"
+                alt=""
+                aria-hidden="true"
+                width={1200}
+                height={800}
+                loading="lazy"
+                decoding="async"
               />
-              <div className="live-copy">
-                <p className="eyebrow">LIVE</p>
-                <h2>
-                  JADWAL
-                  <br />
-                  PERTUNJUKAN.
-                </h2>
-                <p>
+              <div className="an-stage-scrim" aria-hidden="true" />
+              <div className="an-stage-copy">
+                <p className="an-meta">Live</p>
+                <h2 id="stage-title">Jadwal panggung.</h2>
+                <p className="an-stage-lede">
                   {publicContent.data?.live?.message ||
                     managedLive?.subtitle ||
                     (featuredEvent
@@ -746,7 +763,7 @@ export default function Home() {
                       : "Jadwal akan tampil setelah diumumkan secara resmi.")}
                 </p>
                 <a
-                  className="button-primary"
+                  className="an-btn an-btn--solid"
                   href={
                     featuredEvent?.ticketUrl ||
                     featuredEvent?.rsvpUrl ||
@@ -771,41 +788,41 @@ export default function Home() {
                   <Ticket size={14} />
                   <span>
                     {featuredEvent?.ticketUrl
-                      ? "TIKET SHOW"
+                      ? "Tiket show"
                       : featuredEvent?.rsvpUrl
-                        ? "RSVP SHOW"
-                        : "BERI TAHU SAYA"}
+                        ? "RSVP show"
+                        : "Beri tahu saya"}
                   </span>
                 </a>
               </div>
-              <div className="live-status">
-                <span>
+
+              <div className="an-stage-board">
+                <span className="an-meta">
                   {featuredEvent
-                    ? "SHOW BERIKUTNYA"
-                    : managedLive?.label || "INFO JADWAL"}
+                    ? "Show berikutnya"
+                    : managedLive?.label || "Info jadwal"}
                 </span>
-                <strong>
-                  {featuredEvent?.title || managedLive?.title || (
-                    <>
-                      BELUM ADA
-                      <br />
-                      TANGGAL
-                    </>
-                  )}
+                <strong className="an-stage-board-title">
+                  {featuredEvent?.title ||
+                    managedLive?.title || (
+                      <>
+                        Belum ada
+                        <br />
+                        tanggal
+                      </>
+                    )}
                 </strong>
-                <small>
+                <small className="an-stage-board-when">
                   {featuredEvent
                     ? formatEventDate(featuredEvent.date)
                     : managedLive
-                      ? "UPDATE RESMI"
-                      : "AKAN DIUMUMKAN"}
+                      ? "Update resmi"
+                      : "Akan diumumkan"}
                 </small>
               </div>
+
               {cmsEvents.length ? (
-                <div
-                  className="home-live-events"
-                  aria-label="Jadwal pertunjukan"
-                >
+                <ol className="an-stage-index" aria-label="Jadwal pertunjukan">
                   {cmsEvents.slice(0, 3).map(event => {
                     const eventHref =
                       event.ticketUrl || event.rsvpUrl || "#signal";
@@ -814,8 +831,10 @@ export default function Home() {
                         .filter(Boolean)
                         .join(", ") || "Detail venue menyusul";
                     return (
-                      <article className="home-live-event" key={event._id}>
-                        <span>{formatEventDate(event.date)}</span>
+                      <li key={event._id}>
+                        <span className="an-stage-date">
+                          {formatEventDate(event.date)}
+                        </span>
                         <strong>{event.title}</strong>
                         <small>
                           {event.mapsUrl ? (
@@ -832,7 +851,7 @@ export default function Home() {
                           )}
                         </small>
                         <a
-                          className="home-live-event-source"
+                          className="an-stage-source"
                           href={eventHref}
                           target={
                             eventHref.startsWith("http") ? "_blank" : undefined
@@ -845,16 +864,16 @@ export default function Home() {
                           aria-label={`${event.title} — buka sumber resmi`}
                         >
                           {event.ticketUrl
-                            ? "TIKET"
+                            ? "Tiket"
                             : event.rsvpUrl
                               ? "RSVP"
-                              : "LIHAT JADWAL"}{" "}
+                              : "Lihat jadwal"}{" "}
                           <ArrowUpRight size={13} />
                         </a>
-                      </article>
+                      </li>
                     );
                   })}
-                </div>
+                </ol>
               ) : null}
             </section>
           </Reveal>

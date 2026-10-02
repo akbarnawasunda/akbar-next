@@ -11,6 +11,11 @@ import { isPublicRoute, languageOf } from "@/signature/routeSignal";
 import { useSignatureState } from "@/signature/useSignature";
 import "./PublicShell.css";
 import "./EditorialRefresh.css";
+// Dimuat terakhir: lapisan redesign chrome (masthead + footer) menang urutan
+// cascade terhadap EditorialRefresh tanpa menambah `!important` baru.
+import "./ChromeRedesign.css";
+// Primitif scene bersama (label, judul, tombol, baris indeks, gerak masuk).
+import "./SceneKit.css";
 
 /**
  * Lapisan signature global.
