@@ -161,7 +161,7 @@ export default function Inquiry() {
               <h2 className="an-inq-context-title">
                 Konteks singkat membuat brief cepat ditinjau.
               </h2>
-              <ul className="an-inq-checklist">
+              <ul className="an-checklist">
                 <li>Tujuan proyek dan bentuk kerja samanya.</li>
                 <li>Referensi atau contoh yang paling dekat.</li>
                 <li>Timeline dan target penggunaan.</li>

@@ -84,31 +84,6 @@
   color: var(--paper);
 }
 
-.an-public-shell.an-editorial .an-inq-checklist {
-  display: grid;
-  gap: 10px;
-  margin: var(--space-sm) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.an-public-shell.an-editorial .an-inq-checklist li {
-  display: grid;
-  grid-template-columns: 8px minmax(0, 1fr);
-  gap: 12px;
-  font-size: 0.92rem;
-  line-height: 1.62;
-  color: color-mix(in srgb, var(--paper) 78%, transparent);
-}
-
-.an-public-shell.an-editorial .an-inq-checklist li::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  margin-top: 0.52em;
-  border: 1px solid color-mix(in srgb, var(--acid) 70%, transparent);
-}
-
 .an-public-shell.an-editorial .an-inq-roles {
   margin: 0;
   font-family: var(--font-mono);

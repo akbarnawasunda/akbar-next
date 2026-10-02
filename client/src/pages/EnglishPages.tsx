@@ -39,6 +39,7 @@ import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import VisualPortraitStudies from "@/components/VisualPortraitStudies";
 import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
+import { LicensingView } from "./Licensing";
 import { PlatformMarquee } from "@/components/PlatformMarquee";
 import {
   currentRelease,
@@ -2006,103 +2007,9 @@ export function EnglishInquiry() {
 }
 
 export function EnglishLicensing() {
-  const routes = [
-    [
-      "01",
-      "Content use",
-      "For social, editorial, branded, or platform content that needs a defined track and usage window.",
-    ],
-    [
-      "02",
-      "Commercial use",
-      "Commercial permissions, fees, exclusivity, and deliverables are discussed case by case.",
-    ],
-    [
-      "03",
-      "Clearance first",
-      "A request is an opening conversation, not automatic permission to use a recording.",
-    ],
-    [
-      "04",
-      "Credit matters",
-      "Non-commercial use with clear credit is appreciated, but still needs a confirmed route when rights are involved.",
-    ],
-  ];
-
   return (
     <EnglishFrame>
-      <main id="main-content" tabIndex={-1} className="en-content">
-        <section className="nf-page-hero en-hero">
-          <div>
-            <h1>
-              LICENSE
-              <br />
-              <em>THE MUSIC.</em>
-            </h1>
-            <p>
-              For content, campaigns, edits, and other uses that need a clear,
-              direct conversation about rights.
-            </p>
-          </div>
-          <div className="nf-hero-note">
-            <span>STATUS</span>
-            <strong>REQUEST FIRST</strong>
-            <a
-              className="nf-text-button"
-              href={`mailto:${bookingEmail}?subject=Music%20licensing%20inquiry`}
-            >
-              ASK ABOUT USE <ArrowUpRight size={14} />
-            </a>
-          </div>
-        </section>
-
-        <section className="nf-section">
-          <div className="en-section-intro">
-            <h2>
-              CLARITY
-              <br />
-              <em>BEFORE USE.</em>
-            </h2>
-            <p>
-              Send the title, the project, where it will appear, the territory,
-              duration, audience, and whether the use is commercial or
-              non-commercial.
-            </p>
-          </div>
-          <div className="en-service-grid">
-            {routes.map(([number, title, copy]) => (
-              <article className="en-service-card" key={title}>
-                <span>{number}</span>
-                <h3>{title}</h3>
-                <p>{copy}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="nf-section dark-panel">
-          <div className="en-contact-panel">
-            <div>
-              <h2>
-                DESCRIBE
-                <br />
-                <em>THE USE.</em>
-              </h2>
-              <p>
-                Rights, approvals, fees, exclusivity, and deliverables depend on
-                the project. This page is an inquiry route, not an automatic
-                license.
-              </p>
-            </div>
-            <a
-              className="nf-button"
-              href={`mailto:${bookingEmail}?subject=Music%20licensing%20inquiry`}
-            >
-              <Mail size={14} /> SEND LICENSING BRIEF <ArrowUpRight size={14} />
-            </a>
-          </div>
-        </section>
-      </main>
+      <LicensingView locale="en" />
     </EnglishFrame>
   );
 }
