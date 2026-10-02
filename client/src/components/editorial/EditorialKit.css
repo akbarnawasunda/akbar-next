@@ -621,6 +621,18 @@
   padding: var(--ed-player-pad);
 }
 
+/* Judul bar pemutar di ponsel: mono uppercase dengan letter-spacing 0.14em
+   pada 0.58rem (±9px) terlalu rapat untuk dibaca dan judul rilisan yang
+   panjang pecah jadi tiga baris. Di layar kecil ukurannya naik sedikit dan
+   tracking-nya dirapatkan supaya tetap satu-dua baris. */
+@media (max-width: 640px) {
+  .ed-player__title {
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    line-height: 1.45;
+  }
+}
+
 /* -- Form fields ------------------------------------------------ */
 .ed-field {
   display: grid;
