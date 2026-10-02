@@ -124,6 +124,13 @@
   align-items: stretch;
 }
 
+/* Sama seperti grid pemutar di /music: saat satu player terbuka,
+   penyamaan tinggi dilepas supaya kartu pasangannya tidak memanjang
+   dan menyisakan ruang kosong. */
+.an-public-shell.an-editorial .an-vis-screening-grid:has(.is-player-open) {
+  align-items: start;
+}
+
 /* -- Arsip visual: kolom berirama, bukan kotak seragam --------- */
 
 .an-public-shell.an-editorial .an-vis-archive {

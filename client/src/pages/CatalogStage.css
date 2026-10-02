@@ -171,6 +171,14 @@
   align-items: stretch;
 }
 
+/* Begitu salah satu pemutar dibuka, penyama tinggi berbalik jadi
+   masalah: kartu yang lebih pendek ikut memanjang dan menyisakan
+   bidang kosong di atas tombolnya. Dalam keadaan itu setiap kartu
+   memakai tinggi aslinya sendiri. */
+.an-public-shell.an-editorial .an-cat-listen-grid:has(.is-player-open) {
+  align-items: start;
+}
+
 /* -- Strip ajakan platform ------------------------------------ */
 
 .an-public-shell.an-editorial .an-cat-band {

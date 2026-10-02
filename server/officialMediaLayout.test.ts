@@ -167,6 +167,65 @@ describe("kartu media resmi — geometri", () => {
   });
 });
 
+describe("baris judul & pemutar yang terbuka", () => {
+  const scene = stripComments(source("client/src/shell/SceneKit.css"));
+
+  it("menumpuk baris judul dua kolom di bawah 768px", () => {
+    // Kolom kanan memakai `auto` dan isinya paragraf 44–52ch (±330px),
+    // lebih lebar daripada ruang isi di 360px (±316px). Tanpa penumpukan,
+    // kolom `minmax(0, 1fr)` di sebelahnya menyusut sampai nol dan judul
+    // turun satu kata per baris.
+    const chunks = scene.split("@media (max-width: 767.98px)").slice(1);
+    const stacked = chunks.some(chunk => {
+      if (!chunk.includes(".an-head--row {")) return false;
+      return /grid-template-columns:\s*minmax\(0,\s*1fr\)/.test(
+        rule(chunk, ".an-head--row {")
+      );
+    });
+    expect(stacked).toBe(true);
+
+    // Di layar lebar tetap dua kolom seperti semula.
+    const base = rule(scene, ".an-head--row {");
+    expect(base).toMatch(/grid-template-columns:\s*minmax\(0, 1fr\) auto/);
+  });
+
+  it("melepas penyamaan tinggi begitu pemutar dibuka", () => {
+    // `stretch` membuat kartu pasangan ikut memanjang dan menyisakan
+    // bidang kosong di atas tombolnya.
+    for (const [css, name] of [
+      [musicStage, "/music"],
+      [visualStage, "/visuals"],
+    ] as const) {
+      expect(
+        /grid:has\(\.is-player-open\)\s*\{\s*align-items:\s*start/.test(css),
+        `${name} tidak melepas stretch saat player terbuka`
+      ).toBe(true);
+    }
+  });
+
+  it("tidak menumpuk thumbnail 16:9 dengan iframe 16:9", () => {
+    const open = rule(
+      frame,
+      ".an-official-media-provider-youtube.is-player-open .an-official-media-art {"
+    );
+    expect(open).toMatch(/display:\s*none/);
+    // Barisnya bergeser setelah thumbnail dilepas: tombol tidak boleh
+    // meregang mengisi sisa `1fr`.
+    const rows = rule(
+      frame,
+      ".an-official-media-provider-youtube.is-player-open {"
+    );
+    expect(rows).toMatch(/grid-template-rows:\s*auto auto auto auto/);
+  });
+
+  it("melepas bingkai kedua MusicEmbed di dalam kartu", () => {
+    const nested = rule(frame, ".an-official-player-wrap .an-music-embed {");
+    expect(nested).toMatch(/border:\s*0/);
+    expect(nested).toMatch(/border-radius:\s*0/);
+    expect(nested).toMatch(/box-shadow:\s*none/);
+  });
+});
+
 describe("grid media: ritme arsip visual", () => {
   /** Susun kartu memakai penempatan padat seperti grid-auto-flow: dense. */
   function pack(spans: number[], cols = 6) {

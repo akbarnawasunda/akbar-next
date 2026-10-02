@@ -261,8 +261,13 @@
     color 160ms ease;
 }
 
+/* Kedua tombol memakai basis yang sama: sebelumnya `180px` vs `150px`
+   membuat tombol kiri selalu lebih lebar (±10%) sehingga tepi kanannya
+   tidak sejajar dengan tombol di sebelahnya. Dengan basis sama,
+   keduanya tumbuh seimbang dan tetap turun ke baris sendiri saat
+   kartu sempit. */
 .an-official-media-actions a {
-  flex: 1 1 180px;
+  flex: 1 1 160px;
   border-color: var(--paper);
   background: var(--paper);
   color: var(--ink);
@@ -275,7 +280,7 @@
 }
 
 .an-official-media-actions button {
-  flex: 1 1 150px;
+  flex: 1 1 160px;
 }
 
 .an-official-media-actions button:hover {
@@ -300,6 +305,35 @@
   font-family: var(--font-body);
   font-size: 0.78rem;
   line-height: 1.55;
+}
+
+/* MusicEmbed membawa bingkai sendiri (radius 8px + garis + bayangan).
+   Di dalam kartu bersudut 2px itu terbaca sebagai kartu di dalam kartu
+   yang tepinya tidak sejajar. Di dalam wrap ini chrome-nya dilepas;
+   yang tersisa hanya iframe-nya. */
+.an-official-player-wrap .an-music-embed {
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.an-official-player-wrap .an-music-embed:hover {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* Kartu video: thumbnail 16:9 dan iframe 16:9 tidak ditumpuk dua kali.
+   Saat player terbuka, thumbnail dilepas — kartu tidak jadi dua kali
+   lebih tinggi dari pasangannya di baris yang sama. */
+.an-official-media-provider-youtube.is-player-open .an-official-media-art {
+  display: none;
+}
+
+/* Tanpa thumbnail, teks naik ke baris pertama dan baris tombol tidak
+   boleh ikut meregang mengisi sisa `1fr` — tinggi mengikuti isi. */
+.an-official-media-provider-youtube.is-player-open {
+  grid-template-rows: auto auto auto auto;
 }
 
 /* -- Di dalam shelf AudioPlayerShell --------------------------

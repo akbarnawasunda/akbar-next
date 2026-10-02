@@ -79,6 +79,26 @@
   gap: var(--space-md);
 }
 
+/* Baris judul dua kolom tidak muat di ponsel.
+   Kolom kanan memakai `auto` dan isinya paragraf pendamping selebar
+   44–52ch (±330px), sedangkan ruang yang tersedia di 360px hanya
+   ±316px. Kolom `minmax(0, 1fr)` di sebelahnya karena itu menyusut
+   sampai nol: judul turun satu kata per baris dan bertumpuk dengan
+   paragraf di sebelahnya. Di bawah 768px keduanya ditumpuk, judul
+   dapat lebar penuh, paragraf duduk rapi di bawahnya. */
+@media (max-width: 767.98px) {
+  .an-public-shell.an-editorial .an-head--row {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    row-gap: var(--space-sm);
+  }
+
+  .an-public-shell.an-editorial .an-head--row > :last-child {
+    justify-self: start;
+    text-align: left;
+  }
+}
+
 /* -- Tombol --------------------------------------------------- */
 
 .an-public-shell.an-editorial .an-btn {
