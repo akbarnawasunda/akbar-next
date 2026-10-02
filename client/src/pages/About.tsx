@@ -18,7 +18,7 @@ export default function About() {
   return (
     <div className="nf-page an-about-page">
       <NightHeader active="/about" />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section
           className="nf-page-hero an-about-hero"
           style={

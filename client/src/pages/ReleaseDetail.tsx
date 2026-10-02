@@ -60,7 +60,7 @@ export default function ReleaseDetail() {
     return (
       <div className="nf-page">
         <NightHeader active="/music" />
-        <main>
+        <main id="main-content" tabIndex={-1}>
           <section className="nf-section an-release-missing">
             <h1>
               RILISAN
@@ -93,7 +93,7 @@ export default function ReleaseDetail() {
   return (
     <div className="nf-page">
       <NightHeader active="/music" />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section
           className="nf-page-hero an-release-detail-hero"
           style={

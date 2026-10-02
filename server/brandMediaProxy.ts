@@ -1,5 +1,5 @@
 import type { Express, Request, Response } from "express";
-import { publicMediaSource } from "./publicMediaPolicy";
+import { localMediaFallback, publicMediaSource } from "./publicMediaPolicy";
 
 const BRAND_MEDIA_PATHS = [
   "/media/portrait/neon-portrait.jpg",
@@ -7,6 +7,15 @@ const BRAND_MEDIA_PATHS = [
   "/media/portrait/official-portrait.jpg",
   "/media/brand/rmx-mark.jpg",
 ] as const;
+
+function redirectToLocalFallback(pathname: string, res: Response) {
+  const fallback = localMediaFallback(pathname);
+  if (!fallback) return false;
+
+  res.set("Cache-Control", "public, max-age=300, stale-while-revalidate=3600");
+  res.redirect(302, fallback);
+  return true;
+}
 
 export function registerBrandMediaProxy(app: Express) {
   for (const pathname of BRAND_MEDIA_PATHS) {
@@ -16,17 +25,25 @@ export function registerBrandMediaProxy(app: Express) {
       try {
         const response = await fetch(source);
         if (!response.ok) {
+          if (redirectToLocalFallback(pathname, res)) return;
           res.status(502).send("Brand media is unavailable");
           return;
         }
         const bytes = Buffer.from(await response.arrayBuffer());
-        res.set("Content-Type", response.headers.get("content-type") || "image/jpeg");
+        res.set(
+          "Content-Type",
+          response.headers.get("content-type") || "image/jpeg"
+        );
         res.set("Content-Disposition", "inline");
-        res.set("Cache-Control", "public, max-age=86400, stale-while-revalidate=604800");
+        res.set(
+          "Cache-Control",
+          "public, max-age=86400, stale-while-revalidate=604800"
+        );
         res.set("X-Content-Type-Options", "nosniff");
         res.send(bytes);
       } catch (error) {
         console.error(`[BrandMediaProxy] ${pathname} failed:`, error);
+        if (redirectToLocalFallback(pathname, res)) return;
         res.status(502).send("Brand media is unavailable");
       }
     });

@@ -1,6 +1,5 @@
-import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Radio, X } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "wouter";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
@@ -14,27 +13,27 @@ export interface MobileNavItem {
 }
 
 export const defaultIdNavItems: MobileNavItem[] = [
-  { href: "/music", label: "MUSIK", desc: "Diskografi & rilisan resmi" },
-  { href: "/visuals", label: "VISUAL", desc: "Video musik & galeri artwork" },
-  { href: "/live", label: "JADWAL", desc: "Jadwal panggung & arsipnya" },
-  { href: "/universe", label: "ARSIP", desc: "Perjalanan & arsip lengkap" },
-  { href: "/about", label: "TENTANG", desc: "Profil & cerita di balik nama" },
+  { href: "/music", label: "Musik", desc: "Diskografi & rilisan resmi" },
+  { href: "/visuals", label: "Visual", desc: "Video musik & galeri artwork" },
+  { href: "/live", label: "Jadwal", desc: "Jadwal panggung & arsipnya" },
+  { href: "/universe", label: "Arsip", desc: "Perjalanan & arsip lengkap" },
+  { href: "/about", label: "Tentang", desc: "Profil & cerita di balik nama" },
   { href: "/epk", label: "EPK", desc: "Press kit resmi" },
-  { href: "/inquire", label: "KONTAK", desc: "Booking & kerja sama" },
+  { href: "/inquire", label: "Kontak", desc: "Booking & kerja sama" },
 ];
 
 export const defaultEnNavItems: MobileNavItem[] = [
-  { href: "/en/music", label: "MUSIC", desc: "Official discography & tracks" },
+  { href: "/en/music", label: "Music", desc: "Official discography & tracks" },
   {
     href: "/en/visuals",
-    label: "VISUALS",
+    label: "Visuals",
     desc: "Music videos & visual artwork",
   },
-  { href: "/en/live", label: "LIVE", desc: "Stage tour dates & archive" },
-  { href: "/universe", label: "ARCHIVE", desc: "Complete ecosystem catalog" },
-  { href: "/en/about", label: "ABOUT", desc: "Artist biography & statement" },
+  { href: "/en/live", label: "Live", desc: "Stage tour dates & archive" },
+  { href: "/universe", label: "Archive", desc: "Complete ecosystem catalog" },
+  { href: "/en/about", label: "About", desc: "Artist biography & statement" },
   { href: "/en/epk", label: "EPK", desc: "Official press kit & curations" },
-  { href: "/en/inquire", label: "CONTACT", desc: "Direct booking & inquiry" },
+  { href: "/en/inquire", label: "Contact", desc: "Direct booking & inquiry" },
 ];
 
 export interface MobileNavProps {
@@ -90,10 +89,10 @@ function MobileLanguageToggle({
 }
 
 /**
- * Slide-out Mobile Navigation Drawer powered by Framer Motion.
- * Triggered by hamburger button on mobile screens (< 768px).
- * Locks body scrolling while active, handles keyboard trap,
- * and auto-closes if viewport expands past 768px.
+ * Responsive mobile navigation drawer.
+ * Triggered by the site header and animated with CSS.
+ * Locks body scrolling while active, handles keyboard focus,
+ * and auto-closes if the viewport expands beyond the 1080px menu breakpoint.
  */
 export function MobileNav({
   isOpen,
@@ -108,19 +107,39 @@ export function MobileNav({
   const panelRef = useRef<HTMLElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const [mounted, setMounted] = useState(false);
+  const [shouldRender, setShouldRender] = useState(isOpen);
+  const [isEntered, setIsEntered] = useState(isOpen);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // CSS owns the drawer transition. Keep it mounted briefly on close so the
+  // panel can slide away without shipping a JavaScript animation runtime.
+  useEffect(() => {
+    let frame = 0;
+    let timeout = 0;
+    if (isOpen) {
+      setShouldRender(true);
+      frame = window.requestAnimationFrame(() => setIsEntered(true));
+    } else {
+      setIsEntered(false);
+      timeout = window.setTimeout(() => setShouldRender(false), 280);
+    }
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      if (timeout) window.clearTimeout(timeout);
+    };
+  }, [isOpen]);
+
   // Lock body scroll when mobile navigation drawer is open
   useLockBodyScroll(isOpen);
 
-  // Auto-close if screen resizes to desktop breakpoint (>= 768px)
+  // Auto-close only once the responsive header returns to its desktop layout.
   useEffect(() => {
     if (!isOpen) return;
     const handleResize = () => {
-      if (window.innerWidth >= 768) {
+      if (window.innerWidth > 1080) {
         onClose();
       }
     };
@@ -168,179 +187,161 @@ export function MobileNav({
     };
   }, [isOpen, onClose]);
 
-  if (!mounted || typeof document === "undefined") return null;
+  if (!mounted || typeof document === "undefined" || (!shouldRender && !isOpen))
+    return null;
 
   const signalHref = lang === "en" ? "/en#signal" : "#signal";
+  const drawerOpen = isOpen && isEntered;
 
   return createPortal(
-    <AnimatePresence>
-      {isOpen && (
-        <div
-          id={lang === "en" ? "english-mobile-menu" : "night-mobile-menu"}
-          className="nf-mobile-drawer-root is-open"
-          role="dialog"
-          aria-modal="true"
-          aria-label={
-            lang === "en" ? "Mobile Navigation Menu" : "Menu Navigasi Mobile"
-          }
-        >
-          {/* Backdrop Scrim */}
-          <motion.div
-            key="mobile-nav-backdrop"
-            className="nf-mobile-drawer-backdrop"
-            onClick={onClose}
-            aria-hidden="true"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-          />
+    <div
+      id={lang === "en" ? "english-mobile-menu" : "night-mobile-menu"}
+      className={`nf-mobile-drawer-root${drawerOpen ? " is-open" : ""}`}
+      data-open={drawerOpen ? "true" : "false"}
+      role="dialog"
+      aria-hidden={!isOpen}
+      aria-modal={isOpen || undefined}
+      inert={!isOpen}
+      aria-label={
+        lang === "en" ? "Mobile Navigation Menu" : "Menu Navigasi Mobile"
+      }
+    >
+      {/* Backdrop Scrim */}
+      <div
+        className="nf-mobile-drawer-backdrop"
+        onClick={onClose}
+        aria-hidden="true"
+      />
 
-          {/* Slide-out Drawer Panel */}
-          <motion.aside
-            key="mobile-nav-panel"
-            ref={panelRef}
-            className="nf-mobile-drawer-panel"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {/* Header */}
-            <div className="nf-mobile-drawer-header">
-              <div className="nf-mobile-drawer-brand">
-                <ResilientBrandImage
-                  className="nf-mobile-drawer-logo"
-                  alt="Akbar Nawasunda"
-                />
-                <div className="nf-mobile-drawer-brand-text">
-                  <strong>AKBAR NAWASUNDA</strong>
-                  <span>
-                    {lang === "en" ? "OFFICIAL PORTAL" : "SITUS RESMI"}
-                  </span>
-                </div>
-              </div>
-
-              <button
-                ref={closeBtnRef}
-                className="nf-mobile-drawer-close"
-                type="button"
-                onClick={onClose}
-                aria-label={
-                  lang === "en" ? "Close navigation" : "Tutup navigasi"
-                }
-              >
-                <X size={16} aria-hidden="true" />
-                <span>{lang === "en" ? "CLOSE" : "TUTUP"}</span>
-              </button>
+      {/* Slide-out Drawer Panel */}
+      <aside ref={panelRef} className="nf-mobile-drawer-panel">
+        {/* Header */}
+        <div className="nf-mobile-drawer-header">
+          <div className="nf-mobile-drawer-brand">
+            <ResilientBrandImage
+              className="nf-mobile-drawer-logo"
+              alt="Akbar Nawasunda"
+            />
+            <div className="nf-mobile-drawer-brand-text">
+              <strong>AKBAR NAWASUNDA</strong>
+              <span>{lang === "en" ? "OFFICIAL PORTAL" : "SITUS RESMI"}</span>
             </div>
+          </div>
 
-            {/* Scrollable Body */}
-            <div className="nf-mobile-drawer-body">
-              <div className="nf-mobile-drawer-eyebrow">
-                <span>
-                  {lang === "en"
-                    ? "NAVIGATION · DIRECT ROUTES"
-                    : "NAVIGASI · JALUR UTAMA"}
-                </span>
-              </div>
+          <button
+            ref={closeBtnRef}
+            className="nf-mobile-drawer-close"
+            type="button"
+            onClick={onClose}
+            aria-label={lang === "en" ? "Close navigation" : "Tutup navigasi"}
+          >
+            <X size={16} aria-hidden="true" />
+            <span>{lang === "en" ? "CLOSE" : "TUTUP"}</span>
+          </button>
+        </div>
 
-              {/* Navigation Links */}
-              <nav
-                className="nf-mobile-drawer-nav"
-                aria-label={
-                  lang === "en"
-                    ? "Primary mobile navigation"
-                    : "Navigasi mobile"
-                }
-              >
-                {navItems.map((item, index) => {
-                  const isActive =
-                    active === item.href || pathname === item.href;
-                  return (
-                    <Link
-                      key={item.href}
-                      className={`nf-mobile-drawer-link ${isActive ? "is-active" : ""}`}
-                      href={item.href}
-                      onClick={onClose}
-                      aria-current={isActive ? "page" : undefined}
-                    >
-                      <div className="nf-mobile-drawer-link-main">
-                        <span
-                          className="nf-mobile-drawer-link-index"
-                          aria-hidden="true"
-                        >
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                        <div className="nf-mobile-drawer-link-info">
-                          <span className="nf-mobile-drawer-link-title">
-                            {item.label}
-                          </span>
-                          {item.desc && (
-                            <span className="nf-mobile-drawer-link-desc">
-                              {item.desc}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <ArrowUpRight
-                        className="nf-mobile-drawer-link-arrow"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                    </Link>
-                  );
-                })}
-              </nav>
+        {/* Scrollable Body */}
+        <div className="nf-mobile-drawer-body">
+          <div className="nf-mobile-drawer-eyebrow">
+            <span>
+              {lang === "en"
+                ? "NAVIGATION · DIRECT ROUTES"
+                : "NAVIGASI · JALUR UTAMA"}
+            </span>
+          </div>
 
-              {/* Fan Signal Callout */}
-              <div className="nf-mobile-drawer-signal-block">
-                <a
-                  className="nf-mobile-drawer-signal-btn"
-                  href={signalHref}
+          {/* Navigation Links */}
+          <nav
+            className="nf-mobile-drawer-nav"
+            aria-label={
+              lang === "en" ? "Primary mobile navigation" : "Navigasi mobile"
+            }
+          >
+            {navItems.map((item, index) => {
+              const isActive = active === item.href || pathname === item.href;
+              const label =
+                item.label === "EPK"
+                  ? item.label
+                  : `${item.label.charAt(0)}${item.label.slice(1).toLowerCase()}`;
+              return (
+                <Link
+                  key={item.href}
+                  className={`nf-mobile-drawer-link ${isActive ? "is-active" : ""}`}
+                  href={item.href}
                   onClick={onClose}
+                  aria-current={isActive ? "page" : undefined}
                 >
-                  <div className="nf-mobile-drawer-signal-left">
+                  <div className="nf-mobile-drawer-link-main">
                     <span
-                      className="nf-signal-live-beacon"
+                      className="nf-mobile-drawer-link-index"
                       aria-hidden="true"
-                    />
-                    <Radio size={15} aria-hidden="true" />
-                    <div className="nf-mobile-drawer-signal-copy">
-                      <strong>
-                        {lang === "en" ? "FAN SIGNAL" : "KABAR TERBARU"}
-                      </strong>
-                      <small>
-                        {lang === "en"
-                          ? "Direct drops, tour dates & secret audio"
-                          : "Akses rilis awal, tiket, & audio eksklusif"}
-                      </small>
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <div className="nf-mobile-drawer-link-info">
+                      <span className="nf-mobile-drawer-link-title">
+                        {label}
+                      </span>
+                      {item.desc && (
+                        <span className="nf-mobile-drawer-link-desc">
+                          {item.desc}
+                        </span>
+                      )}
                     </div>
                   </div>
-                  <ArrowUpRight size={14} aria-hidden="true" />
-                </a>
-              </div>
-            </div>
+                  <ArrowUpRight
+                    className="nf-mobile-drawer-link-arrow"
+                    size={16}
+                    aria-hidden="true"
+                  />
+                </Link>
+              );
+            })}
+          </nav>
 
-            {/* Footer */}
-            <div className="nf-mobile-drawer-footer">
-              <div className="nf-mobile-drawer-footer-row">
-                <span className="nf-mobile-drawer-meta-tag">
-                  {lang === "en" ? "LANGUAGE" : "PILIH BAHASA"}
-                </span>
-                <MobileLanguageToggle pathname={pathname} onClose={onClose} />
+          {/* Fan Signal Callout */}
+          <div className="nf-mobile-drawer-signal-block">
+            <a
+              className="nf-mobile-drawer-signal-btn"
+              href={signalHref}
+              onClick={onClose}
+            >
+              <div className="nf-mobile-drawer-signal-left">
+                <span className="nf-signal-live-beacon" aria-hidden="true" />
+                <Radio size={15} aria-hidden="true" />
+                <div className="nf-mobile-drawer-signal-copy">
+                  <strong>
+                    {lang === "en" ? "FAN SIGNAL" : "KABAR TERBARU"}
+                  </strong>
+                  <small>
+                    {lang === "en"
+                      ? "Direct drops, tour dates & secret audio"
+                      : "Akses rilis awal, tiket, & audio eksklusif"}
+                  </small>
+                </div>
               </div>
-
-              <div className="nf-mobile-drawer-footer-bottom">
-                <span className="nf-mobile-drawer-meta-sub">
-                  PRODUCER / INDONESIA
-                </span>
-              </div>
-            </div>
-          </motion.aside>
+              <ArrowUpRight size={14} aria-hidden="true" />
+            </a>
+          </div>
         </div>
-      )}
-    </AnimatePresence>,
+
+        {/* Footer */}
+        <div className="nf-mobile-drawer-footer">
+          <div className="nf-mobile-drawer-footer-row">
+            <span className="nf-mobile-drawer-meta-tag">
+              {lang === "en" ? "LANGUAGE" : "PILIH BAHASA"}
+            </span>
+            <MobileLanguageToggle pathname={pathname} onClose={onClose} />
+          </div>
+
+          <div className="nf-mobile-drawer-footer-bottom">
+            <span className="nf-mobile-drawer-meta-sub">
+              PRODUCER / INDONESIA
+            </span>
+          </div>
+        </div>
+      </aside>
+    </div>,
     document.body
   );
 }

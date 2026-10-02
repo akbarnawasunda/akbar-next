@@ -53,7 +53,7 @@ export default function Live() {
   return (
     <div className="nf-page">
       <NightHeader active="/live" />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section
           className="nf-page-hero"
           style={

@@ -3,7 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
-import { publicPlatformLinks, usePublicArtistContent } from "@/content/publicContent";
+import {
+  publicPlatformLinks,
+  usePublicArtistContent,
+} from "@/content/publicContent";
 import { MobileNav } from "./MobileNav";
 import "./NightFrequencyChrome.css";
 import "./OfficialBrand.css";
@@ -45,18 +48,32 @@ export function EnglishHeader({ active }: { active?: string }) {
 
   const closeAndReturnFocus = () => {
     setIsOpen(false);
-    window.requestAnimationFrame(() => triggerRef.current?.focus());
+    window.requestAnimationFrame(() => {
+      const trigger = triggerRef.current;
+      if (!trigger) return;
+      if (window.innerWidth <= 1080) {
+        trigger.focus();
+        return;
+      }
+      trigger
+        .closest(".nf-nav")
+        ?.querySelector<HTMLAnchorElement>("nav a")
+        ?.focus();
+    });
   };
 
   return (
     <>
       <header className="nf-nav en-nav">
         <Link className="nf-wordmark nf-wordmark-official" href="/en">
-          <ResilientBrandImage className="nf-brand-logo" alt="Akbar Nawasunda" />
+          <ResilientBrandImage
+            className="nf-brand-logo"
+            alt="Akbar Nawasunda"
+          />
           <span>AKBAR NAWASUNDA</span>
         </Link>
         <nav aria-label="Primary navigation">
-          {navItems.map((item) => (
+          {navItems.map(item => (
             <Link
               key={item.href}
               className={resolvedActive === item.href ? "is-active" : ""}
@@ -74,7 +91,7 @@ export function EnglishHeader({ active }: { active?: string }) {
           ref={triggerRef}
           className="nf-menu-toggle"
           type="button"
-          onClick={() => setIsOpen((value) => !value)}
+          onClick={() => setIsOpen(value => !value)}
           aria-label={isOpen ? "Close navigation" : "Open navigation"}
           aria-expanded={isOpen}
           aria-controls="english-mobile-menu"
@@ -110,7 +127,7 @@ export function EnglishFooter() {
       </div>
       <div className="nf-footer-column">
         <span>DISCOVER</span>
-        {navItems.map((item) => (
+        {navItems.map(item => (
           <Link key={item.href} href={item.href}>
             {item.label[0] + item.label.slice(1).toLowerCase()}{" "}
             <ArrowUpRight size={13} />
@@ -119,7 +136,7 @@ export function EnglishFooter() {
       </div>
       <div className="nf-footer-column">
         <span>CONNECT</span>
-        {links.map((link) => (
+        {links.map(link => (
           <a key={link.label} href={link.href} target="_blank" rel="noreferrer">
             {link.label} <ArrowUpRight size={13} />
           </a>
@@ -160,7 +177,7 @@ export function EnglishChannelLinks() {
   const links = publicPlatformLinks(cms.data);
   return (
     <div className="en-channel-links">
-      {links.map((link) => (
+      {links.map(link => (
         <a key={link.label} href={link.href} target="_blank" rel="noreferrer">
           <Radio size={13} /> {link.label} <ArrowUpRight size={13} />
         </a>

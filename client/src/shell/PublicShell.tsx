@@ -1,75 +1,60 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { useLocation } from "wouter";
 import { CommandPalette } from "@/components/CommandPalette";
-import { CursorSignal } from "@/components/signature/CursorSignal";
-import { GlobalAudioPlayer } from "@/components/signature/GlobalAudioPlayer";
 import { LightboxProvider } from "@/components/signature/LightboxProvider";
-import { RouteSignalCurtain } from "@/components/signature/RouteSignalCurtain";
-import { SignatureBackground } from "@/components/signature/SignatureBackground";
+import { GlobalAudioPlayer } from "@/components/signature/GlobalAudioPlayer";
 import { SignatureProvider } from "@/signature/SignatureProvider";
 import { isPublicRoute, languageOf } from "@/signature/routeSignal";
 import { useSignatureState } from "@/signature/useSignature";
 import "./PublicShell.css";
+import "./EditorialRefresh.css";
 
-/**
- * PublicShell — satu cangkang untuk seluruh rute publik ID dan EN.
- *
- * Shell memegang semua sistem interaksi global: Signature Runtime, particle
- * background, route curtain, player audio persisten, command palette, cursor
- * signal, dan lightbox. Halaman hanya mengurus kontennya sendiri (termasuk
- * NightHeader/EnglishHeader dan footer masing-masing, supaya chrome tidak
- * terduplikasi) dan membaca state yang sama lewat `useSignature*`.
- *
- * Semua lapisan overlay baru hanya dirender setelah mount di browser, jadi
- * HTML hasil SSR tetap berisi halaman penuh tanpa kebocoran UI client.
- */
-function ShellSurfaces({ lang }: { lang: "id" | "en" }) {
-  const playerState = useSignatureState(snapshot => snapshot.audio.state);
+function ShellSurfaces() {
+  const [mounted, setMounted] = useState(false);
   const mode = useSignatureState(snapshot => snapshot.route.mode);
   const frequency = useSignatureState(snapshot => snapshot.frequency.active);
-  const tier = useSignatureState(snapshot => snapshot.capability.tier);
+
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const root = document.documentElement;
     root.dataset.signatureMode = frequency ? "frequency" : mode;
-    root.dataset.playerState = playerState;
-    // Dipakai untuk diagnosa cepat: `off` berarti runtime menghormati
-    // reduced motion / hemat data / perangkat sangat lemah.
-    root.dataset.signatureTier = tier;
     return () => {
       delete root.dataset.signatureMode;
-      delete root.dataset.playerState;
-      delete root.dataset.signatureTier;
     };
-  }, [frequency, mode, playerState, tier]);
+  }, [frequency, mode]);
+
+  if (!mounted) return null;
 
   return (
     <>
-      <SignatureBackground />
-      <RouteSignalCurtain />
       <GlobalAudioPlayer />
       <CommandPalette />
-      <CursorSignal />
-      <span className="an-shell-hint" aria-hidden="true">
-        {lang === "en" ? "⌘K / CTRL K" : "⌘K / CTRL K"}
-      </span>
     </>
   );
 }
 
 function ShellBody({ children }: { children: ReactNode }) {
   const [location] = useLocation();
-  const [mounted, setMounted] = useState(false);
   const lang = languageOf(location);
-  const publicRoute = isPublicRoute(location);
-
-  useEffect(() => setMounted(true), []);
+  const isEditorialRoute =
+    isPublicRoute(location) && !/^(?:\/en)?\/game(?:\/|$)/.test(location);
+  const path = location.split(/[?#]/, 1)[0] || "/";
+  const skipTarget = path === "/" || path === "/en" ? "#top" : "#main-content";
 
   return (
     <LightboxProvider lang={lang}>
-      <div className="an-public-shell" data-shell-lang={lang}>
+      <div
+        className={`an-public-shell${isEditorialRoute ? " an-editorial" : ""}`}
+        data-shell-lang={lang}
+      >
+        {isEditorialRoute && (
+          <a className="an-skip-link" href={skipTarget}>
+            {lang === "en" ? "Skip to main content" : "Lewati ke konten utama"}
+          </a>
+        )}
         {children}
-        {mounted && publicRoute ? <ShellSurfaces lang={lang} /> : null}
+        {isEditorialRoute && <ShellSurfaces />}
       </div>
     </LightboxProvider>
   );

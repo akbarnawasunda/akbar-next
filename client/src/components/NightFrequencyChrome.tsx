@@ -26,53 +26,6 @@ const navItems = [
   { href: "/inquire", label: "KONTAK" },
 ];
 
-function DesktopStageHud() {
-  const [wibTime, setWibTime] = useState("");
-
-  useEffect(() => {
-    const updateTime = () => {
-      try {
-        const now = new Date();
-        const formatter = new Intl.DateTimeFormat("id-ID", {
-          timeZone: "Asia/Jakarta",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false,
-        });
-        setWibTime(`${formatter.format(now)} WIB`);
-      } catch {
-        setWibTime("BANDUNG / STAGE");
-      }
-    };
-    updateTime();
-    const timer = setInterval(updateTime, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div className="nf-desktop-hud" aria-hidden="true">
-      <div className="nf-hud-left">
-        <span className="nf-hud-live-dot" />
-        <span className="nf-hud-badge">BANDUNG BARAT</span>
-        <span className="nf-hud-sep">·</span>
-        <span className="nf-hud-time">{wibTime || "LIVE WIB"}</span>
-        <span className="nf-hud-sep">·</span>
-        <span>WIB (UTC+7)</span>
-      </div>
-      <div className="nf-hud-center">
-        <span>AKBAR NAWASUNDA // BREAKBEAT · INDO BASS · JEDAG JEDUG</span>
-      </div>
-      <div className="nf-hud-right">
-        <span className="nf-hud-kbd-hint">HOTKEYS:</span>
-        <kbd>[M] MUSIK</kbd>
-        <kbd>[V] VISUAL</kbd>
-        <kbd>[E] EPK</kbd>
-      </div>
-    </div>
-  );
-}
-
 function LanguageSwitcher({ pathname }: { pathname: string }) {
   const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
   const idPath = isEnglish ? pathname.replace(/^\/en/, "") || "/" : pathname;
@@ -155,12 +108,22 @@ export function NightHeader({ active }: { active?: string }) {
 
   const closeAndReturnFocus = () => {
     setIsOpen(false);
-    window.requestAnimationFrame(() => triggerRef.current?.focus());
+    window.requestAnimationFrame(() => {
+      const trigger = triggerRef.current;
+      if (!trigger) return;
+      if (window.innerWidth <= 1080) {
+        trigger.focus();
+        return;
+      }
+      trigger
+        .closest(".nf-nav")
+        ?.querySelector<HTMLAnchorElement>("nav a")
+        ?.focus();
+    });
   };
 
   return (
     <>
-      <DesktopStageHud />
       <header className="nf-nav">
         <Link className="nf-wordmark nf-wordmark-official" href="/">
           <ResilientBrandImage

@@ -264,7 +264,7 @@ export function EnglishHome() {
 
   return (
     <EnglishFrame>
-      <main id="top" className="en-content en-home-parity">
+      <main id="top" tabIndex={-1} className="en-content en-home-parity">
         <section className="an-hero">
           <div className="home-hero-portrait">
             <img
@@ -760,7 +760,7 @@ export function EnglishMusic() {
 
   return (
     <EnglishFrame>
-      <main className="en-content">
+      <main id="main-content" tabIndex={-1} className="en-content">
         <section
           className="nf-page-hero en-hero"
           style={
@@ -983,7 +983,7 @@ export function EnglishVisuals() {
 
   return (
     <EnglishFrame>
-      <main className="en-content">
+      <main id="main-content" tabIndex={-1} className="en-content">
         <section
           className="nf-page-hero en-hero"
           style={
@@ -1128,7 +1128,7 @@ export function EnglishLive() {
 
   return (
     <EnglishFrame>
-      <main className="en-content">
+      <main id="main-content" tabIndex={-1} className="en-content">
         <section className="nf-page-hero en-hero">
           <div>
             <h1>
@@ -1361,7 +1361,7 @@ export function EnglishUniverse() {
 
   return (
     <EnglishFrame>
-      <main className="en-content">
+      <main id="main-content" tabIndex={-1} className="en-content">
         <section className="nf-page-hero en-hero">
           <div>
             <h1>
@@ -1512,7 +1512,7 @@ export function EnglishAbout() {
 
   return (
     <EnglishFrame>
-      <main className="en-content">
+      <main id="main-content" tabIndex={-1} className="en-content">
         <section
           className="nf-page-hero en-hero en-about-hero"
           style={
@@ -1650,7 +1650,7 @@ export function EnglishEpk() {
 
   return (
     <EnglishFrame>
-      <main className="en-content">
+      <main id="main-content" tabIndex={-1} className="en-content">
         <section className="nf-epk-hero en-hero en-epk-hero">
           <div className="en-epk-hero-copy">
             <h1>
@@ -1932,7 +1932,7 @@ const inquiryServices = [
 export function EnglishInquiry() {
   return (
     <EnglishFrame>
-      <main className="en-content">
+      <main id="main-content" tabIndex={-1} className="en-content">
         <section className="nf-page-hero en-hero">
           <div>
             <h1>
@@ -2031,7 +2031,7 @@ export function EnglishLicensing() {
 
   return (
     <EnglishFrame>
-      <main className="en-content">
+      <main id="main-content" tabIndex={-1} className="en-content">
         <section className="nf-page-hero en-hero">
           <div>
             <h1>
@@ -2118,7 +2118,7 @@ export function EnglishPrivacy() {
 
   return (
     <EnglishFrame>
-      <main className="en-content">
+      <main id="main-content" tabIndex={-1} className="en-content">
         <section className="nf-section en-privacy-intro">
           <div className="en-two-column">
             <div className="en-copy-block">
@@ -2284,7 +2284,7 @@ export function EnglishReleaseDetail() {
   if (!release && !cms.isLoading) {
     return (
       <EnglishFrame>
-        <main className="en-content">
+        <main id="main-content" tabIndex={-1} className="en-content">
           <section className="nf-section en-empty">
             <p className="nf-page-eyebrow">RELEASE NOT FOUND</p>
             <strong>This release is not available.</strong>
@@ -2312,7 +2312,7 @@ export function EnglishReleaseDetail() {
 
   return (
     <EnglishFrame>
-      <main className="en-content">
+      <main id="main-content" tabIndex={-1} className="en-content">
         <section
           className="nf-page-hero en-hero"
           style={

@@ -118,7 +118,7 @@ export default function Music() {
   return (
     <div className="nf-page music-reference-page">
       <NightHeader active="/music" />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <section
           className="nf-page-hero"
           style={

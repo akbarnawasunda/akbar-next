@@ -55,7 +55,7 @@ function GalleryContent({ english = false }: VisualPortraitGalleryProps) {
     };
   });
   return (
-    <main className={english ? "en-content" : undefined}>
+    <main id="main-content" tabIndex={-1} className={english ? "en-content" : undefined}>
       <section className="nf-page-hero portrait-gallery-hero">
         <div>
           <h1>{english ? <>PHOTO<br /><em>STUDIES.</em></> : <>STUDI<br /><em>POTRET.</em></>}</h1>
