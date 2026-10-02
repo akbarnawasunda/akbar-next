@@ -26,8 +26,11 @@ describe("portrait gallery analytics", () => {
   });
 
   it("explains the aggregate anonymous counter in public privacy copy", () => {
+    // Salinan ID dan EN kini hidup di satu tempat: PrivacyPolicy.tsx
+    // (PrivacyView dipakai /privacy dan /en/privacy). Sebelumnya versi EN
+    // ada di EnglishPages.tsx dan bisa tertinggal dari versi ID.
     const idPrivacy = source("client/src/pages/PrivacyPolicy.tsx");
-    const enPrivacy = source("client/src/pages/EnglishPages.tsx");
+    const enPrivacy = source("client/src/pages/PrivacyPolicy.tsx");
     expect(idPrivacy).toContain("penanda anonim");
     expect(idPrivacy).toContain("tidak menyimpan IP, email, atau user-agent");
     expect(enPrivacy).toContain("anonymous gallery visitor marker");

@@ -18,15 +18,19 @@ import "./EcosystemPages.css";
 import "./Live.css";
 import "./ShowcaseStage.css";
 
-const formatDate = (value: string, time?: string) => {
+const formatDate = (
+  value: string,
+  time: string | undefined,
+  locale: "id" | "en"
+) => {
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
-  const dateText = new Intl.DateTimeFormat("id-ID", {
+  const dateText = new Intl.DateTimeFormat(locale === "id" ? "id-ID" : "en-GB", {
     dateStyle: "medium",
   }).format(parsed);
   return time
     ? `${dateText} · ${time}`
-    : new Intl.DateTimeFormat("id-ID", {
+    : new Intl.DateTimeFormat(locale === "id" ? "id-ID" : "en-GB", {
         dateStyle: "medium",
         timeStyle: "short",
       }).format(parsed);
@@ -37,7 +41,133 @@ const inquiryHref = (type: string) =>
     `${type} — Akbar Nawasunda`
   )}`;
 
-export default function Live() {
+/**
+ * Salinan dua bahasa untuk panggung live. Satu komposisi (`LiveView`) dipakai
+ * `/live` dan `/en/live`, jadi versi EN tidak lagi punya struktur terpisah
+ * yang tertinggal dari versi ID.
+ */
+const copy = {
+  id: {
+    kickerFeatured: "Show berikutnya",
+    kickerOpen: "Terbuka untuk booking",
+    title: "Booking & panggung.",
+    meta: "BOOKING / REMIX / KOLABORASI",
+    ledeFallback:
+      "Untuk booking penampilan, remix custom, dan kolaborasi, kirim detail proyek lewat email.",
+    ticketCta: "Ambil tiket",
+    briefCta: "Kirim brief booking",
+    emailCta: "Email studio",
+    nextShowMeta: "Show berikutnya",
+    statusLabel: "Status",
+    countdownLabels: ["HARI", "JAM", "MENIT", "DETIK"],
+    countdownIdle: "Hitung mundur menuju show berikutnya",
+    emptyMeta: "Kalender",
+    emptyTitle: "Belum ada tanggal publik.",
+    emptyPlace: "Slot panggung & studio masih terbuka",
+    emptyCopy:
+      "Begitu ada show yang dikonfirmasi, tanggal, venue, zona waktu, dan tautan tiketnya akan tampil di sini lebih dulu.",
+    emptyCta: "Ajukan tanggal",
+    indexTitle: "Jadwal terkonfirmasi.",
+    indexMeta: (count: number) => `${count} event · waktu lokal venue`,
+    placeFallback: "Detail venue menyusul",
+    rowTicket: "Tiket",
+    rowRsvp: "RSVP",
+    rowInfo: "Info",
+    rowAria: (title: string) => `${title} — buka sumber resmi`,
+    venueMap: "Lihat peta",
+    bookingMeta: "Booking",
+    bookingTitle: "Booking dan kolaborasi.",
+    bookingCopy:
+      "Belum ada jadwal publik yang dikonfirmasi. Untuk performa, remix custom, atau kolaborasi, kirim konteks proyek dan tanggal yang diinginkan.",
+    bookingBrief: "Kirim brief booking",
+    remixTitle: "Remix custom",
+    remixCopy: "Remix, aransemen, dan produksi musik untuk proyek atau konten.",
+    collabTitle: "Kolaborasi",
+    collabCopy: "Kolaborasi rilisan, visual, dan performance bersama.",
+    ctaTitle: (
+      <>
+        AJUKAN TANGGAL
+        <br />
+        DAN KONSEPNYA.
+      </>
+    ),
+    ctaCopy:
+      "Kirim tanggal, lokasi, durasi set, dan konteks acara. Setiap inquiry dibaca langsung oleh studio.",
+    ctaForm: "FORM INQUIRY",
+    ctaEmail: "EMAIL STUDIO",
+    signalTitle: (
+      <>
+        IKUTI
+        <br />
+        KABARNYA.
+      </>
+    ),
+    signalCopy:
+      "Info rilisan, video, dan jadwal manggung — langsung dari kanal resmi.",
+  },
+  en: {
+    kickerFeatured: "Next show",
+    kickerOpen: "Open for booking",
+    title: "Booking & stage.",
+    meta: "BOOKING / REMIX / COLLABORATION",
+    ledeFallback:
+      "For live bookings, custom remixes, and collaborations, send the project details by email.",
+    ticketCta: "Get tickets",
+    briefCta: "Send booking brief",
+    emailCta: "Email the studio",
+    nextShowMeta: "Next show",
+    statusLabel: "Status",
+    countdownLabels: ["DAYS", "HOURS", "MINUTES", "SECONDS"],
+    countdownIdle: "Countdown to the next confirmed show",
+    emptyMeta: "Calendar",
+    emptyTitle: "No confirmed show is public yet.",
+    emptyPlace: "Stage and studio slots are still open",
+    emptyCopy:
+      "Once a show is confirmed, the date, venue, time zone, and ticket link appear here first.",
+    emptyCta: "Propose a date",
+    indexTitle: "Confirmed dates.",
+    indexMeta: (count: number) => `${count} events · local venue time`,
+    placeFallback: "Venue details to follow",
+    rowTicket: "Tickets",
+    rowRsvp: "RSVP",
+    rowInfo: "Info",
+    rowAria: (title: string) => `${title} — open the official source`,
+    venueMap: "View map",
+    bookingMeta: "Booking",
+    bookingTitle: "Booking and collaboration.",
+    bookingCopy:
+      "No public date is confirmed yet. For a performance, custom remix, or collaboration, send the project context and your preferred dates.",
+    bookingBrief: "Send booking brief",
+    remixTitle: "Custom remix",
+    remixCopy:
+      "Remix, arrangement, and music production for a project or content.",
+    collabTitle: "Collaboration",
+    collabCopy: "Release, visual, and performance collaboration.",
+    ctaTitle: (
+      <>
+        PROPOSE A DATE
+        <br />
+        AND THE CONCEPT.
+      </>
+    ),
+    ctaCopy:
+      "Send the date, location, set length, and event context. Every inquiry is read directly by the studio.",
+    ctaForm: "INQUIRY FORM",
+    ctaEmail: "EMAIL THE STUDIO",
+    signalTitle: (
+      <>
+        FOLLOW
+        <br />
+        THE SIGNAL.
+      </>
+    ),
+    signalCopy:
+      "New releases, videos, and live dates — straight from the official channels.",
+  },
+} as const;
+
+export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
+  const t = copy[locale];
   const cms = usePublicArtistContent();
   const events = publicUpcomingEvents(cms.data).filter(
     event => !/no date announced|tba/i.test(event.title)
@@ -46,9 +176,7 @@ export default function Live() {
   const signal = cms.data?.live;
 
   return (
-    <div className="nf-page">
-      <NightHeader active="/live" />
-      <main id="main-content" tabIndex={-1}>
+    <main id="main-content" tabIndex={-1}>
         {/* Panggung: foto pertunjukan sebagai latar penuh, tipografi di
             atas scrim. */}
         <section className="an-live-hero" aria-labelledby="live-title">
@@ -87,13 +215,12 @@ export default function Live() {
           <div className="an-live-hero-copy">
             <p className="an-kicker">
               <span className="an-kicker-dot" aria-hidden="true" />
-              {featured ? "Show berikutnya" : "Terbuka untuk booking"}
+              {featured ? t.kickerFeatured : t.kickerOpen}
             </p>
-            <h1 id="live-title">Booking &amp; panggung.</h1>
-            <p className="an-meta">BOOKING / REMIX / KOLABORASI</p>
+            <h1 id="live-title">{t.title}</h1>
+            <p className="an-meta">{t.meta}</p>
             <p className="an-vis-lede">
-              {signal?.message ||
-                "Untuk booking penampilan, remix custom, dan kolaborasi, kirim detail proyek lewat email."}
+              {signal?.message || t.ledeFallback}
             </p>
             <div className="an-live-hero-actions">
               {featured?.ticketUrl ? (
@@ -103,21 +230,21 @@ export default function Live() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <Ticket size={14} /> Ambil tiket
+                  <Ticket size={14} /> {t.ticketCta}
                 </a>
               ) : (
                 <a
                   className="an-btn an-btn--solid"
                   href={inquiryHref("Booking inquiry")}
                 >
-                  <Ticket size={14} /> Kirim brief booking
+                  <Ticket size={14} /> {t.briefCta}
                 </a>
               )}
               <a
                 className="an-btn an-btn--quiet"
                 href={inquiryHref("Booking inquiry")}
               >
-                Email studio <ArrowUpRight size={14} />
+                {t.emailCta} <ArrowUpRight size={14} />
               </a>
             </div>
           </div>
@@ -132,9 +259,9 @@ export default function Live() {
             aria-labelledby="next-show-title"
           >
             <div className="an-live-next-copy">
-              <p className="an-meta">Show berikutnya</p>
+              <p className="an-meta">{t.nextShowMeta}</p>
               <p className="an-live-date">
-                {formatDate(featured.date, featured.time)}
+                {formatDate(featured.date, featured.time, locale)}
               </p>
               <h2 id="next-show-title" className="an-title">
                 {featured.title}
@@ -152,7 +279,7 @@ export default function Live() {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <Ticket size={13} /> Ambil tiket
+                    <Ticket size={13} /> {t.ticketCta}
                   </a>
                 ) : null}
                 {featured.rsvpUrl ? (
@@ -172,19 +299,19 @@ export default function Live() {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <MapPin size={13} /> Lihat peta
+                    <MapPin size={13} /> {t.venueMap}
                   </a>
                 ) : null}
               </div>
             </div>
             <div className="an-live-next-side">
               <p className="an-meta">
-                Status: {featured.status?.toUpperCase() || "ANNOUNCED"}
+                {t.statusLabel}: {featured.status?.toUpperCase() || "ANNOUNCED"}
               </p>
               <EventCountdown
                 target={featured.date}
-                labels={["HARI", "JAM", "MENIT", "DETIK"]}
-                idleLabel="Hitung mundur menuju show berikutnya"
+                labels={[...t.countdownLabels]}
+                idleLabel={t.countdownIdle}
               />
             </div>
           </section>
@@ -195,23 +322,20 @@ export default function Live() {
             aria-labelledby="next-show-title"
           >
             <div className="an-live-next-copy">
-              <p className="an-meta">Kalender</p>
+              <p className="an-meta">{t.emptyMeta}</p>
               <h2 id="next-show-title" className="an-title">
-                Belum ada tanggal publik.
+                {t.emptyTitle}
               </h2>
               <p className="an-live-place">
-                <span>Slot panggung &amp; studio masih terbuka</span>
+                <span>{t.emptyPlace}</span>
               </p>
-              <p className="an-vis-lede">
-                Begitu ada show yang dikonfirmasi, tanggal, venue, zona waktu,
-                dan tautan tiketnya akan tampil di sini lebih dulu.
-              </p>
+              <p className="an-vis-lede">{t.emptyCopy}</p>
               <div className="an-live-next-actions">
                 <a
                   className="an-btn an-btn--solid"
                   href={inquiryHref("Booking inquiry")}
                 >
-                  Ajukan tanggal <ArrowUpRight size={13} />
+                  {t.emptyCta} <ArrowUpRight size={13} />
                 </a>
               </div>
             </div>
@@ -223,11 +347,9 @@ export default function Live() {
           <section className="an-section" aria-labelledby="live-index-title">
             <header className="an-head">
               <h2 id="live-index-title" className="an-title">
-                Jadwal terkonfirmasi.
+                {t.indexTitle}
               </h2>
-              <p className="an-meta">
-                {events.length} event · waktu lokal venue
-              </p>
+              <p className="an-meta">{t.indexMeta(events.length)}</p>
             </header>
             <ul className="an-index an-live-index">
               {events.map(event => {
@@ -239,7 +361,7 @@ export default function Live() {
                 return (
                   <li className="an-live-row" key={event._id}>
                     <span className="an-live-row-date">
-                      {formatDate(event.date, event.time)}
+                      {formatDate(event.date, event.time, locale)}
                     </span>
                     {eventHref ? (
                       <a
@@ -264,13 +386,13 @@ export default function Live() {
                           rel="noreferrer"
                         >
                           <MapPin size={12} aria-hidden="true" />{" "}
-                          {place || "Detail venue menyusul"}{" "}
+                          {place || t.placeFallback}{" "}
                           <ArrowUpRight size={11} aria-hidden="true" />
                         </a>
                       ) : (
                         <>
                           <MapPin size={12} aria-hidden="true" />{" "}
-                          {place || "Detail venue menyusul"}
+                          {place || t.placeFallback}
                         </>
                       )}
                     </span>
@@ -279,9 +401,13 @@ export default function Live() {
                       href={eventHref}
                       target={eventHref.startsWith("http") ? "_blank" : undefined}
                       rel={eventHref.startsWith("http") ? "noreferrer" : undefined}
-                      aria-label={`${event.title} — buka sumber resmi`}
+                      aria-label={t.rowAria(event.title)}
                     >
-                      {event.ticketUrl ? "Tiket" : event.rsvpUrl ? "RSVP" : "Info"}{" "}
+                      {event.ticketUrl
+                        ? t.rowTicket
+                        : event.rsvpUrl
+                          ? t.rowRsvp
+                          : t.rowInfo}{" "}
                       <ArrowUpRight size={13} aria-hidden="true" />
                     </a>
                   </li>
@@ -295,21 +421,17 @@ export default function Live() {
             aria-labelledby="booking-options-title"
           >
             <div className="an-live-booking-copy">
-              <p className="an-meta">Booking</p>
+              <p className="an-meta">{t.bookingMeta}</p>
               <h2 id="booking-options-title" className="an-title">
-                Booking dan kolaborasi.
+                {t.bookingTitle}
               </h2>
-              <p>
-                Belum ada jadwal publik yang dikonfirmasi. Untuk performa, remix
-                custom, atau kolaborasi, kirim konteks proyek dan tanggal yang
-                diinginkan.
-              </p>
+              <p>{t.bookingCopy}</p>
               <div className="an-live-next-actions">
                 <a
                   className="an-btn an-btn--solid"
                   href={inquiryHref("Booking inquiry")}
                 >
-                  Kirim brief booking <ArrowUpRight size={14} />
+                  {t.bookingBrief} <ArrowUpRight size={14} />
                 </a>
               </div>
             </div>
@@ -321,11 +443,8 @@ export default function Live() {
                 >
                   <span className="an-meta">01</span>
                   <span className="an-live-option-copy">
-                    <strong>Remix custom</strong>
-                    <small>
-                      Remix, aransemen, dan produksi musik untuk proyek atau
-                      konten.
-                    </small>
+                    <strong>{t.remixTitle}</strong>
+                    <small>{t.remixCopy}</small>
                   </span>
                   <ArrowUpRight size={15} aria-hidden="true" />
                 </a>
@@ -337,10 +456,8 @@ export default function Live() {
                 >
                   <span className="an-meta">02</span>
                   <span className="an-live-option-copy">
-                    <strong>Kolaborasi</strong>
-                    <small>
-                      Kolaborasi rilisan, visual, dan performance bersama.
-                    </small>
+                    <strong>{t.collabTitle}</strong>
+                    <small>{t.collabCopy}</small>
                   </span>
                   <ArrowUpRight size={15} aria-hidden="true" />
                 </a>
@@ -351,21 +468,22 @@ export default function Live() {
 
         <CtaPanel
           id="booking"
-          title={
-            <>
-              AJUKAN TANGGAL
-              <br />
-              DAN KONSEPNYA.
-            </>
-          }
-          copy="Kirim tanggal, lokasi, durasi set, dan konteks acara. Setiap inquiry dibaca langsung oleh studio."
+          title={t.ctaTitle}
+          copy={t.ctaCopy}
           actions={
             <>
-              <Link className="ed-button" href="/inquire?type=booking&source=live">
-                FORM INQUIRY <ArrowUpRight size={14} />
+              <Link
+                className="ed-button"
+                href={
+                  locale === "en"
+                    ? "/en/inquire?type=booking&source=live"
+                    : "/inquire?type=booking&source=live"
+                }
+              >
+                {t.ctaForm} <ArrowUpRight size={14} />
               </Link>
               <a className="ed-button--ghost" href={inquiryHref("Booking inquiry")}>
-                EMAIL STUDIO <ArrowUpRight size={14} />
+                {t.ctaEmail} <ArrowUpRight size={14} />
               </a>
             </>
           }
@@ -374,16 +492,18 @@ export default function Live() {
         <FanSignalSection
           source={FAN_SIGNAL_SOURCES.live}
           className="fan-signal-section--motion"
-          title={
-            <>
-              IKUTI
-              <br />
-              KABARNYA.
-            </>
-          }
-          description="Info rilisan, video, dan jadwal manggung — langsung dari kanal resmi."
+          title={t.signalTitle}
+          description={t.signalCopy}
         />
-      </main>
+    </main>
+  );
+}
+
+export default function Live() {
+  return (
+    <div className="nf-page">
+      <NightHeader active="/live" />
+      <LiveView locale="id" />
       <NightFooter />
     </div>
   );

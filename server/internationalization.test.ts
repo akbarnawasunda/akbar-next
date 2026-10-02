@@ -16,7 +16,11 @@ describe("international artist layer", () => {
     expect(app).toContain('path={"/en/privacy"} component={EnglishPrivacy}');
     expect(english).toContain("Producer, remixer, and electronic bass artist from Bandung");
     expect(english).toContain("Barat, Indonesia.");
-    expect(english).toContain("No confirmed show is public yet.");
+    // Salinan panggung EN kini hidup di Live.tsx (LiveView dipakai /live dan
+    // /en/live), bukan lagi disalin terpisah di EnglishPages.tsx.
+    expect(source("client/src/pages/Live.tsx")).toContain(
+      "No confirmed show is public yet."
+    );
     expect(english).toContain("Available on request.");
     expect(english).not.toContain("FanSignalInline");
   });
