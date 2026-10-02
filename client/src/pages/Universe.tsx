@@ -29,31 +29,154 @@ import "./ArchiveUpgrade.css";
 import "./ArchiveArtwork.css";
 import "./ArchiveStage.css";
 
-const routes = [
-  {
-    number: "01",
-    title: "Dengar rilisan",
-    copy: "Masuk ke katalog, artwork, dan tautan dengar resmi yang tersedia.",
-    href: "/music",
-    icon: Disc3,
+/**
+ * Salinan arsip dua bahasa. `UniverseView` dipakai `/universe` dan
+ * `/en/universe`, jadi linimasa babak, catatan studio, dinding artwork, dan
+ * jalur resmi selalu satu komposisi di kedua bahasa.
+ */
+const copy = {
+  id: {
+    kicker: "Arsip resmi · 2020—sekarang",
+    title: "Perjalanan Akbar Nawasunda.",
+    lede:
+      "Dari DJ Akbar Remix ke Akbar Nawasunda — satu katalog, beberapa babak, dan semua tautan resminya di satu tempat.",
+    portraitAlt: "Artwork editorial Akbar Nawasunda dengan tema future city",
+    portraitCaption: "Arsip visual · Bandung Barat",
+    facts: { since: "Mulai", based: "Basis", releases: "Rilisan" },
+    basedValue: "Bandung Barat",
+    exploreCta: "Telusuri babak",
+    originMeta: "Asal & konteks",
+    originFallback: "Perjalanan musik.",
+    timelineTitle: (
+      <>
+        SATU NAMA,
+        <br />
+        BANYAK BABAK.
+      </>
+    ),
+    timelineLede:
+      "Setiap babak terbaca penuh di halaman ini. Gulir untuk melihat garis babak menyala dan artwork terkait berganti.",
+    timelineIndicator: "ARSIP INTERAKTIF",
+    studioMeta: "Catatan visual",
+    studioTitle: "Dari studio.",
+    studioCopy:
+      "Salah satu arah visual dari dunia Akbar Nawasunda: industrial, kontras, dan dekat dengan energi electronic bass.",
+    studioNote: "Bukan rilisan audio",
+    studioAlt: "Potret editorial Akbar Nawasunda dengan cahaya merah",
+    studioCta: "Lihat visual",
+    wallMeta: (count: number) => `${count} rilisan · kanal resmi`,
+    wallTitle: "Artwork rilisan.",
+    wallCta: "Buka katalog",
+    wallHref: "/music",
+    routesMeta: "Jalur resmi",
+    routesTitle: "Music, remix, booking, lisensi.",
+    routesCopy: "Semua kebutuhan itu masuk lewat satu jalur resmi yang sama.",
+    signalTitle: (
+      <>
+        TETAP DI
+        <br />
+        FREKUENSI.
+      </>
+    ),
+    signalCopy:
+      "Ikuti perjalanan, rilisan, dan kolaborasi baru Akbar Nawasunda dari satu kanal resmi.",
+    routes: [
+      {
+        number: "01",
+        title: "Dengar rilisan",
+        copy: "Masuk ke katalog, artwork, dan tautan dengar resmi yang tersedia.",
+        href: "/music",
+        icon: Disc3,
+      },
+      {
+        number: "02",
+        title: "Remix / kolaborasi",
+        copy: "Kirim konteks project untuk remix request, custom arrangement, atau kolaborasi.",
+        href: "/inquire?type=remix&source=archive",
+        icon: Sparkles,
+      },
+      {
+        number: "03",
+        title: "Booking / lisensi",
+        copy: "Gunakan jalur inquiry resmi untuk performance, kebutuhan penggunaan musik, atau kerja sama.",
+        href: "/inquire?type=booking&source=archive",
+        icon: Music2,
+      },
+    ],
   },
-  {
-    number: "02",
-    title: "Remix / kolaborasi",
-    copy: "Kirim konteks project untuk remix request, custom arrangement, atau kolaborasi.",
-    href: "/inquire?type=remix&source=archive",
-    icon: Sparkles,
+  en: {
+    kicker: "Official archive · 2020—now",
+    title: "The Akbar Nawasunda journey.",
+    lede:
+      "From DJ Akbar Remix to Akbar Nawasunda — one catalog, several chapters, and every official link in one place.",
+    portraitAlt: "Editorial artwork of Akbar Nawasunda with a future city theme",
+    portraitCaption: "Visual archive · Bandung Barat",
+    facts: { since: "Started", based: "Based in", releases: "Releases" },
+    basedValue: "Bandung Barat",
+    exploreCta: "Explore the chapters",
+    originMeta: "Origin & context",
+    originFallback: "The musical journey.",
+    timelineTitle: (
+      <>
+        ONE NAME,
+        <br />
+        MANY CHAPTERS.
+      </>
+    ),
+    timelineLede:
+      "Every chapter reads in full on this page. Scroll to see the chapter line light up and the related artwork change.",
+    timelineIndicator: "INTERACTIVE ARCHIVE",
+    studioMeta: "Visual note",
+    studioTitle: "From the studio.",
+    studioCopy:
+      "One visual direction from the Akbar Nawasunda world: industrial, high contrast, and close to the energy of electronic bass.",
+    studioNote: "Not an audio release",
+    studioAlt: "Editorial portrait of Akbar Nawasunda in red light",
+    studioCta: "See the visuals",
+    wallMeta: (count: number) => `${count} releases · official channels`,
+    wallTitle: "Release artwork.",
+    wallCta: "Open catalog",
+    wallHref: "/en/music",
+    routesMeta: "Official routes",
+    routesTitle: "Music, remix, booking, licensing.",
+    routesCopy: "All of it arrives through the same official route.",
+    signalTitle: (
+      <>
+        STAY ON
+        <br />
+        THE FREQUENCY.
+      </>
+    ),
+    signalCopy:
+      "Follow the journey, releases, and new collaborations from one official channel.",
+    routes: [
+      {
+        number: "01",
+        title: "Hear the releases",
+        copy: "Go to the catalog, artwork, and the official listening links that exist.",
+        href: "/en/music",
+        icon: Disc3,
+      },
+      {
+        number: "02",
+        title: "Remix / collaboration",
+        copy: "Send the project context for a remix request, custom arrangement, or collaboration.",
+        href: "/en/inquire?type=remix&source=archive",
+        icon: Sparkles,
+      },
+      {
+        number: "03",
+        title: "Booking / licensing",
+        copy: "Use the official inquiry route for performance, music usage, or partnership.",
+        href: "/en/inquire?type=booking&source=archive",
+        icon: Music2,
+      },
+    ],
   },
-  {
-    number: "03",
-    title: "Booking / lisensi",
-    copy: "Gunakan jalur inquiry resmi untuk performance, kebutuhan penggunaan musik, atau kerja sama.",
-    href: "/inquire?type=booking&source=archive",
-    icon: Music2,
-  },
-];
+} as const;
 
-export default function Universe() {
+export function UniverseView({ locale = "id" }: { locale?: "id" | "en" }) {
+  const t = copy[locale];
   const cms = usePublicArtistContent();
   const journey = publicJourney(cms.data);
   const photoStories = publicPhotoStories(cms.data);
@@ -91,53 +214,48 @@ export default function Universe() {
         image: release.image,
       })),
   ];
-  const eras = publicEras(cms.data, "id");
+  const eras = publicEras(cms.data, locale);
 
   return (
-    <div className="nf-page an-archive-page">
-      <NightHeader active="/universe" />
-      <main id="main-content" tabIndex={-1}>
+    <main id="main-content" tabIndex={-1}>
         {/* Babak 1 — pembuka arsip: satu potret arsip sebagai jangkar,
             sisanya fakta yang bisa diverifikasi. */}
         <section className="an-arc-hero" aria-labelledby="archive-title">
           <figure className="an-arc-hero-plate">
             <img
               src={officialBrand.archivePortrait}
-              alt="Artwork editorial Akbar Nawasunda dengan tema future city"
+              alt={t.portraitAlt}
               width={800}
               height={1000}
               loading="eager"
               decoding="async"
             />
-            <figcaption>Arsip visual · Bandung Barat</figcaption>
+            <figcaption>{t.portraitCaption}</figcaption>
           </figure>
           <div className="an-arc-hero-copy">
             <p className="an-kicker">
               <span className="an-kicker-dot" aria-hidden="true" />
-              Arsip resmi · 2020—sekarang
+              {t.kicker}
             </p>
-            <h1 id="archive-title">Perjalanan Akbar Nawasunda.</h1>
-            <p className="an-arc-lede">
-              Dari DJ Akbar Remix ke Akbar Nawasunda — satu katalog, beberapa
-              babak, dan semua tautan resminya di satu tempat.
-            </p>
+            <h1 id="archive-title">{t.title}</h1>
+            <p className="an-arc-lede">{t.lede}</p>
             <dl className="an-facts">
               <div>
-                <dt>Mulai</dt>
+                <dt>{t.facts.since}</dt>
                 <dd>2020</dd>
               </div>
               <div>
-                <dt>Basis</dt>
-                <dd>Bandung Barat</dd>
+                <dt>{t.facts.based}</dt>
+                <dd>{t.basedValue}</dd>
               </div>
               <div>
-                <dt>Rilisan</dt>
+                <dt>{t.facts.releases}</dt>
                 <dd>{catalog.length}</dd>
               </div>
             </dl>
             <div className="an-arc-hero-actions">
               <a className="an-btn an-btn--quiet" href="#timeline">
-                Telusuri babak <ArrowDown size={14} aria-hidden="true" />
+                {t.exploreCta} <ArrowDown size={14} aria-hidden="true" />
               </a>
             </div>
           </div>
@@ -152,9 +270,11 @@ export default function Universe() {
             aria-labelledby="archive-origin-title"
           >
             <div className="an-arc-origin-head an-rise">
-              <p className="an-meta">Asal &amp; konteks</p>
+              <p className="an-meta">{t.originMeta}</p>
               <h2 id="archive-origin-title" className="an-title">
-                {journey.title || "Perjalanan musik."}
+                {(locale === "en"
+                  ? journey.titleEn
+                  : journey.title) || t.originFallback}
               </h2>
               <ul className="an-arc-genres">
                 {verifiedArtistProfile.genres.map(genre => (
@@ -164,7 +284,9 @@ export default function Universe() {
             </div>
             <div className="an-arc-origin-body an-rise">
               <p className="an-arc-intro">
-                {journey.intro || verifiedArtistProfile.longBio}
+                {locale === "en"
+                  ? journey.introEn || verifiedArtistProfile.longBioEn
+                  : journey.intro || verifiedArtistProfile.longBio}
               </p>
               <p className="an-arc-detail">
                 {verifiedArtistProfile.location} ·{" "}
@@ -177,17 +299,11 @@ export default function Universe() {
         {/* Babak 3 — linimasa babak, isi utama arsip. */}
         <EditorialSection
           id="timeline"
-          title={
-            <>
-              SATU NAMA,
-              <br />
-              BANYAK BABAK.
-            </>
-          }
-          lede="Setiap babak terbaca penuh di halaman ini. Gulir untuk melihat garis babak menyala dan artwork terkait berganti."
-          aside={<SignalIndicator label="ARSIP INTERAKTIF" />}
+          title={t.timelineTitle}
+          lede={t.timelineLede}
+          aside={<SignalIndicator label={t.timelineIndicator} />}
         >
-          <EraTimeline eras={eras} lang="id" />
+          <EraTimeline eras={eras} lang={locale} />
         </EditorialSection>
 
         {/* Babak 4 — catatan dari studio: satu gambar, satu keterangan. */}
@@ -199,7 +315,7 @@ export default function Universe() {
             <figure className="an-arc-studio-plate an-rise">
               <img
                 src={officialBrand.editorialPortrait}
-                alt="Potret editorial Akbar Nawasunda dengan cahaya merah"
+                alt={t.studioAlt}
                 width={667}
                 height={1000}
                 loading="lazy"
@@ -207,25 +323,25 @@ export default function Universe() {
               />
             </figure>
             <div className="an-arc-studio-copy an-rise">
-              <p className="an-meta">Catatan visual</p>
+              <p className="an-meta">{t.studioMeta}</p>
               <h2 id="archive-studio-title" className="an-title">
-                Dari studio.
+                {t.studioTitle}
               </h2>
-              <p>
-                Salah satu arah visual dari dunia Akbar Nawasunda: industrial,
-                kontras, dan dekat dengan energi electronic bass.
-              </p>
-              <p className="an-arc-note">Bukan rilisan audio</p>
+              <p>{t.studioCopy}</p>
+              <p className="an-arc-note">{t.studioNote}</p>
               <div className="an-arc-hero-actions">
-                <Link className="an-btn an-btn--quiet" href="/visuals">
-                  Lihat visual <ArrowUpRight size={14} aria-hidden="true" />
+                <Link
+                  className="an-btn an-btn--quiet"
+                  href={locale === "en" ? "/en/visuals" : "/visuals"}
+                >
+                  {t.studioCta} <ArrowUpRight size={14} aria-hidden="true" />
                 </Link>
               </div>
             </div>
           </section>
         </Reveal>
 
-        <ArtistPhotoStorySection photoStories={photoStories} />
+        <ArtistPhotoStorySection photoStories={photoStories} locale={locale} />
 
         {/* Babak 5 — dinding artwork: enam rilisan, lebar bergantian. */}
         <Reveal>
@@ -235,20 +351,22 @@ export default function Universe() {
           >
             <header className="an-head an-head--row">
               <div>
-                <p className="an-meta">{catalog.length} rilisan · kanal resmi</p>
+                <p className="an-meta">{t.wallMeta(catalog.length)}</p>
                 <h2 id="archive-artwork-title" className="an-title">
-                  Artwork rilisan.
+                  {t.wallTitle}
                 </h2>
               </div>
-              <Link className="an-btn an-btn--quiet" href="/music">
-                Buka katalog <ArrowUpRight size={14} aria-hidden="true" />
+              <Link className="an-btn an-btn--quiet" href={t.wallHref}>
+                {t.wallCta} <ArrowUpRight size={14} aria-hidden="true" />
               </Link>
             </header>
             <div className="an-arc-wall-grid">
               {catalog.slice(0, 6).map(release => (
                 <Link
                   className="an-arc-wall-item an-rise"
-                  href={`/music/${slugify(release.title)}`}
+                  href={`${locale === "en" ? "/en" : ""}/music/${slugify(
+                    release.title
+                  )}`}
                   key={release.title}
                 >
                   <span className="an-arc-wall-art">
@@ -276,14 +394,14 @@ export default function Universe() {
           aria-labelledby="archive-routes-title"
         >
           <div className="an-arc-route-head">
-            <p className="an-meta">Jalur resmi</p>
+            <p className="an-meta">{t.routesMeta}</p>
             <h2 id="archive-routes-title" className="an-title">
-              Music, remix, booking, lisensi.
+              {t.routesTitle}
             </h2>
-            <p>Semua kebutuhan itu masuk lewat satu jalur resmi yang sama.</p>
+            <p>{t.routesCopy}</p>
           </div>
           <ul className="an-index an-arc-route-list">
-            {routes.map(route => {
+            {t.routes.map(route => {
               const Icon = route.icon;
               return (
                 <li key={route.title}>
@@ -301,18 +419,24 @@ export default function Universe() {
           </ul>
         </section>
 
-        <FanSignalSection
-          source={FAN_SIGNAL_SOURCES.universe}
-          title={
-            <>
-              TETAP DI
-              <br />
-              FREKUENSI.
-            </>
-          }
-          description="Ikuti perjalanan, rilisan, dan kolaborasi baru Akbar Nawasunda dari satu kanal resmi."
-        />
-      </main>
+        {/* Halaman Inggris sengaja tidak memasang FanSignal: formulirnya
+            masih berbahasa Indonesia (lihat signatureRuntime.test.ts). */}
+        {locale === "id" ? (
+          <FanSignalSection
+            source={FAN_SIGNAL_SOURCES.universe}
+            title={t.signalTitle}
+            description={t.signalCopy}
+          />
+        ) : null}
+    </main>
+  );
+}
+
+export default function Universe() {
+  return (
+    <div className="nf-page an-archive-page">
+      <NightHeader active="/universe" />
+      <UniverseView locale="id" />
       <NightFooter />
     </div>
   );

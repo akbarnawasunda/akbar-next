@@ -489,12 +489,16 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
           }
         />
 
-        <FanSignalSection
-          source={FAN_SIGNAL_SOURCES.live}
-          className="fan-signal-section--motion"
-          title={t.signalTitle}
-          description={t.signalCopy}
-        />
+        {/* Formulir FanSignal masih berbahasa Indonesia, jadi hanya dipasang
+            di rute ID (kontrak signatureRuntime.test.ts). */}
+        {locale === "id" ? (
+          <FanSignalSection
+            source={FAN_SIGNAL_SOURCES.live}
+            className="fan-signal-section--motion"
+            title={t.signalTitle}
+            description={t.signalCopy}
+          />
+        ) : null}
     </main>
   );
 }

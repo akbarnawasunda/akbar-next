@@ -8,10 +8,15 @@ describe("public identity consistency", () => {
   it("states producer, remixer, and DJ in fallback public copy", () => {
     const profile = source("client/src/content/artistPlatform.ts");
     const home = source("client/src/pages/Home.tsx");
-    const english = source("client/src/pages/EnglishPages.tsx");
+    // Salinan EN untuk profil kini fallback resmi di artistPlatform
+    // (dipakai AboutView saat locale = en), bukan literal di EnglishPages.
+    const english = source("client/src/content/artistPlatform.ts");
     expect(profile).toContain("Produser musik, remixer, dan DJ dari Bandung Barat.");
     expect(home).toContain("Produser musik, remixer, dan DJ dari Bandung Barat.");
     expect(english).toContain("Music producer, remixer, and DJ from Bandung Barat.");
+    expect(source("client/src/pages/About.tsx")).toContain(
+      "verifiedArtistProfile.shortBioEn"
+    );
   });
 
   it("normalizes only the known legacy CMS wording on public output", () => {

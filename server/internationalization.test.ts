@@ -21,7 +21,10 @@ describe("international artist layer", () => {
     expect(source("client/src/pages/Live.tsx")).toContain(
       "No confirmed show is public yet."
     );
-    expect(english).toContain("Available on request.");
+    // Salinan EPK EN kini hidup di PressKit.tsx (PressView locale="en").
+    expect(source("client/src/pages/PressKit.tsx")).toContain(
+      "Available on request."
+    );
     expect(english).not.toContain("FanSignalInline");
   });
 
