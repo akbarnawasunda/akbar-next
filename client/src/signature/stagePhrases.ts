@@ -15,9 +15,20 @@
  * Nama domain (akbarnawasunda.my.id) tetap hidup sebagai teks di DOM lewat
  * `alsoKnownAs` panggung, jadi yang dilepas hanyalah versi partikelnya.
  */
+/**
+ * Frasa kedua ditulis dengan aksara Sunda (blok Unicode U+1B80–1BFF):
+ * ᮓᮤᮏᮦ ᮃᮊ᮪ᮘᮁ ᮛᮦᮙᮤᮊ᮪ᮞ᮪ = alias "DJ AKBAR REMIX" yang sudah dipakai
+ * artis di platform. Versi Latinnya tetap hidup sebagai teks di DOM lewat
+ * `alsoKnownAs` panggung, jadi pembaca layar dan mesin pencari tidak
+ * kehilangan apa pun kalau aksaranya tidak bisa dirender.
+ *
+ * Transliterasi ini USULAN dan masih perlu konfirmasi pemilik — lihat
+ * docs/phase6-signature-report.md. Tidak ada klaim makna yang dilekatkan
+ * padanya di mana pun di situs ini.
+ */
 export const STAGE_PHRASES: string[][] = [
   ["AKBAR", "NAWASUNDA"],
-  ["DJ AKBAR", "REMIX"],
+  ["ᮓᮤᮏᮦ ᮃᮊ᮪ᮘᮁ", "ᮛᮦᮙᮤᮊ᮪ᮞ᮪"],
 ];
 
 /** Progres saat titik berhenti ditarik pegas dan mulai terbang bebas. */

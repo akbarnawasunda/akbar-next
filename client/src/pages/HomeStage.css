@@ -156,8 +156,12 @@
    dan server/homeEnhancements.test.ts) — hanya tipografinya yang diubah. */
 .an-site .an-hero-inner .hero-title-editorial {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 6.6vw, 6.4rem);
+  /* Fase 6: judul nama memakai Syne 800 (--font-title). Semua ukuran di
+     berkas ini sudah dikalikan 0,60 terhadap angka Clash karena
+     "NAWASUNDA." di Syne 11,46em vs 6,81em di Clash 600 (advance width
+     diukur, bukan ditebak): lebar baris tetap, tinggi huruf yang berubah. */
+  font-family: var(--font-title);
+  font-size: clamp(1.8rem, 3.96vw, 3.84rem);
   font-weight: 600;
   letter-spacing: -0.045em;
   line-height: 0.94;
@@ -176,6 +180,31 @@
 
 .an-site .an-hero-inner .hero-title-word {
   white-space: nowrap;
+}
+
+/* -- Gema aksara Sunda ----------------------------------------
+   Satu baris kecil persis di bawah nama. Bukan ornamen yang bisa
+   dipindah: isinya nama orang ini, ditulis dengan aksara daerah asalnya.
+   Warnanya aksen tunggal (--signal, 9,1:1 di atas --ink), ukurannya tidak
+   pernah lebih besar dari lede, dan karena `aria-hidden` ia tidak pernah
+   membuat pembaca layar mengulang nama dua kali.
+   Kalau font aksara gagal dimuat, fallback-nya teks biasa — baris ini
+   mengecil, tidak ada layout yang runtuh. */
+.an-site .an-hero-sunda {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5em;
+  margin: 0;
+  font-family: var(--font-sunda);
+  font-weight: 700;
+  font-size: clamp(0.95rem, 1.5vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--signal);
+}
+
+.an-site .an-hero-sunda-sep {
+  color: color-mix(in srgb, var(--signal) 50%, transparent);
 }
 
 .an-site .an-hero-lede {
@@ -240,11 +269,10 @@
   color: var(--acid);
 }
 
-/* Pita ukur + scrim atas pada plate.
-   Dua alasan: (1) memberi tepi teknis pada foto seperti alat ukur, dan
-   (2) meredupkan bagian atas foto tempat siku bingkai dan strip frekuensi
-   hidup, supaya penanda tipis itu tidak hilang di atas area foto yang
-   terang. Scrim bawah (::after) tidak disentuh. */
+/* Scrim atas pada plate — alasannya sekarang tinggal satu dan fungsional:
+   foto hero penuh layar, dan masthead (logo + nav) duduk di atasnya.
+   Tanpa peredupan ini kontras nav jatuh di foto yang terang. Scrim bawah
+   (::after) tidak disentuh. */
 .an-site .an-hero-plate::before {
   content: "";
   position: absolute;
@@ -473,9 +501,11 @@
   }
 
   /* clamp ini ikut diuji server/mobileLayout.test.ts: kata terpanjang
-     "NAWASUNDA." harus muat di 320px (36,8px × 6,963em ≈ 256px ≤ 280px). */
+     "NAWASUNDA." harus muat di 320px. Dengan Syne 800 satu em jauh lebih
+     lebar (11,463em pada letter-spacing -0,05em), jadi 23,0px × 11,463em
+     ≈ 264px ≤ 280px. */
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(2.4rem, 11.5vw, 4rem);
+    font-size: clamp(1.44rem, 6.9vw, 2.4rem);
     letter-spacing: -0.05em;
     line-height: 0.96;
   }
@@ -573,121 +603,12 @@
    `!important`, dan setiap gerakan punya jalur `no-preference`.
    ============================================================ */
 
-/* -- Bingkai instrumen: siku di empat sudut + strip frekuensi ----
-   Titik sudut memakai warna kertas redup supaya terbaca sebagai bingkai
-   teknis, bukan ornamen. Semuanya `aria-hidden` di markup. */
-.an-site .an-hero-instrument {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.an-site .an-hero-tick {
-  position: absolute;
-  z-index: 3;
-  width: 15px;
-  height: 15px;
-  border: 0 solid color-mix(in srgb, var(--paper) 32%, transparent);
-}
-
-.an-site .an-hero-tick--tl,
-.an-site .an-hero-tick--tr {
-  top: calc(var(--chrome-h, 78px) + clamp(14px, 2.2vh, 24px));
-}
-
-.an-site .an-hero-tick--bl,
-.an-site .an-hero-tick--br {
-  bottom: calc(var(--chrome-h, 78px) + clamp(18px, 3vh, 30px));
-}
-
-.an-site .an-hero-tick--tl,
-.an-site .an-hero-tick--bl {
-  left: var(--hx-gutter);
-}
-
-.an-site .an-hero-tick--tr,
-.an-site .an-hero-tick--br {
-  right: var(--hx-gutter);
-}
-
-.an-site .an-hero-tick--tl {
-  border-top-width: 1px;
-  border-left-width: 1px;
-}
-
-.an-site .an-hero-tick--tr {
-  border-top-width: 1px;
-  border-right-width: 1px;
-}
-
-.an-site .an-hero-tick--bl {
-  border-bottom-width: 1px;
-  border-left-width: 1px;
-}
-
-.an-site .an-hero-tick--br {
-  border-bottom-width: 1px;
-  border-right-width: 1px;
-}
-
-/* Strip frekuensi: 46 bar 2px dari tinggi deterministik (lihat HERO_SPECTRUM
-   di Home.tsx). Bukan analisis audio — ini bahasa visual situs, bukan data. */
-.an-site .an-hero-spectrum {
-  position: absolute;
-  top: calc(var(--chrome-h, 78px) + clamp(15px, 2.2vh, 26px));
-  right: var(--hx-gutter);
-  z-index: 3;
-  display: flex;
-  align-items: flex-end;
-  gap: 4px;
-  height: clamp(24px, 3.6vh, 42px);
-  mask-image: linear-gradient(90deg, transparent 0%, #000 32%);
-}
-
-/* Backing gelap tipis di belakang bar: foto potret di sudut kanan atas
-   terang, dan bar steel di atas area terang akan hilang tanpa ini.
-   `::before` dikeluarkan dari alur flex dengan position: absolute supaya
-   tidak menjadi item ke-47 di dalam strip. */
-.an-site .an-hero-spectrum::before {
-  content: "";
-  position: absolute;
-  inset: -16px -20px -12px -28px;
-  z-index: -1;
-  background: radial-gradient(
-    72% 130% at 100% 0%,
-    color-mix(in srgb, var(--ink) 74%, transparent) 0%,
-    transparent 74%
-  );
-}
-
-.an-site .an-hero-bar {
-  width: 2px;
-  height: calc(var(--bar) * 100%);
-  background: linear-gradient(
-    to top,
-    color-mix(in srgb, var(--signal) 72%, transparent) 0%,
-    color-mix(in srgb, var(--signal) 10%, transparent) 100%
-  );
-  transform-origin: 50% 100%;
-}
-
-/* Kisi nilainya bergerak pelan, masing-masing mulai dari fase berbeda
-   (delay negatif deterministik dari indeks bar — bukan angka acak). */
-@media (prefers-reduced-motion: no-preference) {
-  .an-site .an-hero-bar {
-    animation: an-hero-bar-breathe 3.4s var(--ease) infinite alternate;
-    animation-delay: calc(var(--bar-index) * -59ms);
-  }
-}
-
-@keyframes an-hero-bar-breathe {
-  from {
-    transform: scaleY(0.5);
-  }
-  to {
-    transform: scaleY(1);
-  }
-}
+/* FASE 6 — siku bingkai, strip frekuensi, dan bar-nya DIHAPUS.
+   Alasannya bukan selera: keduanya mengaku sebagai penanda teknis tanpa
+   membaca apa pun (strip itu angka sinus tetap, bukan audio), dan di layar
+   pertama mereka bersaing dengan satu-satunya hal yang harus menang —
+   nama dan gema aksaranya. Satu animasi `infinite` (46 bar) ikut hilang.
+   Lihat docs/phase6-signature-report.md §5. */
 
 /* -- Hero desktop: huruf lebih besar, kata terakhir jadi garis ----
    Hanya di atas 768px. Ukuran ponsel TIDAK disentuh: `clamp()` mobile
@@ -701,7 +622,7 @@
   }
 
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(3.3rem, 7.6vw, 7.8rem);
+    font-size: clamp(1.98rem, 4.56vw, 4.68rem);
     letter-spacing: -0.055em;
     line-height: 0.9;
   }
@@ -780,15 +701,6 @@
   }
 }
 
-/* Ponsel: bingkai dan strip disembunyikan. Komposisi ponsel tetap
-   foto → tipografi → fakta, tanpa penanda teknis yang memakan ruang. */
-@media (max-width: 767.98px) {
-  .an-site .an-hero-tick,
-  .an-site .an-hero-spectrum {
-    display: none;
-  }
-}
-
 /* ============================================================
    FASE 4B — HERO SINEMATIK + PITA TERANG
    ------------------------------------------------------------
@@ -851,11 +763,14 @@
     gap: clamp(14px, 1.5vw, 24px);
   }
 
-  /* Kata terpanjang ("NAWASUNDA.") ≈ 5,7em pada Clash Display 600;
-     pada 12,4vw ia memakai ≈ 71vw — masih di dalam ruang teks (≈90vw
-     setelah dua gutter), jadi tidak ada kata yang keluar layar. */
+  /* Kata terpanjang ("NAWASUNDA.") = 11,463em pada Syne 800 dengan
+     letter-spacing -0,05em (diukur dari advance width font yang di-host
+     di repo ini, bukan diperkirakan). Pada 7,44vw ia memakai ≈85vw —
+     masih di dalam ruang teks (≈88-90vw setelah dua gutter) pada seluruh
+     rentang 768-1600px, jadi tidak ada kata yang keluar layar.
+     Catatan kalibrasi: 9,2vw yang sempat diusulkan TIDAK muat (≈105vw). */
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(3.6rem, 12.4vw, 12.4rem);
+    font-size: clamp(2.16rem, 7.44vw, 7.44rem);
     line-height: 0.86;
     letter-spacing: -0.05em;
   }

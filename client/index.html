@@ -24,9 +24,16 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#101211" />
     <!-- Legacy font names Bebas+Neue and Manrope are intentionally replaced by local Fontsource bundles. -->
+    <!--
+      Fase 6: yang di-preload adalah font JUDUL (Syne 800), bukan lagi
+      Clash Display 500. H1 adalah elemen terbesar di layar pertama, jadi
+      ia yang paling mahal kalau harus di-swap; Clash tetap dipakai H2/H3
+      yang semuanya di bawah lipatan dan cukup dengan `font-display: swap`.
+      Jumlah file preload tetap tiga, totalnya justru turun (63 → 62 kB).
+    -->
     <link
       rel="preload"
-      href="/assets/fonts/fontshare/clash-display-500.woff2"
+      href="/assets/fonts/fontsource/syne-800.woff2"
       as="font"
       type="font/woff2"
       crossorigin

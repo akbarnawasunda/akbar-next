@@ -25,7 +25,14 @@ const SHELL_FILE = "client/src/shell/PublicShell.css";
 /** File yang memang memuat hukum: satu jaring pengaman di public shell. */
 const OVERFLOW_ALLOWLIST = [SHELL_FILE];
 
-const LOCAL_FONTS = ["Clash Display", "General Sans", "Azeret Mono"];
+const LOCAL_FONTS = [
+  "Clash Display",
+  "General Sans",
+  "Azeret Mono",
+  // Fase 6: judul/H1 (Syne) dan gema aksara Sunda — keduanya self-hosted.
+  "Syne",
+  "Noto Sans Sundanese",
+];
 const FONT_FALLBACKS = [
   "inherit",
   "serif",
@@ -49,6 +56,8 @@ const FONT_FALLBACKS = [
   "var(--font-display)",
   "var(--font-body)",
   "var(--font-mono)",
+  "var(--font-title)",
+  "var(--font-sunda)",
   "var(--ref-serif-display)",
   "var(--ref-body)",
   "var(--ref-mono)",

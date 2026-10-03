@@ -16,11 +16,21 @@ const source = (path: string) =>
 
 /**
  * Lebar kata "NAWASUNDA." dalam satuan em, diukur dari advance width glyph
- * di client/public/assets/fonts/fontshare/clash-display-700.woff2 (upem 1000)
- * ditambah letter-spacing -0.06em per karakter. Angka ini yang membuat judul
- * hero terpotong di layar 320px saat ukurannya dipatok dalam rem.
+ * font JUDUL yang di-host di repo ini (upem 1000) ditambah letter-spacing
+ * per karakter. Angka ini yang membuat judul hero terpotong di layar 320px
+ * saat ukurannya dipatok dalam rem.
+ *
+ * KONTRAK BERUBAH (Fase 6, disengaja): sejak H1 memakai
+ * `client/public/assets/fonts/fontsource/syne-800.woff2` — bukan lagi
+ * clash-display-700 — kata yang sama memakai 11,463em (letter-spacing
+ * -0,05em), bukan 6,963em. Syne menulis ±1,65× lebih lebar, jadi SELURUH
+ * clamp judul di CSS ikut dikalikan 0,60 supaya lebar barisnya tetap sama.
+ * Yang dijaga tes ini tidak berubah: tidak boleh ada kata judul yang
+ * melewati ruang teks di layar 320px.
+ *
+ *   sum(advance "NAWASUNDA.") / upem = 11,963 ; 11,963 - (0,05 × 10) = 11,463
  */
-const HERO_WORD_EM = 6.963;
+const HERO_WORD_EM = 11.463;
 const SMALLEST_PHONE = 320;
 const GUTTER = 20; // --hx-gutter / --ref-gutter pada <= 767.98px
 
