@@ -9,7 +9,7 @@ import { CtaPanel, EventCountdown } from "@/components/editorial/EditorialKit";
 import { Link } from "wouter";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
 import {
-  publicUpcomingEvents,
+  publicConfirmedEvents,
   usePublicArtistContent,
 } from "@/content/publicContent";
 import "./EcosystemPages.css";
@@ -167,9 +167,9 @@ const copy = {
 export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
   const t = copy[locale];
   const cms = usePublicArtistContent();
-  const events = publicUpcomingEvents(cms.data).filter(
-    event => !/no date announced|tba/i.test(event.title)
-  );
+  /* Satu sumber "terkonfirmasi" dengan aturan slot JADWAL di nav
+     (publicContent.ts) — tidak boleh ada dua definisi. */
+  const events = publicConfirmedEvents(cms.data);
   const featured = events.find(event => event.isFeatured) || events[0];
   const signal = cms.data?.live;
 

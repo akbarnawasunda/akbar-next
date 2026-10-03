@@ -21,9 +21,11 @@ const ROUTE_META = {
   "/": { mode: "wordmark", id: "BERANDA", en: "HOME" },
   "/music": { mode: "signal", id: "MUSIK", en: "MUSIC" },
   "/visuals": { mode: "dust", id: "VISUAL", en: "VISUALS" },
-  "/visuals/portraits": { mode: "dust", id: "POTRET", en: "PORTRAITS" },
-  "/live": { mode: "signal", id: "LIVE", en: "LIVE" },
-  "/universe": { mode: "era", id: "ARSIP", en: "ARCHIVE" },
+  /* /visuals/portraits dihapus (Phase 3 §2 baris 5): kontennya jadi seksi
+     in-page /visuals#portraits (dibangun di sub-fase 5d); rute lama 301
+     di vercel.json, tirai tidak lagi mengenalnya. */
+  "/live": { mode: "signal", id: "JADWAL", en: "LIVE" },
+  "/universe": { mode: "era", id: "PERJALANAN", en: "JOURNEY" },
   "/about": { mode: "quiet", id: "TENTANG", en: "ABOUT" },
   "/inquire": { mode: "quiet", id: "KONTAK", en: "INQUIRE" },
   "/licensing": { mode: "quiet", id: "LISENSI", en: "LICENSING" },

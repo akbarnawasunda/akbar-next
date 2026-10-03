@@ -45,8 +45,12 @@ describe("lapisan signature global", () => {
     expect(stage).not.toContain('data-live="false"');
     expect(stage).toContain("data-live={live}");
     expect(stage).toMatch(/const live = ready && tier !== "off"/);
-    // Baris era tetap dibaca mesin pencari walau efeknya hidup.
-    expect(stage).toContain("STAGE_PHRASES");
+    // Nama + alias tetap di DOM (teks nyata) walau partikel hidup, supaya
+    // mesin pencari dan screen reader membacanya. Baris era lama dihapus
+    // (Phase 3 §2 baris 1); isian journey tinggal di /universe.
+    expect(stage).toContain("<p className=\"sr-only\">{alsoKnownAs}</p>");
+    expect(stage).toContain("AKBAR");
+    expect(stage).not.toContain("an-signature-stage-eras");
   });
 
   it("tidak membocorkan lapisan client ke HTML SSR", async () => {

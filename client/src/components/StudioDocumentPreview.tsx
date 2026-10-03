@@ -41,7 +41,7 @@ const publicRoutes: Record<DocumentType, { route: string; surface: string }> = {
   legal: { route: "/privacy", surface: "Privacy / Legal" },
   release: { route: "/music", surface: "Music + release cards" },
   visual: { route: "/visuals", surface: "Visuals + homepage" },
-  portrait: { route: "/visuals/portraits", surface: "Visual Studies gallery" },
+  portrait: { route: "/visuals#portraits", surface: "Visuals · seksi studi potret" },
   photoStory: { route: "/", surface: "Homepage Photo Story + Visuals" },
   live: { route: "/live", surface: "Live + homepage" },
   event: { route: "/live", surface: "Live + homepage" },

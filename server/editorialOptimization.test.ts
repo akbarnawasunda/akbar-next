@@ -25,21 +25,37 @@ describe("high-performance image optimization & non-Google typography", () => {
   // Gambar editorial dirender di HTML, jadi kontraknya diuji dari halaman
   // nyata (lihat docs/notes/testing-policy.md), bukan dari nama variabel.
   it("mengirim markup gambar yang aman layout-shift, responsif, dan hemat data", async () => {
-    const page = await render("/visuals/portraits", prefetch);
+    // Kontrak markup sama untuk semua permukaan OptimizedEditorialImage.
+    // Halaman gallery potret lama bukan rute lagi — seksi #portraits-nya
+    // dibangun di sub-fase 5d; kontrak "frame pertama eager" (di gallery
+    // frame pertama memang above-the-fold) diverifikasi ulang di sana.
+    // Di /universe semua gambar berada di bawah fold, jadi wajib lazy.
+    const page = await render("/universe", prefetch);
     const images = page.html.match(/<img[^>]*an-opt-img-element[^>]*>/g) || [];
 
-    expect(images.length, "halaman potret tanpa gambar editorial").toBeGreaterThan(0);
+    expect(images.length, "halaman tanpa gambar editorial").toBeGreaterThan(0);
     for (const img of images) {
       expect(img, "gambar tanpa decoding async").toContain('decoding="async"');
-      expect(img, "gambar tanpa kebijakan loading").toMatch(/loading="(lazy|eager)"/);
-    }
-    // Frame pertama adalah above-the-fold: boleh eager, sisanya wajib lazy.
-    expect(images[0], "frame pertama harus eager").toContain('loading="eager"');
-    for (const img of images.slice(1)) {
-      expect(img, "gambar bawah fold harus lazy").toContain('loading="lazy"');
+      expect(img, "gambar di bawah fold harus lazy").toContain('loading="lazy"');
     }
     // Varian mobile dikirim lewat <picture>, bukan `sizes` tanpa `srcSet`.
     expect(page.html, "tanpa <picture> untuk varian mobile").toContain("<picture");
+  });
+
+  it("route potret lama redirect ke seksi in-page /visuals#portraits (Phase 3 §2 baris 5)", async () => {
+    for (const [route, target] of [
+      ["/visuals/portraits", "/visuals#portraits"],
+      ["/en/visuals/portraits", "/en/visuals#portraits"],
+    ] as const) {
+      const page = await render(route, prefetch);
+      expect(page.html, `${route}: tanpa meta refresh`).toContain(
+        `content="0; url=${target}"`
+      );
+      // Galeri tidak lagi dirender di rute lama.
+      expect(page.html, `${route}: markup gallery bocor`).not.toContain(
+        "an-opt-img-element"
+      );
+    }
   });
 
   it("memakai ukuran intrinsik untuk gambar aset lokal", async () => {

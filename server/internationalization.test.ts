@@ -34,7 +34,10 @@ describe("international artist layer", () => {
     expect(idChrome).toContain('aria-label="Pilihan bahasa"');
     expect(idChrome).toContain('href={englishPath}');
     expect(enChrome).toContain('href={indonesianPath(pathname)}');
-    expect(enChrome).toContain('href="/en/inquire"');
+    // CTA utama EN kini LISTEN → /en/music (Phase 3 §7, paritas dengan
+    // "Dengarkan" di chrome ID); inquiry tetap ada sebagai rute CONTACT.
+    expect(enChrome).toContain('href="/en/music"');
+    expect(enChrome).toContain('"/en/inquire"');
     expect(enChrome).toContain('aria-controls="english-mobile-menu"');
   });
 

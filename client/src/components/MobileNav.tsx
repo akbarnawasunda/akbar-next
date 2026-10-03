@@ -12,11 +12,14 @@ export interface MobileNavItem {
   desc?: string;
 }
 
+/* Drawer mobile = 6 item datar (Phase 3 §7), tanpa nesting:
+   Musik · Visual · Perjalanan · Tentang · EPK · Kontak. "Jadwal" tidak
+   permanen: ia menjadi baris ke-7 (ditambahkan di ujung) hanya saat CMS
+   punya jadwal terkonfirmasi. Label "Arsip" pensiun — itu Perjalanan. */
 export const defaultIdNavItems: MobileNavItem[] = [
   { href: "/music", label: "Musik", desc: "Diskografi & rilisan resmi" },
   { href: "/visuals", label: "Visual", desc: "Video musik & galeri artwork" },
-  { href: "/live", label: "Jadwal", desc: "Jadwal panggung & arsipnya" },
-  { href: "/universe", label: "Arsip", desc: "Perjalanan & arsip lengkap" },
+  { href: "/universe", label: "Perjalanan", desc: "Dua nama, satu cerita" },
   { href: "/about", label: "Tentang", desc: "Profil & cerita di balik nama" },
   { href: "/epk", label: "EPK", desc: "Press kit resmi" },
   { href: "/inquire", label: "Kontak", desc: "Booking & kerja sama" },
@@ -29,12 +32,38 @@ export const defaultEnNavItems: MobileNavItem[] = [
     label: "Visuals",
     desc: "Music videos & visual artwork",
   },
-  { href: "/en/live", label: "Live", desc: "Stage tour dates & archive" },
-  { href: "/universe", label: "Archive", desc: "Complete ecosystem catalog" },
+  {
+    href: "/en/universe",
+    label: "Journey",
+    desc: "The two-name story & eras",
+  },
   { href: "/en/about", label: "About", desc: "Artist biography & statement" },
   { href: "/en/epk", label: "EPK", desc: "Official press kit & curations" },
   { href: "/en/inquire", label: "Contact", desc: "Direct booking & inquiry" },
 ];
+
+const scheduleIdNavItem: MobileNavItem = {
+  href: "/live",
+  label: "Jadwal",
+  desc: "Jadwal panggung yang terkonfirmasi",
+};
+
+const scheduleEnNavItem: MobileNavItem = {
+  href: "/en/live",
+  label: "Live",
+  desc: "Confirmed show dates",
+};
+
+/** Tambahkan baris jadwal (baris 7, di ujung) hanya jika ada jadwal
+    terkonfirmasi — aturan yang sama dengan nav desktop. */
+export function withScheduleItem(
+  items: MobileNavItem[],
+  lang: "id" | "en",
+  hasConfirmedEvents: boolean,
+): MobileNavItem[] {
+  if (!hasConfirmedEvents) return items;
+  return [...items, lang === "en" ? scheduleEnNavItem : scheduleIdNavItem];
+}
 
 export interface MobileNavProps {
   isOpen: boolean;
@@ -43,6 +72,8 @@ export interface MobileNavProps {
   active?: string;
   lang?: "id" | "en";
   navItems?: MobileNavItem[];
+  /** Kalau true, baris "Jadwal/Live" ditambahkan di ujung drawer (baris 7). */
+  hasConfirmedEvents?: boolean;
 }
 
 function MobileLanguageToggle({
@@ -100,8 +131,12 @@ export function MobileNav({
   pathname: customPathname,
   active,
   lang = "id",
-  navItems = lang === "en" ? defaultEnNavItems : defaultIdNavItems,
+  navItems,
+  hasConfirmedEvents = false,
 }: MobileNavProps) {
+  const baseItems = navItems ?? (lang === "en" ? defaultEnNavItems : defaultIdNavItems);
+  // Baris jadwal hanya muncul (di ujung) kalau ada jadwal terkonfirmasi.
+  const items = withScheduleItem(baseItems, lang, hasConfirmedEvents);
   const [currentLocation] = useLocation();
   const pathname = customPathname ?? currentLocation;
   const panelRef = useRef<HTMLElement>(null);
@@ -190,7 +225,10 @@ export function MobileNav({
   if (!mounted || typeof document === "undefined" || (!shouldRender && !isOpen))
     return null;
 
-  const signalHref = lang === "en" ? "/en#signal" : "#signal";
+  /* Tujuan "Kabar Terbaru" = papan signal di beranda. Pakai path absolut
+     supaya tautan ini hidup dari halaman mana pun (Home.tsx men-scroll ke
+     target hash-nya setelah rute berganti). */
+  const signalHref = lang === "en" ? "/en#signal" : "/#signal";
   const drawerOpen = isOpen && isEntered;
 
   return createPortal(
@@ -257,7 +295,7 @@ export function MobileNav({
               lang === "en" ? "Primary mobile navigation" : "Navigasi mobile"
             }
           >
-            {navItems.map((item, index) => {
+            {items.map((item, index) => {
               const isActive = active === item.href || pathname === item.href;
               const label =
                 item.label === "EPK"

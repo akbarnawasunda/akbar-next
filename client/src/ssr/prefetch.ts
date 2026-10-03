@@ -42,7 +42,6 @@ const idTitles: Record<string, string> = {
   "/": SITE_NAME,
   "/music": "Music by Akbar Nawasunda",
   "/visuals": "Videos by Akbar Nawasunda",
-  "/visuals/portraits": "Portrait Studies | Akbar Nawasunda",
   "/live": "Live Dates | Akbar Nawasunda",
   "/universe": "About the Work | Akbar Nawasunda",
   "/about": "About the Artist | Akbar Nawasunda",
@@ -57,7 +56,6 @@ const enTitles: Record<string, string> = {
   "/": SITE_NAME,
   "/music": "Music by Akbar Nawasunda",
   "/visuals": "Videos by Akbar Nawasunda",
-  "/visuals/portraits": "Portrait Studies | Akbar Nawasunda",
   "/live": "Live Dates | Akbar Nawasunda",
   "/universe": "About the Work | Akbar Nawasunda",
   "/about": "About the Artist | Akbar Nawasunda",
@@ -106,7 +104,6 @@ export async function prefetchForPath(
     [
       "/music",
       "/visuals",
-      "/visuals/portraits",
       "/live",
       "/universe",
       "/about",

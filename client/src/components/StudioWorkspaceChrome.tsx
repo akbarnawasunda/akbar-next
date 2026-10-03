@@ -58,7 +58,7 @@ function destinationFor(documentType: string) {
   if (documentType === "legal") return "/privacy";
   if (documentType === "release") return "/music + release detail";
   if (documentType === "visual") return "/visuals";
-  if (documentType === "portrait") return "/visuals/portraits";
+  if (documentType === "portrait") return "/visuals#portraits";
   if (documentType === "photoStory") return "Homepage Photo Story + /visuals";
   if (documentType === "event" || documentType === "live") return "/live";
   if (documentType === "game") return "/game/jedag-run + homepage teaser";

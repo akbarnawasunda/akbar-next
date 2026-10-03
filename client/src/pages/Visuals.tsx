@@ -64,7 +64,9 @@ const copy = {
     ctaPrimary: "AJUKAN PROYEK",
     ctaSecondary: "LIHAT PORTRAIT",
     ctaHref: "/inquire?type=visual&source=visuals",
-    portraitsHref: "/visuals/portraits",
+    /* Rute /visuals/portraits dihapus (Phase 3 §2 baris 5); kini seksi
+       in-page. Anchor #portraits dibangun di sub-fase 5d. */
+    portraitsHref: "/visuals#portraits",
     signalTitle: (
       <>
         LIHAT YANG
@@ -113,7 +115,7 @@ const copy = {
     ctaPrimary: "PITCH A PROJECT",
     ctaSecondary: "VIEW PORTRAITS",
     ctaHref: "/en/inquire?type=visual&source=visuals",
-    portraitsHref: "/en/visuals/portraits",
+    portraitsHref: "/en/visuals#portraits",
     signalTitle: (
       <>
         SEE WHAT

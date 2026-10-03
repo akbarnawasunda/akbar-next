@@ -358,48 +358,6 @@ export function EnglishHome() {
           alsoKnownAs="Also known as DJ Akbar Remix and akbarnawasunda.my.id."
         />
 
-        <section
-          className="home-signal-deck"
-          aria-labelledby="en-signal-deck-title"
-        >
-          <div className="home-signal-copy">
-            <p className="eyebrow">
-              <span /> OFFICIAL PLATFORMS
-            </p>
-            <h2 id="en-signal-deck-title">
-              LISTEN
-              <br />
-              ANYWHERE.
-            </h2>
-            <Link className="home-deck-cta" href="/en/music">
-              VIEW MUSIC <ArrowUpRight size={14} />
-            </Link>
-          </div>
-          <div className="home-platform-rack">
-            {editablePlatformLinks.map((platform) => (
-              <a
-                className={`home-platform-card platform-${platform.label
-                  .toLowerCase()
-                  .replace(/\s+/g, "-")}`}
-                key={platform.label}
-                href={platform.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`Open Akbar Nawasunda on ${platform.label}`}
-              >
-                <span className="home-platform-icon-shell">
-                  <PlatformIcon label={platform.label} />
-                </span>
-                <span className="home-platform-copy">
-                  <strong>{platform.label}</strong>
-                </span>
-                <ArrowUpRight className="home-platform-arrow" size={14} />
-              </a>
-            ))}
-          </div>
-          <PlatformMarquee links={editablePlatformLinks} />
-        </section>
-
         <section className="section section-current" id="music">
           <div className="section-heading">
             <div>
@@ -441,6 +399,48 @@ export function EnglishHome() {
               </div>
             </div>
           </div>
+        </section>
+
+        <section
+          className="home-signal-deck"
+          aria-labelledby="en-signal-deck-title"
+        >
+          <div className="home-signal-copy">
+            <p className="eyebrow">
+              <span /> OFFICIAL PLATFORMS
+            </p>
+            <h2 id="en-signal-deck-title">
+              LISTEN
+              <br />
+              ANYWHERE.
+            </h2>
+            <Link className="home-deck-cta" href="/en/music">
+              VIEW MUSIC <ArrowUpRight size={14} />
+            </Link>
+          </div>
+          <div className="home-platform-rack">
+            {editablePlatformLinks.map((platform) => (
+              <a
+                className={`home-platform-card platform-${platform.label
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")}`}
+                key={platform.label}
+                href={platform.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Open Akbar Nawasunda on ${platform.label}`}
+              >
+                <span className="home-platform-icon-shell">
+                  <PlatformIcon label={platform.label} />
+                </span>
+                <span className="home-platform-copy">
+                  <strong>{platform.label}</strong>
+                </span>
+                <ArrowUpRight className="home-platform-arrow" size={14} />
+              </a>
+            ))}
+          </div>
+          <PlatformMarquee links={editablePlatformLinks} />
         </section>
 
         <ArtistEditorialSections

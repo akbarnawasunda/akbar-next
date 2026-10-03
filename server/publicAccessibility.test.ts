@@ -17,7 +17,6 @@ const ID_ROUTES = [
   "/",
   "/music",
   "/visuals",
-  "/visuals/portraits",
   "/live",
   "/universe",
   "/about",
@@ -197,13 +196,16 @@ describe("panggung signature", () => {
 
       // Nama tetap jadi teks sungguhan di panggung.
       expect(visible, `${route} nama`).toContain("AKBAR NAWASUNDA");
-      // Satu baris konteks per frasa, bersumber dari era yang sama dengan
-      // timeline arsip — jadi panggungnya bercerita, bukan sekadar nama.
-      expect(visible, `${route} era sekarang`).toMatch(
-        route === "/en" ? /NOW|TODAY|SEKARANG/i : /SEKARANG/i
+      // Baris era/jalan-perjalanan dihapus dari panggung (Phase 3 §2 baris 1):
+      // isian itu milik /universe; panggung tinggal identitas + angka katalog.
+      expect(visible, `${route} era sekarang`).not.toContain("SEKARANG");
+      expect(visible, `${route} era awal`).not.toMatch(
+        route === "/en" ? /bedroom producer/i : /bedroom producer/i
       );
-      expect(visible, `${route} era awal`).toContain("2020");
-      expect(visible, `${route} alias era`).toMatch(/DJ Akbar Remix/i);
+      // Alias (DJ Akbar Remix) tetap terbaca, tapi lewat baris aka sr-only —
+      // bukan sebagai baris era yang terlihat.
+      const markupNoSr = markup;
+      expect(markupNoSr, `${route} aka sr-only`).toMatch(/sr-only[^>]*>.*DJ Akbar Remix/s);
       // Tiga angka katalog yang menghitung naik saat panggung masuk layar;
       // nilai finalnya tetap ada di HTML untuk pembaca tanpa JavaScript.
       expect(visible, `${route} angka`).toMatch(

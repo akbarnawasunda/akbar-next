@@ -67,6 +67,14 @@ export function serveStatic(app: Express) {
       const query = req.originalUrl.slice(req.path.length);
       return res.redirect(301, `/universe${suffix}${query}`);
     }
+    /* Mirrors vercel.json (keep in sync): rute potret lama 301 ke seksi
+       in-page /visuals#portraits (Phase 3 §2 baris 5). */
+    if (req.path === "/visuals/portraits" || req.path.startsWith("/visuals/portraits/")) {
+      return res.redirect(301, "/visuals#portraits");
+    }
+    if (req.path === "/en/visuals/portraits" || req.path.startsWith("/en/visuals/portraits/")) {
+      return res.redirect(301, "/en/visuals#portraits");
+    }
     if (req.path !== "/" && /\/$/.test(req.path)) {
       const query = req.originalUrl.slice(req.path.length);
       const target = (req.path.replace(/\/+$/, "") || "/").replace(/^\/\/+/, "/");

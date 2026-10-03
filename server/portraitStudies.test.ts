@@ -27,21 +27,32 @@ describe("portrait studies CMS and public gallery", () => {
     expect(archive).toContain("Edit portrait");
   });
 
-  it("routes portrait CTAs to the dedicated gallery in both languages", () => {
+  it("merges the portrait gallery into /visuals with 301 redirects (Phase 3 §2 baris 5)", () => {
     const app = source("client/src/App.tsx");
     const visuals = source("client/src/pages/Visuals.tsx");
-    const component = source("client/src/components/VisualPortraitStudies.tsx");
-    const gallery = source("client/src/pages/VisualPortraitGallery.tsx");
+    const vercel = source("vercel.json");
     const sitemap = source("client/public/sitemap.xml");
-    expect(app).toContain('path={"/visuals/portraits"}');
-    expect(app).toContain('path={"/en/visuals/portraits"}');
-    // Komponen kini menerima bahasa lewat prop `english`; rute ID tetap
-    // memakai default (english=false).
+    const component = source("client/src/components/VisualPortraitStudies.tsx");
+    // Rute lama tidak lagi ada; CTA visual kini menunjuk seksi in-page.
+    expect(app).not.toContain('path={"/visuals/portraits"} component=');
+    expect(visuals).toContain('portraitsHref: "/visuals#portraits"');
+    expect(visuals).toContain('portraitsHref: "/en/visuals#portraits"');
     expect(visuals).toContain("<VisualPortraitStudies");
     expect(visuals).toContain("studies={portraitContent}");
-    expect(component).toContain('"/en/visuals/portraits"');
-    expect(gallery).toContain("PHOTO");
-    expect(sitemap).toContain("https://akbarnawasunda.my.id/visuals/portraits");
-    expect(sitemap).toContain("https://akbarnawasunda.my.id/en/visuals/portraits");
+    expect(component).not.toContain("/visuals/portraits");
+    // 301 permanen di kedua bahasa; sitemap tidak lagi mempublikasikan rute lama.
+    const redirects: { source: string; destination: string; permanent: boolean }[] =
+      JSON.parse(vercel).redirects;
+    const idRedirect = redirects.find(
+      r => r.source === "/visuals/portraits"
+    );
+    const enRedirect = redirects.find(
+      r => r.source === "/en/visuals/portraits"
+    );
+    expect(idRedirect?.destination).toBe("/visuals#portraits");
+    expect(idRedirect?.permanent).toBe(true);
+    expect(enRedirect?.destination).toBe("/en/visuals#portraits");
+    expect(enRedirect?.permanent).toBe(true);
+    expect(sitemap).not.toContain("/visuals/portraits");
   });
 });

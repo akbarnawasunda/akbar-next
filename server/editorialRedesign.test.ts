@@ -25,7 +25,6 @@ const ROUTES_ID = [
   "/",
   "/music",
   "/visuals",
-  "/visuals/portraits",
   "/live",
   "/universe",
   "/about",
@@ -233,7 +232,7 @@ describe("aset statis redesign", () => {
         expect(content.toLowerCase(), `${hex} di ${file}`).not.toContain(hex);
       }
     }
-    expect(read("client/src/index.css")).toContain("--acid:       #8fb2c0");
+    expect(read("client/src/index.css")).toContain("--acid:       #9bb9c1");
   });
 
   it("token audio embed dan warna inti tetap utuh", () => {

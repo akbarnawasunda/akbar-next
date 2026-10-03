@@ -11,7 +11,9 @@ type VisualPortraitStudiesProps = {
 
 export default function VisualPortraitStudies({ english = false, studies = publicPortraitStudies(null) }: VisualPortraitStudiesProps) {
   const study = studies[1] || studies[0];
-  const galleryRoute = english ? "/en/visuals/portraits" : "/visuals/portraits";
+  /* Galeri kini seksi in-page #portraits di halaman /visuals (rute potret
+     lama dihapus, Phase 3 §2 baris 5; seksi penuh dibangun di sub-fase 5d). */
+  const galleryAnchor = "#portraits";
   if (!study) return null;
   const localizedTitle = english ? study.titleEn || study.title : study.title;
 
@@ -39,7 +41,7 @@ export default function VisualPortraitStudies({ english = false, studies = publi
           <span className="an-portrait-study-kicker">{english ? "PORTRAIT STUDY / KX-07" : "STUDI POTRET / KX-07"}</span>
           <strong>{localizedTitle}</strong>
           <p>{english ? study.copyEn || study.copyId : study.copyId || study.copyEn}</p>
-          <a className="nf-text-button" href={`${galleryRoute}#${study._id}`}>
+          <a className="nf-text-button" href={galleryAnchor}>
             {english ? "VIEW PHOTO STUDY" : "LIHAT STUDI FOTO"} <ArrowUpRight size={13} />
           </a>
         </div>
@@ -47,7 +49,7 @@ export default function VisualPortraitStudies({ english = false, studies = publi
       </div>
       <div className="an-portrait-study-indexes" aria-label={english ? "Portrait study images" : "Daftar foto studi potret"}>
         {studies.map((item, index) => (
-          <a className="an-portrait-study-index-link" href={`${galleryRoute}#${item._id}`} key={item._id}>
+          <a className="an-portrait-study-index-link" href={galleryAnchor} key={item._id}>
             <span>{formatPublicIndex(index)}</span>
             <div>
               <small>{item.label || (english ? "PORTRAIT STUDY" : "STUDI POTRET")}</small>

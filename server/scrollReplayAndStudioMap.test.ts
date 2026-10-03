@@ -61,7 +61,7 @@ describe("scroll replay and studio site map contracts", () => {
     }
     expect(map).toContain("VERIFIED FALLBACK");
     expect(studio).toContain("<StudioPageMirror");
-    for (const route of ["/", "/music", "/visuals", "/visuals/portraits", "/live", "/universe", "/about", "/epk", "/inquire", "/licensing", "/privacy", "/game/jedag-run"]) {
+    for (const route of ["/", "/music", "/visuals", "/visuals#portraits", "/live", "/universe", "/about", "/epk", "/inquire", "/licensing", "/privacy", "/game/jedag-run"]) {
       expect(mirror).toContain(`route: "${route}"`);
     }
     expect(mirror).toContain("Navigasi, CTA & footer routes");
