@@ -240,6 +240,31 @@
   color: var(--acid);
 }
 
+/* Pita ukur + scrim atas pada plate.
+   Dua alasan: (1) memberi tepi teknis pada foto seperti alat ukur, dan
+   (2) meredupkan bagian atas foto tempat siku bingkai dan strip frekuensi
+   hidup, supaya penanda tipis itu tidak hilang di atas area foto yang
+   terang. Scrim bawah (::after) tidak disentuh. */
+.an-site .an-hero-plate::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 26%;
+  z-index: 2;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--paper) 20%, transparent) 0 1px,
+      transparent 1px 24px
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ink) 52%, transparent) 0%,
+      transparent 100%
+    );
+}
+
 /* ------------------------------------------------------------
    ADEGAN 3 — KANAL RESMI
    ------------------------------------------------------------ */
@@ -534,5 +559,232 @@
   .an-site .an-hero-artifact,
   .an-site .an-hero-scroll {
     transition: none;
+  }
+}
+
+/* ============================================================
+   FASE 4A — LAPISAN INSTRUMEN HERO
+   ------------------------------------------------------------
+   Semua di bawah ini adalah tambahan pada komposisi 5b, bukan
+   penggantian: blok hero yang sudah dikunci tes (tinggi satu viewport,
+   plate foto, maskot, baris kanal) tidak disentuh.
+
+   Prinsipnya sama dengan InstrumentLayer.css: dekorasi saja, tanpa
+   `!important`, dan setiap gerakan punya jalur `no-preference`.
+   ============================================================ */
+
+/* -- Bingkai instrumen: siku di empat sudut + strip frekuensi ----
+   Titik sudut memakai warna kertas redup supaya terbaca sebagai bingkai
+   teknis, bukan ornamen. Semuanya `aria-hidden` di markup. */
+.an-site .an-hero-instrument {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.an-site .an-hero-tick {
+  position: absolute;
+  z-index: 3;
+  width: 15px;
+  height: 15px;
+  border: 0 solid color-mix(in srgb, var(--paper) 32%, transparent);
+}
+
+.an-site .an-hero-tick--tl,
+.an-site .an-hero-tick--tr {
+  top: calc(var(--chrome-h, 78px) + clamp(14px, 2.2vh, 24px));
+}
+
+.an-site .an-hero-tick--bl,
+.an-site .an-hero-tick--br {
+  bottom: calc(var(--chrome-h, 78px) + clamp(18px, 3vh, 30px));
+}
+
+.an-site .an-hero-tick--tl,
+.an-site .an-hero-tick--bl {
+  left: var(--hx-gutter);
+}
+
+.an-site .an-hero-tick--tr,
+.an-site .an-hero-tick--br {
+  right: var(--hx-gutter);
+}
+
+.an-site .an-hero-tick--tl {
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.an-site .an-hero-tick--tr {
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.an-site .an-hero-tick--bl {
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.an-site .an-hero-tick--br {
+  border-bottom-width: 1px;
+  border-right-width: 1px;
+}
+
+/* Strip frekuensi: 46 bar 2px dari tinggi deterministik (lihat HERO_SPECTRUM
+   di Home.tsx). Bukan analisis audio — ini bahasa visual situs, bukan data. */
+.an-site .an-hero-spectrum {
+  position: absolute;
+  top: calc(var(--chrome-h, 78px) + clamp(15px, 2.2vh, 26px));
+  right: var(--hx-gutter);
+  z-index: 3;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: clamp(24px, 3.6vh, 42px);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 32%);
+}
+
+/* Backing gelap tipis di belakang bar: foto potret di sudut kanan atas
+   terang, dan bar steel di atas area terang akan hilang tanpa ini.
+   `::before` dikeluarkan dari alur flex dengan position: absolute supaya
+   tidak menjadi item ke-47 di dalam strip. */
+.an-site .an-hero-spectrum::before {
+  content: "";
+  position: absolute;
+  inset: -16px -20px -12px -28px;
+  z-index: -1;
+  background: radial-gradient(
+    72% 130% at 100% 0%,
+    color-mix(in srgb, var(--ink) 74%, transparent) 0%,
+    transparent 74%
+  );
+}
+
+.an-site .an-hero-bar {
+  width: 2px;
+  height: calc(var(--bar) * 100%);
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--signal) 72%, transparent) 0%,
+    color-mix(in srgb, var(--signal) 10%, transparent) 100%
+  );
+  transform-origin: 50% 100%;
+}
+
+/* Kisi nilainya bergerak pelan, masing-masing mulai dari fase berbeda
+   (delay negatif deterministik dari indeks bar — bukan angka acak). */
+@media (prefers-reduced-motion: no-preference) {
+  .an-site .an-hero-bar {
+    animation: an-hero-bar-breathe 3.4s var(--ease) infinite alternate;
+    animation-delay: calc(var(--bar-index) * -59ms);
+  }
+}
+
+@keyframes an-hero-bar-breathe {
+  from {
+    transform: scaleY(0.5);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* -- Hero desktop: huruf lebih besar, kata terakhir jadi garis ----
+   Hanya di atas 768px. Ukuran ponsel TIDAK disentuh: `clamp()` mobile
+   dikunci server/mobileLayout.test.ts supaya "NAWASUNDA." tetap muat di
+   layar 320px. */
+@media (min-width: 768px) {
+  .an-site .an-hero-inner {
+    /* Ruang untuk kata terpanjang pada ukuran baru, dihitung dari lebar
+       kolom (58% viewport) — bukan asumsi lebar layar tetap. */
+    max-width: min(48rem, 58%);
+  }
+
+  .an-site .an-hero-inner .hero-title-editorial {
+    font-size: clamp(3.3rem, 7.6vw, 7.8rem);
+    letter-spacing: -0.055em;
+    line-height: 0.9;
+  }
+
+  /* Kata terakhir jadi garis luar: satu gerakan tipografi yang membuat
+     hero tidak terbaca sebagai "judul biasa". Kalau `-webkit-text-stroke`
+     tidak ada, aturan ini tidak pernah aktif dan kata tetap terisi penuh. */
+  @supports (-webkit-text-stroke: 1px #000) {
+    .an-site .an-hero-inner .hero-title-mask:last-child .hero-title-word {
+      color: transparent;
+      /* Warna stroke memakai token, bukan `color-mix`: kalau browser
+         mendukung `-webkit-text-stroke` tetapi tidak mendukung campuran
+         warna, kata ini tetap punya garis dan tidak menghilang. */
+      -webkit-text-stroke: 1.1px var(--paper);
+    }
+  }
+
+  /* Mode kontras paksa: garis luar dimatikan, teks kembali terisi. */
+  @media (forced-colors: active) {
+    .an-site .an-hero-inner .hero-title-mask:last-child .hero-title-word {
+      color: CanvasText;
+      -webkit-text-stroke: 0;
+    }
+  }
+
+  /* Fakta hero dipisah garis tipis, bukan hanya jarak. */
+  .an-site .an-hero-facts > div + div {
+    padding-left: clamp(14px, 1.6vw, 24px);
+    border-left: 1px solid var(--editorial-rule);
+  }
+}
+
+/* -- Titik sinyal berdenyut ------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .an-site .an-hero-inner .an-kicker-dot {
+    animation: an-hero-dot-ping 2.4s var(--ease) infinite;
+  }
+}
+
+@keyframes an-hero-dot-ping {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--signal) 42%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 9px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* -- Petunjuk gulir: garis yang mengalir ----------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .an-site .an-hero-scroll::after {
+    content: "";
+    width: clamp(22px, 3vw, 34px);
+    height: 1px;
+    background: currentColor;
+    transform-origin: 0 50%;
+    animation: an-hero-scroll-line 2.6s var(--ease) infinite;
+  }
+}
+
+@keyframes an-hero-scroll-line {
+  0% {
+    transform: scaleX(0.25);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(0.25);
+    opacity: 0.45;
+  }
+}
+
+/* Ponsel: bingkai dan strip disembunyikan. Komposisi ponsel tetap
+   foto → tipografi → fakta, tanpa penanda teknis yang memakan ruang. */
+@media (max-width: 767.98px) {
+  .an-site .an-hero-tick,
+  .an-site .an-hero-spectrum {
+    display: none;
   }
 }
