@@ -25,18 +25,22 @@ const capabilityType = ["remix", "remix", "collaboration", "licensing"] as const
  */
 const copy = {
   id: {
-    kicker: "Press & booking",
-    title: "Akbar Nawasunda.",
+    kicker: "Lembar fakta artis",
+    // Phase 3 §8: H1 = "Press & booking." (purpose-first) — nama artis
+    // sudah menjadi brand persisten di header, tidak perlu diulang di H1.
+    title: "Press & booking.",
     ledeFallback:
       "Informasi untuk promoter, media, playlist editor, dan kolaborator.",
     contactCta: "Kontak press",
     printCta: "SAVE / PRINT EPK",
-    sheetLabel: "Fact sheet artis",
+    sheetLabel: "Identitas & kontak",
     sheetFacts: {
       basedIn: "Berbasis di",
       alias: "Alias",
       role: "Peran",
       roleValue: "Producer / Remixer",
+      bio: "Bio singkat",
+      genres: "Genre",
       contact: "Kontak",
     },
     portraitAlt: "Potret editorial Akbar Nawasunda",
@@ -123,18 +127,22 @@ const copy = {
     ],
   },
   en: {
-    kicker: "Press & booking",
-    title: "Akbar Nawasunda.",
+    kicker: "Artist fact sheet",
+    // Phase 3 §8: H1 = "Press & booking." (purpose-first) — the artist
+    // name is already the persistent header brand.
+    title: "Press & booking.",
     ledeFallback:
       "Information for promoters, media, playlist editors, and collaborators.",
     contactCta: "Press contact",
     printCta: "SAVE / PRINT EPK",
-    sheetLabel: "Artist fact sheet",
+    sheetLabel: "Identity & contact",
     sheetFacts: {
       basedIn: "Based in",
       alias: "Alias",
       role: "Role",
       roleValue: "Producer / Remixer",
+      bio: "Short bio",
+      genres: "Genres",
       contact: "Contact",
     },
     portraitAlt: "Editorial portrait of Akbar Nawasunda",
@@ -267,6 +275,14 @@ export function PressView({ locale = "id" }: { locale?: "id" | "en" }) {
   const portrait =
     press?.editorialImage || profile?.portraitImage || officialBrand.editorialPortrait;
   const bio = press?.snapshotBio || profile?.longBio || verifiedArtistProfile.longBio;
+  // Lembar fakta memakai bio SINGKAT yang terverifikasi (snapshot),
+  // sedangkan bagian "Tentang" di bawah tetap memakai bio panjang.
+  // CMS profil belum punya field EN, jadi versi EN memakai fallback resmi
+  // supaya halaman EN tidak pernah menampilkan teks Indonesia.
+  const shortBio =
+    locale === "en"
+      ? verifiedArtistProfile.shortBioEn
+      : profile?.shortBio || verifiedArtistProfile.shortBio;
   const location =
     press?.snapshotLocation || profile?.location || verifiedArtistProfile.location;
   const genres = press?.snapshotGenres?.length
@@ -357,6 +373,14 @@ export function PressView({ locale = "id" }: { locale?: "id" | "en" }) {
               <div>
                 <dt>{t.sheetFacts.role}</dt>
                 <dd>{t.sheetFacts.roleValue}</dd>
+              </div>
+              <div className="an-press-sheet-row--stack">
+                <dt>{t.sheetFacts.bio}</dt>
+                <dd className="an-press-sheet-bio">{shortBio}</dd>
+              </div>
+              <div>
+                <dt>{t.sheetFacts.genres}</dt>
+                <dd>{genres.join(" · ")}</dd>
               </div>
               <div>
                 <dt>{t.sheetFacts.contact}</dt>

@@ -1,6 +1,5 @@
 import { ArrowUpRight, Mail } from "lucide-react";
 import { Link } from "wouter";
-import { CtaPanel } from "@/components/editorial/EditorialKit";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { verifiedArtistProfile } from "@/content/artistPlatform";
 import { usePublicArtistContent } from "@/content/publicContent";
@@ -46,17 +45,7 @@ const copy = {
       "Perkiraan audiens dan tenggat produksi.",
       "Bentuk deliverable yang diharapkan.",
     ],
-    ctaTitle: (
-      <>
-        SIAP DIPAKAI
-        <br />
-        DI PROYEKMU.
-      </>
-    ),
-    ctaCopy:
-      "Sertakan platform, wilayah, durasi, dan bentuk pemakaian supaya penawaran lisensi bisa disusun tanpa bolak-balik.",
     ctaPrimary: "KIRIM DETAIL",
-    ctaSecondary: "DENGAR KATALOG",
     mailSubject: "Music licensing inquiry",
     mailLabel: "Tanya lewat email",
   },
@@ -99,17 +88,7 @@ const copy = {
       "Estimated audience and production deadline.",
       "The deliverables you expect.",
     ],
-    ctaTitle: (
-      <>
-        READY TO
-        <br />
-        USE THE MUSIC.
-      </>
-    ),
-    ctaCopy:
-      "Send the platform, territory, duration, and form of use so a licensing offer can be prepared without back and forth.",
     ctaPrimary: "SEND DETAILS",
-    ctaSecondary: "HEAR THE CATALOG",
     mailSubject: "Music licensing inquiry",
     mailLabel: "Ask by email",
   },
@@ -205,23 +184,6 @@ export function LicensingView({ locale = "id" }: { locale?: "id" | "en" }) {
         </ul>
       </section>
 
-      <CtaPanel
-        title={t.ctaTitle}
-        copy={t.ctaCopy}
-        actions={
-          <>
-            <Link className="ed-button" href={inquiryHref("licensing")}>
-              {t.ctaPrimary} <ArrowUpRight size={14} aria-hidden="true" />
-            </Link>
-            <Link
-              className="ed-button--ghost"
-              href={locale === "en" ? "/en/music" : "/music"}
-            >
-              {t.ctaSecondary} <ArrowUpRight size={14} aria-hidden="true" />
-            </Link>
-          </>
-        }
-      />
     </main>
   );
 }

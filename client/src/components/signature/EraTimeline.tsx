@@ -117,7 +117,11 @@ export function EraTimeline({
             {era.relatedRelease ? (
               <Link
                 className="an-era-link"
-                href={`${releaseHrefPrefix}/music`}
+                href={
+                  era.releaseSlug
+                    ? `${releaseHrefPrefix}/music/${era.releaseSlug}`
+                    : `${releaseHrefPrefix}/music`
+                }
                 data-signal-interactive
               >
                 {copy.release} · {era.relatedRelease}{" "}

@@ -97,6 +97,18 @@
   border-bottom: 1px solid var(--editorial-rule);
 }
 
+/* Baris bio singkat: teks lebih panjang jadi penuh lebar (satu kolom). */
+.an-public-shell.an-editorial .an-press-sheet-facts > div.an-press-sheet-row--stack {
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.an-public-shell.an-editorial .an-press-sheet-facts dd.an-press-sheet-bio {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--paper) 84%, transparent);
+}
+
 .an-public-shell.an-editorial .an-press-sheet-facts > div:last-child {
   padding-bottom: 0;
   border-bottom: 0;

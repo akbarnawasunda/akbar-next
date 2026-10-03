@@ -35,6 +35,7 @@ describe("official media fallback and online EPK", () => {
     expect(epkStyles).toContain(".nf-page .an-epk-contact-panel");
     expect(epkStyles).toContain("background: var(--paper) !important");
     expect(epkStyles).toContain("color: var(--ink) !important");
-    expect(live).toContain("BOOKING / REMIX / KOLABORASI");
+    // Booking keluar dari /live lewat satu jalur inquiry yang sudah terarah.
+    expect(live).toContain("/inquire?type=booking&source=live");
   });
 });

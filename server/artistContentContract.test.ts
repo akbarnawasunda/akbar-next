@@ -32,7 +32,10 @@ describe("artist content contract", () => {
 
     expect(pressKit).toContain("Request material");
     expect(pressKit).toContain("Aset yang tersedia secara resmi");
-    expect(live).toContain("BOOKING / REMIX / KOLABORASI");
+    // /live adalah permukaan tanggal (Phase 3 §2 baris 6): statusnya jujur
+    // ("terbuka untuk booking") tanpa menjanjikan jadwal yang belum ada.
+    expect(live).toContain("Terbuka untuk booking");
+    expect(live).toContain("JADWAL / VENUE / TIKET");
     expect(live).toContain("an-event-location-link");
   });
 

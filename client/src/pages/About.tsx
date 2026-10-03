@@ -1,6 +1,5 @@
 import { ArrowUpRight, MapPin, Radio } from "lucide-react";
 import { Link } from "wouter";
-import { CtaPanel } from "@/components/editorial/EditorialKit";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { Reveal } from "@/components/Reveal";
@@ -30,27 +29,24 @@ const copy = {
       "Karya orisinal dirilis sebagai Akbar Nawasunda; katalog remix juga dikenal melalui DJ Akbar Remix.",
     bandLabel: "Potret editorial",
     bandAlt: "Potret editorial Akbar Nawasunda dengan cahaya merah",
-    bandCaption: "Potret editorial · Bandung Barat",
-    ctaTitle: (
-      <>
-        MULAI SATU
-        <br />
-        PROYEK BARU.
-      </>
-    ),
-    ctaCopy:
-      "Booking panggung, remix custom, lisensi, atau kolaborasi rilisan — semuanya masuk lewat satu jalur inquiry resmi.",
-    ctaPrimary: "KIRIM INQUIRY",
-    ctaSecondary: "JADWAL LIVE",
-    ctaHref: "/inquire?source=about",
-    liveHref: "/live",
+    bandCaption: "Potret editorial",
+    outlineMeta: "Satu jalur keluar",
+    outlineCopy:
+      "Booking panggung, remix, lisensi, atau kolaborasi — semuanya masuk lewat satu jalur inquiry resmi.",
+    outlineCta: "KIRIM INQUIRY",
+    outlineHref: "/inquire?source=about",
     pathMeta: "Lanjut dari sini",
-    pathTitle: "Dengar, baca, atau ajak kerja sama.",
+    pathTitle: "Dengar, telusuri, atau ajak kerja sama.",
     path: [
       {
         href: "/music",
         title: "Dengar rilisan",
         copy: "Katalog lengkap dengan artwork, metadata, dan tautan dengar resmi.",
+      },
+      {
+        href: "/universe",
+        title: "Telusuri perjalanan",
+        copy: "Satu nama, dua era — linimasa babak dan rilisannya.",
       },
       {
         href: "/epk",
@@ -79,27 +75,24 @@ const copy = {
       "Original work is released as Akbar Nawasunda; the remix catalog is also known through DJ Akbar Remix.",
     bandLabel: "Editorial portrait",
     bandAlt: "Editorial portrait of Akbar Nawasunda in red light",
-    bandCaption: "Editorial portrait · Bandung Barat",
-    ctaTitle: (
-      <>
-        START A
-        <br />
-        NEW PROJECT.
-      </>
-    ),
-    ctaCopy:
-      "Stage bookings, custom remixes, licensing, or release collaborations — all of it arrives through one official inquiry route.",
-    ctaPrimary: "SEND INQUIRY",
-    ctaSecondary: "LIVE DATES",
-    ctaHref: "/en/inquire?source=about",
-    liveHref: "/en/live",
+    bandCaption: "Editorial portrait",
+    outlineMeta: "One official route",
+    outlineCopy:
+      "Stage booking, remix, licensing, or collaboration — it all arrives through one official inquiry route.",
+    outlineCta: "SEND INQUIRY",
+    outlineHref: "/en/inquire?source=about",
     pathMeta: "Continue from here",
-    pathTitle: "Listen, read, or start a collaboration.",
+    pathTitle: "Listen, explore, or start a collaboration.",
     path: [
       {
         href: "/en/music",
         title: "Hear the releases",
         copy: "The full catalog with artwork, metadata, and official listening links.",
+      },
+      {
+        href: "/en/universe",
+        title: "Follow the journey",
+        copy: "One name, two eras — the chapter timeline and its releases.",
       },
       {
         href: "/en/epk",
@@ -151,9 +144,7 @@ export function AboutView({ locale = "id" }: { locale?: "id" | "en" }) {
               loading="eager"
               fetchPriority="high"
             />
-            <figcaption>
-              {location} · {t.portraitCaption}
-            </figcaption>
+            <figcaption>{t.portraitCaption}</figcaption>
           </figure>
           <div className="an-ab-hero-copy">
             <p className="an-kicker">
@@ -248,20 +239,15 @@ export function AboutView({ locale = "id" }: { locale?: "id" | "en" }) {
           </p>
         </section>
 
-        <CtaPanel
-          title={t.ctaTitle}
-          copy={t.ctaCopy}
-          actions={
-            <>
-              <a className="ed-button" href={t.ctaHref}>
-                {t.ctaPrimary} <ArrowUpRight size={14} />
-              </a>
-              <Link className="ed-button--ghost" href={t.liveHref}>
-                {t.ctaSecondary} <ArrowUpRight size={14} />
-              </Link>
-            </>
-          }
-        />
+        {/* Pitch booking direduksi jadi SATU jalur keluar (Phase 3:
+            layanan/harga/form adalah tugas /epk — bukan /about). */}
+        <section className="an-section an-ab-outline" aria-label={t.outlineMeta}>
+          <p className="an-meta">{t.outlineMeta}</p>
+          <p className="an-ab-outline-copy">{t.outlineCopy}</p>
+          <a className="an-btn an-btn--quiet" href={t.outlineHref}>
+            {t.outlineCta} <ArrowUpRight size={14} aria-hidden="true" />
+          </a>
+        </section>
 
         <section
           className="an-section an-ab-path"

@@ -26,11 +26,10 @@ describe("high-performance image optimization & non-Google typography", () => {
   // nyata (lihat docs/notes/testing-policy.md), bukan dari nama variabel.
   it("mengirim markup gambar yang aman layout-shift, responsif, dan hemat data", async () => {
     // Kontrak markup sama untuk semua permukaan OptimizedEditorialImage.
-    // Halaman gallery potret lama bukan rute lagi — seksi #portraits-nya
-    // dibangun di sub-fase 5d; kontrak "frame pertama eager" (di gallery
-    // frame pertama memang above-the-fold) diverifikasi ulang di sana.
-    // Di /universe semua gambar berada di bawah fold, jadi wajib lazy.
-    const page = await render("/universe", prefetch);
+    // Pemiliknya /visuals: seksi #portraits (5d) memuat frame studi potret,
+    // dan semuanya berada di bawah fold — jadi wajib lazy. Hero /visuals
+    // memakai slot eager-nya sendiri (bukan OptimizedEditorialImage).
+    const page = await render("/visuals", prefetch);
     const images = page.html.match(/<img[^>]*an-opt-img-element[^>]*>/g) || [];
 
     expect(images.length, "halaman tanpa gambar editorial").toBeGreaterThan(0);
@@ -59,9 +58,9 @@ describe("high-performance image optimization & non-Google typography", () => {
   });
 
   it("memakai ukuran intrinsik untuk gambar aset lokal", async () => {
-    // Studi potret pindah ke /universe (tidak diulang di beranda), jadi
-    // kontrak ukuran intrinsik diperiksa di halaman pemiliknya.
-    const page = await render("/universe", prefetch);
+    // Studi potret hanya hidup di /visuals#portraits (5e: blok foto /universe
+    // dihapus), jadi kontrak ukuran intrinsik diperiksa di halaman pemiliknya.
+    const page = await render("/visuals", prefetch);
     const images = page.html.match(/<img[^>]*an-opt-img-element[^>]*>/g) || [];
     const sized = images.filter(img => /width="\d+"/.test(img) && /height="\d+"/.test(img));
     expect(sized.length, "tidak ada gambar dengan ukuran intrinsik").toBeGreaterThan(0);

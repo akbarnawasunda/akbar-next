@@ -127,16 +127,6 @@
   gap: 8px;
 }
 
-.an-public-shell.an-editorial .an-inq-form-title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(1.4rem, 2.2vw, 2rem);
-  font-weight: 500;
-  letter-spacing: -0.028em;
-  line-height: 1.06;
-  color: var(--paper);
-}
-
 .an-public-shell.an-editorial .an-inq-type-row {
   display: flex;
   flex-wrap: wrap;
@@ -194,14 +184,79 @@
   grid-column: 1 / -1;
 }
 
-.an-public-shell.an-editorial .an-inq-grid label,
-.an-public-shell.an-editorial .an-inq-full {
+/* Sel field pembungkus label + pesan error supaya grid tetap rapi saat
+   error muncul (error tidak mendesak sel lain). */
+.an-public-shell.an-editorial .an-inq-cell {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.an-public-shell.an-editorial .an-inq-cell label {
   display: grid;
   gap: 8px;
 }
 
+.an-inq-field-error {
+  margin: 0;
+  color: var(--state-err);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+}
+
+/* Ringkasan error: fokus target (tabIndex=-1) + diumumkan via role=alert. */
+.an-public-shell.an-editorial .an-inq-error-summary {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--state-err) 55%, transparent);
+  border-left: 3px solid var(--state-err);
+  background: color-mix(in srgb, var(--state-err) 7%, transparent);
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-inq-error-summary strong {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--state-err);
+}
+
+.an-public-shell.an-editorial .an-inq-error-summary ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.an-public-shell.an-editorial .an-inq-error-summary:focus,
+.an-public-shell.an-editorial .an-inq-error-summary:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.an-public-shell.an-editorial .an-inq-legend-title {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-inq-cell input.is-error,
+.an-public-shell.an-editorial .an-inq-cell textarea.is-error {
+  border-color: color-mix(in srgb, var(--state-err) 70%, transparent);
+}
+
 .an-public-shell.an-editorial .an-inq-grid label > span,
-.an-public-shell.an-editorial .an-inq-full > span {
+.an-public-shell.an-editorial .an-inq-cell label > span {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -303,8 +358,16 @@
 }
 
 .an-public-shell.an-editorial .an-inq-feedback.is-error {
-  border-left-color: var(--paper);
-  background: color-mix(in srgb, var(--paper) 7%, transparent);
+  border-left-color: var(--state-err);
+  background: color-mix(in srgb, var(--state-err) 7%, transparent);
+}
+
+/* Blok sukses menerima fokus setelah submit (tabIndex=-1) — ring fokus
+   standar Phase 4 supaya perpindahan fokus terlihat. */
+.an-public-shell.an-editorial .an-inq-feedback:focus,
+.an-public-shell.an-editorial .an-inq-feedback:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
 }
 
 .an-public-shell.an-editorial .an-inq-feedback strong {
