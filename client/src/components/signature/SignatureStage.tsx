@@ -1,11 +1,10 @@
 import { TabularCounter } from "@/components/signature/SignalType";
 import { releases as catalogReleases } from "@/content/artistPlatform";
-import { publicEras } from "@/content/eras";
 import {
+  publicJourney,
   publicPlatformLinks,
   usePublicArtistContent,
 } from "@/content/publicContent";
-import { STAGE_PHRASES } from "@/signature/stagePhrases";
 import { useSignatureState } from "@/signature/useSignature";
 import "./SignatureStage.css";
 
@@ -17,10 +16,15 @@ import "./SignatureStage.css";
  * `data-signal-stage-track` (jalur scroll yang tingginya dibaca runtime
  * menjadi progres 0..1) dan `data-signal-stage` (kotak yang diukur partikel).
  *
- * `data-live` mengikuti runtime: hanya `true` kalau particle field benar-benar
- * hidup di perangkat ini. Kalau tidak (reduced motion, hemat data, perangkat
- * lemah, atau JS mati), jalur panjangnya runtuh jadi section biasa dan wordmark
- * tetap terbaca sebagai teks di DOM untuk screen reader dan mesin pencari.
+ * `data-live` mengikuti runtime: hanya `true` kalau particle field benar-
+ * benar hidup di perangkat ini. Kalau tidak (reduced motion, hemat data,
+ * perangkat lemah, atau JS mati), jalur panjangnya runtuh jadi section biasa
+ * dan wordmark tetap terbaca sebagai teks di DOM untuk screen reader dan
+ * mesin pencari.
+ *
+ * Isi panggung = IDENTITAS SAJA (Phase 3 §2 baris 1): nama, baris aka, dan
+ * statistik yang dihitung. Baris era/jalan-perjalanan lama sengaja dihapus —
+ * isian itu milik /universe (PERJALANAN) dan tidak boleh diulang di beranda.
  *
  * Scroll tetap scroll: tidak ada event yang dicegat, semuanya `position:
  * sticky` biasa.
@@ -37,7 +41,7 @@ const COPY: Record<"id" | "en", StageCopy> = {
   en: { releases: "RELEASES", since: "SINCE", platforms: "PLATFORMS" },
 };
 
-/** Tahun pertama yang bisa dibaca dari daftar era; jatuh ke 2020. */
+/** Tahun pertama yang bisa dibaca dari milestone perjalanan; jatuh ke 2020. */
 function startYearOf(years: string[]) {
   for (const year of years) {
     const parsed = Number.parseInt(year, 10);
@@ -55,23 +59,14 @@ export function SignatureStage({
 }) {
   const tier = useSignatureState(snapshot => snapshot.capability.tier);
   const ready = useSignatureState(snapshot => snapshot.fieldReady);
-  const phrase = useSignatureState(snapshot => snapshot.stagePhrase);
   const live = ready && tier !== "off";
   const copy = COPY[lang];
 
   const cms = usePublicArtistContent();
-  const eras = publicEras(cms.data, lang);
+  const journey = publicJourney(cms.data);
   const platforms = publicPlatformLinks(cms.data).length;
   const releaseCount = cms.data?.releases?.length || catalogReleases.length;
-  const startYear = startYearOf(eras.map(era => era.year));
-
-  // Tiap frasa partikel dipasangkan dengan era yang namanya sama; kalau CMS
-  // mengganti judulnya, urutannya dibalik (frasa pertama = era terbaru).
-  const notes = STAGE_PHRASES.map((words, index) => {
-    const name = words.join(" ").toLowerCase();
-    const matched = eras.find(era => era.title.toLowerCase() === name);
-    return matched ?? eras[eras.length - 1 - index] ?? eras[0];
-  });
+  const startYear = startYearOf(journey.milestones.map(m => m.year));
 
   return (
     <section className="an-signature-stage" data-live={live}>
@@ -87,29 +82,6 @@ export function SignatureStage({
           </div>
 
           <div className="an-signature-stage-context">
-            {/* Baris konteks berganti mengikuti kata yang sedang disusun.
-                Keduanya tetap di HTML: mesin pencari membaca dua-duanya,
-                dan tanpa efek keduanya tampil berurutan. */}
-            <div className="an-signature-stage-eras">
-              {notes.map((era, index) =>
-                era ? (
-                  <p
-                    className="an-signature-stage-era"
-                    key={era.id || index}
-                    data-active={index === phrase}
-                    aria-hidden={live && index !== phrase ? "true" : undefined}
-                  >
-                    <span className="an-signature-stage-era-year">
-                      {era.year}
-                    </span>
-                    <span className="an-signature-stage-era-body">
-                      {era.title} — {era.description}
-                    </span>
-                  </p>
-                ) : null
-              )}
-            </div>
-
             <dl className="an-signature-stage-stats">
               <div>
                 <dt className="sr-only">{copy.releases}</dt>

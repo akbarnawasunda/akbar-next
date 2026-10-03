@@ -65,8 +65,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  /* Target sentuh minimum 44px (docs/phase4 §7) — lightbox kini dipakai di
+     halaman publik /visuals#portraits. */
+  width: 44px;
+  height: 44px;
   border: 1px solid color-mix(in srgb, var(--paper) 28%, transparent);
   background: var(--ink-card);
   color: var(--paper);

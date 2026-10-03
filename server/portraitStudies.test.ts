@@ -27,21 +27,35 @@ describe("portrait studies CMS and public gallery", () => {
     expect(archive).toContain("Edit portrait");
   });
 
-  it("routes portrait CTAs to the dedicated gallery in both languages", () => {
+  it("merges the portrait gallery into /visuals with 301 redirects (Phase 3 §2 baris 5)", () => {
     const app = source("client/src/App.tsx");
     const visuals = source("client/src/pages/Visuals.tsx");
-    const component = source("client/src/components/VisualPortraitStudies.tsx");
-    const gallery = source("client/src/pages/VisualPortraitGallery.tsx");
+    const vercel = source("vercel.json");
     const sitemap = source("client/public/sitemap.xml");
-    expect(app).toContain('path={"/visuals/portraits"}');
-    expect(app).toContain('path={"/en/visuals/portraits"}');
-    // Komponen kini menerima bahasa lewat prop `english`; rute ID tetap
-    // memakai default (english=false).
-    expect(visuals).toContain("<VisualPortraitStudies");
-    expect(visuals).toContain("studies={portraitContent}");
-    expect(component).toContain('"/en/visuals/portraits"');
-    expect(gallery).toContain("PHOTO");
-    expect(sitemap).toContain("https://akbarnawasunda.my.id/visuals/portraits");
-    expect(sitemap).toContain("https://akbarnawasunda.my.id/en/visuals/portraits");
+    const section = source("client/src/components/PortraitStudiesSection.tsx");
+    // Rute lama tidak lagi ada; seksi studi potret kini in-page (#portraits).
+    expect(app).not.toContain('path={"/visuals/portraits"} component=');
+    expect(visuals).toContain("<PortraitStudiesSection");
+    expect(visuals).toContain('href="#portraits"');
+    expect(section).toContain('id="portraits"');
+    expect(section).not.toContain("/visuals/portraits");
+    // ALT fallback wajib: studi tanpa altId/altEn jatuh ke judul, dan judul
+    // kosong jatuh ke label fallback — tidak ada <img alt=""> di seksi.
+    expect(section).toContain("study.altEn || study.altId || titleOf(study)");
+    expect(section).toContain("t.fallbackTitle");
+    // 301 permanen di kedua bahasa; sitemap tidak lagi mempublikasikan rute lama.
+    const redirects: { source: string; destination: string; permanent: boolean }[] =
+      JSON.parse(vercel).redirects;
+    const idRedirect = redirects.find(
+      r => r.source === "/visuals/portraits"
+    );
+    const enRedirect = redirects.find(
+      r => r.source === "/en/visuals/portraits"
+    );
+    expect(idRedirect?.destination).toBe("/visuals#portraits");
+    expect(idRedirect?.permanent).toBe(true);
+    expect(enRedirect?.destination).toBe("/en/visuals#portraits");
+    expect(enRedirect?.permanent).toBe(true);
+    expect(sitemap).not.toContain("/visuals/portraits");
   });
 });

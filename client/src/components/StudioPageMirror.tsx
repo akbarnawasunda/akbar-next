@@ -523,11 +523,13 @@ export default function StudioPageMirror({
         ],
       },
       {
-        route: "/visuals/portraits",
+        /* Rute /visuals/portraits dihapus (Phase 3 §2 baris 5): kini seksi
+           in-page di /visuals#portraits (sub-fase 5d). Mirror mengikuti. */
+        route: "/visuals#portraits",
         title: "Visual Portraits",
         marker: "PORTRAIT STUDIES",
         summary:
-          "Arsip studi potret, foto, label, caption, alt text, dan navigasi kembali ke Visuals.",
+          "Studi potret (seksi in-page /visuals), foto, label, caption, dan alt text.",
         sections: [
           {
             title: "Portrait study cards",

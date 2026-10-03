@@ -1,15 +1,10 @@
-import {
-  ArrowUpRight,
-  CalendarDays,
-  MapPin,
-  Ticket,
-} from "lucide-react";
+import { ArrowUpRight, MapPin, Ticket } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
-import { CtaPanel, EventCountdown } from "@/components/editorial/EditorialKit";
+import { EventCountdown } from "@/components/editorial/EditorialKit";
 import { Link } from "wouter";
-import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
+import { verifiedArtistProfile } from "@/content/artistPlatform";
 import {
-  publicUpcomingEvents,
+  publicConfirmedEvents,
   usePublicArtistContent,
 } from "@/content/publicContent";
 import "./EcosystemPages.css";
@@ -48,12 +43,11 @@ const copy = {
   id: {
     kickerFeatured: "Show berikutnya",
     kickerOpen: "Terbuka untuk booking",
-    title: "Booking & panggung.",
-    meta: "BOOKING / REMIX / KOLABORASI",
+    title: "Jadwal & panggung.",
+    meta: "JADWAL / VENUE / TIKET",
     ledeFallback:
-      "Untuk booking penampilan, remix custom, dan kolaborasi, kirim detail proyek lewat email.",
+      "Tanggal yang sudah dikonfirmasi tampil di sini lebih dulu. Untuk mengajukan tanggal, gunakan jalur booking resmi.",
     ticketCta: "Ambil tiket",
-    briefCta: "Kirim brief booking",
     emailCta: "Email studio",
     nextShowMeta: "Show berikutnya",
     statusLabel: "Status",
@@ -73,45 +67,15 @@ const copy = {
     rowInfo: "Info",
     rowAria: (title: string) => `${title} — buka sumber resmi`,
     venueMap: "Lihat peta",
-    bookingMeta: "Booking",
-    bookingTitle: "Booking dan kolaborasi.",
-    bookingCopy:
-      "Belum ada jadwal publik yang dikonfirmasi. Untuk performa, remix custom, atau kolaborasi, kirim konteks proyek dan tanggal yang diinginkan.",
-    bookingBrief: "Kirim brief booking",
-    remixTitle: "Remix custom",
-    remixCopy: "Remix, aransemen, dan produksi musik untuk proyek atau konten.",
-    collabTitle: "Kolaborasi",
-    collabCopy: "Kolaborasi rilisan, visual, dan performance bersama.",
-    ctaTitle: (
-      <>
-        AJUKAN TANGGAL
-        <br />
-        DAN KONSEPNYA.
-      </>
-    ),
-    ctaCopy:
-      "Kirim tanggal, lokasi, durasi set, dan konteks acara. Setiap inquiry dibaca langsung oleh studio.",
-    ctaForm: "FORM INQUIRY",
-    ctaEmail: "EMAIL STUDIO",
-    signalTitle: (
-      <>
-        IKUTI
-        <br />
-        KABARNYA.
-      </>
-    ),
-    signalCopy:
-      "Info rilisan, video, dan jadwal manggung — langsung dari kanal resmi.",
   },
   en: {
     kickerFeatured: "Next show",
     kickerOpen: "Open for booking",
-    title: "Booking & stage.",
-    meta: "BOOKING / REMIX / COLLABORATION",
+    title: "Dates & stage.",
+    meta: "DATES / VENUES / TICKETS",
     ledeFallback:
-      "For live bookings, custom remixes, and collaborations, send the project details by email.",
+      "Confirmed dates appear here first. To propose a date, use the official booking route.",
     ticketCta: "Get tickets",
-    briefCta: "Send booking brief",
     emailCta: "Email the studio",
     nextShowMeta: "Next show",
     statusLabel: "Status",
@@ -131,45 +95,15 @@ const copy = {
     rowInfo: "Info",
     rowAria: (title: string) => `${title} — open the official source`,
     venueMap: "View map",
-    bookingMeta: "Booking",
-    bookingTitle: "Booking and collaboration.",
-    bookingCopy:
-      "No public date is confirmed yet. For a performance, custom remix, or collaboration, send the project context and your preferred dates.",
-    bookingBrief: "Send booking brief",
-    remixTitle: "Custom remix",
-    remixCopy:
-      "Remix, arrangement, and music production for a project or content.",
-    collabTitle: "Collaboration",
-    collabCopy: "Release, visual, and performance collaboration.",
-    ctaTitle: (
-      <>
-        PROPOSE A DATE
-        <br />
-        AND THE CONCEPT.
-      </>
-    ),
-    ctaCopy:
-      "Send the date, location, set length, and event context. Every inquiry is read directly by the studio.",
-    ctaForm: "INQUIRY FORM",
-    ctaEmail: "EMAIL THE STUDIO",
-    signalTitle: (
-      <>
-        FOLLOW
-        <br />
-        THE SIGNAL.
-      </>
-    ),
-    signalCopy:
-      "New releases, videos, and live dates — straight from the official channels.",
   },
 } as const;
 
 export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
   const t = copy[locale];
   const cms = usePublicArtistContent();
-  const events = publicUpcomingEvents(cms.data).filter(
-    event => !/no date announced|tba/i.test(event.title)
-  );
+  /* Satu sumber "terkonfirmasi" dengan aturan slot JADWAL di nav
+     (publicContent.ts) — tidak boleh ada dua definisi. */
+  const events = publicConfirmedEvents(cms.data);
   const featured = events.find(event => event.isFeatured) || events[0];
   const signal = cms.data?.live;
 
@@ -220,31 +154,20 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
             <p className="an-vis-lede">
               {signal?.message || t.ledeFallback}
             </p>
-            <div className="an-live-hero-actions">
-              {featured?.ticketUrl ? (
+            {/* /live = permukaan tanggal, bukan pitch booking kedua
+                (Phase 3 §2 baris 6). Aksi di sini hanya aksi tanggal. */}
+            {featured?.ticketUrl ? (
+              <div className="an-live-hero-actions">
                 <a
                   className="an-btn an-btn--solid"
                   href={featured.ticketUrl}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <Ticket size={14} /> {t.ticketCta}
+                  <Ticket size={14} aria-hidden="true" /> {t.ticketCta}
                 </a>
-              ) : (
-                <a
-                  className="an-btn an-btn--solid"
-                  href={inquiryHref("Booking inquiry")}
-                >
-                  <Ticket size={14} /> {t.briefCta}
-                </a>
-              )}
-              <a
-                className="an-btn an-btn--quiet"
-                href={inquiryHref("Booking inquiry")}
-              >
-                {t.emailCta} <ArrowUpRight size={14} />
-              </a>
-            </div>
+              </div>
+            ) : null}
           </div>
         </section>
 
@@ -328,12 +251,24 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
                 <span>{t.emptyPlace}</span>
               </p>
               <p className="an-vis-lede">{t.emptyCopy}</p>
+              {/* Satu blok keluar booking (Phase 3 §2 baris 6): form
+                  inquiry yang sudah terarah + email sebagai jalur cadangan. */}
               <div className="an-live-next-actions">
-                <a
+                <Link
                   className="an-btn an-btn--solid"
+                  href={
+                    locale === "en"
+                      ? "/en/inquire?type=booking&source=live"
+                      : "/inquire?type=booking&source=live"
+                  }
+                >
+                  {t.emptyCta} <ArrowUpRight size={13} aria-hidden="true" />
+                </Link>
+                <a
+                  className="an-btn an-btn--quiet"
                   href={inquiryHref("Booking inquiry")}
                 >
-                  {t.emptyCta} <ArrowUpRight size={13} />
+                  {t.emailCta} <ArrowUpRight size={13} aria-hidden="true" />
                 </a>
               </div>
             </div>
@@ -413,79 +348,7 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
               })}
             </ul>
           </section>
-        ) : (
-          <section
-            className="an-section an-live-booking"
-            aria-labelledby="booking-options-title"
-          >
-            <div className="an-live-booking-copy">
-              <p className="an-meta">{t.bookingMeta}</p>
-              <h2 id="booking-options-title" className="an-title">
-                {t.bookingTitle}
-              </h2>
-              <p>{t.bookingCopy}</p>
-              <div className="an-live-next-actions">
-                <a
-                  className="an-btn an-btn--solid"
-                  href={inquiryHref("Booking inquiry")}
-                >
-                  {t.bookingBrief} <ArrowUpRight size={14} />
-                </a>
-              </div>
-            </div>
-            <ul className="an-index an-live-booking-options">
-              <li>
-                <a
-                  className="an-index-row"
-                  href={inquiryHref("Custom remix inquiry")}
-                >
-                  <span className="an-meta">01</span>
-                  <span className="an-live-option-copy">
-                    <strong>{t.remixTitle}</strong>
-                    <small>{t.remixCopy}</small>
-                  </span>
-                  <ArrowUpRight size={15} aria-hidden="true" />
-                </a>
-              </li>
-              <li>
-                <a
-                  className="an-index-row"
-                  href={inquiryHref("Collaboration inquiry")}
-                >
-                  <span className="an-meta">02</span>
-                  <span className="an-live-option-copy">
-                    <strong>{t.collabTitle}</strong>
-                    <small>{t.collabCopy}</small>
-                  </span>
-                  <ArrowUpRight size={15} aria-hidden="true" />
-                </a>
-              </li>
-            </ul>
-          </section>
-        )}
-
-        <CtaPanel
-          id="booking"
-          title={t.ctaTitle}
-          copy={t.ctaCopy}
-          actions={
-            <>
-              <Link
-                className="ed-button"
-                href={
-                  locale === "en"
-                    ? "/en/inquire?type=booking&source=live"
-                    : "/inquire?type=booking&source=live"
-                }
-              >
-                {t.ctaForm} <ArrowUpRight size={14} />
-              </Link>
-              <a className="ed-button--ghost" href={inquiryHref("Booking inquiry")}>
-                {t.ctaEmail} <ArrowUpRight size={14} />
-              </a>
-            </>
-          }
-        />
+        ) : null}
 
         {/* Formulir langganan hanya ada di beranda. Dulu section yang sama
             dipasang di lima halaman, jadi pengunjung melihat blok yang sama

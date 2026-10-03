@@ -1,10 +1,14 @@
 /**
- * Kontrak komposisi arsip & profil (redesign checkpoint D).
+ * Kontrak komposisi arsip & profil (redesign checkpoint D, diperbarui 5e).
  *
  * Overflow sungguhan hanya terlihat di browser; yang bisa dikunci dari sini
  * adalah aturan yang menyebabkannya: lebar kolom tetap pada layar kecil,
  * judul hero yang harus muat di 320px, dan struktur scene yang tidak boleh
  * dibalik tanpa disadari. Semua angka dibaca dari file CSS-nya sendiri.
+ *
+ * Catatan 5e: dinding artwork /universe dihapus (Phase 3 §3 — tiap babak
+ * memuat rilisannya sendiri di linimasa), jadi kontrak reflow-nya pindah ke
+ * linimasa babak (EraTimeline.css) yang kini jadi tulang punggung halaman.
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -17,6 +21,7 @@ const stripComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, "");
 
 const ARCHIVE_STAGE = "client/src/pages/ArchiveStage.css";
 const SCENE_KIT = "client/src/shell/SceneKit.css";
+const ERA_TIMELINE = "client/src/components/signature/EraTimeline.css";
 
 /** Isi blok `selector { ... }` pertama yang cocok. */
 function block(css: string, selector: string) {
@@ -77,7 +82,7 @@ describe("komposisi arsip & profil", () => {
       "grid-template-columns: minmax(0, 1fr)"
     );
     // Aside yang lengket tidak boleh tetap sticky saat kolomnya sudah satu.
-    expect(block(tablet, ".an-arc-origin-head,")).toContain("position: static");
+    expect(block(tablet, ".an-ab-bio-aside {")).toContain("position: static");
   });
 
   it("menjaga judul hero tetap muat di layar 320px", () => {
@@ -97,43 +102,15 @@ describe("komposisi arsip & profil", () => {
     ).toBeLessThanOrEqual(available);
   });
 
-  it("menyusun dinding artwork 5+3+4 / 4+3+5 pada dua belas kolom", () => {
-    const spans = [
-      ...block(css, ".an-arc-wall-item:nth-child(1)").matchAll(
-        /grid-column:\s*span\s+(\d+)/g
-      ),
-      ...block(css, ".an-arc-wall-item:nth-child(2)").matchAll(
-        /grid-column:\s*span\s+(\d+)/g
-      ),
-      ...block(css, ".an-arc-wall-item:nth-child(3),").matchAll(
-        /grid-column:\s*span\s+(\d+)/g
-      ),
-    ].map(match => Number(match[1]));
-    expect(spans).toEqual([5, 3, 4]);
-    expect(block(css, ".an-arc-wall-grid {")).toContain(
-      "repeat(12, minmax(0, 1fr))"
+  it("menjatuhkan linimasa babak jadi satu kolom di tablet", () => {
+    const timeline = stripComments(source(ERA_TIMELINE));
+    const tablet = media(timeline, "@media (max-width: 900px)");
+    // Kolom ganda linimasa tidak boleh bertahan di layar sempit: itu yang
+    // membuat artwork sticky menutupi teks babak.
+    expect(block(tablet, ".an-era-timeline {")).toContain(
+      "grid-template-columns: 1fr"
     );
-  });
-
-  it("mengubah dinding artwork jadi dua kolom di ponsel", () => {
-    const mobile = media(css, "@media (max-width: 767.98px)");
-    expect(block(mobile, ".an-arc-wall-grid {")).toContain(
-      "repeat(2, minmax(0, 1fr))"
-    );
-    // Semua item harus kembali ke satu kolom grid, apa pun urutannya.
-    expect(block(mobile, ".an-arc-wall-item:nth-child(n) {")).toContain(
-      "grid-column: span 1"
-    );
-    expect(
-      block(mobile, ".an-arc-wall-item:nth-child(n) .an-arc-wall-art {")
-    ).toContain("aspect-ratio: 1 / 1");
-  });
-
-  it("memberi rantai <picture> acuan tinggi supaya crop benar", () => {
-    expect(block(css, ".an-arc-wall-art > picture {")).toContain(
-      "height: 100%"
-    );
-    expect(block(css, ".an-arc-wall-art img {")).toContain("object-fit: cover");
+    expect(block(tablet, ".an-era-artwork {")).toContain("position: static");
   });
 
   it("memberi band potret tinggi berbasis viewport, bukan px tetap", () => {
@@ -145,6 +122,6 @@ describe("komposisi arsip & profil", () => {
   it("mematikan gerak saat pengunjung memintanya", () => {
     const reduced = media(css, "@media (prefers-reduced-motion: reduce)");
     expect(reduced).toContain("transition: none");
-    expect(reduced).toContain("transform: none");
+    expect(reduced).toContain("padding-left: 0");
   });
 });

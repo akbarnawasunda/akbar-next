@@ -37,15 +37,14 @@ const PAGE_COPY: Record<
     id: ["Visual", "Video & karya visual"],
     en: ["Visuals", "Videos & visual work"],
   },
-  "/visuals/portraits": {
-    id: ["Studi potret", "Galeri potret"],
-    en: ["Portrait studies", "Portrait gallery"],
-  },
   "/live": {
     id: ["Jadwal live", "Jadwal & arsip panggung"],
     en: ["Live", "Dates & stage archive"],
   },
-  "/universe": { id: ["Arsip", "Babak & linimasa"], en: ["Archive", "Eras & timeline"] },
+  "/universe": {
+    id: ["Perjalanan", "Babak & linimasa"],
+    en: ["Journey", "Eras & timeline"],
+  },
   "/about": { id: ["Tentang", "Profil artis"], en: ["About", "Artist biography"] },
   "/inquire": { id: ["Kontak", "Inquiry langsung"], en: ["Inquire", "Direct inquiry"] },
   "/licensing": { id: ["Lisensi", "Lisensi musik"], en: ["Licensing", "Music licensing"] },

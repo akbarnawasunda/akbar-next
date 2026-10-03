@@ -27,4 +27,11 @@ describe("Vercel canonical routing", () => {
     expect(vercelConfig).toContain('"source": "/archive"');
     expect(vercelConfig).toContain('"destination": "/universe"');
   });
+
+  it("redirects the removed portrait routes to the in-page section (Phase 3 §2 baris 5)", () => {
+    expect(vercelConfig).toContain('"source": "/visuals/portraits"');
+    expect(vercelConfig).toContain('"destination": "/visuals#portraits"');
+    expect(vercelConfig).toContain('"source": "/en/visuals/portraits"');
+    expect(vercelConfig).toContain('"destination": "/en/visuals#portraits"');
+  });
 });

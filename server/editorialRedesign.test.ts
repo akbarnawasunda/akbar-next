@@ -25,7 +25,6 @@ const ROUTES_ID = [
   "/",
   "/music",
   "/visuals",
-  "/visuals/portraits",
   "/live",
   "/universe",
   "/about",
@@ -135,13 +134,16 @@ describe("rute publik sesudah redesign", () => {
   });
 
   it("menonjolkan status live dan selalu punya CTA inquiry", async () => {
-    for (const [route, needle] of [
-      ["/live", "AJUKAN TANGGAL"],
-      ["/en/live", "PROPOSE A DATE"],
+    for (const [route, cta] of [
+      ["/live", "/inquire?type=booking&source=live"],
+      ["/en/live", "/en/inquire?type=booking&source=live"],
     ] as const) {
       const page = await renderPage(route);
       expect(page.html, route).toContain('id="next-show"');
-      expect(page.text, route).toContain(needle);
+      // Satu-satunya jalur booking di /live harus tetap terkirim meski
+      // kalender kosong (Phase 3 §2 baris 6: dates-only + satu CTA).
+      // HTML meng-escape `&` di href — bandingkan bentuk ter-escape.
+      expect(page.html, route).toContain(`href="${cta.replace("&", "&amp;")}"`);
     }
   });
 
@@ -233,7 +235,7 @@ describe("aset statis redesign", () => {
         expect(content.toLowerCase(), `${hex} di ${file}`).not.toContain(hex);
       }
     }
-    expect(read("client/src/index.css")).toContain("--acid:       #8fb2c0");
+    expect(read("client/src/index.css")).toContain("--acid:       #9bb9c1");
   });
 
   it("token audio embed dan warna inti tetap utuh", () => {

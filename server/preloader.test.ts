@@ -27,8 +27,9 @@ describe("splash pembuka", () => {
   });
 
   it("memakai palet brand, bukan neon acak", () => {
-    expect(indexHtml).toContain("#0a0b0c"); // ink
-    expect(indexHtml).toContain("#8fb2c0"); // signal
+    // Palet kanonik Phase 4 (satu sumber dengan :root di index.css).
+    expect(indexHtml).toContain("#101211"); // ink
+    expect(indexHtml).toContain("#9bb9c1"); // signal
     for (const aiNeon of ["#00ffd5", "#ffd319", "#ff0055", "#00d4ff"]) {
       expect(indexHtml).not.toContain(aiNeon);
     }

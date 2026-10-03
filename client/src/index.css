@@ -81,28 +81,38 @@
   --font-body:    "General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono:    "Azeret Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Nocturnal Electronic Artist Palette */
-  --ink:        #0a0b0c;
-  --ink-soft:   #111214;
-  --ink-card:   #16181b;
-  --ink-hover:  #1e2126;
-  --paper:      #eceae5;
-  --paper-soft: #cfcdc7;
+  /* Nocturnal Electronic Artist Palette — PHASE 4 CANONICAL.
+     Satu sumber kebenaran warna untuk seluruh situs (dok:
+     docs/phase4-design-system.md §3). Cakupan lama
+     (.an-public-shell.an-editorial) tidak lagi menduplikat nilai ini. */
+  --ink:        #101211;
+  --ink-soft:   #171a18;
+  --ink-card:   #1b1e1c;
+  --ink-hover:  #232724;
+  --paper:      #f1efe9;
+  --paper-soft: #d5d2ca;
 
-  /* Accents: one electric cyan system, with named shades for legacy layers. */
-  --acid:       #8fb2c0;
-  --acid-rgb:   143, 178, 192;
+  /* Satu aksen: steel signal. Aksen kedua (--an-birthday) hanya aktif
+     pada mode 1 November. Alias lama ditunjuk ke aksen yang sama supaya
+     tidak ada warna liar di lapisan legacy. */
+  --acid:       #9bb9c1;
+  --acid-rgb:   155, 185, 193;
   --signal:     var(--acid);
+  --signal-dim: color-mix(in srgb, var(--signal) 55%, var(--ink));
   --accent-violet: var(--acid);
-  --cyan-bright: #a7c5d0;
-  --cyan:        #8fb2c0;
-  --cyan-soft:   #b9ccd4;
-  --cyan-light:  #9dbcc8;
-  --mint:        #8fb2c0;
-  --blue:        #4a6f84;
-  --mute:       #9b9b97;
-  --mute-soft:  #74746f;
+  --cyan-bright: color-mix(in srgb, var(--acid) 75%, var(--paper));
+  --cyan:        var(--acid);
+  --cyan-soft:   color-mix(in srgb, var(--acid) 65%, var(--paper));
+  --cyan-light:  color-mix(in srgb, var(--acid) 85%, var(--paper));
+  --mint:        var(--acid);
+  --blue:        color-mix(in srgb, var(--acid) 62%, var(--ink));
+  --mute:       #a6a69f;
+  --mute-soft:  #777a74;
   --mute-ink:   #87877f;
+
+  /* Aksen hangat waktu-terbatas: mode ulang tahun (1 November, waktu
+     Jakarta). Di luar hari itu token ini tidak boleh dipakai. */
+  --an-birthday: #dcb573;
 
   /* Editorial sepia tokens used by the portrait study layer. */
   --sepia-bg:        #151414;
@@ -122,8 +132,9 @@
   --state-ok:  #7cf2a4;
   --state-err: #ff7b72;
 
-  --ink-line:   rgba(255, 255, 255, 0.10);
-  --paper-line: rgba(255, 255, 255, 0.12);
+  /* Hairline kanonik (docs/phase4 §3): paper 13% / 14%, bukan putih murni. */
+  --ink-line:   rgb(241 239 233 / 13%);
+  --paper-line: rgb(241 239 233 / 14%);
   --gradient-accent: linear-gradient(135deg, var(--acid) 0%, var(--acid) 100%);
   --gradient-signal: linear-gradient(135deg, var(--acid) 0%, var(--acid) 100%);
   --gradient-night: linear-gradient(135deg, var(--ink-soft) 0%, var(--ink) 100%);
@@ -137,11 +148,15 @@
 
   --gutter: clamp(20px, 4.5vw, 64px);
   --max:    1440px;
+  /* Alias nama dokumen Phase 4 (lebar garis halaman). */
+  --lines:  var(--max);
 
   --ease:      cubic-bezier(0.16, 1, 0.30, 1);
   --dur-fast:  160ms;
   --dur:       280ms;
   --dur-slow:  520ms;
+  /* Pulsa elemen signal (titik live, dot signal) — docs/phase4 §9. */
+  --dur-pulse: 2000ms;
 
   --r-xs: 2px;
   --r-sm: 4px;
@@ -183,6 +198,8 @@
      `@layer base`; sekarang satu sumber saja. `--text-meta` untuk
      label mono kecil. */
   --text-hero:  clamp(2.5rem, 6.5vw, 6.8rem);
+  /* H1 section publik (di luar hero beranda): docs/phase4 §5. */
+  --text-h1:    clamp(2.4rem, 5vw, 4rem);
   --text-h2:    clamp(1.85rem, 4.2vw, 4rem);
   --text-h3:    clamp(1.25rem, 2vw, 2rem);
   --text-lede:  clamp(1rem, 1.25vw, 1.14rem);
@@ -334,10 +351,30 @@
   img, svg, video, canvas { display: block; max-width: 100%; height: auto; }
   ::selection { background: var(--acid); color: var(--ink); }
 
+  /* Cincin fokus publik — docs/phase4 §7: 2px solid --signal, offset 2px.
+     Di atas permukaan solid signal, cincinnya --paper supaya tetap terlihat. */
   :focus-visible {
     outline: 2px solid var(--acid);
-    outline-offset: 3px;
+    outline-offset: 2px;
     border-radius: 2px;
+  }
+  /* Tombol yang isinya solid signal saat fokus (lihat cakupan editorial):
+     cincinnya --paper supaya tidak hilang signal-di-signal. */
+  :is(a, button).an-btn--solid:focus-visible,
+  :is(a, button).an-inquiry-submit:focus-visible,
+  :is(a, button).button-primary:focus-visible,
+  :is(a, button).nf-button:focus-visible {
+    outline-color: var(--paper);
+  }
+
+  /* Preferensi kontras sistem (docs/phase4 §12): hairline naik ke paper 20%,
+     teks sekunder naik ke --paper-soft. Dua baris token, tanpa efek lain. */
+  @media (prefers-contrast: more) {
+    :root {
+      --ink-line: rgb(241 239 233 / 20%);
+      --paper-line: rgb(241 239 233 / 20%);
+      --mute: var(--paper-soft);
+    }
   }
 }
 

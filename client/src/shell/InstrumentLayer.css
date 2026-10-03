@@ -1,0 +1,288 @@
+/* ============================================================
+   INSTRUMENT LAYER — amplifikasi visual NIGHT FREQUENCY (Fase 4A)
+   ------------------------------------------------------------
+   Dimuat SETELAH PublicShell / EditorialRefresh / ChromeRedesign / SceneKit,
+   jadi aturan di sini adalah kata terakhir pada permukaannya sendiri.
+
+   Aturan main lapisan ini:
+   - hanya dekorasi: `aria-hidden`, `pointer-events: none`, tanpa teks;
+   - tanpa `!important`, tanpa `backdrop-filter`, tanpa `100vw`, tanpa
+     `overflow-x` (tiga kebijakan itu dijaga scripts/audit-layout.mjs);
+   - tanpa aset baru: grain = satu SVG data URI, sisanya gradien CSS;
+   - setiap gerakan punya pasangan `prefers-reduced-motion: reduce`.
+
+   Yang TIDAK dilakukan lapisan ini: mengubah warna kanonik, ukuran huruf
+   teks isi, jarak antar-bagian, atau struktur halaman. Token Phase 4 tetap
+   satu-satunya sumber nilai; di sini hanya tekstur, penanda, dan ritme.
+   ============================================================ */
+
+.instr-atmosphere {
+  --instr-line: color-mix(in srgb, var(--paper) 5%, transparent);
+  --instr-line-strong: color-mix(in srgb, var(--paper) 9%, transparent);
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Di bawah konten: kedalaman. Nilai -1 dipakai supaya tetap di atas latar
+   `--ink` milik body tetapi di bawah seluruh isi halaman. */
+.instr-atmosphere--deep {
+  z-index: -1;
+}
+
+/* Di atas konten, di bawah particle field (--z-field: 3): satu bahan cetak. */
+.instr-atmosphere--film {
+  z-index: var(--z-base, 1);
+}
+
+/* -- Aurora ---------------------------------------------------
+   Dua sumber cahaya steel yang sangat tipis di bagian atas halaman.
+   Ada supaya halaman tidak pernah rata seperti kertas kosong; tidak
+   pernah cukup kuat untuk mengubah kontras teks. */
+.instr-aurora {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 92vh;
+  background:
+    radial-gradient(
+      52% 46% at 18% 0%,
+      color-mix(in srgb, var(--signal) 13%, transparent) 0%,
+      transparent 68%
+    ),
+    radial-gradient(
+      44% 38% at 82% 6%,
+      color-mix(in srgb, var(--signal) 8%, transparent) 0%,
+      transparent 70%
+    );
+}
+
+/* -- Grid cetak biru ------------------------------------------ */
+.instr-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, var(--instr-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--instr-line) 1px, transparent 1px);
+  background-size: 76px 76px;
+  /* Luruh di tengah halaman supaya tidak pernah bertabrakan dengan teks. */
+  mask-image: radial-gradient(130% 100% at 50% 0%, #000 0%, transparent 74%);
+}
+
+/* -- Rel tepi halaman -----------------------------------------
+   Dua garis tipis sejajar tepi kontainer. Ini yang membuat halaman terasa
+   seperti satu lembar kerja, bukan tumpukan blok. */
+.instr-rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--instr-line-strong) 12%,
+    var(--instr-line-strong) 88%,
+    transparent 100%
+  );
+}
+
+.instr-rail--left {
+  left: max(var(--hx-gutter, 22px), calc((100% - var(--hx-max, 1400px)) / 2));
+}
+
+.instr-rail--right {
+  right: max(var(--hx-gutter, 22px), calc((100% - var(--hx-max, 1400px)) / 2));
+}
+
+/* -- Grain ----------------------------------------------------
+   Satu tekstur 180×180 yang diulang. Angkanya sengaja rendah (4,5%):
+   tujuannya menghilangkan kesan gradien digital yang rata, bukan
+   menambah noise yang terlihat. */
+.instr-grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  opacity: 0.045;
+}
+
+/* -- Garis pindai ---------------------------------------------
+   Satu garis setinggi 1px yang turun pelan sekali setiap 19 detik. Dibuat
+   tipis dan lambat supaya terbaca sebagai "perangkat yang hidup", bukan
+   animasi yang minta diperhatikan. */
+.instr-scan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--signal) 42%, transparent) 45%,
+    color-mix(in srgb, var(--signal) 26%, transparent) 60%,
+    transparent 100%
+  );
+  opacity: 0;
+  animation: instr-scan 19s linear infinite;
+}
+
+@keyframes instr-scan {
+  0% {
+    transform: translateY(-1vh);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.55;
+  }
+  88% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateY(101vh);
+    opacity: 0;
+  }
+}
+
+/* -- Progres gulir --------------------------------------------
+   Angka nyata dari posisi gulir, tanpa JavaScript: CSS scroll-timeline.
+   Peramban yang belum mendukungnya tidak merender apa pun (tanpa
+   `@supports` garisnya akan diam di 0% dan itu berbohong). */
+.instr-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 95; /* di atas nav (90), di bawah cursor (60) tidak relevan */
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--signal) 55%, transparent) 0%,
+    var(--signal) 100%
+  );
+  pointer-events: none;
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .instr-progress {
+    display: block;
+    animation: instr-progress-grow linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@keyframes instr-progress-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* -- Garis gelombang ------------------------------------------
+   Satu strip "equalizer" setinggi belasan piksel sebagai jahitan antar
+   bagian (mis. tepat di bawah lipatan hero). Tinggi bar mengikuti busur
+   lewat `mask-size` berulang, jadi tidak ada satu pun elemen per bar dan
+   tidak ada JavaScript: dua gradien CSS + satu mask.
+
+   Sama seperti strip hero: ini bahasa visual, bukan data audio. */
+.instr-wave {
+  display: block;
+  width: 100%;
+  height: clamp(10px, 1.5vh, 18px);
+  margin: 0 auto;
+  background-image: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--signal) 52%, transparent) 0 2px,
+    transparent 2px 9px
+  );
+  mask-image: radial-gradient(62% 132% at 50% 100%, #000 60%, transparent 62%);
+  mask-size: 58px 100%;
+  mask-repeat: repeat-x;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ============================================================
+   TIPOGRAFI — penyelesaian, bukan perubahan bahasa
+   ============================================================ */
+
+/* Heading besar: hindari satu kata menggantung di baris terakhir. */
+.an-public-shell.an-editorial :is(h1, h2, h3) {
+  text-wrap: balance;
+}
+
+/* Paragraf: hindari baris terakhir yang hanya berisi satu kata. */
+.an-public-shell.an-editorial :is(p, li) {
+  text-wrap: pretty;
+}
+
+/* Angka di label mono selalu rata kolom. */
+.an-public-shell.an-editorial :is(.an-meta, .an-kicker, dt, dd, .instr-index) {
+  font-variant-numeric: tabular-nums;
+}
+
+.an-public-shell.an-editorial ::selection {
+  background: color-mix(in srgb, var(--signal) 78%, transparent);
+  color: var(--ink);
+}
+
+html {
+  scrollbar-color: color-mix(in srgb, var(--paper) 24%, transparent) transparent;
+}
+
+/* -- Label indeks bagian --------------------------------------
+   Satu penanda teknis: nomor, nama bagian, lalu garis yang mengisi sisa
+   baris. Dipakai di beranda untuk memberi halaman tulang punggung.
+   Tidak dipakai di dalam panggung signature (dikunci tes aksesibilitas:
+   panggung hanya boleh berisi fakta musik, bukan label bagian). */
+.instr-index {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.instr-index::after {
+  content: "";
+  flex: 1 1 auto;
+  min-width: 20px;
+  height: 1px;
+  background: var(--editorial-rule, var(--ink-line));
+}
+
+/* ============================================================
+   KECIL / SENTUH — tekstur dikurangi, bukan dihapus
+   ============================================================ */
+
+@media (max-width: 767.98px) {
+  /* Di layar kecil rel tepi hanya menambah dua garis di pinggir 22px. */
+  .instr-rail {
+    display: none;
+  }
+
+  .instr-grid {
+    background-size: 56px 56px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .instr-scan {
+    animation: none;
+    opacity: 0;
+  }
+
+  .instr-progress {
+    animation: none;
+    transform: scaleX(1);
+    opacity: 0.4;
+  }
+}

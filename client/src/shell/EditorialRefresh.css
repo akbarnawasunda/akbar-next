@@ -1,29 +1,16 @@
 /*
  * Akbar Nawasunda — editorial refresh
  * A quiet, image-led system shared by all public Indonesian and English routes.
- * The existing locally hosted typefaces are kept; hierarchy and spacing do the work.
+ * Palet, garis hairline, dan stack font kanonik tinggal di :root
+ * (client/src/index.css) — satu sumber kebenaran
+ * (docs/phase4-design-system.md §3); cakupan ini hanya menambah token
+ * khas editorial, tidak menduplikat nilai.
  */
 .an-public-shell.an-editorial {
-  --ink: #101211;
-  --ink-soft: #171a18;
-  --ink-card: #1b1e1c;
-  --ink-hover: #232724;
-  --paper: #f1efe9;
-  --paper-soft: #d5d2ca;
-  --paper-line: rgb(241 239 233 / 14%);
-  --ink-line: rgb(241 239 233 / 13%);
-  --acid: #9bb9c1;
-  --acid-rgb: 155, 185, 193;
-  --signal: #9bb9c1;
-  --mute: #a6a69f;
-  --mute-soft: #777a74;
-  --font-display: "Clash Display", "General Sans", sans-serif;
-  --font-body:
-    "General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "Azeret Mono", ui-monospace, SFMono-Regular, monospace;
+  /* Cakupan ini hanya menambah token khas editorial, bukan menduplikat nilai. */
   --editorial-gutter: clamp(22px, 6vw, 104px);
-  --editorial-rule: rgb(241 239 233 / 14%);
-  --editorial-accent: #9bb9c1;
+  --editorial-rule: var(--paper-line);
+  --editorial-accent: var(--signal);
   min-height: 100%;
   color: var(--paper);
   background: var(--ink);
@@ -71,15 +58,9 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.an-public-shell.an-editorial
-  :is(.nf-page, .an-site)
-  :is(a, button):focus-visible,
-.an-public-shell.an-editorial
-  :is(.nf-page, .an-site)
-  :is(input, select, textarea):focus-visible {
-  outline: 2px solid var(--editorial-accent);
-  outline-offset: 4px;
-}
+/* Cincin fokus publik bersatu di @layer base (client/src/index.css):
+   2px solid --signal, offset 2px, --paper di atas isian solid signal.
+   Cakupan lama (offset 4px) sengaja dihapus agar tidak ada dua aturan. */
 
 .an-skip-link {
   position: absolute;
@@ -256,8 +237,9 @@
 
 .an-public-shell.an-editorial .nf-menu-toggle {
   display: none;
-  width: 42px;
-  height: 42px;
+  /* Target sentuh 44px (docs/phase4 §7) — konsisten dengan dasar chrome. */
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--editorial-rule);
   border-radius: 2px;
   background: transparent;
@@ -1079,9 +1061,19 @@
     gap: 12px;
   }
   .an-public-shell.an-editorial .nf-nav nav,
-  .an-public-shell.an-editorial .nf-nav .an-language-switcher,
-  .an-public-shell.an-editorial .nf-nav .nf-signal {
+  .an-public-shell.an-editorial .nf-nav .an-language-switcher {
     display: none !important;
+  }
+  /* CTA "Dengarkan/LISTEN" tetap ada di header mobile (Phase 3 §7):
+     logo → home, Dengarkan → /music, tombol menu. Kompak, 44px.
+     justify-self: end supaya CTA menempel tombol menu (chrome EN tidak
+     membungkus CTA di .nf-nav-tools). */
+  .an-public-shell.an-editorial .nf-nav .nf-signal {
+    display: inline-flex !important;
+    justify-self: end;
+    min-height: 44px;
+    padding: 0 12px;
+    font-size: 0.72rem;
   }
   .an-public-shell.an-editorial .nf-menu-toggle {
     display: inline-flex !important;

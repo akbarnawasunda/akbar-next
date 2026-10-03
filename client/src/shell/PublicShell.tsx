@@ -6,6 +6,7 @@ import { CursorSignal } from "@/components/signature/CursorSignal";
 import { GlobalAudioPlayer } from "@/components/signature/GlobalAudioPlayer";
 import { RouteSignalCurtain } from "@/components/signature/RouteSignalCurtain";
 import { SignatureBackground } from "@/components/signature/SignatureBackground";
+import { NightAtmosphere } from "@/components/signature/NightAtmosphere";
 import { SignatureProvider } from "@/signature/SignatureProvider";
 import { languageOf } from "@/signature/routeSignal";
 import { useSignatureState } from "@/signature/useSignature";
@@ -16,6 +17,9 @@ import "./EditorialRefresh.css";
 import "./ChromeRedesign.css";
 // Primitif scene bersama (label, judul, tombol, baris indeks, gerak masuk).
 import "./SceneKit.css";
+// Terakhir: lapisan instrumen (atmosfer, grid, grain, progres gulir, label
+// indeks). Dekoratif — tidak mengubah token, jarak, atau struktur halaman.
+import "./InstrumentLayer.css";
 
 /**
  * Lapisan signature global.
@@ -47,6 +51,7 @@ function ShellSurfaces() {
 
   return (
     <>
+      <NightAtmosphere />
       <SignatureBackground />
       <RouteSignalCurtain />
       <CursorSignal />

@@ -28,6 +28,16 @@
       "source": "/archive",
       "destination": "/universe",
       "permanent": true
+    },
+    {
+      "source": "/visuals/portraits",
+      "destination": "/visuals#portraits",
+      "permanent": true
+    },
+    {
+      "source": "/en/visuals/portraits",
+      "destination": "/en/visuals#portraits",
+      "permanent": true
     }
   ],
   "routes": [

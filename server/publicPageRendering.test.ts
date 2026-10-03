@@ -83,13 +83,18 @@ describe("halaman publik yang dirender server", () => {
     for (const label of [
       "MUSIK",
       "VISUAL",
-      "JADWAL",
-      "ARSIP",
+      "PERJALANAN",
       "TENTANG",
+      "EPK",
       "KONTAK",
     ]) {
       expect(text).toContain(label);
     }
+    // JADWAL hanya mengisi slot 3 nav saat CMS punya jadwal terkonfirmasi
+    // (Phase 3 §2 baris 6). Konten uji tidak punya, jadi nav tetap 6 item
+    // dan label "ARSIP" lama tidak boleh muncul lagi.
+    expect(text).not.toContain("JADWAL");
+    expect(text).not.toContain("ARSIP");
     // Label Inggris lama tidak boleh bocor ke navigasi berbahasa Indonesia.
     expect(text).not.toMatch(/\bVISUALS\b/);
     expect(text).not.toMatch(/\bARCHIVE\b/);
@@ -99,7 +104,11 @@ describe("halaman publik yang dirender server", () => {
     const { text } = await renderPage("/en");
     expect(text).toMatch(/\bMUSIC\b/);
     expect(text).toMatch(/\bVISUALS\b/);
+    // Label /universe kini JOURNEY (bukan ARCHIVE) dan link-nya /en/universe.
+    expect(text).toMatch(/\bJOURNEY\b/);
     expect(text).not.toContain("JADWAL");
+    // Copy konten "VISUAL ARCHIVE" sah; yang dilarang hanya LABEL nav ARCHIVE.
+    expect(text).not.toMatch(/>ARCHIVE</);
   });
 
   it("memberi setiap video thumbnail-nya sendiri di /visuals", async () => {

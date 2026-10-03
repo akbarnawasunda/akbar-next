@@ -35,7 +35,7 @@ export default function StudioGalleryAnalytics() {
           <h2 className="mt-2 text-xl font-semibold tracking-tight text-white">Portrait gallery access</h2>
           <p className="mt-1 max-w-md text-xs leading-5 text-white/45">Berapa banyak browser anonim yang membuka halaman gallery foto.</p>
         </div>
-        <a href="/visuals/portraits" target="_blank" rel="noreferrer" className="rounded-lg border border-cyan-200/15 p-2 text-cyan-100/70 transition hover:bg-cyan-200/10" aria-label="Open portrait gallery"><Eye size={15} /></a>
+        <a href="/visuals#portraits" target="_blank" rel="noreferrer" className="rounded-lg border border-cyan-200/15 p-2 text-cyan-100/70 transition hover:bg-cyan-200/10" aria-label="Open portrait gallery"><Eye size={15} /></a>
       </div>
       <div className="grid grid-cols-3 gap-3 px-5 py-5 sm:px-6">
         <Stat label="Hari ini" value={analytics.isLoading ? "—" : data?.todayStats.visitors ?? 0} />

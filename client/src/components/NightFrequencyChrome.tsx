@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   usePublicArtistContent,
+  publicConfirmedEvents,
   publicPlatformLinks,
 } from "@/content/publicContent";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
@@ -17,15 +18,27 @@ import "./PublicMotion.css";
 
 export { MobileNav, MobileSlideMenu, useLockBodyScroll };
 
-const navItems = [
+/* Nav desktop = 6 item permanen (Phase 3 §2 baris 6 + §10). JADWAL tidak
+   permanen: ia mengisi slot 3 HANYA saat CMS mempublikasikan jadwal yang
+   terkonfirmasi (lihat `buildNavItems` di bawah). Label "ARSIP" pensiun —
+   halaman itu kini PERJALANAN; URL-nya tetap /universe. */
+const baseNavItems = [
   { href: "/music", label: "MUSIK" },
   { href: "/visuals", label: "VISUAL" },
-  { href: "/live", label: "JADWAL" },
-  { href: "/universe", label: "ARSIP" },
+  { href: "/universe", label: "PERJALANAN" },
   { href: "/about", label: "TENTANG" },
   { href: "/epk", label: "EPK" },
   { href: "/inquire", label: "KONTAK" },
 ];
+
+const scheduleNavItem = { href: "/live", label: "JADWAL" };
+
+function buildNavItems(hasConfirmedEvents: boolean) {
+  if (!hasConfirmedEvents) return baseNavItems;
+  const items = [...baseNavItems];
+  items.splice(2, 0, scheduleNavItem);
+  return items;
+}
 
 function LanguageSwitcher({ pathname }: { pathname: string }) {
   const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
@@ -60,6 +73,9 @@ export function NightHeader({ active }: { active?: string }) {
   const [pathname, navigate] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const cms = usePublicArtistContent();
+  const hasConfirmedEvents = publicConfirmedEvents(cms.data).length > 0;
+  const navItems = buildNavItems(hasConfirmedEvents);
   const activeRoute =
     active ??
     (pathname.startsWith("/music")
@@ -187,6 +203,7 @@ export function NightHeader({ active }: { active?: string }) {
         active={activeRoute}
         onClose={closeAndReturnFocus}
         lang="id"
+        hasConfirmedEvents={hasConfirmedEvents}
       />
     </>
   );
@@ -222,13 +239,17 @@ export function NightFooter() {
           </span>
         </Link>
       </div>
+      {/* Kaki halaman = himpunan rute yang tidak ada di nav (Phase 3 §7):
+          Jadwal tetap di sini (nav-nya kondisional), JEDAG RUN masuk sebagai
+          baris footer, dan Privasi kini setara di kedua bahasa. */}
       <div className="nf-footer-column">
         <span>JELAJAHI</span>
         <Link href="/music">Musik</Link>
         <Link href="/visuals">Visual</Link>
         <Link href="/live">Jadwal</Link>
-        <Link href="/universe">Arsip</Link>
+        <Link href="/universe">Perjalanan</Link>
         <Link href="/about">Tentang</Link>
+        <Link href="/game/jedag-run">JEDAG RUN</Link>
       </div>
       <div className="nf-footer-column">
         <span>HUBUNGI</span>
@@ -238,6 +259,7 @@ export function NightFooter() {
           </a>
         ))}
         <Link href="/epk">EPK / Booking</Link>
+        <Link href="/privacy">Privasi</Link>
       </div>
       <p className="footer-bottom">
         <span>© {new Date().getFullYear()} AKBAR NAWASUNDA</span>

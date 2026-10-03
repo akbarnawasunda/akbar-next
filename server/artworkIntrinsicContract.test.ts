@@ -29,10 +29,8 @@ describe("artwork platform intrinsic sizing", () => {
     for (const route of [
       "/music",
       "/visuals",
-      "/visuals/portraits",
       "/universe",
       "/en/visuals",
-      "/en/visuals/portraits",
     ]) {
       const page = await render(route, prefetch);
       const images = (page.html.match(/<img[^>]*>/g) || []).filter(img =>

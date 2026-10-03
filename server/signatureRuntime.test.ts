@@ -28,7 +28,8 @@ const ID_ROUTES = [
   "/",
   "/music",
   "/visuals",
-  "/visuals/portraits",
+  // /visuals/portraits bukan rute lagi (Phase 3 §2 baris 5); kontennya jadi
+  // seksi in-page /visuals#portraits (sub-fase 5d).
   "/live",
   "/universe",
   "/about",
@@ -100,7 +101,7 @@ describe("rute publik tetap halaman penuh di SSR", () => {
   });
 
   it("tidak membocorkan lapisan client ke HTML SSR", async () => {
-    for (const route of ["/", "/en", "/music", "/en/visuals/portraits"]) {
+    for (const route of ["/", "/en", "/music", "/en/visuals"]) {
       const page = await renderPage(route);
       expect(page.html, `lightbox ${route}`).not.toContain("an-lightbox");
       expect(page.html, `palette ${route}`).not.toContain("an-command");
@@ -290,12 +291,19 @@ describe("kontrak runtime yang tidak muncul di HTML", () => {
   it("memakai metadata rute bersama untuk label tirai", () => {
     expect(routeInfo("/music").label).toBe("MUSIK");
     expect(routeInfo("/en/music").label).toBe("MUSIC");
-    expect(routeInfo("/universe").label).toBe("ARSIP");
-    expect(routeInfo("/en/universe").label).toBe("ARCHIVE");
+    // Phase 3 §2: /universe di-label PERJALANAN (ID) / JOURNEY (EN);
+    // /live di-label JADWAL (ID) / LIVE (EN).
+    expect(routeInfo("/universe").label).toBe("PERJALANAN");
+    expect(routeInfo("/en/universe").label).toBe("JOURNEY");
+    expect(routeInfo("/live").label).toBe("JADWAL");
+    expect(routeInfo("/en/live").label).toBe("LIVE");
+    // Rute potret yang dihapus tidak lagi dikenal metadata tirai.
+    expect(routeInfo("/visuals/portraits").label).toBe("");
     expect(routeInfo("/visuals").mode).toBe("dust");
     expect(routeInfo("/").mode).toBe("wordmark");
     expect(isPublicRoute("/studio")).toBe(false);
     expect(isPublicRoute("/en/live")).toBe(true);
+    expect(isPublicRoute("/visuals/portraits")).toBe(false);
   });
 });
 

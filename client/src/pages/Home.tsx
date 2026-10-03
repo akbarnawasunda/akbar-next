@@ -68,6 +68,24 @@ const youtubeIdFrom = (url: string | null | undefined) => {
   return match?.[1];
 };
 
+/**
+ * Tinggi bar strip instrumen hero (0..1).
+ *
+ * Deterministik — hash sinus, bukan `Math.random()` — supaya HTML server dan
+ * hasil hidrasi klien identik (tidak ada mismatch) dan tidak ada angka yang
+ * berubah tiap muat halaman.
+ *
+ * Ini DEKORASI, bukan data: strip ini tidak membaca audio, rilisan, atau
+ * metrik apa pun. Karena itu seluruh strip `aria-hidden` dan tidak diberi
+ * label yang bisa dibaca sebagai klaim ("live", "analisis", dsb).
+ */
+const HERO_SPECTRUM = Array.from({ length: 46 }, (_, index) => {
+  const noise = Math.abs(Math.sin((index + 1) * 12.9898) * 43758.5453) % 1;
+  // Selubung melengkung: bar paling tinggi di tengah, turun ke tepi.
+  const envelope = 0.42 + 0.58 * Math.sin((index / 45) * Math.PI);
+  return Number((0.14 + noise * 0.86 * envelope).toFixed(3));
+});
+
 const managedVideoImage = (
   imageUrl: string | null | undefined,
   href?: string | null
@@ -173,12 +191,14 @@ export default function Home() {
     cmsHero?.heroBody ||
     managedHero?.subtitle ||
     "Produser musik, remixer, dan DJ dari Bandung Barat. Breakbeat, electronic bass, dan remix untuk rilisan serta kolaborasi.";
-  const heroActionUrl =
-    cmsHero?.primaryActionUrl || managedHero?.href || activeRelease.href;
+  /* RILISAN ADALAH SATU SUMBER (risiko R2, Phase 5b): CTA hero, papan
+     signal, dokumen rilisan (slot 4), dan player global semuanya menunjuk
+     `activeRelease` (isCurrent CMS/katalog). URL & label aksi CMS hero
+     tidak lagi menimpa target — sebelumnya itu bisa membuat hero menunjuk
+     track yang berbeda dari dokumen rilisan di halaman yang sama. */
+  const heroActionUrl = activeRelease.href;
   const heroActionIsVisual = /youtube\.com|youtu\.be/i.test(heroActionUrl);
-  const heroActionLabel =
-    cmsHero?.primaryActionLabel ||
-    (heroActionIsVisual ? "TONTON VISUAL" : "DENGARKAN KARYA");
+  const heroActionLabel = heroActionIsVisual ? "TONTON VISUAL" : "DENGAR SEKARANG";
 
 
   const gameConfig = publicContent.data?.game;
@@ -384,12 +404,42 @@ export default function Home() {
               <span aria-hidden="true">Gulir</span>
               <ArrowDownRight size={15} aria-hidden="true" />
             </a>
+
+            {/* Lapisan instrumen hero — murni dekoratif (aria-hidden):
+                siku bingkai di empat sudut + strip frekuensi deterministik.
+                Tidak ada teks, tidak ada tautan, jadi tidak ada apa pun yang
+                hilang bagi pembaca layar atau pengguna keyboard. */}
+            <div className="an-hero-instrument" aria-hidden="true">
+              <span className="an-hero-tick an-hero-tick--tl" />
+              <span className="an-hero-tick an-hero-tick--tr" />
+              <span className="an-hero-tick an-hero-tick--bl" />
+              <span className="an-hero-tick an-hero-tick--br" />
+              <span className="an-hero-spectrum">
+                {HERO_SPECTRUM.map((height, index) => (
+                  <span
+                    key={index}
+                    className="an-hero-bar"
+                    style={
+                      {
+                        "--bar": height,
+                        "--bar-index": index,
+                      } as CSSProperties
+                    }
+                  />
+                ))}
+              </span>
+            </div>
           </section>
+
+          {/* Jahitan di lipatan: satu strip gelombang yang memisahkan foto
+              hero dari isi halaman. Dekoratif, tanpa teks. */}
+          <span className="instr-wave" aria-hidden="true" />
 
           <SignatureStage alsoKnownAs="Juga dikenal sebagai DJ Akbar Remix dan akbarnawasunda.my.id." />
 
           <EditorialSection
             id="signal"
+            index="01 — SINYAL"
             title={
               <>
                 YANG SEDANG
@@ -403,59 +453,7 @@ export default function Home() {
             <CurrentSignalBoard rows={currentSignalRows} />
           </EditorialSection>
 
-          {/* ADEGAN 3 — kanal resmi sebagai daftar tipografis, bukan deretan
-              kartu identik. Marquee di bawahnya tetap dipakai sebagai ritme. */}
-          <section
-            className="an-channels"
-            id="platforms"
-            aria-labelledby="channels-title"
-          >
-            <header className="an-channels-head">
-              <h2 id="channels-title">Dengar di kanal resminya.</h2>
-              <p className="an-meta">
-                {editablePlatformLinks.length} kanal resmi · rilisan, remix,
-                dan set
-              </p>
-            </header>
-
-            <ul className="an-channels-list">
-              {editablePlatformLinks.map((platform, index) => (
-                <li key={platform.label}>
-                  <a
-                    className={`an-channel platform-${platform.label
-                      .toLowerCase()
-                      .replace(/\s+/g, "-")}`}
-                    href={platform.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
-                  >
-                    <span className="an-channel-index" aria-hidden="true">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="an-channel-mark" aria-hidden="true">
-                      <PlatformIcon label={platform.label} />
-                    </span>
-                    <span className="an-channel-name">{platform.label}</span>
-                    <ArrowUpRight
-                      className="an-channel-arrow"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            <div className="an-channels-foot">
-              <PlatformMarquee links={editablePlatformLinks} />
-              <Link className="an-btn an-btn--quiet" href="/music">
-                Buka katalog musik <ArrowRight size={14} />
-              </Link>
-            </div>
-          </section>
-
-          {/* ADEGAN 4 — rilisan terbaru sebagai satu dokumen utuh: artwork
+          {/* ADEGAN 3 — rilisan terbaru sebagai satu dokumen utuh: artwork
               besar, metadata mono, dan pemutar resmi di tempat yang sama. */}
           <Reveal>
             <section
@@ -480,7 +478,7 @@ export default function Home() {
               </figure>
 
               <div className="an-doc-copy an-rise">
-                <p className="an-meta">Rilisan terbaru</p>
+                <p className="an-meta">02 — Rilisan terbaru</p>
                 <h2 id="feature-title">{activeRelease.title}</h2>
                 <p className="an-doc-story">
                   {activeReleaseStory ||
@@ -525,6 +523,60 @@ export default function Home() {
               </div>
             </section>
           </Reveal>
+
+          {/* ADEGAN 4 — kanal resmi sebagai daftar tipografis, bukan deretan
+              kartu identik. Marquee di bawahnya tetap dipakai sebagai ritme. */}
+          <section
+            className="an-channels"
+            id="platforms"
+            aria-labelledby="channels-title"
+          >
+            <header className="an-channels-head">
+              <p className="instr-index">03 — Kanal resmi</p>
+              <h2 id="channels-title">Dengar di kanal resminya.</h2>
+              <p className="an-meta">
+                {editablePlatformLinks.length} kanal resmi · rilisan, remix,
+                dan set
+              </p>
+            </header>
+
+            <ul className="an-channels-list">
+              {editablePlatformLinks.map((platform, index) => (
+                <li key={platform.label}>
+                  <a
+                    className={`an-channel platform-${platform.label
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}`}
+                    href={platform.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
+                  >
+                    <span className="an-channel-index" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="an-channel-mark" aria-hidden="true">
+                      <PlatformIcon label={platform.label} />
+                    </span>
+                    <span className="an-channel-name">{platform.label}</span>
+                    <ArrowUpRight
+                      className="an-channel-arrow"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div className="an-channels-foot">
+              <PlatformMarquee links={editablePlatformLinks} />
+              <Link className="an-btn an-btn--quiet" href="/music">
+                Buka katalog musik <ArrowRight size={14} />
+              </Link>
+            </div>
+          </section>
+
 
           {/* Perjalanan & studi potret tidak diulang di beranda: bagian itu
               milik /universe supaya pengunjung tidak melihat section yang

@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useRef, useState, type FormEvent } from "react";
 import { useSearch } from "wouter";
 import { toast } from "sonner";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
@@ -17,19 +17,42 @@ const validTypes: InquiryType[] = [
   "collaboration",
   "licensing",
 ];
+/* Sumber yang bisa diisi halaman lain. Nilai di luar daftar ini (mis.
+   `source=live` dari /live atau `source=photo` di masa depan) jatuh ke
+   "epk" — kolom `source` di DB adalah enum empat nilai
+   (`drizzle/schema.ts`), jadi granularitas asal halaman perlu migrasi
+   enum sebelum bisa disimpan apa adanya. */
 const validSources: InquirySource[] = [
   "epk",
   "release",
   "universe",
   "licensing",
 ];
+/* Alias jenis dari halaman lain. Phase 3 mengunci form pada EMPAT jenis,
+   jadi `?type=visual` (CTA /visuals) tidak menambah jenis kelima —
+   kolaborasi visual adalah kolaborasi, dan itulah label yang muncul. */
+const typeAliases: Record<string, InquiryType> = {
+  visual: "collaboration",
+  video: "collaboration",
+};
+
+/** Field yang divalidasi klien (cermin aturan zod server — lihat
+ *  `server/routers.ts` inquiry.submit). */
+type FieldKey = "name" | "email" | "projectTitle" | "message";
+const fieldIds: Record<FieldKey, string> = {
+  name: "inq-name",
+  email: "inq-email",
+  projectTitle: "inq-project",
+  message: "inq-message",
+};
 
 /* ============================================================
    INQUIRY — /inquire dan /en/inquire
    ------------------------------------------------------------
-   Satu formulir, dua bahasa. `InquiryView({ locale })` menyuplai seluruh
-   salinan (jenis inquiry, label field, pesan status) sehingga versi EN
-   tidak lagi memakai struktur lama yang tertinggal.
+   Satu formulir, dua bahasa, satu target nyata (tRPC → inbox owner di
+   /studio/inquiries). Validasi klien memantulkan aturan server supaya
+   error muncul per field + ringkasan yang bisa difokuskan, bukan toast
+   generik. Fallback mailto selalu tersedia di samping form.
    ============================================================ */
 
 const copy = {
@@ -81,6 +104,15 @@ const copy = {
         placeholder:
           "Jelaskan kebutuhan, referensi, link, deliverable, serta hal penting lain.",
       },
+    },
+    errors: {
+      name: "Nama minimal 2 karakter.",
+      email: "Format email tidak valid.",
+      projectTitle: "Judul proyek minimal 2 karakter.",
+      message: "Brief minimal 12 karakter.",
+      summaryTitle: "Periksa kembali isian berikut sebelum mengirim.",
+      serverSummary:
+        "Inquiry belum terkirim — periksa kembali isian, atau kirim langsung ke email di samping.",
     },
     submit: "KIRIM INQUIRY",
     pending: "MENGIRIM…",
@@ -172,6 +204,15 @@ const copy = {
           "Describe the requirements, references, links, deliverables, and anything else that matters.",
       },
     },
+    errors: {
+      name: "Name must be at least 2 characters.",
+      email: "That email format is not valid.",
+      projectTitle: "Project title must be at least 2 characters.",
+      message: "Brief must be at least 12 characters.",
+      summaryTitle: "Please fix the following before sending.",
+      serverSummary:
+        "The inquiry was not sent — check the fields, or email directly using the address beside the form.",
+    },
     submit: "SEND INQUIRY",
     pending: "SENDING…",
     note: "Confirmation follows once the inquiry has been reviewed.",
@@ -219,9 +260,10 @@ export function InquiryView({ locale = "id" }: { locale?: "id" | "en" }) {
   const t = copy[locale];
   const search = useSearch();
   const params = useMemo(() => new URLSearchParams(search), [search]);
-  const initialType = validTypes.includes(params.get("type") as InquiryType)
-    ? (params.get("type") as InquiryType)
-    : "booking";
+  const requestedType = params.get("type") ?? "";
+  const initialType = validTypes.includes(requestedType as InquiryType)
+    ? (requestedType as InquiryType)
+    : (typeAliases[requestedType] ?? "booking");
   const initialSource = validSources.includes(
     params.get("source") as InquirySource
   )
@@ -239,37 +281,84 @@ export function InquiryView({ locale = "id" }: { locale?: "id" | "en" }) {
     budgetContext: "",
     message: "",
   });
+  const [fieldErrors, setFieldErrors] = useState<Partial<
+    Record<FieldKey, string>
+  >>({});
+  const [serverError, setServerError] = useState(false);
   const [submissionState, setSubmissionState] = useState<
     "idle" | "success" | "error"
   >("idle");
+  const errorSummaryRef = useRef<HTMLDivElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+
+  const focusElement = (element: HTMLElement | null) => {
+    // rAF supaya fokus mengikuti render ringkasan/konfirmasi yang baru.
+    requestAnimationFrame(() => element?.focus());
+  };
+
   const submit = trpc.inquiry.submit.useMutation({
     onSuccess: () => {
       setSubmissionState("success");
+      focusElement(successRef.current);
       toast.success(t.toastSuccess);
     },
     onError: error => {
+      /* Petakan error server (zod) ke field-nya. Data form TIDAK di-log
+         ke konsol browser — hanya struktur path issue yang dibaca. */
+      const data = (
+        error as {
+          data?: {
+            issues?: Array<{ path?: Array<string | number> }>;
+            fieldErrors?: Record<string, string[]>;
+          };
+        }
+      )?.data;
+      const issueKeys = new Set<string>();
+      data?.issues?.forEach(issue => {
+        const key = issue.path?.[0];
+        if (typeof key === "string") issueKeys.add(key);
+      });
+      Object.keys(data?.fieldErrors ?? {}).forEach(key => issueKeys.add(key));
+      const mapped: Partial<Record<FieldKey, string>> = {};
+      (Object.keys(fieldIds) as FieldKey[]).forEach(key => {
+        if (issueKeys.has(key)) mapped[key] = t.errors[key];
+      });
+      setFieldErrors(mapped);
+      setServerError(Object.keys(mapped).length === 0);
       setSubmissionState("error");
-      console.error("Inquiry error:", error);
-      const message = error.message.toLowerCase();
-      if (message.includes("database") || message.includes("connect")) {
-        toast.error(t.toastDb);
-      } else if (message.includes("email")) {
-        toast.error(t.toastEmail);
-      } else if (message.includes("invalid") || message.includes("expected")) {
-        toast.error(t.toastInvalid);
-      } else {
-        toast.error(t.toastFallback);
-      }
+      toast.error(Object.keys(mapped).length ? t.toastInvalid : t.toastFallback);
     },
   });
   const current = t.labels[type];
+  const hasErrors = serverError || Object.keys(fieldErrors).length > 0;
+  const errorSummaryTitle =
+    serverError && !Object.keys(fieldErrors).length
+      ? t.errors.serverSummary
+      : t.errors.summaryTitle;
+
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const errors: Partial<Record<FieldKey, string>> = {};
+    if (form.name.trim().length < 2) errors.name = t.errors.name;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+      errors.email = t.errors.email;
+    if (form.projectTitle.trim().length < 2)
+      errors.projectTitle = t.errors.projectTitle;
+    if (form.message.trim().length < 12) errors.message = t.errors.message;
+    setFieldErrors(errors);
+    setServerError(false);
+    if (Object.keys(errors).length) {
+      setSubmissionState("idle");
+      focusElement(errorSummaryRef.current);
+      return;
+    }
     setSubmissionState("idle");
     submit.mutate({ inquiryType: type, source, ...form });
   };
   const resetSubmission = () => {
     setSubmissionState("idle");
+    setFieldErrors({});
+    setServerError(false);
     setForm({
       name: "",
       email: "",
@@ -281,8 +370,33 @@ export function InquiryView({ locale = "id" }: { locale?: "id" | "en" }) {
       message: "",
     });
   };
-  const update = (key: keyof typeof form, value: string) =>
+  const update = (key: keyof typeof form, value: string) => {
     setForm(previous => ({ ...previous, [key]: value }));
+    if (key in fieldIds) {
+      const fieldKey = key as FieldKey;
+      setFieldErrors(previous => {
+        if (!(fieldKey in previous)) return previous;
+        const next = { ...previous };
+        delete next[fieldKey];
+        return next;
+      });
+    }
+  };
+
+  const errorProps = (key: FieldKey) => ({
+    id: fieldIds[key],
+    "aria-invalid": fieldErrors[key] ? true : undefined,
+    "aria-describedby": fieldErrors[key]
+      ? `${fieldIds[key]}-error`
+      : undefined,
+    className: fieldErrors[key] ? "is-error" : undefined,
+  });
+  const fieldError = (key: FieldKey) =>
+    fieldErrors[key] ? (
+      <p className="an-inq-field-error" id={`${fieldIds[key]}-error`}>
+        {fieldErrors[key]}
+      </p>
+    ) : null;
 
   return (
     <main id="main-content" tabIndex={-1}>
@@ -335,11 +449,32 @@ export function InquiryView({ locale = "id" }: { locale?: "id" | "en" }) {
             </a>
           </aside>
 
-          <form className="an-inq-form an-rise" onSubmit={onSubmit}>
+          <form className="an-inq-form an-rise" onSubmit={onSubmit} noValidate>
             <div className="an-inq-form-head">
               <p className="an-meta">{t.formMeta}</p>
-              <h2 className="an-inq-form-title">{current.title}</h2>
             </div>
+
+            {/* Ringkasan error: difokuskan saat submit gagal validasi,
+                diumumkan ke AT (role=alert), dan hilang saat diperbaiki. */}
+            {hasErrors ? (
+              <div
+                ref={errorSummaryRef}
+                tabIndex={-1}
+                role="alert"
+                className="an-inq-error-summary"
+              >
+                <strong>{errorSummaryTitle}</strong>
+                {Object.keys(fieldErrors).length > 0 ? (
+                  <ul>
+                    {(Object.keys(fieldIds) as FieldKey[]).map(key =>
+                      fieldErrors[key] ? (
+                        <li key={key}>{fieldErrors[key]}</li>
+                      ) : null
+                    )}
+                  </ul>
+                ) : null}
+              </div>
+            ) : null}
 
             <div
               className="an-inq-type-row"
@@ -360,110 +495,148 @@ export function InquiryView({ locale = "id" }: { locale?: "id" | "en" }) {
             </div>
 
             <fieldset className="an-inq-fieldset">
-              <legend className="an-meta">{t.aboutLegend}</legend>
+              <legend>
+                <h2 className="an-inq-legend-title">{t.aboutLegend}</h2>
+              </legend>
               <div className="an-inq-grid">
-                <label>
-                  <span>{t.fields.name.label}</span>
-                  <input
-                    required
-                    value={form.name}
-                    onChange={event => update("name", event.target.value)}
-                    placeholder={t.fields.name.placeholder}
-                  />
-                </label>
-                <label>
-                  <span>{t.fields.email.label}</span>
-                  <input
-                    required
-                    type="email"
-                    value={form.email}
-                    onChange={event => update("email", event.target.value)}
-                    placeholder={t.fields.email.placeholder}
-                  />
-                </label>
-                <label>
-                  <span>
-                    {t.fields.organization.label}{" "}
-                    <small className="an-inq-optional">{t.optional}</small>
-                  </span>
-                  <input
-                    value={form.organization}
-                    onChange={event =>
-                      update("organization", event.target.value)
-                    }
-                    placeholder={t.fields.organization.placeholder}
-                  />
-                </label>
-                <label>
-                  <span>{t.fields.projectTitle.label}</span>
-                  <input
-                    required
-                    value={form.projectTitle}
-                    onChange={event =>
-                      update("projectTitle", event.target.value)
-                    }
-                    placeholder={t.fields.projectTitle.placeholder}
-                  />
-                </label>
+                <div className="an-inq-cell">
+                  <label htmlFor={fieldIds.name}>
+                    <span>{t.fields.name.label}</span>
+                    <input
+                      required
+                      autoComplete="name"
+                      value={form.name}
+                      onChange={event => update("name", event.target.value)}
+                      placeholder={t.fields.name.placeholder}
+                      {...errorProps("name")}
+                    />
+                  </label>
+                  {fieldError("name")}
+                </div>
+                <div className="an-inq-cell">
+                  <label htmlFor={fieldIds.email}>
+                    <span>{t.fields.email.label}</span>
+                    <input
+                      required
+                      type="email"
+                      autoComplete="email"
+                      value={form.email}
+                      onChange={event => update("email", event.target.value)}
+                      placeholder={t.fields.email.placeholder}
+                      {...errorProps("email")}
+                    />
+                  </label>
+                  {fieldError("email")}
+                </div>
+                <div className="an-inq-cell">
+                  <label htmlFor="inq-organization">
+                    <span>
+                      {t.fields.organization.label}{" "}
+                      <small className="an-inq-optional">{t.optional}</small>
+                    </span>
+                    <input
+                      id="inq-organization"
+                      autoComplete="organization"
+                      value={form.organization}
+                      onChange={event =>
+                        update("organization", event.target.value)
+                      }
+                      placeholder={t.fields.organization.placeholder}
+                    />
+                  </label>
+                </div>
+                <div className="an-inq-cell">
+                  <label htmlFor={fieldIds.projectTitle}>
+                    <span>{t.fields.projectTitle.label}</span>
+                    <input
+                      required
+                      autoComplete="organization-title"
+                      value={form.projectTitle}
+                      onChange={event =>
+                        update("projectTitle", event.target.value)
+                      }
+                      placeholder={t.fields.projectTitle.placeholder}
+                      {...errorProps("projectTitle")}
+                    />
+                  </label>
+                  {fieldError("projectTitle")}
+                </div>
               </div>
             </fieldset>
 
             <fieldset className="an-inq-fieldset">
-              <legend className="an-meta">{t.planLegend}</legend>
+              <legend>
+                <h2 className="an-inq-legend-title">{t.planLegend}</h2>
+              </legend>
               <div className="an-inq-grid">
-                <label>
-                  <span>
-                    {t.fields.location.label}{" "}
-                    <small className="an-inq-optional">{t.optional}</small>
-                  </span>
-                  <input
-                    value={form.location}
-                    onChange={event => update("location", event.target.value)}
-                    placeholder={t.fields.location.placeholder}
-                  />
-                </label>
-                <label>
-                  <span>
-                    {t.fields.timeline.label}{" "}
-                    <small className="an-inq-optional">{t.optional}</small>
-                  </span>
-                  <input
-                    value={form.timeline}
-                    onChange={event => update("timeline", event.target.value)}
-                    placeholder={t.fields.timeline.placeholder}
-                  />
-                </label>
-                <label className="an-inq-full">
-                  <span>
-                    {t.fields.budgetContext.label}{" "}
-                    <small className="an-inq-optional">{t.optional}</small>
-                  </span>
-                  <input
-                    value={form.budgetContext}
-                    onChange={event =>
-                      update("budgetContext", event.target.value)
-                    }
-                    placeholder={t.fields.budgetContext.placeholder}
-                  />
-                </label>
+                <div className="an-inq-cell">
+                  <label htmlFor="inq-location">
+                    <span>
+                      {t.fields.location.label}{" "}
+                      <small className="an-inq-optional">{t.optional}</small>
+                    </span>
+                    <input
+                      id="inq-location"
+                      value={form.location}
+                      onChange={event => update("location", event.target.value)}
+                      placeholder={t.fields.location.placeholder}
+                    />
+                  </label>
+                </div>
+                <div className="an-inq-cell">
+                  <label htmlFor="inq-timeline">
+                    <span>
+                      {t.fields.timeline.label}{" "}
+                      <small className="an-inq-optional">{t.optional}</small>
+                    </span>
+                    <input
+                      id="inq-timeline"
+                      value={form.timeline}
+                      onChange={event => update("timeline", event.target.value)}
+                      placeholder={t.fields.timeline.placeholder}
+                    />
+                  </label>
+                </div>
+                <div className="an-inq-cell an-inq-full">
+                  <label htmlFor="inq-budget">
+                    <span>
+                      {t.fields.budgetContext.label}{" "}
+                      <small className="an-inq-optional">{t.optional}</small>
+                    </span>
+                    <input
+                      id="inq-budget"
+                      value={form.budgetContext}
+                      onChange={event =>
+                        update("budgetContext", event.target.value)
+                      }
+                      placeholder={t.fields.budgetContext.placeholder}
+                    />
+                  </label>
+                </div>
               </div>
             </fieldset>
 
             <fieldset className="an-inq-fieldset">
-              <legend className="an-meta">{t.briefLegend}</legend>
-              <label className="an-inq-full">
-                <span>
-                  {t.fields.message.label}{" "}
-                  <small className="an-inq-optional">{t.required}</small>
-                </span>
-                <textarea
-                  required
-                  minLength={12}
-                  value={form.message}
-                  onChange={event => update("message", event.target.value)}
-                  placeholder={t.fields.message.placeholder}
-                />
-              </label>
+              <legend>
+                <h2 className="an-inq-legend-title">{t.briefLegend}</h2>
+              </legend>
+              <div className="an-inq-cell an-inq-full">
+                <label htmlFor={fieldIds.message}>
+                  <span>
+                    {t.fields.message.label}{" "}
+                    <small className="an-inq-optional">{t.required}</small>
+                  </span>
+                  <textarea
+                    required
+                    minLength={12}
+                    value={form.message}
+                    onChange={event => update("message", event.target.value)}
+                    placeholder={t.fields.message.placeholder}
+                    {...errorProps("message")}
+                  />
+                </label>
+                {fieldError("message")}
+              </div>
             </fieldset>
 
             <div className="an-inq-submit-row">
@@ -478,6 +651,8 @@ export function InquiryView({ locale = "id" }: { locale?: "id" | "en" }) {
 
             {submissionState === "success" ? (
               <div
+                ref={successRef}
+                tabIndex={-1}
                 className="an-inq-feedback is-success"
                 role="status"
                 aria-live="polite"

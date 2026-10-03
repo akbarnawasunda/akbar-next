@@ -7,12 +7,10 @@ import {
   SignalIndicator,
   type SignalRow,
 } from "@/components/editorial/EditorialKit";
-import { EraTimeline } from "@/components/signature/EraTimeline";
 import {
   SignalHeading,
 } from "@/components/signature/SignalType";
 import { SignatureStage } from "@/components/signature/SignatureStage";
-import { publicEras } from "@/content/eras";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -28,17 +26,13 @@ import {
   Ticket,
 } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
-import { Link, useRoute } from "wouter";
+import { Link } from "wouter";
 import {
   EnglishFooter,
   EnglishHeader,
 } from "@/components/EnglishChrome";
-import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
-import { soundcloudEmbedUrl } from "@/components/MusicEmbed";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
-import VisualPortraitStudies from "@/components/VisualPortraitStudies";
-import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
 import { PrivacyView } from "./PrivacyPolicy";
 import { LiveView } from "./Live";
 import { InquiryView } from "./Inquiry";
@@ -60,8 +54,6 @@ import {
 } from "@/content/artistPlatform";
 import type { CmsRelease } from "@/content/publicContent";
 import {
-  publicJourney,
-  publicPhotoStories,
   publicPlatformLinks,
   publicPortraitStudies,
   publicUpcomingEvents,
@@ -224,8 +216,6 @@ export function EnglishHome() {
 
   const activeVideos = videos;
   const publicEvents = publicUpcomingEvents(cms.data);
-  const journey = publicJourney(cms.data);
-  const photoStories = publicPhotoStories(cms.data);
   const featuredEvent =
     publicEvents.find((event) => event.isFeatured) || publicEvents[0];
 
@@ -358,48 +348,6 @@ export function EnglishHome() {
           alsoKnownAs="Also known as DJ Akbar Remix and akbarnawasunda.my.id."
         />
 
-        <section
-          className="home-signal-deck"
-          aria-labelledby="en-signal-deck-title"
-        >
-          <div className="home-signal-copy">
-            <p className="eyebrow">
-              <span /> OFFICIAL PLATFORMS
-            </p>
-            <h2 id="en-signal-deck-title">
-              LISTEN
-              <br />
-              ANYWHERE.
-            </h2>
-            <Link className="home-deck-cta" href="/en/music">
-              VIEW MUSIC <ArrowUpRight size={14} />
-            </Link>
-          </div>
-          <div className="home-platform-rack">
-            {editablePlatformLinks.map((platform) => (
-              <a
-                className={`home-platform-card platform-${platform.label
-                  .toLowerCase()
-                  .replace(/\s+/g, "-")}`}
-                key={platform.label}
-                href={platform.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`Open Akbar Nawasunda on ${platform.label}`}
-              >
-                <span className="home-platform-icon-shell">
-                  <PlatformIcon label={platform.label} />
-                </span>
-                <span className="home-platform-copy">
-                  <strong>{platform.label}</strong>
-                </span>
-                <ArrowUpRight className="home-platform-arrow" size={14} />
-              </a>
-            ))}
-          </div>
-          <PlatformMarquee links={editablePlatformLinks} />
-        </section>
-
         <section className="section section-current" id="music">
           <div className="section-heading">
             <div>
@@ -443,16 +391,52 @@ export function EnglishHome() {
           </div>
         </section>
 
-        <ArtistEditorialSections
-          journey={journey}
-          showPhotoStory={false}
-          locale="en"
-        />
-        <ArtistEditorialSections
-          photoStories={photoStories}
-          showJourney={false}
-          locale="en"
-        />
+        <section
+          className="home-signal-deck"
+          aria-labelledby="en-signal-deck-title"
+        >
+          <div className="home-signal-copy">
+            <p className="eyebrow">
+              <span /> OFFICIAL PLATFORMS
+            </p>
+            <h2 id="en-signal-deck-title">
+              LISTEN
+              <br />
+              ANYWHERE.
+            </h2>
+            <Link className="home-deck-cta" href="/en/music">
+              VIEW MUSIC <ArrowUpRight size={14} />
+            </Link>
+          </div>
+          <div className="home-platform-rack">
+            {editablePlatformLinks.map((platform) => (
+              <a
+                className={`home-platform-card platform-${platform.label
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")}`}
+                key={platform.label}
+                href={platform.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Open Akbar Nawasunda on ${platform.label}`}
+              >
+                <span className="home-platform-icon-shell">
+                  <PlatformIcon label={platform.label} />
+                </span>
+                <span className="home-platform-copy">
+                  <strong>{platform.label}</strong>
+                </span>
+                <ArrowUpRight className="home-platform-arrow" size={14} />
+              </a>
+            ))}
+          </div>
+          <PlatformMarquee links={editablePlatformLinks} />
+        </section>
+
+        {/* Journey + photo stories moved out of the EN home (Phase 3:
+            the era timeline's owner is /en/universe, portrait studies'
+            owner is /en/visuals#portraits) — same treatment the ID
+            home received in 5b. */}
 
         <section className="section release-section">
           <div className="section-inline">

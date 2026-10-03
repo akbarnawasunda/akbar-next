@@ -46,6 +46,22 @@ export function publicUpcomingEvents(content: CmsArtistContent | null | undefine
   return (content?.events ?? []).filter(isUpcomingPublicEvent);
 }
 
+/**
+ * Peristiwa "terkonfirmasi" = upcoming publik dengan tanggal yang terbaca.
+ * Judul TBA / "no date announced" dan tanggal yang tidak bisa di-parse
+ * bukan konfirmasi: ia tidak layak mengisi slot JADWAL di navigasi
+ * (Phase 3 §2 baris 6) dan tidak muncul sebagai jadwal berikutnya.
+ */
+export function isConfirmedPublicEvent(event: CmsEvent): boolean {
+  if (!isUpcomingPublicEvent(event)) return false;
+  if (/no date announced|tba/i.test(event.title)) return false;
+  return !Number.isNaN(new Date(event.date).getTime());
+}
+
+export function publicConfirmedEvents(content: CmsArtistContent | null | undefined): CmsEvent[] {
+  return (content?.events ?? []).filter(isConfirmedPublicEvent);
+}
+
 type CustomDocument = {
   id: number;
   documentType: string;

@@ -82,11 +82,9 @@
   gap: 16px;
 }
 
-/* ---------- Aksen hari ulang tahun ---------- */
-
-:root {
-  --an-birthday: #dcb573;
-}
+/* ---------- Aksen hari ulang tahun ----------
+   Token --an-birthday didefinisikan di :root (client/src/index.css) —
+   satu sumber kebenaran; di sini hanya dipakai. */
 
 .nf-birthday-chip {
   display: inline-flex;

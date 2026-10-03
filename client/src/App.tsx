@@ -49,9 +49,9 @@ function lazyWithPreload<T extends React.ComponentType<any>>(
 const Home = lazyWithPreload(() => import("./pages/Home"));
 const Music = lazyWithPreload(() => import("./pages/Music"));
 const Visuals = lazyWithPreload(() => import("./pages/Visuals"));
-const VisualPortraitGallery = lazyWithPreload(
-  () => import("./pages/VisualPortraitGallery")
-);
+/* /visuals/portraits tidak lagi rute (Phase 3 §2 baris 5): kontennya jadi
+   seksi in-page /visuals#portraits (sub-fase 5d). HTTP 301-nya di
+   vercel.json; ClientRedirect di bawah adalah cadangan SPA/dev. */
 const Live = lazyWithPreload(() => import("./pages/Live"));
 const Universe = lazyWithPreload(() => import("./pages/Universe"));
 const PressKit = lazyWithPreload(() => import("./pages/PressKit"));
@@ -77,11 +77,6 @@ const EnglishMusic = lazyWithPreload(() =>
 );
 const EnglishVisuals = lazyWithPreload(() =>
   EnglishPages().then(module => ({ default: module.EnglishVisuals }))
-);
-const EnglishVisualPortraitGallery = lazyWithPreload(() =>
-  import("./pages/VisualPortraitGallery").then(module => ({
-    default: module.EnglishVisualPortraitGallery,
-  }))
 );
 const EnglishLive = lazyWithPreload(() =>
   EnglishPages().then(module => ({ default: module.EnglishLive }))
@@ -123,7 +118,6 @@ export async function preloadPublicRoute(pathname: string) {
   else if (path === "/music") add(Music);
   else if (path.startsWith("/music/")) add(ReleaseDetail);
   else if (path === "/visuals") add(Visuals);
-  else if (path === "/visuals/portraits") add(VisualPortraitGallery);
   else if (path === "/live") add(Live);
   else if (path === "/universe") add(Universe);
   else if (path === "/about") add(About);
@@ -136,7 +130,6 @@ export async function preloadPublicRoute(pathname: string) {
   else if (path === "/en/music") add(EnglishMusic);
   else if (path.startsWith("/en/music/")) add(EnglishReleaseDetail);
   else if (path === "/en/visuals") add(EnglishVisuals);
-  else if (path === "/en/visuals/portraits") add(EnglishVisualPortraitGallery);
   else if (path === "/en/live") add(EnglishLive);
   else if (path === "/en/universe") add(EnglishUniverse);
   else if (path === "/en/about") add(EnglishAbout);
@@ -167,6 +160,22 @@ function NotFoundRoute() {
   return <NotFound locale={english ? "en" : "id"} />;
 }
 
+/**
+ * Cadangan redirect sisi-klien untuk rute yang dihapus (Phase 3 §2 baris 5).
+ * Produksi diurus 301 HTTP di `vercel.json`; komponen ini menangani navigasi
+ * SPA dan dev (vite) di mana rewrite Vercel tidak berjalan. `meta refresh`
+ * memastikan redirect tetap terjadi bahkan tanpa JavaScript.
+ */
+function ClientRedirect({ to }: { to: string }) {
+  const [, navigate] = useLocation();
+  useEffect(() => {
+    navigate(to, { replace: true });
+  }, [navigate, to]);
+  return (
+    <meta httpEquiv="refresh" content={`0; url=${to}`} />
+  );
+}
+
 function Router() {
   return (
     <Switch>
@@ -174,7 +183,11 @@ function Router() {
       <Route path={"/music"} component={Music} />
       <Route path={"/music/:slug"} component={ReleaseDetail} />
       <Route path={"/visuals"} component={Visuals} />
-      <Route path={"/visuals/portraits"} component={VisualPortraitGallery} />
+      {/* Rute lama dipertahankan hanya sebagai redirect (lihat ClientRedirect). */}
+      <Route
+        path={"/visuals/portraits"}
+        component={() => <ClientRedirect to={"/visuals#portraits"} />}
+      />
       <Route path={"/live"} component={Live} />
       <Route path={"/universe"} component={Universe} />
       <Route path={"/about"} component={About} />
@@ -194,7 +207,7 @@ function Router() {
       <Route path={"/en/visuals"} component={EnglishVisuals} />
       <Route
         path={"/en/visuals/portraits"}
-        component={EnglishVisualPortraitGallery}
+        component={() => <ClientRedirect to={"/en/visuals#portraits"} />}
       />
       <Route path={"/en/live"} component={EnglishLive} />
       <Route path={"/en/universe"} component={EnglishUniverse} />
@@ -216,7 +229,6 @@ const supportedLanguagePaths = [
   "/",
   "/music",
   "/visuals",
-  "/visuals/portraits",
   "/live",
   "/universe",
   "/about",
@@ -254,7 +266,6 @@ const idTitles: Record<string, string> = {
   "/": "Akbar Nawasunda | Official Website",
   "/music": "Music by Akbar Nawasunda",
   "/visuals": "Videos by Akbar Nawasunda",
-  "/visuals/portraits": "Portrait Studies | Akbar Nawasunda",
   "/live": "Live Dates | Akbar Nawasunda",
   "/universe": "About the Work | Akbar Nawasunda",
   "/about": "About the Artist | Akbar Nawasunda",
@@ -269,7 +280,6 @@ const englishTitles: Record<string, string> = {
   "/en": "Akbar Nawasunda | Official Website",
   "/en/music": "Music by Akbar Nawasunda",
   "/en/visuals": "Videos by Akbar Nawasunda",
-  "/en/visuals/portraits": "Portrait Studies | Akbar Nawasunda",
   "/en/live": "Live Dates | Akbar Nawasunda",
   "/en/universe": "About the Work | Akbar Nawasunda",
   "/en/about": "About the Artist | Akbar Nawasunda",

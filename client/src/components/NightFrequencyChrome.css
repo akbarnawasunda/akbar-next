@@ -9,8 +9,9 @@
   display: none;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  /* Target sentuh minimum 44px (docs/phase4 §7). */
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--paper-line);
   border-radius: 0;
   background: transparent;
@@ -304,9 +305,10 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--acid);
-  box-shadow: 0 0 10px var(--acid);
-  animation: nf-beacon-pulse 1.8s ease-in-out infinite;
+  background: var(--signal);
+  box-shadow: 0 0 10px var(--signal);
+  /* Pulsa signal = token durasi (docs/phase4 §9: 2000ms). */
+  animation: nf-beacon-pulse var(--dur-pulse) ease-in-out infinite;
   flex-shrink: 0;
 }
 @keyframes nf-beacon-pulse {
