@@ -788,3 +788,201 @@
     display: none;
   }
 }
+
+/* ============================================================
+   FASE 4B — HERO SINEMATIK + PITA TERANG
+   ------------------------------------------------------------
+   Dua perubahan besar setelah umpan balik "belum terlihat berubah".
+   Keduanya CSS murni pada DOM yang sudah ada: tidak ada bagian baru,
+   tidak ada teks baru, tidak ada aset baru.
+
+   1. Hero: foto tidak lagi panel di kanan (62%), tapi menutupi
+      seluruh layar pertama; judul naik ke ~12vw.
+   2. Pita terang: bagian "kanal resmi" membalik jadi kertas terang —
+      satu-satunya bidang terang di seluruh situs, jadi mata berhenti
+      di situ.
+
+   Semua override kurung `@media (min-width: 768px)`, jadi aturan
+   ponsel (dikunci tes 320px + tes komposisi) tidak tersentuh.
+   Warna latar memakai token `--paper` apa adanya, dan token tidak
+   dibalik lokal, supaya tidak ada satu pun nilai warna hard-code.
+   ============================================================ */
+
+@media (min-width: 768px) {
+  /* -- 1. Foto jadi latar penuh ------------------------------ */
+  .an-site .an-hero-plate {
+    inset: 0;
+    width: 100%;
+    max-width: none;
+  }
+
+  .an-site .an-hero-plate .home-hero-picture img {
+    object-position: 50% 18%;
+  }
+
+  /* Tiga lapis: gelap di bawah (tempat tipografi), gelap di kiri
+     (kolom teks), cuci steel tipis dari kanan atas supaya foto
+     menyatu dengan palet malam, bukan tampak ditempel. */
+  .an-site .an-hero-plate::after {
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--ink) 86%, transparent) 0%,
+        color-mix(in srgb, var(--ink) 34%, transparent) 32%,
+        color-mix(in srgb, var(--ink) 26%, transparent) 46%,
+        color-mix(in srgb, var(--ink) 93%, transparent) 100%
+      ),
+      linear-gradient(
+        93deg,
+        color-mix(in srgb, var(--ink) 92%, transparent) 0%,
+        color-mix(in srgb, var(--ink) 46%, transparent) 44%,
+        transparent 74%
+      ),
+      linear-gradient(
+        202deg,
+        color-mix(in srgb, var(--signal) 15%, transparent) 0%,
+        transparent 54%
+      );
+  }
+
+  /* -- 2. Judul raksasa -------------------------------------- */
+  .an-site .an-hero-inner {
+    max-width: min(64rem, 100%);
+    gap: clamp(14px, 1.5vw, 24px);
+  }
+
+  /* Kata terpanjang ("NAWASUNDA.") ≈ 5,7em pada Clash Display 600;
+     pada 12,4vw ia memakai ≈ 71vw — masih di dalam ruang teks (≈90vw
+     setelah dua gutter), jadi tidak ada kata yang keluar layar. */
+  .an-site .an-hero-inner .hero-title-editorial {
+    font-size: clamp(3.6rem, 12.4vw, 12.4rem);
+    line-height: 0.86;
+    letter-spacing: -0.05em;
+  }
+
+  .an-site .an-hero-lede {
+    max-width: 54ch;
+    font-size: clamp(1rem, 1.05vw, 1.18rem);
+  }
+
+  /* Maskot dulu duduk di sudut kiri-atas plate (yang mulai di 62%),
+     jadi ia tidak pernah bertabrakan dengan logo di masthead. Sekarang
+     foto menutupi seluruh adegan, jadi maskot dipindah ke bawah bar:
+     sejajar gutter, di sebelah kanan siku bingkai kiri-atas. */
+  .an-site .an-hero-mascot {
+    top: calc(var(--chrome-h, 78px) + clamp(10px, 1.8vh, 22px));
+    left: calc(var(--hx-gutter) + 38px);
+    width: clamp(58px, 5.6vw, 84px);
+  }
+
+  .an-site .an-hero-facts {
+    border-top-color: color-mix(in srgb, var(--paper) 20%, transparent);
+  }
+
+  .an-site .an-hero-facts > div + div {
+    border-left-color: color-mix(in srgb, var(--paper) 18%, transparent);
+  }
+
+  /* -- 3. Pita terang: kanal resmi jadi kertas ----------------
+     Token lokal di bawah ini hanya nama-nama baru (`--band-*`), jadi
+     palet gelap tidak dibalik dan `--paper` tetap bisa dipakai sebagai
+     warna latar. Setiap elemen di dalam bagian ini diberi warna
+     eksplisit karena semuanya sebelumnya membaca token gelap. */
+  .an-site .an-channels {
+    --band-rule: color-mix(in srgb, var(--ink) 16%, transparent);
+    --band-mute: color-mix(in srgb, var(--ink) 70%, var(--paper));
+    /* Steel asli ≈1,9:1 di atas kertas; campuran ink ini ≈5,4:1 —
+       satu keluarga warna, tetap terbaca. */
+    --band-accent: color-mix(in srgb, var(--signal) 42%, var(--ink));
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .an-site .an-channels h2 {
+    color: var(--ink);
+  }
+
+  .an-site .an-channels .an-meta,
+  .an-site .an-channels .instr-index {
+    color: var(--band-mute);
+  }
+
+  .an-site .an-channels .instr-index::after {
+    background: var(--band-rule);
+  }
+
+  .an-site .an-channels-list {
+    border-top-color: var(--band-rule);
+  }
+
+  .an-site .an-channel {
+    border-bottom-color: var(--band-rule);
+    color: var(--ink);
+  }
+
+  .an-site .an-channel-index {
+    color: var(--band-mute);
+  }
+
+  .an-site .an-channel-mark {
+    color: color-mix(in srgb, var(--ink) 74%, transparent);
+  }
+
+  .an-site .an-channel-name {
+    color: color-mix(in srgb, var(--ink) 90%, transparent);
+  }
+
+  .an-site .an-channel-arrow {
+    color: color-mix(in srgb, var(--ink) 48%, transparent);
+  }
+
+  .an-site .an-channel:hover,
+  .an-site .an-channel:focus-visible {
+    background: color-mix(in srgb, var(--ink) 7%, transparent);
+  }
+
+  .an-site .an-channel:hover .an-channel-name,
+  .an-site .an-channel:focus-visible .an-channel-name,
+  .an-site .an-channel:hover .an-channel-mark,
+  .an-site .an-channel:focus-visible .an-channel-mark,
+  .an-site .an-channel:hover .an-channel-arrow,
+  .an-site .an-channel:focus-visible .an-channel-arrow {
+    color: var(--band-accent);
+  }
+
+  /* Marquee kanal memakai token gelap sendiri (berkas terpisah). */
+  .an-site .an-channels .an-platform-marquee {
+    border-top-color: var(--band-rule);
+    color: var(--ink);
+  }
+
+  .an-site .an-channels .an-platform-marquee-heading {
+    border-bottom-color: var(--band-rule);
+    color: var(--band-mute);
+  }
+
+  .an-site .an-channels .an-platform-marquee-row {
+    border-bottom-color: var(--band-rule);
+  }
+
+  .an-site .an-channels .an-platform-marquee-item {
+    color: var(--ink);
+  }
+
+  .an-site .an-channels .an-platform-marquee-item:hover,
+  .an-site .an-channels .an-platform-marquee-item:focus-visible {
+    color: var(--band-accent);
+  }
+
+  /* Tombol garis di kaki bagian ikut jadi ink di atas kertas. */
+  .an-site .an-channels .an-btn--quiet {
+    border-color: var(--band-rule);
+    color: var(--ink);
+  }
+
+  .an-site .an-channels .an-btn--quiet:hover,
+  .an-site .an-channels .an-btn--quiet:focus-visible {
+    border-color: var(--band-accent);
+    color: var(--band-accent);
+  }
+}
