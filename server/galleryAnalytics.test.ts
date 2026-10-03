@@ -6,7 +6,9 @@ const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf
 
 describe("portrait gallery analytics", () => {
   it("uses a first-party anonymous visitor marker", () => {
-    const gallery = source("client/src/pages/VisualPortraitGallery.tsx");
+    // Galeri portret kini hidup sebagai seksi in-page /visuals#portraits;
+    // penanda anonim pihak pertamanya ikut pindah ke komponen seksi.
+    const gallery = source("client/src/components/PortraitStudiesSection.tsx");
     expect(gallery).toContain("an_portrait_gallery_visitor");
     expect(gallery).toContain('gallery: "portrait-gallery"');
     expect(gallery).toContain("localStorage");

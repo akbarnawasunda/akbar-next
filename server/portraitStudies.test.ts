@@ -32,14 +32,17 @@ describe("portrait studies CMS and public gallery", () => {
     const visuals = source("client/src/pages/Visuals.tsx");
     const vercel = source("vercel.json");
     const sitemap = source("client/public/sitemap.xml");
-    const component = source("client/src/components/VisualPortraitStudies.tsx");
-    // Rute lama tidak lagi ada; CTA visual kini menunjuk seksi in-page.
+    const section = source("client/src/components/PortraitStudiesSection.tsx");
+    // Rute lama tidak lagi ada; seksi studi potret kini in-page (#portraits).
     expect(app).not.toContain('path={"/visuals/portraits"} component=');
-    expect(visuals).toContain('portraitsHref: "/visuals#portraits"');
-    expect(visuals).toContain('portraitsHref: "/en/visuals#portraits"');
-    expect(visuals).toContain("<VisualPortraitStudies");
-    expect(visuals).toContain("studies={portraitContent}");
-    expect(component).not.toContain("/visuals/portraits");
+    expect(visuals).toContain("<PortraitStudiesSection");
+    expect(visuals).toContain('href="#portraits"');
+    expect(section).toContain('id="portraits"');
+    expect(section).not.toContain("/visuals/portraits");
+    // ALT fallback wajib: studi tanpa altId/altEn jatuh ke judul, dan judul
+    // kosong jatuh ke label fallback — tidak ada <img alt=""> di seksi.
+    expect(section).toContain("study.altEn || study.altId || titleOf(study)");
+    expect(section).toContain("t.fallbackTitle");
     // 301 permanen di kedua bahasa; sitemap tidak lagi mempublikasikan rute lama.
     const redirects: { source: string; destination: string; permanent: boolean }[] =
       JSON.parse(vercel).redirects;

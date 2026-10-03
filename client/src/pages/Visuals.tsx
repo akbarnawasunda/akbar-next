@@ -8,7 +8,7 @@ import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { officialBrand, videos } from "@/content/artistPlatform";
 import { InteractiveArtworkCard } from "@/components/signature/InteractiveArtworkCard";
 import { SignalHeading } from "@/components/signature/SignalType";
-import VisualPortraitStudies from "@/components/VisualPortraitStudies";
+import PortraitStudiesSection from "@/components/PortraitStudiesSection";
 import {
   publicPortraitStudies,
   usePublicArtistContent,
@@ -64,9 +64,6 @@ const copy = {
     ctaPrimary: "AJUKAN PROYEK",
     ctaSecondary: "LIHAT PORTRAIT",
     ctaHref: "/inquire?type=visual&source=visuals",
-    /* Rute /visuals/portraits dihapus (Phase 3 §2 baris 5); kini seksi
-       in-page. Anchor #portraits dibangun di sub-fase 5d. */
-    portraitsHref: "/visuals#portraits",
     signalTitle: (
       <>
         LIHAT YANG
@@ -115,7 +112,6 @@ const copy = {
     ctaPrimary: "PITCH A PROJECT",
     ctaSecondary: "VIEW PORTRAITS",
     ctaHref: "/en/inquire?type=visual&source=visuals",
-    portraitsHref: "/en/visuals#portraits",
     signalTitle: (
       <>
         SEE WHAT
@@ -207,9 +203,9 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
             >
               {t.youtubeCta} <ArrowUpRight size={14} />
             </a>
-            <Link className="an-btn an-btn--quiet" href={t.portraitsHref}>
+            <a className="an-btn an-btn--quiet" href="#portraits">
               {t.portraitsCta} <ArrowUpRight size={14} />
-            </Link>
+            </a>
           </div>
           <dl className="an-vis-facts">
             <div>
@@ -268,11 +264,6 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
         </div>
       </section>
 
-      <VisualPortraitStudies
-        english={locale === "en"}
-        studies={portraitContent}
-      />
-
       {/* Arsip visual: kolom berirama (dense grid), bukan kotak seragam.
             Kalau semua video sudah tampil sebagai tayangan, bagian ini
             disembunyikan supaya tidak ada daftar kosong atau pengulangan. */}
@@ -315,6 +306,11 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
         </section>
       )}
 
+      {/* Seksi studi potret in-page (anchor #portraits — tujuan 301 rute
+          lama): lead frame + grid + lightbox. Tersembunyi otomatis kalau
+          CMS/fallback tidak punya studi (MUST NOT: empty state). */}
+      <PortraitStudiesSection english={locale === "en"} />
+
       <CtaPanel
         title={t.ctaTitle}
         copy={t.ctaCopy}
@@ -323,9 +319,9 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
             <Link className="ed-button" href={t.ctaHref}>
               {t.ctaPrimary} <ArrowUpRight size={14} />
             </Link>
-            <Link className="ed-button--ghost" href={t.portraitsHref}>
+            <a className="ed-button--ghost" href="#portraits">
               {t.ctaSecondary} <ArrowUpRight size={14} />
-            </Link>
+            </a>
           </>
         }
       />

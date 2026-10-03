@@ -37,7 +37,6 @@ import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { soundcloudEmbedUrl } from "@/components/MusicEmbed";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
-import VisualPortraitStudies from "@/components/VisualPortraitStudies";
 import { ArtistEditorialSections } from "@/components/ArtistEditorialSections";
 import { PrivacyView } from "./PrivacyPolicy";
 import { LiveView } from "./Live";
