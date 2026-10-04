@@ -1,0 +1,26 @@
+Autocron
+Design credit embedded in the font file: Shanaf Studio / Shanaf Design
+Studio Font (designer: Yesie Erma Yunita). Distributed on dafont.com
+under "PutraCetol Studio".
+Source: https://www.dafont.com/autocron.font (category: Techno > Sci-fi)
+License URL embedded in file: https://putracetol.com/licenses/
+
+License on dafont.com — STRONGER wording than the other Fase 13 fonts:
+"Free for personal use - 2 font files. Please note that this font is for
+PERSONAL USE ONLY and cannot be used for COMMERCIAL USE!. This font is
+copyrighted and protected by the law. Usage of this font on any work
+without proper license is deemed as illegal."
+
+[RISK EXPLICITLY FLAGGED & ACCEPTED BY SITE OWNER] This is a commercial
+artist website, which this license explicitly forbids. The site owner
+was shown this exact wording (including the "cannot be used for
+COMMERCIAL USE" line) and a visual preview of the font before choosing
+it anyway for this role, accepting the legal/financial risk personally.
+This is not a recommendation from this build session.
+
+Used for: --font-label token (client/src/index.css) — header/footer nav
+links, footer column labels, platform names, copyright line, the hero
+tagline (.an-hero-lede), and the "AKSARA SUNDA" caption (.an-sunda-label).
+Note: this is a heavy techno/sci-fi display font, not a typical thin
+"label" font — the site owner was told this reduces legibility at small
+repeated sizes (long nav/platform lists) and chose to proceed anyway.

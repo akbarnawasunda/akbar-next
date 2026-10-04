@@ -49,6 +49,12 @@ const LOCAL_FONTS = [
   "Striper",
   "Tritopani",
   "Central Station",
+  // Fase 13 lanjutan: dua kata judul hero beranda, dua huruf berbeda.
+  "Unityped",
+  "Cultura Estropeada",
+  // Fase 13 lanjutan: Impact Label SWL tidak pernah diunggah, Autocron
+  // dipilih pemilik situs sebagai gantinya untuk peran --font-label.
+  "Autocron",
 ];
 const FONT_FALLBACKS = [
   "inherit",

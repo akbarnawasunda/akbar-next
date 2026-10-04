@@ -147,8 +147,8 @@
 .an-public-shell.an-editorial .nf-nav nav a {
   padding: 12px 0;
   color: color-mix(in srgb, var(--paper) 58%, transparent);
-  /* FASE 12: label navigasi header -> --font-label (Impact Label SWL,
-     jatuh ke Sometype Mono selama berkasnya belum diunggah). */
+  /* FASE 12/13: label navigasi header -> --font-label (Autocron, lihat
+     client/src/index.css). */
   font-family: var(--font-label);
   font-size: 0.58rem;
   font-weight: 500;

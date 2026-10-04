@@ -306,6 +306,21 @@
   animation: hx-word-in 1500ms cubic-bezier(0.16, 1, 0.3, 1)
     calc(200ms + var(--hero-word-index, 0) * 220ms) both;
 }
+/* Fase 13 lanjutan: dua kata judul hero, dua huruf berbeda. Kata dipecah
+   jadi beberapa <span class="hero-title-mask"> berurutan sesuai array
+   kata (lihat heroTitleWords di Home.tsx/EnglishPages.tsx) -- spasi di
+   antaranya cuma teks node, tidak ikut dihitung :nth-of-type, jadi
+   selektor posisi ini aman dipakai untuk menyasar kata pertama/kedua
+   tanpa bergantung pada isi tekstualnya (CMS boleh ganti teksnya, urutan
+   katanya tetap sama). Kalau judulnya berubah jadi >2 kata, kata ke-3
+   dst jatuh ke --font-title (Central Station) lewat warisan dari
+   .hero-title-editorial -- tidak pecah, cuma tidak dapat huruf khusus. */
+.an-site .hero-copy .hero-title-mask:nth-of-type(1) .hero-title-word {
+  font-family: var(--font-hero-akbar);
+}
+.an-site .hero-copy .hero-title-mask:nth-of-type(2) .hero-title-word {
+  font-family: var(--font-hero-nawasunda);
+}
 @keyframes hx-word-in {
   to {
     opacity: 1;

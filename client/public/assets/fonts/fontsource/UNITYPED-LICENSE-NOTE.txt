@@ -1,0 +1,18 @@
+Unityped
+By Tension Type (same foundry as Impact Label SWL, the still-missing 5th
+Fase 13 font).
+Source: https://www.dafont.com/unityped.font (category: Fancy > Old School)
+
+License on dafont.com: "Free for personal use" ONLY.
+
+[RISK ACCEPTED BY SITE OWNER] This is a commercial artist website, which
+this license does not cover. Same situation as the other Fase 13 fonts
+(Tritopani/Central Station/Complete Destroy) — the site owner was told
+this pattern applies here too and chose to proceed, accepting the
+legal/financial risk personally.
+
+Used only for the word "AKBAR" (first word) in the homepage hero title
+(--font-hero-akbar token, client/src/index.css, applied via
+.hero-title-mask:nth-of-type(1) in client/src/pages/Home.css). Not used
+anywhere else — the wordmark, splash, and "tanda tangan" still use
+Central Station / Tritopani respectively.

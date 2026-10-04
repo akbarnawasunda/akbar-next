@@ -52,9 +52,9 @@
 }
 
 .an-sunda-label {
-  /* FASE 12: label "AKSARA SUNDA" -> --font-label (Impact Label SWL,
-     jatuh ke Sometype Mono sampai berkasnya diunggah). Sebelumnya
-     mewarisi var(--font-mono) dari .an-sunda-key. */
+  /* FASE 12/13: label "AKSARA SUNDA" -> --font-label (Autocron, lihat
+     client/src/index.css). Sebelumnya mewarisi var(--font-mono) dari
+     .an-sunda-key. */
   font-family: var(--font-label);
   color: color-mix(in srgb, var(--signal) 78%, var(--paper));
 }
