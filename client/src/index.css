@@ -3,71 +3,128 @@
    Satu-satunya sumber kebenaran untuk: font, warna, tipe, base.
    ============================================================ */
 
-/* Independent Non-Google Typefaces (Self-hosted from Fontshare / ITF) */
+/* ROSTER HURUF — FASE 6H.
+   Tiga huruf lama (display ITF, General Sans, mono lama) DIHAPUS dari
+   repo (bukan
+   sekadar tidak dipakai). Alasannya: pemilik situs minta huruf diganti,
+   bukan ditambah, dan tiga keluarga itu adalah bagian paling netral dari
+   tampilan lama. Perbandingan empat pasangan pada teks yang sama ada di
+   docs/notes/body-swap-candidates.png.
+
+   Empat suara, tidak lebih:
+     1. Big Shoulders Display 800 — H1 + wordmark (lihat blok di bawah)
+     2. Schibsted Grotesk 400/500/700 — badan teks, UI, H2/H3
+     3. Sometype Mono 400/500 — label, angka, konsol
+     4. Noto Sans Sundanese 400 — identitas aksara
+
+   Total 8 berkas / 114.012 B, turun dari 11 berkas / 218.048 B. */
 @font-face {
-  font-family: "Clash Display";
-  src: url("/assets/fonts/fontshare/clash-display-500.woff2") format("woff2");
+  font-family: "Schibsted Grotesk";
+  src: url("/assets/fonts/fontsource/schibsted-grotesk-400.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("/assets/fonts/fontsource/schibsted-grotesk-500.woff2")
+    format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Clash Display";
-  src: url("/assets/fonts/fontshare/clash-display-600.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Clash Display";
-  src: url("/assets/fonts/fontshare/clash-display-700.woff2") format("woff2");
+  font-family: "Schibsted Grotesk";
+  src: url("/assets/fonts/fontsource/schibsted-grotesk-700.woff2")
+    format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "General Sans";
-  src: url("/assets/fonts/fontshare/general-sans-400.woff2") format("woff2");
+  font-family: "Sometype Mono";
+  src: url("/assets/fonts/fontsource/sometype-mono-400.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "General Sans";
-  src: url("/assets/fonts/fontshare/general-sans-500.woff2") format("woff2");
+  font-family: "Sometype Mono";
+  src: url("/assets/fonts/fontsource/sometype-mono-500.woff2") format("woff2");
   font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "General Sans";
-  src: url("/assets/fonts/fontshare/general-sans-600.woff2") format("woff2");
-  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 
+/* Big Shoulders Display 800 — SATU bobot, judul/H1 saja.
+   FASE 6E, menggantikan Syne 800. Alasannya bisa dilihat, bukan diperdebatkan:
+   docs/notes/display-candidates.png membandingkan enam huruf display pada
+   LEBAR BARIS YANG SAMA PERSIS. Syne menulis "NAWASUNDA." selebar 12,163em,
+   jadi untuk muat di kolom hero ia harus dikecilkan sampai judulnya nyaris
+   tidak bersuara. Big Shoulders menulis kata yang sama dalam 4,871em —
+   2,5× lebih tinggi pada lebar yang sama — dan potongan diagonal pada
+   A/K/W/N-nya seirama dengan sudut-sudut aksara Sunda di bawahnya.
+   Anton dibuang justru karena terlalu dikenal (huruf poster default).
+   Self-hosted dari @fontsource/big-shoulders-display (SIL OFL, lihat
+   BIG-SHOULDERS-DISPLAY-LICENSE.txt). */
 @font-face {
-  font-family: "Azeret Mono";
-  src: url("/assets/fonts/fontshare/azeret-mono-400.woff2") format("woff2");
+  font-family: "Big Shoulders Display";
+  src: url("/assets/fonts/fontsource/big-shoulders-display-800.woff2")
+    format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Wordmark miring -------------------------------------------------
+   SATU perlakuan, bukan font baru. Nama (dan HANYA nama) dimiringkan 9°
+   ke kanan, searah kemiringan alami aksara Sunda yang berdiri di
+   bawahnya — lihat docs/notes/wordmark-treatments.png, baris B.
+   Akibatnya nama terbaca sebagai LOGO, sementara judul kalimat di
+   halaman lain tetap tegak dan tenang.
+
+   Dipakai di: splash pembuka (client/index.html), wordmark header &
+   footer (shell/ChromeRedesign.css), dan judul hero (pages/HomeStage.css).
+   Tidak pernah dipasang ke elemen yang berisi kalimat. Jalur
+   reduced-motion tidak terpengaruh: ini bentuk, bukan gerakan. */
+   DICABUT DI FASE 6I. Kemiringan 9° dipasang sebagai `font-style:
+   oblique` — artinya browser MEMALSUKAN kemiringan dari huruf tegak.
+   Hasilnya terbaca murahan, dan pemilik situs langsung menangkapnya.
+   Pelajarannya: kemiringan hanya sah kalau hurufnya memang punya
+   potongan miring sendiri; Big Shoulders Display tidak punya. Blok ini
+   sengaja ditinggalkan sebagai catatan, kelasnya tidak lagi memiringkan
+   apa pun.
+
+   (Catatan lama: dipakai `font-style: oblique 9deg`, BUKAN
+   `transform: skewX()`. Judul hero dan wordmark splash sudah punya
+   animasi yang menulis `transform`, jadi skew akan tertimpa saat
+   animasinya selesai (`transform: none`). `oblique` adalah properti
+   huruf, bukan transform, jadi keduanya hidup berdampingan. Sudutnya
+   disintesis browser karena Big Shoulders Display tidak punya potongan
+   miring sendiri.) */
+.an-markslant {
+  font-style: normal;
+}
+
+/* Aksara Sunda — hanya blok U+1B80–1BFF, jadi tidak pernah ikut terunduh
+   untuk teks Latin dan tidak pernah membajak teks biasa. Self-hosted dari
+   @fontsource/noto-sans-sundanese (SIL OFL).
+
+   BOBOT 400, BUKAN 700 — ini keputusan yang sudah pernah salah sekali.
+   Pada bobot 700 goresan aksaranya menebal sampai mata hurufnya tertutup
+   dan deretnya terbaca seperti coretan miring, bukan tulisan. Perbandingan
+   keempat bobot ada di docs/notes/aksara-weight-compare.png: 400 yang
+   bentuknya paling jelas — dan filenya paling kecil (4.988 B vs 5.136 B).
+   Jangan naikkan bobot ini tanpa melihat gambar itu lebih dulu. */
+@font-face {
+  font-family: "Noto Sans Sundanese";
+  src: url("/assets/fonts/fontsource/noto-sans-sundanese-400.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-}
-@font-face {
-  font-family: "Azeret Mono";
-  src: url("/assets/fonts/fontshare/azeret-mono-500.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Azeret Mono";
-  src: url("/assets/fonts/fontshare/azeret-mono-600.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
+  unicode-range: U+1B80-1BBF, U+1BC0-1BFF, U+1CC0-1CC7;
 }
 
 @import "tailwindcss";
@@ -77,9 +134,16 @@
 
 :root {
   /* Curated 3-Font System: Independent, Distinctive, Highly Legible */
-  --font-display: "Clash Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-body:    "General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono:    "Azeret Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: "Big Shoulders Display", "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Judul/H1 saja. Syne lebih lebar ±1,68× dari huruf display lama
+     (diukur dari advance width, bukan ditebak — lihat laporan Fase 6), jadi
+     setiap clamp judul ikut dikalibrasi ulang. Fallback-nya huruf badan supaya
+     hierarki tidak runtuh ke font sistem sebelum huruf judul dimuat. */
+  --font-title:   "Big Shoulders Display", "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Aksara Sunda: gema kecil di bawah judul, bukan teks isi. */
+  --font-sunda:   "Noto Sans Sundanese", "Schibsted Grotesk", sans-serif;
+  --font-body:    "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:    "Sometype Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Nocturnal Electronic Artist Palette — PHASE 4 CANONICAL.
      Satu sumber kebenaran warna untuk seluruh situs (dok:
@@ -197,9 +261,14 @@
      Nilai ini sama dengan clamp yang sudah dipakai h1/h2/h3 di
      `@layer base`; sekarang satu sumber saja. `--text-meta` untuk
      label mono kecil. */
-  --text-hero:  clamp(2.5rem, 6.5vw, 6.8rem);
+  /* FASE 6 — skala judul dikalibrasi ulang untuk Syne 800.
+     Syne menulis kata yang sama ±1,68× lebih lebar dari huruf display lama
+     (advance width "NAWASUNDA." 11,46em vs 6,81em), jadi setiap angka
+     judul dikalikan 0,60: LEBAR baris tetap seperti sebelumnya, yang
+     berubah hanya tinggi hurufnya. Lihat docs/phase4-design-system.md §2. */
+  --text-hero:  clamp(1.5rem, 3.9vw, 4.08rem);
   /* H1 section publik (di luar hero beranda): docs/phase4 §5. */
-  --text-h1:    clamp(2.4rem, 5vw, 4rem);
+  --text-h1:    clamp(1.44rem, 3vw, 2.4rem);
   --text-h2:    clamp(1.85rem, 4.2vw, 4rem);
   --text-h3:    clamp(1.25rem, 2vw, 2rem);
   --text-lede:  clamp(1rem, 1.25vw, 1.14rem);
@@ -332,7 +401,14 @@
     word-break: break-word;
     overflow-wrap: break-word;
   }
-  h1 { font-size: var(--text-hero); line-height: 1.05; letter-spacing: -0.035em; }
+  /* H1 — dan hanya H1 — memakai huruf judul (Big Shoulders Display 800).
+     H2/H3 memakai Schibsted Grotesk 700, satu tingkat lebih tenang. */
+  h1 {
+    font-family: var(--font-title);
+    font-size: var(--text-hero);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
   h2 { font-size: var(--text-h2); line-height: 1.08; }
   h3 { font-size: var(--text-h3); line-height: 1.15; }
 
@@ -619,7 +695,7 @@ svg {
 @media (max-width: 420px) {
   .nf-page h1,
   .an-site h1 {
-    font-size: clamp(2rem, 11vw, 2.9rem);
+    font-size: clamp(1.2rem, 6.6vw, 1.74rem);
   }
   .nf-page h2,
   .an-site h2 {

@@ -88,7 +88,7 @@ function fastSin(x: number) {
   return SIN_TABLE[(x * TRIG_SCALE) & TRIG_MASK];
 }
 function fastCos(x: number) {
-  return SIN_TABLE[((x * TRIG_SCALE) + TRIG_QUARTER) & TRIG_MASK];
+  return SIN_TABLE[(x * TRIG_SCALE + TRIG_QUARTER) & TRIG_MASK];
 }
 
 /** Medan aliran prosedural: murah, tanpa tabel noise, tanpa dependensi. */
@@ -102,7 +102,16 @@ function flowAngle(x: number, y: number, t: number) {
 
 const WORDMARK = STAGE_PHRASES[0];
 
-const WORDMARK_FONT = '"Clash Display", "General Sans", sans-serif';
+/**
+ * Font panggung = font JUDUL situs (Syne 800), lalu fallback.
+ *
+ * Panggung hanya menyusun teks Latin. Aksara Sunda sengaja TIDAK pernah
+ * disusun partikel: tanda tempelnya (rarangkén) terlalu halus untuk
+ * kerapatan titik berapa pun, dan hasilnya gumpalan, bukan tulisan. Aksara
+ * dirender sebagai teks sungguhan di `SundaScript.tsx`.
+ */
+const WORDMARK_FONT =
+  '"Big Shoulders Display", "Schibsted Grotesk", sans-serif';
 
 /** Mode yang menyusun huruf; butuh titik lebih banyak agar terbaca. */
 const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency", "transit"];
@@ -255,7 +264,9 @@ export function createParticleField(
   ];
 
   /** Saat berpindah halaman, label tujuan mengambil alih mode rute. */
-  function resolveMode(state: ReturnType<FieldStateReader>): SignatureFieldMode {
+  function resolveMode(
+    state: ReturnType<FieldStateReader>
+  ): SignatureFieldMode {
     return state.transition !== "idle" && state.transitLabel
       ? "transit"
       : state.mode;
@@ -279,7 +290,15 @@ export function createParticleField(
     centerY: number,
     wanted: number,
     boxWidth = width,
-    boxHeight = height
+    boxHeight = height,
+    /**
+     * `true` = ambil TEPI huruf saja (piksel terisi yang bersebelahan dengan
+     * piksel kosong pada jarak 1-2px), bukan seluruh isinya. Dipakai frasa
+     * nama: dengan jumlah titik yang sama huruf jadi terbaca sebagai tulisan
+     * bergaris, bukan gundukan kerikil — dan saat titik dilepas yang
+     * menguap adalah garis hurufnya.
+     */
+    edgeOnly = false
   ) {
     const sampleWidth = Math.max(320, Math.min(Math.round(boxWidth), 1600));
     const sampleHeight = Math.max(200, Math.min(Math.round(boxHeight), 1000));
@@ -293,7 +312,7 @@ export function createParticleField(
     if (!sample) return [];
 
     const setFont = (size: number) => {
-      sample.font = `700 ${size}px ${WORDMARK_FONT}`;
+      sample.font = `800 ${size}px ${WORDMARK_FONT}`;
     };
     const spaced = sample as CanvasRenderingContext2D & {
       letterSpacing?: string;
@@ -329,25 +348,81 @@ export function createParticleField(
     // Langkah sampling disesuaikan agar jumlah target kira-kira sebanyak
     // titik yang tersedia: terlalu rapat boros, terlalu renggang tidak
     // terbaca.
+    const ALPHA = 110;
+    const filled = (x: number, y: number) => {
+      if (x < 0 || y < 0 || x >= sampleWidth || y >= sampleHeight) return false;
+      return pixels[(y * sampleWidth + x) * 4 + 3] > ALPHA;
+    };
+
+    /**
+     * Piksel tepi: terisi, dan ada piksel kosong di jarak 1-2px pada salah
+     * satu dari delapan arah. Radius 2 (bukan 1) dipilih supaya garisnya
+     * tetap punya badan satu-dua titik di sisi dalam — radius 1 membuat
+     * huruf terlihat seperti garis rambut yang putus-putus pada layar
+     * kerapatan rendah.
+     */
+    const isEdge = (x: number, y: number) => {
+      for (let d = 1; d <= 2; d++) {
+        if (
+          !filled(x + d, y) ||
+          !filled(x - d, y) ||
+          !filled(x, y + d) ||
+          !filled(x, y - d) ||
+          !filled(x + d, y + d) ||
+          !filled(x - d, y - d) ||
+          !filled(x + d, y - d) ||
+          !filled(x - d, y + d)
+        ) {
+          return true;
+        }
+      }
+      return false;
+    };
+
     const collect = (step: number) => {
       const targets: { x: number; y: number }[] = [];
       for (let y = 0; y < sampleHeight; y += step) {
         for (let x = 0; x < sampleWidth; x += step) {
-          if (pixels[(y * sampleWidth + x) * 4 + 3] > 110) {
-            targets.push({ x: x * scaleX, y: y * scaleY });
-          }
+          if (!filled(x, y)) continue;
+          if (edgeOnly && !isEdge(x, y)) continue;
+          targets.push({ x: x * scaleX, y: y * scaleY });
         }
       }
       return targets;
     };
 
-    let step = 2;
+    // Tepi huruf jauh lebih sedikit daripada isinya, jadi langkah awalnya
+    // 1px; mode isi penuh tetap mulai dari 2px seperti sebelumnya.
+    let step = edgeOnly ? 1 : 2;
     let targets = collect(step);
     while (targets.length > wanted * 2.4 && step < 7) {
       step += 1;
       targets = collect(step);
     }
     return targets;
+  }
+
+  /**
+   * Memo sampel teks.
+   *
+   * Pengambilan target tepi membaca piksel satu per satu (ribuan kali),
+   * dan `morphTo` memanggilnya tepat saat pengguna sedang menggulir —
+   * waktu paling buruk untuk kerja sinkron. Kuncinya frasa + ukuran kotak +
+   * jumlah titik, jadi dua frasa panggung cukup disampling sekali masing-
+   * masing; cache dikosongkan saat kanvas berubah ukuran.
+   */
+  const targetCache = new Map<string, { x: number; y: number }[]>();
+
+  function cachedTextTargets(
+    key: string,
+    build: () => { x: number; y: number }[]
+  ) {
+    const hit = targetCache.get(key);
+    if (hit) return hit;
+    const built = build();
+    if (targetCache.size > 6) targetCache.clear();
+    targetCache.set(key, built);
+    return built;
   }
 
   function targetsFor(
@@ -365,14 +440,27 @@ export function createParticleField(
         const boxWidth = stage ? stage.w : width;
         const boxHeight = stage ? stage.h : height;
         const compact = boxWidth < 900;
-        const phrase = stage ? STAGE_PHRASES[phraseIndex] || WORDMARK : WORDMARK;
-        return sampleTextTargets(
-          compact ? phrase : [phrase.join(" ").replace(" .", ".")],
-          compact ? 0.92 : 0.9,
-          stage ? 0.5 : compact ? 0.36 : 0.44,
-          wanted,
-          boxWidth,
-          boxHeight
+        const phrase = stage
+          ? STAGE_PHRASES[phraseIndex] || WORDMARK
+          : WORDMARK;
+        const lines = compact ? phrase : [phrase.join(" ").replace(" .", ".")];
+        return cachedTextTargets(
+          `${mode}|${lines.join("/")}|${Math.round(boxWidth)}x${Math.round(
+            boxHeight
+          )}|${wanted}`,
+          () =>
+            sampleTextTargets(
+              lines,
+              compact ? 0.92 : 0.9,
+              stage ? 0.5 : compact ? 0.36 : 0.44,
+              wanted,
+              boxWidth,
+              boxHeight,
+              // Hanya frasa NAMA yang diambil dari tepi huruf. Mode lain
+              // (signal, dust, era, frequency) tujuannya massa, jadi isinya
+              // tetap penuh.
+              mode === "wordmark"
+            )
         );
       }
       case "transit": {
@@ -402,7 +490,11 @@ export function createParticleField(
           for (let i = 0; i < density; i++) {
             list.push({
               x: width * (0.08 + Math.random() * 0.84),
-              y: y + (Math.random() - 0.5) * laneHeight * (lane === index ? 0.5 : 0.22),
+              y:
+                y +
+                (Math.random() - 0.5) *
+                  laneHeight *
+                  (lane === index ? 0.5 : 0.22),
             });
           }
         }
@@ -425,7 +517,10 @@ export function createParticleField(
     const lite = capability.tier === "lite";
     const ceiling = lite ? TEXT_CEILING_LITE : TEXT_CEILING_FULL;
     const density = lite ? TEXT_DENSITY_LITE : TEXT_DENSITY_FULL;
-    return Math.max(base, Math.min(ceiling, Math.round((width * height) / density)));
+    return Math.max(
+      base,
+      Math.min(ceiling, Math.round((width * height) / density))
+    );
   }
 
   function buildPoints() {
@@ -469,13 +564,13 @@ export function createParticleField(
         // Sapuan kiri→kanan: huruf terbentuk seperti ditulis, bukan muncul
         // acak sekaligus.
         delay: textMode
-          ? Math.min(
-              0.62,
-              (target.x / boxWidth) * 0.5 + Math.random() * 0.12
-            )
+          ? Math.min(0.62, (target.x / boxWidth) * 0.5 + Math.random() * 0.12)
           : 0,
         // Lepasnya juga menyapu, dengan jitter supaya tidak serentak.
-        release: Math.min(1, (target.x / boxWidth) * 0.5 + Math.random() * 0.52),
+        release: Math.min(
+          1,
+          (target.x / boxWidth) * 0.5 + Math.random() * 0.52
+        ),
         sx,
         sy,
         kick: 0.6 + Math.random() * 0.8,
@@ -508,7 +603,10 @@ export function createParticleField(
     const targets = targetsFor(mode, state.era.index, state.era.total, desired);
     points.forEach((point, index) => {
       const target = targets.length
-        ? targets[Math.floor((index / points.length) * targets.length) % targets.length]
+        ? targets[
+            Math.floor((index / points.length) * targets.length) %
+              targets.length
+          ]
         : { x: Math.random() * width, y: Math.random() * height };
       point.tx = target.x;
       point.ty = target.y;
@@ -543,7 +641,9 @@ export function createParticleField(
     for (let i = 0; i < points.length; i++) {
       const point = points[i];
       const target =
-        targets[Math.floor((i / points.length) * targets.length) % targets.length];
+        targets[
+          Math.floor((i / points.length) * targets.length) % targets.length
+        ];
       point.tx = target.x + (Math.random() - 0.5) * 2.2;
       point.ty = target.y + (Math.random() - 0.5) * 2.2;
       point.delay = Math.min(
@@ -584,7 +684,11 @@ export function createParticleField(
   }
 
   function drawGrid(amplitude: number) {
-    ctx.strokeStyle = rgbaFrom(acid, 0.06 + amplitude * 0.1, "rgba(143,178,192,0.1)");
+    ctx.strokeStyle = rgbaFrom(
+      acid,
+      0.06 + amplitude * 0.1,
+      "rgba(143,178,192,0.1)"
+    );
     ctx.lineWidth = 1;
     const gap = Math.max(48, width / 18);
     ctx.beginPath();
@@ -794,7 +898,9 @@ export function createParticleField(
     // Denyut halus: bernapas pelan saat senyap, mengikuti amplitudo saat ada
     // audio yang benar-benar bisa dianalisis.
     const pulse =
-      1 + fastSin(time * 0.0009) * 0.004 + amplitude * 0.03 * (textMode ? 1 : 0.4);
+      1 +
+      fastSin(time * 0.0009) * 0.004 +
+      amplitude * 0.03 * (textMode ? 1 : 0.4);
     const centerX = anchored && stage ? stage.w / 2 : width / 2;
     const centerY = anchored && stage ? stage.h / 2 : height / 2;
     // Pusat panggung dalam koordinat layar: titik dilempar menjauh dari sini.
@@ -839,7 +945,10 @@ export function createParticleField(
     // terbang keluar layar.
     const drawLimit =
       mode === "transit"
-        ? Math.max(Math.round(limit * 0.25), Math.round(limit * (1 - settleRamp * 0.55)))
+        ? Math.max(
+            Math.round(limit * 0.25),
+            Math.round(limit * (1 - settleRamp * 0.55))
+          )
         : limit;
 
     // Saat dilepas titik meredup secukupnya — tidak sampai menghilang.
@@ -1006,7 +1115,11 @@ export function createParticleField(
           // Buyar seperti debu tertiup: jatuh bergelombang mengikuti posisi
           // horizontal, bukan meledak acak ke segala arah.
           const wave = fastSin(point.tx * 0.012 + point.seed * 0.4);
-          targetX += (wave * 0.55 + (point.seed / TAU - 0.5) * 0.7) * width * 0.4 * disperse;
+          targetX +=
+            (wave * 0.55 + (point.seed / TAU - 0.5) * 0.7) *
+            width *
+            0.4 *
+            disperse;
           targetY +=
             disperse * height * (0.22 + 0.3 * (0.5 + 0.5 * wave)) +
             fastSin(point.seed * 3.1) * height * 0.12 * disperse;
@@ -1049,7 +1162,11 @@ export function createParticleField(
         // melengkung dan tiap titik mengambil rute berbeda.
         if (textMode && ramp < 0.995) {
           const drift = (1 - ramp) * (1 - ramp) * 0.5;
-          const angle = flowAngle(point.x, point.y, flowTime + point.seed * 0.08);
+          const angle = flowAngle(
+            point.x,
+            point.y,
+            flowTime + point.seed * 0.08
+          );
           point.vx += fastCos(angle) * drift;
           point.vy += fastSin(angle) * drift;
         }
@@ -1133,6 +1250,8 @@ export function createParticleField(
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Ukuran kotak berubah → sampel lama tidak berlaku lagi.
+    targetCache.clear();
     buildPoints();
     if (readState().capability.tier === "off") {
       stop();
@@ -1168,10 +1287,13 @@ export function createParticleField(
     const resample = () => {
       if (destroyed) return;
       if (!TEXT_MODES.includes(readState().mode)) return;
+      // Sampel pertama mungkin memakai font fallback — buang, lalu susun
+      // ulang dengan bentuk huruf yang sebenarnya.
+      targetCache.clear();
       buildPoints();
     };
     void fonts
-      .load(`700 120px ${WORDMARK_FONT}`)
+      .load(`800 120px ${WORDMARK_FONT}`)
       .then(resample)
       .catch(() => undefined);
     void fonts.ready.then(resample).catch(() => undefined);

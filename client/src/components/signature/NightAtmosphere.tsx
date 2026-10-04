@@ -1,39 +1,44 @@
 /**
- * Atmosfer "instrumen" NIGHT FREQUENCY — lapisan dekoratif halaman.
+ * Atmosfer halaman NIGHT FREQUENCY — lapisan dekoratif.
  *
- * Tiga hal yang perlu dipahami sebelum mengubah berkas ini:
+ * FASE 6 — dari delapan ornamen jadi empat. Yang dihapus (aurora, garis
+ * pindai, strip gelombang, siku bingkai hero, strip frekuensi hero) tidak
+ * punya alasan selain "menambah tekstur", dan delapan hal yang sama-sama
+ * minta perhatian berarti tidak ada satu pun yang menang. Yang tersisa
+ * masing-masing menjawab satu pertanyaan:
  *
- * 1. TIDAK ADA MAKNA DATA di sini. Grid, grain, aurora, dan garis pindai
- *    hanya tekstur. Tidak ada satu pun angka atau klaim yang dibaca dari
- *    audio/rilisan, jadi tidak ada yang bisa menyesatkan.
- * 2. Murni dekoratif: seluruh pohon `aria-hidden`, `pointer-events: none`,
- *    dan tanpa teks. Pembaca layar tidak pernah menemukannya.
- * 3. Nol permintaan jaringan baru. Grain adalah satu SVG inline (data URI);
- *    sisanya gradien CSS. Tidak ada video, tidak ada canvas, tidak ada JS
- *    per-frame — jadi LCP/TBT tidak tersentuh.
+ * 1. `instr-topo`  — DI MANA ini? Garis kontur: bentuk tanah tempat
+ *    artisnya tinggal. Ini satu-satunya lapisan yang membawa identitas.
+ * 2. `instr-rail`  — DI MANA tepi halamannya? Dua garis sejajar kontainer,
+ *    jadi lebar kerja terlihat, bukan ditebak.
+ * 3. `instr-grain` — SATU BAHAN. Foto, artwork, dan permukaan UI diikat
+ *    jadi satu material cetak, bukan tiga sumber gambar berbeda.
+ * 4. `instr-progress` — SEBERAPA JAUH saya menggulir? Satu-satunya lapisan
+ *    yang membawa angka nyata (CSS scroll-timeline, tanpa JS).
  *
- * Dua lapis z-index sengaja dipisah:
- * - `--deep`  (di bawah konten) : aurora, grid, dan rel tepi halaman;
- * - `--film`  (di atas konten)  : grain + garis pindai tipis, supaya foto
- *   dan artwork ikut terasa seperti satu bahan cetak yang sama.
- * Keduanya tetap di bawah particle field (--z-field), player, dan nav.
- *
- * Garis progres gulir memakai CSS scroll-timeline (`@supports` di CSS).
- * Di peramban yang belum mendukungnya, garisnya tidak dirender sama sekali —
- * tidak ada indikator palsu yang macet di 0%.
+ * Aturan yang tidak berubah:
+ * - tidak ada makna data yang dikarang di sini;
+ * - seluruh pohon `aria-hidden`, `pointer-events: none`, tanpa teks;
+ * - nol permintaan jaringan baru (grain = satu SVG data URI, sisanya CSS);
+ * - `instr-progress` hanya dirender kalau peramban mendukung
+ *   `animation-timeline: scroll()` — tanpa itu tidak ada indikator palsu.
  */
 export function NightAtmosphere() {
   return (
     <>
-      <div className="instr-atmosphere instr-atmosphere--deep" aria-hidden="true">
-        <span className="instr-aurora" />
-        <span className="instr-grid" />
+      <div
+        className="instr-atmosphere instr-atmosphere--deep"
+        aria-hidden="true"
+      >
+        <span className="instr-topo" />
         <span className="instr-rail instr-rail--left" />
         <span className="instr-rail instr-rail--right" />
       </div>
-      <div className="instr-atmosphere instr-atmosphere--film" aria-hidden="true">
+      <div
+        className="instr-atmosphere instr-atmosphere--film"
+        aria-hidden="true"
+      >
         <span className="instr-grain" />
-        <span className="instr-scan" />
       </div>
       <span className="instr-progress" aria-hidden="true" />
     </>

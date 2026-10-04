@@ -35,37 +35,37 @@
   z-index: var(--z-base, 1);
 }
 
-/* -- Aurora ---------------------------------------------------
-   Dua sumber cahaya steel yang sangat tipis di bagian atas halaman.
-   Ada supaya halaman tidak pernah rata seperti kertas kosong; tidak
-   pernah cukup kuat untuk mengubah kontras teks. */
-.instr-aurora {
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 92vh;
-  background:
-    radial-gradient(
-      52% 46% at 18% 0%,
-      color-mix(in srgb, var(--signal) 13%, transparent) 0%,
-      transparent 68%
-    ),
-    radial-gradient(
-      44% 38% at 82% 6%,
-      color-mix(in srgb, var(--signal) 8%, transparent) 0%,
-      transparent 70%
-    );
-}
+/* -- Garis kontur ---------------------------------------------
+   Pengganti grid kotak generik. Tiga keluarga cincin hairline dengan pusat
+   dan jari-jari berbeda saling menimpa; yang terbaca adalah pola punggungan
+   dan lembah — bahasa peta kontur, bukan kertas milimeter.
 
-/* -- Grid cetak biru ------------------------------------------ */
-.instr-grid {
+   Kenapa ini dan bukan motif tradisional: kontur adalah bentuk tanahnya
+   sendiri, tanah Bandung Barat tempat orang ini tinggal dan bekerja. Ia
+   tidak mengklaim arti apa pun, tidak meniru ragam hias siapa pun, dan
+   tidak bisa dipindah ke artis dari kota lain tanpa jadi bohong.
+
+   Biaya: nol permintaan jaringan, nol JavaScript, satu elemen statis —
+   sama persis seperti grid yang digantikannya. */
+.instr-topo {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(to right, var(--instr-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--instr-line) 1px, transparent 1px);
-  background-size: 76px 76px;
-  /* Luruh di tengah halaman supaya tidak pernah bertabrakan dengan teks. */
-  mask-image: radial-gradient(130% 100% at 50% 0%, #000 0%, transparent 74%);
+  /* SATU keluarga garis, bukan tiga. Percobaan dengan tiga pusat cincin
+     menghasilkan pola moiré yang terbaca sebagai radar/gelombang — persis
+     kosakata EDM generik yang dihindari sistem ini. Garis kontur asli
+     tidak pernah saling memotong, jadi di sini pun tidak.
+
+     Elips sangat lebar (150% × 78%) dengan pusat di luar layar: yang
+     terlihat bukan lingkaran, melainkan sapuan panjang seperti punggungan
+     yang melandai ke tenggara. */
+  background-image: repeating-radial-gradient(
+    150% 78% at 18% -22%,
+    transparent 0 33px,
+    var(--instr-line) 33px 34px
+  );
+  /* Luruh sebelum sampai ke badan halaman supaya tidak pernah bertabrakan
+     dengan teks. */
+  mask-image: radial-gradient(135% 92% at 46% 0%, #000 0%, transparent 72%);
 }
 
 /* -- Rel tepi halaman -----------------------------------------
@@ -105,44 +105,6 @@
   opacity: 0.045;
 }
 
-/* -- Garis pindai ---------------------------------------------
-   Satu garis setinggi 1px yang turun pelan sekali setiap 19 detik. Dibuat
-   tipis dan lambat supaya terbaca sebagai "perangkat yang hidup", bukan
-   animasi yang minta diperhatikan. */
-.instr-scan {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    color-mix(in srgb, var(--signal) 42%, transparent) 45%,
-    color-mix(in srgb, var(--signal) 26%, transparent) 60%,
-    transparent 100%
-  );
-  opacity: 0;
-  animation: instr-scan 19s linear infinite;
-}
-
-@keyframes instr-scan {
-  0% {
-    transform: translateY(-1vh);
-    opacity: 0;
-  }
-  8% {
-    opacity: 0.55;
-  }
-  88% {
-    opacity: 0.55;
-  }
-  100% {
-    transform: translateY(101vh);
-    opacity: 0;
-  }
-}
-
 /* -- Progres gulir --------------------------------------------
    Angka nyata dari posisi gulir, tanpa JavaScript: CSS scroll-timeline.
    Peramban yang belum mendukungnya tidak merender apa pun (tanpa
@@ -178,30 +140,6 @@
   to {
     transform: scaleX(1);
   }
-}
-
-/* -- Garis gelombang ------------------------------------------
-   Satu strip "equalizer" setinggi belasan piksel sebagai jahitan antar
-   bagian (mis. tepat di bawah lipatan hero). Tinggi bar mengikuti busur
-   lewat `mask-size` berulang, jadi tidak ada satu pun elemen per bar dan
-   tidak ada JavaScript: dua gradien CSS + satu mask.
-
-   Sama seperti strip hero: ini bahasa visual, bukan data audio. */
-.instr-wave {
-  display: block;
-  width: 100%;
-  height: clamp(10px, 1.5vh, 18px);
-  margin: 0 auto;
-  background-image: repeating-linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--signal) 52%, transparent) 0 2px,
-    transparent 2px 9px
-  );
-  mask-image: radial-gradient(62% 132% at 50% 100%, #000 60%, transparent 62%);
-  mask-size: 58px 100%;
-  mask-repeat: repeat-x;
-  opacity: 0.4;
-  pointer-events: none;
 }
 
 /* ============================================================
@@ -269,17 +207,18 @@ html {
     display: none;
   }
 
-  .instr-grid {
-    background-size: 56px 56px;
+  /* Layar kecil: jarak antar-garis dirapatkan supaya di lebar 390px masih
+     terlihat beberapa garis, bukan satu lengkungan tunggal. */
+  .instr-topo {
+    background-image: repeating-radial-gradient(
+      170% 86% at 14% -18%,
+      transparent 0 23px,
+      var(--instr-line) 23px 24px
+    );
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .instr-scan {
-    animation: none;
-    opacity: 0;
-  }
-
   .instr-progress {
     animation: none;
     transform: scaleX(1);

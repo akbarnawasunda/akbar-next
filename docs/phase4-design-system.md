@@ -36,12 +36,25 @@ swapped. [INVENTED as a test, DERIVED as content.]
 
 ## 2. TYPOGRAPHY SYSTEM
 
-**Typefaces** — the three self-hosted families already in the repo; no new font is introduced. [DERIVED — the
-fonts exist, are self-hosted, total ≈205 KB across 9 woff2 files (`client/public/assets/fonts/fontshare/`), and
-the whole current layout is built on them; replacing them would cost license risk, weight, and the existing
-signature stage wordmark.]
+> **AMANDEMEN FASE 6 (2026-10-03, branch `arena/01a10161-akbar-next`).** Bagian ini diubah secara sadar;
+> perubahannya dicatat di `docs/phase6-signature-report.md`. Ringkasnya: (a) keluarga font naik dari tiga
+> menjadi **lima**, (b) anggaran font naik dari **189,7 kB → 208,5 kB** (11 file woff2, +18,8 kB: Syne 800
+> 13,7 kB + Noto Sans Sundanese 700 5,1 kB), (c) peran *display* dipecah menjadi **judul/H1 (Syne 800)** dan
+> *heading lain (Clash Display)*, dan (d) seluruh clamp ukuran judul dikalikan **0,60** karena Syne menulis
+> kata yang sama ±1,68× lebih lebar — lebar baris judul tetap, tinggi hurufnya yang turun. Angka lebar diukur
+> dari advance width file font di repo (`scripts/measure-title-type.py`), bukan diperkirakan.
 
-- **Clash Display** (500/600/700) — *display/identity.* A characterful geometric display, deliberately not a
+**Typefaces** — lima keluarga self-hosted; totalnya 208,5 kB di 11 file woff2
+(`client/public/assets/fonts/fontshare/` + `client/public/assets/fonts/fontsource/`). [DERIVED — tiga keluarga
+lama sudah ada; dua tambahan Fase 6 dipasang dari npm pack @fontsource dan di-host dari repo, bukan CDN.]
+
+- **Syne 800** — *judul/H1 saja.* Potongan bersudut pada K/R/W/A/M membuat nama artis punya bentuk yang tidak
+  dimiliki grotesk mana pun; inilah satu-satunya suara tipografi yang tidak bisa dipindah begitu saja. Satu
+  bobot, 13,7 kB, SIL OFL. Token: `--font-title`. [Fase 6]
+- **Noto Sans Sundanese 700** — *gema aksara Sunda saja* (blok U+1B80–1BFF, `unicode-range` dikunci sehingga
+  tidak pernah ikut terunduh untuk teks Latin). 5,1 kB, SIL OFL. Token: `--font-sunda`. [Fase 6]
+
+- **Clash Display** (500/600/700) — *heading H2/H3 (sejak Fase 6 bukan lagi H1).* A characterful geometric display, deliberately not a
   trending default; it carries the giant artist name and page titles. [DERIVED (asset) + INVENTED (role
   justification).]
 - **General Sans** (400/500/600) — *body.* Warm neutral grotesque; the reading voice for Indonesian/English.
@@ -54,8 +67,8 @@ signature stage wordmark.]
 
 | Role | Face | Size | Weight | Tracking | Line-height | Case |
 |---|---|---|---|---|---|---|
-| Display hero (home H1, stage wordmark) | Clash | `--text-hero` clamp(2.5rem, 6.5vw, 6.8rem) | 500 (600 for emphasis) | −0.045em | 0.98 | sentence case; UPPERCASE only for the artist name and two-line section headlines [DERIVED: existing usage] |
-| Page title (inner H1) | Clash | clamp(2.4rem, 5vw, 4rem) [DERIVED: existing inner-title clamp] | 500 | −0.045em | 1.0 | sentence case + trailing period (existing convention, e.g. "Perjalanan Akbar Nawasunda.") [DERIVED] |
+| Display hero (home H1, stage wordmark) | **Syne 800** [Fase 6] | `--text-hero` clamp(1.5rem, 3.9vw, 4.08rem) [Fase 6: 0,60 × nilai lama] | 500 (600 for emphasis) | −0.045em | 0.98 | sentence case; UPPERCASE only for the artist name and two-line section headlines [DERIVED: existing usage] |
+| Page title (inner H1) | **Syne 800** [Fase 6] | `--text-h1` clamp(1.44rem, 3vw, 2.4rem) [Fase 6: 0,60 × nilai lama] | 500 | −0.045em | 1.0 | sentence case + trailing period (existing convention, e.g. "Perjalanan Akbar Nawasunda.") [DERIVED] |
 | Section title H2 | Clash | `--text-h2` clamp(1.85rem, 4.2vw, 4rem) | 500 | −0.045em | 1.0 | sentence case, or UPPERCASE two-line "headline" style (existing pattern, e.g. "YANG SEDANG BERJALAN.") [DERIVED] |
 | Entry title H3 (releases, eras, cards) | Clash | `--text-h3` clamp(1.25rem, 2vw, 2rem) | 500 | −0.02em | 1.1 | **as written by the artist** — Javanese/Minang/pop titles keep their original casing; never force-uppercased [INVENTED rule from FACT: titles are content] |
 | Lede | General Sans | `--text-lede` clamp(1rem, 1.25vw, 1.14rem) | 400 | 0 | 1.6 | sentence |
@@ -69,20 +82,30 @@ signature stage wordmark.]
 banned in body text, ledes, form help text, and release titles. [INVENTED rule, consistent with the existing
 split between mono labels (caps) and body (sentence) — DERIVED.]
 
-**Language coverage:** Latin only — Indonesian + English, no diacritics required; the Javanese/Minang release
+**Language coverage (diamandemen Fase 6):** Latin untuk seluruh teks yang dibaca; ditambah **satu** pemakaian
+aksara Sunda (U+1B80–1BFF) sebagai gema nama di bawah judul hero dan sebagai frasa partikel alias — keduanya
+`aria-hidden`/non-teks, dengan padanan Latin yang tetap hidup di DOM. Transliterasinya usulan dan menunggu
+konfirmasi pemilik. Teks asli (sebelum Fase 6): Latin only — Indonesian + English, no diacritics required; the Javanese/Minang release
 titles are Latin-script as written. Japanese text exists **inside artwork images only** (e.g. the
 future-red portrait) and is not a typography requirement. [DERIVED: the served UI is ID/EN;
 `content.json` multi-language bios are legacy, not rendered.]
 
 **Loading strategy:** self-hosted woff2, `font-display: swap` (existing); preload exactly three critical files —
-`clash-display-500`, `general-sans-400`, `azeret-mono-500` (≈63 KB) — the rest swap in. No external font origin.
+sejak Fase 6: `syne-800`, `general-sans-400`, `azeret-mono-500` (61,9 kB, turun dari 63,5 kB). Yang dikeluarkan
+dari preload adalah `clash-display-500`: ia sekarang hanya melayani H2/H3 yang seluruhnya di bawah lipatan,
+sementara H1 adalah elemen terbesar di layar pertama dan paling mahal kalau harus di-swap. Sisanya swap. No
+external font origin.
 [INVENTED optimization of the existing self-hosting; the files and weights are FACT.]
 
 **Fallback stacks** (existing, kept): display → `-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
 body → same; mono → `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace`. [DERIVED + CONVENTIONAL.]
 
 **Mobile:** the fluid clamps are the mobile scale — no separate mobile type system. Floors: body ≥16 px,
-mono ≥11 px, H1 ≥2.4rem (the existing mobile-tuned clamp), hero ≈38–40 px at 390 px [DERIVED: existing
+mono ≥11 px. **Fase 6:** lantai H1 turun ke 1,44rem dan hero ≈28 px di 390 px — bukan pengecilan hierarki
+melainkan konsekuensi lebar Syne: pada ukuran itu kata "NAWASUNDA." memakai lebar baris yang SAMA seperti
+Clash 38 px sebelumnya (11,463em vs 6,963em). Kontrak yang dijaga `server/mobileLayout.test.ts` tidak berubah:
+tidak ada kata judul yang keluar dari ruang teks di layar 320 px. Nilai lama (sebelum Fase 6) adalah
+hero clamp(2.5rem, 6.5vw, 6.8rem) / H1 ≥2.4rem, hero ≈38–40 px at 390 px [DERIVED: existing
 `--text-hero` + the foundation-audit inner-title clamp].
 
 **How typography expresses the signature:** the mono voice *is* the signal voice — every surface where the

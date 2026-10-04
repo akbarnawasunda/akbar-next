@@ -15,16 +15,29 @@
 }
 
 @keyframes an-route-signal-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes an-route-signal-out {
-  from { opacity: 1; clip-path: inset(0 0 0 0); }
-  to { opacity: 0; clip-path: inset(0 0 100% 0); }
+  from {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
 }
 
 /* Partikel yang menuliskan labelnya → teks tirai dipadamkan. */
+/* Saat partikel yang menuliskan nama tujuan, bacaan Latin dan label
+   dipadamkan supaya tidak ada teks ganda. Aksaranya TETAP tampil: partikel
+   tidak pernah menggambar aksara, jadi tidak mungkin bertabrakan. */
 .an-route-signal[data-particles="true"] .an-route-signal-mark,
 .an-route-signal[data-particles="true"] .an-route-signal-target {
   opacity: 0;
@@ -38,15 +51,40 @@
   text-align: center;
 }
 
+/* Nama dalam aksara Sunda: tersingkap kiri→kanan lewat clip-path, meniru
+   arah tulis. Bobot 400 dan line-height longgar — sama dengan pelat nama
+   di hero (lihat SundaScript.css); pada bobot tebal rarangkén-nya menutup.
+   Ukurannya ditahan di bawah lebar tirai supaya satu baris tidak pernah
+   terpenggal di ponsel. */
+.an-route-signal-aksara {
+  display: block;
+  font-family: var(--font-sunda);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 7vw, 3rem);
+  line-height: 1.9;
+  color: var(--paper);
+  clip-path: inset(0 100% 0 0);
+  animation: an-route-signal-write 520ms cubic-bezier(0.22, 1, 0.36, 1) 60ms
+    forwards;
+}
+
+@keyframes an-route-signal-write {
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Bacaan Latin: kunci baca, bukan judul. Kecil, mono, berjarak lebar. */
 .an-route-signal-mark {
   display: block;
   overflow: hidden;
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 6vw, 3.4rem);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  line-height: 1.02;
-  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: clamp(0.62rem, 1.8vw, 0.78rem);
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--paper) 70%, transparent);
 }
 
 .an-route-signal-mark span {
@@ -55,12 +93,14 @@
   animation: an-route-signal-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.an-route-signal-mark:nth-child(2) span {
-  animation-delay: 70ms;
+.an-route-signal-mark span {
+  animation-delay: 240ms;
 }
 
 @keyframes an-route-signal-rise {
-  to { transform: translateY(0); }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .an-route-signal-line {
@@ -70,11 +110,14 @@
   background: var(--acid);
   transform: scaleX(0);
   transform-origin: left center;
-  animation: an-route-signal-sweep 460ms cubic-bezier(0.65, 0, 0.35, 1) 120ms forwards;
+  animation: an-route-signal-sweep 460ms cubic-bezier(0.65, 0, 0.35, 1) 120ms
+    forwards;
 }
 
 @keyframes an-route-signal-sweep {
-  to { transform: scaleX(1); }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 .an-route-signal-scan {
@@ -91,7 +134,9 @@
 }
 
 @keyframes an-route-signal-scanline {
-  to { transform: translateY(100%); }
+  to {
+    transform: translateY(100%);
+  }
 }
 
 .an-route-signal-target {
@@ -104,7 +149,9 @@
 }
 
 @keyframes an-route-signal-target {
-  to { opacity: 1; }
+  to {
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

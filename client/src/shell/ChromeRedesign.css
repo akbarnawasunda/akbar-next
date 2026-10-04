@@ -48,12 +48,16 @@
 /* Beranda saja: bar transparan di paling atas, di atas foto hero. Halaman
    dalam (termasuk /en yang juga memakai `.an-site`) tetap bar solid, karena
    di sana foto hero-nya tidak ditarik ke bawah masthead. */
-.an-public-shell.an-editorial .an-site[data-page="home"] .nf-nav[data-scrolled="false"] {
+.an-public-shell.an-editorial
+  .an-site[data-page="home"]
+  .nf-nav[data-scrolled="false"] {
   background: transparent;
   border-bottom-color: transparent;
 }
 
-.an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-nav[data-scrolled="true"] {
+.an-public-shell.an-editorial
+  :is(.an-site, .nf-page)
+  .nf-nav[data-scrolled="true"] {
   min-height: var(--chrome-h-compact);
   background: color-mix(in srgb, var(--ink) 96%, transparent);
   border-bottom-color: var(--chrome-rule);
@@ -79,11 +83,13 @@
   min-width: 0;
 }
 
+/* Wordmark header: huruf JUDUL dan dimiringkan — nama tampil sebagai
+   logo, bukan sebagai label teks biasa. Lihat .an-markslant di index.css. */
 .an-public-shell.an-editorial .nf-nav .nf-wordmark-text strong {
-  font-family: var(--font-display);
-  font-size: 0.98rem;
-  font-weight: 600;
-  letter-spacing: 0.005em;
+  font-family: var(--font-title);
+  font-size: 1.16rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
   color: var(--paper);
   white-space: nowrap;
 }
@@ -114,7 +120,10 @@
 }
 
 .an-public-shell.an-editorial .nf-nav .nf-wordmark:hover .nf-brand-logo,
-.an-public-shell.an-editorial .nf-nav .nf-wordmark:focus-visible .nf-brand-logo {
+.an-public-shell.an-editorial
+  .nf-nav
+  .nf-wordmark:focus-visible
+  .nf-brand-logo {
   border-color: var(--acid);
 }
 
@@ -248,11 +257,12 @@
 }
 
 .an-public-shell.an-editorial .nf-footer-brand strong {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2.4rem);
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--font-title);
+  font-size: clamp(2.2rem, 4.4vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: 0.03em;
   color: var(--paper);
+  display: inline-block;
 }
 
 .an-public-shell.an-editorial .nf-footer-brand p {

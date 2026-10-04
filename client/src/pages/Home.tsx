@@ -7,7 +7,13 @@ import {
   Sparkles,
   Ticket,
 } from "lucide-react";
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  type CSSProperties,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Link } from "wouter";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { PlatformMarquee } from "@/components/PlatformMarquee";
@@ -40,6 +46,8 @@ import {
   youtubeThumbnail,
 } from "@/content/artistPlatform";
 import { SignatureStage } from "@/components/signature/SignatureStage";
+import { SundaScript } from "@/components/signature/SundaScript";
+import { SUNDA_NAME } from "@/content/sundaneseScript";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
 // Komposisi baru beranda (checkpoint A). Dimuat setelah Home.css: nama kelas
@@ -67,24 +75,6 @@ const youtubeIdFrom = (url: string | null | undefined) => {
   );
   return match?.[1];
 };
-
-/**
- * Tinggi bar strip instrumen hero (0..1).
- *
- * Deterministik — hash sinus, bukan `Math.random()` — supaya HTML server dan
- * hasil hidrasi klien identik (tidak ada mismatch) dan tidak ada angka yang
- * berubah tiap muat halaman.
- *
- * Ini DEKORASI, bukan data: strip ini tidak membaca audio, rilisan, atau
- * metrik apa pun. Karena itu seluruh strip `aria-hidden` dan tidak diberi
- * label yang bisa dibaca sebagai klaim ("live", "analisis", dsb).
- */
-const HERO_SPECTRUM = Array.from({ length: 46 }, (_, index) => {
-  const noise = Math.abs(Math.sin((index + 1) * 12.9898) * 43758.5453) % 1;
-  // Selubung melengkung: bar paling tinggi di tengah, turun ke tepi.
-  const envelope = 0.42 + 0.58 * Math.sin((index / 45) * Math.PI);
-  return Number((0.14 + noise * 0.86 * envelope).toFixed(3));
-});
 
 const managedVideoImage = (
   imageUrl: string | null | undefined,
@@ -198,8 +188,9 @@ export default function Home() {
      track yang berbeda dari dokumen rilisan di halaman yang sama. */
   const heroActionUrl = activeRelease.href;
   const heroActionIsVisual = /youtube\.com|youtu\.be/i.test(heroActionUrl);
-  const heroActionLabel = heroActionIsVisual ? "TONTON VISUAL" : "DENGAR SEKARANG";
-
+  const heroActionLabel = heroActionIsVisual
+    ? "TONTON VISUAL"
+    : "DENGAR SEKARANG";
 
   const gameConfig = publicContent.data?.game;
   const gameEnabled = gameConfig?.isEnabled !== false;
@@ -346,18 +337,30 @@ export default function Home() {
               >
                 <span className="sr-only">{displayHeroTitle}</span>
                 <span aria-hidden="true">
+                  {/* Spasi antar kata WAJIB di luar `.hero-title-mask`.
+                      Mask itu inline-block, dan spasi di ujung inline-block
+                      dipangkas browser — dulu judulnya terbaca menyatu
+                      "AKBARNAWASUNDA". Fragment di bawah menaruh spasi
+                      sebagai simpul saudara, bukan anak. */}
                   {heroTitleWords.map((word, index) => (
-                    <span
-                      className="hero-title-mask"
-                      key={`${word}-${index}`}
-                      style={{ "--hero-word-index": index } as CSSProperties}
-                    >
-                      <span className="hero-title-word">{word}</span>
-                      {index < heroTitleWords.length - 1 ? " " : null}
-                    </span>
+                    <Fragment key={`${word}-${index}`}>
+                      {index > 0 ? " " : null}
+                      <span
+                        className="hero-title-mask"
+                        style={{ "--hero-word-index": index } as CSSProperties}
+                      >
+                        <span className="hero-title-word">{word}</span>
+                      </span>
+                    </Fragment>
                   ))}
                 </span>
               </h1>
+              {/* Pelat nama aksara Sunda. Bukan karakter lepas: komponennya
+                  selalu membawa kunci baca (label + bacaan Latin) dan
+                  line-height longgar supaya tanda tempel aksaranya tidak
+                  terpotong. Isi dari client/src/content/sundaneseScript.ts;
+                  transliterasi masih menunggu konfirmasi pemilik. */}
+              <SundaScript entry={SUNDA_NAME} lang="id" tone="hero" />
               <p className="an-hero-lede">{heroBody}</p>
 
               {/* Hanya tampil otomatis pada 1 November (waktu Jakarta). */}
@@ -375,7 +378,11 @@ export default function Home() {
                   <Play size={13} fill="currentColor" />
                   <span>{heroActionLabel}</span>
                 </a>
-                <Link className="an-btn an-btn--quiet" href="/visuals" data-signal-magnetic>
+                <Link
+                  className="an-btn an-btn--quiet"
+                  href="/visuals"
+                  data-signal-magnetic
+                >
                   Lihat visual <ArrowRight size={15} />
                 </Link>
               </div>
@@ -404,36 +411,7 @@ export default function Home() {
               <span aria-hidden="true">Gulir</span>
               <ArrowDownRight size={15} aria-hidden="true" />
             </a>
-
-            {/* Lapisan instrumen hero — murni dekoratif (aria-hidden):
-                siku bingkai di empat sudut + strip frekuensi deterministik.
-                Tidak ada teks, tidak ada tautan, jadi tidak ada apa pun yang
-                hilang bagi pembaca layar atau pengguna keyboard. */}
-            <div className="an-hero-instrument" aria-hidden="true">
-              <span className="an-hero-tick an-hero-tick--tl" />
-              <span className="an-hero-tick an-hero-tick--tr" />
-              <span className="an-hero-tick an-hero-tick--bl" />
-              <span className="an-hero-tick an-hero-tick--br" />
-              <span className="an-hero-spectrum">
-                {HERO_SPECTRUM.map((height, index) => (
-                  <span
-                    key={index}
-                    className="an-hero-bar"
-                    style={
-                      {
-                        "--bar": height,
-                        "--bar-index": index,
-                      } as CSSProperties
-                    }
-                  />
-                ))}
-              </span>
-            </div>
           </section>
-
-          {/* Jahitan di lipatan: satu strip gelombang yang memisahkan foto
-              hero dari isi halaman. Dekoratif, tanpa teks. */}
-          <span className="instr-wave" aria-hidden="true" />
 
           <SignatureStage alsoKnownAs="Juga dikenal sebagai DJ Akbar Remix dan akbarnawasunda.my.id." />
 
@@ -470,7 +448,10 @@ export default function Home() {
                 />
                 <figcaption>
                   {cmsCurrentRelease
-                    ? [cmsCurrentRelease.format || cmsCurrentRelease.platform, cmsCurrentRelease.year]
+                    ? [
+                        cmsCurrentRelease.format || cmsCurrentRelease.platform,
+                        cmsCurrentRelease.year,
+                      ]
                         .filter(Boolean)
                         .join(" · ")
                     : managedRelease?.label || currentRelease.eyebrow}
@@ -517,9 +498,7 @@ export default function Home() {
                     />
                   </div>
                 ) : null}
-                {contentIsLoading && (
-                  <p className="an-meta">Memuat rilisan…</p>
-                )}
+                {contentIsLoading && <p className="an-meta">Memuat rilisan…</p>}
               </div>
             </section>
           </Reveal>
@@ -535,8 +514,8 @@ export default function Home() {
               <p className="instr-index">03 — Kanal resmi</p>
               <h2 id="channels-title">Dengar di kanal resminya.</h2>
               <p className="an-meta">
-                {editablePlatformLinks.length} kanal resmi · rilisan, remix,
-                dan set
+                {editablePlatformLinks.length} kanal resmi · rilisan, remix, dan
+                set
               </p>
             </header>
 
@@ -576,7 +555,6 @@ export default function Home() {
               </Link>
             </div>
           </section>
-
 
           {/* Perjalanan & studi potret tidak diulang di beranda: bagian itu
               milik /universe supaya pengunjung tidak melihat section yang

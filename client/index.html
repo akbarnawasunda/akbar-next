@@ -24,23 +24,42 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#101211" />
     <!-- Legacy font names Bebas+Neue and Manrope are intentionally replaced by local Fontsource bundles. -->
+    <!--
+      Fase 6: yang di-preload adalah font JUDUL (Syne 800), bukan lagi
+      Clash Display 500. H1 adalah elemen terbesar di layar pertama, jadi
+      ia yang paling mahal kalau harus di-swap; Clash tetap dipakai H2/H3
+      yang semuanya di bawah lipatan dan cukup dengan `font-display: swap`.
+      Jumlah file preload tetap tiga, totalnya justru turun (63 → 62 kB).
+    -->
     <link
       rel="preload"
-      href="/assets/fonts/fontshare/clash-display-500.woff2"
+      href="/assets/fonts/fontsource/big-shoulders-display-800.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="/assets/fonts/fontshare/general-sans-400.woff2"
+      href="/assets/fonts/fontsource/schibsted-grotesk-400.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="/assets/fonts/fontshare/azeret-mono-500.woff2"
+      href="/assets/fonts/fontsource/sometype-mono-500.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <!--
+      Fase 6D: aksara Sunda ikut di-preload (4,9 kB) karena sekarang ia
+      muncul di splash — hal pertama yang dilihat pengunjung. Tanpa preload
+      baris aksaranya sempat kosong beberapa ratus milidetik.
+    -->
+    <link
+      rel="preload"
+      href="/assets/fonts/fontsource/noto-sans-sundanese-400.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -75,7 +94,9 @@
       .an-splash-inner {
         position: relative;
         z-index: 1;
-        width: min(92%, 560px);
+        /* 1100px, bukan 560px: wordmark splash jauh lebih besar sejak
+           Fase 6E dan kotak lama memotongnya di desktop. */
+        width: min(92vw, 1100px);
         padding: 0 4vw;
       }
       .an-splash-top {
@@ -84,7 +105,7 @@
         justify-content: space-between;
         gap: 14px;
         margin: 0 0 clamp(18px, 4vw, 30px);
-        font-family: "Azeret Mono", ui-monospace, SFMono-Regular, monospace;
+        font-family: "Sometype Mono", ui-monospace, SFMono-Regular, monospace;
         font-size: 9px;
         letter-spacing: 0.24em;
         text-transform: uppercase;
@@ -111,28 +132,87 @@
       }
       .an-splash-word {
         display: block;
+        /* Syne 800 lebih dulu — font judul situs ini. Tracking POSITIF:
+           pada tracking negatif huruf Syne 800 bertabrakan
+           (docs/notes/hero-tracking-scan.png). Ukuran ikut dikecilkan
+           supaya lebar barisnya tidak berubah. */
         font-family:
-          "Clash Display",
-          "Syne",
+          "Big Shoulders Display",
+          "Schibsted Grotesk",
           system-ui,
           -apple-system,
           sans-serif;
         font-weight: 800;
-        font-size: clamp(2.4rem, 11vw, 5.25rem);
-        line-height: 0.92;
-        letter-spacing: -0.02em;
+        /* Ukuran DITURUNKAN dari lebar kotaknya sendiri, bukan ditebak dari
+           lebar layar. "Nawasunda" memakai 4,53em pada tracking +0,02em
+           (diukur dari big-shoulders-display-800.woff2); pembagi 4,6 memberi
+           sisa ±1,5%. Dengan rumus ini kata itu MUSTAHIL terpotong di lebar
+           berapa pun — inilah penyebab splash kepotong di desktop tapi utuh
+           di ponsel. */
+        /* Pembagi 4,75 (bukan 4,6): kemiringan 9° menambah ±2,5% lebar
+           tampak di ujung kanan. */
+        font-size: max(2.2rem, calc((min(92vw, 1100px) - 8vw) / 5.4));
+        line-height: 0.94;
+        letter-spacing: 0.02em;
         text-transform: uppercase;
         transform: translateY(105%);
-        animation: an-splash-rise 0.86s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation: an-splash-rise 0.72s cubic-bezier(0.16, 1, 0.3, 1) 0.3s
+          forwards;
       }
       .an-splash-line:nth-child(3) .an-splash-word {
-        animation-delay: 0.08s;
+        animation-delay: 0.4s;
       }
       @keyframes an-splash-rise {
         to {
           transform: translateY(0);
         }
       }
+      .an-splash-aksara {
+        display: block;
+        margin: 0.42em 0 0;
+        font-family: "Noto Sans Sundanese", system-ui, sans-serif;
+        font-weight: 400;
+        font-size: clamp(1.15rem, 5.2vw, 2.3rem);
+        line-height: 1.9;
+        color: #9bb9c1;
+        clip-path: inset(0 100% 0 0);
+        /* Beat pertama: aksara ditulis lebih dulu, baru nama Latin naik.
+           Yang memimpin layar pembuka adalah identitasnya, bukan wordmark. */
+        animation: an-splash-write 0.62s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      }
+      @keyframes an-splash-write {
+        to {
+          clip-path: inset(0 0 0 0);
+        }
+      }
+
+      /* Versi ringkas (kunjungan ke-2 dalam satu sesi): isi pendukung
+         disembunyikan, sekuens dipercepat ±3×. Tetap nama dalam aksara,
+         tetap satu gerakan — hanya lebih singkat. */
+      #akbar-preloader.an-splash-quick .an-splash-top,
+      #akbar-preloader.an-splash-quick .an-splash-steps,
+      #akbar-preloader.an-splash-quick .an-splash-meter,
+      #akbar-preloader.an-splash-quick .an-splash-caption,
+      #akbar-preloader.an-splash-quick .an-splash-birthday {
+        display: none;
+      }
+      #akbar-preloader.an-splash-quick .an-splash-aksara {
+        animation-duration: 0.26s;
+      }
+      #akbar-preloader.an-splash-quick .an-splash-word {
+        animation-duration: 0.3s;
+        animation-delay: 0.12s;
+      }
+      #akbar-preloader.an-splash-quick
+        .an-splash-line:nth-child(3)
+        .an-splash-word {
+        animation-delay: 0.18s;
+      }
+      #akbar-preloader.an-splash-quick .an-splash-rule {
+        animation-duration: 0.34s;
+        animation-delay: 0.22s;
+      }
+
       /* Pola langkah drum: delapan ketukan yang menyala berurutan. */
       .an-splash-steps {
         display: flex;
@@ -189,7 +269,7 @@
         background: #9bb9c1;
         transform-origin: left center;
         transform: scaleX(0);
-        animation: an-splash-wipe 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.18s
+        animation: an-splash-wipe 0.78s cubic-bezier(0.22, 1, 0.36, 1) 0.62s
           forwards;
       }
       @keyframes an-splash-wipe {
@@ -218,7 +298,7 @@
         align-items: baseline;
         justify-content: space-between;
         gap: 16px;
-        font-family: "Azeret Mono", ui-monospace, SFMono-Regular, monospace;
+        font-family: "Sometype Mono", ui-monospace, SFMono-Regular, monospace;
         font-size: 10px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
@@ -232,7 +312,7 @@
       }
       .an-splash-birthday {
         margin: 16px 0 0;
-        font-family: "Azeret Mono", ui-monospace, SFMono-Regular, monospace;
+        font-family: "Sometype Mono", ui-monospace, SFMono-Regular, monospace;
         font-size: 10px;
         letter-spacing: 0.24em;
         text-transform: uppercase;
@@ -263,6 +343,7 @@
       }
       @media (prefers-reduced-motion: reduce) {
         .an-splash-word,
+        .an-splash-aksara,
         .an-splash-rule,
         .an-splash-top,
         .an-splash-caption,
@@ -298,9 +379,16 @@
         <span class="an-splash-line"
           ><span class="an-splash-word">Nawasunda</span></span
         >
+        <!-- Nama yang sama dalam aksara Sunda: tersingkap kiri ke kanan
+             seperti sedang dituliskan. Inilah yang membuat layar pembuka
+             ini tidak bisa dipakai artis lain. Bacaan Latinnya sudah ada
+             tepat di atasnya, jadi baris ini murni dekoratif. -->
+        <span class="an-splash-aksara" aria-hidden="true" lang="su-Sund"
+          >ᮃᮊ᮪ᮘᮁ ᮔᮝᮞᮥᮔ᮪ᮓ</span
+        >
         <div class="an-splash-steps" aria-hidden="true">
-          <span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span> <span></span
+          ><span></span><span></span><span></span>
         </div>
         <div class="an-splash-rule" aria-hidden="true"></div>
         <div class="an-splash-meter" aria-hidden="true">
@@ -381,7 +469,8 @@
               var out = {};
               var parts = jakartaFormat.formatToParts(date);
               for (var i = 0; i < parts.length; i++) {
-                if (parts[i].type !== "literal") out[parts[i].type] = parts[i].value;
+                if (parts[i].type !== "literal")
+                  out[parts[i].type] = parts[i].value;
               }
               return {
                 h: Number(out.hour) % 24,
@@ -424,9 +513,16 @@
               pad(stamp.h) + "." + pad(stamp.m) + "." + pad(stamp.s);
           }
           if (dateEl) {
-            var day = stamp.weekday ? stamp.weekday.toUpperCase().slice(0, 3) + " · " : "";
+            var day = stamp.weekday
+              ? stamp.weekday.toUpperCase().slice(0, 3) + " · "
+              : "";
             dateEl.textContent =
-              day + stamp.day + " " + MONTHS[stamp.month - 1].toUpperCase() + " " + stamp.year;
+              day +
+              stamp.day +
+              " " +
+              MONTHS[stamp.month - 1].toUpperCase() +
+              " " +
+              stamp.year;
           }
           // 1 November waktu Jakarta: situs merayakan sendiri, tiap tahun.
           if (stamp.month === 11 && stamp.day === 1) {
@@ -447,18 +543,27 @@
           }
         }
 
-        if (seen || reduced) {
+        if (reduced) {
           window.__dismissAkbarPreloader = drop;
           drop();
           return;
         }
 
+        // Kunjungan kedua dalam satu sesi TIDAK lagi melewatkan splash diam-
+        // diam — dulu inilah sebabnya layar pembuka terasa "tidak ada" di
+        // desktop (sekali reload, hilang selamanya sampai tab ditutup).
+        // Sekarang ia tampil ringkas: hanya aksara + nama, ±0,46 dtk.
+        if (seen) preloader.classList.add("an-splash-quick");
+
         var dismissed = false;
         var shownAt = Date.now();
         // Durasi splash: minimal 1.4 detik supaya seluruh sekuens terbaca,
         // dan tidak pernah lebih dari 2.2 detik.
-        var MIN_VISIBLE = 1400;
-        var MAX_VISIBLE = 2200;
+        // Sekuens penuh selesai di ±1,25 dtk (aksara 0-0,62; nama 0,3-1,12;
+        // garis 0,62-1,40). MIN_VISIBLE tidak boleh lebih pendek dari itu,
+        // kalau tidak animasinya terpotong di tengah pada koneksi cepat.
+        var MIN_VISIBLE = seen ? 460 : 1450;
+        var MAX_VISIBLE = seen ? 900 : 2200;
 
         // Angka durasi = waktu yang benar-benar berjalan sejak splash tampil.
         function paintProgress() {
