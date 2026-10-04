@@ -119,7 +119,12 @@ describe("high-performance image optimization & non-Google typography", () => {
     // --font-title), bukan grotesk biasa. Saat ia sempat menunjuk grotesk,
     // seluruh H2/H3 di situs kehilangan watak dan halaman jadi datar. Fase
     // 8 dan Fase 9 mempertahankan prinsip ini, cuma bertukar huruf judul.
-    expect(indexCss).toContain('--font-display: "Big Shoulders Display"');
+    // Fase 12: huruf judulnya sendiri pindah lagi, dari Big Shoulders
+    // Display ke Central Station -- prinsip "--font-display == --font-title"
+    // tidak berubah, cuma nilai bersamanya yang berganti.
+    expect(indexCss).toContain('@font-face {\n  font-family: "Central Station";');
+    expect(indexCss).toContain('--font-display: "Central Station"');
+    expect(indexCss).toContain('--font-title:   "Central Station"');
     expect(indexCss).toContain('--font-body:    "Hanken Grotesk"');
     expect(indexCss).toContain('--font-mono:    "Sometype Mono"');
     expect(indexCss).not.toContain("Clash Display");

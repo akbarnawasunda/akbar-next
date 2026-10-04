@@ -240,7 +240,9 @@
 .an-site .an-hero-lede {
   margin: 0;
   max-width: 46ch;
-  font-family: var(--font-body);
+  /* FASE 12: tagline hero -> --font-label (Impact Label SWL, jatuh ke
+     Sometype Mono sampai berkasnya diunggah). */
+  font-family: var(--font-label);
   font-size: var(--text-lede);
   line-height: 1.66;
   color: color-mix(in srgb, var(--paper) 80%, transparent);

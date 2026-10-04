@@ -38,6 +38,14 @@ const LOCAL_FONTS = [
   "Noto Sans Sundanese",
   // Fase 9: font judul/H1 kembali ke Big Shoulders Display 800.
   "Big Shoulders Display",
+  // Fase 12: lima huruf baru, masing-masing satu peran sempit. Impact
+  // Label SWL SENGAJA TIDAK masuk daftar ini — berkasnya belum diunggah,
+  // jadi belum ada @font-face untuknya di mana pun; --font-label jatuh ke
+  // Sometype Mono (sudah di daftar ini) sampai berkasnya datang.
+  "Striper",
+  "Tritopani",
+  "Central Station",
+  "Complete Destroy",
 ];
 const FONT_FALLBACKS = [
   "inherit",

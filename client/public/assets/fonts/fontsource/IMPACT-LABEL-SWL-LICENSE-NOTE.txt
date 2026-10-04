@@ -1,0 +1,23 @@
+Impact Label SWL — PENDING, not yet installed.
+Designed by Tension Type.
+Source: https://www.dafont.com/impact-label-swl.font
+
+License on dafont.com: "Free for personal use" ONLY (2 font files:
+Impact Label SWL.ttf and Impact Label SWL Reversed.ttf). Commercial
+licensing: contact via http://www.tensiontype.com/
+
+[RISK TO BE ACCEPTED BY SITE OWNER] Same situation as Tritopani/Central
+Station/Complete Destroy below — this is a commercial site, the license
+does not cover that, and the decision to proceed is the site owner's.
+
+STATUS: the .woff2 file for this font has not been uploaded yet. Until
+it is, --font-label (client/src/index.css) falls back to "Sometype Mono"
+so nothing breaks. Intended scope once installed: nav links, footer
+column labels/links, platform names, copyright line, and the hero
+tagline (.an-hero-lede) + the "AKSARA SUNDA" caption (.an-sunda-label).
+
+To finish: convert to .woff2, save as
+  impact-label-swl-full-400-normal.woff2
+in this folder, then add one @font-face block in client/src/index.css
+(copy the Striper/Tritopani block pattern) pointing --font-label at
+"Impact Label SWL" first in the stack.

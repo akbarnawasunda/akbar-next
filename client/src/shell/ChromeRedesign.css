@@ -91,9 +91,14 @@
    dikembalikan ke angka Big Shoulders Display 800 semula di sini dan di
    breakpoint ≤767,98px di bawah. */
 .an-public-shell.an-editorial .nf-nav .nf-wordmark-text strong {
-  font-family: var(--font-title);
+  /* FASE 12: wordmark header = nama "Akbar Nawasunda" sebagai logo, jadi
+     --font-brand (Complete Destroy), bukan --font-title (sekarang
+     Central Station, dipakai judul section biasa). Complete Destroy
+     cuma satu berkas bobot (400) -- 800 di sini akan memalsukan
+     ketebalan lewat synthetic bold. */
+  font-family: var(--font-brand);
   font-size: 1.16rem;
-  font-weight: 800;
+  font-weight: 400;
   letter-spacing: 0.04em;
   color: var(--paper);
   white-space: nowrap;
@@ -141,7 +146,9 @@
 .an-public-shell.an-editorial .nf-nav nav a {
   padding: 12px 0;
   color: color-mix(in srgb, var(--paper) 58%, transparent);
-  font-family: var(--font-mono);
+  /* FASE 12: label navigasi header -> --font-label (Impact Label SWL,
+     jatuh ke Sometype Mono selama berkasnya belum diunggah). */
+  font-family: var(--font-label);
   font-size: 0.58rem;
   font-weight: 500;
   letter-spacing: 0.16em;
@@ -262,33 +269,42 @@
 }
 
 .an-public-shell.an-editorial .nf-footer-brand strong {
-  font-family: var(--font-title);
+  /* FASE 12: wordmark footer = nama "Akbar Nawasunda" juga, sama
+     perlakuan dengan wordmark header di atas -- --font-brand (Complete
+     Destroy), bukan --font-title (sekarang Central Station). */
+  font-family: var(--font-brand);
   /* Fase 8 ganti ke Unbounded, Fase 9 kembali: sempat diturunkan ×0,5594
      untuk Unbounded 900, dikembalikan ke angka Big Shoulders Display 800
      semula setelah peninjauan tampilan hidup. */
   font-size: clamp(2.2rem, 4.4vw, 3.5rem);
-  font-weight: 800;
+  /* Complete Destroy cuma satu berkas bobot (400) -- 800 akan
+     memalsukan ketebalan lewat synthetic bold. */
+  font-weight: 400;
   letter-spacing: 0.03em;
   color: var(--paper);
   display: inline-block;
 }
 
 .an-public-shell.an-editorial .nf-footer-brand p {
-  font-family: var(--font-mono);
+  /* FASE 12: tagline footer ("PRODUCER / REMIXER / INDONESIA") -> label. */
+  font-family: var(--font-label);
   font-size: 0.55rem;
   letter-spacing: 0.2em;
   color: var(--mute);
 }
 
 .an-public-shell.an-editorial .nf-footer-column > span {
-  font-family: var(--font-mono);
+  /* FASE 12: label kolom footer ("JELAJAHI"/"HUBUNGI") -> --font-label. */
+  font-family: var(--font-label);
   font-size: 0.52rem;
   letter-spacing: 0.22em;
   color: var(--mute);
 }
 
 .an-public-shell.an-editorial .nf-footer-column a {
-  font-family: var(--font-body);
+  /* FASE 12: tautan footer (nav + platform + EPK/Booking + Privasi)
+     -> --font-label. */
+  font-family: var(--font-label);
   font-size: 0.86rem;
   color: color-mix(in srgb, var(--paper) 74%, transparent);
 }
@@ -299,7 +315,8 @@
 }
 
 .an-public-shell.an-editorial .nf-footer .footer-bottom {
-  font-family: var(--font-mono);
+  /* FASE 12: baris hak cipta -> --font-label. */
+  font-family: var(--font-label);
   font-size: 0.52rem;
   letter-spacing: 0.2em;
   color: var(--mute);

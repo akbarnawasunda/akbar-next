@@ -91,6 +91,55 @@
   font-display: swap;
 }
 
+/* FASE 12 — lima huruf baru, masing-masing untuk SATU peran sempit,
+   bukan pengganti roster di atas. Pemilik situs memilih sendiri kelima
+   huruf ini dari Fontshare/dafont dan memberi tahu persis elemen mana
+   yang dapat yang mana — bukan keputusan desain yang dibuat di sini.
+
+   [RISIKO LISENSI — DIKETAHUI & DITERIMA PEMILIK SITUS] Striper
+   (Fontshare) gratis untuk pemakaian komersial (ITF Free Font License).
+   EMPAT lainnya — Tritopani, Central Station, Impact Label SWL, Complete
+   Destroy — berlisensi "Free for personal use" di dafont.com, BUKAN
+   gratis untuk situs komersial seperti ini. Pemilik situs sudah diberi
+   tahu risikonya (termasuk ancaman sanksi UU Hak Cipta No. 28/2014 yang
+   dicantumkan pembuat Tritopani) dan tetap meminta huruf-huruf ini
+   dipasang — keputusan dan tanggung jawab ada di pemilik situs, bukan
+   rekomendasi dari sesi ini. Kalau suatu saat ingin membereskan status
+   hukumnya, tautan beli lisensi komersial ada di masing-masing
+   LICENSE-NOTE di folder font ini. */
+@font-face {
+  font-family: "Striper";
+  src: url("/assets/fonts/fontsource/striper-full-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Tritopani";
+  src: url("/assets/fonts/fontsource/tritopani-full-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Central Station";
+  src: url("/assets/fonts/fontsource/central-station-full-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Complete Destroy";
+  src: url("/assets/fonts/fontsource/complete-destroy-full-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 
 /* --- Wordmark miring -------------------------------------------------
    SATU perlakuan, bukan font baru. Nama (dan HANYA nama) dimiringkan 9°
@@ -158,7 +207,14 @@
 
 :root {
   /* Curated 3-Font System: Independent, Distinctive, Highly Legible */
-  --font-display: "Big Shoulders Display", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* FASE 12: --font-display/--font-title dipindah dari Big Shoulders
+     Display ke Central Station — pemilik situs memilih huruf ini khusus
+     "untuk judul atau teks embed" (h1-h4 umum DAN caption di
+     MusicEmbed/OfficialMediaFrame yang sudah lama memakai token ini).
+     Big Shoulders Display TIDAK dihapus (masih huruf fallback pertama di
+     rantai, dan filenya tetap ada) supaya kalau Central Station gagal
+     muat, hierarki tidak langsung jatuh ke font sistem. */
+  --font-display: "Central Station", "Big Shoulders Display", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   /* Judul/H1 DAN H2/H3 (Fase 6I: --font-display sengaja disamakan dengan
      --font-title, lihat catatan test di server/editorialOptimization.test.ts
      — saat --font-display sempat menunjuk grotesk biasa, seluruh H2/H3
@@ -166,8 +222,36 @@
      menggantikan Unbounded (Fase 8) — kondensasi, bukan lebar, jadi clamp
      judul ikut dikalibrasi balik (lihat server/mobileLayout.test.ts).
      Fallback-nya huruf badan supaya hierarki tidak runtuh ke font sistem
-     sebelum huruf judul dimuat. */
-  --font-title:   "Big Shoulders Display", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+     sebelum huruf judul dimuat. FASE 12: nilainya disamakan dengan
+     --font-display di atas (Central Station) — PENGECUALIAN: elemen yang
+     merender nama "Akbar Nawasunda" sebagai judul/wordmark (hero,
+     wordmark header/footer, splash) override eksplisit ke --font-brand
+     di bawah, bukan lewat token ini. */
+  --font-title:   "Central Station", "Big Shoulders Display", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* FASE 12 — empat suara baru, masing-masing SATU peran sempit yang
+     ditunjuk eksplisit oleh pemilik situs (lihat catatan lisensi di blok
+     @font-face Complete Destroy/Tritopani/Central Station/Striper di
+     atas). Tidak satu pun dipakai sebagai fallback huruf lain — kalau
+     gagal muat, turun ke huruf judul/badan yang sudah mapan, bukan ke
+     huruf dekoratif lain yang tidak terkait. */
+  /* --font-brand: HANYA untuk elemen yang merender nama "Akbar Nawasunda"
+     sebagai judul/wordmark/logo (hero title, wordmark header & footer,
+     splash) — bukan judul section biasa (itu tugas --font-title/
+     --font-display di atas, sekarang Central Station). */
+  --font-brand:     "Complete Destroy", "Big Shoulders Display", "Hanken Grotesk", sans-serif;
+  /* --font-label: nav, tautan footer, label kolom footer, nama platform,
+     keterangan hak cipta, tagline hero — daftar persis yang diminta
+     pemilik situs. BELUM AKTIF: file Impact Label SWL belum diunggah,
+     jadi sementara jatuh ke Sometype Mono (suara label yang sudah ada)
+     supaya tidak ada elemen yang kosong/pecah. Tinggal tambah berkas
+     woff2-nya + satu @font-face begitu diunggah, token ini otomatis
+     memakainya di semua elemen yang sudah menunjuknya. */
+  --font-label:     "Impact Label SWL", "Sometype Mono", ui-monospace, monospace;
+  /* --font-signature: HANYA bacaan Latin di sebelah aksara Sunda
+     (.an-sunda-latin) — bukan aksaranya sendiri (tetap --font-sunda). */
+  --font-signature: "Tritopani", "Hanken Grotesk", cursive, sans-serif;
+  /* --font-game: HANYA judul/heading di dalam game Jedag Run. */
+  --font-game:      "Striper", "Big Shoulders Display", "Hanken Grotesk", sans-serif;
   /* Aksara Sunda: gema kecil di bawah judul, bukan teks isi. */
   --font-sunda:   "Noto Sans Sundanese", "Hanken Grotesk", sans-serif;
   --font-body:    "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;

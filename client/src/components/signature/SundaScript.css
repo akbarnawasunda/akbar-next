@@ -52,7 +52,24 @@
 }
 
 .an-sunda-label {
+  /* FASE 12: label "AKSARA SUNDA" -> --font-label (Impact Label SWL,
+     jatuh ke Sometype Mono sampai berkasnya diunggah). Sebelumnya
+     mewarisi var(--font-mono) dari .an-sunda-key. */
+  font-family: var(--font-label);
   color: color-mix(in srgb, var(--signal) 78%, var(--paper));
+}
+
+/* FASE 12: bacaan Latin ("tanda tangan") -> --font-signature (Tritopani),
+   dikonfirmasi ke pemilik situs sebagai ".an-sunda-latin" lewat
+   ask_user. Sebelumnya mewarisi var(--font-mono) dari .an-sunda-key.
+   Tritopani huruf skrip/tulisan tangan -- ukuran dinaikkan sedikit dari
+   mono-nya (0.68rem bawaan terlalu kecil untuk dibaca sebagai tanda
+   tangan) dan tracking dilonggarkan supaya sambungan hurufnya tidak
+   saling tabrak. */
+.an-sunda-latin {
+  font-family: var(--font-signature);
+  font-size: 1.05em;
+  letter-spacing: 0.02em;
 }
 
 .an-sunda-dot {

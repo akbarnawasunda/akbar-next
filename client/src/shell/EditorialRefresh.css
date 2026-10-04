@@ -168,7 +168,9 @@
   position: relative;
   padding: 9px 0;
   color: var(--mute);
-  font-family: var(--font-body);
+  /* FASE 12: aturan ini yang menang (dimuat setelah ChromeRedesign.css,
+     spesifisitas sama) -- ikut dipindah ke --font-label. */
+  font-family: var(--font-label);
   font-size: 0.82rem;
   font-weight: 500;
   letter-spacing: 0;
@@ -595,14 +597,17 @@
   max-width: 9ch;
   margin: 0;
   color: var(--paper);
-  font-family: var(--font-display);
+  /* FASE 12: ini aturan yang SEBENARNYA menang untuk judul hero beranda
+     (selektornya lebih spesifik dari punya Home.css) -- jadi ini yang
+     harus ikut pindah ke --font-brand (Complete Destroy), bukan
+     --font-display (sekarang Central Station, dipakai judul section
+     biasa). Complete Destroy cuma satu berkas bobot (400), jadi
+     font-weight ikut disamakan ke 400 -- 800 di sini sebelumnya
+     (ditujukan untuk Big Shoulders Display) akan memalsukan ketebalan
+     lewat synthetic bold kalau dibiarkan. */
+  font-family: var(--font-brand);
   font-size: clamp(2.4rem, 5.04vw, 5.22rem) !important;
-  /* [BUGFIX] Cuma satu berkas static weight yang di-host untuk huruf
-     judul (big-shoulders-display-800.woff2), jadi 600 di sini tidak
-     pernah benar-benar merender lebih tipis -- browser diam-diam
-     memakai muka 800 yang sama. Disamakan ke 800 supaya tidak
-     membingungkan pembaca kode lain. Tanpa dampak visual. */
-  font-weight: 800;
+  font-weight: 400;
   letter-spacing: 0em;
   line-height: 0.82 !important;
   text-shadow: none;
@@ -915,7 +920,9 @@
 .an-public-shell.an-editorial .nf-footer-column > span,
 .an-public-shell.an-editorial .nf-footer .footer-bottom {
   color: var(--mute-soft);
-  font-family: var(--font-body);
+  /* FASE 12: aturan ini yang menang (dimuat setelah ChromeRedesign.css,
+     spesifisitas sama) -- ikut dipindah ke --font-label. */
+  font-family: var(--font-label);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.09em;

@@ -34,10 +34,37 @@
       dikembalikan ke Big Shoulders Display 800 setelah peninjauan
       tampilan hidup menilai Unbounded kurang cocok; Hanken Grotesk
       (badan) tetap. Jumlah file preload tetap tiga.
+      Fase 12: kata nama di splash (.an-splash-word) pindah ke Complete
+      Destroy (--font-brand) menyamai wordmark header/footer dan judul
+      hero -- preload-nya ikut diganti supaya tetap tidak ada jeda
+      font-swap terlihat di elemen pertama yang dilihat pengunjung.
+      Big Shoulders Display TIDAK di-preload lagi di sini (section
+      heading sekarang Central Station, bukan huruf splash, dan tidak di
+      atas lipatan pertama splash), tapi berkasnya tetap ada sebagai
+      fallback di index.css.
     -->
     <link
       rel="preload"
-      href="/assets/fonts/fontsource/big-shoulders-display-800.woff2"
+      href="/assets/fonts/fontsource/complete-destroy-full-400-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <!--
+      Fase 12: Central Station (section heading h1-h4 di SELURUH halaman,
+      --font-title/--font-display) ikut di-preload -- ini elemen besar
+      pertama yang terlihat di hampir semua halaman tepat setelah splash
+      tertutup, jadi sama kritisnya dengan huruf splash sendiri.
+      [TAFSIR/RISIKO] Complete Destroy 271 kB jauh lebih besar dari Big
+      Shoulders Display (14,5 kB) yang digantikannya di splash -- total
+      berkas yang di-preload melonjak. Tidak diukur ulang di sesi ini
+      apakah ini bikin First Contentful Paint terasa lebih lambat di
+      koneksi lambat; kalau terasa, pertimbangkan drop preload Complete
+      Destroy (splash tetap tampil, tinggal nunggu font-display: swap).
+    -->
+    <link
+      rel="preload"
+      href="/assets/fonts/fontsource/central-station-full-400-normal.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -141,23 +168,36 @@
            banget, basic"), lalu dikembalikan ke Big Shoulders Display 800
            setelah peninjauan tampilan hidup menilai Unbounded kurang cocok
            untuk judul. Tracking tetap POSITIF (pelajaran dari Syne
-           800/Big Shoulders Display, docs/notes/hero-tracking-scan.png). */
+           800/Big Shoulders Display, docs/notes/hero-tracking-scan.png).
+           Fase 12: pindah lagi ke Complete Destroy (--font-brand) supaya
+           nama di splash menyamai wordmark header/footer dan judul hero
+           (lihat client/src/index.css). Complete Destroy cuma satu
+           berkas bobot (400) -- font-weight 800 di bawah DIHAPUS, bukan
+           disamakan ke 400, supaya tidak ada yang salah kira huruf ini
+           punya potongan tebal sendiri (synthetic bold palsu, pelajaran
+           sama dengan .an-markslant soal kemiringan palsu). */
         font-family:
+          "Complete Destroy",
           "Big Shoulders Display",
           "Hanken Grotesk",
           system-ui,
           -apple-system,
           sans-serif;
-        font-weight: 800;
+        font-weight: 400;
         /* Ukuran DITURUNKAN dari lebar kotaknya sendiri, bukan ditebak dari
            lebar layar. "NAWASUNDA" (huruf besar dari text-transform di
            bawah, tanpa titik — beda dengan "NAWASUNDA." di hero) memakai
            4,523em advance width + tracking pada Big Shoulders Display 800
-           (diukur fontTools, upem 1000). Pembagi dan lantai `max()` di
-           bawah dikembalikan ke 5,4 dan 2,2rem (angka Fase 6E/sebelum
-           Fase 8) supaya kata itu tetap MUSTAHIL terpotong di lebar
-           berapa pun. */
-        font-size: max(2.2rem, calc((min(92vw, 1100px) - 8vw) / 5.4));
+           (diukur fontTools, upem 1000); pembagi dan lantai `max()` di
+           bawah SEMPAT 5,4 dan 2,2rem (angka Fase 6E/sebelum Fase 8).
+           Fase 12: "NAWASUNDA" pada Complete Destroy cuma 4,270em advance
+           width (diukur fontTools, upem 2048) -- LEBIH SEMPIT dari Big
+           Shoulders Display, jadi margin aman 1,194x dari Fase 9
+           (5,4/4,523) diterapkan ulang ke angka Complete Destroy:
+           (4,270 + 8×0,02 tracking) × 1,194 ≈ 5,29, dibulatkan NAIK (lebih
+           aman, bukan lebih pas) ke 5,3 supaya kata itu tetap MUSTAHIL
+           terpotong di lebar berapa pun. Lantai 2,2rem tidak berubah. */
+        font-size: max(2.2rem, calc((min(92vw, 1100px) - 8vw) / 5.3));
         line-height: 0.94;
         letter-spacing: 0.02em;
         text-transform: uppercase;

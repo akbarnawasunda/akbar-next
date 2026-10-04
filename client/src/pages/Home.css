@@ -273,8 +273,16 @@
 .an-site .hero-copy .hero-title-editorial {
   display: block;
   margin: 0;
-  font-family: var(--font-title);
-  font-weight: 800;
+  /* FASE 12: huruf JUDUL BESAR nama artis ("Akbar Nawasunda") pindah ke
+     --font-brand (Complete Destroy) — token --font-title di bawahnya
+     sekarang Central Station, dipakai judul section biasa, bukan nama
+     ini. Complete Destroy cuma py satu berkas bobot (400) jadi
+     font-weight TIDAK dipaksa 800 lagi — memaksa 800 pada huruf yang
+     tidak punya potongan tebal sendiri cuma memalsukan ketebalan lewat
+     synthetic bold (pelajaran yang sama dengan kemiringan palsu di Fase
+     6I: lihat .an-markslant di atas). */
+  font-family: var(--font-brand);
+  font-weight: 400;
   font-size: clamp(2.6rem, 10vw, 10rem) !important;
   line-height: 1.05 !important;
   letter-spacing: 0.02em;
