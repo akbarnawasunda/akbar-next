@@ -105,7 +105,10 @@ describe("high-performance image optimization & non-Google typography", () => {
     expect(indexCss).toContain('@font-face {\n  font-family: "Schibsted Grotesk";');
     expect(indexCss).toContain('@font-face {\n  font-family: "Sometype Mono";');
     expect(indexCss).toContain('@font-face {\n  font-family: "Big Shoulders Display";');
-    expect(indexCss).toContain('--font-display: "Schibsted Grotesk"');
+    // Fase 6I: --font-display kembali memegang suara DISPLAY (Big
+    // Shoulders), bukan grotesk biasa. Saat ia sempat menunjuk Schibsted,
+    // seluruh H2/H3 di situs kehilangan watak dan halaman jadi datar.
+    expect(indexCss).toContain('--font-display: "Big Shoulders Display"');
     expect(indexCss).toContain('--font-body:    "Schibsted Grotesk"');
     expect(indexCss).toContain('--font-mono:    "Sometype Mono"');
     expect(indexCss).not.toContain("Clash Display");

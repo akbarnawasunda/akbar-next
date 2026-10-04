@@ -92,7 +92,6 @@
   letter-spacing: 0.04em;
   color: var(--paper);
   white-space: nowrap;
-  font-style: oblique 9deg;
 }
 
 .an-public-shell.an-editorial .nf-nav .nf-wordmark-text small {
@@ -264,7 +263,6 @@
   letter-spacing: 0.03em;
   color: var(--paper);
   display: inline-block;
-  font-style: oblique 9deg;
 }
 
 .an-public-shell.an-editorial .nf-footer-brand p {

@@ -161,7 +161,7 @@
      "NAWASUNDA." di Syne 11,46em vs 6,81em di Clash 600 (advance width
      diukur, bukan ditebak): lebar baris tetap, tinggi huruf yang berubah. */
   font-family: var(--font-title);
-  font-size: clamp(3.4rem, 10.6vw, 10.6rem);
+  font-size: clamp(2.6rem, 8vw, 8rem);
   /* Syne yang di-host di repo hanya punya satu bobot: 800. Menulis 600 di
      sini membuat sebagian browser memalsukan bobotnya. */
   font-weight: 800;
@@ -190,12 +190,9 @@
   padding-right: 0.13em;
 }
 
-/* Nama = logo, jadi dimiringkan. Judul halaman lain (kalimat) tetap
-   tegak — lihat .an-markslant di index.css untuk alasannya. */
 .an-site .an-hero-inner .hero-title-word {
   white-space: nowrap;
   display: inline-block;
-  font-style: oblique 9deg;
 }
 
 /* -- Pelat nama aksara Sunda ----------------------------------
@@ -504,7 +501,7 @@
      lebar (11,463em pada letter-spacing -0,05em), jadi 23,0px × 11,463em
      ≈ 264px ≤ 280px. */
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(2.6rem, 17.2vw, 5.6rem);
+    font-size: clamp(2.2rem, 14vw, 4.6rem);
     letter-spacing: 0.02em;
     line-height: 1.02;
   }
@@ -621,7 +618,7 @@
   }
 
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(3.7rem, 11.5vw, 11.5rem);
+    font-size: clamp(2.9rem, 9vw, 9rem);
     letter-spacing: 0.02em;
     line-height: 1;
   }
@@ -769,7 +766,7 @@
      rentang 768-1600px, jadi tidak ada kata yang keluar layar.
      Catatan kalibrasi: 9,2vw yang sempat diusulkan TIDAK muat (≈105vw). */
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(5.2rem, 17.4vw, 17.4rem);
+    font-size: clamp(3.6rem, 12vw, 12rem);
     /* 0,86 meremas dua baris nama jadi satu blok padat; 0,94 memberi udara
        tanpa memutus lockup-nya. */
     line-height: 0.94;

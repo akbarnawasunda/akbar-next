@@ -89,15 +89,23 @@
    footer (shell/ChromeRedesign.css), dan judul hero (pages/HomeStage.css).
    Tidak pernah dipasang ke elemen yang berisi kalimat. Jalur
    reduced-motion tidak terpengaruh: ini bentuk, bukan gerakan. */
-   CATATAN TEKNIS: dipakai `font-style: oblique 9deg`, BUKAN
+   DICABUT DI FASE 6I. Kemiringan 9° dipasang sebagai `font-style:
+   oblique` — artinya browser MEMALSUKAN kemiringan dari huruf tegak.
+   Hasilnya terbaca murahan, dan pemilik situs langsung menangkapnya.
+   Pelajarannya: kemiringan hanya sah kalau hurufnya memang punya
+   potongan miring sendiri; Big Shoulders Display tidak punya. Blok ini
+   sengaja ditinggalkan sebagai catatan, kelasnya tidak lagi memiringkan
+   apa pun.
+
+   (Catatan lama: dipakai `font-style: oblique 9deg`, BUKAN
    `transform: skewX()`. Judul hero dan wordmark splash sudah punya
    animasi yang menulis `transform`, jadi skew akan tertimpa saat
    animasinya selesai (`transform: none`). `oblique` adalah properti
    huruf, bukan transform, jadi keduanya hidup berdampingan. Sudutnya
    disintesis browser karena Big Shoulders Display tidak punya potongan
-   miring sendiri. */
+   miring sendiri.) */
 .an-markslant {
-  font-style: oblique 9deg;
+  font-style: normal;
 }
 
 /* Aksara Sunda — hanya blok U+1B80–1BFF, jadi tidak pernah ikut terunduh
@@ -126,7 +134,7 @@
 
 :root {
   /* Curated 3-Font System: Independent, Distinctive, Highly Legible */
-  --font-display: "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Big Shoulders Display", "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   /* Judul/H1 saja. Syne lebih lebar ±1,68× dari huruf display lama
      (diukur dari advance width, bukan ditebak — lihat laporan Fase 6), jadi
      setiap clamp judul ikut dikalibrasi ulang. Fallback-nya huruf badan supaya
