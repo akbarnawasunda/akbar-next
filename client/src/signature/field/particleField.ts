@@ -110,7 +110,8 @@ const WORDMARK = STAGE_PHRASES[0];
  * kerapatan titik berapa pun, dan hasilnya gumpalan, bukan tulisan. Aksara
  * dirender sebagai teks sungguhan di `SundaScript.tsx`.
  */
-const WORDMARK_FONT = '"Syne", "Clash Display", "General Sans", sans-serif';
+const WORDMARK_FONT =
+  '"Big Shoulders Display", "Schibsted Grotesk", sans-serif';
 
 /** Mode yang menyusun huruf; butuh titik lebih banyak agar terbaca. */
 const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency", "transit"];

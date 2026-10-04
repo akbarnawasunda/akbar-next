@@ -3,69 +3,57 @@
    Satu-satunya sumber kebenaran untuk: font, warna, tipe, base.
    ============================================================ */
 
-/* Independent Non-Google Typefaces (Self-hosted from Fontshare / ITF) */
+/* ROSTER HURUF — FASE 6H.
+   Tiga huruf lama (display ITF, General Sans, mono lama) DIHAPUS dari
+   repo (bukan
+   sekadar tidak dipakai). Alasannya: pemilik situs minta huruf diganti,
+   bukan ditambah, dan tiga keluarga itu adalah bagian paling netral dari
+   tampilan lama. Perbandingan empat pasangan pada teks yang sama ada di
+   docs/notes/body-swap-candidates.png.
+
+   Empat suara, tidak lebih:
+     1. Big Shoulders Display 800 — H1 + wordmark (lihat blok di bawah)
+     2. Schibsted Grotesk 400/500/700 — badan teks, UI, H2/H3
+     3. Sometype Mono 400/500 — label, angka, konsol
+     4. Noto Sans Sundanese 400 — identitas aksara
+
+   Total 8 berkas / 114.012 B, turun dari 11 berkas / 218.048 B. */
 @font-face {
-  font-family: "Clash Display";
-  src: url("/assets/fonts/fontshare/clash-display-500.woff2") format("woff2");
+  font-family: "Schibsted Grotesk";
+  src: url("/assets/fonts/fontsource/schibsted-grotesk-400.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("/assets/fonts/fontsource/schibsted-grotesk-500.woff2")
+    format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Clash Display";
-  src: url("/assets/fonts/fontshare/clash-display-600.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Clash Display";
-  src: url("/assets/fonts/fontshare/clash-display-700.woff2") format("woff2");
+  font-family: "Schibsted Grotesk";
+  src: url("/assets/fonts/fontsource/schibsted-grotesk-700.woff2")
+    format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "General Sans";
-  src: url("/assets/fonts/fontshare/general-sans-400.woff2") format("woff2");
+  font-family: "Sometype Mono";
+  src: url("/assets/fonts/fontsource/sometype-mono-400.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "General Sans";
-  src: url("/assets/fonts/fontshare/general-sans-500.woff2") format("woff2");
+  font-family: "Sometype Mono";
+  src: url("/assets/fonts/fontsource/sometype-mono-500.woff2") format("woff2");
   font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "General Sans";
-  src: url("/assets/fonts/fontshare/general-sans-600.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Azeret Mono";
-  src: url("/assets/fonts/fontshare/azeret-mono-400.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Azeret Mono";
-  src: url("/assets/fonts/fontshare/azeret-mono-500.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Azeret Mono";
-  src: url("/assets/fonts/fontshare/azeret-mono-600.woff2") format("woff2");
-  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
@@ -138,16 +126,16 @@
 
 :root {
   /* Curated 3-Font System: Independent, Distinctive, Highly Legible */
-  --font-display: "Clash Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  /* Judul/H1 saja. Syne lebih lebar ±1,68× dari Clash pada kata yang sama
+  --font-display: "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Judul/H1 saja. Syne lebih lebar ±1,68× dari huruf display lama
      (diukur dari advance width, bukan ditebak — lihat laporan Fase 6), jadi
-     setiap clamp judul ikut dikalibrasi ulang. Fallback-nya Clash supaya
-     hierarki tidak runtuh ke font sistem sebelum Syne selesai dimuat. */
-  --font-title:   "Big Shoulders Display", "Clash Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+     setiap clamp judul ikut dikalibrasi ulang. Fallback-nya huruf badan supaya
+     hierarki tidak runtuh ke font sistem sebelum huruf judul dimuat. */
+  --font-title:   "Big Shoulders Display", "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   /* Aksara Sunda: gema kecil di bawah judul, bukan teks isi. */
-  --font-sunda:   "Noto Sans Sundanese", "General Sans", sans-serif;
-  --font-body:    "General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono:    "Azeret Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sunda:   "Noto Sans Sundanese", "Schibsted Grotesk", sans-serif;
+  --font-body:    "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono:    "Sometype Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Nocturnal Electronic Artist Palette — PHASE 4 CANONICAL.
      Satu sumber kebenaran warna untuk seluruh situs (dok:
@@ -266,7 +254,7 @@
      `@layer base`; sekarang satu sumber saja. `--text-meta` untuk
      label mono kecil. */
   /* FASE 6 — skala judul dikalibrasi ulang untuk Syne 800.
-     Syne menulis kata yang sama ±1,68× lebih lebar dari Clash Display
+     Syne menulis kata yang sama ±1,68× lebih lebar dari huruf display lama
      (advance width "NAWASUNDA." 11,46em vs 6,81em), jadi setiap angka
      judul dikalikan 0,60: LEBAR baris tetap seperti sebelumnya, yang
      berubah hanya tinggi hurufnya. Lihat docs/phase4-design-system.md §2. */
@@ -405,7 +393,8 @@
     word-break: break-word;
     overflow-wrap: break-word;
   }
-  /* H1 — dan hanya H1 — memakai Syne 800. H2/H3 tetap Clash Display. */
+  /* H1 — dan hanya H1 — memakai huruf judul (Big Shoulders Display 800).
+     H2/H3 memakai Schibsted Grotesk 700, satu tingkat lebih tenang. */
   h1 {
     font-family: var(--font-title);
     font-size: var(--text-hero);

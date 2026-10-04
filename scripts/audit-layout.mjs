@@ -26,9 +26,11 @@ const SHELL_FILE = "client/src/shell/PublicShell.css";
 const OVERFLOW_ALLOWLIST = [SHELL_FILE];
 
 const LOCAL_FONTS = [
-  "Clash Display",
-  "General Sans",
-  "Azeret Mono",
+  // Fase 6H: Clash Display / General Sans / Azeret Mono DIHAPUS dari repo.
+  // Sengaja tidak disisakan di sini supaya sisa pemakaiannya langsung
+  // terdeteksi sebagai pelanggaran.
+  "Schibsted Grotesk",
+  "Sometype Mono",
   // Fase 6: gema aksara Sunda — self-hosted.
   "Noto Sans Sundanese",
   // Fase 6E: font judul/H1. Menggantikan Syne, yang berkasnya sudah dihapus

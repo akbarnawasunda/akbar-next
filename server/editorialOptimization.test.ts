@@ -70,22 +70,52 @@ describe("high-performance image optimization & non-Google typography", () => {
     }
   });
 
-  it("serves curated non-Google Fontshare fonts locally with zero external Google font latency", () => {
-    const clashFont = assetPath("fonts/fontshare/clash-display-600.woff2");
-    const generalFont = assetPath("fonts/fontshare/general-sans-500.woff2");
-    const azeretFont = assetPath("fonts/fontshare/azeret-mono-500.woff2");
+  it("menyajikan empat suara huruf self-hosted tanpa satu pun panggilan CDN", () => {
+    // KONTRAK BERUBAH (Fase 6H, disengaja). Pemilik situs meminta huruf
+    // DIGANTI, bukan ditambah. Clash Display, General Sans, dan Azeret Mono
+    // dihapus dari repo dan digantikan Big Shoulders Display (judul),
+    // Schibsted Grotesk (badan/UI/H2-H3), dan Sometype Mono (label).
+    // Perbandingan yang mendasari pilihan ini:
+    // docs/notes/body-swap-candidates.png.
+    // Yang dijaga tes ini tidak berubah: semua huruf dilayani dari repo,
+    // tidak ada satu pun permintaan ke CDN huruf mana pun.
+    for (const file of [
+      "fonts/fontsource/big-shoulders-display-800.woff2",
+      "fonts/fontsource/schibsted-grotesk-400.woff2",
+      "fonts/fontsource/schibsted-grotesk-500.woff2",
+      "fonts/fontsource/schibsted-grotesk-700.woff2",
+      "fonts/fontsource/sometype-mono-400.woff2",
+      "fonts/fontsource/sometype-mono-500.woff2",
+      "fonts/fontsource/noto-sans-sundanese-400.woff2",
+    ]) {
+      expect(existsSync(assetPath(file)), file).toBe(true);
+    }
 
-    expect(existsSync(clashFont)).toBe(true);
-    expect(existsSync(generalFont)).toBe(true);
-    expect(existsSync(azeretFont)).toBe(true);
+    // Huruf lama benar-benar hilang dari repo, bukan sekadar tak dipakai.
+    for (const gone of [
+      "fonts/fontshare/clash-display-600.woff2",
+      "fonts/fontshare/general-sans-500.woff2",
+      "fonts/fontshare/azeret-mono-500.woff2",
+      "fonts/fontsource/syne-800.woff2",
+    ]) {
+      expect(existsSync(assetPath(gone)), gone).toBe(false);
+    }
 
     const indexCss = source("client/src/index.css");
-    expect(indexCss).toContain('@font-face {\n  font-family: "Clash Display";');
-    expect(indexCss).toContain('@font-face {\n  font-family: "General Sans";');
-    expect(indexCss).toContain('@font-face {\n  font-family: "Azeret Mono";');
-    expect(indexCss).toContain('--font-display: "Clash Display"');
-    expect(indexCss).toContain('--font-body:    "General Sans"');
-    expect(indexCss).toContain('--font-mono:    "Azeret Mono"');
+    expect(indexCss).toContain('@font-face {\n  font-family: "Schibsted Grotesk";');
+    expect(indexCss).toContain('@font-face {\n  font-family: "Sometype Mono";');
+    expect(indexCss).toContain('@font-face {\n  font-family: "Big Shoulders Display";');
+    expect(indexCss).toContain('--font-display: "Schibsted Grotesk"');
+    expect(indexCss).toContain('--font-body:    "Schibsted Grotesk"');
+    expect(indexCss).toContain('--font-mono:    "Sometype Mono"');
+    expect(indexCss).not.toContain("Clash Display");
+    expect(indexCss).not.toContain("Azeret Mono");
+
+    // Tidak ada CDN huruf di mana pun.
+    for (const file of ["client/index.html", "client/src/index.css"]) {
+      const text = source(file);
+      expect(text).not.toMatch(/fonts\.googleapis\.com|fonts\.gstatic\.com|api\.fontshare\.com/);
+    }
   });
 
   it("mencegah teks terpotong tanpa menyembunyikan overflow", () => {
