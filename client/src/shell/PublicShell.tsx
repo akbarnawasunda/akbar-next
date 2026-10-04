@@ -7,6 +7,7 @@ import { GlobalAudioPlayer } from "@/components/signature/GlobalAudioPlayer";
 import { RouteSignalCurtain } from "@/components/signature/RouteSignalCurtain";
 import { SignatureBackground } from "@/components/signature/SignatureBackground";
 import { NightAtmosphere } from "@/components/signature/NightAtmosphere";
+import { MotionOrchestrator } from "@/components/MotionOrchestrator";
 import { SignatureProvider } from "@/signature/SignatureProvider";
 import { languageOf } from "@/signature/routeSignal";
 import { useSignatureState } from "@/signature/useSignature";
@@ -85,6 +86,15 @@ function ShellBody({ children }: { children: ReactNode }) {
           </a>
         )}
         {children}
+        {/* [BUGFIX] MotionOrchestrator sudah lama ada sebagai berkas (CSS-nya
+            pun sudah dipasang di NightFrequencySignature.css lewat kelas
+            `.is-motion-in-view`), tapi komponennya sendiri tidak pernah
+            di-mount di mana pun — jadi SELURUH halaman `.nf-page` (semua
+            rute publik kecuali beranda `/`, studio, dan game) render
+            statis tanpa animasi masuk sama sekali. Dipasang di sini
+            (bukan di dalam ShellSurfaces yang nunggu `mounted`) supaya
+            section langsung diobservasi begitu halaman di-render. */}
+        {isEditorialRoute && <MotionOrchestrator />}
         {isEditorialRoute && <ShellSurfaces />}
       </div>
     </LightboxProvider>

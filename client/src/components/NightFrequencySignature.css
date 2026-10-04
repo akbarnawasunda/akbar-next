@@ -63,6 +63,42 @@
   transform: scaleX(1);
 }
 
+/* [BUGFIX] Seluruh section di atas (garis aksen tipis + bar di samping
+   judul) menunggu kelas `.is-revealed`, tapi tidak ada apa pun yang pernah
+   menambahkannya — `useScrollReveal` (client/src/hooks/useScrollReveal.ts)
+   sudah lama ada sebagai berkas tapi tidak pernah dipasang ref-nya ke
+   section mana pun. Sekarang dipasang di beranda (Home.tsx: kanal resmi,
+   jeda kutipan, teaser game), jadi section-section itu juga diberi gerak
+   masuk fade+naik yang sepadan dengan yang dipakai halaman `.nf-page`
+   lewat MotionOrchestrator (lihat MotionOrchestrator.css) — supaya kedua
+   sistem terasa setara, bukan satu halaman terasa "diam" dibanding yang
+   lain. Hero (`.an-hero-scene`) sengaja dikecualikan: ia harus langsung
+   kelihatan tanpa fade-in. ADEGAN 3 (rilisan) tidak diikutkan juga karena
+   sudah dibungkus `<Reveal>` sendiri (bukan anak langsung `main`). */
+.an-site main > section.reveal-ready:not(.an-hero-scene) {
+  transition:
+    opacity 520ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform 520ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+  will-change: opacity, transform;
+}
+.an-site main > section.reveal-ready:not(.an-hero-scene):not(.is-revealed) {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+}
+.an-site main > section.is-revealed:not(.an-hero-scene) {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .an-site main > section.reveal-ready:not(.an-hero-scene) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+}
+
 .nf-page main > section:not(.nf-page-hero) .nf-section-title,
 .nf-page main > section:not(.nf-page-hero) .en-section-intro,
 .an-site main > section:not(.an-hero) .section-heading,

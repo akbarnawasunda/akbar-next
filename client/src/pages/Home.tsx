@@ -23,6 +23,7 @@ import { MusicEmbed } from "@/components/MusicEmbed";
 import FanSignalSection from "@/components/FanSignalSection";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { Reveal } from "@/components/Reveal";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import {
   CtaPanel,
   CurrentSignalBoard,
@@ -94,6 +95,16 @@ export default function Home() {
   const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
   const [playerOpen, setPlayerOpen] = useState(false);
   const releaseCatalogRef = useRef<HTMLDivElement>(null);
+  // [BUGFIX] `.an-site main > section.is-revealed` punya dekorasi garis
+  // aksen yang tumbuh saat kelihatan (lihat NightFrequencySignature.css),
+  // tapi tidak ada apa pun yang pernah menambahkan kelas `is-revealed` —
+  // `useScrollReveal` sudah lama ada sebagai berkas tapi tidak pernah
+  // dipakai di mana pun. Hero sengaja TIDAK dipasangi (harus langsung
+  // kelihatan tanpa fade-in); ADEGAN 3 (rilisan) sudah punya animasinya
+  // sendiri lewat `<Reveal>`/`.an-rise` jadi tidak diikutkan juga.
+  const channelsRevealRef = useScrollReveal<HTMLElement>();
+  const pauseRevealRef = useScrollReveal<HTMLElement>();
+  const gameTeaserRevealRef = useScrollReveal<HTMLElement>();
 
   const publicContent = usePublicArtistContent();
   const contentQuery = trpc.content.list.useQuery(undefined, {
@@ -509,6 +520,7 @@ export default function Home() {
           {/* ADEGAN 4 — kanal resmi sebagai daftar tipografis, bukan deretan
               kartu identik. Marquee di bawahnya tetap dipakai sebagai ritme. */}
           <section
+            ref={channelsRevealRef}
             className="an-channels"
             id="platforms"
             aria-labelledby="channels-title"
@@ -570,7 +582,7 @@ export default function Home() {
               sudah dibacakan screen reader lewat `.an-hero-lede`; mengulang
               di sini hanya untuk mata, bukan telinga. Tidak ada aset gambar
               baru; hanya CSS pada DOM yang sudah ringan ini. */}
-          <section className="an-pause" aria-hidden="true">
+          <section ref={pauseRevealRef} className="an-pause" aria-hidden="true">
             <p className="an-pause-quote">
               Breakbeat, electronic bass, dan remix.
             </p>
@@ -591,6 +603,7 @@ export default function Home() {
 
           {gameEnabled ? (
             <section
+              ref={gameTeaserRevealRef}
               className="section game-teaser-section"
               id="game"
               aria-labelledby="game-teaser-title"
