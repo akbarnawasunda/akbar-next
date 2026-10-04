@@ -40,6 +40,8 @@ import {
   youtubeThumbnail,
 } from "@/content/artistPlatform";
 import { SignatureStage } from "@/components/signature/SignatureStage";
+import { SundaScript } from "@/components/signature/SundaScript";
+import { SUNDA_NAME } from "@/content/sundaneseScript";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
 // Komposisi baru beranda (checkpoint A). Dimuat setelah Home.css: nama kelas
@@ -341,17 +343,12 @@ export default function Home() {
                   ))}
                 </span>
               </h1>
-              {/* Gema aksara Sunda di bawah nama: ᮃᮊ᮪ᮘᮁ ᮔᮝᮞᮥᮔ᮪ᮓ.
-                  `aria-hidden` karena ini pengulangan nama yang sudah
-                  dibacakan H1 di atasnya — bukan informasi baru, dan tidak
-                  ada klaim makna yang dilekatkan padanya. Transliterasi
-                  usulan, menunggu konfirmasi pemilik (lihat
-                  docs/phase6-signature-report.md). */}
-              <p className="an-hero-sunda" lang="su" aria-hidden="true">
-                <span>ᮃᮊ᮪ᮘᮁ</span>
-                <span className="an-hero-sunda-sep">·</span>
-                <span>ᮔᮝᮞᮥᮔ᮪ᮓ</span>
-              </p>
+              {/* Pelat nama aksara Sunda. Bukan karakter lepas: komponennya
+                  selalu membawa kunci baca (label + bacaan Latin) dan
+                  line-height longgar supaya tanda tempel aksaranya tidak
+                  terpotong. Isi dari client/src/content/sundaneseScript.ts;
+                  transliterasi masih menunggu konfirmasi pemilik. */}
+              <SundaScript entry={SUNDA_NAME} lang="id" tone="hero" />
               <p className="an-hero-lede">{heroBody}</p>
 
               {/* Hanya tampil otomatis pada 1 November (waktu Jakarta). */}

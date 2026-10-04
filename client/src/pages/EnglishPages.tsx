@@ -7,10 +7,10 @@ import {
   SignalIndicator,
   type SignalRow,
 } from "@/components/editorial/EditorialKit";
-import {
-  SignalHeading,
-} from "@/components/signature/SignalType";
+import { SignalHeading } from "@/components/signature/SignalType";
 import { SignatureStage } from "@/components/signature/SignatureStage";
+import { SundaScript } from "@/components/signature/SundaScript";
+import { SUNDA_NAME } from "@/content/sundaneseScript";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -27,10 +27,7 @@ import {
 } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
 import { Link } from "wouter";
-import {
-  EnglishFooter,
-  EnglishHeader,
-} from "@/components/EnglishChrome";
+import { EnglishFooter, EnglishHeader } from "@/components/EnglishChrome";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { PrivacyView } from "./PrivacyPolicy";
@@ -126,9 +123,9 @@ type CatalogItem = {
 };
 
 function mergedCatalog(cmsReleases: CmsRelease[]): CatalogItem[] {
-  const cmsCatalog = cmsReleases.map((item) => {
+  const cmsCatalog = cmsReleases.map(item => {
     const fallback = releases.find(
-      (release) =>
+      release =>
         release.title.trim().toLowerCase() === item.title.trim().toLowerCase()
     );
     return {
@@ -136,7 +133,8 @@ function mergedCatalog(cmsReleases: CmsRelease[]): CatalogItem[] {
       format: item.format || fallback?.format || "Release",
       year: item.year || fallback?.year || "—",
       platform: item.platform || fallback?.platform || "Official link",
-      href: item.url || fallback?.href || "https://soundcloud.com/akbarnawasunda",
+      href:
+        item.url || fallback?.href || "https://soundcloud.com/akbarnawasunda",
       image: item.artworkUrl || fallback?.image || officialBrand.socialPreview,
       story: item.story,
       credits: item.credits,
@@ -149,14 +147,14 @@ function mergedCatalog(cmsReleases: CmsRelease[]): CatalogItem[] {
     ...cmsCatalog,
     ...releases
       .filter(
-        (legacy) =>
+        legacy =>
           !cmsCatalog.some(
-            (item) =>
+            item =>
               item.title.trim().toLowerCase() ===
               legacy.title.trim().toLowerCase()
           )
       )
-      .map((legacy) => ({
+      .map(legacy => ({
         title: legacy.title,
         format: legacy.format || "Release",
         year: legacy.year || "—",
@@ -191,8 +189,7 @@ export function EnglishHome() {
   const catalog = mergedCatalog(cms.data?.releases ?? []);
   const editablePlatformLinks = publicPlatformLinks(cms.data);
   const current =
-    cms.data?.releases.find((item) => item.isCurrent) ||
-    cms.data?.releases[0];
+    cms.data?.releases.find(item => item.isCurrent) || cms.data?.releases[0];
 
   const activeRelease: CatalogItem = current
     ? {
@@ -217,7 +214,7 @@ export function EnglishHome() {
   const activeVideos = videos;
   const publicEvents = publicUpcomingEvents(cms.data);
   const featuredEvent =
-    publicEvents.find((event) => event.isFeatured) || publicEvents[0];
+    publicEvents.find(event => event.isFeatured) || publicEvents[0];
 
   const currentSignalRows: SignalRow[] = [
     {
@@ -313,6 +310,9 @@ export function EnglishHome() {
                 ))}
               </span>
             </h1>
+            {/* Pelat nama aksara Sunda — sama persis dengan beranda ID,
+                dengan label berbahasa Inggris. */}
+            <SundaScript entry={SUNDA_NAME} lang="en" tone="hero" />
             <p className="hero-description">
               Producer, remixer, and electronic bass artist from Bandung
               Barat, Indonesia.
@@ -409,7 +409,7 @@ export function EnglishHome() {
             </Link>
           </div>
           <div className="home-platform-rack">
-            {editablePlatformLinks.map((platform) => (
+            {editablePlatformLinks.map(platform => (
               <a
                 className={`home-platform-card platform-${platform.label
                   .toLowerCase()
@@ -451,18 +451,19 @@ export function EnglishHome() {
             <a
               className="text-link"
               href={
-                editablePlatformLinks.find((link) => link.label === "Spotify")
+                editablePlatformLinks.find(link => link.label === "Spotify")
                   ?.href ||
                 "https://open.spotify.com/intl-id/artist/7KOQuIQLuxyklLox0RDMMw"
               }
               target="_blank"
               rel="noreferrer"
             >
-              SPOTIFY <PlatformIcon label="Spotify" /> <ArrowUpRight size={14} />
+              SPOTIFY <PlatformIcon label="Spotify" />{" "}
+              <ArrowUpRight size={14} />
             </a>
           </div>
           <div className="release-grid">
-            {catalog.map((release) => (
+            {catalog.map(release => (
               <a
                 className="release-card"
                 key={release.title}
@@ -578,9 +579,7 @@ export function EnglishHome() {
             </Link>
           </div>
           <div className="live-status">
-            <span>
-              {featuredEvent ? "NEXT CONFIRMED SHOW" : "DATES"}
-            </span>
+            <span>{featuredEvent ? "NEXT CONFIRMED SHOW" : "DATES"}</span>
             <strong>
               {featuredEvent?.title || (
                 <>
@@ -598,7 +597,7 @@ export function EnglishHome() {
           </div>
           {publicEvents.length ? (
             <div className="home-live-events" aria-label="Confirmed live dates">
-              {publicEvents.slice(0, 3).map((event) => {
+              {publicEvents.slice(0, 3).map(event => {
                 const eventHref =
                   event.ticketUrl || event.rsvpUrl || "/en/live";
                 const locationLabel =
@@ -626,7 +625,9 @@ export function EnglishHome() {
                     <a
                       className="home-live-event-source"
                       href={eventHref}
-                      target={eventHref.startsWith("http") ? "_blank" : undefined}
+                      target={
+                        eventHref.startsWith("http") ? "_blank" : undefined
+                      }
                       rel={
                         eventHref.startsWith("http") ? "noreferrer" : undefined
                       }

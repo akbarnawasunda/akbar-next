@@ -103,12 +103,14 @@ function flowAngle(x: number, y: number, t: number) {
 const WORDMARK = STAGE_PHRASES[0];
 
 /**
- * Font panggung = font JUDUL situs (Syne 800), lalu aksara Sunda, lalu
- * fallback. Tumpukan ini dipakai per-glyph oleh kanvas: frasa Latin diambil
- * dari Syne, frasa beraksara Sunda jatuh ke Noto Sans Sundanese.
+ * Font panggung = font JUDUL situs (Syne 800), lalu fallback.
+ *
+ * Panggung hanya menyusun teks Latin. Aksara Sunda sengaja TIDAK pernah
+ * disusun partikel: tanda tempelnya (rarangkén) terlalu halus untuk
+ * kerapatan titik berapa pun, dan hasilnya gumpalan, bukan tulisan. Aksara
+ * dirender sebagai teks sungguhan di `SundaScript.tsx`.
  */
-const WORDMARK_FONT =
-  '"Syne", "Noto Sans Sundanese", "Clash Display", "General Sans", sans-serif';
+const WORDMARK_FONT = '"Syne", "Clash Display", "General Sans", sans-serif';
 
 /** Mode yang menyusun huruf; butuh titik lebih banyak agar terbaca. */
 const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency", "transit"];
@@ -1291,12 +1293,6 @@ export function createParticleField(
     };
     void fonts
       .load(`800 120px ${WORDMARK_FONT}`)
-      .then(resample)
-      .catch(() => undefined);
-    // Frasa kedua beraksara Sunda: fontnya punya unicode-range sendiri,
-    // jadi ia tidak ikut terunduh oleh permintaan Latin di atas.
-    void fonts
-      .load(`700 120px "Noto Sans Sundanese"`, STAGE_PHRASES[1].join(" "))
       .then(resample)
       .catch(() => undefined);
     void fonts.ready.then(resample).catch(() => undefined);

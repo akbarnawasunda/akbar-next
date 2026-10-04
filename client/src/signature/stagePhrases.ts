@@ -12,24 +12,51 @@
  * diganti. Dua frasa menyisakan ~0,36 progres untuk masing-masing sebelum
  * titik dilepas terbang di `RELEASE_PROGRESS`.
  *
- * Nama domain (akbarnawasunda.my.id) tetap hidup sebagai teks di DOM lewat
- * `alsoKnownAs` panggung, jadi yang dilepas hanyalah versi partikelnya.
- */
-/**
- * Frasa kedua ditulis dengan aksara Sunda (blok Unicode U+1B80–1BFF):
- * ᮓᮤᮏᮦ ᮃᮊ᮪ᮘᮁ ᮛᮦᮙᮤᮊ᮪ᮞ᮪ = alias "DJ AKBAR REMIX" yang sudah dipakai
- * artis di platform. Versi Latinnya tetap hidup sebagai teks di DOM lewat
- * `alsoKnownAs` panggung, jadi pembaca layar dan mesin pencari tidak
- * kehilangan apa pun kalau aksaranya tidak bisa dirender.
+ * KEDUA FRASA DITULIS LATIN — dan itu keputusan yang sudah pernah salah
+ * sekali. Percobaan menyusun frasa kedua dengan aksara Sunda membuat alias
+ * "DJ AKBAR REMIX" hilang dari layar: partikel adalah titik-titik, jadi
+ * tanda tempel aksara (rarangkén) yang halus itu tidak pernah terbaca pada
+ * kerapatan titik berapa pun, dan yang tersisa hanya gumpalan. Aksara Sunda
+ * sekarang hidup sebagai TEKS SUNGGUHAN (lihat
+ * `client/src/content/sundaneseScript.ts` + `SundaScript.tsx`), tempat ia
+ * dirender dengan font aslinya dan benar-benar terbaca.
  *
- * Transliterasi ini USULAN dan masih perlu konfirmasi pemilik — lihat
- * docs/phase6-signature-report.md. Tidak ada klaim makna yang dilekatkan
- * padanya di mana pun di situs ini.
+ * Nama domain (akbarnawasunda.my.id) tetap hidup sebagai teks di DOM lewat
+ * `alsoKnownAs` panggung.
  */
 export const STAGE_PHRASES: string[][] = [
   ["AKBAR", "NAWASUNDA"],
-  ["ᮓᮤᮏᮦ ᮃᮊ᮪ᮘᮁ", "ᮛᮦᮙᮤᮊ᮪ᮞ᮪"],
+  ["DJ AKBAR", "REMIX"],
 ];
+
+/**
+ * Keterangan tiap frasa untuk baris indeks di bawah panggung.
+ *
+ * Panggung TIDAK boleh menebak isi daftar di atas: kalau frasanya berubah,
+ * keterangannya ikut dari sini. `kind` dipakai panggung untuk memutuskan
+ * frasa mana yang pantas ditemani pelat aksara (hanya nama resmi).
+ */
+export const STAGE_PHRASE_META: {
+  /** Teks satu baris, persis seperti yang disusun partikel. */
+  text: string;
+  kind: "name" | "alias";
+}[] = [
+  { text: "AKBAR NAWASUNDA", kind: "name" },
+  { text: "DJ AKBAR REMIX", kind: "alias" },
+];
+
+/**
+ * Posisi scroll (dalam progres 0..1 jalur panggung) tempat tiap frasa
+ * benar-benar sudah tersusun utuh.
+ *
+ * Dipakai tombol daftar frasa di `SignatureStage`: menekan "02" membawa
+ * pengunjung ke titik jalur tempat partikel menyusun alias — bukan animasi
+ * palsu, hanya menggulir ke posisi yang memang sudah ada. Nilainya dijaga
+ * tes: `phraseFor(PHRASE_SCROLL_TARGET[i])` harus sama dengan `i`, dan
+ * semuanya harus di bawah `RELEASE_PROGRESS` (di atas itu titik sudah
+ * dilepas dan tidak ada kata yang tersusun).
+ */
+export const PHRASE_SCROLL_TARGET = [0.18, 0.56];
 
 /** Progres saat titik berhenti ditarik pegas dan mulai terbang bebas. */
 export const RELEASE_PROGRESS = 0.75;

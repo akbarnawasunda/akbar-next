@@ -182,29 +182,12 @@
   white-space: nowrap;
 }
 
-/* -- Gema aksara Sunda ----------------------------------------
-   Satu baris kecil persis di bawah nama. Bukan ornamen yang bisa
-   dipindah: isinya nama orang ini, ditulis dengan aksara daerah asalnya.
-   Warnanya aksen tunggal (--signal, 9,1:1 di atas --ink), ukurannya tidak
-   pernah lebih besar dari lede, dan karena `aria-hidden` ia tidak pernah
-   membuat pembaca layar mengulang nama dua kali.
-   Kalau font aksara gagal dimuat, fallback-nya teks biasa — baris ini
-   mengecil, tidak ada layout yang runtuh. */
-.an-site .an-hero-sunda {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.5em;
-  margin: 0;
-  font-family: var(--font-sunda);
-  font-weight: 700;
-  font-size: clamp(0.95rem, 1.5vw, 1.25rem);
-  line-height: 1.5;
-  color: var(--signal);
-}
-
-.an-site .an-hero-sunda-sep {
-  color: color-mix(in srgb, var(--signal) 50%, transparent);
+/* -- Pelat nama aksara Sunda ----------------------------------
+   Gaya pelatnya ada di SundaScript.css (satu komponen, satu berkas).
+   Di sini hanya posisinya di dalam hero: menempel di bawah judul,
+   bukan mengambang dengan jarak section. */
+.an-site .an-hero-inner .an-sunda {
+  margin-top: calc(var(--space-2xs) * -1);
 }
 
 .an-site .an-hero-lede {

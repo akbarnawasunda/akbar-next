@@ -80,6 +80,138 @@
   overflow-wrap: anywhere;
 }
 
+/* ============================================================
+   DAFTAR FRASA — alias sebagai teks, bukan hanya partikel
+   ------------------------------------------------------------
+   Kenapa ada: partikel tidak bisa diandalkan sebagai satu-satunya
+   pembawa informasi. Ia mati pada reduced motion, hemat data,
+   perangkat lemah, dan JS gagal; bahkan saat hidup, titik yang
+   sedang buyar tidak terbaca siapa pun. Dua nama yang disusun
+   panggung sekarang selalu ada sebagai teks, dan yang sedang
+   disusun ditandai.
+   ============================================================ */
+
+.an-signature-stage-phrases {
+  display: grid;
+  justify-items: center;
+  gap: clamp(10px, 1.4vw, 16px);
+  width: 100%;
+}
+
+.an-signature-stage-phrases-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute-soft);
+}
+
+.an-signature-stage-phrase-list {
+  display: grid;
+  gap: clamp(10px, 1.6vw, 18px);
+  width: min(100%, 44rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.an-signature-stage-phrase-list > li {
+  display: grid;
+  min-width: 0;
+}
+
+/* Satu aturan untuk dua elemen: <button> saat panggung hidup, <span>
+   saat tidak. Reset tombol ditulis eksplisit supaya tidak ada gaya
+   bawaan peramban yang bocor. */
+.an-signature-stage-phrase {
+  width: 100%;
+  margin: 0;
+  font: inherit;
+  text-align: inherit;
+  background: transparent;
+  appearance: none;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0 clamp(12px, 1.6vw, 20px);
+  padding: clamp(10px, 1.4vw, 14px) clamp(12px, 1.8vw, 18px);
+  border: 1px solid color-mix(in srgb, var(--paper) 10%, transparent);
+  /* Garis kiri adalah penanda aktif; saat tidak aktif ia transparan,
+     jadi lebar barisnya tidak pernah berubah saat frasa berganti. */
+  border-left: 2px solid transparent;
+  color: var(--mute);
+  transition:
+    border-color 320ms var(--ease, ease),
+    color 320ms var(--ease, ease),
+    background-color 320ms var(--ease, ease);
+}
+
+/* Hanya versi tombol yang bisa ditekan. */
+button.an-signature-stage-phrase {
+  cursor: pointer;
+}
+
+button.an-signature-stage-phrase:hover {
+  border-color: color-mix(in srgb, var(--paper) 22%, transparent);
+  background: color-mix(in srgb, var(--paper) 6%, transparent);
+  color: var(--paper);
+}
+
+button.an-signature-stage-phrase:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.an-signature-stage-phrase[data-active="true"] {
+  border-left-color: var(--signal);
+  background: color-mix(in srgb, var(--paper) 4%, transparent);
+  color: var(--paper);
+}
+
+.an-signature-stage-phrase-index {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1.9;
+  color: var(--mute-soft);
+}
+
+.an-signature-stage-phrase[data-active="true"] .an-signature-stage-phrase-index {
+  color: var(--signal);
+}
+
+.an-signature-stage-phrase-body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  text-align: left;
+}
+
+.an-signature-stage-phrase-text {
+  font-family: var(--font-title);
+  font-size: clamp(1.05rem, 2vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+/* Mode kontras paksa: penanda aktif tidak boleh bergantung warna saja. */
+@media (forced-colors: active) {
+  .an-signature-stage-phrase[data-active="true"] {
+    border-left-color: Highlight;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-signature-stage-phrase {
+    transition: none;
+  }
+}
+
 /* Konteks panggung: tiga angka katalog yang dihitung. Isinya fakta tentang
    musiknya, bukan keterangan tentang efeknya. Baris era/jalan-perjalanan
    lama dihapus (Phase 3 §2 baris 1) — isian itu milik /universe. */
@@ -125,6 +257,10 @@
   }
   .an-signature-stage-stats {
     gap: 18px 26px;
+  }
+  .an-signature-stage-phrase {
+    padding: 10px 12px;
+    gap: 0 10px;
   }
 }
 
