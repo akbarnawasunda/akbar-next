@@ -369,7 +369,7 @@ body::before {
     padding: 92px var(--ref-gutter) 42px !important;
     background-position: 63% center !important;
   }
-  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(1.44rem, 6.9vw, 2.4rem) !important; }
+  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(1.4rem, 6.7vw, 2.33rem) !important; }
   .nf-hero-note { align-self: stretch !important; max-width: none !important; }
   .nf-section, .nf-platform-hub { padding-block: 70px !important; }
   .nf-section-title { display: block !important; }
@@ -400,7 +400,7 @@ body::before {
   }
   .an-site .home-hero-portrait { order: -1; width: 100% !important; height: 405px !important; }
   .an-site .hero-copy { max-width: 100% !important; }
-  .an-site .hero-copy .hero-title-editorial { font-size: clamp(1.2rem, 7.2vw, 2.4rem) !important; }
+  .an-site .hero-copy .hero-title-editorial { font-size: clamp(1.2rem, 6.7vw, 2.33rem) !important; }
   .an-site .hero-description { max-width: 36ch !important; margin: 22px 0 24px !important; font-size: 0.65rem !important; }
   .an-site .hero-actions { gap: 10px 18px !important; }
   .an-site .button-primary { min-height: 44px; }
@@ -418,13 +418,13 @@ body::before {
 }
 @media (max-width: 480px) {
   .nf-page-hero { min-height: 640px !important; }
-  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(1.44rem, 6.9vw, 2.4rem) !important; }
+  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(1.4rem, 6.7vw, 2.33rem) !important; }
   .nf-platform-grid { grid-template-columns: 1fr !important; }
   .nf-visual-grid { grid-template-rows: 260px 190px !important; }
   .nf-catalog-card { flex-basis: min(78vw, 290px) !important; min-height: 350px !important; }
   .an-site .an-hero { min-height: 680px !important; }
   .an-site .home-hero-portrait { height: 330px !important; }
-  .an-site .hero-copy .hero-title-editorial { font-size: clamp(1.2rem, 7.2vw, 2.4rem) !important; }
+  .an-site .hero-copy .hero-title-editorial { font-size: clamp(1.2rem, 6.7vw, 2.33rem) !important; }
   .an-site .section h2, .an-site .home-signal-copy h2 { font-size: clamp(2.7rem, 15vw, 5rem) !important; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -523,7 +523,7 @@ body::before {
     background-position: 66% center !important;
   }
   .music-reference-page .nf-page-hero::after { top: 78px; right: 20px; }
-  .music-reference-page .nf-page-hero h1 { font-size: clamp(1.44rem, 6.9vw, 2.4rem) !important; }
+  .music-reference-page .nf-page-hero h1 { font-size: clamp(1.4rem, 6.7vw, 2.33rem) !important; }
   .music-reference-page .an-story-section { padding-block: 62px !important; }
   .music-reference-page .an-story-copy h2 { max-width: 9ch !important; }
   .music-reference-page .nf-platform-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; max-width: none; }
@@ -532,7 +532,7 @@ body::before {
 @media (max-width: 480px) {
   .music-reference-page .nf-page-hero::after { display: none; }
   .music-reference-page .nf-page-hero { min-height: 640px !important; }
-  .music-reference-page .nf-page-hero h1 { font-size: clamp(1.44rem, 6.9vw, 2.4rem) !important; }
+  .music-reference-page .nf-page-hero h1 { font-size: clamp(1.4rem, 6.7vw, 2.33rem) !important; }
   .music-reference-page .nf-platform-grid { grid-template-columns: 1fr !important; }
 }
 
@@ -569,7 +569,7 @@ body::before {
   .an-site .hero-copy .hero-title-editorial {
     /* Kata judul dipaksa nowrap, jadi ukurannya harus ikut lebar layar.
        Lantai rem tetap membuat "NAWASUNDA." terpotong di layar 320px. */
-    font-size: clamp(1.2rem, 7.2vw, 2.4rem) !important;
+    font-size: clamp(1.2rem, 6.7vw, 2.33rem) !important;
     letter-spacing: -0.06em !important;
   }
   .an-site .hero-copy .hero-title-word {
@@ -869,7 +869,7 @@ body::before {
   .nf-page .nf-epk-hero { min-height: 650px !important; }
   .nf-page .nf-page-hero h1,
   .en-page .nf-page-hero h1,
-  .nf-page .nf-epk-hero h1 { font-size: clamp(1.44rem, 6.9vw, 2.4rem) !important; line-height: 0.92 !important; letter-spacing: -0.05em !important; }
+  .nf-page .nf-epk-hero h1 { font-size: clamp(1.4rem, 6.7vw, 2.33rem) !important; line-height: 0.92 !important; letter-spacing: -0.05em !important; }
   .nf-page .nf-section,
   .en-page .nf-section { padding-block: 64px !important; }
   .nf-page .nf-section-title,
@@ -993,7 +993,7 @@ body::before {
   .en-page .nf-epk-hero h1,
   .nf-page .an-inquiry-hero h1,
   .en-page .an-inquiry-hero h1 {
-    font-size: clamp(1.44rem, 6.9vw, 2.4rem) !important;
+    font-size: clamp(1.4rem, 6.7vw, 2.33rem) !important;
     letter-spacing: -0.05em !important;
   }
 }

@@ -25,6 +25,7 @@ import {
   Sparkles,
   Ticket,
 } from "lucide-react";
+import { Fragment } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { Link } from "wouter";
 import { EnglishFooter, EnglishHeader } from "@/components/EnglishChrome";
@@ -298,15 +299,18 @@ export function EnglishHome() {
               aria-label={displayHeroTitle}
             >
               <span aria-hidden="true">
+                {/* Lihat catatan di Home.tsx: spasi harus jadi saudara
+                    `.hero-title-mask`, bukan anaknya. */}
                 {heroTitleWords.map((word, index) => (
-                  <span
-                    className="hero-title-mask"
-                    key={`${word}-${index}`}
-                    style={{ "--hero-word-index": index } as CSSProperties}
-                  >
-                    <span className="hero-title-word">{word}</span>
-                    {index < heroTitleWords.length - 1 ? " " : null}
-                  </span>
+                  <Fragment key={`${word}-${index}`}>
+                    {index > 0 ? " " : null}
+                    <span
+                      className="hero-title-mask"
+                      style={{ "--hero-word-index": index } as CSSProperties}
+                    >
+                      <span className="hero-title-word">{word}</span>
+                    </span>
+                  </Fragment>
                 ))}
               </span>
             </h1>
@@ -314,8 +318,12 @@ export function EnglishHome() {
                 dengan label berbahasa Inggris. */}
             <SundaScript entry={SUNDA_NAME} lang="en" tone="hero" />
             <p className="hero-description">
-              Producer, remixer, and electronic bass artist from Bandung
-              Barat, Indonesia.
+              {/* Satu literal, bukan teks JSX lepas: server/internationalization.test.ts
+                  memeriksa potongan "Barat, Indonesia." di sumbernya, dan teks
+                  lepas bisa dipatahkan Prettier di tengah potongan itu. */}
+              {
+                "Producer, remixer, and electronic bass artist from Bandung Barat, Indonesia."
+              }
             </p>
             <div className="hero-actions">
               <a

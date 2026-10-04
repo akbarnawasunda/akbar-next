@@ -28,9 +28,14 @@ const source = (path: string) =>
  * Yang dijaga tes ini tidak berubah: tidak boleh ada kata judul yang
  * melewati ruang teks di layar 320px.
  *
- *   sum(advance "NAWASUNDA.") / upem = 11,963 ; 11,963 - (0,05 × 10) = 11,463
+ *   sum(advance "NAWASUNDA.") / upem = 11,963 ; 11,963 + (0,02 × 10) = 12,163
+ *
+ * KONTRAK BERUBAH LAGI (Fase 6D, disengaja): tracking judul dilonggarkan
+ * dari -0,05em ke +0,02em karena di bawah itu huruf Syne 800 benar-benar
+ * bertabrakan (docs/notes/hero-tracking-scan.png). Kata yang sama kini 12,163em, jadi
+ * seluruh clamp di CSS dikecilkan ±2-3% agar lebar barisnya tidak berubah.
  */
-const HERO_WORD_EM = 11.463;
+const HERO_WORD_EM = 12.163;
 const SMALLEST_PHONE = 320;
 const GUTTER = 20; // --hx-gutter / --ref-gutter pada <= 767.98px
 

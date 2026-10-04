@@ -7,7 +7,13 @@ import {
   Sparkles,
   Ticket,
 } from "lucide-react";
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  type CSSProperties,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Link } from "wouter";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { PlatformMarquee } from "@/components/PlatformMarquee";
@@ -331,15 +337,21 @@ export default function Home() {
               >
                 <span className="sr-only">{displayHeroTitle}</span>
                 <span aria-hidden="true">
+                  {/* Spasi antar kata WAJIB di luar `.hero-title-mask`.
+                      Mask itu inline-block, dan spasi di ujung inline-block
+                      dipangkas browser — dulu judulnya terbaca menyatu
+                      "AKBARNAWASUNDA". Fragment di bawah menaruh spasi
+                      sebagai simpul saudara, bukan anak. */}
                   {heroTitleWords.map((word, index) => (
-                    <span
-                      className="hero-title-mask"
-                      key={`${word}-${index}`}
-                      style={{ "--hero-word-index": index } as CSSProperties}
-                    >
-                      <span className="hero-title-word">{word}</span>
-                      {index < heroTitleWords.length - 1 ? " " : null}
-                    </span>
+                    <Fragment key={`${word}-${index}`}>
+                      {index > 0 ? " " : null}
+                      <span
+                        className="hero-title-mask"
+                        style={{ "--hero-word-index": index } as CSSProperties}
+                      >
+                        <span className="hero-title-word">{word}</span>
+                      </span>
+                    </Fragment>
                   ))}
                 </span>
               </h1>
