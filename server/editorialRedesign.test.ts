@@ -189,14 +189,20 @@ describe("aset statis redesign", () => {
   const read = (path: string) =>
     readFileSync(resolve(process.cwd(), path), "utf8");
 
-  it("splash hanya tampil sekali per sesi dan punya batas durasi jelas", () => {
+  it("splash punya versi penuh dan versi ringkas dengan batas durasi jelas", () => {
     const indexHtml = read("client/index.html");
     expect(indexHtml).toContain("an-splash-seen");
     expect(indexHtml).toContain("sessionStorage");
-    // Batas durasi splash: minimal 1.4 detik agar sekuens tanda tangan
-    // terbaca, maksimal 2.2 detik sebagai jaring pengaman.
-    expect(indexHtml).toContain("MIN_VISIBLE = 1400");
-    expect(indexHtml).toContain("MAX_VISIBLE = 2200");
+    // KONTRAK BERUBAH (Fase 6F, disengaja): kunjungan kedua dalam satu sesi
+    // dulu melewatkan splash sepenuhnya, dan itu membuat layar pembuka
+    // terasa "tidak ada" di desktop (sekali reload, hilang sampai tab
+    // ditutup). Sekarang kunjungan kedua mendapat versi RINGKAS 460ms,
+    // bukan tidak sama sekali. Kunjungan pertama naik 1400 → 1450ms karena
+    // sekuensnya kini berakhir di ±1,40 dtk; di 1400ms garis terakhirnya
+    // terpotong.
+    expect(indexHtml).toContain("MIN_VISIBLE = seen ? 460 : 1450");
+    expect(indexHtml).toContain("MAX_VISIBLE = seen ? 900 : 2200");
+    expect(indexHtml).toContain("an-splash-quick");
     expect(indexHtml).toMatch(/prefers-reduced-motion: reduce/);
   });
 
