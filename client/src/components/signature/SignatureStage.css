@@ -153,6 +153,41 @@ button.an-signature-stage-phrase {
   cursor: pointer;
 }
 
+/* Petunjuk arah: hanya muncul saat baris disorot/difokus, dan hanya pada
+   versi tombol. Dibuat lewat `::after` — tidak ada simpul teks baru, jadi
+   pembaca layar tidak kebagian karakter panah yang dibacakan aneh
+   (perannya sudah dipegang aria-label tombolnya). */
+button.an-signature-stage-phrase::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: clamp(12px, 1.8vw, 18px);
+  width: 14px;
+  height: 1px;
+  background: var(--signal);
+  transform: translate(-6px, -50%) scaleX(0);
+  transform-origin: 100% 50%;
+  opacity: 0;
+  transition:
+    transform 260ms var(--ease, ease),
+    opacity 260ms var(--ease, ease);
+}
+
+button.an-signature-stage-phrase {
+  position: relative;
+}
+
+button.an-signature-stage-phrase:is(:hover, :focus-visible)::after {
+  transform: translate(0, -50%) scaleX(1);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button.an-signature-stage-phrase::after {
+    transition: none;
+  }
+}
+
 button.an-signature-stage-phrase:hover {
   border-color: color-mix(in srgb, var(--paper) 22%, transparent);
   background: color-mix(in srgb, var(--paper) 6%, transparent);

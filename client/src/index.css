@@ -84,11 +84,18 @@
 
 /* Aksara Sunda — hanya blok U+1B80–1BFF, jadi tidak pernah ikut terunduh
    untuk teks Latin dan tidak pernah membajak teks biasa. Self-hosted dari
-   @fontsource/noto-sans-sundanese (SIL OFL). */
+   @fontsource/noto-sans-sundanese (SIL OFL).
+
+   BOBOT 400, BUKAN 700 — ini keputusan yang sudah pernah salah sekali.
+   Pada bobot 700 goresan aksaranya menebal sampai mata hurufnya tertutup
+   dan deretnya terbaca seperti coretan miring, bukan tulisan. Perbandingan
+   keempat bobot ada di docs/notes/aksara-weight-compare.png: 400 yang
+   bentuknya paling jelas — dan filenya paling kecil (4.988 B vs 5.136 B).
+   Jangan naikkan bobot ini tanpa melihat gambar itu lebih dulu. */
 @font-face {
   font-family: "Noto Sans Sundanese";
-  src: url("/assets/fonts/fontsource/noto-sans-sundanese-700.woff2") format("woff2");
-  font-weight: 700;
+  src: url("/assets/fonts/fontsource/noto-sans-sundanese-400.woff2") format("woff2");
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
   unicode-range: U+1B80-1BBF, U+1BC0-1BFF, U+1CC0-1CC7;

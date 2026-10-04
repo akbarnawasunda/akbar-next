@@ -42,8 +42,11 @@ type StageCopy = {
   releases: string;
   since: string;
   platforms: string;
-  /** Judul daftar frasa di bawah panggung. */
+  /** Judul daftar frasa saat partikel hidup… */
   spelling: string;
+  /** …dan saat tidak. Panggung tidak boleh mengaku sedang menyusun apa pun
+      kalau partikelnya memang mati. */
+  spellingStatic: string;
   /** Label aksi tombol frasa, `%s` diganti nama yang dituju. */
   jump: (name: string) => string;
 };
@@ -54,6 +57,7 @@ const COPY: Record<"id" | "en", StageCopy> = {
     since: "MULAI",
     platforms: "PLATFORM",
     spelling: "NAMA YANG DISUSUN",
+    spellingStatic: "NAMA & ALIAS",
     jump: name => `Gulir ke bagian saat partikel menyusun ${name}`,
   },
   en: {
@@ -61,6 +65,7 @@ const COPY: Record<"id" | "en", StageCopy> = {
     since: "SINCE",
     platforms: "PLATFORMS",
     spelling: "NAMES BEING SPELLED",
+    spellingStatic: "NAME & ALIAS",
     jump: name => `Scroll to where the particles spell ${name}`,
   },
 };
@@ -153,7 +158,9 @@ export function SignatureStage({
               siapa pun. Baris ini selalu teks sungguhan, dan baris yang
               sedang disusun ditandai. */}
           <div className="an-signature-stage-phrases">
-            <p className="an-signature-stage-phrases-label">{copy.spelling}</p>
+            <p className="an-signature-stage-phrases-label">
+              {live ? copy.spelling : copy.spellingStatic}
+            </p>
             <ol className="an-signature-stage-phrase-list">
               {STAGE_PHRASE_META.map((phrase, index) => {
                 const body = (

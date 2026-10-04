@@ -84,7 +84,11 @@ describe("aksara Sunda — pemasangan", () => {
       css.indexOf('font-family: "Noto Sans Sundanese"'),
       css.indexOf('font-family: "Noto Sans Sundanese"') + 420
     );
-    expect(face).toContain("noto-sans-sundanese-700.woff2");
+    // Bobot 400, bukan 700: pada 700 goresan aksaranya menutup mata huruf
+    // dan deretnya terbaca seperti coretan. Bukti perbandingan keempat
+    // bobot: docs/notes/aksara-weight-compare.png.
+    expect(face).toContain("noto-sans-sundanese-400.woff2");
+    expect(face).toMatch(/font-weight:\s*400/);
     // Tanpa unicode-range, font aksara ikut terunduh di setiap halaman
     // Latin — 5 kB sia-sia untuk mayoritas pengunjung.
     expect(face).toMatch(/unicode-range:\s*U\+1B80/i);
@@ -107,6 +111,7 @@ describe("aksara Sunda — pemasangan", () => {
     );
     expect(scriptBlock).toMatch(/line-height:\s*1\.[89]/);
     expect(scriptBlock).toContain("var(--font-sunda)");
+    expect(scriptBlock).toMatch(/font-weight:\s*400/);
   });
 
   it("komponennya selalu merender kunci baca bersama aksaranya", () => {
