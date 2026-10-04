@@ -128,7 +128,7 @@ body::before {
   margin: 15px 0 24px !important;
   font-size: clamp(1.98rem, 4.8vw, 5.16rem) !important;
   line-height: 0.91 !important;
-  letter-spacing: -0.065em !important;
+  letter-spacing: 0em !important;
 }
 .nf-page-hero h1 em,
 .nf-epk-hero h1 em { color: var(--ref-ink) !important; font-style: normal !important; }
@@ -158,7 +158,7 @@ body::before {
 .an-archive-routes h2 {
   font-size: clamp(2.6rem, 6vw, 6.7rem) !important;
   line-height: 0.94 !important;
-  letter-spacing: -0.065em !important;
+  letter-spacing: 0em !important;
 }
 .nf-section-title > p,
 .an-story-copy p,
@@ -171,7 +171,7 @@ body::before {
   border-bottom: 1px solid var(--ref-line) !important;
 }
 .nf-platform-hub-copy { max-width: 1180px; margin: 0 auto; }
-.nf-platform-hub h2 { font-size: clamp(2.7rem, 6vw, 6.2rem) !important; line-height: 0.94 !important; letter-spacing: -0.06em !important; }
+.nf-platform-hub h2 { font-size: clamp(2.7rem, 6vw, 6.2rem) !important; line-height: 0.94 !important; letter-spacing: 0em !important; }
 .nf-platform-grid {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
@@ -280,7 +280,7 @@ body::before {
 
 .an-inquiry-hero,
 .an-epk-hero { background: var(--ref-bg) !important; border-bottom-color: var(--ref-line) !important; }
-.an-inquiry-hero h1 { max-width: 8ch !important; font-size: clamp(2.49rem, 6.65vw, 6.65rem) !important; line-height: 1 !important; letter-spacing: 0.02em !important; white-space: pre-line; }
+.an-inquiry-hero h1 { max-width: 8ch !important; font-size: clamp(4.9rem, 13.1vw, 13.1rem) !important; line-height: 1 !important; letter-spacing: 0.02em !important; white-space: pre-line; }
 .an-inquiry-signal { border-left-color: var(--ref-cyan) !important; }
 .an-inquiry-shell { background: var(--ref-bg-2) !important; }
 .an-inquiry-form input,
@@ -322,7 +322,7 @@ body::before {
 .an-site .an-section-index > i { height: 1px !important; background: var(--ref-line) !important; background-image: none !important; }
 .an-site .an-section-index > span:last-child { color: var(--ref-muted) !important; font-size: 0.57rem !important; letter-spacing: 0.14em !important; }
 .an-site .section h2,
-.an-site .home-signal-copy h2 { font-size: clamp(2.7rem, 6vw, 6.6rem) !important; line-height: 0.91 !important; letter-spacing: -0.07em !important; font-style: normal !important; }
+.an-site .home-signal-copy h2 { font-size: clamp(2.7rem, 6vw, 6.6rem) !important; line-height: 0.91 !important; letter-spacing: 0em !important; font-style: normal !important; }
 .an-site .home-platform-rack { border-top-color: var(--ref-line) !important; }
 .an-site .home-platform-card { grid-template-columns: 56px 36px minmax(0, 1fr) auto !important; gap: 18px !important; padding: 22px 0 !important; border-bottom-color: var(--ref-line) !important; }
 .an-site .home-platform-card:hover { padding-left: 12px !important; box-shadow: none !important; transform: none !important; background: rgba(30,232,255,0.04) !important; }
@@ -568,7 +568,14 @@ body::before {
 @media (max-width: 767.98px) {
   .an-site .hero-copy .hero-title-editorial {
     /* Kata judul dipaksa nowrap, jadi ukurannya harus ikut lebar layar.
-       Lantai rem tetap membuat "NAWASUNDA." terpotong di layar 320px. */
+       Lantai rem tetap membuat "NAWASUNDA." terpotong di layar 320px.
+       [FAKTA — Fase 8 ganti ke Unbounded, Fase 9 kembali] Sempat diganti
+       Unbounded 900 (clamp diturunkan ×0,50735 = 4,871/9,601), tapi
+       peninjauan tampilan hidup menilai Unbounded kurang cocok untuk
+       judul — dikembalikan ke Big Shoulders Display 800 dan angka clamp
+       di bawah (dan semua salinannya di berkas ini) kembali ke nilai
+       Fase 6E — halaman ini dipakai nyata oleh /en (lihat
+       EnglishPages.tsx). */
     font-size: clamp(3rem, 16.7vw, 5.8rem) !important;
     letter-spacing: 0.02em !important;
   }
@@ -661,7 +668,7 @@ body::before {
   font-family: var(--ref-display, var(--font-display)) !important;
   font-size: clamp(2.4rem, 5.4vw, 5.4rem) !important;
   font-weight: 600 !important;
-  letter-spacing: -0.075em !important;
+  letter-spacing: 0em !important;
   line-height: 0.86 !important;
   text-wrap: balance;
   text-shadow: 0 14px 44px rgba(0, 0, 0, 0.42);
@@ -705,7 +712,7 @@ body::before {
   color: var(--public-ink) !important;
   font-family: var(--ref-display, var(--font-display)) !important;
   font-size: clamp(2.8rem, 6vw, 6.4rem) !important;
-  letter-spacing: -0.065em !important;
+  letter-spacing: 0em !important;
   line-height: 0.9 !important;
   text-wrap: balance;
 }
@@ -808,7 +815,7 @@ body::before {
 .en-page .an-archive-route-list strong {
   color: var(--public-ink) !important;
   font-family: var(--ref-display, var(--font-display)) !important;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
 }
 .nf-page .nf-visual-card p,
 .nf-page .nf-event-card p,
@@ -994,6 +1001,6 @@ body::before {
   .nf-page .an-inquiry-hero h1,
   .en-page .an-inquiry-hero h1 {
     font-size: clamp(1.4rem, 6.7vw, 2.33rem) !important;
-    letter-spacing: -0.05em !important;
+    letter-spacing: 0em !important;
   }
 }

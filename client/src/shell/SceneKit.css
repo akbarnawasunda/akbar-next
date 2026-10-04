@@ -55,7 +55,7 @@
   font-family: var(--font-display);
   font-size: var(--text-h2);
   font-weight: 500;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   line-height: 1.02;
   text-transform: none;
   color: var(--paper);
@@ -122,7 +122,21 @@
   transition:
     border-color 200ms var(--ease, ease),
     background-color 200ms var(--ease, ease),
-    color 200ms var(--ease, ease);
+    color 200ms var(--ease, ease),
+    transform 200ms var(--ease, ease),
+    box-shadow 200ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .an-btn:hover,
+.an-public-shell.an-editorial .an-btn:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-soft);
+}
+
+.an-public-shell.an-editorial .an-btn:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: none;
+  transition-duration: 90ms;
 }
 
 .an-public-shell.an-editorial .an-btn--solid {
@@ -135,6 +149,7 @@
 .an-public-shell.an-editorial .an-btn--solid:focus-visible {
   background: color-mix(in srgb, var(--acid) 84%, var(--paper));
   border-color: color-mix(in srgb, var(--acid) 84%, var(--paper));
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--acid) 35%, transparent);
 }
 
 .an-public-shell.an-editorial .an-btn--quiet:hover,
@@ -142,6 +157,7 @@
   border-color: var(--acid);
   color: var(--acid);
 }
+
 
 /* ------------------------------------------------------------
    Primitif lokal: daftar fakta (dipakai kedua halaman)
@@ -174,7 +190,7 @@
   font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: 0em;
   line-height: 1.2;
   color: var(--paper);
 }
@@ -193,6 +209,7 @@
 }
 
 .an-public-shell.an-editorial .an-index-row {
+  position: relative;
   display: grid;
   align-items: center;
   gap: var(--space-md);
@@ -204,10 +221,32 @@
     background-color 260ms var(--ease, ease);
 }
 
+/* Garis aksen tipis yang "tumbuh" dari kiri saat baris disentuh --
+   detail kecil yang bikin daftar bernomor ini terasa lebih diolah,
+   bukan cuma ganti warna latar. Dihormati prefers-reduced-motion di
+   bawah (transition keseluruhan dimatikan). */
+.an-public-shell.an-editorial .an-index-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 2px;
+  background: var(--acid);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform 260ms var(--ease, ease);
+}
+
 .an-public-shell.an-editorial .an-index-row:hover,
 .an-public-shell.an-editorial .an-index-row:focus-visible {
   padding-left: 14px;
   background: color-mix(in srgb, var(--paper) 4%, transparent);
+}
+
+.an-public-shell.an-editorial .an-index-row:hover::before,
+.an-public-shell.an-editorial .an-index-row:focus-visible::before {
+  transform: scaleY(1);
 }
 
 /* -- Gerak masuk ---------------------------------------------
@@ -239,7 +278,14 @@
     animation: none;
   }
   .an-public-shell.an-editorial .an-btn,
-  .an-public-shell.an-editorial .an-index-row {
+  .an-public-shell.an-editorial .an-index-row,
+  .an-public-shell.an-editorial .an-index-row::before {
+    transition: none;
+  }
+  .an-public-shell.an-editorial .an-btn:hover,
+  .an-public-shell.an-editorial .an-btn:focus-visible,
+  .an-public-shell.an-editorial .an-btn:active {
+    transform: none;
     transition: none;
   }
 }
@@ -275,7 +321,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.8rem, 3.4vw, 3.2rem);
   font-weight: 500;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   line-height: 1.04;
   text-transform: none;
   color: var(--paper);
@@ -368,7 +414,7 @@
   font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: 0em;
   line-height: 1.16;
   color: var(--paper);
 }
@@ -440,7 +486,7 @@
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 5.6vw, 5rem);
   font-weight: 500;
-  letter-spacing: -0.038em;
+  letter-spacing: 0em;
   line-height: 0.98;
   color: var(--paper);
 }

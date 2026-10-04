@@ -70,13 +70,34 @@ const COPY: Record<"id" | "en", StageCopy> = {
   },
 };
 
-/** Tahun pertama yang bisa dibaca dari milestone perjalanan; jatuh ke 2020. */
-function startYearOf(years: string[]) {
-  for (const year of years) {
-    const parsed = Number.parseInt(year, 10);
+/**
+ * Tahun "MULAI" yang ditampilkan mengikuti frasa yang SEDANG disusun
+ * partikel — dulu satu angka tetap untuk seluruh panggung, padahal
+ * "AKBAR NAWASUNDA" dan "DJ AKBAR REMIX" adalah dua identitas dengan dua
+ * sejarah berbeda. Kalau partikel berpindah nama, angka tahunnya harus
+ * ikut berpindah.
+ *
+ * Dicocokkan lewat TEKS judul (`STAGE_PHRASE_META[i].text` vs
+ * `journey.milestones[].title`), bukan indeks — urutannya memang berbeda:
+ * milestone perjalanan dimulai dari alias (2020), sedangkan daftar frasa
+ * panggung dimulai dari nama resmi. Kalau milestone-nya bertahun pasti,
+ * pakai itu. Kalau tidak (mis. "SEKARANG" — era yang masih berjalan sampai
+ * hari ini), pakai tahun kalender saat ini: itulah makna harfiah "sekarang",
+ * dan angkanya akan ikut maju tiap tahun tanpa perlu disentuh lagi.
+ */
+function yearForPhrase(
+  phraseText: string,
+  milestones: { year: string; title: string }[]
+) {
+  const normalized = phraseText.trim().toLowerCase();
+  const match = milestones.find(
+    milestone => milestone.title.trim().toLowerCase() === normalized
+  );
+  if (match) {
+    const parsed = Number.parseInt(match.year, 10);
     if (Number.isFinite(parsed) && parsed > 1900) return parsed;
   }
-  return 2020;
+  return new Date().getFullYear();
 }
 
 export function SignatureStage({
@@ -129,7 +150,10 @@ export function SignatureStage({
   const journey = publicJourney(cms.data);
   const platforms = publicPlatformLinks(cms.data).length;
   const releaseCount = cms.data?.releases?.length || catalogReleases.length;
-  const startYear = startYearOf(journey.milestones.map(m => m.year));
+  const startYear = yearForPhrase(
+    STAGE_PHRASE_META[activePhrase]?.text ?? "",
+    journey.milestones
+  );
 
   return (
     <section className="an-signature-stage" data-live={live}>

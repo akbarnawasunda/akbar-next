@@ -113,3 +113,6 @@ temp/
 client/public/__manus__/version.json
 .project-config.json
 .env
+
+# Pratinjau gambar dari alat pencarian gambar agen -- bukan aset situs
+image-search/

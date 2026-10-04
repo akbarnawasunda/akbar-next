@@ -230,10 +230,11 @@
 .jedag-run-overlay h2 {
   margin: 0;
   color: var(--paper);
-  font-family: var(--font-display);
+  /* FASE 12: judul overlay (pause/game-over) -> --font-game (Striper). */
+  font-family: var(--font-game);
   font-weight: 400;
   font-size: clamp(1.8rem, 5vw, 3.6rem);
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   line-height: 0.98;
 }
 

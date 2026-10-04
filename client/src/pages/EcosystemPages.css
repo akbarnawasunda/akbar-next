@@ -168,7 +168,7 @@
   font-weight: 700;
   font-size: clamp(2.6rem, 6.2vw, 6.6rem);
   line-height: 1.05;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   color: var(--paper);
   text-wrap: balance;
 }
@@ -237,7 +237,7 @@
   font-weight: 400;
   font-size: 1.35rem;
   line-height: 1.05;
-  letter-spacing: -0.028em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 
@@ -273,7 +273,7 @@
     "WONK" 1;
   font-size: clamp(2rem, 4.4vw, 4.2rem);
   line-height: 1.08;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .nf-section-title > p {
@@ -411,7 +411,7 @@
     "WONK" 0;
   font-size: 1.4rem;
   line-height: 1.05;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .nf-catalog-card b {
@@ -496,7 +496,7 @@
     "WONK" 0;
   font-size: clamp(1.15rem, 1.8vw, 1.6rem);
   line-height: 1.05;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 
@@ -524,7 +524,7 @@
   font-weight: 400;
   font-size: 1.7rem;
   line-height: 1;
-  letter-spacing: -0.028em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .nf-universe-card p {
@@ -573,7 +573,7 @@
   font-weight: 400;
   font-size: 1.5rem;
   line-height: 1;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-event-card p {
@@ -620,7 +620,7 @@
   font-weight: 500;
   font-size: clamp(2rem, 4.4vw, 4.4rem);
   line-height: 1.08;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
 }
 .an-booking-grid p {
   max-width: 46ch;
@@ -686,7 +686,7 @@
   font-family: var(--font-display);
   font-weight: 400;
   font-size: 1.2rem;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-booking-option > small {
@@ -728,7 +728,7 @@
   font-weight: 500;
   font-size: clamp(2rem, 4.2vw, 4rem);
   line-height: 1.08;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
 }
 .an-story-copy p {
   max-width: 52ch;
@@ -773,7 +773,7 @@
   font-weight: 500;
   font-size: clamp(2rem, 4.4vw, 4.4rem);
   line-height: 1.08;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   max-width: 16ch;
   color: var(--paper);
 }
@@ -807,7 +807,7 @@
   font-weight: 400;
   font-size: 1.35rem;
   line-height: 1.05;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-archive-timeline p {
@@ -891,7 +891,7 @@
   font-weight: 400;
   font-size: 1.35rem;
   line-height: 1;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
 }
 .an-archive-release p {
   display: inline-flex;
@@ -942,7 +942,7 @@
   font-family: var(--font-display);
   font-weight: 400;
   font-size: 1.25rem;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
 }
 .an-archive-route-list small {
   grid-column: 2 / 4;
@@ -979,7 +979,7 @@
   font-weight: 500;
   font-size: clamp(2rem, 4.4vw, 4.4rem);
   line-height: 1.08;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
 }
 .an-profile-copy p {
   max-width: 56ch;
@@ -995,7 +995,7 @@
   font-style: italic;
   font-size: 1.3rem;
   line-height: 1.4;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-profile-note {
@@ -1042,7 +1042,7 @@
   font-weight: 500;
   font-size: clamp(2rem, 4.4vw, 4.4rem);
   line-height: 1.08;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
 }
 .an-about-actions {
   display: flex;
@@ -1077,7 +1077,7 @@
   font-weight: 400;
   font-size: 1.5rem;
   line-height: 1;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-epk-capability p {
@@ -1124,7 +1124,7 @@
   font-weight: 400;
   font-size: 1.1rem;
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-epk-release p {

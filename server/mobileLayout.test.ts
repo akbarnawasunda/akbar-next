@@ -18,14 +18,24 @@ const source = (path: string) =>
  * per karakter. Angka ini yang menentukan apakah judul hero terpotong di
  * layar 320px.
  *
- * KONTRAK BERUBAH (Fase 6E, disengaja): font judul kini
- * `client/public/assets/fonts/fontsource/big-shoulders-display-800.woff2`.
- * Riwayatnya: clash-display-700 6,963em → syne-800 12,163em →
- * big-shoulders-display-800 **4,871em** (sudah termasuk tracking +0,02em).
- * Perbandingan keenam kandidat pada lebar baris yang sama ada di
- * docs/notes/display-candidates.png. Karena hurufnya 2,5× lebih ringkas,
- * seluruh clamp judul dinaikkan — bukan karena ingin lebih besar saja,
- * tapi karena lebar barisnya tetap sama.
+ * KONTRAK BERUBAH DUA KALI (disengaja): Fase 8, pemilik situs menilai
+ * roster huruf Fase 6H ("Big Shoulders Display" + "Schibsted Grotesk")
+ * "jelek banget, basic" dan minta huruf JUDUL diganti ke Unbounded 900
+ * (9,601em). Fase 9, peninjauan tampilan hidup menilai Unbounded kurang
+ * cocok untuk judul — dikembalikan ke Big Shoulders Display 800
+ * (`fontsource/big-shoulders-display-800.woff2`), badan teks (Hanken
+ * Grotesk) tidak ikut berubah. Riwayat lengkap: clash-display-700
+ * 6,963em → syne-800 12,163em → big-shoulders-display-800 **4,871em**
+ * (Fase 6H, dipakai lagi sejak Fase 9) → unbounded-900 9,601em (Fase 8
+ * saja, sudah termasuk tracking +0,02em/huruf, konvensi yang sama
+ * dipakai sejak Fase 6D). Bukti perbandingan ada di
+ * docs/notes/font-candidate-preview.png.
+ *
+ * Big Shoulders Display adalah huruf KONDENSASI (bukan lebar seperti
+ * Unbounded) — advance width "NAWASUNDA." hampir separuh dari Unbounded
+ * (4,871 vs 9,601em). Karena itu SELURUH clamp judul hero/halaman dalam
+ * di bawah, yang sempat diturunkan ×0,50735 untuk Unbounded di Fase 8,
+ * dikembalikan lagi ke angka Fase 6E/6H di Fase 9.
  *
  * Yang dijaga tes ini tidak pernah berubah: tidak boleh ada kata judul
  * yang melewati ruang teks di layar 320px.

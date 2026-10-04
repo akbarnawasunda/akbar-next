@@ -8,16 +8,23 @@
    - hanya dekorasi: `aria-hidden`, `pointer-events: none`, tanpa teks;
    - tanpa `!important`, tanpa `backdrop-filter`, tanpa `100vw`, tanpa
      `overflow-x` (tiga kebijakan itu dijaga scripts/audit-layout.mjs);
-   - tanpa aset baru: grain = satu SVG data URI, sisanya gradien CSS;
+   - tanpa aset baru: gradien CSS saja, tidak ada gambar yang diunduh;
    - setiap gerakan punya pasangan `prefers-reduced-motion: reduce`.
+
+   FASE 7 nomor 6: dari empat ornamen (topo, rail, grain, progress) jadi
+   dua (rail, progress) — lihat docs/notes/inventaris-ornamen.md. "Grain =
+   satu SVG data URI" di baris atas sudah tidak relevan karena grain-nya
+   sendiri sudah dihapus.
 
    Yang TIDAK dilakukan lapisan ini: mengubah warna kanonik, ukuran huruf
    teks isi, jarak antar-bagian, atau struktur halaman. Token Phase 4 tetap
    satu-satunya sumber nilai; di sini hanya tekstur, penanda, dan ritme.
    ============================================================ */
 
+/* FASE 7 nomor 6 — `--instr-line` dihapus bersama `.instr-topo`: tidak ada
+   selektor lain yang memakainya. `--instr-line-strong` tetap tinggal,
+   masih dipakai `.instr-rail` di bawah. */
 .instr-atmosphere {
-  --instr-line: color-mix(in srgb, var(--paper) 5%, transparent);
   --instr-line-strong: color-mix(in srgb, var(--paper) 9%, transparent);
   position: fixed;
   inset: 0;
@@ -25,52 +32,21 @@
 }
 
 /* Di bawah konten: kedalaman. Nilai -1 dipakai supaya tetap di atas latar
-   `--ink` milik body tetapi di bawah seluruh isi halaman. */
+   `--ink` milik body tetapi di bawah seluruh isi halaman. Dulu wadah ini
+   juga membungkus `.instr-topo`; sekarang isinya cuma rel tepi. */
 .instr-atmosphere--deep {
   z-index: -1;
 }
 
-/* Di atas konten, di bawah particle field (--z-field: 3): satu bahan cetak. */
-.instr-atmosphere--film {
-  z-index: var(--z-base, 1);
-}
-
-/* -- Garis kontur ---------------------------------------------
-   Pengganti grid kotak generik. Tiga keluarga cincin hairline dengan pusat
-   dan jari-jari berbeda saling menimpa; yang terbaca adalah pola punggungan
-   dan lembah — bahasa peta kontur, bukan kertas milimeter.
-
-   Kenapa ini dan bukan motif tradisional: kontur adalah bentuk tanahnya
-   sendiri, tanah Bandung Barat tempat orang ini tinggal dan bekerja. Ia
-   tidak mengklaim arti apa pun, tidak meniru ragam hias siapa pun, dan
-   tidak bisa dipindah ke artis dari kota lain tanpa jadi bohong.
-
-   Biaya: nol permintaan jaringan, nol JavaScript, satu elemen statis —
-   sama persis seperti grid yang digantikannya. */
-.instr-topo {
-  position: absolute;
-  inset: 0;
-  /* SATU keluarga garis, bukan tiga. Percobaan dengan tiga pusat cincin
-     menghasilkan pola moiré yang terbaca sebagai radar/gelombang — persis
-     kosakata EDM generik yang dihindari sistem ini. Garis kontur asli
-     tidak pernah saling memotong, jadi di sini pun tidak.
-
-     Elips sangat lebar (150% × 78%) dengan pusat di luar layar: yang
-     terlihat bukan lingkaran, melainkan sapuan panjang seperti punggungan
-     yang melandai ke tenggara. */
-  background-image: repeating-radial-gradient(
-    150% 78% at 18% -22%,
-    transparent 0 33px,
-    var(--instr-line) 33px 34px
-  );
-  /* Luruh sebelum sampai ke badan halaman supaya tidak pernah bertabrakan
-     dengan teks. */
-  mask-image: radial-gradient(135% 92% at 46% 0%, #000 0%, transparent 72%);
-}
+/* FASE 7 nomor 6 — `.instr-atmosphere--film` dihapus bersama `.instr-grain`:
+   itu satu-satunya pemakainya. Lihat docs/notes/inventaris-ornamen.md untuk
+   alasan kedua lapisan ini dibuang (tekstur/identitas, bukan penanda batas
+   atau keadaan) dan docs/phase7-laporan.md untuk ringkasan keputusannya. */
 
 /* -- Rel tepi halaman -----------------------------------------
    Dua garis tipis sejajar tepi kontainer. Ini yang membuat halaman terasa
-   seperti satu lembar kerja, bukan tumpukan blok. */
+   seperti satu lembar kerja, bukan tumpukan blok. Satu-satunya ornamen
+   atmosfer yang bertahan karena fungsinya: menandai BATAS kolom kerja. */
 .instr-rail {
   position: absolute;
   top: 0;
@@ -91,18 +67,6 @@
 
 .instr-rail--right {
   right: max(var(--hx-gutter, 22px), calc((100% - var(--hx-max, 1400px)) / 2));
-}
-
-/* -- Grain ----------------------------------------------------
-   Satu tekstur 180×180 yang diulang. Angkanya sengaja rendah (4,5%):
-   tujuannya menghilangkan kesan gradien digital yang rata, bukan
-   menambah noise yang terlihat. */
-.instr-grain {
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23g)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  opacity: 0.045;
 }
 
 /* -- Progres gulir --------------------------------------------
@@ -205,16 +169,6 @@ html {
   /* Di layar kecil rel tepi hanya menambah dua garis di pinggir 22px. */
   .instr-rail {
     display: none;
-  }
-
-  /* Layar kecil: jarak antar-garis dirapatkan supaya di lebar 390px masih
-     terlihat beberapa garis, bukan satu lengkungan tunggal. */
-  .instr-topo {
-    background-image: repeating-radial-gradient(
-      170% 86% at 14% -18%,
-      transparent 0 23px,
-      var(--instr-line) 23px 24px
-    );
   }
 }
 

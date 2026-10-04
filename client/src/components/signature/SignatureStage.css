@@ -229,7 +229,7 @@ button.an-signature-stage-phrase:focus-visible {
   font-family: var(--font-title);
   font-size: clamp(1.05rem, 2vw, 1.5rem);
   font-weight: 800;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   line-height: 1.25;
   overflow-wrap: anywhere;
 }

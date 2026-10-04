@@ -1,0 +1,23 @@
+Central Station
+Designed by Woodcutter (MMXXII).
+Source: https://www.dafont.com/central-station.font
+
+License on dafont.com: "Free for personal use" ONLY. Author's note:
+"Free For Personal Use Only". Commercial licenses available by contacting
+woodcuttermanero@gmail.com. Donation link: paypal.me/woodcuttermanero
+
+[RISK ACCEPTED BY SITE OWNER] This is a commercial artist website, which
+this license does not cover. The site owner was explicitly told this and
+chose to proceed anyway, accepting the legal/financial risk personally.
+This is not a recommendation from this build session — if the site owner
+wants to resolve the licensing status, contact the author at the address
+above.
+
+Used for: --font-title / --font-display token (client/src/index.css) —
+ALL section headings site-wide (h1-h4), including the literal "Akbar
+Nawasunda" brand title (hero, header/footer wordmark, splash screen),
+and embedded-media captions (MusicEmbed.css, OfficialMediaFrame.css).
+[Fase 13] A separate --font-brand/Complete Destroy treatment was briefly
+tried for the brand title only, then reverted per the site owner's
+instruction — the brand title now shares this same token/font with every
+other heading on the site, no exception.

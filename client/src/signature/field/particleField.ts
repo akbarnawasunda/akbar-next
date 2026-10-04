@@ -103,7 +103,9 @@ function flowAngle(x: number, y: number, t: number) {
 const WORDMARK = STAGE_PHRASES[0];
 
 /**
- * Font panggung = font JUDUL situs (Syne 800), lalu fallback.
+ * Font panggung = font JUDUL situs (Big Shoulders Display 800, Fase 9 —
+ * sempat diganti Unbounded 900 di Fase 8, dikembalikan setelah peninjauan
+ * tampilan hidup), lalu fallback.
  *
  * Panggung hanya menyusun teks Latin. Aksara Sunda sengaja TIDAK pernah
  * disusun partikel: tanda tempelnya (rarangkén) terlalu halus untuk
@@ -111,7 +113,7 @@ const WORDMARK = STAGE_PHRASES[0];
  * dirender sebagai teks sungguhan di `SundaScript.tsx`.
  */
 const WORDMARK_FONT =
-  '"Big Shoulders Display", "Schibsted Grotesk", sans-serif';
+  '"Big Shoulders Display", "Hanken Grotesk", sans-serif';
 
 /** Mode yang menyusun huruf; butuh titik lebih banyak agar terbaca. */
 const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency", "transit"];

@@ -23,6 +23,7 @@ import { MusicEmbed } from "@/components/MusicEmbed";
 import FanSignalSection from "@/components/FanSignalSection";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { Reveal } from "@/components/Reveal";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import {
   CtaPanel,
   CurrentSignalBoard,
@@ -33,6 +34,7 @@ import {
 import { NightHeader, NightFooter } from "@/components/NightFrequencyChrome";
 import { BirthdayNote } from "@/components/StudioClock";
 import { trpc } from "@/lib/trpc";
+import { toRoman } from "@/lib/roman";
 import {
   publicPlatformLinks,
   publicUpcomingEvents,
@@ -93,6 +95,16 @@ export default function Home() {
   const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
   const [playerOpen, setPlayerOpen] = useState(false);
   const releaseCatalogRef = useRef<HTMLDivElement>(null);
+  // [BUGFIX] `.an-site main > section.is-revealed` punya dekorasi garis
+  // aksen yang tumbuh saat kelihatan (lihat NightFrequencySignature.css),
+  // tapi tidak ada apa pun yang pernah menambahkan kelas `is-revealed` —
+  // `useScrollReveal` sudah lama ada sebagai berkas tapi tidak pernah
+  // dipakai di mana pun. Hero sengaja TIDAK dipasangi (harus langsung
+  // kelihatan tanpa fade-in); ADEGAN 3 (rilisan) sudah punya animasinya
+  // sendiri lewat `<Reveal>`/`.an-rise` jadi tidak diikutkan juga.
+  const channelsRevealRef = useScrollReveal<HTMLElement>();
+  const pauseRevealRef = useScrollReveal<HTMLElement>();
+  const gameTeaserRevealRef = useScrollReveal<HTMLElement>();
 
   const publicContent = usePublicArtistContent();
   const contentQuery = trpc.content.list.useQuery(undefined, {
@@ -459,7 +471,9 @@ export default function Home() {
               </figure>
 
               <div className="an-doc-copy an-rise">
-                <p className="an-meta">02 — Rilisan terbaru</p>
+                <p className="an-meta">
+                  <span className="an-section-num">02</span> — Rilisan terbaru
+                </p>
                 <h2 id="feature-title">{activeRelease.title}</h2>
                 <p className="an-doc-story">
                   {activeReleaseStory ||
@@ -506,12 +520,15 @@ export default function Home() {
           {/* ADEGAN 4 — kanal resmi sebagai daftar tipografis, bukan deretan
               kartu identik. Marquee di bawahnya tetap dipakai sebagai ritme. */}
           <section
+            ref={channelsRevealRef}
             className="an-channels"
             id="platforms"
             aria-labelledby="channels-title"
           >
             <header className="an-channels-head">
-              <p className="instr-index">03 — Kanal resmi</p>
+              <p className="instr-index">
+                <span className="an-section-num">03</span> — Kanal resmi
+              </p>
               <h2 id="channels-title">Dengar di kanal resminya.</h2>
               <p className="an-meta">
                 {editablePlatformLinks.length} kanal resmi · rilisan, remix, dan
@@ -521,7 +538,11 @@ export default function Home() {
 
             <ul className="an-channels-list">
               {editablePlatformLinks.map((platform, index) => (
-                <li key={platform.label}>
+                <li
+                  key={platform.label}
+                  className="an-channel-row"
+                  style={{ "--i": index } as CSSProperties}
+                >
                   <a
                     className={`an-channel platform-${platform.label
                       .toLowerCase()
@@ -532,7 +553,7 @@ export default function Home() {
                     aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
                   >
                     <span className="an-channel-index" aria-hidden="true">
-                      {String(index + 1).padStart(2, "0")}
+                      {toRoman(index + 1)}
                     </span>
                     <span className="an-channel-mark" aria-hidden="true">
                       <PlatformIcon label={platform.label} />
@@ -556,6 +577,21 @@ export default function Home() {
             </div>
           </section>
 
+          {/* FASE 7 nomor 7 — satu layar jeda. Sengaja hampir kosong: satu
+              baris mikro, bukan section baru dengan judul dan CTA. Kutipannya
+              BUKAN klaim baru — potongan verbatim dari `heroBody` di atas
+              (sendiri bersumber dari CMS/managed content), ditata ulang
+              sebagai kutipan tunggal huruf judul supaya layak jadi jeda,
+              bukan diulang sebagai paragraf. `aria-hidden` karena kalimatnya
+              sudah dibacakan screen reader lewat `.an-hero-lede`; mengulang
+              di sini hanya untuk mata, bukan telinga. Tidak ada aset gambar
+              baru; hanya CSS pada DOM yang sudah ringan ini. */}
+          <section ref={pauseRevealRef} className="an-pause" aria-hidden="true">
+            <p className="an-pause-quote">
+              Breakbeat, electronic bass, dan remix.
+            </p>
+          </section>
+
           {/* Perjalanan & studi potret tidak diulang di beranda: bagian itu
               milik /universe supaya pengunjung tidak melihat section yang
               sama dua kali di halaman berbeda. */}
@@ -571,6 +607,7 @@ export default function Home() {
 
           {gameEnabled ? (
             <section
+              ref={gameTeaserRevealRef}
               className="section game-teaser-section"
               id="game"
               aria-labelledby="game-teaser-title"

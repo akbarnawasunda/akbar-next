@@ -3,6 +3,20 @@
    Ikon monokrom mengikuti palet utama (paper / acid).
    Warna brand platform sengaja dilepas supaya konsisten
    dengan palet editorial Night Frequency.
+
+   [BUGFIX] `color` di bawah sengaja `inherit`, BUKAN warna tetap. Setiap
+   pemakai (`.an-channel-mark`, `.home-platform-icon-shell`,
+   `.an-embed-card-platform-tag`, `.an-press-platform`,
+   `.an-cat-channel-mark`, dll — semuanya di atas latar GELAP `--ink`)
+   sudah menyetel warna ambiennya sendiri (`--paper`/`--acid`/`--mute`)
+   di elemen pembungkus, tapi warna tetap `var(--ink)` yang dulu ada di
+   sini MENIMPA warisan itu di span ikon — bukan masalah spesifisitas,
+   `color` yang disetel langsung di elemen selalu menang atas warisan.
+   Akibatnya ikon (nyaris) hitam di atas latar nyaris-hitam: logo platform
+   hilang dari mata, bukan dari DOM. Satu pengecualian, `.an-btn--solid`
+   (latar `--acid` terang), tetap benar karena elemen itu SENDIRI
+   menyetel `color: var(--ink)` — ikonnya tetap mewarisi `--ink` yang
+   sama lewat warisan normal, bukan lewat baris ini.
    ============================================================ */
 
 .an-platform-icon {
@@ -11,7 +25,7 @@
   width: 20px;
   height: 20px;
   flex: 0 0 auto;
-  color: var(--ink);
+  color: inherit;
   transition: color 180ms ease;
 }
 .an-platform-icon svg {

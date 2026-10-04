@@ -43,7 +43,7 @@
   font-family: var(--font-display);
   font-synthesis: none;
   font-weight: 500;
-  letter-spacing: -0.045em;
+  letter-spacing: 0em;
   line-height: 0.98;
   text-wrap: balance;
 }
@@ -168,7 +168,9 @@
   position: relative;
   padding: 9px 0;
   color: var(--mute);
-  font-family: var(--font-body);
+  /* FASE 12: aturan ini yang menang (dimuat setelah ChromeRedesign.css,
+     spesifisitas sama) -- ikut dipindah ke --font-label. */
+  font-family: var(--font-label);
   font-size: 0.82rem;
   font-weight: 500;
   letter-spacing: 0;
@@ -285,7 +287,7 @@
   font-family: var(--font-display);
   font-size: clamp(3.6rem, 8vw, 7.8rem) !important;
   font-weight: 500;
-  letter-spacing: -0.065em !important;
+  letter-spacing: 0em !important;
   line-height: 0.88 !important;
 }
 
@@ -357,7 +359,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.35rem, 2.1vw, 1.8rem);
   font-weight: 500;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   line-height: 1.05;
 }
 
@@ -397,7 +399,7 @@
   font-family: var(--font-display);
   font-size: clamp(2.4rem, 5vw, 5rem) !important;
   font-weight: 500;
-  letter-spacing: -0.06em;
+  letter-spacing: 0em;
   line-height: 0.94;
 }
 
@@ -595,10 +597,18 @@
   max-width: 9ch;
   margin: 0;
   color: var(--paper);
+  /* FASE 12/13: ini aturan yang SEBENARNYA menang untuk judul hero
+     beranda (selektornya lebih spesifik dari punya Home.css). Sesi
+     Fase 13 sempat memindahkannya ke --font-brand (Complete Destroy)
+     khusus untuk nama "Akbar Nawasunda", tapi DIBATALKAN atas instruksi
+     pemilik situs -- kembali ke --font-display (Central Station) seperti
+     judul lain. Central Station cuma satu berkas bobot (400); 800 di
+     sini sebelumnya (ditujukan untuk Big Shoulders Display) sudah
+     diturunkan ke 400 -- tetap 400, bukan dikembalikan ke 800. */
   font-family: var(--font-display);
   font-size: clamp(2.4rem, 5.04vw, 5.22rem) !important;
-  font-weight: 600;
-  letter-spacing: -0.075em;
+  font-weight: 400;
+  letter-spacing: 0em;
   line-height: 0.82 !important;
   text-shadow: none;
   text-transform: none;
@@ -691,7 +701,7 @@
   font-size: clamp(2.55rem, 5.5vw, 5.6rem) !important;
   font-style: normal;
   font-weight: 500;
-  letter-spacing: -0.065em;
+  letter-spacing: 0em;
   line-height: 0.9;
   text-shadow: none;
 }
@@ -740,7 +750,7 @@
   font-family: var(--font-display);
   font-size: clamp(2rem, 4.3vw, 4rem);
   font-weight: 500;
-  letter-spacing: -0.06em;
+  letter-spacing: 0em;
   line-height: 0.95;
 }
 
@@ -821,7 +831,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.92rem, 4.2vw, 3.84rem);
   font-weight: 500;
-  letter-spacing: -0.065em;
+  letter-spacing: 0em;
   line-height: 0.9;
 }
 
@@ -910,7 +920,9 @@
 .an-public-shell.an-editorial .nf-footer-column > span,
 .an-public-shell.an-editorial .nf-footer .footer-bottom {
   color: var(--mute-soft);
-  font-family: var(--font-body);
+  /* FASE 12: aturan ini yang menang (dimuat setelah ChromeRedesign.css,
+     spesifisitas sama) -- ikut dipindah ke --font-label. */
+  font-family: var(--font-label);
   font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.09em;
@@ -943,9 +955,9 @@
   --acid-rgb: 155, 185, 193;
   --mute: #a6a69f;
   --mute-soft: #777a74;
-  --font-display: "Big Shoulders Display", "Schibsted Grotesk", sans-serif;
+  --font-display: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
   --font-body:
-    "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
   --font-mono: "Sometype Mono", ui-monospace, SFMono-Regular, monospace;
 }
@@ -1023,7 +1035,7 @@
 .nf-mobile-drawer-root .nf-mobile-drawer-link-title {
   font-family: var(--font-display);
   font-weight: 500;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
 }
 
 .nf-mobile-drawer-root .nf-mobile-drawer-close {
@@ -1170,7 +1182,13 @@
   }
   .an-public-shell.an-editorial .an-site .hero-copy .hero-title-editorial {
     font-size: clamp(2.1rem, 9.0vw, 3.36rem) !important;
-    letter-spacing: -0.075em;
+    /* [BUGFIX] Ini aturan yang SEBENARNYA menang (selektor ini lebih
+       spesifik dari punya Home.css) untuk judul hero beranda -- dan
+       -0.075em-nya lolos dari sapuan Fase 8 karena blok ini tidak
+       menyebut var(--font-title)/var(--font-display) langsung. Inilah
+       sumber nyata kenapa judul di layar <=640px terasa beda/lebih
+       rapat dari desktop. Disamakan ke 0em seperti aturan dasarnya. */
+    letter-spacing: 0em;
   }
   .an-public-shell.an-editorial .an-site .hero-actions {
     align-items: flex-start;

@@ -1,0 +1,13 @@
+Striper
+Designed by Jitka Janečková, published by Indian Type Foundry via Fontshare.
+Source: https://www.fontshare.com/fonts/striper
+
+License: ITF Free Font License (Closed Source).
+Free for personal AND commercial use, any media, any scale, worldwide.
+Not allowed: reselling the font files themselves, redistributing them on
+other font platforms, or modifying and redistributing under a different
+name. See https://www.fontshare.com/licenses/itf-ffl for the full terms.
+
+Status in this project: safe to use commercially. No action needed.
+Used only for the Jedag Run game's headings (--font-game token,
+client/src/index.css).

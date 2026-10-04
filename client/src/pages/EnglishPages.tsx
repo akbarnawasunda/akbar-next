@@ -417,7 +417,7 @@ export function EnglishHome() {
             </Link>
           </div>
           <div className="home-platform-rack">
-            {editablePlatformLinks.map(platform => (
+            {editablePlatformLinks.map((platform, index) => (
               <a
                 className={`home-platform-card platform-${platform.label
                   .toLowerCase()
@@ -427,6 +427,7 @@ export function EnglishHome() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`Open Akbar Nawasunda on ${platform.label}`}
+                style={{ "--i": index } as CSSProperties}
               >
                 <span className="home-platform-icon-shell">
                   <PlatformIcon label={platform.label} />

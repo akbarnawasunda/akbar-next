@@ -101,7 +101,7 @@
   font-weight: 400;
   font-size: clamp(1.6rem, 3.2vw, 2.6rem);
   line-height: 0.9;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-epk-hero-card-copy small {
@@ -124,7 +124,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 4.2vw, 4.2rem);
   line-height: 0.94;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-epk-document p {
@@ -208,7 +208,7 @@
   font-weight: 400;
   font-size: 1.5rem;
   line-height: 1;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-epk-capability p {
@@ -269,7 +269,7 @@
   font-weight: 400;
   font-size: 1.45rem;
   line-height: 1.05;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-epk-asset p {
@@ -329,7 +329,7 @@
   font-weight: 400;
   font-size: 1.1rem;
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-epk-release p {

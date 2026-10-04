@@ -22,7 +22,7 @@
   font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 1;
   font-size: clamp(2.8rem, 7.5vw, 7.5rem);
   line-height: 0.86;
-  letter-spacing: -0.045em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 
@@ -52,7 +52,7 @@
   font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
   font-size: clamp(2rem, 5.4vw, 5rem);
   line-height: 0.92;
-  letter-spacing: -0.04em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-profile-copy h2 em,
@@ -75,7 +75,7 @@
   font-style: italic;
   font-size: 1.35rem;
   line-height: 1.4;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
 }
 .an-profile-note {
   margin-top: 22px;
@@ -119,7 +119,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 4.4vw, 4.4rem);
   line-height: 0.94;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-about-actions {
@@ -136,7 +136,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 5vw, 4.6rem);
   line-height: 0.92;
-  letter-spacing: -0.038em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-press-intro h2 em,
@@ -183,7 +183,7 @@
   font-weight: 400;
   font-size: 1.5rem;
   line-height: 1.05;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-press-pack p {
@@ -224,7 +224,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 4.6vw, 4.4rem);
   line-height: 0.94;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-booking-grid p {
@@ -271,7 +271,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 4.8vw, 4.6rem);
   line-height: 0.92;
-  letter-spacing: -0.038em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 
@@ -304,7 +304,7 @@
   font-weight: 400;
   font-size: 1.45rem;
   line-height: 1.05;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-event-card p {
@@ -363,7 +363,7 @@
   font-weight: 400;
   font-size: 1.9rem;
   line-height: 1.05;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper);
   text-wrap: balance;
 }
@@ -406,7 +406,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 4.8vw, 4.2rem);
   line-height: 0.94;
-  letter-spacing: -0.038em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-story-copy > p {

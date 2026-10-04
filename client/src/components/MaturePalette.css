@@ -13,14 +13,14 @@
   font-family: var(--font-display);
   font-weight: 500;
   font-variation-settings: "wght" 560;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   line-height: 1.08;
   text-transform: none;
 }
 .nf-page h3 {
   font-family: var(--font-display);
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   line-height: 1.15;
 }
 .nf-page strong { font-family: var(--font-body); font-weight: 600; }
@@ -100,7 +100,7 @@
   font-variation-settings: "wght" 560;
   font-size: clamp(2.35rem, 5.2vw, 5.4rem) !important;
   line-height: 0.88 !important;
-  letter-spacing: -0.042em !important;
+  letter-spacing: 0em !important;
   color: var(--paper);
   max-width: 16ch;
 }
@@ -136,7 +136,7 @@
   font-family: var(--font-display);
   font-weight: 400;
   font-size: 1.4rem;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper) !important;
 }
 
@@ -275,7 +275,7 @@
 .nf-page .an-epk-release h3 {
   font-family: var(--font-display) !important;
   font-weight: 400 !important;
-  letter-spacing: -0.025em !important;
+  letter-spacing: 0em !important;
   color: var(--paper) !important;
 }
 .nf-page .nf-catalog-card b,
@@ -481,7 +481,7 @@
 .an-footer .footer-brand strong {
   font-family: var(--font-display) !important;
   font-weight: 400 !important;
-  letter-spacing: -0.02em !important;
+  letter-spacing: 0em !important;
   color: var(--paper) !important;
 }
 .nf-page .nf-footer-column > span,

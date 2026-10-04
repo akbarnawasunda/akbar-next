@@ -31,7 +31,7 @@
 .an-public-shell.an-editorial .an-cat-hero-copy h1 {
   font-size: clamp(2.8rem, 7vw, 6rem);
   line-height: 0.96;
-  letter-spacing: -0.04em;
+  letter-spacing: 0em;
   max-width: 14ch;
 }
 
@@ -80,7 +80,7 @@
   font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 
@@ -106,7 +106,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 3vw, 2.6rem);
   font-weight: 500;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   line-height: 1.06;
   color: var(--paper);
 }
@@ -130,7 +130,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.1rem, 2.2vw, 1.7rem);
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   color: color-mix(in srgb, var(--paper) 84%, transparent);
   transition: color 220ms var(--ease, ease);
 }
@@ -200,7 +200,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 2.8vw, 2.4rem);
   font-weight: 500;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   line-height: 1.06;
   color: var(--paper);
 }
@@ -231,7 +231,7 @@
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 5.4vw, 4.6rem);
   font-weight: 500;
-  letter-spacing: -0.04em;
+  letter-spacing: 0em;
   line-height: 1;
   color: var(--paper);
   overflow-wrap: break-word;
@@ -355,7 +355,7 @@
   font-family: var(--font-display);
   font-size: clamp(2.2rem, 5vw, 4rem);
   font-weight: 500;
-  letter-spacing: -0.04em;
+  letter-spacing: 0em;
   line-height: 1;
   color: var(--paper);
 }

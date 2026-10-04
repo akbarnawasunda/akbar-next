@@ -273,8 +273,15 @@
 .an-site .hero-copy .hero-title-editorial {
   display: block;
   margin: 0;
+  /* FASE 12/13: huruf JUDUL BESAR nama artis ("Akbar Nawasunda") ikut
+     --font-title (Central Station) seperti judul lain — sesi Fase 13
+     sempat mencoba huruf --font-brand (Complete Destroy) terpisah
+     khusus untuk nama ini, tapi DIBATALKAN atas instruksi pemilik situs.
+     Central Station cuma punya satu berkas bobot (400); font-weight
+     tidak dipaksa 800 — lihat `font-synthesis: none` di body
+     (index.css) yang mencegah synthetic bold di seluruh situs. */
   font-family: var(--font-title);
-  font-weight: 800;
+  font-weight: 400;
   font-size: clamp(2.6rem, 10vw, 10rem) !important;
   line-height: 1.05 !important;
   letter-spacing: 0.02em;
@@ -298,6 +305,21 @@
   transform: translate3d(0, 105%, 0);
   animation: hx-word-in 1500ms cubic-bezier(0.16, 1, 0.3, 1)
     calc(200ms + var(--hero-word-index, 0) * 220ms) both;
+}
+/* Fase 13 lanjutan: dua kata judul hero, dua huruf berbeda. Kata dipecah
+   jadi beberapa <span class="hero-title-mask"> berurutan sesuai array
+   kata (lihat heroTitleWords di Home.tsx/EnglishPages.tsx) -- spasi di
+   antaranya cuma teks node, tidak ikut dihitung :nth-of-type, jadi
+   selektor posisi ini aman dipakai untuk menyasar kata pertama/kedua
+   tanpa bergantung pada isi tekstualnya (CMS boleh ganti teksnya, urutan
+   katanya tetap sama). Kalau judulnya berubah jadi >2 kata, kata ke-3
+   dst jatuh ke --font-title (Central Station) lewat warisan dari
+   .hero-title-editorial -- tidak pecah, cuma tidak dapat huruf khusus. */
+.an-site .hero-copy .hero-title-mask:nth-of-type(1) .hero-title-word {
+  font-family: var(--font-hero-akbar);
+}
+.an-site .hero-copy .hero-title-mask:nth-of-type(2) .hero-title-word {
+  font-family: var(--font-hero-nawasunda);
 }
 @keyframes hx-word-in {
   to {
@@ -488,7 +510,7 @@
   font-weight: 400;
   font-size: clamp(2.35rem, 5.6vw, 5.4rem);
   line-height: 0.86;
-  letter-spacing: -0.04em;
+  letter-spacing: 0em;
   color: var(--acid);
 }
 .an-section-index > i {
@@ -534,7 +556,7 @@
   font-size: clamp(2.1rem, 4.2vw, 4.4rem) !important;
   font-style: italic;
   line-height: 1.06;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   text-transform: none;
   color: var(--paper);
 }
@@ -613,7 +635,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 4vw, 4rem);
   line-height: 1.06;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-site .home-signal-copy > p:not(.eyebrow) {
@@ -650,7 +672,18 @@
     background 180ms ease,
     transform 220ms ease,
     box-shadow 220ms ease;
-  animation: hx-card-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* Dulu kartu ini auto-play begitu mount, jadi kalau raknya ada di bawah
+     layar, animasinya sudah lewat sebelum sempat kelihatan. Sekarang
+     ditahan sampai section induknya (.home-signal-deck) kena
+     .is-motion-in-view dari MotionOrchestrator, lalu masuk satu per satu
+     memakai --i (index peta array) dari EnglishPages.tsx. */
+  opacity: 0;
+  transform: translateY(18px);
+  animation: none;
+}
+.home-signal-deck.is-motion-in-view .home-platform-card {
+  animation: hx-card-in 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
 }
 @keyframes hx-card-in {
   from {
@@ -660,6 +693,13 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .an-site .home-platform-card {
+    opacity: 1;
+    transform: none;
+    animation: none !important;
   }
 }
 .an-site .home-platform-card::before,
@@ -709,7 +749,7 @@
     "WONK" 0;
   font-weight: 400;
   font-size: clamp(1.3rem, 2vw, 1.9rem);
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   line-height: 1;
 }
 .home-platform-copy small {
@@ -806,7 +846,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 4.5vw, 4rem);
   line-height: 1.06;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-site .release-detail > p:not(.mono-label) {
@@ -940,7 +980,7 @@
   font-weight: 500;
   font-size: clamp(1.15rem, 1.8vw, 1.4rem);
   line-height: 1.15;
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   color: var(--paper);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1069,7 +1109,7 @@
   font-weight: 400;
   font-size: clamp(1.1rem, 1.7vw, 1.5rem);
   line-height: 1.02;
-  letter-spacing: -0.032em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-site .round-play {
@@ -1128,7 +1168,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 4vw, 4rem);
   line-height: 1.06;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-site .live-copy > p:not(.eyebrow) {
@@ -1180,7 +1220,7 @@
   font-weight: 400;
   font-size: clamp(1.3rem, 2.2vw, 2rem);
   line-height: 1;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-site .live-status small {
@@ -1242,7 +1282,7 @@
   font-weight: 400;
   font-size: clamp(1.1rem, 1.6vw, 1.4rem);
   line-height: 1.02;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-site .home-live-event small {
@@ -1458,7 +1498,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 4vw, 4rem);
   line-height: 1.06;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-site .game-teaser-copy > p:not(.eyebrow) {
@@ -1536,7 +1576,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 4vw, 4rem);
   line-height: 1.06;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-site .signal-section > div > p:not(.eyebrow) {
@@ -1658,7 +1698,7 @@
   font-variation-settings: "wght" 560;
   font-weight: 400;
   font-size: clamp(1.8rem, 3vw, 2.8rem);
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   line-height: 1.1;
   color: var(--paper);
 }
@@ -2103,7 +2143,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 9vw, 3.6rem);
   line-height: 1.1;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
 }
 
 .menu-link-note {
@@ -3082,7 +3122,11 @@
     /* Kata judul dipaksa nowrap, jadi ukurannya harus ikut lebar layar.
        Lantai rem tetap membuat "NAWASUNDA." terpotong di layar 320px. */
     font-size: clamp(1.2rem, 6.7vw, 2.33rem) !important;
-    letter-spacing: -0.06em !important;
+    /* [BUGFIX] Lolos dari sapuan Fase 8 (blok ini tidak menyebut
+       var(--font-title) langsung, hanya mewarisi dari aturan dasarnya,
+       jadi tidak kena pola pencarian otomatis) -- judul hero di mobile
+       jadi terasa lebih rapat/beda dari desktop. Disamakan ke 0em. */
+    letter-spacing: 0em !important;
   }
   .an-site .hero-copy .hero-title-word {
     display: inline-block;

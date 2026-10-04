@@ -37,7 +37,7 @@
   font-family: var(--font-display);
   font-size: clamp(2.4rem, 5.4vw, 4.8rem);
   font-weight: 500;
-  letter-spacing: -0.038em;
+  letter-spacing: 0em;
   line-height: 0.98;
   color: var(--paper);
 }
@@ -212,7 +212,7 @@
   font-family: var(--font-display);
   font-size: 1.1rem;
   font-weight: 500;
-  letter-spacing: -0.015em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 
@@ -268,7 +268,7 @@
   font-family: var(--font-display);
   font-size: 1.08rem;
   font-weight: 500;
-  letter-spacing: -0.015em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 
@@ -330,7 +330,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.7rem, 2.8vw, 2.6rem);
   font-weight: 500;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
   line-height: 1.04;
   color: var(--ink);
 }
@@ -372,7 +372,7 @@
   font-family: var(--font-display);
   font-size: 1.1rem;
   font-weight: 500;
-  letter-spacing: -0.015em;
+  letter-spacing: 0em;
 }
 
 .an-public-shell.an-editorial .an-press-contact-link small {

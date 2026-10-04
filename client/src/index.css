@@ -3,40 +3,49 @@
    Satu-satunya sumber kebenaran untuk: font, warna, tipe, base.
    ============================================================ */
 
-/* ROSTER HURUF — FASE 6H.
-   Tiga huruf lama (display ITF, General Sans, mono lama) DIHAPUS dari
-   repo (bukan
-   sekadar tidak dipakai). Alasannya: pemilik situs minta huruf diganti,
-   bukan ditambah, dan tiga keluarga itu adalah bagian paling netral dari
-   tampilan lama. Perbandingan empat pasangan pada teks yang sama ada di
-   docs/notes/body-swap-candidates.png.
+/* ROSTER HURUF — FASE 9 (title dikembalikan ke Fase 6H, badan tetap Fase 8).
+   Pemilik situs melihat tampilan hidup Unbounded 900 pada judul dan minta
+   kembali ke huruf judul sebelumnya ("font lamanya lebih enak dilihat") —
+   keluhannya eksplisit soal JUDUL, bukan badan teks, jadi Hanken Grotesk
+   (badan) TETAP, hanya huruf judul yang kembali ke Big Shoulders Display
+   800. Unbounded dan lisensinya dihapus lagi dari repo (tidak dipakai
+   elemen mana pun lagi setelah ini).
 
    Empat suara, tidak lebih:
      1. Big Shoulders Display 800 — H1 + wordmark (lihat blok di bawah)
-     2. Schibsted Grotesk 400/500/700 — badan teks, UI, H2/H3
+     2. Hanken Grotesk 400/500/700 — badan teks, UI, H2/H3
      3. Sometype Mono 400/500 — label, angka, konsol
      4. Noto Sans Sundanese 400 — identitas aksara
 
-   Total 8 berkas / 114.012 B, turun dari 11 berkas / 218.048 B. */
+   [CATATAN] Sapuan `letter-spacing` negatif→0em dari Fase 8 (159 aturan di
+   30 berkas, ditala ulang supaya Unbounded yang lebar tidak bertabrakan)
+   SENGAJA TIDAK dikembalikan ke nilai negatif semula di sini: tracking 0
+   aman untuk huruf kondensasi seperti Big Shoulders Display juga (tidak
+   pernah membuat huruf bertabrakan, cuma sedikit lebih longgar dari tuning
+   asli pra-Fase-8). Mengembalikan 159 titik itu satu per satu di luar
+   cakupan keluhan kali ini (soal judul kelihatan jelek, bukan soal
+   kerapatan huruf) dan berisiko tinggi salah ketik tanpa verifikasi
+   visual. Kalau user masih merasa huruf judul "terlalu longgar", itu
+   permintaan terpisah untuk sesi berikutnya. */
 @font-face {
-  font-family: "Schibsted Grotesk";
-  src: url("/assets/fonts/fontsource/schibsted-grotesk-400.woff2")
+  font-family: "Hanken Grotesk";
+  src: url("/assets/fonts/fontsource/hanken-grotesk-400.woff2")
     format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Schibsted Grotesk";
-  src: url("/assets/fonts/fontsource/schibsted-grotesk-500.woff2")
+  font-family: "Hanken Grotesk";
+  src: url("/assets/fonts/fontsource/hanken-grotesk-500.woff2")
     format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Schibsted Grotesk";
-  src: url("/assets/fonts/fontsource/schibsted-grotesk-700.woff2")
+  font-family: "Hanken Grotesk";
+  src: url("/assets/fonts/fontsource/hanken-grotesk-700.woff2")
     format("woff2");
   font-weight: 700;
   font-style: normal;
@@ -59,14 +68,18 @@
 }
 
 /* Big Shoulders Display 800 — SATU bobot, judul/H1 saja.
-   FASE 6E, menggantikan Syne 800. Alasannya bisa dilihat, bukan diperdebatkan:
-   docs/notes/display-candidates.png membandingkan enam huruf display pada
-   LEBAR BARIS YANG SAMA PERSIS. Syne menulis "NAWASUNDA." selebar 12,163em,
-   jadi untuk muat di kolom hero ia harus dikecilkan sampai judulnya nyaris
-   tidak bersuara. Big Shoulders menulis kata yang sama dalam 4,871em —
-   2,5× lebih tinggi pada lebar yang sama — dan potongan diagonal pada
-   A/K/W/N-nya seirama dengan sudut-sudut aksara Sunda di bawahnya.
-   Anton dibuang justru karena terlalu dikenal (huruf poster default).
+   FASE 9: dikembalikan lagi menggantikan Unbounded 900 (Fase 8) setelah
+   peninjauan tampilan hidup — judul dinilai lebih enak dibaca dengan huruf
+   kondensasi ini daripada huruf geometris lebar Unbounded.
+
+   [FAKTA PENTING] Big Shoulders Display jauh lebih KONDENSASI daripada
+   Unbounded: menulis "NAWASUNDA." sepanjang 4,871em (termasuk tracking)
+   vs 9,601em milik Unbounded — hampir setengahnya. Karena itu SELURUH
+   clamp judul yang dikalibrasi ulang untuk Unbounded di Fase 8 (lihat
+   server/mobileLayout.test.ts, pages/HomeStage.css, CinematicReference.css,
+   shell/ChromeRedesign.css) dikembalikan lagi ke angka Fase 6H supaya
+   lebar baris tetap sepadan dengan huruf kondensasi ini.
+
    Self-hosted dari @fontsource/big-shoulders-display (SIL OFL, lihat
    BIG-SHOULDERS-DISPLAY-LICENSE.txt). */
 @font-face {
@@ -77,6 +90,101 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* FASE 12/13 — beberapa huruf baru, masing-masing untuk SATU peran
+   sempit, bukan pengganti roster di atas. Pemilik situs memilih sendiri
+   huruf-huruf ini dari Fontshare/dafont dan memberi tahu persis elemen
+   mana yang dapat yang mana — bukan keputusan desain yang dibuat di
+   sini. Roster berubah beberapa kali dalam proses (Complete Destroy
+   sempat dipasang lalu dibatalkan; Impact Label SWL tidak pernah benar-
+   benar diunggah dan digantikan Autocron) — lihat riwayat komentar di
+   setiap token/selektor terkait untuk kronologinya, bukan di sini.
+
+   [RISIKO LISENSI — DIKETAHUI & DITERIMA PEMILIK SITUS] Striper
+   (Fontshare) gratis untuk pemakaian komersial (ITF Free Font License).
+   Selebihnya — Tritopani, Central Station, Unityped, Cultura Estropeada,
+   Autocron — berlisensi "Free for personal use" di dafont.com (Autocron
+   malah eksplisit menulis "cannot be used for COMMERCIAL USE"), BUKAN
+   gratis untuk situs komersial seperti ini. Pemilik situs sudah diberi
+   tahu risikonya (termasuk ancaman sanksi UU Hak Cipta No. 28/2014 yang
+   dicantumkan pembuat Tritopani, dan peringatan comm-use eksplisit di
+   Autocron) dan tetap meminta huruf-huruf ini dipasang — keputusan dan
+   tanggung jawab ada di pemilik situs, bukan rekomendasi dari sesi ini.
+   Kalau suatu saat ingin membereskan status hukumnya, tautan beli
+   lisensi komersial ada di masing-masing LICENSE-NOTE di folder font
+   ini. */
+@font-face {
+  font-family: "Striper";
+  src: url("/assets/fonts/fontsource/striper-full-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Tritopani";
+  src: url("/assets/fonts/fontsource/tritopani-full-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Central Station";
+  src: url("/assets/fonts/fontsource/central-station-full-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+/* Fase 13 lanjutan: dua kata di judul hero beranda ("AKBAR" + "NAWASUNDA")
+   masing-masing dapat huruf sendiri, bukan huruf judul umum — pemilihan
+   dan berkasnya dari pemilik situs (lihat LICENSE-NOTE masing-masing
+   untuk status lisensinya; sama-sama "Free for personal use" di
+   dafont.com, risiko sudah diterima pemilik situs seperti huruf Fase 13
+   lain). HANYA dipakai di kata hero beranda (.hero-title-word), BUKAN
+   wordmark header/footer/splash/tanda tangan — itu tetap Central
+   Station/Tritopani. */
+@font-face {
+  font-family: "Unityped";
+  src: url("/assets/fonts/fontsource/unityped-full-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cultura Estropeada";
+  src: url("/assets/fonts/fontsource/cultura-estropeada-full-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+/* Fase 13 lanjutan: nav header, tautan & label footer, nama platform,
+   tagline hero, label "AKSARA SUNDA" -- pemilik situs minta font
+   "impact label" untuk semua ini. Tidak ada berkas bernama persis
+   "Impact Label SWL" yang pernah diunggah (dicek langsung di GitHub);
+   setelah ditanyakan, pemilik situs memilih Autocron dari berkas yang
+   SUDAH ada di GitHub untuk peran ini, sadar hurufnya tebal/dekoratif
+   (gaya techno/sci-fi), bukan huruf label tipis seperti rencana semula.
+   LICENSE-NOTE-nya eksplisit "PERSONAL USE ONLY, cannot be used for
+   COMMERCIAL USE" -- risiko ini sudah diberi tahu & diterima. */
+@font-face {
+  font-family: "Autocron";
+  src: url("/assets/fonts/fontsource/autocron-full-400-normal.woff2")
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+/* Fase 13: Complete Destroy SEMPAT dipasang untuk judul "Akbar Nawasunda"
+   (hero/wordmark/splash), lalu DIHAPUS lagi atas instruksi pemilik situs
+   ("title akbar nawasunda bukan pake font yang itu") — nama itu sekarang
+   ikut --font-title/--font-display seperti judul lain (Central Station).
+   Berkas complete-destroy-full-400-normal.woff2 ikut dihapus dari repo,
+   bukan dibiarkan jadi fallback tak terpakai. */
+
 
 /* --- Wordmark miring -------------------------------------------------
    SATU perlakuan, bukan font baru. Nama (dan HANYA nama) dimiringkan 9°
@@ -89,7 +197,17 @@
    footer (shell/ChromeRedesign.css), dan judul hero (pages/HomeStage.css).
    Tidak pernah dipasang ke elemen yang berisi kalimat. Jalur
    reduced-motion tidak terpengaruh: ini bentuk, bukan gerakan. */
-   DICABUT DI FASE 6I. Kemiringan 9° dipasang sebagai `font-style:
+
+/* [BUG PRA-SESI INI, DIPERBAIKI] Komentar di bawah ini kehilangan `/*`
+   pembuka sejak ditulis (riwayatnya tidak jelas, tapi sudah ada di commit
+   dasar sebelum sesi ini dimulai) — akibatnya separuh kalimatnya terbaca
+   parser CSS sebagai kode sungguhan ("Unknown word DI"), dan SELURUH
+   `index.css` gagal di-parse oleh dev server (bukan oleh `vite build`
+   produksi, yang memakai jalur transform berbeda dan kebetulan toleran).
+   Ini sebabnya preview sempat tampil tanpa gaya sama sekali di semua
+   halaman, bukan cuma beranda. Isinya tidak diubah, cuma ditutup dengan
+   benar. */
+/* DICABUT DI FASE 6I. Kemiringan 9° dipasang sebagai `font-style:
    oblique` — artinya browser MEMALSUKAN kemiringan dari huruf tegak.
    Hasilnya terbaca murahan, dan pemilik situs langsung menangkapnya.
    Pelajarannya: kemiringan hanya sah kalau hurufnya memang punya
@@ -134,15 +252,60 @@
 
 :root {
   /* Curated 3-Font System: Independent, Distinctive, Highly Legible */
-  --font-display: "Big Shoulders Display", "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  /* Judul/H1 saja. Syne lebih lebar ±1,68× dari huruf display lama
-     (diukur dari advance width, bukan ditebak — lihat laporan Fase 6), jadi
-     setiap clamp judul ikut dikalibrasi ulang. Fallback-nya huruf badan supaya
-     hierarki tidak runtuh ke font sistem sebelum huruf judul dimuat. */
-  --font-title:   "Big Shoulders Display", "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* FASE 12: --font-display/--font-title dipindah dari Big Shoulders
+     Display ke Central Station — pemilik situs memilih huruf ini khusus
+     "untuk judul atau teks embed" (h1-h4 umum DAN caption di
+     MusicEmbed/OfficialMediaFrame yang sudah lama memakai token ini).
+     Big Shoulders Display TIDAK dihapus (masih huruf fallback pertama di
+     rantai, dan filenya tetap ada) supaya kalau Central Station gagal
+     muat, hierarki tidak langsung jatuh ke font sistem. */
+  --font-display: "Central Station", "Big Shoulders Display", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Judul/H1 DAN H2/H3 (Fase 6I: --font-display sengaja disamakan dengan
+     --font-title, lihat catatan test di server/editorialOptimization.test.ts
+     — saat --font-display sempat menunjuk grotesk biasa, seluruh H2/H3
+     kehilangan watak). Fase 9: Big Shoulders Display dikembalikan
+     menggantikan Unbounded (Fase 8) — kondensasi, bukan lebar, jadi clamp
+     judul ikut dikalibrasi balik (lihat server/mobileLayout.test.ts).
+     Fallback-nya huruf badan supaya hierarki tidak runtuh ke font sistem
+     sebelum huruf judul dimuat. FASE 12: nilainya disamakan dengan
+     --font-display di atas (Central Station) — termasuk untuk nama
+     "Akbar Nawasunda" sendiri (hero, wordmark header/footer, splash):
+     Fase 13 sempat mencoba huruf --font-brand (Complete Destroy)
+     terpisah khusus untuk nama itu, tapi DIBATALKAN atas instruksi
+     pemilik situs ("title akbar nawasunda bukan pake font yang itu") —
+     nama itu sekarang ikut token ini juga, satu suara judul di semua
+     tempat, tidak ada pengecualian lagi. */
+  --font-title:   "Central Station", "Big Shoulders Display", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* FASE 12 — tiga suara baru (Impact Label SWL/Tritopani/Striper),
+     masing-masing SATU peran sempit yang ditunjuk eksplisit oleh pemilik
+     situs (lihat catatan lisensi di blok @font-face Tritopani/Central
+     Station/Striper di atas). Tidak satu pun dipakai sebagai fallback
+     huruf lain — kalau gagal muat, turun ke huruf judul/badan yang sudah
+     mapan, bukan ke huruf dekoratif lain yang tidak terkait. */
+  /* --font-label: nav, tautan footer, label kolom footer, nama platform,
+     keterangan hak cipta, tagline hero, label "AKSARA SUNDA" — daftar
+     persis yang diminta pemilik situs. AKTIF sejak Fase 13 lanjutan:
+     Impact Label SWL tidak pernah benar-benar diunggah (dicek di GitHub,
+     tidak ada), jadi pemilik situs memilih Autocron dari berkas yang
+     sudah ada sebagai gantinya untuk peran ini. Sometype Mono tetap
+     fallback kalau Autocron gagal muat. */
+  --font-label:     "Autocron", "Sometype Mono", ui-monospace, monospace;
+  /* --font-signature: HANYA bacaan Latin di sebelah aksara Sunda
+     (.an-sunda-latin) — bukan aksaranya sendiri (tetap --font-sunda). */
+  --font-signature: "Tritopani", "Hanken Grotesk", cursive, sans-serif;
+
+  /* --font-game: HANYA judul/heading di dalam game Jedag Run. */
+  --font-game:      "Striper", "Big Shoulders Display", "Hanken Grotesk", sans-serif;
+  /* --font-hero-akbar / --font-hero-nawasunda: HANYA dua kata di judul
+     hero BERANDA (.hero-title-word, kata ke-1 dan ke-2) -- bukan nama
+     "Akbar Nawasunda" di tempat lain (wordmark, splash, tanda tangan
+     tetap --font-title/--font-signature). Dua suara berbeda untuk dua
+     kata yang sama, sesuai instruksi eksplisit pemilik situs. */
+  --font-hero-akbar:     "Unityped", "Big Shoulders Display", "Hanken Grotesk", sans-serif;
+  --font-hero-nawasunda: "Cultura Estropeada", "Big Shoulders Display", "Hanken Grotesk", sans-serif;
   /* Aksara Sunda: gema kecil di bawah judul, bukan teks isi. */
-  --font-sunda:   "Noto Sans Sundanese", "Schibsted Grotesk", sans-serif;
-  --font-body:    "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sunda:   "Noto Sans Sundanese", "Hanken Grotesk", sans-serif;
+  --font-body:    "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono:    "Sometype Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Nocturnal Electronic Artist Palette — PHASE 4 CANONICAL.
@@ -276,6 +439,34 @@
   --text-small: 0.86rem;
   --text-meta:  0.72rem;
 
+  /* -- Tangga kontras (FASE 7, nomor 3) --------------------------
+     TOKEN SAJA — belum dipasang ke selektor mana pun di sini. Nomor 4
+     yang memasangnya ke HomeStage.css.
+
+     docs/notes/skala-huruf-sekarang.md membuktikan dengan angka kenapa
+     tangga di atas (`--text-*`) tidak cukup: 88,3% dari 513 deklarasi
+     ukuran tetap di seluruh CSS menumpuk di pita 0,5–1rem. Itu tangga
+     yang "aman" — rasio berdekatan 1,2×, cocok untuk teks baca panjang,
+     tapi tidak pernah menghasilkan kontras.
+
+     Tangga ini rasionya 1,5× (bukan 1,2×) dari dasar 1rem, naik dan
+     turun: `--step-0` = 1rem, setiap langkah ke atas ×1,5, ke bawah ÷1,5.
+     Prinsip pemakaiannya (nomor 4-5): SATU layar hanya boleh memakai TIGA
+     tingkat — raksasa, sedang, mikro — tidak pernah tingkat yang
+     berdekatan. `--step-3` (titik tengah angka -1..7) SENGAJA tidak
+     pernah dipakai di berkas mana pun; itu yang membuat lompatannya
+     terasa seperti lompatan, bukan tanjakan. Jangan pasang --step-3 ke
+     selektor apa pun tanpa menulis alasannya di sini lebih dulu. */
+  --step--1: 0.667rem;   /* mikro — label pendamping, keterangan kecil */
+  --step-0:  1rem;       /* dasar — sama dengan --text-body, titik nol tangga */
+  --step-1:  1.5rem;     /* sedang-kecil */
+  --step-2:  2.25rem;    /* sedang — lantai judul hero di ponsel */
+  --step-3:  3.375rem;   /* KOSONG SENGAJA — jangan dipakai, lihat catatan di atas */
+  --step-4:  5.062rem;   /* sedang-besar — plafon judul hero di ponsel / lantai di desktop */
+  --step-5:  7.594rem;   /* besar */
+  --step-6:  11.391rem;  /* raksasa */
+  --step-7:  17.086rem;  /* raksasa maksimum — jarang dipakai, nyaris tidak pernah tercapai di viewport nyata (lihat nomor 4) */
+
   /* -- Media / image system ------------------------------------- */
   --ratio-square: 1 / 1;
   --ratio-portrait: 4 / 5;
@@ -389,25 +580,48 @@
     line-height: 1.55;
     font-weight: 400;
     letter-spacing: -0.006em;
+    /* FASE 12/13 — [BUGFIX GLOBAL] Central Station/Complete
+       Destroy/Striper/Tritopani cuma punya SATU berkas bobot (400) di
+       masing-masing. Ratusan selektor lama di situs ini menulis
+       font-weight 600/700/800 bersama var(--font-display)/var(--font-title)
+       dengan asumsi diam-diam bahwa hurufnya (sebelumnya Big Shoulders
+       Display 800) memang punya potongan tebal sendiri — asumsi yang
+       sekarang salah untuk Central Station. Tanpa baris ini, browser
+       MEMALSUKAN ketebalan lewat synthetic bold di semua tempat itu,
+       tanpa terlihat sebagai bug kecuali dibandingkan langsung (sama
+       persis dengan pelajaran soal kemiringan palsu di .an-markslant).
+       `font-synthesis: none` properti yang DIWARISI — didaftar di sini
+       (body) sekali, berlaku ke seluruh situs — mematikan simulasi
+       tebal/miring itu secara total, bukan menambal satu per satu
+       selektor. Huruf dengan berkas bobot asli ganda (Hanken Grotesk
+       400/500/700, Sometype Mono 400/500) TIDAK terdampak: itu bukan
+       sintesis, itu pencocokan ke berkas nyata terdekat. */
+    font-synthesis: none;
   }
 
   h1, h2, h3, h4 {
     margin: 0;
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.03em;
+    letter-spacing: 0em;
     line-height: 1.08;
     text-wrap: balance;
     word-break: break-word;
     overflow-wrap: break-word;
   }
-  /* H1 — dan hanya H1 — memakai huruf judul (Big Shoulders Display 800).
-     H2/H3 memakai Schibsted Grotesk 700, satu tingkat lebih tenang. */
+  /* [FAKTA — dikoreksi Fase 8] Komentar lama di sini menyebut "H2/H3
+     memakai Schibsted Grotesk 700" — itu sudah tidak benar sejak Fase 6I,
+     ketika --font-display dikembalikan menyamai --font-title (lihat
+     catatan di token --font-display di atas dan test-nya di
+     server/editorialOptimization.test.ts). Praktiknya: h1 DAN h2/h3/h4
+     sama-sama memakai huruf judul (Fase 9: Big Shoulders Display 800)
+     lewat --font-display/--font-title yang nilainya disamakan. h1
+     override di bawah ini hanya mengubah ukuran, bukan keluarga huruf. */
   h1 {
     font-family: var(--font-title);
     font-size: var(--text-hero);
     line-height: 1.05;
-    letter-spacing: -0.04em;
+    letter-spacing: 0em;
   }
   h2 { font-size: var(--text-h2); line-height: 1.08; }
   h3 { font-size: var(--text-h3); line-height: 1.15; }
