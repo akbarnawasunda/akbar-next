@@ -14,6 +14,10 @@ wants to resolve the licensing status, contact the author at the address
 above.
 
 Used for: --font-title / --font-display token (client/src/index.css) —
-general section headings (h1-h4 site-wide, excluding the literal "Akbar
-Nawasunda" brand title which uses --font-brand/Complete Destroy instead)
+ALL section headings site-wide (h1-h4), including the literal "Akbar
+Nawasunda" brand title (hero, header/footer wordmark, splash screen),
 and embedded-media captions (MusicEmbed.css, OfficialMediaFrame.css).
+[Fase 13] A separate --font-brand/Complete Destroy treatment was briefly
+tried for the brand title only, then reverted per the site owner's
+instruction — the brand title now shares this same token/font with every
+other heading on the site, no exception.

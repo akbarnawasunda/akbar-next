@@ -91,12 +91,13 @@
    dikembalikan ke angka Big Shoulders Display 800 semula di sini dan di
    breakpoint ≤767,98px di bawah. */
 .an-public-shell.an-editorial .nf-nav .nf-wordmark-text strong {
-  /* FASE 12: wordmark header = nama "Akbar Nawasunda" sebagai logo, jadi
-     --font-brand (Complete Destroy), bukan --font-title (sekarang
-     Central Station, dipakai judul section biasa). Complete Destroy
-     cuma satu berkas bobot (400) -- 800 di sini akan memalsukan
-     ketebalan lewat synthetic bold. */
-  font-family: var(--font-brand);
+  /* FASE 12/13: wordmark header = nama "Akbar Nawasunda" sebagai logo.
+     Sesi Fase 13 sempat memindahkannya ke --font-brand (Complete
+     Destroy), tapi DIBATALKAN atas instruksi pemilik situs -- kembali
+     ke --font-title (Central Station), sama dengan judul lain. Central
+     Station cuma satu berkas bobot (400); 800 tidak dipakai lagi di
+     sini (lihat `font-synthesis: none` di body, index.css). */
+  font-family: var(--font-title);
   font-size: 1.16rem;
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -269,16 +270,17 @@
 }
 
 .an-public-shell.an-editorial .nf-footer-brand strong {
-  /* FASE 12: wordmark footer = nama "Akbar Nawasunda" juga, sama
-     perlakuan dengan wordmark header di atas -- --font-brand (Complete
-     Destroy), bukan --font-title (sekarang Central Station). */
-  font-family: var(--font-brand);
+  /* FASE 12/13: wordmark footer = nama "Akbar Nawasunda" juga, sama
+     perlakuan dengan wordmark header di atas -- kembali ke --font-title
+     (Central Station) setelah --font-brand/Complete Destroy dibatalkan
+     atas instruksi pemilik situs. */
+  font-family: var(--font-title);
   /* Fase 8 ganti ke Unbounded, Fase 9 kembali: sempat diturunkan ×0,5594
      untuk Unbounded 900, dikembalikan ke angka Big Shoulders Display 800
      semula setelah peninjauan tampilan hidup. */
   font-size: clamp(2.2rem, 4.4vw, 3.5rem);
-  /* Complete Destroy cuma satu berkas bobot (400) -- 800 akan
-     memalsukan ketebalan lewat synthetic bold. */
+  /* Central Station cuma satu berkas bobot (400) -- 800 tidak dipakai
+     lagi (lihat `font-synthesis: none` di body, index.css). */
   font-weight: 400;
   letter-spacing: 0.03em;
   color: var(--paper);

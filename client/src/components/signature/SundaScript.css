@@ -70,6 +70,12 @@
   font-family: var(--font-signature);
   font-size: 1.05em;
   letter-spacing: 0.02em;
+  /* [BUGFIX] .an-sunda-key (induknya) memaksa text-transform: uppercase
+     untuk label mono di sebelahnya -- tanpa baris ini, "Akbar Nawasunda"
+     akan ikut tertarik jadi "AKBAR NAWASUNDA" oleh warisan CSS meskipun
+     sumber datanya sudah huruf besar-kecil biasa (lihat
+     client/src/content/sundaneseScript.ts). */
+  text-transform: none;
 }
 
 .an-sunda-dot {

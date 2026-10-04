@@ -597,15 +597,15 @@
   max-width: 9ch;
   margin: 0;
   color: var(--paper);
-  /* FASE 12: ini aturan yang SEBENARNYA menang untuk judul hero beranda
-     (selektornya lebih spesifik dari punya Home.css) -- jadi ini yang
-     harus ikut pindah ke --font-brand (Complete Destroy), bukan
-     --font-display (sekarang Central Station, dipakai judul section
-     biasa). Complete Destroy cuma satu berkas bobot (400), jadi
-     font-weight ikut disamakan ke 400 -- 800 di sini sebelumnya
-     (ditujukan untuk Big Shoulders Display) akan memalsukan ketebalan
-     lewat synthetic bold kalau dibiarkan. */
-  font-family: var(--font-brand);
+  /* FASE 12/13: ini aturan yang SEBENARNYA menang untuk judul hero
+     beranda (selektornya lebih spesifik dari punya Home.css). Sesi
+     Fase 13 sempat memindahkannya ke --font-brand (Complete Destroy)
+     khusus untuk nama "Akbar Nawasunda", tapi DIBATALKAN atas instruksi
+     pemilik situs -- kembali ke --font-display (Central Station) seperti
+     judul lain. Central Station cuma satu berkas bobot (400); 800 di
+     sini sebelumnya (ditujukan untuk Big Shoulders Display) sudah
+     diturunkan ke 400 -- tetap 400, bukan dikembalikan ke 800. */
+  font-family: var(--font-display);
   font-size: clamp(2.4rem, 5.04vw, 5.22rem) !important;
   font-weight: 400;
   letter-spacing: 0em;

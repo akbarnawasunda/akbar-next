@@ -131,14 +131,12 @@
   font-style: normal;
   font-display: swap;
 }
-@font-face {
-  font-family: "Complete Destroy";
-  src: url("/assets/fonts/fontsource/complete-destroy-full-400-normal.woff2")
-    format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+/* Fase 13: Complete Destroy SEMPAT dipasang untuk judul "Akbar Nawasunda"
+   (hero/wordmark/splash), lalu DIHAPUS lagi atas instruksi pemilik situs
+   ("title akbar nawasunda bukan pake font yang itu") — nama itu sekarang
+   ikut --font-title/--font-display seperti judul lain (Central Station).
+   Berkas complete-destroy-full-400-normal.woff2 ikut dihapus dari repo,
+   bukan dibiarkan jadi fallback tak terpakai. */
 
 
 /* --- Wordmark miring -------------------------------------------------
@@ -223,22 +221,20 @@
      judul ikut dikalibrasi balik (lihat server/mobileLayout.test.ts).
      Fallback-nya huruf badan supaya hierarki tidak runtuh ke font sistem
      sebelum huruf judul dimuat. FASE 12: nilainya disamakan dengan
-     --font-display di atas (Central Station) — PENGECUALIAN: elemen yang
-     merender nama "Akbar Nawasunda" sebagai judul/wordmark (hero,
-     wordmark header/footer, splash) override eksplisit ke --font-brand
-     di bawah, bukan lewat token ini. */
+     --font-display di atas (Central Station) — termasuk untuk nama
+     "Akbar Nawasunda" sendiri (hero, wordmark header/footer, splash):
+     Fase 13 sempat mencoba huruf --font-brand (Complete Destroy)
+     terpisah khusus untuk nama itu, tapi DIBATALKAN atas instruksi
+     pemilik situs ("title akbar nawasunda bukan pake font yang itu") —
+     nama itu sekarang ikut token ini juga, satu suara judul di semua
+     tempat, tidak ada pengecualian lagi. */
   --font-title:   "Central Station", "Big Shoulders Display", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  /* FASE 12 — empat suara baru, masing-masing SATU peran sempit yang
-     ditunjuk eksplisit oleh pemilik situs (lihat catatan lisensi di blok
-     @font-face Complete Destroy/Tritopani/Central Station/Striper di
-     atas). Tidak satu pun dipakai sebagai fallback huruf lain — kalau
-     gagal muat, turun ke huruf judul/badan yang sudah mapan, bukan ke
-     huruf dekoratif lain yang tidak terkait. */
-  /* --font-brand: HANYA untuk elemen yang merender nama "Akbar Nawasunda"
-     sebagai judul/wordmark/logo (hero title, wordmark header & footer,
-     splash) — bukan judul section biasa (itu tugas --font-title/
-     --font-display di atas, sekarang Central Station). */
-  --font-brand:     "Complete Destroy", "Big Shoulders Display", "Hanken Grotesk", sans-serif;
+  /* FASE 12 — tiga suara baru (Impact Label SWL/Tritopani/Striper),
+     masing-masing SATU peran sempit yang ditunjuk eksplisit oleh pemilik
+     situs (lihat catatan lisensi di blok @font-face Tritopani/Central
+     Station/Striper di atas). Tidak satu pun dipakai sebagai fallback
+     huruf lain — kalau gagal muat, turun ke huruf judul/badan yang sudah
+     mapan, bukan ke huruf dekoratif lain yang tidak terkait. */
   /* --font-label: nav, tautan footer, label kolom footer, nama platform,
      keterangan hak cipta, tagline hero — daftar persis yang diminta
      pemilik situs. BELUM AKTIF: file Impact Label SWL belum diunggah,
@@ -250,6 +246,7 @@
   /* --font-signature: HANYA bacaan Latin di sebelah aksara Sunda
      (.an-sunda-latin) — bukan aksaranya sendiri (tetap --font-sunda). */
   --font-signature: "Tritopani", "Hanken Grotesk", cursive, sans-serif;
+
   /* --font-game: HANYA judul/heading di dalam game Jedag Run. */
   --font-game:      "Striper", "Big Shoulders Display", "Hanken Grotesk", sans-serif;
   /* Aksara Sunda: gema kecil di bawah judul, bukan teks isi. */
@@ -529,6 +526,23 @@
     line-height: 1.55;
     font-weight: 400;
     letter-spacing: -0.006em;
+    /* FASE 12/13 — [BUGFIX GLOBAL] Central Station/Complete
+       Destroy/Striper/Tritopani cuma punya SATU berkas bobot (400) di
+       masing-masing. Ratusan selektor lama di situs ini menulis
+       font-weight 600/700/800 bersama var(--font-display)/var(--font-title)
+       dengan asumsi diam-diam bahwa hurufnya (sebelumnya Big Shoulders
+       Display 800) memang punya potongan tebal sendiri — asumsi yang
+       sekarang salah untuk Central Station. Tanpa baris ini, browser
+       MEMALSUKAN ketebalan lewat synthetic bold di semua tempat itu,
+       tanpa terlihat sebagai bug kecuali dibandingkan langsung (sama
+       persis dengan pelajaran soal kemiringan palsu di .an-markslant).
+       `font-synthesis: none` properti yang DIWARISI — didaftar di sini
+       (body) sekali, berlaku ke seluruh situs — mematikan simulasi
+       tebal/miring itu secara total, bukan menambal satu per satu
+       selektor. Huruf dengan berkas bobot asli ganda (Hanken Grotesk
+       400/500/700, Sometype Mono 400/500) TIDAK terdampak: itu bukan
+       sintesis, itu pencocokan ke berkas nyata terdekat. */
+    font-synthesis: none;
   }
 
   h1, h2, h3, h4 {

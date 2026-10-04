@@ -16,10 +16,12 @@
    Grotesk) -- bukan huruf wordmark seperti versi ID. Selektor di bawah
    sengaja dibuat sespesifik aturan dasar itu (4 class + 1 elemen >
    4 class) supaya menang tanpa !important, menyamakan wordmark EN
-   dengan wordmark ID: --font-brand (Complete Destroy), bukan
-   --font-title/--font-display (section heading biasa). */
+   dengan wordmark ID: --font-title/--font-display (Central Station). */
 .an-public-shell.an-editorial .nf-nav .nf-wordmark-official > span {
-  font-family: var(--font-brand);
+  /* FASE 12/13: --font-brand (Complete Destroy) dibatalkan atas instruksi
+     pemilik situs -- wordmark EN ikut --font-title (Central Station),
+     sama dengan wordmark ID di ChromeRedesign.css. */
+  font-family: var(--font-title);
   font-size: 1.16rem;
   font-weight: 400;
   letter-spacing: 0.04em;
