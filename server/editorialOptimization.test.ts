@@ -71,18 +71,19 @@ describe("high-performance image optimization & non-Google typography", () => {
   });
 
   it("menyajikan empat suara huruf self-hosted tanpa satu pun panggilan CDN", () => {
-    // KONTRAK BERUBAH LAGI (Fase 8, disengaja). Pemilik situs menilai
+    // KONTRAK BERUBAH DUA KALI (disengaja). Fase 8: pemilik situs menilai
     // roster Fase 6H ("Big Shoulders Display" + "Schibsted Grotesk")
-    // "jelek banget, basic" dan secara eksplisit membatalkan larangan
-    // ganti-huruf dari Fase 6H/7 untuk kali ini. Keduanya dihapus dari
-    // repo dan digantikan Unbounded 900 (judul) dan Hanken Grotesk
-    // 400/500/700 (badan/UI/H2-H3). Sometype Mono dan Noto Sans Sundanese
-    // TIDAK disentuh — di luar keluhan pemilik situs.
-    // Bukti perbandingan: docs/notes/font-candidate-preview.png.
+    // "jelek banget, basic" dan minta huruf JUDUL diganti ke Unbounded 900
+    // (badan ikut diganti ke Hanken Grotesk 400/500/700). Fase 9:
+    // peninjauan tampilan hidup menilai Unbounded kurang cocok untuk
+    // judul — dikembalikan ke Big Shoulders Display 800, SEDANGKAN badan
+    // (Hanken Grotesk) TETAP karena bukan bagian dari keluhan. Sometype
+    // Mono dan Noto Sans Sundanese tidak pernah disentuh di kedua fase.
+    // Bukti perbandingan Fase 8: docs/notes/font-candidate-preview.png.
     // Yang dijaga tes ini tidak berubah: semua huruf dilayani dari repo,
     // tidak ada satu pun permintaan ke CDN huruf mana pun.
     for (const file of [
-      "fonts/fontsource/unbounded-900.woff2",
+      "fonts/fontsource/big-shoulders-display-800.woff2",
       "fonts/fontsource/hanken-grotesk-400.woff2",
       "fonts/fontsource/hanken-grotesk-500.woff2",
       "fonts/fontsource/hanken-grotesk-700.woff2",
@@ -93,13 +94,16 @@ describe("high-performance image optimization & non-Google typography", () => {
       expect(existsSync(assetPath(file)), file).toBe(true);
     }
 
-    // Huruf lama benar-benar hilang dari repo, bukan sekadar tak dipakai.
+    // Huruf yang tidak lagi dipakai benar-benar hilang dari repo, bukan
+    // sekadar tak dipakai. Unbounded (huruf judul Fase 8) masuk daftar ini
+    // sejak Fase 9; Schibsted Grotesk tetap gone sejak Fase 8 (badan kini
+    // Hanken Grotesk, bukan dikembalikan ke Schibsted).
     for (const gone of [
       "fonts/fontshare/clash-display-600.woff2",
       "fonts/fontshare/general-sans-500.woff2",
       "fonts/fontshare/azeret-mono-500.woff2",
       "fonts/fontsource/syne-800.woff2",
-      "fonts/fontsource/big-shoulders-display-800.woff2",
+      "fonts/fontsource/unbounded-900.woff2",
       "fonts/fontsource/schibsted-grotesk-400.woff2",
       "fonts/fontsource/schibsted-grotesk-500.woff2",
       "fonts/fontsource/schibsted-grotesk-700.woff2",
@@ -110,17 +114,17 @@ describe("high-performance image optimization & non-Google typography", () => {
     const indexCss = source("client/src/index.css");
     expect(indexCss).toContain('@font-face {\n  font-family: "Hanken Grotesk";');
     expect(indexCss).toContain('@font-face {\n  font-family: "Sometype Mono";');
-    expect(indexCss).toContain('@font-face {\n  font-family: "Unbounded";');
+    expect(indexCss).toContain('@font-face {\n  font-family: "Big Shoulders Display";');
     // Fase 6I: --font-display memegang suara DISPLAY (sama dengan
     // --font-title), bukan grotesk biasa. Saat ia sempat menunjuk grotesk,
     // seluruh H2/H3 di situs kehilangan watak dan halaman jadi datar. Fase
-    // 8 mempertahankan prinsip ini dengan huruf judul yang baru.
-    expect(indexCss).toContain('--font-display: "Unbounded"');
+    // 8 dan Fase 9 mempertahankan prinsip ini, cuma bertukar huruf judul.
+    expect(indexCss).toContain('--font-display: "Big Shoulders Display"');
     expect(indexCss).toContain('--font-body:    "Hanken Grotesk"');
     expect(indexCss).toContain('--font-mono:    "Sometype Mono"');
     expect(indexCss).not.toContain("Clash Display");
     expect(indexCss).not.toContain("Azeret Mono");
-    expect(indexCss).not.toContain('"Big Shoulders Display"');
+    expect(indexCss).not.toContain('"Unbounded"');
     expect(indexCss).not.toContain('"Schibsted Grotesk"');
 
     // Tidak ada CDN huruf di mana pun.

@@ -280,7 +280,7 @@ body::before {
 
 .an-inquiry-hero,
 .an-epk-hero { background: var(--ref-bg) !important; border-bottom-color: var(--ref-line) !important; }
-.an-inquiry-hero h1 { max-width: 8ch !important; font-size: clamp(2.49rem, 6.65vw, 6.65rem) !important; line-height: 1 !important; letter-spacing: 0.02em !important; white-space: pre-line; }
+.an-inquiry-hero h1 { max-width: 8ch !important; font-size: clamp(4.9rem, 13.1vw, 13.1rem) !important; line-height: 1 !important; letter-spacing: 0.02em !important; white-space: pre-line; }
 .an-inquiry-signal { border-left-color: var(--ref-cyan) !important; }
 .an-inquiry-shell { background: var(--ref-bg-2) !important; }
 .an-inquiry-form input,
@@ -306,7 +306,7 @@ body::before {
 .an-site .hero-copy::before { content: none !important; }
 .an-site .hero-copy .eyebrow { margin-bottom: 22px !important; color: var(--ref-cyan) !important; font-family: var(--ref-mono) !important; font-size: 0.6rem !important; letter-spacing: 0.14em !important; }
 .an-site .hero-copy .eyebrow > span { width: 8px !important; height: 8px !important; border-radius: 50%; background: var(--ref-cyan) !important; box-shadow: 0 0 16px var(--ref-cyan); }
-.an-site .hero-copy .hero-title-editorial { font-size: clamp(1.319rem, 5.073vw, 5.073rem) !important; line-height: 0.96 !important; letter-spacing: 0.02em !important; }
+.an-site .hero-copy .hero-title-editorial { font-size: clamp(2.6rem, 10vw, 10rem) !important; line-height: 0.96 !important; letter-spacing: 0.02em !important; }
 .an-site .hero-copy .hero-title-mask { padding: 0 !important; }
 .an-site .hero-description { max-width: 34ch !important; margin: 28px 0 30px !important; color: var(--ref-muted) !important; font-family: var(--ref-mono) !important; font-size: 0.69rem !important; line-height: 1.8 !important; }
 .an-site .home-hero-portrait { height: min(78vh, 720px) !important; border: 0 !important; box-shadow: var(--ref-shadow) !important; }
@@ -369,7 +369,7 @@ body::before {
     padding: 92px var(--ref-gutter) 42px !important;
     background-position: 63% center !important;
   }
-  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(1.065rem, 5.073vw, 1.776rem) !important; }
+  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(2.1rem, 10vw, 3.5rem) !important; }
   .nf-hero-note { align-self: stretch !important; max-width: none !important; }
   .nf-section, .nf-platform-hub { padding-block: 70px !important; }
   .nf-section-title { display: block !important; }
@@ -400,7 +400,7 @@ body::before {
   }
   .an-site .home-hero-portrait { order: -1; width: 100% !important; height: 405px !important; }
   .an-site .hero-copy { max-width: 100% !important; }
-  .an-site .hero-copy .hero-title-editorial { font-size: clamp(1.522rem, 8.473vw, 2.943rem) !important; }
+  .an-site .hero-copy .hero-title-editorial { font-size: clamp(3rem, 16.7vw, 5.8rem) !important; }
   .an-site .hero-description { max-width: 36ch !important; margin: 22px 0 24px !important; font-size: 0.65rem !important; }
   .an-site .hero-actions { gap: 10px 18px !important; }
   .an-site .button-primary { min-height: 44px; }
@@ -418,13 +418,13 @@ body::before {
 }
 @media (max-width: 480px) {
   .nf-page-hero { min-height: 640px !important; }
-  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(1.065rem, 5.073vw, 1.776rem) !important; }
+  .nf-page-hero h1, .nf-epk-hero h1 { font-size: clamp(2.1rem, 10vw, 3.5rem) !important; }
   .nf-platform-grid { grid-template-columns: 1fr !important; }
   .nf-visual-grid { grid-template-rows: 260px 190px !important; }
   .nf-catalog-card { flex-basis: min(78vw, 290px) !important; min-height: 350px !important; }
   .an-site .an-hero { min-height: 680px !important; }
   .an-site .home-hero-portrait { height: 330px !important; }
-  .an-site .hero-copy .hero-title-editorial { font-size: clamp(1.522rem, 8.473vw, 2.943rem) !important; }
+  .an-site .hero-copy .hero-title-editorial { font-size: clamp(3rem, 16.7vw, 5.8rem) !important; }
   .an-site .section h2, .an-site .home-signal-copy h2 { font-size: clamp(2.7rem, 15vw, 5rem) !important; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -523,7 +523,7 @@ body::before {
     background-position: 66% center !important;
   }
   .music-reference-page .nf-page-hero::after { top: 78px; right: 20px; }
-  .music-reference-page .nf-page-hero h1 { font-size: clamp(1.065rem, 5.073vw, 1.776rem) !important; }
+  .music-reference-page .nf-page-hero h1 { font-size: clamp(2.1rem, 10vw, 3.5rem) !important; }
   .music-reference-page .an-story-section { padding-block: 62px !important; }
   .music-reference-page .an-story-copy h2 { max-width: 9ch !important; }
   .music-reference-page .nf-platform-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; max-width: none; }
@@ -532,7 +532,7 @@ body::before {
 @media (max-width: 480px) {
   .music-reference-page .nf-page-hero::after { display: none; }
   .music-reference-page .nf-page-hero { min-height: 640px !important; }
-  .music-reference-page .nf-page-hero h1 { font-size: clamp(1.065rem, 5.073vw, 1.776rem) !important; }
+  .music-reference-page .nf-page-hero h1 { font-size: clamp(2.1rem, 10vw, 3.5rem) !important; }
   .music-reference-page .nf-platform-grid { grid-template-columns: 1fr !important; }
 }
 
@@ -569,14 +569,14 @@ body::before {
   .an-site .hero-copy .hero-title-editorial {
     /* Kata judul dipaksa nowrap, jadi ukurannya harus ikut lebar layar.
        Lantai rem tetap membuat "NAWASUNDA." terpotong di layar 320px.
-       [FAKTA — Fase 8] Huruf judul ganti ke Unbounded 900, yang menulis
-       "NAWASUNDA." ~1,97× lebih lebar per karakter daripada Big Shoulders
-       Display (9,601em vs 4,871em, lihat HERO_WORD_EM di
-       server/mobileLayout.test.ts). Ketiga angka clamp di bawah (dan semua
-       salinannya di berkas ini) diturunkan ×0,50735 (= 4,871/9,601) dari
-       nilai Fase 6E supaya lebar baris di layar tetap sama persis —
-       halaman ini dipakai nyata oleh /en (lihat EnglishPages.tsx). */
-    font-size: clamp(1.522rem, 8.473vw, 2.943rem) !important;
+       [FAKTA — Fase 8 ganti ke Unbounded, Fase 9 kembali] Sempat diganti
+       Unbounded 900 (clamp diturunkan ×0,50735 = 4,871/9,601), tapi
+       peninjauan tampilan hidup menilai Unbounded kurang cocok untuk
+       judul — dikembalikan ke Big Shoulders Display 800 dan angka clamp
+       di bawah (dan semua salinannya di berkas ini) kembali ke nilai
+       Fase 6E — halaman ini dipakai nyata oleh /en (lihat
+       EnglishPages.tsx). */
+    font-size: clamp(3rem, 16.7vw, 5.8rem) !important;
     letter-spacing: 0.02em !important;
   }
   .an-site .hero-copy .hero-title-word {
@@ -876,7 +876,7 @@ body::before {
   .nf-page .nf-epk-hero { min-height: 650px !important; }
   .nf-page .nf-page-hero h1,
   .en-page .nf-page-hero h1,
-  .nf-page .nf-epk-hero h1 { font-size: clamp(1.005rem, 4.82vw, 1.674rem) !important; line-height: 1 !important; letter-spacing: 0.02em !important; }
+  .nf-page .nf-epk-hero h1 { font-size: clamp(1.98rem, 9.5vw, 3.3rem) !important; line-height: 1 !important; letter-spacing: 0.02em !important; }
   .nf-page .nf-section,
   .en-page .nf-section { padding-block: 64px !important; }
   .nf-page .nf-section-title,

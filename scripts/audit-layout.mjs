@@ -27,16 +27,17 @@ const OVERFLOW_ALLOWLIST = [SHELL_FILE];
 
 const LOCAL_FONTS = [
   // Fase 6H: Clash Display / General Sans / Azeret Mono DIHAPUS dari repo.
-  // Fase 8: Big Shoulders Display / Schibsted Grotesk DIHAPUS juga (pemilik
-  // situs menilainya "jelek banget, basic"). Sengaja tidak disisakan di
-  // sini supaya sisa pemakaian nama font lama langsung terdeteksi sebagai
-  // pelanggaran.
+  // Fase 8: Big Shoulders Display / Schibsted Grotesk sempat DIHAPUS juga
+  // (pemilik situs menilainya "jelek banget, basic"), digantikan Unbounded
+  // (judul) + Hanken Grotesk (badan). Fase 9: Unbounded DIHAPUS lagi,
+  // Big Shoulders Display 800 kembali jadi huruf judul setelah peninjauan
+  // tampilan hidup — Hanken Grotesk (badan) tetap.
   "Hanken Grotesk",
   "Sometype Mono",
   // Fase 6: gema aksara Sunda — self-hosted.
   "Noto Sans Sundanese",
-  // Fase 8: font judul/H1. Menggantikan Big Shoulders Display 800.
-  "Unbounded",
+  // Fase 9: font judul/H1 kembali ke Big Shoulders Display 800.
+  "Big Shoulders Display",
 ];
 const FONT_FALLBACKS = [
   "inherit",

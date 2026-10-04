@@ -3,20 +3,30 @@
    Satu-satunya sumber kebenaran untuk: font, warna, tipe, base.
    ============================================================ */
 
-/* ROSTER HURUF — FASE 8.
-   Fase 6H (Big Shoulders Display + Schibsted Grotesk) DIGANTI lagi:
-   pemilik situs menilainya "jelek banget, basic" dan secara eksplisit
-   membatalkan larangan ganti-huruf dari Fase 6H/7 untuk kali ini. Huruf
-   lama DIHAPUS dari repo (bukan sekadar tidak dipakai). Perbandingan ada
-   di docs/notes/font-candidate-preview.png.
+/* ROSTER HURUF — FASE 9 (title dikembalikan ke Fase 6H, badan tetap Fase 8).
+   Pemilik situs melihat tampilan hidup Unbounded 900 pada judul dan minta
+   kembali ke huruf judul sebelumnya ("font lamanya lebih enak dilihat") —
+   keluhannya eksplisit soal JUDUL, bukan badan teks, jadi Hanken Grotesk
+   (badan) TETAP, hanya huruf judul yang kembali ke Big Shoulders Display
+   800. Unbounded dan lisensinya dihapus lagi dari repo (tidak dipakai
+   elemen mana pun lagi setelah ini).
 
    Empat suara, tidak lebih:
-     1. Unbounded 900 — H1 + wordmark (lihat blok di bawah)
+     1. Big Shoulders Display 800 — H1 + wordmark (lihat blok di bawah)
      2. Hanken Grotesk 400/500/700 — badan teks, UI, H2/H3
      3. Sometype Mono 400/500 — label, angka, konsol
      4. Noto Sans Sundanese 400 — identitas aksara
 
-   Total 8 berkas / 86.956 B, turun dari 8 berkas / 114.012 B (Fase 6H). */
+   [CATATAN] Sapuan `letter-spacing` negatif→0em dari Fase 8 (159 aturan di
+   30 berkas, ditala ulang supaya Unbounded yang lebar tidak bertabrakan)
+   SENGAJA TIDAK dikembalikan ke nilai negatif semula di sini: tracking 0
+   aman untuk huruf kondensasi seperti Big Shoulders Display juga (tidak
+   pernah membuat huruf bertabrakan, cuma sedikit lebih longgar dari tuning
+   asli pra-Fase-8). Mengembalikan 159 titik itu satu per satu di luar
+   cakupan keluhan kali ini (soal judul kelihatan jelek, bukan soal
+   kerapatan huruf) dan berisiko tinggi salah ketik tanpa verifikasi
+   visual. Kalau user masih merasa huruf judul "terlalu longgar", itu
+   permintaan terpisah untuk sesi berikutnya. */
 @font-face {
   font-family: "Hanken Grotesk";
   src: url("/assets/fonts/fontsource/hanken-grotesk-400.woff2")
@@ -57,34 +67,30 @@
   font-display: swap;
 }
 
-/* Unbounded 900 — SATU bobot, judul/H1 saja.
-   FASE 8, menggantikan Big Shoulders Display 800. Pemilik situs menilai
-   roster Fase 6H "jelek banget, basic" dan minta sesuatu yang berkarakter
-   — eksplisit BUKAN grotesque generik lagi. Bukti perbandingan:
-   docs/notes/font-candidate-preview.png.
+/* Big Shoulders Display 800 — SATU bobot, judul/H1 saja.
+   FASE 9: dikembalikan lagi menggantikan Unbounded 900 (Fase 8) setelah
+   peninjauan tampilan hidup — judul dinilai lebih enak dibaca dengan huruf
+   kondensasi ini daripada huruf geometris lebar Unbounded.
 
-   [FAKTA PENTING] Unbounded adalah huruf GEOMETRIS LEBAR, bukan
-   kondensasi seperti Big Shoulders Display. Diukur dari advance width
-   glyph (fontTools, upem 1000): Unbounded menulis "NAWASUNDA." sepanjang
-   9,601em (termasuk tracking +0,02em/huruf) vs 4,871em huruf lama — hampir
-   2× lebih lebar per karakter. Karena itu SELURUH clamp judul hero/halaman
-   di seluruh situs ikut diturunkan ×0,50735 di Fase 8 (lihat
+   [FAKTA PENTING] Big Shoulders Display jauh lebih KONDENSASI daripada
+   Unbounded: menulis "NAWASUNDA." sepanjang 4,871em (termasuk tracking)
+   vs 9,601em milik Unbounded — hampir setengahnya. Karena itu SELURUH
+   clamp judul yang dikalibrasi ulang untuk Unbounded di Fase 8 (lihat
    server/mobileLayout.test.ts, pages/HomeStage.css, CinematicReference.css,
-   shell/ChromeRedesign.css) supaya lebar baris di layar tetap sama seperti
-   sebelum penggantian huruf. Tracking tetap POSITIF (+0,02em), mengikuti
-   pelajaran Fase 6D: huruf lebar/geometris berisiko tabrakan kalau
-   tracking-nya negatif.
+   shell/ChromeRedesign.css) dikembalikan lagi ke angka Fase 6H supaya
+   lebar baris tetap sepadan dengan huruf kondensasi ini.
 
-   Self-hosted dari @fontsource/unbounded (SIL OFL, lihat
-   UNBOUNDED-LICENSE.txt). */
+   Self-hosted dari @fontsource/big-shoulders-display (SIL OFL, lihat
+   BIG-SHOULDERS-DISPLAY-LICENSE.txt). */
 @font-face {
-  font-family: "Unbounded";
-  src: url("/assets/fonts/fontsource/unbounded-900.woff2")
+  font-family: "Big Shoulders Display";
+  src: url("/assets/fonts/fontsource/big-shoulders-display-800.woff2")
     format("woff2");
-  font-weight: 900;
+  font-weight: 800;
   font-style: normal;
   font-display: swap;
 }
+
 
 /* --- Wordmark miring -------------------------------------------------
    SATU perlakuan, bukan font baru. Nama (dan HANYA nama) dimiringkan 9°
@@ -152,16 +158,16 @@
 
 :root {
   /* Curated 3-Font System: Independent, Distinctive, Highly Legible */
-  --font-display: "Unbounded", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Big Shoulders Display", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   /* Judul/H1 DAN H2/H3 (Fase 6I: --font-display sengaja disamakan dengan
      --font-title, lihat catatan test di server/editorialOptimization.test.ts
      — saat --font-display sempat menunjuk grotesk biasa, seluruh H2/H3
-     kehilangan watak). Fase 8: Unbounded ±1,97× lebih lebar dari huruf
-     display lama (diukur dari advance width, bukan ditebak — lihat
-     server/mobileLayout.test.ts), jadi setiap clamp judul ikut
-     dikalibrasi ulang. Fallback-nya huruf badan supaya hierarki tidak
-     runtuh ke font sistem sebelum huruf judul dimuat. */
-  --font-title:   "Unbounded", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+     kehilangan watak). Fase 9: Big Shoulders Display dikembalikan
+     menggantikan Unbounded (Fase 8) — kondensasi, bukan lebar, jadi clamp
+     judul ikut dikalibrasi balik (lihat server/mobileLayout.test.ts).
+     Fallback-nya huruf badan supaya hierarki tidak runtuh ke font sistem
+     sebelum huruf judul dimuat. */
+  --font-title:   "Big Shoulders Display", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   /* Aksara Sunda: gema kecil di bawah judul, bukan teks isi. */
   --font-sunda:   "Noto Sans Sundanese", "Hanken Grotesk", sans-serif;
   --font-body:    "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -456,9 +462,9 @@
      ketika --font-display dikembalikan menyamai --font-title (lihat
      catatan di token --font-display di atas dan test-nya di
      server/editorialOptimization.test.ts). Praktiknya: h1 DAN h2/h3/h4
-     sama-sama memakai huruf judul (kini Unbounded 900) lewat
-     --font-display/--font-title yang nilainya disamakan. h1 override di
-     bawah ini hanya mengubah ukuran, bukan keluarga huruf. */
+     sama-sama memakai huruf judul (Fase 9: Big Shoulders Display 800)
+     lewat --font-display/--font-title yang nilainya disamakan. h1
+     override di bawah ini hanya mengubah ukuran, bukan keluarga huruf. */
   h1 {
     font-family: var(--font-title);
     font-size: var(--text-hero);

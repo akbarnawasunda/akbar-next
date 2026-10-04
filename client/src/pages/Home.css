@@ -274,7 +274,7 @@
   display: block;
   margin: 0;
   font-family: var(--font-title);
-  font-weight: 900;
+  font-weight: 800;
   font-size: clamp(2.6rem, 10vw, 10rem) !important;
   line-height: 1.05 !important;
   letter-spacing: 0.02em;

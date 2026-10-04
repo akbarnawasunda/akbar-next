@@ -103,8 +103,9 @@ function flowAngle(x: number, y: number, t: number) {
 const WORDMARK = STAGE_PHRASES[0];
 
 /**
- * Font panggung = font JUDUL situs (Unbounded 900, Fase 8 — menggantikan
- * Big Shoulders Display 800 dari Fase 6H), lalu fallback.
+ * Font panggung = font JUDUL situs (Big Shoulders Display 800, Fase 9 —
+ * sempat diganti Unbounded 900 di Fase 8, dikembalikan setelah peninjauan
+ * tampilan hidup), lalu fallback.
  *
  * Panggung hanya menyusun teks Latin. Aksara Sunda sengaja TIDAK pernah
  * disusun partikel: tanda tempelnya (rarangkén) terlalu halus untuk
@@ -112,7 +113,7 @@ const WORDMARK = STAGE_PHRASES[0];
  * dirender sebagai teks sungguhan di `SundaScript.tsx`.
  */
 const WORDMARK_FONT =
-  '"Unbounded", "Hanken Grotesk", sans-serif';
+  '"Big Shoulders Display", "Hanken Grotesk", sans-serif';
 
 /** Mode yang menyusun huruf; butuh titik lebih banyak agar terbaca. */
 const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency", "transit"];
@@ -313,7 +314,7 @@ export function createParticleField(
     if (!sample) return [];
 
     const setFont = (size: number) => {
-      sample.font = `900 ${size}px ${WORDMARK_FONT}`;
+      sample.font = `800 ${size}px ${WORDMARK_FONT}`;
     };
     const spaced = sample as CanvasRenderingContext2D & {
       letterSpacing?: string;
@@ -1294,7 +1295,7 @@ export function createParticleField(
       buildPoints();
     };
     void fonts
-      .load(`900 120px ${WORDMARK_FONT}`)
+      .load(`800 120px ${WORDMARK_FONT}`)
       .then(resample)
       .catch(() => undefined);
     void fonts.ready.then(resample).catch(() => undefined);
