@@ -71,19 +71,21 @@ describe("high-performance image optimization & non-Google typography", () => {
   });
 
   it("menyajikan empat suara huruf self-hosted tanpa satu pun panggilan CDN", () => {
-    // KONTRAK BERUBAH (Fase 6H, disengaja). Pemilik situs meminta huruf
-    // DIGANTI, bukan ditambah. Clash Display, General Sans, dan Azeret Mono
-    // dihapus dari repo dan digantikan Big Shoulders Display (judul),
-    // Schibsted Grotesk (badan/UI/H2-H3), dan Sometype Mono (label).
-    // Perbandingan yang mendasari pilihan ini:
-    // docs/notes/body-swap-candidates.png.
+    // KONTRAK BERUBAH LAGI (Fase 8, disengaja). Pemilik situs menilai
+    // roster Fase 6H ("Big Shoulders Display" + "Schibsted Grotesk")
+    // "jelek banget, basic" dan secara eksplisit membatalkan larangan
+    // ganti-huruf dari Fase 6H/7 untuk kali ini. Keduanya dihapus dari
+    // repo dan digantikan Unbounded 900 (judul) dan Hanken Grotesk
+    // 400/500/700 (badan/UI/H2-H3). Sometype Mono dan Noto Sans Sundanese
+    // TIDAK disentuh — di luar keluhan pemilik situs.
+    // Bukti perbandingan: docs/notes/font-candidate-preview.png.
     // Yang dijaga tes ini tidak berubah: semua huruf dilayani dari repo,
     // tidak ada satu pun permintaan ke CDN huruf mana pun.
     for (const file of [
-      "fonts/fontsource/big-shoulders-display-800.woff2",
-      "fonts/fontsource/schibsted-grotesk-400.woff2",
-      "fonts/fontsource/schibsted-grotesk-500.woff2",
-      "fonts/fontsource/schibsted-grotesk-700.woff2",
+      "fonts/fontsource/unbounded-900.woff2",
+      "fonts/fontsource/hanken-grotesk-400.woff2",
+      "fonts/fontsource/hanken-grotesk-500.woff2",
+      "fonts/fontsource/hanken-grotesk-700.woff2",
       "fonts/fontsource/sometype-mono-400.woff2",
       "fonts/fontsource/sometype-mono-500.woff2",
       "fonts/fontsource/noto-sans-sundanese-400.woff2",
@@ -97,22 +99,29 @@ describe("high-performance image optimization & non-Google typography", () => {
       "fonts/fontshare/general-sans-500.woff2",
       "fonts/fontshare/azeret-mono-500.woff2",
       "fonts/fontsource/syne-800.woff2",
+      "fonts/fontsource/big-shoulders-display-800.woff2",
+      "fonts/fontsource/schibsted-grotesk-400.woff2",
+      "fonts/fontsource/schibsted-grotesk-500.woff2",
+      "fonts/fontsource/schibsted-grotesk-700.woff2",
     ]) {
       expect(existsSync(assetPath(gone)), gone).toBe(false);
     }
 
     const indexCss = source("client/src/index.css");
-    expect(indexCss).toContain('@font-face {\n  font-family: "Schibsted Grotesk";');
+    expect(indexCss).toContain('@font-face {\n  font-family: "Hanken Grotesk";');
     expect(indexCss).toContain('@font-face {\n  font-family: "Sometype Mono";');
-    expect(indexCss).toContain('@font-face {\n  font-family: "Big Shoulders Display";');
-    // Fase 6I: --font-display kembali memegang suara DISPLAY (Big
-    // Shoulders), bukan grotesk biasa. Saat ia sempat menunjuk Schibsted,
-    // seluruh H2/H3 di situs kehilangan watak dan halaman jadi datar.
-    expect(indexCss).toContain('--font-display: "Big Shoulders Display"');
-    expect(indexCss).toContain('--font-body:    "Schibsted Grotesk"');
+    expect(indexCss).toContain('@font-face {\n  font-family: "Unbounded";');
+    // Fase 6I: --font-display memegang suara DISPLAY (sama dengan
+    // --font-title), bukan grotesk biasa. Saat ia sempat menunjuk grotesk,
+    // seluruh H2/H3 di situs kehilangan watak dan halaman jadi datar. Fase
+    // 8 mempertahankan prinsip ini dengan huruf judul yang baru.
+    expect(indexCss).toContain('--font-display: "Unbounded"');
+    expect(indexCss).toContain('--font-body:    "Hanken Grotesk"');
     expect(indexCss).toContain('--font-mono:    "Sometype Mono"');
     expect(indexCss).not.toContain("Clash Display");
     expect(indexCss).not.toContain("Azeret Mono");
+    expect(indexCss).not.toContain('"Big Shoulders Display"');
+    expect(indexCss).not.toContain('"Schibsted Grotesk"');
 
     // Tidak ada CDN huruf di mana pun.
     for (const file of ["client/index.html", "client/src/index.css"]) {

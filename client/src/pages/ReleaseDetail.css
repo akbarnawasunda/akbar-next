@@ -69,7 +69,7 @@
   font-weight: 400;
   font-size: clamp(2rem, 4.4vw, 4.2rem);
   line-height: 0.94;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   color: var(--paper);
 }
 .an-release-copy h2 em,

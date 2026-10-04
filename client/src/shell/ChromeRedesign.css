@@ -84,11 +84,18 @@
 }
 
 /* Wordmark header: huruf JUDUL dan dimiringkan — nama tampil sebagai
-   logo, bukan sebagai label teks biasa. Lihat .an-markslant di index.css. */
+   logo, bukan sebagai label teks biasa. Lihat .an-markslant di index.css.
+   [FAKTA — Fase 8] "Akbar Nawasunda" (white-space: nowrap, tidak boleh
+   membungkus) diukur 7,2665em di Big Shoulders Display 800 + tracking
+   0,04em, vs 12,872em di Unbounded 900 (huruf geometris lebar, bukan
+   kondensasi). font-size diturunkan ×0,5645 (= 7,2665/12,872) di sini dan
+   di breakpoint ≤767,98px di bawah supaya lebar wordmark di header tetap
+   sama persis seperti sebelum penggantian huruf — tanpa ini nama bisa
+   melebihi kolom header di layar sempit. */
 .an-public-shell.an-editorial .nf-nav .nf-wordmark-text strong {
   font-family: var(--font-title);
-  font-size: 1.16rem;
-  font-weight: 800;
+  font-size: 0.655rem;
+  font-weight: 900;
   letter-spacing: 0.04em;
   color: var(--paper);
   white-space: nowrap;
@@ -258,8 +265,14 @@
 
 .an-public-shell.an-editorial .nf-footer-brand strong {
   font-family: var(--font-title);
-  font-size: clamp(2.2rem, 4.4vw, 3.5rem);
-  font-weight: 800;
+  /* Fase 8: "Akbar Nawasunda" (tracking 0,03em) = 7,1165em di Big
+     Shoulders Display 800, 12,722em di Unbounded 900. Clamp diturunkan
+     ×0,5594 (= 7,1165/12,722). Elemen ini `display: inline-block` tanpa
+     nowrap jadi bisa membungkus kalau perlu — bukan risiko overflow keras
+     seperti wordmark header, tapi diturunkan juga supaya proporsinya
+     tetap sepadan dengan isi footer lain. */
+  font-size: clamp(1.231rem, 2.461vw, 1.958rem);
+  font-weight: 900;
   letter-spacing: 0.03em;
   color: var(--paper);
   display: inline-block;
@@ -338,7 +351,9 @@
     --chrome-h-compact: 58px;
   }
   .an-public-shell.an-editorial .nf-nav .nf-wordmark-text strong {
-    font-size: 0.9rem;
+    /* Fase 8: diturunkan ×0,5645 dari 0,9rem, konsisten dengan catatan di
+       atas (Unbounded jauh lebih lebar daripada Big Shoulders Display). */
+    font-size: 0.508rem;
   }
   .an-public-shell.an-editorial .nf-nav .nf-wordmark-text small {
     font-size: 0.46rem;

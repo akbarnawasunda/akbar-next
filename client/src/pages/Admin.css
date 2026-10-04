@@ -51,7 +51,7 @@
   font-weight: 400;
   font-size: clamp(3rem, 8vw, 8rem);
   line-height: 0.82;
-  letter-spacing: -0.06em;
+  letter-spacing: 0em;
 }
 .an-control-room-hero h1 em,
 .an-control-section-heading h2 em,
@@ -60,7 +60,7 @@
   font-style: italic;
   font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: -0.04em;
+  letter-spacing: 0em;
 }
 
 .an-control-room-intro {
@@ -124,7 +124,7 @@
   font-family: var(--font-display);
   font-weight: 400;
   font-size: 1.8rem;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
 }
 .an-control-room-stats small {
   display: block;
@@ -154,7 +154,7 @@
   font-weight: 400;
   font-size: clamp(2.4rem, 5.4vw, 4.8rem);
   line-height: 0.88;
-  letter-spacing: -0.04em;
+  letter-spacing: 0em;
 }
 .an-control-section-heading > p {
   max-width: 46ch;
@@ -223,7 +223,7 @@
   font-weight: 400;
   font-size: clamp(1.4rem, 2.2vw, 1.9rem);
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
 }
 .an-control-tool p {
   max-width: 38ch;
@@ -280,7 +280,7 @@
   font-weight: 400;
   font-size: clamp(2.4rem, 4.8vw, 4.4rem);
   line-height: 0.9;
-  letter-spacing: -0.04em;
+  letter-spacing: 0em;
 }
 .an-control-workflow ol {
   display: grid;
@@ -375,7 +375,7 @@
   font-weight: 400;
   font-size: clamp(2.2rem, 6vw, 4rem);
   line-height: 0.9;
-  letter-spacing: -0.04em;
+  letter-spacing: 0em;
 }
 .an-control-access span {
   display: block;
@@ -459,7 +459,7 @@
 .admin-shell h2,
 .admin-shell h3 {
   font-family: var(--font-display);
-  letter-spacing: -0.03em;
+  letter-spacing: 0em;
 }
 .studio-shell input,
 .studio-shell textarea,

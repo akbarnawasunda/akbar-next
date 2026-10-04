@@ -18,19 +18,27 @@ const source = (path: string) =>
  * per karakter. Angka ini yang menentukan apakah judul hero terpotong di
  * layar 320px.
  *
- * KONTRAK BERUBAH (Fase 6E, disengaja): font judul kini
- * `client/public/assets/fonts/fontsource/big-shoulders-display-800.woff2`.
- * Riwayatnya: clash-display-700 6,963em → syne-800 12,163em →
- * big-shoulders-display-800 **4,871em** (sudah termasuk tracking +0,02em).
- * Perbandingan keenam kandidat pada lebar baris yang sama ada di
- * docs/notes/display-candidates.png. Karena hurufnya 2,5× lebih ringkas,
- * seluruh clamp judul dinaikkan — bukan karena ingin lebih besar saja,
- * tapi karena lebar barisnya tetap sama.
+ * KONTRAK BERUBAH (Fase 8, disengaja): pemilik situs menilai roster huruf
+ * Fase 6H ("Big Shoulders Display" + "Schibsted Grotesk") "jelek banget,
+ * basic" dan meminta huruf JUDUL diganti dengan sesuatu yang berkarakter.
+ * Huruf judul kini `fontsource/unbounded-900.woff2`. Riwayatnya:
+ * clash-display-700 6,963em → syne-800 12,163em →
+ * big-shoulders-display-800 4,871em → unbounded-900 **9,601em** (sudah
+ * termasuk tracking +0,02em/huruf, konvensi yang sama dipakai sejak
+ * Fase 6D). Bukti perbandingan ada di docs/notes/font-candidate-preview.png.
+ *
+ * Unbounded adalah huruf geometris LEBAR (bukan kondensasi seperti Big
+ * Shoulders Display) — advance width "NAWASUNDA." nyaris 2× lipat huruf
+ * lama (9,601 vs 4,871em). Karena itu SELURUH clamp judul hero/halaman
+ * dalam di bawah diturunkan ×0,50735 (= 4,871/9,601) supaya lebar baris
+ * di layar tetap sama persis seperti sebelum penggantian huruf — bukan
+ * karena ingin lebih kecil, tapi karena huruf barunya jauh lebih lebar
+ * per karakter.
  *
  * Yang dijaga tes ini tidak pernah berubah: tidak boleh ada kata judul
  * yang melewati ruang teks di layar 320px.
  */
-const HERO_WORD_EM = 4.871;
+const HERO_WORD_EM = 9.601;
 const SMALLEST_PHONE = 320;
 const GUTTER = 20; // --hx-gutter / --ref-gutter pada <= 767.98px
 

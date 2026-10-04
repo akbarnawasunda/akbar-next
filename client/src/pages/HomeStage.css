@@ -29,9 +29,26 @@
 }
 
 .an-site :is(.an-channels, .an-feature, .an-catalog) {
-  padding: var(--section-y) var(--hx-gutter);
+  /* FASE 7 nomor 4 — "jarak antar blok melebar": var(--section-y) adalah
+     token global (--space-2xl, dipakai semua halaman); di beranda saja
+     jaraknya dilebarkan ke --space-3xl supaya adegan-adegan raksasa
+     punya ruang jeda yang sepadan, tanpa mengubah token global yang
+     dipakai halaman lain. */
+  padding: var(--space-3xl) var(--hx-gutter);
   max-width: var(--hx-max);
   margin-inline: auto;
+}
+
+/* FASE 7 nomor 5 — "nomor seksi": angka pembuka label section (dalam
+   `.an-meta`/`.instr-index`, mis. "02 — Rilisan terbaru") dipisah ke
+   elemen sendiri supaya hanya digitnya yang memakai huruf judul; sisa
+   kalimat tetap mono, warisan dari kelas induknya. */
+.an-site .an-section-num {
+  font-family: var(--font-title);
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 1.1em;
 }
 
 .an-site :is(.an-channels, .an-feature, .an-catalog) h2 {
@@ -40,7 +57,7 @@
   font-family: var(--font-display);
   font-size: var(--text-h2);
   font-weight: 500;
-  letter-spacing: -0.035em;
+  letter-spacing: 0em;
   line-height: 1.02;
   text-transform: none;
   color: var(--paper);
@@ -156,21 +173,28 @@
    dan server/homeEnhancements.test.ts) — hanya tipografinya yang diubah. */
 .an-site .an-hero-inner .hero-title-editorial {
   margin: 0;
-  /* Fase 6: judul nama memakai Syne 800 (--font-title). Semua ukuran di
-     berkas ini sudah dikalikan 0,60 terhadap angka Clash karena
-     "NAWASUNDA." di Syne 11,46em vs 6,81em di Clash 600 (advance width
-     diukur, bukan ditebak): lebar baris tetap, tinggi huruf yang berubah. */
+  /* [FAKTA — dikoreksi Fase 8] Huruf judul sekarang Unbounded 900 (lihat
+     --font-title di index.css), menggantikan Big Shoulders Display 800
+     dari Fase 6H — pemilik situs menilai roster Fase 6H "jelek banget,
+     basic". Baris ini TIDAK PERNAH benar-benar dipakai browser — selalu
+     kalah cascade oleh salah satu blok @media di bawah (mobile ≤767.98px
+     atau desktop ≥768px, keduanya mencakup seluruh rentang lebar layar).
+     Ditulis literal (bukan var(--step-2)/var(--step-4)) karena Fase 8
+     memutus hubungan angka hero dengan tangga --step umum: Unbounded
+     menulis "NAWASUNDA." ~1,97× lebih lebar per karakter (9,601em vs
+     4,871em, lihat HERO_WORD_EM di server/mobileLayout.test.ts), jadi
+     plafon/lantai hero perlu angkanya sendiri — memakai --step-2/--step-4
+     apa adanya akan membuat "NAWASUNDA." terpotong di layar sempit. */
   font-family: var(--font-title);
-  font-size: clamp(2.6rem, 8vw, 8rem);
-  /* Syne yang di-host di repo hanya punya satu bobot: 800. Menulis 600 di
-     sini membuat sebagian browser memalsukan bobotnya. */
-  font-weight: 800;
+  font-size: clamp(1.142rem, 4.566vw, 2.568rem);
+  font-weight: 900;
   /* Fase 6D: tracking JUDUL jadi POSITIF (+0,02em), bukan negatif.
      Bukti: docs/notes/hero-tracking-scan.png — pada -0,05em sampai 0em
      huruf Syne 800 benar-benar bertabrakan (A menyatu dengan K, K menabrak
-     B); itulah yang terbaca "gepeng". Syne 800 sudah rapat dari sananya dan
-     tidak boleh dirapatkan lagi. Seluruh clamp dikecilkan ×0,942 supaya
-     lebar barisnya tidak berubah meski tracking melonggar. */
+     B); itulah yang terbaca "gepeng". Konvensi tracking positif ini
+     dipertahankan untuk Unbounded (huruf geometris lebar, bukan
+     kondensasi) — tracking negatif jauh lebih berisiko bertabrakan pada
+     huruf selebar ini. */
   letter-spacing: 0.02em;
   line-height: 1;
   color: var(--paper);
@@ -194,6 +218,17 @@
   white-space: nowrap;
   display: inline-block;
 }
+
+/* Fase 9: kata terakhir SEMPAT jadi garis luar (hollow outline) lewat
+   `-webkit-text-stroke` — gerakan tipografi yang masuk akal di atas huruf
+   tipis/kondensasi lama. Sejak Fase 8 judul memakai Unbounded 900 (geometris,
+   sangat tebal): garis setipis 1,1px di atas bentuk setebal itu tidak terbaca
+   sebagai "aksen editorial", tapi sebagai teks yang rusak/glitch — itu
+   laporan langsung dari peninjauan tampilan hidup. Jadi hiasan garis luar
+   ini DICABUT, bukan dilemahkan: kedua kata hero sekarang sama-sama terisi
+   penuh (solid), konsisten dengan berat Unbounded. Tidak ada clamp/ukuran
+   yang berubah di sini, jadi kontrak server/mobileLayout.test.ts tidak
+   tersentuh. */
 
 /* -- Pelat nama aksara Sunda ----------------------------------
    Gaya pelatnya ada di SundaScript.css (satu komponen, satu berkas).
@@ -308,7 +343,11 @@
 
 .an-site .an-channel {
   display: grid;
-  grid-template-columns: 3.2rem 2.1rem minmax(0, 1fr) auto;
+  /* Kolom nomor 3,8rem (dulu 3,2rem): sejak angka Romawi menggantikan
+     "01".."10", "VIII" di Unbounded 900 step-1 (1,5rem) berukuran
+     ≈3,15rem (diukur dari advance width glyph di woff2) — 3,2rem lama
+     nyaris tanpa jarak. 3,8rem menyisakan jarak yang wajar. */
+  grid-template-columns: 3.8rem 2.1rem minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-md);
   padding: clamp(14px, 1.6vw, 20px) 4px;
@@ -320,10 +359,18 @@
     background-color 260ms var(--ease, ease);
 }
 
+/* FASE 7 nomor 5 — "angka besar": nomor kanal naik dari label mono kecil
+   (0,54rem) ke huruf judul di tingkat --step-1 (1,5rem, ×2,8). Ini salah
+   satu dari sedikit tempat huruf judul dipakai di luar hero. Sejak Fase 9
+   nomornya angka Romawi, bukan "01".."10" — kolom grid `.an-channel`
+   dilebarkan ke 3,8rem (desktop) / 3,6rem (mobile) di atas supaya "VIII"
+   tetap punya jarak di Unbounded 900. */
 .an-site .an-channel-index {
-  font-family: var(--font-mono);
-  font-size: 0.54rem;
-  letter-spacing: 0.16em;
+  font-family: var(--font-title);
+  font-size: var(--step-1);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1;
   color: var(--mute);
 }
 
@@ -339,7 +386,7 @@
   font-family: var(--font-display);
   font-size: clamp(1.25rem, 2.6vw, 2.1rem);
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   color: color-mix(in srgb, var(--paper) 84%, transparent);
   transition: color 220ms var(--ease, ease);
 }
@@ -409,10 +456,15 @@
   gap: 12px;
 }
 
+/* FASE 7 nomor 5 — "awalan nama track": label tipe rilisan (Single/EP/dst)
+   duduk tepat di sebelah judul rilisan sebagai penanda singkatnya, jadi
+   diberi huruf judul juga supaya terbaca sebagai bagian dari identitas
+   nama, bukan metadata teknis seperti label mono lain di sekitarnya. */
 .an-site .an-feature-type {
-  font-family: var(--font-mono);
-  font-size: 0.52rem;
-  letter-spacing: 0.18em;
+  font-family: var(--font-title);
+  font-size: 0.86rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
   color: var(--mute);
 }
@@ -424,6 +476,51 @@
 .an-site .an-rail {
   /* Rail beranda: kartu lebih besar karena hanya menampilkan rilisan. */
   grid-auto-columns: clamp(230px, 25vw, 340px);
+}
+
+/* ------------------------------------------------------------
+   ADEGAN 5 — JEDA (FASE 7 nomor 7)
+   ------------------------------------------------------------
+   Satu layar yang isinya nyaris tidak ada: ruang kosong di atas dan di
+   bawah jauh lebih besar dari biasanya, satu baris mikro di tengah.
+   Ini hanya masuk akal SETELAH nomor 6 (ornamen dipangkas) — kalau
+   instr-topo/instr-grain masih hidup, "kosong" ini akan tetap penuh
+   tekstur dan tidak terasa sebagai jeda sama sekali.
+   ------------------------------------------------------------ */
+
+.an-site .an-pause {
+  display: grid;
+  place-items: center;
+  /* Jauh lebih tinggi dari --space-3xl section lain: inilah yang
+     membuatnya terasa seperti helaan napas, bukan section pendek. */
+  min-height: clamp(260px, 38vh, 440px);
+  padding: 0 var(--hx-gutter);
+}
+
+.an-site .an-pause-quote {
+  margin: 0;
+  max-width: 28ch;
+  text-align: center;
+  /* FASE 7 nomor 5 — "kutipan tunggal": huruf judul dipakai di luar
+     konteks nama, di tingkat MIKRO (--step--1), bukan raksasa. Ini satu
+     dari tiga tingkat kontras yang disengaja (raksasa di hero, sedang di
+     nomor kanal, mikro di sini) — tingkat tengahnya memang tidak pernah
+     dipakai, lihat catatan --step-3 di index.css. */
+  font-family: var(--font-title);
+  font-size: var(--step--1);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--paper) 46%, transparent);
+}
+
+.an-site .an-pause-quote::before {
+  content: "“";
+}
+
+.an-site .an-pause-quote::after {
+  content: "”";
 }
 
 /* ------------------------------------------------------------
@@ -496,12 +593,28 @@
     padding-inline: var(--hx-gutter);
   }
 
-  /* clamp ini ikut diuji server/mobileLayout.test.ts: kata terpanjang
-     "NAWASUNDA." harus muat di 320px. Dengan Syne 800 satu em jauh lebih
-     lebar (11,463em pada letter-spacing -0,05em), jadi 23,0px × 11,463em
-     ≈ 264px ≤ 280px. */
+  /* FASE 7 nomor 4 — tingkat RAKSASA di ponsel, lantai --step-2 (2,25rem)
+     naik ke plafon --step-4 (5,062rem). Diukur, bukan dikira: huruf judul
+     yang di-host repo ini saat itu (Big Shoulders Display 800) menulis
+     "NAWASUNDA." sepanjang 4,671em advance width + tracking +0,02em/huruf
+     (10 huruf) = 4,871em. Pada 320px nilai efektifnya 49,6px (3,1rem) ×
+     4,871em ≈ 242px, sisa 38px dari 280px ruang yang ada.
+     [FAKTA — Fase 8] Huruf judul ganti lagi ke Unbounded 900: pemilik
+     situs menilai Big Shoulders Display + Schibsted Grotesk "jelek
+     banget, basic". Unbounded menulis "NAWASUNDA." 9,601em (hampir 2×
+     lebih lebar per karakter — lihat HERO_WORD_EM di
+     server/mobileLayout.test.ts), jadi clamp ini TIDAK bisa lagi memakai
+     --step-2/--step-4 apa adanya: seluruh tiga angka diturunkan ×0,50735
+     (= 4,871/9,601) supaya lebar baris di 320px tetap ≈242px, sama persis
+     seperti sebelum penggantian huruf. */
+  /* Ditulis literal (bukan var(--step-2)/var(--step-4)) dengan sengaja:
+     server/mobileLayout.test.ts membaca clamp() lewat regex angka
+     literal, bukan custom property. Sejak Fase 8 angkanya SENGAJA berbeda
+     dari --step-2/--step-4 (lihat catatan di atas) — tangga --step umum
+     tetap memakai progresi ×1,5 yang bersih untuk keperluan lain, hero
+     ini punya angka sendiri yang dikalibrasi ke advance width Unbounded. */
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(2.2rem, 14vw, 4.6rem);
+    font-size: clamp(1.142rem, 7.864vw, 2.568rem);
     letter-spacing: 0.02em;
     line-height: 1.02;
   }
@@ -524,7 +637,11 @@
   }
 
   .an-site .an-channel {
-    grid-template-columns: 2rem 1.9rem minmax(0, 1fr) auto;
+    /* 3,6rem (dulu 2rem): sama alasannya dengan blok desktop di atas —
+       angka Romawi butuh lebih banyak ruang daripada "01".."10". Diuji
+       server/homeStageLayout.test.ts tetap menyisakan ≥150px untuk nama
+       kanal di layar 360px. */
+    grid-template-columns: 3.6rem 1.9rem minmax(0, 1fr) auto;
     gap: var(--space-sm);
     padding-block: 14px;
   }
@@ -606,10 +723,12 @@
    nama dan gema aksaranya. Satu animasi `infinite` (46 bar) ikut hilang.
    Lihat docs/phase6-signature-report.md §5. */
 
-/* -- Hero desktop: huruf lebih besar, kata terakhir jadi garis ----
+/* -- Hero desktop: huruf lebih besar ----
    Hanya di atas 768px. Ukuran ponsel TIDAK disentuh: `clamp()` mobile
    dikunci server/mobileLayout.test.ts supaya "NAWASUNDA." tetap muat di
-   layar 320px. */
+   layar 320px. (Garis luar kata terakhir dulu hidup di sini juga — sejak
+   Fase 9 hiasan itu dicabut sepenuhnya, lihat catatan dekat
+   `.hero-title-word` di atas.) */
 @media (min-width: 768px) {
   .an-site .an-hero-inner {
     /* Ruang untuk kata terpanjang pada ukuran baru, dihitung dari lebar
@@ -617,31 +736,16 @@
     max-width: min(48rem, 58%);
   }
 
+  /* Override oleh blok FASE 4B di bawah (selektor sama, urutan sumber
+     lebih akhir menang) — nilainya disamakan di sini supaya tidak ada
+     dua angka berbeda untuk aturan yang kelihatannya sama, meski yang
+     dipakai browser selalu blok 4B. Sejak Fase 8 (huruf judul Unbounded
+     900) angkanya literal, bukan var(--step-4) — lihat catatan lengkap
+     di blok FASE 4B di bawah. */
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(2.9rem, 9vw, 9rem);
+    font-size: clamp(2.568rem, 7.103vw, 6.494rem);
     letter-spacing: 0.02em;
     line-height: 1;
-  }
-
-  /* Kata terakhir jadi garis luar: satu gerakan tipografi yang membuat
-     hero tidak terbaca sebagai "judul biasa". Kalau `-webkit-text-stroke`
-     tidak ada, aturan ini tidak pernah aktif dan kata tetap terisi penuh. */
-  @supports (-webkit-text-stroke: 1px #000) {
-    .an-site .an-hero-inner .hero-title-mask:last-child .hero-title-word {
-      color: transparent;
-      /* Warna stroke memakai token, bukan `color-mix`: kalau browser
-         mendukung `-webkit-text-stroke` tetapi tidak mendukung campuran
-         warna, kata ini tetap punya garis dan tidak menghilang. */
-      -webkit-text-stroke: 1.1px var(--paper);
-    }
-  }
-
-  /* Mode kontras paksa: garis luar dimatikan, teks kembali terisi. */
-  @media (forced-colors: active) {
-    .an-site .an-hero-inner .hero-title-mask:last-child .hero-title-word {
-      color: CanvasText;
-      -webkit-text-stroke: 0;
-    }
   }
 
   /* Fakta hero dipisah garis tipis, bukan hanya jarak. */
@@ -714,6 +818,13 @@
    ponsel (dikunci tes 320px + tes komposisi) tidak tersentuh.
    Warna latar memakai token `--paper` apa adanya, dan token tidak
    dibalik lokal, supaya tidak ada satu pun nilai warna hard-code.
+
+   [PERMINTAAN LANJUTAN pasca-Fase 7] Poin 2 (pita terang) SUDAH TIDAK
+   lagi hidup di dalam media query ini — dipindah ke blok tersendiri di
+   akhir berkas supaya warnanya sama di ponsel juga (lihat komentar di
+   sana). Poin 1 (foto layar penuh + judul raksasa) TETAP desktop-only
+   dengan sengaja: itu perubahan ukuran/struktur yang dikunci oleh
+   server/mobileLayout.test.ts, bukan sekadar warna.
    ============================================================ */
 
 @media (min-width: 768px) {
@@ -756,17 +867,32 @@
   /* -- 2. Judul raksasa -------------------------------------- */
   .an-site .an-hero-inner {
     max-width: min(64rem, 100%);
-    gap: clamp(14px, 1.5vw, 24px);
+    /* FASE 7 nomor 4 — "jarak antar blok melebar": dulu 14-24px (lebih
+       rapat dari --space-md yang dipakai bagian lain), sekarang
+       --space-lg supaya judul raksasa punya jarak yang sepadan ke
+       lede/CTA/fakta, bukan menempel. */
+    gap: var(--space-lg);
   }
 
-  /* Kata terpanjang ("NAWASUNDA.") = 11,463em pada Syne 800 dengan
-     letter-spacing -0,05em (diukur dari advance width font yang di-host
-     di repo ini, bukan diperkirakan). Pada 7,44vw ia memakai ≈85vw —
-     masih di dalam ruang teks (≈88-90vw setelah dua gutter) pada seluruh
-     rentang 768-1600px, jadi tidak ada kata yang keluar layar.
-     Catatan kalibrasi: 9,2vw yang sempat diusulkan TIDAK muat (≈105vw). */
+  /* FASE 7 nomor 4 — tingkat RAKSASA, dipasang dari tangga --step
+     (lihat index.css): lantai --step-4 (5,062rem), plafon 12,8rem, dikalibrasi
+     terhadap kolom hero yang sebenarnya (`.an-hero-inner { max-width: min(64rem,
+     100%) }` = plafon 1024px pada layar lebar) dan advance width terukur
+     "NAWASUNDA." 4,871em (Big Shoulders Display 800 + tracking).
+     [FAKTA — Fase 8] Huruf judul ganti ke Unbounded 900 (pemilik situs
+     menilai roster Fase 6H "jelek banget, basic"; lihat
+     docs/notes/font-candidate-preview.png). Unbounded menulis "NAWASUNDA."
+     9,601em — hampir 2× lebih lebar per karakter daripada Big Shoulders
+     Display (lihat HERO_WORD_EM di server/mobileLayout.test.ts) — jadi
+     batas aman mutlak di kolom yang sama turun jadi 1024px ÷ 9,601em ≈
+     106,7px (6,67rem). Lantai dan plafon lama (var(--step-4), 12,8rem)
+     diturunkan ×0,50735 (= 4,871/9,601) jadi 2,568rem dan 6,494rem supaya
+     lebar baris di setiap lebar layar (768-2560px) tetap identik dengan
+     sebelum penggantian huruf — sisa aman di plafon tetap ≈25,5px dari
+     1024px, sama seperti sebelumnya. vw ikut diturunkan rasio yang sama
+     (14vw → 7,103vw) supaya laju pertumbuhannya proporsional juga. */
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(3.6rem, 12vw, 12rem);
+    font-size: clamp(2.568rem, 7.103vw, 6.494rem);
     /* 0,86 meremas dua baris nama jadi satu blok padat; 0,94 memberi udara
        tanpa memutus lockup-nya. */
     line-height: 0.94;
@@ -775,7 +901,16 @@
 
   .an-site .an-hero-lede {
     max-width: 54ch;
-    font-size: clamp(1rem, 1.05vw, 1.18rem);
+    /* FASE 7 nomor 4 — "teks pendamping turun ke mikro": dulu nyaris
+       sama besar dengan badan teks biasa (1-1,18rem). Sekarang memakai
+       tingkat MIKRO (--step--1 = 0,667rem) sebagai lantai, dengan
+       plafon 0,8rem supaya tetap bisa dibaca sebagai kalimat pada layar
+       lebar — bukan 1,18rem seperti sebelumnya. [TAFSIR/RISIKO] 10,7px
+       pada lebar sempit lebih kecil dari anjuran umum ~12px untuk teks
+       baca; dipakai di sini karena perannya memang pendamping singkat
+       (dua baris), bukan badan artikel, tapi ini belum diuji dengan
+       pengguna nyata — lihat docs/phase7-laporan.md. */
+    font-size: clamp(var(--step--1), 1vw, 0.8rem);
   }
 
   /* Maskot dulu duduk di sudut kiri-atas plate (yang mulai di 62%),
@@ -795,107 +930,136 @@
   .an-site .an-hero-facts > div + div {
     border-left-color: color-mix(in srgb, var(--paper) 18%, transparent);
   }
+}
 
-  /* -- 3. Pita terang: kanal resmi jadi kertas ----------------
-     Token lokal di bawah ini hanya nama-nama baru (`--band-*`), jadi
-     palet gelap tidak dibalik dan `--paper` tetap bisa dipakai sebagai
-     warna latar. Setiap elemen di dalam bagian ini diberi warna
-     eksplisit karena semuanya sebelumnya membaca token gelap. */
-  .an-site .an-channels {
-    --band-rule: color-mix(in srgb, var(--ink) 16%, transparent);
-    --band-mute: color-mix(in srgb, var(--ink) 70%, var(--paper));
-    /* Steel asli ≈1,9:1 di atas kertas; campuran ink ini ≈5,4:1 —
-       satu keluarga warna, tetap terbaca. */
-    --band-accent: color-mix(in srgb, var(--signal) 42%, var(--ink));
-    background: var(--paper);
-    color: var(--ink);
-  }
+/* -- 3. Pita terang: kanal resmi jadi kertas ----------------
+   Token lokal di bawah ini hanya nama-nama baru (`--band-*`), jadi
+   palet gelap tidak dibalik dan `--paper` tetap bisa dipakai sebagai
+   warna latar. Setiap elemen di dalam bagian ini diberi warna
+   eksplisit karena semuanya sebelumnya membaca token gelap.
 
-  .an-site .an-channels h2 {
-    color: var(--ink);
-  }
+   [PERMINTAAN LANJUTAN pasca-Fase 7] Dulu blok ini hidup di dalam
+   `@media (min-width: 768px)` (komentar FASE 4B di atas masih menyebut
+   "Semua override ... jadi aturan ponsel tidak tersentuh" — itu sengaja
+   waktu itu). Efeknya: satu-satunya bidang terang di seluruh situs itu
+   CUMA muncul di desktop; di ponsel bagian "Kanal resmi" tetap gelap
+   seperti section lain, jadi ritme gelap-terang-gelap yang jadi ciri
+   khas desktop hilang total di HP. Dipindah keluar media query supaya
+   warnanya SAMA di semua lebar layar — murni soal warna/rasa visual,
+   TIDAK ada perubahan struktur grid/kolom (itu tetap beda sesuai lebar
+   layar masing-masing, diatur blok lain). Posisi fisik di berkas ini
+   sengaja tidak dipindah: tetap di baris paling akhir supaya urutan
+   sumber (cascade) tetap menang atas blok ponsel 767.98px dan blok
+   dasar ADEGAN 3 di atas, tanpa perlu menaikkan spesifisitas apa pun. */
+.an-site .an-channels {
+  --band-rule: color-mix(in srgb, var(--ink) 16%, transparent);
+  --band-mute: color-mix(in srgb, var(--ink) 70%, var(--paper));
+  /* Steel asli ≈1,9:1 di atas kertas; campuran ink ini ≈5,4:1 —
+     satu keluarga warna, tetap terbaca. */
+  --band-accent: color-mix(in srgb, var(--signal) 42%, var(--ink));
+  background: var(--paper);
+  color: var(--ink);
+}
 
-  .an-site .an-channels .an-meta,
-  .an-site .an-channels .instr-index {
-    color: var(--band-mute);
-  }
+.an-site .an-channels h2 {
+  color: var(--ink);
+}
 
-  .an-site .an-channels .instr-index::after {
-    background: var(--band-rule);
-  }
+.an-site .an-channels .an-meta,
+.an-site .an-channels .instr-index {
+  color: var(--band-mute);
+}
 
-  .an-site .an-channels-list {
-    border-top-color: var(--band-rule);
-  }
+.an-site .an-channels .instr-index::after {
+  background: var(--band-rule);
+}
 
-  .an-site .an-channel {
-    border-bottom-color: var(--band-rule);
-    color: var(--ink);
-  }
+.an-site .an-channels-list {
+  border-top-color: var(--band-rule);
+}
 
-  .an-site .an-channel-index {
-    color: var(--band-mute);
-  }
+.an-site .an-channel {
+  border-bottom-color: var(--band-rule);
+  color: var(--ink);
+}
 
-  .an-site .an-channel-mark {
-    color: color-mix(in srgb, var(--ink) 74%, transparent);
-  }
+.an-site .an-channel-index {
+  color: var(--band-mute);
+}
 
-  .an-site .an-channel-name {
-    color: color-mix(in srgb, var(--ink) 90%, transparent);
-  }
+.an-site .an-channel-mark {
+  color: color-mix(in srgb, var(--ink) 74%, transparent);
+}
 
-  .an-site .an-channel-arrow {
-    color: color-mix(in srgb, var(--ink) 48%, transparent);
-  }
+.an-site .an-channel-name {
+  color: color-mix(in srgb, var(--ink) 90%, transparent);
+}
 
-  .an-site .an-channel:hover,
-  .an-site .an-channel:focus-visible {
-    background: color-mix(in srgb, var(--ink) 7%, transparent);
-  }
+.an-site .an-channel-arrow {
+  color: color-mix(in srgb, var(--ink) 48%, transparent);
+}
 
-  .an-site .an-channel:hover .an-channel-name,
-  .an-site .an-channel:focus-visible .an-channel-name,
-  .an-site .an-channel:hover .an-channel-mark,
-  .an-site .an-channel:focus-visible .an-channel-mark,
-  .an-site .an-channel:hover .an-channel-arrow,
-  .an-site .an-channel:focus-visible .an-channel-arrow {
-    color: var(--band-accent);
-  }
+.an-site .an-channel:hover,
+.an-site .an-channel:focus-visible {
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+}
+
+.an-site .an-channel:hover .an-channel-name,
+.an-site .an-channel:focus-visible .an-channel-name,
+.an-site .an-channel:hover .an-channel-mark,
+.an-site .an-channel:focus-visible .an-channel-mark,
+.an-site .an-channel:hover .an-channel-arrow,
+.an-site .an-channel:focus-visible .an-channel-arrow {
+  color: var(--band-accent);
+}
 
   /* Marquee kanal memakai token gelap sendiri (berkas terpisah). */
-  .an-site .an-channels .an-platform-marquee {
-    border-top-color: var(--band-rule);
-    color: var(--ink);
-  }
+.an-site .an-channels .an-platform-marquee {
+  border-top-color: var(--band-rule);
+  color: var(--ink);
+}
 
-  .an-site .an-channels .an-platform-marquee-heading {
-    border-bottom-color: var(--band-rule);
-    color: var(--band-mute);
-  }
+.an-site .an-channels .an-platform-marquee-heading {
+  border-bottom-color: var(--band-rule);
+  color: var(--band-mute);
+}
 
-  .an-site .an-channels .an-platform-marquee-row {
-    border-bottom-color: var(--band-rule);
-  }
+.an-site .an-channels .an-platform-marquee-row {
+  border-bottom-color: var(--band-rule);
+}
 
-  .an-site .an-channels .an-platform-marquee-item {
-    color: var(--ink);
-  }
+.an-site .an-channels .an-platform-marquee-item {
+  color: var(--ink);
+}
 
-  .an-site .an-channels .an-platform-marquee-item:hover,
-  .an-site .an-channels .an-platform-marquee-item:focus-visible {
-    color: var(--band-accent);
-  }
+/* Tanpa baris ini ikonnya tetap mewarisi `var(--paper)` dari aturan global
+   "ALL-DARK" di Home.css (dibuat untuk marquee di atas latar gelap) —
+   ikon krem di atas pita kertas krem sama-sama hampir putih, jadi SVG-nya
+   ada di DOM tapi tidak kelihatan sama sekali. Band kanal resmi ini
+   berlatar terang (`var(--paper)`), jadi ikonnya harus ikut `var(--ink)`
+   sama seperti teksnya, bukan cuma teksnya saja. */
+.an-site .an-channels .an-platform-marquee-item .an-platform-icon {
+  color: var(--ink);
+}
 
-  /* Tombol garis di kaki bagian ikut jadi ink di atas kertas. */
-  .an-site .an-channels .an-btn--quiet {
-    border-color: var(--band-rule);
-    color: var(--ink);
-  }
+.an-site .an-channels .an-platform-marquee-item:hover,
+.an-site .an-channels .an-platform-marquee-item:focus-visible {
+  color: var(--band-accent);
+}
 
-  .an-site .an-channels .an-btn--quiet:hover,
-  .an-site .an-channels .an-btn--quiet:focus-visible {
-    border-color: var(--band-accent);
-    color: var(--band-accent);
-  }
+.an-site .an-channels .an-platform-marquee-item:hover .an-platform-icon,
+.an-site .an-channels .an-platform-marquee-item:focus-visible .an-platform-icon {
+  color: var(--band-accent);
+}
+
+/* Tombol garis di kaki bagian ikut jadi ink di atas kertas. */
+.an-site .an-channels .an-btn--quiet {
+  border-color: var(--band-rule);
+  color: var(--ink);
+}
+
+.an-site .an-channels .an-btn--quiet:hover,
+.an-site .an-channels .an-btn--quiet:focus-visible {
+  border-color: var(--band-accent);
+  color: var(--band-accent);
 }

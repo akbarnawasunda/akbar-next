@@ -109,7 +109,7 @@
   font-family: var(--font-display);
   font-weight: 400;
   font-size: clamp(3.7rem, 11vw, 9.2rem);
-  letter-spacing: -0.05em;
+  letter-spacing: 0em;
   line-height: 0.84;
 }
 .game-page-body {
@@ -232,7 +232,7 @@
   font-family: var(--font-display);
   font-weight: 400;
   font-size: clamp(2.6rem, 7vw, 6rem);
-  letter-spacing: -0.04em;
+  letter-spacing: 0em;
   line-height: 0.88;
 }
 .game-username-gate-copy p,

@@ -217,7 +217,7 @@
   font-weight: 600;
   line-height: 1.1;
   color: var(--paper);
-  letter-spacing: -0.025em;
+  letter-spacing: 0em;
   margin: 0 0 8px;
 }
 
@@ -340,7 +340,7 @@
   font-weight: 600;
   line-height: 1.15;
   color: var(--paper);
-  letter-spacing: -0.02em;
+  letter-spacing: 0em;
   margin: 0 0 6px;
 }
 

@@ -25,22 +25,24 @@
     <meta name="theme-color" content="#101211" />
     <!-- Legacy font names Bebas+Neue and Manrope are intentionally replaced by local Fontsource bundles. -->
     <!--
-      Fase 6: yang di-preload adalah font JUDUL (Syne 800), bukan lagi
-      Clash Display 500. H1 adalah elemen terbesar di layar pertama, jadi
-      ia yang paling mahal kalau harus di-swap; Clash tetap dipakai H2/H3
-      yang semuanya di bawah lipatan dan cukup dengan `font-display: swap`.
-      Jumlah file preload tetap tiga, totalnya justru turun (63 → 62 kB).
+      Fase 6: yang di-preload adalah font JUDUL, bukan lagi Clash Display
+      500. H1 adalah elemen terbesar di layar pertama, jadi ia yang paling
+      mahal kalau harus di-swap; huruf badan tetap dipakai H2/H3 yang
+      semuanya di bawah lipatan dan cukup dengan `font-display: swap`.
+      Fase 8: huruf judul/badan diganti Unbounded 900 / Hanken Grotesk 400
+      (roster Fase 6H dinilai "jelek banget, basic"). Jumlah file preload
+      tetap tiga.
     -->
     <link
       rel="preload"
-      href="/assets/fonts/fontsource/big-shoulders-display-800.woff2"
+      href="/assets/fonts/fontsource/unbounded-900.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="/assets/fonts/fontsource/schibsted-grotesk-400.woff2"
+      href="/assets/fonts/fontsource/hanken-grotesk-400.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -132,26 +134,31 @@
       }
       .an-splash-word {
         display: block;
-        /* Syne 800 lebih dulu — font judul situs ini. Tracking POSITIF:
-           pada tracking negatif huruf Syne 800 bertabrakan
-           (docs/notes/hero-tracking-scan.png). Ukuran ikut dikecilkan
-           supaya lebar barisnya tidak berubah. */
+        /* [FAKTA — Fase 8] Huruf judul situs ganti ke Unbounded 900 (roster
+           Fase 6H dinilai "jelek banget, basic"). Tracking tetap POSITIF:
+           huruf lebar/geometris seperti Unbounded berisiko bertabrakan pada
+           tracking negatif (pelajaran yang sama dari Syne 800/Big Shoulders
+           Display, docs/notes/hero-tracking-scan.png). Ukuran ikut
+           dikecilkan supaya lebar barisnya tidak berubah. */
         font-family:
-          "Big Shoulders Display",
-          "Schibsted Grotesk",
+          "Unbounded",
+          "Hanken Grotesk",
           system-ui,
           -apple-system,
           sans-serif;
-        font-weight: 800;
+        font-weight: 900;
         /* Ukuran DITURUNKAN dari lebar kotaknya sendiri, bukan ditebak dari
-           lebar layar. "Nawasunda" memakai 4,53em pada tracking +0,02em
-           (diukur dari big-shoulders-display-800.woff2); pembagi 4,6 memberi
-           sisa ±1,5%. Dengan rumus ini kata itu MUSTAHIL terpotong di lebar
-           berapa pun — inilah penyebab splash kepotong di desktop tapi utuh
-           di ponsel. */
-        /* Pembagi 4,75 (bukan 4,6): kemiringan 9° menambah ±2,5% lebar
-           tampak di ujung kanan. */
-        font-size: max(2.2rem, calc((min(92vw, 1100px) - 8vw) / 5.4));
+           lebar layar. "NAWASUNDA" (huruf besar dari text-transform di
+           bawah, tanpa titik — beda dengan "NAWASUNDA." di hero) memakai
+           9,253em pada tracking +0,02em di Unbounded 900 (diukur fontTools,
+           upem 1000), naik dari 4,523em di Big Shoulders Display 800 — rasio
+           4,523/9,253 ≈ 0,4888. Pembagi dan lantai `max()` di bawah
+           (sebelumnya 5,4 dan 2,2rem, angka efektif yang sebenarnya dipakai
+           — bukan 4,6/4,75 yang disebut komentar lama, itu sudah tidak
+           sinkron dengan kode) diturunkan dengan rasio yang sama jadi 11,05
+           dan 1,075rem supaya kata itu tetap MUSTAHIL terpotong di lebar
+           berapa pun, persis seperti sebelum penggantian huruf. */
+        font-size: max(1.075rem, calc((min(92vw, 1100px) - 8vw) / 11.05));
         line-height: 0.94;
         letter-spacing: 0.02em;
         text-transform: uppercase;

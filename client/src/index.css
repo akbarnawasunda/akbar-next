@@ -3,40 +3,39 @@
    Satu-satunya sumber kebenaran untuk: font, warna, tipe, base.
    ============================================================ */
 
-/* ROSTER HURUF — FASE 6H.
-   Tiga huruf lama (display ITF, General Sans, mono lama) DIHAPUS dari
-   repo (bukan
-   sekadar tidak dipakai). Alasannya: pemilik situs minta huruf diganti,
-   bukan ditambah, dan tiga keluarga itu adalah bagian paling netral dari
-   tampilan lama. Perbandingan empat pasangan pada teks yang sama ada di
-   docs/notes/body-swap-candidates.png.
+/* ROSTER HURUF — FASE 8.
+   Fase 6H (Big Shoulders Display + Schibsted Grotesk) DIGANTI lagi:
+   pemilik situs menilainya "jelek banget, basic" dan secara eksplisit
+   membatalkan larangan ganti-huruf dari Fase 6H/7 untuk kali ini. Huruf
+   lama DIHAPUS dari repo (bukan sekadar tidak dipakai). Perbandingan ada
+   di docs/notes/font-candidate-preview.png.
 
    Empat suara, tidak lebih:
-     1. Big Shoulders Display 800 — H1 + wordmark (lihat blok di bawah)
-     2. Schibsted Grotesk 400/500/700 — badan teks, UI, H2/H3
+     1. Unbounded 900 — H1 + wordmark (lihat blok di bawah)
+     2. Hanken Grotesk 400/500/700 — badan teks, UI, H2/H3
      3. Sometype Mono 400/500 — label, angka, konsol
      4. Noto Sans Sundanese 400 — identitas aksara
 
-   Total 8 berkas / 114.012 B, turun dari 11 berkas / 218.048 B. */
+   Total 8 berkas / 86.956 B, turun dari 8 berkas / 114.012 B (Fase 6H). */
 @font-face {
-  font-family: "Schibsted Grotesk";
-  src: url("/assets/fonts/fontsource/schibsted-grotesk-400.woff2")
+  font-family: "Hanken Grotesk";
+  src: url("/assets/fonts/fontsource/hanken-grotesk-400.woff2")
     format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Schibsted Grotesk";
-  src: url("/assets/fonts/fontsource/schibsted-grotesk-500.woff2")
+  font-family: "Hanken Grotesk";
+  src: url("/assets/fonts/fontsource/hanken-grotesk-500.woff2")
     format("woff2");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
-  font-family: "Schibsted Grotesk";
-  src: url("/assets/fonts/fontsource/schibsted-grotesk-700.woff2")
+  font-family: "Hanken Grotesk";
+  src: url("/assets/fonts/fontsource/hanken-grotesk-700.woff2")
     format("woff2");
   font-weight: 700;
   font-style: normal;
@@ -58,22 +57,31 @@
   font-display: swap;
 }
 
-/* Big Shoulders Display 800 — SATU bobot, judul/H1 saja.
-   FASE 6E, menggantikan Syne 800. Alasannya bisa dilihat, bukan diperdebatkan:
-   docs/notes/display-candidates.png membandingkan enam huruf display pada
-   LEBAR BARIS YANG SAMA PERSIS. Syne menulis "NAWASUNDA." selebar 12,163em,
-   jadi untuk muat di kolom hero ia harus dikecilkan sampai judulnya nyaris
-   tidak bersuara. Big Shoulders menulis kata yang sama dalam 4,871em —
-   2,5× lebih tinggi pada lebar yang sama — dan potongan diagonal pada
-   A/K/W/N-nya seirama dengan sudut-sudut aksara Sunda di bawahnya.
-   Anton dibuang justru karena terlalu dikenal (huruf poster default).
-   Self-hosted dari @fontsource/big-shoulders-display (SIL OFL, lihat
-   BIG-SHOULDERS-DISPLAY-LICENSE.txt). */
+/* Unbounded 900 — SATU bobot, judul/H1 saja.
+   FASE 8, menggantikan Big Shoulders Display 800. Pemilik situs menilai
+   roster Fase 6H "jelek banget, basic" dan minta sesuatu yang berkarakter
+   — eksplisit BUKAN grotesque generik lagi. Bukti perbandingan:
+   docs/notes/font-candidate-preview.png.
+
+   [FAKTA PENTING] Unbounded adalah huruf GEOMETRIS LEBAR, bukan
+   kondensasi seperti Big Shoulders Display. Diukur dari advance width
+   glyph (fontTools, upem 1000): Unbounded menulis "NAWASUNDA." sepanjang
+   9,601em (termasuk tracking +0,02em/huruf) vs 4,871em huruf lama — hampir
+   2× lebih lebar per karakter. Karena itu SELURUH clamp judul hero/halaman
+   di seluruh situs ikut diturunkan ×0,50735 di Fase 8 (lihat
+   server/mobileLayout.test.ts, pages/HomeStage.css, CinematicReference.css,
+   shell/ChromeRedesign.css) supaya lebar baris di layar tetap sama seperti
+   sebelum penggantian huruf. Tracking tetap POSITIF (+0,02em), mengikuti
+   pelajaran Fase 6D: huruf lebar/geometris berisiko tabrakan kalau
+   tracking-nya negatif.
+
+   Self-hosted dari @fontsource/unbounded (SIL OFL, lihat
+   UNBOUNDED-LICENSE.txt). */
 @font-face {
-  font-family: "Big Shoulders Display";
-  src: url("/assets/fonts/fontsource/big-shoulders-display-800.woff2")
+  font-family: "Unbounded";
+  src: url("/assets/fonts/fontsource/unbounded-900.woff2")
     format("woff2");
-  font-weight: 800;
+  font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
@@ -89,7 +97,17 @@
    footer (shell/ChromeRedesign.css), dan judul hero (pages/HomeStage.css).
    Tidak pernah dipasang ke elemen yang berisi kalimat. Jalur
    reduced-motion tidak terpengaruh: ini bentuk, bukan gerakan. */
-   DICABUT DI FASE 6I. Kemiringan 9° dipasang sebagai `font-style:
+
+/* [BUG PRA-SESI INI, DIPERBAIKI] Komentar di bawah ini kehilangan `/*`
+   pembuka sejak ditulis (riwayatnya tidak jelas, tapi sudah ada di commit
+   dasar sebelum sesi ini dimulai) — akibatnya separuh kalimatnya terbaca
+   parser CSS sebagai kode sungguhan ("Unknown word DI"), dan SELURUH
+   `index.css` gagal di-parse oleh dev server (bukan oleh `vite build`
+   produksi, yang memakai jalur transform berbeda dan kebetulan toleran).
+   Ini sebabnya preview sempat tampil tanpa gaya sama sekali di semua
+   halaman, bukan cuma beranda. Isinya tidak diubah, cuma ditutup dengan
+   benar. */
+/* DICABUT DI FASE 6I. Kemiringan 9° dipasang sebagai `font-style:
    oblique` — artinya browser MEMALSUKAN kemiringan dari huruf tegak.
    Hasilnya terbaca murahan, dan pemilik situs langsung menangkapnya.
    Pelajarannya: kemiringan hanya sah kalau hurufnya memang punya
@@ -134,15 +152,19 @@
 
 :root {
   /* Curated 3-Font System: Independent, Distinctive, Highly Legible */
-  --font-display: "Big Shoulders Display", "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  /* Judul/H1 saja. Syne lebih lebar ±1,68× dari huruf display lama
-     (diukur dari advance width, bukan ditebak — lihat laporan Fase 6), jadi
-     setiap clamp judul ikut dikalibrasi ulang. Fallback-nya huruf badan supaya
-     hierarki tidak runtuh ke font sistem sebelum huruf judul dimuat. */
-  --font-title:   "Big Shoulders Display", "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Unbounded", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Judul/H1 DAN H2/H3 (Fase 6I: --font-display sengaja disamakan dengan
+     --font-title, lihat catatan test di server/editorialOptimization.test.ts
+     — saat --font-display sempat menunjuk grotesk biasa, seluruh H2/H3
+     kehilangan watak). Fase 8: Unbounded ±1,97× lebih lebar dari huruf
+     display lama (diukur dari advance width, bukan ditebak — lihat
+     server/mobileLayout.test.ts), jadi setiap clamp judul ikut
+     dikalibrasi ulang. Fallback-nya huruf badan supaya hierarki tidak
+     runtuh ke font sistem sebelum huruf judul dimuat. */
+  --font-title:   "Unbounded", "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   /* Aksara Sunda: gema kecil di bawah judul, bukan teks isi. */
-  --font-sunda:   "Noto Sans Sundanese", "Schibsted Grotesk", sans-serif;
-  --font-body:    "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sunda:   "Noto Sans Sundanese", "Hanken Grotesk", sans-serif;
+  --font-body:    "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono:    "Sometype Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
   /* Nocturnal Electronic Artist Palette — PHASE 4 CANONICAL.
@@ -276,6 +298,34 @@
   --text-small: 0.86rem;
   --text-meta:  0.72rem;
 
+  /* -- Tangga kontras (FASE 7, nomor 3) --------------------------
+     TOKEN SAJA — belum dipasang ke selektor mana pun di sini. Nomor 4
+     yang memasangnya ke HomeStage.css.
+
+     docs/notes/skala-huruf-sekarang.md membuktikan dengan angka kenapa
+     tangga di atas (`--text-*`) tidak cukup: 88,3% dari 513 deklarasi
+     ukuran tetap di seluruh CSS menumpuk di pita 0,5–1rem. Itu tangga
+     yang "aman" — rasio berdekatan 1,2×, cocok untuk teks baca panjang,
+     tapi tidak pernah menghasilkan kontras.
+
+     Tangga ini rasionya 1,5× (bukan 1,2×) dari dasar 1rem, naik dan
+     turun: `--step-0` = 1rem, setiap langkah ke atas ×1,5, ke bawah ÷1,5.
+     Prinsip pemakaiannya (nomor 4-5): SATU layar hanya boleh memakai TIGA
+     tingkat — raksasa, sedang, mikro — tidak pernah tingkat yang
+     berdekatan. `--step-3` (titik tengah angka -1..7) SENGAJA tidak
+     pernah dipakai di berkas mana pun; itu yang membuat lompatannya
+     terasa seperti lompatan, bukan tanjakan. Jangan pasang --step-3 ke
+     selektor apa pun tanpa menulis alasannya di sini lebih dulu. */
+  --step--1: 0.667rem;   /* mikro — label pendamping, keterangan kecil */
+  --step-0:  1rem;       /* dasar — sama dengan --text-body, titik nol tangga */
+  --step-1:  1.5rem;     /* sedang-kecil */
+  --step-2:  2.25rem;    /* sedang — lantai judul hero di ponsel */
+  --step-3:  3.375rem;   /* KOSONG SENGAJA — jangan dipakai, lihat catatan di atas */
+  --step-4:  5.062rem;   /* sedang-besar — plafon judul hero di ponsel / lantai di desktop */
+  --step-5:  7.594rem;   /* besar */
+  --step-6:  11.391rem;  /* raksasa */
+  --step-7:  17.086rem;  /* raksasa maksimum — jarang dipakai, nyaris tidak pernah tercapai di viewport nyata (lihat nomor 4) */
+
   /* -- Media / image system ------------------------------------- */
   --ratio-square: 1 / 1;
   --ratio-portrait: 4 / 5;
@@ -395,19 +445,25 @@
     margin: 0;
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.03em;
+    letter-spacing: 0em;
     line-height: 1.08;
     text-wrap: balance;
     word-break: break-word;
     overflow-wrap: break-word;
   }
-  /* H1 — dan hanya H1 — memakai huruf judul (Big Shoulders Display 800).
-     H2/H3 memakai Schibsted Grotesk 700, satu tingkat lebih tenang. */
+  /* [FAKTA — dikoreksi Fase 8] Komentar lama di sini menyebut "H2/H3
+     memakai Schibsted Grotesk 700" — itu sudah tidak benar sejak Fase 6I,
+     ketika --font-display dikembalikan menyamai --font-title (lihat
+     catatan di token --font-display di atas dan test-nya di
+     server/editorialOptimization.test.ts). Praktiknya: h1 DAN h2/h3/h4
+     sama-sama memakai huruf judul (kini Unbounded 900) lewat
+     --font-display/--font-title yang nilainya disamakan. h1 override di
+     bawah ini hanya mengubah ukuran, bukan keluarga huruf. */
   h1 {
     font-family: var(--font-title);
     font-size: var(--text-hero);
     line-height: 1.05;
-    letter-spacing: -0.04em;
+    letter-spacing: 0em;
   }
   h2 { font-size: var(--text-h2); line-height: 1.08; }
   h3 { font-size: var(--text-h3); line-height: 1.15; }

@@ -19,6 +19,7 @@ import {
 } from "@/content/publicContent";
 import { Link } from "wouter";
 import { AudioPlayerShell, CtaPanel } from "@/components/editorial/EditorialKit";
+import { toRoman } from "@/lib/roman";
 import "./EcosystemPages.css";
 import "./CatalogStage.css";
 
@@ -339,7 +340,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
                   aria-label={t.channelAria(platform.label)}
                 >
                   <span className="an-meta" aria-hidden="true">
-                    {String(index + 1).padStart(2, "0")}
+                    {toRoman(index + 1)}
                   </span>
                   <span className="an-cat-channel-name">{platform.label}</span>
                   <span className="an-cat-channel-mark" aria-hidden="true">

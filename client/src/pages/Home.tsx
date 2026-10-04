@@ -33,6 +33,7 @@ import {
 import { NightHeader, NightFooter } from "@/components/NightFrequencyChrome";
 import { BirthdayNote } from "@/components/StudioClock";
 import { trpc } from "@/lib/trpc";
+import { toRoman } from "@/lib/roman";
 import {
   publicPlatformLinks,
   publicUpcomingEvents,
@@ -459,7 +460,9 @@ export default function Home() {
               </figure>
 
               <div className="an-doc-copy an-rise">
-                <p className="an-meta">02 — Rilisan terbaru</p>
+                <p className="an-meta">
+                  <span className="an-section-num">02</span> — Rilisan terbaru
+                </p>
                 <h2 id="feature-title">{activeRelease.title}</h2>
                 <p className="an-doc-story">
                   {activeReleaseStory ||
@@ -511,7 +514,9 @@ export default function Home() {
             aria-labelledby="channels-title"
           >
             <header className="an-channels-head">
-              <p className="instr-index">03 — Kanal resmi</p>
+              <p className="instr-index">
+                <span className="an-section-num">03</span> — Kanal resmi
+              </p>
               <h2 id="channels-title">Dengar di kanal resminya.</h2>
               <p className="an-meta">
                 {editablePlatformLinks.length} kanal resmi · rilisan, remix, dan
@@ -532,7 +537,7 @@ export default function Home() {
                     aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
                   >
                     <span className="an-channel-index" aria-hidden="true">
-                      {String(index + 1).padStart(2, "0")}
+                      {toRoman(index + 1)}
                     </span>
                     <span className="an-channel-mark" aria-hidden="true">
                       <PlatformIcon label={platform.label} />
@@ -554,6 +559,21 @@ export default function Home() {
                 Buka katalog musik <ArrowRight size={14} />
               </Link>
             </div>
+          </section>
+
+          {/* FASE 7 nomor 7 — satu layar jeda. Sengaja hampir kosong: satu
+              baris mikro, bukan section baru dengan judul dan CTA. Kutipannya
+              BUKAN klaim baru — potongan verbatim dari `heroBody` di atas
+              (sendiri bersumber dari CMS/managed content), ditata ulang
+              sebagai kutipan tunggal huruf judul supaya layak jadi jeda,
+              bukan diulang sebagai paragraf. `aria-hidden` karena kalimatnya
+              sudah dibacakan screen reader lewat `.an-hero-lede`; mengulang
+              di sini hanya untuk mata, bukan telinga. Tidak ada aset gambar
+              baru; hanya CSS pada DOM yang sudah ringan ini. */}
+          <section className="an-pause" aria-hidden="true">
+            <p className="an-pause-quote">
+              Breakbeat, electronic bass, dan remix.
+            </p>
           </section>
 
           {/* Perjalanan & studi potret tidak diulang di beranda: bagian itu
