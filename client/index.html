@@ -149,10 +149,13 @@
            sisa ±1,5%. Dengan rumus ini kata itu MUSTAHIL terpotong di lebar
            berapa pun — inilah penyebab splash kepotong di desktop tapi utuh
            di ponsel. */
-        font-size: max(2.4rem, calc((min(92vw, 1100px) - 8vw) / 4.6));
+        /* Pembagi 4,75 (bukan 4,6): kemiringan 9° menambah ±2,5% lebar
+           tampak di ujung kanan. */
+        font-size: max(2.4rem, calc((min(92vw, 1100px) - 8vw) / 4.75));
         line-height: 0.94;
         letter-spacing: 0.02em;
         text-transform: uppercase;
+        font-style: oblique 9deg;
         transform: translateY(105%);
         animation: an-splash-rise 0.72s cubic-bezier(0.16, 1, 0.3, 1) 0.3s
           forwards;

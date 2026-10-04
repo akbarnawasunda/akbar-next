@@ -90,6 +90,28 @@
   font-display: swap;
 }
 
+/* --- Wordmark miring -------------------------------------------------
+   SATU perlakuan, bukan font baru. Nama (dan HANYA nama) dimiringkan 9°
+   ke kanan, searah kemiringan alami aksara Sunda yang berdiri di
+   bawahnya — lihat docs/notes/wordmark-treatments.png, baris B.
+   Akibatnya nama terbaca sebagai LOGO, sementara judul kalimat di
+   halaman lain tetap tegak dan tenang.
+
+   Dipakai di: splash pembuka (client/index.html), wordmark header &
+   footer (shell/ChromeRedesign.css), dan judul hero (pages/HomeStage.css).
+   Tidak pernah dipasang ke elemen yang berisi kalimat. Jalur
+   reduced-motion tidak terpengaruh: ini bentuk, bukan gerakan. */
+   CATATAN TEKNIS: dipakai `font-style: oblique 9deg`, BUKAN
+   `transform: skewX()`. Judul hero dan wordmark splash sudah punya
+   animasi yang menulis `transform`, jadi skew akan tertimpa saat
+   animasinya selesai (`transform: none`). `oblique` adalah properti
+   huruf, bukan transform, jadi keduanya hidup berdampingan. Sudutnya
+   disintesis browser karena Big Shoulders Display tidak punya potongan
+   miring sendiri. */
+.an-markslant {
+  font-style: oblique 9deg;
+}
+
 /* Aksara Sunda — hanya blok U+1B80–1BFF, jadi tidak pernah ikut terunduh
    untuk teks Latin dan tidak pernah membajak teks biasa. Self-hosted dari
    @fontsource/noto-sans-sundanese (SIL OFL).

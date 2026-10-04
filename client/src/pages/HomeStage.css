@@ -184,10 +184,18 @@
   display: inline-block;
   overflow: visible;
   padding-bottom: 0.08em;
+  /* Ruang untuk ujung kanan yang menjorok setelah dimiringkan 9°
+     (tinggi huruf besar × tan 9° ≈ 0,12em). Tanpa ini ujung "A"
+     terakhir bisa tersentuh tepi kolom. */
+  padding-right: 0.13em;
 }
 
+/* Nama = logo, jadi dimiringkan. Judul halaman lain (kalimat) tetap
+   tegak — lihat .an-markslant di index.css untuk alasannya. */
 .an-site .an-hero-inner .hero-title-word {
   white-space: nowrap;
+  display: inline-block;
+  font-style: oblique 9deg;
 }
 
 /* -- Pelat nama aksara Sunda ----------------------------------
