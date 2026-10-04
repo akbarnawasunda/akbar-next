@@ -280,7 +280,7 @@ body::before {
 
 .an-inquiry-hero,
 .an-epk-hero { background: var(--ref-bg) !important; border-bottom-color: var(--ref-line) !important; }
-.an-inquiry-hero h1 { max-width: 8ch !important; font-size: clamp(1.8rem, 4.8vw, 4.8rem) !important; line-height: 0.92 !important; letter-spacing: -0.065em !important; white-space: pre-line; }
+.an-inquiry-hero h1 { max-width: 8ch !important; font-size: clamp(1.66rem, 4.43vw, 4.43rem) !important; line-height: 1 !important; letter-spacing: 0.02em !important; white-space: pre-line; }
 .an-inquiry-signal { border-left-color: var(--ref-cyan) !important; }
 .an-inquiry-shell { background: var(--ref-bg-2) !important; }
 .an-inquiry-form input,
@@ -306,7 +306,7 @@ body::before {
 .an-site .hero-copy::before { content: none !important; }
 .an-site .hero-copy .eyebrow { margin-bottom: 22px !important; color: var(--ref-cyan) !important; font-family: var(--ref-mono) !important; font-size: 0.6rem !important; letter-spacing: 0.14em !important; }
 .an-site .hero-copy .eyebrow > span { width: 8px !important; height: 8px !important; border-radius: 50%; background: var(--ref-cyan) !important; box-shadow: 0 0 16px var(--ref-cyan); }
-.an-site .hero-copy .hero-title-editorial { font-size: clamp(2.1rem, 4.62vw, 5.28rem) !important; line-height: 0.88 !important; letter-spacing: -0.075em !important; }
+.an-site .hero-copy .hero-title-editorial { font-size: clamp(1.94rem, 4.26vw, 4.87rem) !important; line-height: 0.96 !important; letter-spacing: 0.02em !important; }
 .an-site .hero-copy .hero-title-mask { padding: 0 !important; }
 .an-site .hero-description { max-width: 34ch !important; margin: 28px 0 30px !important; color: var(--ref-muted) !important; font-family: var(--ref-mono) !important; font-size: 0.69rem !important; line-height: 1.8 !important; }
 .an-site .home-hero-portrait { height: min(78vh, 720px) !important; border: 0 !important; box-shadow: var(--ref-shadow) !important; }
@@ -452,8 +452,8 @@ body::before {
 .music-reference-page .nf-page-hero > div:first-child { max-width: 430px !important; }
 .music-reference-page .nf-page-hero h1 {
   max-width: 8ch !important;
-  font-size: clamp(2.4rem, 5.4vw, 5.52rem) !important;
-  letter-spacing: -0.08em !important;
+  font-size: clamp(2.2rem, 4.96vw, 5.07rem) !important;
+  letter-spacing: 0.02em !important;
 }
 .music-reference-page .nf-page-hero h1 em { color: var(--ref-ink) !important; }
 .music-reference-page .nf-page-hero p:not(.nf-page-eyebrow) {
@@ -869,7 +869,7 @@ body::before {
   .nf-page .nf-epk-hero { min-height: 650px !important; }
   .nf-page .nf-page-hero h1,
   .en-page .nf-page-hero h1,
-  .nf-page .nf-epk-hero h1 { font-size: clamp(1.4rem, 6.7vw, 2.33rem) !important; line-height: 0.92 !important; letter-spacing: -0.05em !important; }
+  .nf-page .nf-epk-hero h1 { font-size: clamp(1.32rem, 6.31vw, 2.2rem) !important; line-height: 1 !important; letter-spacing: 0.02em !important; }
   .nf-page .nf-section,
   .en-page .nf-section { padding-block: 64px !important; }
   .nf-page .nf-section-title,

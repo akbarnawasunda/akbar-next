@@ -52,6 +52,18 @@
       type="font/woff2"
       crossorigin
     />
+    <!--
+      Fase 6D: aksara Sunda ikut di-preload (4,9 kB) karena sekarang ia
+      muncul di splash — hal pertama yang dilihat pengunjung. Tanpa preload
+      baris aksaranya sempat kosong beberapa ratus milidetik.
+    -->
+    <link
+      rel="preload"
+      href="/assets/fonts/fontsource/noto-sans-sundanese-400.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
   </head>
 
   <body>
@@ -118,16 +130,20 @@
       }
       .an-splash-word {
         display: block;
+        /* Syne 800 lebih dulu — font judul situs ini. Tracking POSITIF:
+           pada tracking negatif huruf Syne 800 bertabrakan
+           (docs/notes/hero-tracking-scan.png). Ukuran ikut dikecilkan
+           supaya lebar barisnya tidak berubah. */
         font-family:
-          "Clash Display",
           "Syne",
+          "Clash Display",
           system-ui,
           -apple-system,
           sans-serif;
         font-weight: 800;
-        font-size: clamp(2.4rem, 11vw, 5.25rem);
-        line-height: 0.92;
-        letter-spacing: -0.02em;
+        font-size: clamp(2.2rem, 10.1vw, 4.82rem);
+        line-height: 0.98;
+        letter-spacing: 0.02em;
         text-transform: uppercase;
         transform: translateY(105%);
         animation: an-splash-rise 0.86s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -140,6 +156,24 @@
           transform: translateY(0);
         }
       }
+      .an-splash-aksara {
+        display: block;
+        margin: 0.42em 0 0;
+        font-family: "Noto Sans Sundanese", system-ui, sans-serif;
+        font-weight: 400;
+        font-size: clamp(1.15rem, 5.2vw, 2.3rem);
+        line-height: 1.9;
+        color: #9bb9c1;
+        clip-path: inset(0 100% 0 0);
+        animation: an-splash-write 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.22s
+          forwards;
+      }
+      @keyframes an-splash-write {
+        to {
+          clip-path: inset(0 0 0 0);
+        }
+      }
+
       /* Pola langkah drum: delapan ketukan yang menyala berurutan. */
       .an-splash-steps {
         display: flex;
@@ -270,6 +304,7 @@
       }
       @media (prefers-reduced-motion: reduce) {
         .an-splash-word,
+        .an-splash-aksara,
         .an-splash-rule,
         .an-splash-top,
         .an-splash-caption,
@@ -304,6 +339,13 @@
         >
         <span class="an-splash-line"
           ><span class="an-splash-word">Nawasunda</span></span
+        >
+        <!-- Nama yang sama dalam aksara Sunda: tersingkap kiri ke kanan
+             seperti sedang dituliskan. Inilah yang membuat layar pembuka
+             ini tidak bisa dipakai artis lain. Bacaan Latinnya sudah ada
+             tepat di atasnya, jadi baris ini murni dekoratif. -->
+        <span class="an-splash-aksara" aria-hidden="true" lang="su-Sund"
+          >ᮃᮊ᮪ᮘᮁ ᮔᮝᮞᮥᮔ᮪ᮓ</span
         >
         <div class="an-splash-steps" aria-hidden="true">
           <span></span><span></span><span></span><span></span>

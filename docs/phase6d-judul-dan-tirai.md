@@ -60,3 +60,32 @@ di `0.0.0.0:4101` · `verify-ssr.sh` **32/32 ALL GREEN**.
 penggantian keluarga huruf untuk badan teks dan label — konsekuensinya besar
 (keterbacaan, anggaran font, seluruh skala tipografi) dan arahnya ada
 beberapa. Opsinya saya ajukan terpisah agar pemilik situs memilih arah dulu.
+
+## Lanjutan 6D — setelah melihat screenshot dari pemilik situs
+
+[FACT] Screenshot yang dikirim memperlihatkan build SEBELUM perbaikan di atas
+(judul masih menyatu). Dari screenshot itu ditemukan tiga hal lagi:
+
+1. [FACT] "Gepeng" tidak hanya di beranda. Judul lain masih dirapatkan
+   ekstrem padahal sudah memakai Syne 800:
+   `.an-inquiry-hero h1` -0,065em, `.an-site .hero-copy .hero-title-editorial`
+   -0,075em, `.music-reference-page .nf-page-hero h1` -0,08em,
+   `.nf-page .nf-epk-hero h1` -0,05em — semuanya di
+   `client/src/CinematicReference.css`. Semua jadi **+0,02em**, leading
+   dilonggarkan, ukuran dikecilkan sesuai hasil ukur agar lebar baris tetap.
+2. [FACT] Judul hero /en di `client/src/pages/Home.css:269` masih
+   `font-family: var(--font-display)` (Clash) plus
+   `font-variation-settings: "wght" 560` untuk font variabel yang tidak
+   di-host. Jadi /en memakai huruf judul yang berbeda dari beranda. Kini
+   `var(--font-title)` + `font-weight: 800`.
+3. [FACT] Layar loading yang benar-benar dilihat pengunjung pertama kali
+   bukan tirai rute, melainkan splash di `client/index.html` — dan splash itu
+   masih memanggil `"Clash Display"` lebih dulu dengan tracking -0,02em.
+   Sekarang: Syne 800, tracking +0,02em, dan satu baris nama dalam aksara
+   Sunda yang tersingkap kiri→kanan di bawah wordmark. Font aksaranya ikut
+   di-preload (4,9 kB) supaya barisnya tidak kosong di detik pertama.
+
+[FACT] Verifikasi ulang penuh: `pnpm check` 0 galat · `vitest` 56/330 lulus ·
+`audit-layout` 0 pelanggaran · `pnpm build` · server di-restart ·
+`verify-ssr` **32/32 ALL GREEN** · HTML terlayani memuat `an-splash-aksara`
+dan spasi judul hero (`…AKBAR</span></span> <span…`).
