@@ -538,7 +538,11 @@ export default function Home() {
 
             <ul className="an-channels-list">
               {editablePlatformLinks.map((platform, index) => (
-                <li key={platform.label}>
+                <li
+                  key={platform.label}
+                  className="an-channel-row"
+                  style={{ "--i": index } as CSSProperties}
+                >
                   <a
                     className={`an-channel platform-${platform.label
                       .toLowerCase()

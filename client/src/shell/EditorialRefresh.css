@@ -597,7 +597,12 @@
   color: var(--paper);
   font-family: var(--font-display);
   font-size: clamp(2.4rem, 5.04vw, 5.22rem) !important;
-  font-weight: 600;
+  /* [BUGFIX] Cuma satu berkas static weight yang di-host untuk huruf
+     judul (big-shoulders-display-800.woff2), jadi 600 di sini tidak
+     pernah benar-benar merender lebih tipis -- browser diam-diam
+     memakai muka 800 yang sama. Disamakan ke 800 supaya tidak
+     membingungkan pembaca kode lain. Tanpa dampak visual. */
+  font-weight: 800;
   letter-spacing: 0em;
   line-height: 0.82 !important;
   text-shadow: none;
@@ -1170,7 +1175,13 @@
   }
   .an-public-shell.an-editorial .an-site .hero-copy .hero-title-editorial {
     font-size: clamp(2.1rem, 9.0vw, 3.36rem) !important;
-    letter-spacing: -0.075em;
+    /* [BUGFIX] Ini aturan yang SEBENARNYA menang (selektor ini lebih
+       spesifik dari punya Home.css) untuk judul hero beranda -- dan
+       -0.075em-nya lolos dari sapuan Fase 8 karena blok ini tidak
+       menyebut var(--font-title)/var(--font-display) langsung. Inilah
+       sumber nyata kenapa judul di layar <=640px terasa beda/lebih
+       rapat dari desktop. Disamakan ke 0em seperti aturan dasarnya. */
+    letter-spacing: 0em;
   }
   .an-public-shell.an-editorial .an-site .hero-actions {
     align-items: flex-start;

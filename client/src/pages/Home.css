@@ -650,7 +650,18 @@
     background 180ms ease,
     transform 220ms ease,
     box-shadow 220ms ease;
-  animation: hx-card-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  /* Dulu kartu ini auto-play begitu mount, jadi kalau raknya ada di bawah
+     layar, animasinya sudah lewat sebelum sempat kelihatan. Sekarang
+     ditahan sampai section induknya (.home-signal-deck) kena
+     .is-motion-in-view dari MotionOrchestrator, lalu masuk satu per satu
+     memakai --i (index peta array) dari EnglishPages.tsx. */
+  opacity: 0;
+  transform: translateY(18px);
+  animation: none;
+}
+.home-signal-deck.is-motion-in-view .home-platform-card {
+  animation: hx-card-in 640ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
 }
 @keyframes hx-card-in {
   from {
@@ -660,6 +671,13 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .an-site .home-platform-card {
+    opacity: 1;
+    transform: none;
+    animation: none !important;
   }
 }
 .an-site .home-platform-card::before,
@@ -3082,7 +3100,11 @@
     /* Kata judul dipaksa nowrap, jadi ukurannya harus ikut lebar layar.
        Lantai rem tetap membuat "NAWASUNDA." terpotong di layar 320px. */
     font-size: clamp(1.2rem, 6.7vw, 2.33rem) !important;
-    letter-spacing: -0.06em !important;
+    /* [BUGFIX] Lolos dari sapuan Fase 8 (blok ini tidak menyebut
+       var(--font-title) langsung, hanya mewarisi dari aturan dasarnya,
+       jadi tidak kena pola pencarian otomatis) -- judul hero di mobile
+       jadi terasa lebih rapat/beda dari desktop. Disamakan ke 0em. */
+    letter-spacing: 0em !important;
   }
   .an-site .hero-copy .hero-title-word {
     display: inline-block;

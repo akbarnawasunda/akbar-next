@@ -340,6 +340,32 @@
   border-top: 1px solid var(--editorial-rule);
 }
 
+/* Setiap baris kanal masuk satu per satu (bukan serempak) begitu section-nya
+   kelihatan -- lihat useScrollReveal() di Home.tsx yang menambah
+   .is-revealed ke <section class="an-channels">. `--i` (index peta array)
+   dipasang lewat inline style per <li>, jadi urutan tundanya otomatis ikut
+   jumlah kanal, tidak perlu di-hardcode per :nth-child. */
+.an-site .an-channel-row {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 480ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)) calc(var(--i, 0) * 55ms),
+    transform 480ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)) calc(var(--i, 0) * 55ms);
+  will-change: opacity, transform;
+}
+.an-site .an-channels.is-revealed .an-channel-row {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .an-site .an-channel-row {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 .an-site .an-channel {
   display: grid;
   /* Kolom nomor 3,2rem: cukup lebar untuk angka Romawi ("VIII" di Big
@@ -379,7 +405,24 @@
   align-items: center;
   justify-content: center;
   color: color-mix(in srgb, var(--paper) 66%, transparent);
-  transition: color 220ms var(--ease, ease);
+  transition:
+    color 220ms var(--ease, ease),
+    transform 220ms var(--ease, ease);
+}
+
+.an-site .an-channel:hover .an-channel-mark,
+.an-site .an-channel:focus-visible .an-channel-mark {
+  transform: scale(1.14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-site .an-channel-mark {
+    transition: none;
+  }
+  .an-site .an-channel:hover .an-channel-mark,
+  .an-site .an-channel:focus-visible .an-channel-mark {
+    transform: none;
+  }
 }
 
 .an-site .an-channel-name {
