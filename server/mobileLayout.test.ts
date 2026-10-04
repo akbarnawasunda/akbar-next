@@ -3,9 +3,7 @@
  *
  * docs/notes/testing-policy.md melarang menguji tampilan lewat teks source.
  * Yang diuji di sini memang tidak pernah muncul di HTML: aturan CSS, meta
- * viewport, dan satu perhitungan lebar teks. Overflow sungguhan hanya bisa
- * dilihat browser; yang bisa dikunci dari sini adalah aturan yang
- * menyebabkannya.
+ * viewport, dan satu perhitungan lebar teks.
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -17,31 +15,32 @@ const source = (path: string) =>
 /**
  * Lebar kata "NAWASUNDA." dalam satuan em, diukur dari advance width glyph
  * font JUDUL yang di-host di repo ini (upem 1000) ditambah letter-spacing
- * per karakter. Angka ini yang membuat judul hero terpotong di layar 320px
- * saat ukurannya dipatok dalam rem.
+ * per karakter. Angka ini yang menentukan apakah judul hero terpotong di
+ * layar 320px.
  *
- * KONTRAK BERUBAH (Fase 6, disengaja): sejak H1 memakai
- * `client/public/assets/fonts/fontsource/syne-800.woff2` — bukan lagi
- * clash-display-700 — kata yang sama memakai 11,463em (letter-spacing
- * -0,05em), bukan 6,963em. Syne menulis ±1,65× lebih lebar, jadi SELURUH
- * clamp judul di CSS ikut dikalikan 0,60 supaya lebar barisnya tetap sama.
- * Yang dijaga tes ini tidak berubah: tidak boleh ada kata judul yang
- * melewati ruang teks di layar 320px.
+ * KONTRAK BERUBAH (Fase 6E, disengaja): font judul kini
+ * `client/public/assets/fonts/fontsource/big-shoulders-display-800.woff2`.
+ * Riwayatnya: clash-display-700 6,963em → syne-800 12,163em →
+ * big-shoulders-display-800 **4,871em** (sudah termasuk tracking +0,02em).
+ * Perbandingan keenam kandidat pada lebar baris yang sama ada di
+ * docs/notes/display-candidates.png. Karena hurufnya 2,5× lebih ringkas,
+ * seluruh clamp judul dinaikkan — bukan karena ingin lebih besar saja,
+ * tapi karena lebar barisnya tetap sama.
  *
- *   sum(advance "NAWASUNDA.") / upem = 11,963 ; 11,963 + (0,02 × 10) = 12,163
- *
- * KONTRAK BERUBAH LAGI (Fase 6D, disengaja): tracking judul dilonggarkan
- * dari -0,05em ke +0,02em karena di bawah itu huruf Syne 800 benar-benar
- * bertabrakan (docs/notes/hero-tracking-scan.png). Kata yang sama kini 12,163em, jadi
- * seluruh clamp di CSS dikecilkan ±2-3% agar lebar barisnya tidak berubah.
+ * Yang dijaga tes ini tidak pernah berubah: tidak boleh ada kata judul
+ * yang melewati ruang teks di layar 320px.
  */
-const HERO_WORD_EM = 12.163;
+const HERO_WORD_EM = 4.871;
 const SMALLEST_PHONE = 320;
 const GUTTER = 20; // --hx-gutter / --ref-gutter pada <= 767.98px
 
 /** clamp(min, prefer, max) seperti CSS, dalam px. */
-const clampPx = (minRem: number, vwFactor: number, maxRem: number, vw: number) =>
-  Math.max(minRem * 16, Math.min((vwFactor / 100) * vw, maxRem * 16));
+const clampPx = (
+  minRem: number,
+  vwFactor: number,
+  maxRem: number,
+  vw: number
+) => Math.max(minRem * 16, Math.min((vwFactor / 100) * vw, maxRem * 16));
 
 /**
  * Semua aturan ukuran judul hero yang hidup di blok @media mobile
@@ -68,7 +67,11 @@ function mobileHeroClamps(css: string) {
       /hero-title-editorial[^{}]*\{[^}]*?font-size:\s*clamp\(\s*([\d.]+)rem\s*,\s*([\d.]+)vw\s*,\s*([\d.]+)rem\s*\)/g;
     let rule: RegExpExecArray | null;
     while ((rule = ruleRe.exec(body))) {
-      out.push({ min: Number(rule[1]), vw: Number(rule[2]), max: Number(rule[3]) });
+      out.push({
+        min: Number(rule[1]),
+        vw: Number(rule[2]),
+        max: Number(rule[3]),
+      });
     }
   }
   return out;
@@ -94,7 +97,10 @@ describe("layout layar kecil", () => {
       ).toBeTruthy();
 
       const rules = mobileHeroClamps(css);
-      expect(rules.length, `${path} punya aturan judul hero mobile`).toBeGreaterThan(0);
+      expect(
+        rules.length,
+        `${path} punya aturan judul hero mobile`
+      ).toBeGreaterThan(0);
       for (const rule of rules) {
         const fontPx = clampPx(rule.min, rule.vw, rule.max, SMALLEST_PHONE);
         const wordPx = fontPx * HERO_WORD_EM;
@@ -129,10 +135,17 @@ describe("layout layar kecil", () => {
         /(?:nf-page-hero|nf-epk-hero|an-inquiry-hero) h1[^{}]*\{[^}]*?font-size:\s*clamp\(\s*([\d.]+)rem\s*,\s*([\d.]+)vw\s*,\s*([\d.]+)rem\s*\)/g;
       let rule: RegExpExecArray | null;
       while ((rule = ruleRe.exec(body))) {
-        rules.push({ min: Number(rule[1]), vw: Number(rule[2]), max: Number(rule[3]) });
+        rules.push({
+          min: Number(rule[1]),
+          vw: Number(rule[2]),
+          max: Number(rule[3]),
+        });
       }
     }
-    expect(rules.length, "aturan judul halaman dalam tidak ditemukan").toBeGreaterThan(0);
+    expect(
+      rules.length,
+      "aturan judul halaman dalam tidak ditemukan"
+    ).toBeGreaterThan(0);
     const available = SMALLEST_PHONE - GUTTER * 2;
     for (const rule of rules) {
       const fontPx = clampPx(rule.min, rule.vw, rule.max, SMALLEST_PHONE);
@@ -164,18 +177,24 @@ describe("layout layar kecil", () => {
       "client/src/components/RouteMotion.css",
     ]) {
       const css = source(path);
-      expect(css, path).toMatch(/min-height:\s*100vh;\s*\n\s*min-height:\s*100svh;/);
+      expect(css, path).toMatch(
+        /min-height:\s*100vh;\s*\n\s*min-height:\s*100svh;/
+      );
     }
   });
 
   it("memberi player sasaran sentuh dan area aman", () => {
     const css = source("client/src/components/signature/GlobalAudioPlayer.css");
     // Tombol 30px cukup untuk kursor, tidak untuk jempol.
-    expect(css).toMatch(/@media \(pointer: coarse\)[\s\S]*?width: 44px;[\s\S]*?height: 44px;/);
+    expect(css).toMatch(
+      /@media \(pointer: coarse\)[\s\S]*?width: 44px;[\s\S]*?height: 44px;/
+    );
     // Bilah gestur Android / home indicator iOS.
     expect(css).toMatch(/bottom:\s*calc\([^)]*env\(safe-area-inset-bottom/);
     // Player melayang tidak boleh menimbun akhir halaman di layar kecil.
-    expect(css).toMatch(/html\[data-an-player="visible"\] body[\s\S]*?padding-bottom/);
+    expect(css).toMatch(
+      /html\[data-an-player="visible"\] body[\s\S]*?padding-bottom/
+    );
     // Tinggi embed audio resmi tetap token yang sama.
     expect(css).toContain("--an-embed-audio-h, 166px");
   });

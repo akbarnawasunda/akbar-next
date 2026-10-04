@@ -29,9 +29,12 @@ const LOCAL_FONTS = [
   "Clash Display",
   "General Sans",
   "Azeret Mono",
-  // Fase 6: judul/H1 (Syne) dan gema aksara Sunda — keduanya self-hosted.
-  "Syne",
+  // Fase 6: gema aksara Sunda — self-hosted.
   "Noto Sans Sundanese",
+  // Fase 6E: font judul/H1. Menggantikan Syne, yang berkasnya sudah dihapus
+  // dari repo — sengaja TIDAK disisakan di daftar ini supaya pemakaian
+  // "Syne" yang tertinggal langsung ketahuan sebagai pelanggaran.
+  "Big Shoulders Display",
 ];
 const FONT_FALLBACKS = [
   "inherit",

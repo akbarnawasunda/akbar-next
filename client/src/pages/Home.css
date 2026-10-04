@@ -275,7 +275,7 @@
   margin: 0;
   font-family: var(--font-title);
   font-weight: 800;
-  font-size: clamp(1.16rem, 2.9vw, 2.79rem) !important;
+  font-size: clamp(2.6rem, 10vw, 10rem) !important;
   line-height: 1.05 !important;
   letter-spacing: 0.02em;
   color: var(--paper);

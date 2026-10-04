@@ -70,13 +70,21 @@
   font-display: swap;
 }
 
-/* Syne 800 — SATU bobot, judul/H1 saja (docs/phase6-signature-report.md §1).
-   Dipilih karena potongan bersudut pada K/R/W/A: judul nama jadi punya
-   bentuk sendiri, bukan grotesk yang bisa dipakai siapa pun. Self-hosted
-   dari @fontsource/syne (SIL OFL, lihat SYNE-LICENSE.txt). */
+/* Big Shoulders Display 800 — SATU bobot, judul/H1 saja.
+   FASE 6E, menggantikan Syne 800. Alasannya bisa dilihat, bukan diperdebatkan:
+   docs/notes/display-candidates.png membandingkan enam huruf display pada
+   LEBAR BARIS YANG SAMA PERSIS. Syne menulis "NAWASUNDA." selebar 12,163em,
+   jadi untuk muat di kolom hero ia harus dikecilkan sampai judulnya nyaris
+   tidak bersuara. Big Shoulders menulis kata yang sama dalam 4,871em —
+   2,5× lebih tinggi pada lebar yang sama — dan potongan diagonal pada
+   A/K/W/N-nya seirama dengan sudut-sudut aksara Sunda di bawahnya.
+   Anton dibuang justru karena terlalu dikenal (huruf poster default).
+   Self-hosted dari @fontsource/big-shoulders-display (SIL OFL, lihat
+   BIG-SHOULDERS-DISPLAY-LICENSE.txt). */
 @font-face {
-  font-family: "Syne";
-  src: url("/assets/fonts/fontsource/syne-800.woff2") format("woff2");
+  font-family: "Big Shoulders Display";
+  src: url("/assets/fonts/fontsource/big-shoulders-display-800.woff2")
+    format("woff2");
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -113,7 +121,7 @@
      (diukur dari advance width, bukan ditebak — lihat laporan Fase 6), jadi
      setiap clamp judul ikut dikalibrasi ulang. Fallback-nya Clash supaya
      hierarki tidak runtuh ke font sistem sebelum Syne selesai dimuat. */
-  --font-title:   "Syne", "Clash Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-title:   "Big Shoulders Display", "Clash Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   /* Aksara Sunda: gema kecil di bawah judul, bukan teks isi. */
   --font-sunda:   "Noto Sans Sundanese", "General Sans", sans-serif;
   --font-body:    "General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
