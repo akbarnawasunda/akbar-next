@@ -105,7 +105,7 @@
 .an-artwork-card-badge {
   font-family: var(--font-mono);
   font-size: 0.54rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   color: var(--acid);
 }
 
@@ -121,7 +121,7 @@
   margin: 0;
   font-family: var(--font-mono);
   font-size: 0.6rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--mute);
 }
 
@@ -144,7 +144,7 @@
   color: var(--paper);
   font-family: var(--font-mono);
   font-size: 0.56rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-decoration: none;
   cursor: pointer;
 }

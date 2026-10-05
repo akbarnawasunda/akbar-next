@@ -84,7 +84,7 @@
 .jedag-run-hud-label {
   color: var(--mute);
   font-size: clamp(0.52rem, 1.2vw, 0.67rem);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 .jedag-run-hud-label b {
@@ -94,12 +94,12 @@
 .jedag-run-hud-left strong {
   color: var(--acid);
   font-size: clamp(1rem, 2.7vw, 1.55rem);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
 }
 .jedag-run-lives {
   color: var(--signal);
   font-size: clamp(0.6rem, 1.7vw, 0.85rem);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
 }
 
 .jedag-run-phase {
@@ -112,7 +112,7 @@
   color: var(--acid);
   background: color-mix(in srgb, var(--acid) 10%, transparent);
   font-size: clamp(0.46rem, 1vw, 0.56rem);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -134,7 +134,7 @@
   margin-top: 0.2rem;
   color: var(--acid);
   font-size: clamp(0.48rem, 1.1vw, 0.62rem);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   text-align: center;
 }
@@ -162,13 +162,13 @@
   color: var(--acid);
   font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-align: right;
 }
 .jedag-run-mode {
   color: var(--mute);
   font-size: clamp(0.48rem, 1.05vw, 0.6rem);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -223,14 +223,14 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
 .jedag-run-overlay h2 {
   margin: 0;
   color: var(--paper);
-  /* FASE 12: judul overlay (pause/game-over) -> --font-game (Striper). */
+
   font-family: var(--font-game);
   font-weight: 400;
   font-size: clamp(1.8rem, 5vw, 3.6rem);
@@ -266,7 +266,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
   transition: background 160ms var(--ease, ease), color 160ms var(--ease, ease), border-color 160ms var(--ease, ease);
@@ -303,7 +303,7 @@
   color: var(--mute);
   font-family: var(--font-mono);
   font-size: 0.59rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .jedag-run-run-summary b {
@@ -322,13 +322,13 @@
   color: var(--mute);
   font-family: var(--font-mono);
   font-size: 0.59rem;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   line-height: 1.5;
 }
 .jedag-run-tutorial strong {
   color: var(--acid);
   font-size: 0.63rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
 }
 .jedag-run-tutorial b {
   color: var(--paper);
@@ -343,7 +343,7 @@
   color: var(--paper);
   font: inherit;
   font-size: 0.55rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
 }
@@ -353,7 +353,7 @@
   color: var(--mute-soft);
   font-family: var(--font-mono);
   font-size: 0.57rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 
@@ -369,7 +369,7 @@
   color: var(--mute-soft);
   font-family: var(--font-mono);
   font-size: 0.55rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 

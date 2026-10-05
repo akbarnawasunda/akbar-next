@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
-"""Ukur lebar kata judul dari file font yang BENAR-BENAR di-host di repo ini.
+"""Ukur lebar judul dari font self-hosted yang aktif di repo ini.
 
-Dipakai untuk mengkalibrasi `clamp()` judul saat font judul diganti, supaya
-angkanya diukur, bukan ditebak. Sumber kebenaran lebar = advance width glyph
-di dalam woff2 (sama dengan yang dipakai `measureText` di kanvas/peramban,
-selama tidak ada kerning kontekstual yang aktif pada teks uppercase ini).
+Dipakai saat menala `clamp()` Recons agar angka ukuran mengikuti metrik font,
+bukan tebakan. Sumber kebenaran lebar adalah advance width glyph dalam woff2
+(sama dengan yang dipakai `measureText` peramban, selama tidak ada kerning
+kontekstual khusus pada teks uppercase yang diukur).
 
-Dipakai di Fase 6 untuk memutuskan:
-  - faktor skala seluruh clamp judul (0,60), dan
-  - konstanta HERO_WORD_EM di server/mobileLayout.test.ts (11,463).
+Roster yang diperiksa:
+  - Recons: primary display / H1 / wordmark
+  - NEXROID: secondary display / H2–H4
+  - Good Times: body dan UI
 
-Jalankan:  pip install fonttools brotli && python3 scripts/measure-title-type.py
+Jalankan: `pip install fonttools brotli && python3 scripts/measure-title-type.py`
 """
 from __future__ import annotations
 
@@ -22,12 +23,12 @@ except ImportError:  # pragma: no cover - alat bantu, bukan bagian build
     sys.exit("Butuh fontTools: pip install fonttools brotli")
 
 FONTS = {
-    "clash-display-600 (lama, H1)": "client/public/assets/fonts/fontshare/clash-display-600.woff2",
-    "clash-display-700 (lama, tes)": "client/public/assets/fonts/fontshare/clash-display-700.woff2",
-    "syne-800 (baru, H1)": "client/public/assets/fonts/fontsource/syne-800.woff2",
+    "Recons (primary display)": "client/public/assets/fonts/fontsource/Recons-Regular.woff2",
+    "NEXROID (secondary display)": "client/public/assets/fonts/fontsource/NEXROID-Regular.woff2",
+    "Good Times (text/UI)": "client/public/assets/fonts/fontsource/Good Times Rg.woff2",
 }
 WORDS = ["NAWASUNDA.", "NAWASUNDA", "AKBAR", "AKBAR NAWASUNDA"]
-TRACKING = [0.0, -0.05, -0.06]
+TRACKING = [0.0, 0.02]
 
 
 def em_width(path: str, text: str, tracking: float) -> float:
@@ -52,7 +53,7 @@ def main() -> None:
                 f"ls{track:+.2f}em = {em_width(path, word, track):7.3f}em"
                 for track in TRACKING
             )
-            print(f'  {word:<18} {row}')
+            print(f"  {word:<18} {row}")
 
 
 if __name__ == "__main__":

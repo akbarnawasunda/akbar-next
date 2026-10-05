@@ -34,7 +34,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 .an-control-room-kicker span {
@@ -82,7 +82,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-decoration: none;
   text-transform: uppercase;
   transition: border-color var(--dur-fast, 160ms) var(--ease, ease), color var(--dur-fast, 160ms) var(--ease, ease);
@@ -133,7 +133,7 @@
   font-family: var(--font-mono);
   font-size: 0.56rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -213,7 +213,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .an-control-tool h2 {
@@ -242,14 +242,14 @@
   color: var(--mute-soft);
   font-family: var(--font-mono);
   font-size: 0.55rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
 }
 .an-control-tool-bottom strong {
   color: var(--acid);
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
 }
 
 /* Semua variant warna tool icon diseragamkan ke acid — 
@@ -302,7 +302,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
 }
 .an-control-workflow li > span {
   display: grid;
@@ -316,7 +316,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -330,7 +330,7 @@
   color: var(--mute-soft);
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .an-control-room-note span {
@@ -365,7 +365,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 .an-control-access h1 {
@@ -392,7 +392,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-decoration: none;
   text-transform: uppercase;
   transition: color var(--dur-fast, 160ms) var(--ease, ease);

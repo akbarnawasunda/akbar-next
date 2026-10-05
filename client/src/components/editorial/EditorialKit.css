@@ -44,30 +44,12 @@
     align-items: start;
   }
 }
-.ed-head__index {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 14px;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--mute-soft);
-}
-.ed-head__index::before {
-  content: "";
-  width: clamp(24px, 4vw, 56px);
-  height: 1px;
-  background: var(--acid);
-}
 .ed-head__eyebrow {
   margin: 0 0 10px;
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--acid);
 }
@@ -160,13 +142,13 @@
 .ed-card__index {
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--mute-soft);
 }
 .ed-card__meta {
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--mute);
 }
@@ -194,7 +176,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--acid);
 }
@@ -207,7 +189,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--acid);
 }
@@ -271,7 +253,7 @@
 }
 .ed-signal-row {
   display: grid;
-  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: clamp(12px, 2vw, 28px);
   padding: clamp(16px, 2vw, 26px) clamp(16px, 2vw, 28px);
@@ -281,18 +263,12 @@
 .ed-signal-row:first-child {
   border-top: 0;
 }
-.ed-signal-row__num {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.18em;
-  color: var(--mute-soft);
-}
 .ed-signal-row__label {
   display: block;
   margin-bottom: 6px;
   font-family: var(--font-mono);
   font-size: 0.56rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--acid);
 }
@@ -320,7 +296,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--acid);
   white-space: nowrap;
@@ -387,7 +363,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition:
     background var(--dur-fast, 160ms) var(--ease, ease),
@@ -460,7 +436,7 @@
   margin-top: 6px;
   font-family: var(--font-mono);
   font-size: 0.54rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--mute-soft);
 }
@@ -493,7 +469,7 @@
 .ed-timeline__year {
   font-family: var(--font-mono);
   font-size: 0.62rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--acid);
 }
 .ed-timeline__title {
@@ -508,7 +484,7 @@
 .ed-timeline__state {
   font-family: var(--font-mono);
   font-size: 0.56rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   color: var(--mute-soft);
 }
 .ed-timeline__panel {
@@ -553,7 +529,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition:
     color var(--dur-fast, 160ms) var(--ease, ease),
@@ -612,7 +588,7 @@
   min-width: 0;
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--mute);
   overflow-wrap: anywhere;
@@ -628,7 +604,7 @@
 @media (max-width: 640px) {
   .ed-player__title {
     font-size: 0.66rem;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.065em;
     line-height: 1.45;
   }
 }
@@ -643,7 +619,7 @@
   font-family: var(--font-mono);
   font-size: 0.56rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--mute);
 }

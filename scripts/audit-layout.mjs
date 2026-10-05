@@ -26,35 +26,13 @@ const SHELL_FILE = "client/src/shell/PublicShell.css";
 const OVERFLOW_ALLOWLIST = [SHELL_FILE];
 
 const LOCAL_FONTS = [
-  // Fase 6H: Clash Display / General Sans / Azeret Mono DIHAPUS dari repo.
-  // Fase 8: Big Shoulders Display / Schibsted Grotesk sempat DIHAPUS juga
-  // (pemilik situs menilainya "jelek banget, basic"), digantikan Unbounded
-  // (judul) + Hanken Grotesk (badan). Fase 9: Unbounded DIHAPUS lagi,
-  // Big Shoulders Display 800 kembali jadi huruf judul setelah peninjauan
-  // tampilan hidup — Hanken Grotesk (badan) tetap.
-  "Hanken Grotesk",
-  "Sometype Mono",
-  // Fase 6: gema aksara Sunda — self-hosted.
+  // Core type system: semua aset di-host lokal oleh aplikasi.
+  "Recons",
+  "NEXROID",
+  "Good Times",
+  "Towards",
   "Noto Sans Sundanese",
-  // Fase 9: font judul/H1 kembali ke Big Shoulders Display 800.
-  "Big Shoulders Display",
-  // Fase 12: huruf baru, masing-masing satu peran sempit. Impact Label
-  // SWL SENGAJA TIDAK masuk daftar ini — berkasnya belum diunggah, jadi
-  // belum ada @font-face untuknya di mana pun; --font-label jatuh ke
-  // Sometype Mono (sudah di daftar ini) sampai berkasnya datang.
-  // [Fase 13] Complete Destroy SEMPAT masuk daftar ini untuk judul
-  // "Akbar Nawasunda", lalu DIHAPUS lagi (berkas & @font-face-nya pun
-  // dihapus dari repo) atas instruksi pemilik situs — nama itu sekarang
-  // ikut Central Station seperti judul lain.
-  "Striper",
-  "Tritopani",
-  "Central Station",
-  // Fase 13 lanjutan: dua kata judul hero beranda, dua huruf berbeda.
-  "Unityped",
-  "Cultura Estropeada",
-  // Fase 13 lanjutan: Impact Label SWL tidak pernah diunggah, Autocron
-  // dipilih pemilik situs sebagai gantinya untuk peran --font-label.
-  "Autocron",
+  "Fluorite",
 ];
 const FONT_FALLBACKS = [
   "inherit",
@@ -79,8 +57,11 @@ const FONT_FALLBACKS = [
   "var(--font-display)",
   "var(--font-body)",
   "var(--font-mono)",
+  "var(--font-label)",
   "var(--font-title)",
+  "var(--font-signature)",
   "var(--font-sunda)",
+  "var(--font-game)",
   "var(--ref-serif-display)",
   "var(--ref-body)",
   "var(--ref-mono)",

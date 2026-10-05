@@ -23,52 +23,28 @@
     />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#101211" />
-    <!-- Legacy font names Bebas+Neue and Manrope are intentionally replaced by local Fontsource bundles. -->
-    <!--
-      Fase 6: yang di-preload adalah font JUDUL, bukan lagi Clash Display
-      500. H1 adalah elemen terbesar di layar pertama, jadi ia yang paling
-      mahal kalau harus di-swap; huruf badan tetap dipakai H2/H3 yang
-      semuanya di bawah lipatan dan cukup dengan `font-display: swap`.
-      Fase 8: huruf judul/badan diganti Unbounded 900 / Hanken Grotesk 400
-      (roster Fase 6H dinilai "jelek banget, basic"). Fase 9: huruf judul
-      dikembalikan ke Big Shoulders Display 800 setelah peninjauan
-      tampilan hidup menilai Unbounded kurang cocok; Hanken Grotesk
-      (badan) tetap.
-      Fase 12: huruf judul pindah ke Central Station (--font-title/
-      --font-display) — berlaku untuk h1-h4 SELURUH situs, termasuk nama
-      "Akbar Nawasunda" di splash/hero/wordmark. [Fase 13] Sempat dicoba
-      huruf --font-brand (Complete Destroy) terpisah khusus untuk nama
-      itu, lalu DIBATALKAN atas instruksi pemilik situs — jadi cuma SATU
-      huruf judul yang perlu di-preload, bukan dua. Big Shoulders Display
-      TIDAK di-preload lagi (tetap ada sebagai fallback di index.css).
-    -->
+    <!-- Core type is self-hosted. Preload only the fonts required above the fold. -->
     <link
       rel="preload"
-      href="/assets/fonts/fontsource/central-station-full-400-normal.woff2"
+      href="/assets/fonts/fontsource/Recons-Regular.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="/assets/fonts/fontsource/hanken-grotesk-400.woff2"
+      href="/assets/fonts/fontsource/Good Times Rg.woff2"
       as="font"
-
       type="font/woff2"
       crossorigin
     />
     <link
       rel="preload"
-      href="/assets/fonts/fontsource/sometype-mono-500.woff2"
+      href="/assets/fonts/fontsource/NEXROID-Regular.woff2"
       as="font"
       type="font/woff2"
       crossorigin
     />
-    <!--
-      Fase 6D: aksara Sunda ikut di-preload (4,9 kB) karena sekarang ia
-      muncul di splash — hal pertama yang dilihat pengunjung. Tanpa preload
-      baris aksaranya sempat kosong beberapa ratus milidetik.
-    -->
     <link
       rel="preload"
       href="/assets/fonts/fontsource/noto-sans-sundanese-400.woff2"
@@ -117,7 +93,7 @@
         justify-content: space-between;
         gap: 14px;
         margin: 0 0 clamp(18px, 4vw, 30px);
-        font-family: "Sometype Mono", ui-monospace, SFMono-Regular, monospace;
+        font-family: "Good Times", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         font-size: 9px;
         letter-spacing: 0.24em;
         text-transform: uppercase;
@@ -144,44 +120,11 @@
       }
       .an-splash-word {
         display: block;
-        /* [FAKTA — Fase 8 ganti ke Unbounded, Fase 9 kembali] Huruf judul
-           sempat ganti ke Unbounded 900 (roster Fase 6H dinilai "jelek
-           banget, basic"), lalu dikembalikan ke Big Shoulders Display 800
-           setelah peninjauan tampilan hidup menilai Unbounded kurang cocok
-           untuk judul. Tracking tetap POSITIF (pelajaran dari Syne
-           800/Big Shoulders Display, docs/notes/hero-tracking-scan.png).
-           Fase 12: pindah ke Central Station (--font-title/--font-display)
-           supaya nama di splash menyamai judul/wordmark lain (lihat
-           client/src/index.css). [Fase 13] Sempat dicoba Complete Destroy
-           (--font-brand) terpisah khusus untuk nama ini, lalu DIBATALKAN
-           atas instruksi pemilik situs ("title akbar nawasunda bukan
-           pake font yang itu") — kembali ke Central Station, satu suara
-           judul di semua tempat. Central Station cuma satu berkas bobot
-           (400) -- font-weight 800 TIDAK dipakai (synthetic bold palsu,
-           pelajaran sama dengan .an-markslant soal kemiringan palsu). */
-        font-family:
-          "Central Station",
-          "Big Shoulders Display",
-          "Hanken Grotesk",
-          system-ui,
-          -apple-system,
-          sans-serif;
+        font-family: "Recons", "Good Times", sans-serif;
         font-weight: 400;
-        /* Ukuran DITURUNKAN dari lebar kotaknya sendiri, bukan ditebak dari
-           lebar layar. "NAWASUNDA" (huruf besar dari text-transform di
-           bawah, tanpa titik — beda dengan "NAWASUNDA." di hero) memakai
-           4,523em advance width + tracking pada Big Shoulders Display 800
-           (diukur fontTools, upem 1000); pembagi dan lantai `max()` di
-           bawah SEMPAT 5,4 dan 2,2rem (angka Fase 6E/sebelum Fase 8).
-           Fase 12: "NAWASUNDA" pada Central Station 5,801em advance width
-           (diukur fontTools, upem 2048) -- LEBIH LEBAR dari Big Shoulders
-           Display, jadi margin aman 1,153x dari Fase 9 (5,4/4,683, versi
-           SUDAH termasuk tracking) diterapkan ulang ke angka Central
-           Station: (5,801 + 8×0,02 tracking) × 1,153 ≈ 6,88, dibulatkan
-           NAIK (lebih aman, bukan lebih pas) ke 6,9 supaya kata itu tetap
-           MUSTAHIL terpotong di lebar berapa pun. Lantai 2,2rem tidak
-           berubah. */
-        font-size: max(2.2rem, calc((min(92vw, 1100px) - 8vw) / 6.9));
+        /* Recons is wider than the prior condensed display; this bound keeps
+           the wordmark intact from compact phones through desktop. */
+        font-size: clamp(2.1rem, 12vw, 8.6rem);
         line-height: 0.94;
         letter-spacing: 0.02em;
         text-transform: uppercase;
@@ -328,7 +271,7 @@
         align-items: baseline;
         justify-content: space-between;
         gap: 16px;
-        font-family: "Sometype Mono", ui-monospace, SFMono-Regular, monospace;
+        font-family: "Good Times", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         font-size: 10px;
         letter-spacing: 0.22em;
         text-transform: uppercase;
@@ -342,7 +285,7 @@
       }
       .an-splash-birthday {
         margin: 16px 0 0;
-        font-family: "Sometype Mono", ui-monospace, SFMono-Regular, monospace;
+        font-family: "Good Times", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         font-size: 10px;
         letter-spacing: 0.24em;
         text-transform: uppercase;

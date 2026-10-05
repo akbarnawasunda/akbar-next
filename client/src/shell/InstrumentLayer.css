@@ -121,7 +121,7 @@
 }
 
 /* Angka di label mono selalu rata kolom. */
-.an-public-shell.an-editorial :is(.an-meta, .an-kicker, dt, dd, .instr-index) {
+.an-public-shell.an-editorial :is(.an-meta, .an-kicker, dt, dd) {
   font-variant-numeric: tabular-nums;
 }
 
@@ -132,33 +132,6 @@
 
 html {
   scrollbar-color: color-mix(in srgb, var(--paper) 24%, transparent) transparent;
-}
-
-/* -- Label indeks bagian --------------------------------------
-   Satu penanda teknis: nomor, nama bagian, lalu garis yang mengisi sisa
-   baris. Dipakai di beranda untuk memberi halaman tulang punggung.
-   Tidak dipakai di dalam panggung signature (dikunci tes aksesibilitas:
-   panggung hanya boleh berisi fakta musik, bukan label bagian). */
-.instr-index {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 0 0 var(--space-md);
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  font-weight: 500;
-  letter-spacing: 0.24em;
-  line-height: 1;
-  text-transform: uppercase;
-  color: var(--mute);
-}
-
-.instr-index::after {
-  content: "";
-  flex: 1 1 auto;
-  min-width: 20px;
-  height: 1px;
-  background: var(--editorial-rule, var(--ink-line));
 }
 
 /* ============================================================

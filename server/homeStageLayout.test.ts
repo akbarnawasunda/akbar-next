@@ -99,13 +99,12 @@ describe("komposisi beranda", () => {
     )
       // Pisahkan per nilai, bukan per spasi: `minmax(0, 1fr)` satu kolom.
       .match(/(?:minmax|min|max)\([^)]*\)|[^\s]+/g) ?? [];
-    expect(columns).toHaveLength(4);
-    const index = px(Number.parseFloat(columns[0] ?? "0"));
-    const mark = px(Number.parseFloat(columns[1] ?? "0"));
+    expect(columns).toHaveLength(3);
+    const mark = px(Number.parseFloat(columns[0] ?? "0"));
     const gap = 12; // --space-sm minimum pada 360px
     const arrow = 16; // ikon ArrowUpRight
     const inner = 360 - 22 * 2;
-    const left = inner - (index + mark + gap * 2 + arrow);
+    const left = inner - (mark + gap * 2 + arrow);
     expect(left, `nama kanal hanya kebagian ${left.toFixed(0)}px`).toBeGreaterThanOrEqual(
       150
     );
@@ -140,13 +139,12 @@ describe("komposisi halaman katalog", () => {
     const columns = (
       row.match(/grid-template-columns:([^;]+);/)?.[1].trim() ?? ""
     ).match(/(?:minmax|min|max)\([^)]*\)|[^\s]+/g) ?? [];
-    expect(columns).toHaveLength(4);
-    const index = px(Number.parseFloat(columns[0] ?? "0"));
+    expect(columns).toHaveLength(3);
     const gap = 12; // --space-sm minimum
     const mark = 20; // lambang platform
     const arrow = 16;
     const inner = 360 - 22 * 2;
-    const left = inner - (index + gap * 3 + mark + arrow);
+    const left = inner - (gap * 2 + mark + arrow);
     expect(
       left,
       `nama kanal hanya kebagian ${left.toFixed(0)}px`

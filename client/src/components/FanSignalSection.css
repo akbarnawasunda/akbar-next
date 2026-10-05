@@ -24,7 +24,7 @@
   color: var(--mute);
   font-family: var(--font-mono);
   font-size: 0.68rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 .fan-signal-index span:first-child { color: var(--paper); }
@@ -68,7 +68,7 @@
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 .fan-signal-eyebrow::before {
@@ -90,7 +90,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 .fan-signal-input-row {
@@ -139,7 +139,7 @@
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;

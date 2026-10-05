@@ -31,9 +31,7 @@ export type SundaneseEntry = {
   latin: string;
 };
 
-/** Nama resmi: AKBAR NAWASUNDA. Bacaan Latin ditulis huruf besar-kecil
-    biasa (bukan huruf kapital semua) karena tampil sebagai "tanda tangan"
-    (.an-sunda-latin, huruf Tritopani) — dikonfirmasi pemilik situs. */
+
 export const SUNDA_NAME: SundaneseEntry = {
   script: "ᮃᮊ᮪ᮘᮁ ᮔᮝᮞᮥᮔ᮪ᮓ",
   latin: "Akbar Nawasunda",

@@ -10,7 +10,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--mute);
   text-transform: uppercase;
   transition: color var(--dur-fast, 160ms) var(--ease, ease);
@@ -58,7 +58,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -93,7 +93,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -123,7 +123,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   transition: background var(--dur-fast, 160ms) var(--ease, ease), border-color var(--dur-fast, 160ms) var(--ease, ease), color var(--dur-fast, 160ms) var(--ease, ease);
 }

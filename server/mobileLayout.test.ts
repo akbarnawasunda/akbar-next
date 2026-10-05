@@ -13,34 +13,12 @@ const source = (path: string) =>
   readFileSync(resolve(process.cwd(), path), "utf8");
 
 /**
- * Lebar kata "NAWASUNDA." dalam satuan em, diukur dari advance width glyph
- * font JUDUL yang di-host di repo ini (upem 1000) ditambah letter-spacing
- * per karakter. Angka ini yang menentukan apakah judul hero terpotong di
- * layar 320px.
- *
- * KONTRAK BERUBAH DUA KALI (disengaja): Fase 8, pemilik situs menilai
- * roster huruf Fase 6H ("Big Shoulders Display" + "Schibsted Grotesk")
- * "jelek banget, basic" dan minta huruf JUDUL diganti ke Unbounded 900
- * (9,601em). Fase 9, peninjauan tampilan hidup menilai Unbounded kurang
- * cocok untuk judul — dikembalikan ke Big Shoulders Display 800
- * (`fontsource/big-shoulders-display-800.woff2`), badan teks (Hanken
- * Grotesk) tidak ikut berubah. Riwayat lengkap: clash-display-700
- * 6,963em → syne-800 12,163em → big-shoulders-display-800 **4,871em**
- * (Fase 6H, dipakai lagi sejak Fase 9) → unbounded-900 9,601em (Fase 8
- * saja, sudah termasuk tracking +0,02em/huruf, konvensi yang sama
- * dipakai sejak Fase 6D). Bukti perbandingan ada di
- * docs/notes/font-candidate-preview.png.
- *
- * Big Shoulders Display adalah huruf KONDENSASI (bukan lebar seperti
- * Unbounded) — advance width "NAWASUNDA." hampir separuh dari Unbounded
- * (4,871 vs 9,601em). Karena itu SELURUH clamp judul hero/halaman dalam
- * di bawah, yang sempat diturunkan ×0,50735 untuk Unbounded di Fase 8,
- * dikembalikan lagi ke angka Fase 6E/6H di Fase 9.
- *
- * Yang dijaga tes ini tidak pernah berubah: tidak boleh ada kata judul
- * yang melewati ruang teks di layar 320px.
+ * Batas konservatif lebar kata terpanjang pada Recons. Nilai 8em sengaja
+ * lebih lebar daripada guardrail sebelumnya supaya setiap clamp mobile tetap
+ * aman jika metrik font display berubah. Kata hero dikunci `nowrap`, maka
+ * tidak boleh melebihi ruang baca 320px.
  */
-const HERO_WORD_EM = 4.871;
+const HERO_WORD_EM = 8;
 const SMALLEST_PHONE = 320;
 const GUTTER = 20; // --hx-gutter / --ref-gutter pada <= 767.98px
 

@@ -71,7 +71,7 @@
 .an-public-shell.an-editorial .an-cat-hero-art figcaption span {
   font-family: var(--font-mono);
   font-size: 0.5rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--acid);
 }
@@ -122,8 +122,8 @@
 /* -- Baris kanal resmi ---------------------------------------- */
 
 .an-public-shell.an-editorial .an-cat-channels .an-index-row {
-  /* nomor · nama kanal · lambang · panah */
-  grid-template-columns: 2.4rem minmax(0, 1fr) auto auto;
+  /* nama kanal · lambang · panah */
+  grid-template-columns: minmax(0, 1fr) auto auto;
 }
 
 .an-public-shell.an-editorial .an-cat-channel-name {
@@ -245,7 +245,7 @@
   margin: 0;
   font-family: var(--font-mono);
   font-size: 0.56rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--mute);
 }
@@ -277,7 +277,7 @@
   font-family: var(--font-mono);
   font-size: 0.54rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 
@@ -325,7 +325,7 @@
 .an-public-shell.an-editorial .an-rel-link-kind {
   font-family: var(--font-mono);
   font-size: 0.52rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--mute);
 }
@@ -403,7 +403,7 @@
     gap: var(--space-md);
   }
   .an-public-shell.an-editorial .an-cat-channels .an-index-row {
-    grid-template-columns: 1.9rem minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     gap: var(--space-sm);
   }
 }

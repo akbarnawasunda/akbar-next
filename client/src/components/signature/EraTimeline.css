@@ -60,7 +60,7 @@
   margin: 0 0 4px;
   font-family: var(--font-mono);
   font-size: 0.6rem;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.21em;
   color: var(--acid);
   font-variant-numeric: tabular-nums;
 }
@@ -94,7 +94,7 @@
   gap: 6px;
   font-family: var(--font-mono);
   font-size: 0.56rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--paper);
   text-decoration: none;
   border-bottom: 1px solid color-mix(in srgb, var(--acid) 60%, transparent);
@@ -118,7 +118,7 @@
   margin: 0;
   font-family: var(--font-mono);
   font-size: 0.54rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   color: var(--mute);
 }
 

@@ -42,10 +42,15 @@
 .an-public-shell.an-editorial :is(.nf-page, .an-site) :is(h1, h2, h3, h4) {
   font-family: var(--font-display);
   font-synthesis: none;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0em;
   line-height: 0.98;
   text-wrap: balance;
+}
+
+/* Primary display is reserved for page-level H1. */
+.an-public-shell.an-editorial :is(.nf-page, .an-site) h1 {
+  font-family: var(--font-title);
 }
 
 .an-public-shell.an-editorial :is(.nf-page, .an-site) :is(p, li) {
@@ -144,7 +149,7 @@
   font-family: var(--font-body);
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.075em;
+  letter-spacing: 0.06em;
   text-transform: none;
 }
 
@@ -196,7 +201,7 @@
   font-family: var(--font-body);
   font-size: 0.73rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
 .an-public-shell.an-editorial .an-language-switcher a {
@@ -322,7 +327,7 @@
   font-family: var(--font-body) !important;
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.11em !important;
+  letter-spacing: 0.09em !important;
   line-height: 1.4;
   text-transform: uppercase;
 }
@@ -350,7 +355,7 @@
   font-family: var(--font-body);
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
 }
 
 .an-public-shell.an-editorial .nf-page .nf-hero-note > strong {
@@ -481,7 +486,7 @@
   font-family: var(--font-body) !important;
   font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.045em;
+  letter-spacing: 0.035em;
   line-height: 1.2;
   text-transform: none;
   transition:
@@ -583,7 +588,7 @@
   font-family: var(--font-body);
   font-size: 0.74rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   animation: none !important;
 }
@@ -597,15 +602,8 @@
   max-width: 9ch;
   margin: 0;
   color: var(--paper);
-  /* FASE 12/13: ini aturan yang SEBENARNYA menang untuk judul hero
-     beranda (selektornya lebih spesifik dari punya Home.css). Sesi
-     Fase 13 sempat memindahkannya ke --font-brand (Complete Destroy)
-     khusus untuk nama "Akbar Nawasunda", tapi DIBATALKAN atas instruksi
-     pemilik situs -- kembali ke --font-display (Central Station) seperti
-     judul lain. Central Station cuma satu berkas bobot (400); 800 di
-     sini sebelumnya (ditujukan untuk Big Shoulders Display) sudah
-     diturunkan ke 400 -- tetap 400, bukan dikembalikan ke 800. */
-  font-family: var(--font-display);
+  /* The English hero is a primary brand moment. */
+  font-family: var(--font-title);
   font-size: clamp(2.4rem, 5.04vw, 5.22rem) !important;
   font-weight: 400;
   letter-spacing: 0em;
@@ -727,7 +725,7 @@
   font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -828,7 +826,7 @@
 .an-public-shell.an-editorial .nf-page .an-inquiry-hero h1,
 .an-public-shell.an-editorial .nf-page .an-privacy-hero h1 {
   color: var(--paper);
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-size: clamp(1.92rem, 4.2vw, 3.84rem);
   font-weight: 500;
   letter-spacing: 0em;
@@ -897,7 +895,7 @@
   font-family: var(--font-body);
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   text-transform: uppercase;
 }
 
@@ -925,7 +923,7 @@
   font-family: var(--font-label);
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.07em;
 }
 
 .an-public-shell.an-editorial .nf-footer-column a {
@@ -955,11 +953,12 @@
   --acid-rgb: 155, 185, 193;
   --mute: #a6a69f;
   --mute-soft: #777a74;
-  --font-display: "Big Shoulders Display", "Hanken Grotesk", sans-serif;
-  --font-body:
-    "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  --font-mono: "Sometype Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-title: "Recons", "Good Times", sans-serif;
+  --font-display: "NEXROID", "Good Times", sans-serif;
+  --font-body: "Good Times", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-mono: var(--font-body);
+  --font-label: var(--font-body);
 }
 
 .nf-mobile-drawer-root {
@@ -1043,7 +1042,7 @@
   border-radius: 2px;
   color: var(--paper);
   font-family: var(--font-body);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
 .nf-mobile-drawer-root .nf-mobile-drawer-signal-btn {

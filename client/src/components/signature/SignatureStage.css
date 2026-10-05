@@ -57,7 +57,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 0 0.28em;
-  font-family: var(--font-display, inherit);
+  font-family: var(--font-title, inherit);
   font-weight: 700;
   font-size: clamp(2.1rem, 11vw, 9rem);
   line-height: 0.92;
@@ -103,7 +103,7 @@
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--mute-soft);
 }
@@ -209,7 +209,7 @@ button.an-signature-stage-phrase:focus-visible {
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   line-height: 1.9;
   color: var(--mute-soft);
 }
