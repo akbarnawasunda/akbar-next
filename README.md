@@ -48,6 +48,23 @@ The current application uses:
 
 Media files are served through the project’s configured storage layer or approved public asset routes. Secrets and environment values are kept outside the repository.
 
+## Typography system
+
+The public site uses a self-hosted, role-based type system. Font files live in `client/public/assets/fonts/fontsource/`; the canonical `@font-face` declarations and CSS tokens live in `client/src/index.css`.
+
+| Role | Font | Primary use |
+|---|---|---|
+| Primary display | **Recons** | Brand wordmark, H1, hero, splash, and particle wordmark |
+| Secondary display | **NEXROID** | H2–H4, section headings, release titles, and card titles |
+| Primary text/UI | **Good Times** (`Good Times Rg.woff2`) | Body copy, navigation, controls, CTAs, forms, metadata, player, and footer |
+| Signature | **Towards** | Latin reading beside the Sundanese signature only |
+| Sundanese | **Noto Sans Sundanese** | Sundanese script only |
+| Game | **Fluorite** | JEDAG RUN title and in-game overlays only |
+
+The text/UI tokens (`--font-body`, `--font-mono`, and `--font-label`) all resolve to Good Times. Their scale and tracking are intentionally compact so interface text remains readable without feeling too wide. Noctavell and Velomino are not part of the active core type system. The app does not load remote font providers and disables synthetic bold/italic with `font-synthesis: none`.
+
+For the public-page coverage map, see [`docs/audit-tipografi-teks-publik.md`](docs/audit-tipografi-teks-publik.md). The next-session visual revision handoff is available in [`docs/prompt-sesi-baru-revisi-tipografi.md`](docs/prompt-sesi-baru-revisi-tipografi.md).
+
 ## Local development
 
 Install dependencies and start the development server:
@@ -62,10 +79,11 @@ The development server is available at `http://localhost:3000` unless the enviro
 Useful project commands:
 
 ```bash
-pnpm check    # TypeScript validation
-pnpm test     # Run the Vitest suite
-pnpm build    # Build the frontend, server bundle, and API entry point
-pnpm format   # Format project files with Prettier
+pnpm check         # TypeScript validation
+pnpm test          # Run the Vitest suite
+pnpm build         # Build the frontend, server bundle, and API entry point
+pnpm audit:layout  # Check CSS/layout and local-font policy guardrails
+pnpm format        # Format project files with Prettier
 ```
 
 Node 24 and pnpm 10 are expected; the exact pnpm version is pinned in the `packageManager` field of `package.json` and activated through Corepack (`corepack enable`). Editor defaults (UTF-8, LF, two-space indent) come from `.editorconfig`.
