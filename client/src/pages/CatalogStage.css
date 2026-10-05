@@ -122,8 +122,8 @@
 /* -- Baris kanal resmi ---------------------------------------- */
 
 .an-public-shell.an-editorial .an-cat-channels .an-index-row {
-  /* nomor · nama kanal · lambang · panah */
-  grid-template-columns: 2.4rem minmax(0, 1fr) auto auto;
+  /* nama kanal · lambang · panah */
+  grid-template-columns: minmax(0, 1fr) auto auto;
 }
 
 .an-public-shell.an-editorial .an-cat-channel-name {
@@ -403,7 +403,7 @@
     gap: var(--space-md);
   }
   .an-public-shell.an-editorial .an-cat-channels .an-index-row {
-    grid-template-columns: 1.9rem minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     gap: var(--space-sm);
   }
 }

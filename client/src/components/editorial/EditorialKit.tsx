@@ -52,7 +52,6 @@ export function SmartLink({
 
 export function EditorialSection({
   id,
-  index,
   eyebrow,
   title,
   lede,
@@ -63,7 +62,6 @@ export function EditorialSection({
   headingLevel = 2,
 }: {
   id?: string;
-  index?: string;
   eyebrow?: string;
   title?: ReactNode;
   lede?: ReactNode;
@@ -85,7 +83,6 @@ export function EditorialSection({
         {(title || eyebrow || lede || aside) && (
           <div className="ed-head">
             <div>
-              {index ? <p className="ed-head__index">{index}</p> : null}
               {eyebrow ? <p className="ed-head__eyebrow">{eyebrow}</p> : null}
               {title ? (
                 <Heading className="ed-head__title" id={headingId}>
@@ -137,11 +134,8 @@ export function CurrentSignalBoard({
   if (!rows.length) return null;
   return (
     <div className="ed-signal-board">
-      {rows.map((row, index) => (
-        <div className="ed-signal-row" key={`${row.label}-${index}`}>
-          <span className="ed-signal-row__num">
-            {String(index + 1).padStart(2, "0")}
-          </span>
+      {rows.map(row => (
+        <div className="ed-signal-row" key={row.label}>
           <div>
             <span className="ed-signal-row__label">{row.label}</span>
             <p className="ed-signal-row__value">{row.value}</p>

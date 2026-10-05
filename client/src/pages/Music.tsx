@@ -19,7 +19,6 @@ import {
 } from "@/content/publicContent";
 import { Link } from "wouter";
 import { AudioPlayerShell, CtaPanel } from "@/components/editorial/EditorialKit";
-import { toRoman } from "@/lib/roman";
 import "./EcosystemPages.css";
 import "./CatalogStage.css";
 
@@ -330,7 +329,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
             </p>
           </header>
           <ul className="an-index">
-            {editablePlatformLinks.map((platform, index) => (
+            {editablePlatformLinks.map(platform => (
               <li key={platform.label}>
                 <a
                   className="an-index-row"
@@ -339,9 +338,6 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
                   rel="noreferrer"
                   aria-label={t.channelAria(platform.label)}
                 >
-                  <span className="an-meta" aria-hidden="true">
-                    {toRoman(index + 1)}
-                  </span>
                   <span className="an-cat-channel-name">{platform.label}</span>
                   <span className="an-cat-channel-mark" aria-hidden="true">
                     <PlatformIcon label={platform.label} />

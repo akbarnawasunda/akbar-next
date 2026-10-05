@@ -594,7 +594,7 @@
 }
 
 /* ============================================================
-   01 — PLATFORMS as broadcast stream list
+   PLATFORMS as broadcast stream list
    ============================================================ */
 .an-site .home-signal-deck {
   display: block;
@@ -759,7 +759,7 @@
 }
 
 /* ============================================================
-   02 — CURRENT RELEASE
+   CURRENT RELEASE
    ============================================================ */
 .an-site .section-current {
   background: var(--ink) !important;
@@ -847,7 +847,7 @@
 }
 
 /* ============================================================
-   05 — CATALOG as radio table
+   CATALOG as radio table
    ============================================================ */
 .an-site .release-section {
   background: var(--ink) !important;
@@ -997,7 +997,7 @@
 }
 
 /* ============================================================
-   06 — VIDEO — waveform overlay
+   VIDEO — waveform overlay
    ============================================================ */
 .an-site .visual-section {
   background: var(--ink) !important;
@@ -1101,7 +1101,7 @@
 }
 
 /* ============================================================
-   07 — LIVE
+   LIVE
    ============================================================ */
 .an-site .live-section {
   position: relative;
@@ -1284,7 +1284,7 @@
 }
 
 /* ============================================================
-   08 — GAME TEASER
+   GAME TEASER
    ============================================================ */
 .an-site .game-teaser-section {
   position: relative;
@@ -1466,7 +1466,7 @@
 }
 
 /* ============================================================
-   09 — SIGNAL — paper panel dengan waveform besar
+   SIGNAL — paper panel dengan waveform besar
    ============================================================ */
 .an-site .signal-section {
   display: grid;

@@ -34,7 +34,6 @@ import {
 import { NightHeader, NightFooter } from "@/components/NightFrequencyChrome";
 import { BirthdayNote } from "@/components/StudioClock";
 import { trpc } from "@/lib/trpc";
-import { toRoman } from "@/lib/roman";
 import {
   publicPlatformLinks,
   publicUpcomingEvents,
@@ -429,7 +428,6 @@ export default function Home() {
 
           <EditorialSection
             id="signal"
-            index="01 — SINYAL"
             title={
               <>
                 YANG SEDANG
@@ -471,9 +469,6 @@ export default function Home() {
               </figure>
 
               <div className="an-doc-copy an-rise">
-                <p className="an-meta">
-                  <span className="an-section-num">02</span> — Rilisan terbaru
-                </p>
                 <h2 id="feature-title">{activeRelease.title}</h2>
                 <p className="an-doc-story">
                   {activeReleaseStory ||
@@ -526,9 +521,6 @@ export default function Home() {
             aria-labelledby="channels-title"
           >
             <header className="an-channels-head">
-              <p className="instr-index">
-                <span className="an-section-num">03</span> — Kanal resmi
-              </p>
               <h2 id="channels-title">Dengar di kanal resminya.</h2>
               <p className="an-meta">
                 {editablePlatformLinks.length} kanal resmi · rilisan, remix, dan
@@ -552,9 +544,6 @@ export default function Home() {
                     rel="noreferrer"
                     aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
                   >
-                    <span className="an-channel-index" aria-hidden="true">
-                      {toRoman(index + 1)}
-                    </span>
                     <span className="an-channel-mark" aria-hidden="true">
                       <PlatformIcon label={platform.label} />
                     </span>

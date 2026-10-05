@@ -22,18 +22,6 @@
   margin-inline: auto;
 }
 
-/* FASE 7 nomor 5 — "nomor seksi": angka pembuka label section (dalam
-   `.an-meta`/`.instr-index`, mis. "02 — Rilisan terbaru") dipisah ke
-   elemen sendiri supaya hanya digitnya yang memakai huruf judul; sisa
-   kalimat tetap mono, warisan dari kelas induknya. */
-.an-site .an-section-num {
-  font-family: var(--font-title);
-  font-weight: 800;
-  letter-spacing: 0;
-  text-transform: none;
-  font-size: 1.1em;
-}
-
 .an-site :is(.an-channels, .an-feature, .an-catalog) h2 {
   margin: 0;
   max-width: 20ch;
@@ -329,7 +317,7 @@
 .an-site .an-channel {
   display: grid;
 
-  grid-template-columns: 3.2rem 2.1rem minmax(0, 1fr) auto;
+  grid-template-columns: 2.1rem minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-md);
   padding: clamp(14px, 1.6vw, 20px) 4px;
@@ -341,15 +329,6 @@
     background-color 260ms var(--ease, ease);
 }
 
-
-.an-site .an-channel-index {
-  font-family: var(--font-title);
-  font-size: var(--step-1);
-  font-weight: 800;
-  letter-spacing: 0;
-  line-height: 1;
-  color: var(--mute);
-}
 
 .an-site .an-channel-mark {
   display: inline-flex;
@@ -614,7 +593,7 @@
 
   .an-site .an-channel {
 
-    grid-template-columns: 2rem 1.9rem minmax(0, 1fr) auto;
+    grid-template-columns: 1.9rem minmax(0, 1fr) auto;
     gap: var(--space-sm);
     padding-block: 14px;
   }
@@ -917,13 +896,8 @@
   color: var(--ink);
 }
 
-.an-site .an-channels .an-meta,
-.an-site .an-channels .instr-index {
+.an-site .an-channels .an-meta {
   color: var(--band-mute);
-}
-
-.an-site .an-channels .instr-index::after {
-  background: var(--band-rule);
 }
 
 .an-site .an-channels-list {
@@ -933,10 +907,6 @@
 .an-site .an-channel {
   border-bottom-color: var(--band-rule);
   color: var(--ink);
-}
-
-.an-site .an-channel-index {
-  color: var(--band-mute);
 }
 
 .an-site .an-channel-mark {
