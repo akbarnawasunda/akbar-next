@@ -65,6 +65,18 @@ The text/UI tokens (`--font-body`, `--font-mono`, and `--font-label`) all resolv
 
 For the public-page coverage map, see [`docs/audit-tipografi-teks-publik.md`](docs/audit-tipografi-teks-publik.md). The next-session visual revision handoff is available in [`docs/prompt-sesi-baru-revisi-tipografi.md`](docs/prompt-sesi-baru-revisi-tipografi.md).
 
+## SEO and discoverability
+
+Public routes are server-side rendered with route-aware metadata so crawlers and social platforms receive complete content without relying on client-side JavaScript.
+
+- Each indexable route emits a route-aware title, meta description, canonical URL, Open Graph metadata, and Twitter card metadata.
+- Indonesian and English public routes publish reciprocal `hreflang` alternates plus an `x-default` URL.
+- JSON-LD is rendered server-side for the site, public page, and artist/music context; release detail pages receive route-specific titles, descriptions, and artwork.
+- [`client/public/sitemap.xml`](client/public/sitemap.xml) lists all public ID/EN routes, while [`client/public/robots.txt`](client/public/robots.txt) exposes that sitemap and blocks admin/studio surfaces.
+- 404 and non-public surfaces emit `noindex, follow`; canonical redirects are handled in the Vercel SSR handler.
+
+SEO coverage is protected by SSR, internationalization, sitemap-indexability, and routing tests in `server/`.
+
 ## Local development
 
 Install dependencies and start the development server:
