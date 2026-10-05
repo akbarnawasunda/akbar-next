@@ -1,46 +1,54 @@
-import { Skeleton } from './ui/skeleton';
+import "@/studio/studio.css";
 
+/** Rangka studio saat sesi owner masih diverifikasi. */
 export function DashboardLayoutSkeleton() {
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Sidebar skeleton */}
-      <div className="w-[280px] border-r border-border bg-background p-4 space-y-6">
-        {/* Logo area */}
-        <div className="flex items-center gap-3 px-2">
-          <Skeleton className="h-8 w-8 rounded-md" />
-          <Skeleton className="h-4 w-24" />
-        </div>
-
-        {/* Menu items */}
-        <div className="space-y-2 px-2">
-          <Skeleton className="h-10 w-full rounded-lg" />
-          <Skeleton className="h-10 w-full rounded-lg" />
-          <Skeleton className="h-10 w-full rounded-lg" />
-        </div>
-
-        {/* User profile area at bottom */}
-        <div className="absolute bottom-4 left-4 right-4">
-          <div className="flex items-center gap-3 px-1">
-            <Skeleton className="h-9 w-9 rounded-full" />
-            <div className="flex-1 space-y-2">
-              <Skeleton className="h-3 w-20" />
-              <Skeleton className="h-2 w-32" />
+    <div className="studio-os">
+      <div className="studio-frame">
+        <aside className="studio-side">
+          <div className="studio-side-head">
+            <span className="studio-mark" aria-hidden>
+              <span className="studio-mark-glyph">AN</span>
+            </span>
+            <div className="studio-side-id">
+              <b>Akbar Nawasunda</b>
+              <span>Studio OS</span>
             </div>
           </div>
+          <div className="studio-side-scroll space-y-2 pt-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-12 animate-pulse rounded-xl bg-white/[0.045]"
+                style={{ animationDelay: `${index * 70}ms` }}
+              />
+            ))}
+          </div>
+        </aside>
+        <div className="studio-main">
+          <header className="studio-top">
+            <div className="h-4 w-40 animate-pulse rounded bg-white/[0.07]" />
+          </header>
+          <main className="studio-body">
+            <div className="studio-canvas space-y-5">
+              <div className="h-40 animate-pulse rounded-[22px] bg-white/[0.045]" />
+              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="h-32 animate-pulse rounded-2xl bg-white/[0.04]"
+                    style={{ animationDelay: `${index * 80}ms` }}
+                  />
+                ))}
+              </div>
+              <div className="h-72 animate-pulse rounded-2xl bg-white/[0.035]" />
+            </div>
+          </main>
         </div>
       </div>
-
-      {/* Main content skeleton */}
-      <div className="flex-1 p-4 space-y-4">
-        {/* Content blocks */}
-        <Skeleton className="h-12 w-48 rounded-lg" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <Skeleton className="h-32 rounded-xl" />
-          <Skeleton className="h-32 rounded-xl" />
-          <Skeleton className="h-32 rounded-xl" />
-        </div>
-        <Skeleton className="h-64 rounded-xl" />
-      </div>
+      <p className="pointer-events-none fixed inset-x-0 bottom-6 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-white/25">
+        Memeriksa sesi owner…
+      </p>
     </div>
   );
 }
