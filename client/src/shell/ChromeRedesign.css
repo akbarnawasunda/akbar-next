@@ -1,21 +1,4 @@
-/* ============================================================
-   CHROME REDESIGN — masthead + footer
-   ------------------------------------------------------------
-   Lapisan ini dimuat SETELAH EditorialRefresh.css (lihat
-   PublicShell.tsx). Semua aturan hanya hidup di dalam
-   `.an-public-shell.an-editorial`, jadi studio/admin dan
-   /game/jedag-run — yang merender di luar shell ini — tidak
-   terpengaruh.
 
-   Arah desain:
-   - masthead = kepala surat majalah, bukan panel kontrol;
-   - wordmark display (Clash Display) + satu baris metadata mono;
-   - tautan nav = metadata mono kecil, bukan judul;
-   - satu CTA nyata ("Dengarkan" / "Inquire"), bukan anchor #signal
-     yang cuma ada di beranda;
-   - di beranda, bar-nya transparan di posisi paling atas supaya
-     foto hero terbaca penuh, lalu menutup jadi tipis saat digulir.
-   ============================================================ */
 
 .an-public-shell.an-editorial {
   /* Tinggi masthead dipakai hero beranda untuk menghitung offset
@@ -83,20 +66,9 @@
   min-width: 0;
 }
 
-/* Wordmark header: huruf JUDUL dan dimiringkan — nama tampil sebagai
-   logo, bukan sebagai label teks biasa. Lihat .an-markslant di index.css.
-   [FAKTA — Fase 8 ganti ke Unbounded, Fase 9 kembali] Sempat diturunkan
-   ×0,5645 untuk Unbounded 900 (huruf lebar), tapi peninjauan tampilan
-   hidup menilai Unbounded kurang cocok untuk judul — font-size
-   dikembalikan ke angka Big Shoulders Display 800 semula di sini dan di
-   breakpoint ≤767,98px di bawah. */
+
 .an-public-shell.an-editorial .nf-nav .nf-wordmark-text strong {
-  /* FASE 12/13: wordmark header = nama "Akbar Nawasunda" sebagai logo.
-     Sesi Fase 13 sempat memindahkannya ke --font-brand (Complete
-     Destroy), tapi DIBATALKAN atas instruksi pemilik situs -- kembali
-     ke --font-title (Central Station), sama dengan judul lain. Central
-     Station cuma satu berkas bobot (400); 800 tidak dipakai lagi di
-     sini (lihat `font-synthesis: none` di body, index.css). */
+
   font-family: var(--font-title);
   font-size: 1.16rem;
   font-weight: 400;
@@ -147,8 +119,7 @@
 .an-public-shell.an-editorial .nf-nav nav a {
   padding: 12px 0;
   color: color-mix(in srgb, var(--paper) 58%, transparent);
-  /* FASE 12/13: label navigasi header -> --font-label (Autocron, lihat
-     client/src/index.css). */
+
   font-family: var(--font-label);
   font-size: 0.58rem;
   font-weight: 500;
@@ -270,17 +241,11 @@
 }
 
 .an-public-shell.an-editorial .nf-footer-brand strong {
-  /* FASE 12/13: wordmark footer = nama "Akbar Nawasunda" juga, sama
-     perlakuan dengan wordmark header di atas -- kembali ke --font-title
-     (Central Station) setelah --font-brand/Complete Destroy dibatalkan
-     atas instruksi pemilik situs. */
+
   font-family: var(--font-title);
-  /* Fase 8 ganti ke Unbounded, Fase 9 kembali: sempat diturunkan ×0,5594
-     untuk Unbounded 900, dikembalikan ke angka Big Shoulders Display 800
-     semula setelah peninjauan tampilan hidup. */
+
   font-size: clamp(2.2rem, 4.4vw, 3.5rem);
-  /* Central Station cuma satu berkas bobot (400) -- 800 tidak dipakai
-     lagi (lihat `font-synthesis: none` di body, index.css). */
+
   font-weight: 400;
   letter-spacing: 0.03em;
   color: var(--paper);
@@ -365,8 +330,7 @@
     --chrome-h-compact: 58px;
   }
   .an-public-shell.an-editorial .nf-nav .nf-wordmark-text strong {
-    /* Fase 9: dikembalikan ke 0,9rem (Big Shoulders Display 800) —
-       sempat diturunkan ×0,5645 di Fase 8 untuk Unbounded 900. */
+
     font-size: 0.9rem;
   }
   .an-public-shell.an-editorial .nf-nav .nf-wordmark-text small {

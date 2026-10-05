@@ -44,9 +44,7 @@
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--acid) 14%, transparent);
 }
 
-/* -- Judul scene ---------------------------------------------
-   Heading memakai Clash Display dalam sentence case; yang uppercase
-   hanya label metadata di atasnya. */
+
 
 .an-public-shell.an-editorial :is(.an-site, .nf-page) :is(h1, h2, h3).an-title,
 .an-public-shell.an-editorial .an-title {

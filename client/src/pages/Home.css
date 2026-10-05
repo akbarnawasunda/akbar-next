@@ -266,20 +266,11 @@
   background: var(--acid);
 }
 
-/* Judul hero /en memakai suara yang sama dengan beranda: Syne 800 dengan
-   tracking POSITIF. Sebelumnya di sini masih var(--font-display) (Clash)
-   plus font-variation-settings untuk font variabel yang tidak di-host —
-   dua-duanya tidak berlaku lagi. */
+
 .an-site .hero-copy .hero-title-editorial {
   display: block;
   margin: 0;
-  /* FASE 12/13: huruf JUDUL BESAR nama artis ("Akbar Nawasunda") ikut
-     --font-title (Central Station) seperti judul lain — sesi Fase 13
-     sempat mencoba huruf --font-brand (Complete Destroy) terpisah
-     khusus untuk nama ini, tapi DIBATALKAN atas instruksi pemilik situs.
-     Central Station cuma punya satu berkas bobot (400); font-weight
-     tidak dipaksa 800 — lihat `font-synthesis: none` di body
-     (index.css) yang mencegah synthetic bold di seluruh situs. */
+
   font-family: var(--font-title);
   font-weight: 400;
   font-size: clamp(2.6rem, 10vw, 10rem) !important;
@@ -306,15 +297,7 @@
   animation: hx-word-in 1500ms cubic-bezier(0.16, 1, 0.3, 1)
     calc(200ms + var(--hero-word-index, 0) * 220ms) both;
 }
-/* Fase 13 lanjutan: dua kata judul hero, dua huruf berbeda. Kata dipecah
-   jadi beberapa <span class="hero-title-mask"> berurutan sesuai array
-   kata (lihat heroTitleWords di Home.tsx/EnglishPages.tsx) -- spasi di
-   antaranya cuma teks node, tidak ikut dihitung :nth-of-type, jadi
-   selektor posisi ini aman dipakai untuk menyasar kata pertama/kedua
-   tanpa bergantung pada isi tekstualnya (CMS boleh ganti teksnya, urutan
-   katanya tetap sama). Kalau judulnya berubah jadi >2 kata, kata ke-3
-   dst jatuh ke --font-title (Central Station) lewat warisan dari
-   .hero-title-editorial -- tidak pecah, cuma tidak dapat huruf khusus. */
+
 .an-site .hero-copy .hero-title-mask:nth-of-type(1) .hero-title-word {
   font-family: var(--font-hero-akbar);
 }
@@ -506,7 +489,6 @@
 .an-section-index > span:first-child {
   display: block !important;
   font-family: var(--font-display);
-  font-variation-settings: "wght" 560;
   font-weight: 400;
   font-size: clamp(2.35rem, 5.6vw, 5.4rem);
   line-height: 0.86;
@@ -551,7 +533,6 @@
   max-width: 16ch;
   margin: 0;
   font-family: var(--font-display);
-  font-variation-settings: "wght" 560;
   font-weight: 400;
   font-size: clamp(2.1rem, 4.2vw, 4.4rem) !important;
   font-style: italic;
@@ -631,7 +612,6 @@
 .an-site .home-signal-copy h2 {
   margin: 0 0 32px;
   font-family: var(--font-display);
-  font-variation-settings: "wght" 560;
   font-weight: 400;
   font-size: clamp(2rem, 4vw, 4rem);
   line-height: 1.06;
@@ -743,10 +723,6 @@
   display: block;
   color: var(--paper);
   font-family: var(--font-display);
-  font-variation-settings:
-    "opsz" 96,
-    "SOFT" 40,
-    "WONK" 0;
   font-weight: 400;
   font-size: clamp(1.3rem, 2vw, 1.9rem);
   letter-spacing: 0em;
@@ -842,7 +818,6 @@
 .an-site .release-detail h3 {
   margin: 24px 0 28px;
   font-family: var(--font-display);
-  font-variation-settings: "wght" 560;
   font-weight: 400;
   font-size: clamp(2rem, 4.5vw, 4rem);
   line-height: 1.06;
@@ -973,10 +948,6 @@
 .an-site .release-card h3 {
   margin: 0;
   font-family: var(--font-display);
-  font-variation-settings:
-    "opsz" 96,
-    "SOFT" 40,
-    "WONK" 0;
   font-weight: 500;
   font-size: clamp(1.15rem, 1.8vw, 1.4rem);
   line-height: 1.15;
@@ -1102,10 +1073,6 @@
   max-width: 22ch;
   margin: 0;
   font-family: var(--font-display);
-  font-variation-settings:
-    "opsz" 96,
-    "SOFT" 40,
-    "WONK" 0;
   font-weight: 400;
   font-size: clamp(1.1rem, 1.7vw, 1.5rem);
   line-height: 1.02;
@@ -1164,7 +1131,6 @@
 .an-site .live-copy h2 {
   margin: 24px 0 32px;
   font-family: var(--font-display);
-  font-variation-settings: "wght" 560;
   font-weight: 400;
   font-size: clamp(2rem, 4vw, 4rem);
   line-height: 1.06;
@@ -1213,10 +1179,6 @@
   display: block;
   margin: 20px 0 28px;
   font-family: var(--font-display);
-  font-variation-settings:
-    "opsz" 96,
-    "SOFT" 40,
-    "WONK" 0;
   font-weight: 400;
   font-size: clamp(1.3rem, 2.2vw, 2rem);
   line-height: 1;
@@ -1275,10 +1237,6 @@
 .an-site .home-live-event strong {
   margin: 24px 0 16px;
   font-family: var(--font-display);
-  font-variation-settings:
-    "opsz" 96,
-    "SOFT" 40,
-    "WONK" 0;
   font-weight: 400;
   font-size: clamp(1.1rem, 1.6vw, 1.4rem);
   line-height: 1.02;
@@ -1494,7 +1452,6 @@
 .an-site .game-teaser-copy h2 {
   margin: 24px 0 28px;
   font-family: var(--font-display);
-  font-variation-settings: "wght" 560;
   font-weight: 400;
   font-size: clamp(2rem, 4vw, 4rem);
   line-height: 1.06;
@@ -1572,7 +1529,6 @@
 .an-site .signal-section h2 {
   margin: 24px 0 28px;
   font-family: var(--font-display);
-  font-variation-settings: "wght" 560;
   font-weight: 400;
   font-size: clamp(2rem, 4vw, 4rem);
   line-height: 1.06;
@@ -1695,7 +1651,6 @@
   display: block;
   margin: 24px 0 0;
   font-family: var(--font-display);
-  font-variation-settings: "wght" 560;
   font-weight: 400;
   font-size: clamp(1.8rem, 3vw, 2.8rem);
   letter-spacing: 0em;
@@ -2139,7 +2094,6 @@
 
 .menu-link-title {
   font-family: var(--font-display);
-  font-variation-settings: "wght" 560;
   font-weight: 400;
   font-size: clamp(2rem, 9vw, 3.6rem);
   line-height: 1.1;

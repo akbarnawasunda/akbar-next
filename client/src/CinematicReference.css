@@ -16,10 +16,7 @@
   --ref-blue: var(--blue);
   --ref-line: rgba(210, 231, 242, 0.2);
   --ref-line-soft: rgba(210, 231, 242, 0.1);
-  /* Font: satu-satunya keluarga yang benar-benar di-self-host adalah
-     Clash Display / General Sans / Azeret Mono (lihat @font-face di
-     index.css). Nama font lain di sini tidak pernah diunduh dan membuat
-     seluruh hierarki turun ke font sistem tanpa terlihat rusak. */
+
   --ref-serif-display: var(--font-display);
   --ref-body: var(--font-body);
   --ref-mono: var(--font-mono);
@@ -75,11 +72,7 @@ body::before {
   text-wrap: balance;
 }
 
-/* FASE 6 — H1 (dan H1 saja) bicara dengan Syne 800.
-   Tidak ada `!important` baru: yang ditulis ulang hanya custom property
-   yang sudah dibaca aturan di atas, jadi H2/H3 tetap Clash Display dan
-   hierarki tiga suara (judul / isi / konsol) bertambah satu tingkat
-   paling atas, bukan berubah seluruhnya. */
+
 .nf-page h1,
 .an-site h1 {
   --ref-serif-display: var(--font-title);
@@ -400,7 +393,7 @@ body::before {
   }
   .an-site .home-hero-portrait { order: -1; width: 100% !important; height: 405px !important; }
   .an-site .hero-copy { max-width: 100% !important; }
-  .an-site .hero-copy .hero-title-editorial { font-size: clamp(3rem, 16.7vw, 5.8rem) !important; }
+  .an-site .hero-copy .hero-title-editorial { font-size: clamp(2.15rem, 10.5vw, 4.4rem) !important; }
   .an-site .hero-description { max-width: 36ch !important; margin: 22px 0 24px !important; font-size: 0.65rem !important; }
   .an-site .hero-actions { gap: 10px 18px !important; }
   .an-site .button-primary { min-height: 44px; }
@@ -424,7 +417,7 @@ body::before {
   .nf-catalog-card { flex-basis: min(78vw, 290px) !important; min-height: 350px !important; }
   .an-site .an-hero { min-height: 680px !important; }
   .an-site .home-hero-portrait { height: 330px !important; }
-  .an-site .hero-copy .hero-title-editorial { font-size: clamp(3rem, 16.7vw, 5.8rem) !important; }
+  .an-site .hero-copy .hero-title-editorial { font-size: clamp(2.15rem, 10.5vw, 4.4rem) !important; }
   .an-site .section h2, .an-site .home-signal-copy h2 { font-size: clamp(2.7rem, 15vw, 5rem) !important; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -567,16 +560,8 @@ body::before {
 .hero-title-break-mobile { display: none; }
 @media (max-width: 767.98px) {
   .an-site .hero-copy .hero-title-editorial {
-    /* Kata judul dipaksa nowrap, jadi ukurannya harus ikut lebar layar.
-       Lantai rem tetap membuat "NAWASUNDA." terpotong di layar 320px.
-       [FAKTA — Fase 8 ganti ke Unbounded, Fase 9 kembali] Sempat diganti
-       Unbounded 900 (clamp diturunkan ×0,50735 = 4,871/9,601), tapi
-       peninjauan tampilan hidup menilai Unbounded kurang cocok untuk
-       judul — dikembalikan ke Big Shoulders Display 800 dan angka clamp
-       di bawah (dan semua salinannya di berkas ini) kembali ke nilai
-       Fase 6E — halaman ini dipakai nyata oleh /en (lihat
-       EnglishPages.tsx). */
-    font-size: clamp(3rem, 16.7vw, 5.8rem) !important;
+
+    font-size: clamp(2.15rem, 10.5vw, 4.4rem) !important;
     letter-spacing: 0.02em !important;
   }
   .an-site .hero-copy .hero-title-word {

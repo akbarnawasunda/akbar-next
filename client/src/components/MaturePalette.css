@@ -12,7 +12,6 @@
 .nf-page h2 {
   font-family: var(--font-display);
   font-weight: 500;
-  font-variation-settings: "wght" 560;
   letter-spacing: 0em;
   line-height: 1.08;
   text-transform: none;
@@ -97,7 +96,6 @@
 .nf-page .nf-epk-hero h1 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-variation-settings: "wght" 560;
   font-size: clamp(2.35rem, 5.2vw, 5.4rem) !important;
   line-height: 0.88 !important;
   letter-spacing: 0em !important;
@@ -107,7 +105,6 @@
 .nf-page .nf-page-hero h1 em,
 .nf-page .nf-epk-hero h1 em {
   font-style: italic;
-  font-variation-settings: "wght" 620;
   color: var(--acid);
 }
 

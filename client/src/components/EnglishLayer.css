@@ -103,16 +103,14 @@
 }
 
 .en-hero-copy h1 {
-  font-family: var(--font-display);
+  font-family: var(--font-title);
   font-weight: 400;
-  font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 1;
   font-size: clamp(2.75rem, 6.6vw, 7rem);
   line-height: 0.88;
   letter-spacing: 0em;
 }
 .en-hero-copy h1 em {
   font-style: italic;
-  font-variation-settings: "opsz" 144, "SOFT" 20, "WONK" 1;
   color: var(--acid);
 }
 
@@ -152,7 +150,6 @@
   margin: 12px 0 20px;
   font-family: var(--font-display);
   font-weight: 400;
-  font-variation-settings: "opsz" 120, "SOFT" 40, "WONK" 1;
   font-size: clamp(2.2rem, 5vw, 5.2rem);
   line-height: 0.92;
   letter-spacing: 0em;
@@ -160,7 +157,6 @@
 .en-section-intro h2 em,
 .en-copy-block h2 em {
   font-style: italic;
-  font-variation-settings: "opsz" 120, "SOFT" 30, "WONK" 1;
   color: var(--acid);
 }
 .en-section-intro p,
@@ -249,7 +245,6 @@
   margin: 12px 0 0;
   font-family: var(--font-display);
   font-weight: 400;
-  font-variation-settings: "opsz" 96, "SOFT" 40, "WONK" 0;
   font-size: clamp(1.15rem, 1.9vw, 1.55rem);
   line-height: 1.05;
   letter-spacing: 0em;

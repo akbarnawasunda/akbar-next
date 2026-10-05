@@ -1,21 +1,4 @@
-/* ============================================================
-   HOME STAGE — komposisi beranda (redesign checkpoint A)
-   ------------------------------------------------------------
-   Dimuat SETELAH Home.css (lihat Home.tsx). Seluruh selektor di
-   sini memakai nama kelas baru (`an-*`) yang tidak dipakai kulit
-   lama, jadi komposisi baru tidak perlu bertarung dengan 3159
-   baris Home.css dan tidak menambah `!important` baru. Kulit lama
-   tetap hidup untuk blok yang belum disentuh (SignatureStage,
-   EditorialKit, game teaser, CTA, FanSignal).
 
-   Bahasa visual:
-   - satu adegan penuh untuk hero (foto + tipografi di atas scrim);
-   - heading sentence case dari Clash Display, metadata mono kecil;
-   - komposisi berbeda per bagian: daftar kanal, dokumen rilisan,
-     rail katalog, ruang tayang, dan panggung live;
-   - tidak ada kartu identik berulang, tidak ada uppercase di semua
-     elemen.
-   ============================================================ */
 
 /* ------------------------------------------------------------
    DASAR BERSAMA
@@ -173,24 +156,11 @@
    dan server/homeEnhancements.test.ts) — hanya tipografinya yang diubah. */
 .an-site .an-hero-inner .hero-title-editorial {
   margin: 0;
-  /* [FAKTA — dikoreksi Fase 9] Huruf judul kembali ke Big Shoulders
-     Display 800 (lihat --font-title di index.css), menggantikan Unbounded
-     900 dari Fase 8 — peninjauan tampilan hidup menilai Unbounded kurang
-     cocok untuk judul. Baris ini TIDAK PERNAH benar-benar dipakai browser
-     — selalu kalah cascade oleh salah satu blok @media di bawah (mobile
-     ≤767.98px atau desktop ≥768px, keduanya mencakup seluruh rentang
-     lebar layar). Dipakai lagi `var(--step-2)/var(--step-4)` seperti
-     sebelum Fase 8: huruf kondensasi ini tidak butuh angka sendiri di
-     luar tangga --step umum. */
+
   font-family: var(--font-title);
   font-size: clamp(var(--step-2), 4.566vw, var(--step-4));
   font-weight: 800;
-  /* Fase 6D: tracking JUDUL jadi POSITIF (+0,02em), bukan negatif.
-     Bukti: docs/notes/hero-tracking-scan.png — pada -0,05em sampai 0em
-     huruf Syne 800 benar-benar bertabrakan (A menyatu dengan K, K menabrak
-     B); itulah yang terbaca "gepeng". Konvensi tracking positif ini
-     dipertahankan untuk Big Shoulders Display juga — aman, tidak pernah
-     lebih berisiko bertabrakan daripada tracking negatif. */
+
   letter-spacing: 0.02em;
   line-height: 1;
   color: var(--paper);
@@ -216,18 +186,7 @@
   display: inline-block;
 }
 
-/* Fase 9: kata terakhir SEMPAT jadi garis luar (hollow outline) lewat
-   `-webkit-text-stroke` — gerakan tipografi yang masuk akal di atas huruf
-   tipis/kondensasi lama, tapi di atas Unbounded 900 (geometris, sangat
-   tebal, huruf judul saat itu) garis setipis 1,1px tidak terbaca sebagai
-   "aksen editorial", melainkan sebagai teks yang rusak/glitch — laporan
-   langsung dari peninjauan tampilan hidup. Hiasan garis luar ini DICABUT,
-   bukan dilemahkan: kedua kata hero sejak itu sama-sama terisi penuh
-   (solid). Keputusan ini tidak dibatalkan ketika huruf judul dikembalikan
-   ke Big Shoulders Display 800 (lihat catatan di atas) — pemilik situs
-   mengonfirmasi tampilan solid tetap yang diinginkan, cuma hurufnya yang
-   diganti lagi. Tidak ada clamp/ukuran yang berubah di sini, jadi kontrak
-   server/mobileLayout.test.ts tidak tersentuh. */
+
 
 /* -- Pelat nama aksara Sunda ----------------------------------
    Gaya pelatnya ada di SundaScript.css (satu komponen, satu berkas).
@@ -240,8 +199,7 @@
 .an-site .an-hero-lede {
   margin: 0;
   max-width: 46ch;
-  /* FASE 12/13: tagline hero -> --font-label (Autocron, lihat
-     client/src/index.css). */
+
   font-family: var(--font-label);
   font-size: var(--text-lede);
   line-height: 1.66;
@@ -370,11 +328,7 @@
 
 .an-site .an-channel {
   display: grid;
-  /* Kolom nomor 3,2rem: cukup lebar untuk angka Romawi ("VIII" di Big
-     Shoulders Display 800 step-1/1,5rem ≈1,66rem, diukur dari advance
-     width glyph di woff2) — sempat dilebarkan ke 3,8rem untuk Unbounded
-     (jauh lebih lebar), dikembalikan ke 3,2rem sejak huruf judul kembali
-     ke Big Shoulders Display. */
+
   grid-template-columns: 3.2rem 2.1rem minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-md);
@@ -387,12 +341,7 @@
     background-color 260ms var(--ease, ease);
 }
 
-/* FASE 7 nomor 5 — "angka besar": nomor kanal naik dari label mono kecil
-   (0,54rem) ke huruf judul di tingkat --step-1 (1,5rem, ×2,8). Ini salah
-   satu dari sedikit tempat huruf judul dipakai di luar hero. Sejak Fase 9
-   nomornya angka Romawi, bukan "01".."10" — kolom grid `.an-channel` di
-   atas (3,2rem) sudah cukup lebar untuk "VIII" di Big Shoulders Display
-   800. */
+
 .an-site .an-channel-index {
   font-family: var(--font-title);
   font-size: var(--step-1);
@@ -638,22 +587,9 @@
     padding-inline: var(--hx-gutter);
   }
 
-  /* FASE 7 nomor 4 — tingkat RAKSASA di ponsel, lantai --step-2 (2,25rem)
-     naik ke plafon --step-4 (5,062rem). Diukur, bukan dikira: huruf judul
-     yang di-host repo ini (Big Shoulders Display 800) menulis
-     "NAWASUNDA." sepanjang 4,671em advance width + tracking +0,02em/huruf
-     (10 huruf) = 4,871em. Pada 320px nilai efektifnya 49,6px (3,1rem) ×
-     4,871em ≈ 242px, sisa 38px dari 280px ruang yang ada.
-     [FAKTA — Fase 8 ganti ke Unbounded, Fase 9 kembali ke Big Shoulders
-     Display] Sempat diganti ke Unbounded 900 (hampir 2× lebih lebar per
-     karakter, clamp-nya diturunkan ×0,50735), tapi peninjauan tampilan
-     hidup menilai Unbounded kurang cocok untuk judul — dikembalikan lagi
-     ke Big Shoulders Display 800 dan clamp-nya ikut kembali ke angka
-     semula di bawah ini. Dipakai literal (`2,25rem`/`5,062rem`, bukan
-     `var(--step-2)`/`var(--step-4)`) supaya tetap konsisten dengan gaya
-     penulisan blok ini; nilainya identik dengan token tersebut. */
+
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(2.25rem, 15.5vw, 5.062rem);
+    font-size: clamp(2.15rem, 10.5vw, 4.4rem);
     letter-spacing: 0.02em;
     line-height: 1.02;
   }
@@ -677,11 +613,7 @@
   }
 
   .an-site .an-channel {
-    /* 2rem: "VIII" di Big Shoulders Display 800 step-1 (1,5rem) ≈1,66rem,
-       masih muat di kolom ini — sempat dilebarkan ke 3,6rem untuk
-       Unbounded, dikembalikan sejak huruf judul kembali ke Big Shoulders
-       Display. Diuji server/homeStageLayout.test.ts tetap menyisakan
-       ≥150px untuk nama kanal di layar 360px. */
+
     grid-template-columns: 2rem 1.9rem minmax(0, 1fr) auto;
     gap: var(--space-sm);
     padding-block: 14px;
@@ -777,14 +709,9 @@
     max-width: min(48rem, 58%);
   }
 
-  /* Override oleh blok FASE 4B di bawah (selektor sama, urutan sumber
-     lebih akhir menang) — nilainya disamakan di sini supaya tidak ada
-     dua angka berbeda untuk aturan yang kelihatannya sama, meski yang
-     dipakai browser selalu blok 4B. Fase 9: huruf judul Big Shoulders
-     Display 800 lagi, jadi angkanya kembali ke var(--step-4)/12,8rem —
-     lihat catatan lengkap di blok FASE 4B di bawah. */
+
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(var(--step-4), 14vw, 12.8rem);
+    font-size: clamp(3rem, 6.5vw, 6rem);
     letter-spacing: 0.02em;
     line-height: 1;
   }
@@ -915,18 +842,9 @@
     gap: var(--space-lg);
   }
 
-  /* FASE 7 nomor 4 — tingkat RAKSASA, dipasang dari tangga --step
-     (lihat index.css): lantai --step-4 (5,062rem), plafon 12,8rem, dikalibrasi
-     terhadap kolom hero yang sebenarnya (`.an-hero-inner { max-width: min(64rem,
-     100%) }` = plafon 1024px pada layar lebar) dan advance width terukur
-     "NAWASUNDA." 4,871em (Big Shoulders Display 800 + tracking).
-     [FAKTA — Fase 8 ganti ke Unbounded, Fase 9 kembali] Sempat diganti ke
-     Unbounded 900 (hampir 2× lebih lebar, clamp diturunkan ×0,50735 jadi
-     2,568rem/6,494rem), tapi peninjauan tampilan hidup menilai Unbounded
-     kurang cocok untuk judul — dikembalikan ke Big Shoulders Display 800
-     dan clamp kembali ke var(--step-4)/12,8rem/14vw di bawah ini. */
+
   .an-site .an-hero-inner .hero-title-editorial {
-    font-size: clamp(var(--step-4), 14vw, 12.8rem);
+    font-size: clamp(3rem, 6.5vw, 6rem);
     /* 0,86 meremas dua baris nama jadi satu blok padat; 0,94 memberi udara
        tanpa memutus lockup-nya. */
     line-height: 0.94;

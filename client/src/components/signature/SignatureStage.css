@@ -57,7 +57,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 0 0.28em;
-  font-family: var(--font-display, inherit);
+  font-family: var(--font-title, inherit);
   font-weight: 700;
   font-size: clamp(2.1rem, 11vw, 9rem);
   line-height: 0.92;

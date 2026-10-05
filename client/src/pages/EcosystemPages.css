@@ -175,10 +175,6 @@
 .nf-page-hero h1 em,
 .nf-epk-hero h1 em {
   font-style: italic;
-  font-variation-settings:
-    "opsz" 144,
-    "SOFT" 20,
-    "WONK" 1;
   color: var(--acid);
 }
 
@@ -267,10 +263,6 @@
   margin: 10px 0 0;
   font-family: var(--font-display);
   font-weight: 500;
-  font-variation-settings:
-    "opsz" 120,
-    "SOFT" 40,
-    "WONK" 1;
   font-size: clamp(2rem, 4.4vw, 4.2rem);
   line-height: 1.08;
   letter-spacing: 0em;
@@ -405,10 +397,6 @@
   margin: 2px 0 0;
   font-family: var(--font-display);
   font-weight: 400;
-  font-variation-settings:
-    "opsz" 96,
-    "SOFT" 40,
-    "WONK" 0;
   font-size: 1.4rem;
   line-height: 1.05;
   letter-spacing: 0em;
@@ -490,10 +478,6 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
-  font-variation-settings:
-    "opsz" 96,
-    "SOFT" 40,
-    "WONK" 0;
   font-size: clamp(1.15rem, 1.8vw, 1.6rem);
   line-height: 1.05;
   letter-spacing: 0em;
