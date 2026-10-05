@@ -88,7 +88,7 @@
 
 .an-global-player-label {
   font-size: 0.56rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--mute);
 }
 
@@ -105,7 +105,7 @@
   align-items: center;
   gap: 4px;
   font-size: 0.56rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--acid);
   text-decoration: none;
 }

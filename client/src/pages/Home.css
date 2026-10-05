@@ -50,7 +50,7 @@
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--paper);
   white-space: nowrap;
@@ -75,7 +75,7 @@
   font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--mute);
   text-transform: uppercase;
   transition: color 180ms ease;
@@ -108,7 +108,7 @@
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   transition:
     background 180ms ease,
@@ -146,7 +146,7 @@
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -255,7 +255,7 @@
   font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 600;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.19em;
   color: var(--paper);
   text-transform: uppercase;
 }
@@ -381,7 +381,7 @@
   font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   box-shadow: none;
   transition:
@@ -415,7 +415,7 @@
   font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   transition:
     border-color 180ms ease,
@@ -434,7 +434,7 @@
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--mute);
   text-transform: uppercase;
   transition: color 180ms ease;
@@ -511,7 +511,7 @@
   grid-column: 3 / 4;
   font-size: 0.66rem;
   font-weight: 600;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.19em;
   color: var(--paper);
 }
 .an-section-index::before {
@@ -550,7 +550,7 @@
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 600;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.19em;
   color: var(--paper);
   text-transform: uppercase;
 }
@@ -565,7 +565,7 @@
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -581,7 +581,7 @@
   font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   transition:
     border-color 180ms ease,
@@ -700,7 +700,7 @@
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--mute);
   text-transform: uppercase;
 }
@@ -806,7 +806,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
 }
 .an-site .cover-orbit {
   display: none !important;
@@ -841,7 +841,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--mute);
   text-transform: uppercase;
 }
@@ -941,7 +941,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   color: var(--mute);
   text-transform: uppercase;
 }
@@ -968,7 +968,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -1065,7 +1065,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -1164,14 +1164,14 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
 }
 .an-site .live-status > span {
   display: block;
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -1190,7 +1190,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--mute);
   text-transform: uppercase;
 }
@@ -1230,7 +1230,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -1248,7 +1248,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--mute);
   line-height: 1.5;
 }
@@ -1260,7 +1260,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--paper);
   text-transform: uppercase;
   transition: color 180ms ease;
@@ -1552,7 +1552,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--paper);
   text-transform: uppercase;
 }
@@ -1607,7 +1607,7 @@
   font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
@@ -1662,7 +1662,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 .an-site .an-mark {
@@ -1674,7 +1674,7 @@
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   color: var(--paper);
 }
 
@@ -1687,7 +1687,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--mute-soft);
   text-transform: uppercase;
 }
@@ -1711,7 +1711,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--mute-soft);
   text-transform: uppercase;
 }
@@ -1753,7 +1753,7 @@
   }
   .an-site .an-wordmark > span {
     font-size: 0.6rem;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.13em;
   }
 
   .an-site .an-hero {
@@ -2033,7 +2033,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   cursor: pointer;
   transition:
@@ -2072,7 +2072,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--mute);
   text-transform: uppercase;
   align-self: center;
@@ -2105,7 +2105,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--mute);
   text-transform: uppercase;
 }
@@ -2579,7 +2579,7 @@
   border-bottom: 1px solid var(--ink-line);
   color: var(--mute);
   font: 600 0.62rem/1 var(--font-mono);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
 }
 .an-site .an-platform-marquee-row {
   overflow: hidden;
@@ -2605,7 +2605,7 @@
   color: var(--ink);
   white-space: nowrap;
   font: 600 0.72rem/1 var(--font-mono);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 .an-site .an-platform-marquee-item .an-platform-icon {
@@ -2762,7 +2762,7 @@
   margin: 0 0 12px;
   color: var(--mute);
   font: 600 0.58rem/1.2 var(--font-mono);
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .an-site .home-release-carousel-controls {
@@ -2998,7 +2998,7 @@
     font-size: 0.58rem;
     font-weight: 600;
     color: var(--acid);
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
   }
   .desktop-vinyl-track {
     font-family: var(--font-display);
@@ -3014,7 +3014,7 @@
     font-family: var(--font-mono, monospace);
     font-size: 0.56rem;
     color: var(--mute);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.065em;
   }
   .desktop-stage-specs {
     display: grid;
@@ -3028,7 +3028,7 @@
     font-family: var(--font-mono, monospace);
     font-size: 0.52rem;
     color: var(--mute);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
   }
   .desktop-spec-item strong {
     display: block;
@@ -3036,7 +3036,7 @@
     font-size: 0.62rem;
     font-weight: 600;
     color: var(--paper);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
   }
 }
 
@@ -3112,7 +3112,7 @@
   background: transparent;
   color: inherit;
   font: inherit;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   cursor: pointer;
   transition:
     background 0.25s ease,

@@ -33,7 +33,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .game-page-brand {
@@ -98,7 +98,7 @@
   font-family: var(--font-mono);
   font-size: 0.66rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
@@ -146,7 +146,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition: border-color 160ms var(--ease, ease), color 160ms var(--ease, ease), background 160ms var(--ease, ease);
 }
@@ -168,7 +168,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
   transition: border-color 160ms var(--ease, ease), color 160ms var(--ease, ease);
@@ -194,7 +194,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
 }
 .game-page-side-note p {
@@ -251,7 +251,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -266,7 +266,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .game-username-form input {
@@ -280,7 +280,7 @@
   font-family: var(--font-mono);
   font-size: 0.82rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   text-transform: uppercase;
   outline: none;
   transition: border-color 160ms var(--ease, ease);
@@ -305,7 +305,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition: background 160ms var(--ease, ease), border-color 160ms var(--ease, ease), color 160ms var(--ease, ease);
 }
@@ -324,7 +324,7 @@
 .game-username-form small {
   color: var(--mute-soft);
   font-size: 0.55rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: none;
 }
 
@@ -388,14 +388,14 @@
   color: var(--acid);
   font-size: 0.65rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
 }
 .game-leaderboard-row strong {
   overflow: hidden;
   color: inherit;
   font-size: 0.68rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
@@ -404,7 +404,7 @@
   color: var(--acid);
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-align: right;
 }
 

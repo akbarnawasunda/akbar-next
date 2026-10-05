@@ -137,7 +137,7 @@
   margin: 0;
   font-family: var(--font-mono);
   font-size: 0.5rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--paper) 62%, transparent);
 }
@@ -225,7 +225,7 @@
   margin-bottom: 5px;
   font-family: var(--font-mono);
   font-size: 0.5rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--mute);
 }
@@ -247,7 +247,7 @@
   gap: 8px;
   font-family: var(--font-mono);
   font-size: 0.52rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--paper) 58%, transparent);
   text-decoration: none;
@@ -434,7 +434,7 @@
   background: var(--ink);
   font-family: var(--font-mono);
   font-size: 0.52rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--paper);
 }

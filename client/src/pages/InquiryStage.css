@@ -88,7 +88,7 @@
   margin: 0;
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   line-height: 1.9;
   text-transform: uppercase;
   color: var(--mute);
@@ -202,7 +202,7 @@
   color: var(--state-err);
   font-family: var(--font-mono);
   font-size: 0.62rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   line-height: 1.5;
 }
 
@@ -220,7 +220,7 @@
 .an-public-shell.an-editorial .an-inq-error-summary strong {
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   text-transform: uppercase;
   color: var(--state-err);
 }
@@ -269,7 +269,7 @@
 .an-public-shell.an-editorial .an-inq-optional {
   font-family: var(--font-mono);
   font-size: 0.5rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--mute);
 }

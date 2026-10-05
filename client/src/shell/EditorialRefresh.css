@@ -149,7 +149,7 @@
   font-family: var(--font-body);
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.075em;
+  letter-spacing: 0.06em;
   text-transform: none;
 }
 
@@ -201,7 +201,7 @@
   font-family: var(--font-body);
   font-size: 0.73rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
 .an-public-shell.an-editorial .an-language-switcher a {
@@ -327,7 +327,7 @@
   font-family: var(--font-body) !important;
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.11em !important;
+  letter-spacing: 0.09em !important;
   line-height: 1.4;
   text-transform: uppercase;
 }
@@ -355,7 +355,7 @@
   font-family: var(--font-body);
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
 }
 
 .an-public-shell.an-editorial .nf-page .nf-hero-note > strong {
@@ -486,7 +486,7 @@
   font-family: var(--font-body) !important;
   font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.045em;
+  letter-spacing: 0.035em;
   line-height: 1.2;
   text-transform: none;
   transition:
@@ -588,7 +588,7 @@
   font-family: var(--font-body);
   font-size: 0.74rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   animation: none !important;
 }
@@ -725,7 +725,7 @@
   font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -895,7 +895,7 @@
   font-family: var(--font-body);
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   text-transform: uppercase;
 }
 
@@ -923,7 +923,7 @@
   font-family: var(--font-label);
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.07em;
 }
 
 .an-public-shell.an-editorial .nf-footer-column a {
@@ -1042,7 +1042,7 @@
   border-radius: 2px;
   color: var(--paper);
   font-family: var(--font-body);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
 .nf-mobile-drawer-root .nf-mobile-drawer-signal-btn {

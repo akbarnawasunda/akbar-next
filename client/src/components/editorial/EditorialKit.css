@@ -52,7 +52,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--mute-soft);
 }
@@ -67,7 +67,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--acid);
 }
@@ -160,13 +160,13 @@
 .ed-card__index {
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--mute-soft);
 }
 .ed-card__meta {
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--mute);
 }
@@ -194,7 +194,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--acid);
 }
@@ -207,7 +207,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--acid);
 }
@@ -284,7 +284,7 @@
 .ed-signal-row__num {
   font-family: var(--font-mono);
   font-size: 0.6rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--mute-soft);
 }
 .ed-signal-row__label {
@@ -292,7 +292,7 @@
   margin-bottom: 6px;
   font-family: var(--font-mono);
   font-size: 0.56rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--acid);
 }
@@ -320,7 +320,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--acid);
   white-space: nowrap;
@@ -387,7 +387,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition:
     background var(--dur-fast, 160ms) var(--ease, ease),
@@ -460,7 +460,7 @@
   margin-top: 6px;
   font-family: var(--font-mono);
   font-size: 0.54rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--mute-soft);
 }
@@ -493,7 +493,7 @@
 .ed-timeline__year {
   font-family: var(--font-mono);
   font-size: 0.62rem;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--acid);
 }
 .ed-timeline__title {
@@ -508,7 +508,7 @@
 .ed-timeline__state {
   font-family: var(--font-mono);
   font-size: 0.56rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   color: var(--mute-soft);
 }
 .ed-timeline__panel {
@@ -553,7 +553,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition:
     color var(--dur-fast, 160ms) var(--ease, ease),
@@ -612,7 +612,7 @@
   min-width: 0;
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--mute);
   overflow-wrap: anywhere;
@@ -628,7 +628,7 @@
 @media (max-width: 640px) {
   .ed-player__title {
     font-size: 0.66rem;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.065em;
     line-height: 1.45;
   }
 }
@@ -643,7 +643,7 @@
   font-family: var(--font-mono);
   font-size: 0.56rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--mute);
 }

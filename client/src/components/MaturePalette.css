@@ -35,7 +35,7 @@
   font-family: var(--font-mono) !important;
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.16em !important;
+  letter-spacing: 0.13em !important;
   text-transform: uppercase;
   color: var(--acid) !important;
 }
@@ -58,7 +58,7 @@
 .nf-page .nf-signal {
   font-family: var(--font-mono) !important;
   font-size: 0.62rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--mute) !important;
   text-transform: uppercase;
 }
@@ -125,7 +125,7 @@
 .nf-page .nf-hero-note span {
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   color: var(--acid) !important;
   text-transform: uppercase;
 }
@@ -183,7 +183,7 @@
   font-family: var(--font-mono) !important;
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition: background-position 280ms ease, color var(--dur-fast, 160ms) var(--ease, ease), transform 180ms ease;
 }
@@ -210,7 +210,7 @@
   font-family: var(--font-mono) !important;
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition: border-color var(--dur-fast, 160ms) var(--ease, ease), color var(--dur-fast, 160ms) var(--ease, ease);
 }
@@ -282,7 +282,7 @@
 .nf-page .nf-universe-card span {
   font-family: var(--font-mono) !important;
   font-size: 0.6rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--acid) !important;
   text-transform: uppercase;
 }
@@ -328,7 +328,7 @@
   color: var(--paper) !important;
   font-family: var(--font-mono) !important;
   font-size: 0.62rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition: background var(--dur-fast, 160ms) var(--ease, ease), transform 180ms ease;
 }
@@ -447,7 +447,7 @@
   background: var(--acid) !important;
   color: var(--ink) !important;
   font-weight: 700 !important;
-  letter-spacing: 0.16em !important;
+  letter-spacing: 0.13em !important;
   text-transform: uppercase !important;
   cursor: pointer !important;
   transition: background 160ms ease, transform 140ms ease !important;
@@ -485,7 +485,7 @@
 .an-footer .footer-links > span {
   font-family: var(--font-mono) !important;
   font-size: 0.58rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   color: var(--mute-soft) !important;
   text-transform: uppercase;
 }
@@ -493,7 +493,7 @@
 .an-footer .footer-bottom {
   font-family: var(--font-mono) !important;
   font-size: 0.58rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--mute-soft) !important;
   text-transform: uppercase;
 }

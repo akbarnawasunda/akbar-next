@@ -104,7 +104,7 @@
   color: var(--sepia-accent);
   font-family: var(--font-mono);
   font-size: 0.66rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
 }
 
 .an-public-shell.an-editorial .an-pg-lead figcaption strong {
@@ -167,7 +167,7 @@
   color: var(--sepia-paper);
   font-family: var(--font-mono);
   font-size: 0.62rem;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   background: color-mix(in srgb, var(--sepia-dark) 72%, transparent);
 }
 

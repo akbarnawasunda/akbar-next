@@ -75,7 +75,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .an-privacy-posture strong {
@@ -129,7 +129,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-decoration: none;
   text-transform: uppercase;
   transition: color var(--dur-fast, 160ms) var(--ease, ease), padding-left var(--dur-fast, 160ms) var(--ease, ease);
@@ -150,7 +150,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-decoration: none;
   text-transform: uppercase;
   transition: color var(--dur-fast, 160ms) var(--ease, ease);
@@ -223,7 +223,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
 }
 .an-privacy-collection-card h3 {
   margin: 47px 0 10px;
@@ -280,7 +280,7 @@
   font-family: var(--font-mono);
   font-size: 0.72rem;
   line-height: 1.6;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
 .an-privacy-muted {

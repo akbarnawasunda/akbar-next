@@ -99,7 +99,7 @@ body::before {
   color: var(--ref-cyan) !important;
   font-family: var(--ref-mono) !important;
   font-size: 0.58rem !important;
-  letter-spacing: 0.14em !important;
+  letter-spacing: 0.12em !important;
   text-transform: uppercase;
 }
 .nf-page-eyebrow::before { background: var(--ref-cyan) !important; }
@@ -182,7 +182,7 @@ body::before {
   color: var(--ref-ink) !important;
   font-family: var(--ref-mono) !important;
   font-size: 0.62rem !important;
-  letter-spacing: 0.1em !important;
+  letter-spacing: 0.08em !important;
   text-transform: uppercase;
 }
 .nf-platform-grid a:hover { background: color-mix(in srgb, var(--acid) 6%, transparent) !important; color: var(--ref-cyan) !important; }
@@ -264,7 +264,7 @@ body::before {
   background: var(--ref-cyan) !important;
   color: var(--ink) !important;
   font-family: var(--ref-mono) !important;
-  letter-spacing: 0.12em !important;
+  letter-spacing: 0.1em !important;
 }
 .an-event-actions a:hover,
 .an-booking-actions a:hover,
@@ -297,23 +297,23 @@ body::before {
 .an-site .an-hero::after { background: linear-gradient(110deg, transparent 32%, rgba(35, 131, 219, 0.22) 60%, transparent 78%) !important; opacity: 0.5 !important; }
 .an-site .hero-copy { align-self: center !important; max-width: 560px !important; }
 .an-site .hero-copy::before { content: none !important; }
-.an-site .hero-copy .eyebrow { margin-bottom: 22px !important; color: var(--ref-cyan) !important; font-family: var(--ref-mono) !important; font-size: 0.6rem !important; letter-spacing: 0.14em !important; }
+.an-site .hero-copy .eyebrow { margin-bottom: 22px !important; color: var(--ref-cyan) !important; font-family: var(--ref-mono) !important; font-size: 0.6rem !important; letter-spacing: 0.12em !important; }
 .an-site .hero-copy .eyebrow > span { width: 8px !important; height: 8px !important; border-radius: 50%; background: var(--ref-cyan) !important; box-shadow: 0 0 16px var(--ref-cyan); }
 .an-site .hero-copy .hero-title-editorial { font-size: clamp(2.6rem, 10vw, 10rem) !important; line-height: 0.96 !important; letter-spacing: 0.02em !important; }
 .an-site .hero-copy .hero-title-mask { padding: 0 !important; }
 .an-site .hero-description { max-width: 34ch !important; margin: 28px 0 30px !important; color: var(--ref-muted) !important; font-family: var(--ref-mono) !important; font-size: 0.69rem !important; line-height: 1.8 !important; }
 .an-site .home-hero-portrait { height: min(78vh, 720px) !important; border: 0 !important; box-shadow: var(--ref-shadow) !important; }
 .an-site .home-hero-portrait img { filter: saturate(0.62) contrast(1.2) brightness(0.76) !important; object-position: 50% 22% !important; }
-.an-site .button-primary { padding: 13px 16px !important; background: var(--ref-cyan) !important; color: var(--ink) !important; font-family: var(--ref-mono) !important; font-size: 0.59rem !important; letter-spacing: 0.12em !important; }
+.an-site .button-primary { padding: 13px 16px !important; background: var(--ref-cyan) !important; color: var(--ink) !important; font-family: var(--ref-mono) !important; font-size: 0.59rem !important; letter-spacing: 0.1em !important; }
 .an-site .button-quiet { padding: 13px 0 !important; border-bottom-color: var(--ref-line) !important; color: var(--ref-ink) !important; font-size: 0.59rem !important; }
 .an-site .hero-signal-link { font-size: 0.58rem !important; color: var(--ref-muted) !important; }
 .an-site .section,
 .an-site .home-signal-deck,
 .an-site .signal-section { padding-block: clamp(68px, 9vw, 132px) !important; background: var(--ref-bg) !important; border-top: 1px solid var(--ref-line) !important; }
 .an-site .an-section-index { margin-bottom: clamp(44px, 6vw, 82px) !important; padding-bottom: 16px !important; border-bottom-color: var(--ref-line) !important; }
-.an-site .an-section-index > span:first-child { color: var(--ref-cyan) !important; font-family: var(--ref-mono) !important; font-size: 0.58rem !important; letter-spacing: 0.16em !important; }
+.an-site .an-section-index > span:first-child { color: var(--ref-cyan) !important; font-family: var(--ref-mono) !important; font-size: 0.58rem !important; letter-spacing: 0.13em !important; }
 .an-site .an-section-index > i { height: 1px !important; background: var(--ref-line) !important; background-image: none !important; }
-.an-site .an-section-index > span:last-child { color: var(--ref-muted) !important; font-size: 0.57rem !important; letter-spacing: 0.14em !important; }
+.an-site .an-section-index > span:last-child { color: var(--ref-muted) !important; font-size: 0.57rem !important; letter-spacing: 0.12em !important; }
 .an-site .section h2,
 .an-site .home-signal-copy h2 { font-size: clamp(2.7rem, 6vw, 6.6rem) !important; line-height: 0.91 !important; letter-spacing: 0em !important; font-style: normal !important; }
 .an-site .home-platform-rack { border-top-color: var(--ref-line) !important; }
@@ -439,7 +439,7 @@ body::before {
   z-index: 1;
   color: var(--ref-muted);
   font: 0.56rem/1.65 var(--ref-mono);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 .music-reference-page .nf-page-hero > div:first-child { max-width: 430px !important; }
@@ -453,7 +453,7 @@ body::before {
   max-width: 28ch !important;
   font-family: var(--ref-mono) !important;
   font-size: 0.62rem !important;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
 }
 .music-reference-page .nf-hero-note {
@@ -485,7 +485,7 @@ body::before {
   border-top: 1px solid var(--ref-line);
   color: var(--ref-muted);
   font: 0.56rem/1.6 var(--ref-mono);
-  letter-spacing: 0.09em;
+  letter-spacing: 0.07em;
 }
 .music-reference-page .nf-platform-hub {
   display: grid;
@@ -643,7 +643,7 @@ body::before {
   font-family: var(--ref-mono, var(--font-mono)) !important;
   font-size: 0.66rem !important;
   font-weight: 600 !important;
-  letter-spacing: 0.18em !important;
+  letter-spacing: 0.14em !important;
   line-height: 1.5 !important;
 }
 .nf-page .nf-page-hero h1,
@@ -724,7 +724,7 @@ body::before {
   font-family: var(--ref-mono, var(--font-mono)) !important;
   font-size: 0.66rem !important;
   font-weight: 700 !important;
-  letter-spacing: 0.12em !important;
+  letter-spacing: 0.1em !important;
   transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease !important;
 }
 .nf-page .nf-button:hover,
@@ -743,7 +743,7 @@ body::before {
 .en-page .an-back-link {
   color: var(--public-ink) !important;
   font-family: var(--ref-mono, var(--font-mono)) !important;
-  letter-spacing: 0.1em !important;
+  letter-spacing: 0.08em !important;
   transition: color 180ms ease, gap 180ms ease !important;
 }
 .nf-page .nf-text-button:hover,

@@ -29,7 +29,7 @@
   color: var(--mute);
   font-family: var(--font-mono);
   font-size: 0.5rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   pointer-events: none;
 }
 

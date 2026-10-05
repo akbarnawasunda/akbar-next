@@ -24,7 +24,7 @@
   margin: 0 0 12px;
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.26em;
+  letter-spacing: 0.21em;
   color: var(--mute);
   font-variant-numeric: tabular-nums;
 }
@@ -57,7 +57,7 @@
 .an-tabular-counter-label {
   font-family: var(--font-mono);
   font-size: 0.56rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   color: var(--mute);
 }
 

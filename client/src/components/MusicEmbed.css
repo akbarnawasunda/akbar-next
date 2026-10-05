@@ -151,7 +151,7 @@
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: var(--paper-soft);
   text-transform: uppercase;
 }
@@ -178,7 +178,7 @@
   font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   color: var(--acid);
   text-transform: uppercase;
   transition: opacity 160ms ease;
@@ -205,7 +205,7 @@
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   color: var(--acid);
   text-transform: uppercase;
   margin-bottom: 8px;
@@ -319,7 +319,7 @@
   font-family: var(--font-mono);
   font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -329,7 +329,7 @@
   font-family: var(--font-mono);
   font-size: 0.65rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--mute-soft);
   text-transform: uppercase;
 }
@@ -370,7 +370,7 @@
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   text-transform: uppercase;
   border: 1px solid var(--acid);
   cursor: pointer;
@@ -399,7 +399,7 @@
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   text-transform: uppercase;
   border: 1px solid var(--ink-line);
   transition: border-color 160ms ease, color 160ms ease;

@@ -64,7 +64,7 @@
   margin: 0 0 5px;
   font-family: var(--font-mono);
   font-size: 0.5rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--mute);
 }
@@ -102,7 +102,7 @@
 .an-public-shell.an-editorial .an-vis-hero-plate figcaption span {
   font-family: var(--font-mono);
   font-size: 0.5rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--acid);
 }
@@ -273,7 +273,7 @@
   margin: 0;
   font-family: var(--font-mono);
   font-size: 0.56rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--mute);
 }
@@ -307,7 +307,7 @@
 .an-public-shell.an-editorial .an-live-row-date {
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: color-mix(in srgb, var(--paper) 70%, transparent);
 }
@@ -333,7 +333,7 @@
   justify-self: end;
   font-family: var(--font-mono);
   font-size: 0.52rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--acid);
 }

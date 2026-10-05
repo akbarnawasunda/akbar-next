@@ -43,7 +43,7 @@
 
 .an-lightbox-figure figcaption span {
   font-size: 0.56rem;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.19em;
   color: var(--acid);
 }
 
@@ -55,7 +55,7 @@
 
 .an-lightbox-figure figcaption small {
   font-size: 0.56rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--mute);
   font-variant-numeric: tabular-nums;
 }

@@ -20,7 +20,7 @@
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   transition: border-color var(--dur-fast, 160ms) var(--ease, ease), color var(--dur-fast, 160ms) var(--ease, ease);
 }
@@ -90,7 +90,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -106,7 +106,7 @@
 }
 .an-epk-hero-card-copy small {
   color: var(--mute);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.065em;
   text-transform: none;
 }
 
@@ -150,7 +150,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -174,7 +174,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--paper);
   text-transform: uppercase;
 }
@@ -199,7 +199,7 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   color: var(--acid);
 }
 .an-epk-capability h3 {
@@ -230,7 +230,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -259,7 +259,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -286,7 +286,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--paper);
   text-transform: uppercase;
 }
@@ -319,7 +319,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--acid);
   text-transform: uppercase;
 }
@@ -336,7 +336,7 @@
   margin: 6px 0 0;
   font-family: var(--font-mono);
   font-size: 0.58rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   color: var(--mute);
   text-transform: uppercase;
 }

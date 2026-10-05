@@ -72,7 +72,7 @@
   font-family: var(--font-title);
   font-size: 1.16rem;
   font-weight: 400;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   color: var(--paper);
   white-space: nowrap;
 }
@@ -81,7 +81,7 @@
   font-family: var(--font-mono);
   font-size: 0.5rem;
   font-weight: 500;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--mute);
   white-space: nowrap;
@@ -123,7 +123,7 @@
   font-family: var(--font-label);
   font-size: 0.58rem;
   font-weight: 500;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   transition: color 180ms var(--ease, ease);
 }
@@ -174,7 +174,7 @@
   font-family: var(--font-mono);
   font-size: 0.58rem;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
 }
 
 .an-public-shell.an-editorial .nf-nav .an-language-switcher a {
@@ -195,7 +195,7 @@
   font-family: var(--font-mono);
   font-size: 0.56rem;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   white-space: nowrap;
   transition:
@@ -247,7 +247,7 @@
   font-size: clamp(2.2rem, 4.4vw, 3.5rem);
 
   font-weight: 400;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.025em;
   color: var(--paper);
   display: inline-block;
 }
@@ -256,7 +256,7 @@
   /* FASE 12: tagline footer ("PRODUCER / REMIXER / INDONESIA") -> label. */
   font-family: var(--font-label);
   font-size: 0.55rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--mute);
 }
 
@@ -264,7 +264,7 @@
   /* FASE 12: label kolom footer ("JELAJAHI"/"HUBUNGI") -> --font-label. */
   font-family: var(--font-label);
   font-size: 0.52rem;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   color: var(--mute);
 }
 
@@ -285,7 +285,7 @@
   /* FASE 12: baris hak cipta -> --font-label. */
   font-family: var(--font-label);
   font-size: 0.52rem;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.16em;
   color: var(--mute);
 }
 
@@ -335,7 +335,7 @@
   }
   .an-public-shell.an-editorial .nf-nav .nf-wordmark-text small {
     font-size: 0.46rem;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.13em;
   }
   .an-public-shell.an-editorial .nf-nav .nf-brand-logo {
     width: 28px;

@@ -137,7 +137,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
 }
 .nf-page .nf-page-eyebrow::after,
 .an-site .an-section-index::after,
@@ -177,7 +177,7 @@
   font-family: var(--font-mono);
   font-size: 0.5rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   color: var(--mute-soft);
   text-transform: uppercase;
 }
@@ -209,7 +209,7 @@
   font-family: var(--font-mono);
   font-size: 0.5rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-align: left;
   text-transform: uppercase;
   transition: color 220ms var(--ease, ease);
