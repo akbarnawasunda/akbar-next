@@ -15,11 +15,12 @@ import {
   Plus,
   Radio,
   Save,
+  Search,
   ShieldCheck,
   Sparkles,
   Trash2,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import DashboardLayout from "@/components/DashboardLayout";
 import AssetPicker from "@/components/AssetPicker";
@@ -30,7 +31,7 @@ import {
 import StudioDocumentPreview from "@/components/StudioDocumentPreview";
 import StudioVisualArchive from "@/components/StudioVisualArchive";
 import StudioPortraitArchive from "@/components/StudioPortraitArchive";
-import { StudioPublishChecklist, StudioWorkspaceNav } from "@/components/StudioWorkspaceChrome";
+import { StudioPublishChecklist } from "@/components/StudioWorkspaceChrome";
 import StudioGalleryAnalytics from "@/components/StudioGalleryAnalytics";
 import StudioLeaderboardManager from "@/components/StudioLeaderboardManager";
 import StudioPageMirror from "@/components/StudioPageMirror";
@@ -50,6 +51,18 @@ import {
 } from "@/content/artistPlatform";
 import { publicPortraitStudies } from "@/content/publicContent";
 import { slugify } from "@shared/slug";
+import {
+  EmptyState,
+  Eyebrow,
+  Panel,
+  Pill,
+  Stat,
+  StatGrid,
+  StudioButton,
+  StudioHero,
+  StudioLink,
+  StudioTabs,
+} from "@/studio/StudioKit";
 
 const documentTypes = [
   {
@@ -162,10 +175,13 @@ const fieldUsage: Record<string, string> = {
   "hero.primaryActionLabel": "Homepage → tombol aksi utama",
   "hero.primaryActionUrl": "Homepage → tujuan tombol aksi utama",
   "profile.shortBio": "About → bio singkat",
-  "profile.longBio": "About + Universe → perjalanan musik; EPK memakai snapshot EPK sendiri",
-  "profile.location": "About + Universe → lokasi/asal; EPK memakai lokasi snapshot sendiri",
+  "profile.longBio":
+    "About + Universe → perjalanan musik; EPK memakai snapshot EPK sendiri",
+  "profile.location":
+    "About + Universe → lokasi/asal; EPK memakai lokasi snapshot sendiri",
   "profile.locationUrl": "About + Universe → link Google Maps lokasi",
-  "profile.genresText": "About + Universe → daftar genre; EPK memakai genre snapshot sendiri",
+  "profile.genresText":
+    "About + Universe → daftar genre; EPK memakai genre snapshot sendiri",
   "profile.portraitImage":
     "About + Universe → portrait profile; bukan foto utama kartu Editorial / Press EPK",
   "profile.artistStatement": "About → kutipan artist statement",
@@ -174,7 +190,8 @@ const fieldUsage: Record<string, string> = {
   "journey.intro": "Homepage + About → intro biografi / journey Indonesia",
   "journey.introEn": "English homepage + About → journey intro",
   "journey.imageUrl": "Homepage → visual opsional untuk scene Artist Journey",
-  "journey.milestonesText": "Homepage + Universe → satu baris per milestone: Tahun | Judul ID | Copy ID | Judul EN | Copy EN; format 3 kolom lama tetap diterima",
+  "journey.milestonesText":
+    "Homepage + Universe → satu baris per milestone: Tahun | Judul ID | Copy ID | Judul EN | Copy EN; format 3 kolom lama tetap diterima",
   "photoStory.title": "Homepage + Visuals → judul frame foto Indonesia",
   "photoStory.titleEn": "English homepage + Visuals → judul frame foto",
   "photoStory.label": "Homepage + Visuals → label kartu foto",
@@ -397,12 +414,43 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
     { key: "artistStatement", label: "Artist statement", multiline: true },
   ],
   journey: [
-    { key: "title", label: "Judul journey Indonesia", placeholder: "PERJALANAN MUSIK." },
-    { key: "titleEn", label: "Journey title English", placeholder: "MUSIC JOURNEY." },
-    { key: "intro", label: "Intro Indonesia", multiline: true, placeholder: "Biografi singkat yang sudah diverifikasi." },
-    { key: "introEn", label: "Intro English", multiline: true, placeholder: "A concise verified artist journey." },
-    { key: "imageUrl", label: "Foto / artwork journey", type: "url", media: true, hint: "Opsional. Dipakai sebagai visual pembuka journey homepage." },
-    { key: "milestonesText", label: "Milestone journey", multiline: true, hint: "Satu baris: Tahun | Judul Indonesia | Copy Indonesia | Judul English | Copy English. Kolom English boleh dikosongkan; format 3 kolom lama tetap diterima.", placeholder: "2020 | DJ Akbar Remix | Awal perjalanan... | DJ Akbar Remix | The beginning...\nSEKARANG | Akbar Nawasunda | Karya orisinal... | Akbar Nawasunda | Original work..." },
+    {
+      key: "title",
+      label: "Judul journey Indonesia",
+      placeholder: "PERJALANAN MUSIK.",
+    },
+    {
+      key: "titleEn",
+      label: "Journey title English",
+      placeholder: "MUSIC JOURNEY.",
+    },
+    {
+      key: "intro",
+      label: "Intro Indonesia",
+      multiline: true,
+      placeholder: "Biografi singkat yang sudah diverifikasi.",
+    },
+    {
+      key: "introEn",
+      label: "Intro English",
+      multiline: true,
+      placeholder: "A concise verified artist journey.",
+    },
+    {
+      key: "imageUrl",
+      label: "Foto / artwork journey",
+      type: "url",
+      media: true,
+      hint: "Opsional. Dipakai sebagai visual pembuka journey homepage.",
+    },
+    {
+      key: "milestonesText",
+      label: "Milestone journey",
+      multiline: true,
+      hint: "Satu baris: Tahun | Judul Indonesia | Copy Indonesia | Judul English | Copy English. Kolom English boleh dikosongkan; format 3 kolom lama tetap diterima.",
+      placeholder:
+        "2020 | DJ Akbar Remix | Awal perjalanan... | DJ Akbar Remix | The beginning...\nSEKARANG | Akbar Nawasunda | Karya orisinal... | Akbar Nawasunda | Original work...",
+    },
   ],
   pressKit: [
     { key: "intro", label: "EPK intro", multiline: true },
@@ -415,7 +463,11 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
     },
     { key: "snapshotBio", label: "Artist Snapshot bio", multiline: true },
     { key: "snapshotLocation", label: "Artist Snapshot location" },
-    { key: "snapshotGenresText", label: "Artist Snapshot genres", placeholder: "Breakbeat, Remix, Production" },
+    {
+      key: "snapshotGenresText",
+      label: "Artist Snapshot genres",
+      placeholder: "Breakbeat, Remix, Production",
+    },
     { key: "snapshotAlias", label: "Artist Snapshot alias" },
     { key: "capabilitiesIntro", label: "Capabilities intro", multiline: true },
     { key: "licensingNote", label: "Licensing note", multiline: true },
@@ -521,10 +573,28 @@ const fieldsByType: Record<DocumentType, FieldSpec[]> = {
     { key: "titleEn", label: "Judul studi English" },
     { key: "label", label: "Label", placeholder: "STUDI POTRET" },
     { key: "imageUrl", label: "Foto portrait", type: "url", media: true },
-    { key: "copyId", label: "Caption Indonesia", multiline: true, placeholder: "Deskripsi singkat foto ini." },
-    { key: "copyEn", label: "Caption English", multiline: true, placeholder: "A short description for the English page." },
-    { key: "altId", label: "Alt text Indonesia", placeholder: "Deskripsi foto untuk aksesibilitas" },
-    { key: "altEn", label: "Alt text English", placeholder: "Accessible image description" },
+    {
+      key: "copyId",
+      label: "Caption Indonesia",
+      multiline: true,
+      placeholder: "Deskripsi singkat foto ini.",
+    },
+    {
+      key: "copyEn",
+      label: "Caption English",
+      multiline: true,
+      placeholder: "A short description for the English page.",
+    },
+    {
+      key: "altId",
+      label: "Alt text Indonesia",
+      placeholder: "Deskripsi foto untuk aksesibilitas",
+    },
+    {
+      key: "altEn",
+      label: "Alt text English",
+      placeholder: "Accessible image description",
+    },
   ],
   live: [
     {
@@ -652,9 +722,12 @@ function fallbackPayload(type: DocumentType): EditorPayload {
     return {
       title: "PERJALANAN MUSIK.",
       titleEn: "MUSIC JOURNEY.",
-      intro: "Perjalanan musik Akbar Nawasunda dimulai pada 2020 sebagai bedroom producer independen dengan nama DJ Akbar Remix. Eksperimennya membawa lagu-lagu populer ke wilayah Breakbeat, Jedag Jedug, dan Jungle Dutch bergaya Bandung. Kini, di bawah nama Akbar Nawasunda, ia merilis karya orisinal yang memadukan melodi pop, electronic bass, dan energi remix untuk platform musik digital global.",
-      introEn: "Akbar Nawasunda's musical journey began in 2020 as an independent bedroom producer known as DJ Akbar Remix. His experiments brought popular songs into a Bandung-rooted space of Breakbeat, Jedag Jedug, and Jungle Dutch. Today, he releases original work shaped by pop melody, electronic bass, and remix energy.",
-      milestonesText: "2020 | DJ Akbar Remix | Awal perjalanan sebagai bedroom producer independen dengan fokus pada reinterpretasi lagu populer. | DJ Akbar Remix | The beginning as an independent bedroom producer focused on reinterpreting popular songs.\nSEKARANG | Akbar Nawasunda | Karya orisinal dan remix yang membawa energi electronic bass ke platform musik digital. | Akbar Nawasunda | Original work and remixes carrying electronic bass energy across digital music platforms.",
+      intro:
+        "Perjalanan musik Akbar Nawasunda dimulai pada 2020 sebagai bedroom producer independen dengan nama DJ Akbar Remix. Eksperimennya membawa lagu-lagu populer ke wilayah Breakbeat, Jedag Jedug, dan Jungle Dutch bergaya Bandung. Kini, di bawah nama Akbar Nawasunda, ia merilis karya orisinal yang memadukan melodi pop, electronic bass, dan energi remix untuk platform musik digital global.",
+      introEn:
+        "Akbar Nawasunda's musical journey began in 2020 as an independent bedroom producer known as DJ Akbar Remix. His experiments brought popular songs into a Bandung-rooted space of Breakbeat, Jedag Jedug, and Jungle Dutch. Today, he releases original work shaped by pop melody, electronic bass, and remix energy.",
+      milestonesText:
+        "2020 | DJ Akbar Remix | Awal perjalanan sebagai bedroom producer independen dengan fokus pada reinterpretasi lagu populer. | DJ Akbar Remix | The beginning as an independent bedroom producer focused on reinterpreting popular songs.\nSEKARANG | Akbar Nawasunda | Karya orisinal dan remix yang membawa energi electronic bass ke platform musik digital. | Akbar Nawasunda | Original work and remixes carrying electronic bass energy across digital music platforms.",
     };
   if (type === "pressKit")
     return {
@@ -665,7 +738,8 @@ function fallbackPayload(type: DocumentType): EditorPayload {
       snapshotLocation: verifiedArtistProfile.location,
       snapshotGenresText: verifiedArtistProfile.genres.join(", "),
       snapshotAlias: verifiedArtistProfile.aliases.join(" / "),
-      capabilitiesIntro: "Format kerja yang tersedia untuk performance, produksi, kolaborasi, dan penggunaan musik.",
+      capabilitiesIntro:
+        "Format kerja yang tersedia untuk performance, produksi, kolaborasi, dan penggunaan musik.",
       licensingNote: verifiedArtistProfile.licensing,
       bookingEmail: verifiedArtistProfile.bookingEmail,
       pressEmail: verifiedArtistProfile.bookingEmail,
@@ -798,7 +872,9 @@ function preparedPayload(type: DocumentType, payload: EditorPayload) {
           year,
           title,
           body,
-          ...(titleEn && bodyEnParts.length ? { titleEn, bodyEn: bodyEnParts.join(" | ") } : {}),
+          ...(titleEn && bodyEnParts.length
+            ? { titleEn, bodyEn: bodyEnParts.join(" | ") }
+            : {}),
         };
       })
       .filter(item => item.year && item.title && item.body);
@@ -850,22 +926,28 @@ function preparedPayload(type: DocumentType, payload: EditorPayload) {
 }
 
 function displayPayload(document: EditorDocument): EditorPayload {
-  const next = document.documentType === "pressKit"
-    ? { ...fallbackPayload("pressKit"), ...document.payload }
-    : { ...document.payload };
+  const next =
+    document.documentType === "pressKit"
+      ? { ...fallbackPayload("pressKit"), ...document.payload }
+      : { ...document.payload };
   if (document.documentType === "profile" && Array.isArray(next.genres))
     next.genresText = next.genres.join(", ");
   if (document.documentType === "journey" && Array.isArray(next.milestones))
     next.milestonesText = next.milestones
-      .map(item => [
-        String(item.year || ""),
-        String(item.title || ""),
-        String(item.body || ""),
-        String(item.titleEn || ""),
-        String(item.bodyEn || ""),
-      ].join(" | "))
+      .map(item =>
+        [
+          String(item.year || ""),
+          String(item.title || ""),
+          String(item.body || ""),
+          String(item.titleEn || ""),
+          String(item.bodyEn || ""),
+        ].join(" | ")
+      )
       .join("\n");
-  if (document.documentType === "pressKit" && Array.isArray(next.snapshotGenres))
+  if (
+    document.documentType === "pressKit" &&
+    Array.isArray(next.snapshotGenres)
+  )
     next.snapshotGenresText = next.snapshotGenres.join(", ");
   if (document.documentType === "legal" && Array.isArray(next.sections))
     next.sectionsText = next.sections
@@ -888,70 +970,70 @@ function StudioOperations() {
   const leads = trpc.fanSignal.list.useQuery();
   const published = content.data?.filter(item => item.isPublished).length ?? 0;
   const drafts = (content.data?.length ?? 0) - published;
+  const media = (content.data ?? []).filter(item =>
+    ["visual", "portrait", "photoStory"].includes(item.documentType)
+  ).length;
+  const spark = (seed: number) =>
+    Array.from({ length: 12 }, (_, index) => {
+      const value = Math.sin(seed + index * 1.7) * 0.5 + 0.5;
+      return 22 + value * 78;
+    });
+
   return (
-    <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      <article className="group relative overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.035] p-5 transition hover:border-cyan-200/25">
-        <div className="absolute -right-8 -top-10 h-28 w-28 rounded-full bg-cyan-300/10 blur-3xl transition group-hover:bg-cyan-300/20" />
-        <div className="relative flex items-start justify-between">
-          <Database className="h-4 w-4 text-cyan-200" />
-          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/35">
-            Live
-          </span>
-        </div>
-        <p className="relative mt-7 text-3xl font-semibold tracking-tight text-white">
-          {content.isLoading ? "—" : published}
-        </p>
-        <p className="mt-1 text-xs text-white/45">Published documents</p>
-      </article>
-      <article className="group relative overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.035] p-5 transition hover:border-violet-200/25">
-        <div className="absolute -right-8 -top-10 h-28 w-28 rounded-full bg-violet-300/10 blur-3xl transition group-hover:bg-violet-300/20" />
-        <div className="relative flex items-start justify-between">
-          <Save className="h-4 w-4 text-violet-200" />
-          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/35">
-            Queue
-          </span>
-        </div>
-        <p className="relative mt-7 text-3xl font-semibold tracking-tight text-white">
-          {content.isLoading ? "—" : drafts}
-        </p>
-        <p className="mt-1 text-xs text-white/45">Draft documents</p>
-      </article>
-      <article className="group relative overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.035] p-5 transition hover:border-amber-200/25">
-        <div className="absolute -right-8 -top-10 h-28 w-28 rounded-full bg-amber-300/10 blur-3xl transition group-hover:bg-amber-300/20" />
-        <div className="relative flex items-start justify-between">
-          <Radio className="h-4 w-4 text-amber-200" />
-          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/35">
-            Signal
-          </span>
-        </div>
-        <p className="relative mt-7 text-3xl font-semibold tracking-tight text-white">
-          {leads.isLoading ? "—" : (leads.data?.length ?? 0)}
-        </p>
-        <p className="mt-1 text-xs text-white/45">Fan signals</p>
-      </article>
-      <a
-        href="/assets"
-        className="group relative overflow-hidden rounded-2xl border border-cyan-200/15 bg-cyan-200/[0.055] p-5 transition hover:border-cyan-200/35 hover:bg-cyan-200/[0.09]"
-      >
-        <div className="absolute -right-8 -top-10 h-28 w-28 rounded-full bg-cyan-300/10 blur-3xl transition group-hover:bg-cyan-300/20" />
-        <div className="relative flex items-start justify-between">
-          <FolderOpen className="h-4 w-4 text-cyan-200" />
-          <ArrowUpRight className="h-4 w-4 text-cyan-200/60" />
-        </div>
-        <p className="relative mt-7 text-sm font-semibold text-white">
-          Asset Library
-        </p>
-        <p className="mt-1 text-xs text-white/45">
-          Upload, inspect, and attach managed media.
-        </p>
-      </a>
-      {leads.isError ? (
-        <p className="text-sm text-red-200 sm:col-span-2 xl:col-span-4">
-          Fan leads could not be loaded.
-        </p>
-      ) : null}
-    </section>
+    <StatGrid>
+      <Stat
+        icon={Database}
+        kicker="Live"
+        value={content.isLoading ? "\u2014" : published}
+        label="Dokumen tayang di publik"
+        tone="cyan"
+        spark={spark(published + 1)}
+      />
+      <Stat
+        icon={Save}
+        kicker="Queue"
+        value={content.isLoading ? "\u2014" : drafts}
+        label="Draft menunggu publish"
+        tone="violet"
+        spark={spark(drafts + 4)}
+      />
+      <Stat
+        icon={ImageIcon}
+        kicker="Visual"
+        value={content.isLoading ? "\u2014" : media}
+        label="Visual, portrait, photo story"
+        tone="amber"
+        spark={spark(media + 6)}
+      />
+      <Stat
+        icon={Radio}
+        kicker="Signal"
+        value={leads.isLoading ? "\u2014" : (leads.data?.length ?? 0)}
+        label="Fan signal leads"
+        tone="mint"
+        spark={spark((leads.data?.length ?? 0) + 8)}
+      />
+    </StatGrid>
   );
+}
+
+type StudioTab = "overview" | "compose" | "library" | "archive";
+type LibraryStatus = "all" | "published" | "draft";
+
+function libraryDestination(documentType: string) {
+  if (documentType === "release") return "Homepage + Music + EPK";
+  if (documentType === "journey")
+    return "Homepage Artist Journey + About / Universe";
+  if (documentType === "photoStory") return "Homepage Photo Story + Visuals";
+  if (documentType === "event" || documentType === "live")
+    return "Live + Homepage";
+  if (documentType === "profile") return "About + Universe + EPK";
+  if (documentType === "pressKit") return "EPK";
+  if (documentType === "visual") return "Visuals + Homepage";
+  if (documentType === "portrait") return "Visuals \u2192 Portrait gallery";
+  if (documentType === "legal") return "Privacy / Legal";
+  if (documentType === "game") return "JEDAG RUN + teaser homepage";
+  return "Homepage + metadata";
 }
 
 function StudioField({
@@ -1041,6 +1123,10 @@ export default function ContentStudio() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
+  const [tab, setTab] = useState<StudioTab>("overview");
+  const [libraryQuery, setLibraryQuery] = useState("");
+  const [libraryType, setLibraryType] = useState<string>("all");
+  const [libraryStatus, setLibraryStatus] = useState<LibraryStatus>("all");
   const documents = trpc.content.documentsAll.useQuery(undefined, {
     enabled: user?.role === "admin",
   });
@@ -1064,6 +1150,86 @@ export default function ContentStudio() {
     onError: error =>
       toast.error(error.message || "Document could not be removed."),
   });
+  const focusCompose = useCallback(() => {
+    setTab("compose");
+    window.requestAnimationFrame(() =>
+      document
+        .getElementById("studio-compose")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" })
+    );
+  }, []);
+
+  const visualDocuments = useMemo(
+    () =>
+      (documents.data ?? []).filter(
+        document => document.documentType === "visual"
+      ),
+    [documents.data]
+  );
+  const portraitDocuments = useMemo(
+    () =>
+      (documents.data ?? []).filter(
+        document => document.documentType === "portrait"
+      ),
+    [documents.data]
+  );
+  const filteredDocuments = useMemo(() => {
+    const query = libraryQuery.trim().toLowerCase();
+    return (documents.data ?? []).filter(document => {
+      if (libraryType !== "all" && document.documentType !== libraryType)
+        return false;
+      if (libraryStatus === "published" && !document.isPublished) return false;
+      if (libraryStatus === "draft" && document.isPublished) return false;
+      if (!query) return true;
+      const haystack = [
+        document.slug,
+        document.documentType,
+        textValue(document.payload, "title"),
+        textValue(document.payload, "siteTitle"),
+        textValue(document.payload, "heroTitle"),
+      ]
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(query);
+    });
+  }, [documents.data, libraryQuery, libraryStatus, libraryType]);
+
+  // ⌘S / Ctrl+S menyimpan dokumen yang sedang dibuka tanpa meraih tombol.
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "s")
+        return;
+      event.preventDefault();
+      const form = document.getElementById(
+        "studio-editor-form"
+      ) as HTMLFormElement | null;
+      if (!form) return;
+      setTab("compose");
+      form.requestSubmit();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Command palette mengirim ?compose=<tipe> untuk membuka editor langsung.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const requested = new URLSearchParams(window.location.search).get(
+      "compose"
+    );
+    if (!requested) return;
+    const known = documentTypes.some(type => type.value === requested);
+    if (known) {
+      setDocumentType(requested as DocumentType);
+      setPayload(emptyPayload(requested as DocumentType));
+      setShowAdvanced(
+        !primaryWorkflowTypes.includes(requested as DocumentType)
+      );
+      setTab("compose");
+    }
+    window.history.replaceState({}, "", window.location.pathname);
+  }, []);
+
   const fields = useMemo(() => fieldsByType[documentType], [documentType]);
   const selectedType = documentTypes.find(type => type.value === documentType);
   const currentWorkflow = primaryWorkflows.find(
@@ -1134,14 +1300,12 @@ export default function ContentStudio() {
     setIsDirty(false);
   }
   function openEditorForType(type: DocumentType) {
-    const existing = documents.data?.find(document => document.documentType === type);
+    const existing = documents.data?.find(
+      document => document.documentType === type
+    );
     if (existing) loadDocument(existing);
     else resetEditor(type);
-    window.requestAnimationFrame(() =>
-      document
-        .getElementById("studio-compose")
-        ?.scrollIntoView({ behavior: "smooth", block: "start" })
-    );
+    focusCompose();
   }
 
   function updateField(key: string, value: string | boolean) {
@@ -1174,8 +1338,10 @@ export default function ContentStudio() {
 
   if (loading)
     return (
-      <div className="grid min-h-screen place-items-center bg-[#08090c] text-sm text-white/50">
-        Checking studio access…
+      <div className="studio-os grid min-h-dvh place-items-center text-sm text-white/50">
+        <span className="relative z-[1] font-mono text-[11px] uppercase tracking-[0.3em]">
+          Memeriksa akses studio…
+        </span>
       </div>
     );
   if (!user)
@@ -1187,8 +1353,8 @@ export default function ContentStudio() {
     );
   if (user.role !== "admin")
     return (
-      <main className="grid min-h-screen place-items-center bg-[#08090c] p-6 text-white">
-        <section className="max-w-md text-center">
+      <main className="studio-os grid min-h-dvh place-items-center p-6 text-white">
+        <section className="st-panel relative z-[1] max-w-md p-8 text-center">
           <ShieldCheck className="mx-auto mb-5 h-9 w-9 text-cyan-200" />
           <h1 className="text-3xl font-semibold">Owner access required</h1>
           <p className="mt-3 text-white/55">
@@ -1205,634 +1371,658 @@ export default function ContentStudio() {
     );
 
   return (
-    <DashboardLayout>
-      <div className="mx-auto max-w-[1600px] space-y-8">
-        <header className="flex flex-col gap-6 border-b border-white/[0.08] pb-7 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-3xl">
-            <div className="mb-4 flex flex-wrap items-center gap-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-cyan-200/75">
-                AN // Content operations
-              </span>
-              <span className="flex items-center gap-2 rounded-full border border-emerald-200/15 bg-emerald-200/[0.06] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.15em] text-emerald-100/75">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />
-                Protected workspace
-              </span>
+    <DashboardLayout title="Content Studio" kicker="AN // Operate">
+      <div className="space-y-6">
+        <StudioHero
+          kicker="AN // Content operations"
+          title={
+            <>
+              Control the <em>signal.</em>
+            </>
+          }
+          lead="Bentuk situs publik dari satu workspace. Susun konten, pasang media terkelola, dan tentukan kapan sebuah perubahan tayang."
+          actions={
+            <>
+              <StudioButton
+                variant="primary"
+                onClick={() => focusCompose()}
+                type="button"
+              >
+                <Plus size={14} /> Dokumen baru
+              </StudioButton>
+              <StudioLink href="/assets">
+                <FolderOpen size={14} /> Media library
+              </StudioLink>
+              <StudioLink href="/" target="_blank" rel="noreferrer">
+                Situs publik <ArrowUpRight size={13} />
+              </StudioLink>
+            </>
+          }
+          aside={
+            <div className="flex flex-col items-start gap-2 sm:items-end">
+              <Pill tone="live">
+                <span className="studio-dot" /> Protected workspace
+              </Pill>
+              <Pill tone={isDirty ? "draft" : "accent"}>
+                {isDirty ? "Ada perubahan belum disimpan" : "Semua tersimpan"}
+              </Pill>
             </div>
-            <h1 className="text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">
-              Control the <span className="text-cyan-200">signal.</span>
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-white/50">
-              Shape the public site from one focused workspace. Compose reviewed
-              content, attach managed media, and decide exactly when a change
-              becomes public.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <a
-              className="inline-flex h-10 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 text-xs font-medium text-white/65 transition hover:border-cyan-200/30 hover:bg-cyan-200/[0.08] hover:text-cyan-100"
-              href="/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Open public site <ArrowUpRight size={14} />
-            </a>
-            <a
-              className="inline-flex h-10 items-center gap-2 rounded-xl border border-cyan-200/20 bg-cyan-200/[0.08] px-3 text-xs font-medium text-cyan-100 transition hover:bg-cyan-200/[0.14]"
-              href="/assets"
-            >
-              Media library <FolderOpen size={14} />
-            </a>
-          </div>
-        </header>
+          }
+        />
 
         <StudioOperations />
 
-        <StudioWorkspaceNav
-          documentCount={documents.data?.length ?? 0}
-          visualCount={(documents.data ?? []).filter(document => document.documentType === "visual").length}
-          portraitCount={(documents.data ?? []).filter(document => document.documentType === "portrait").length}
+        <StudioTabs
+          items={[
+            { id: "overview", label: "Overview", icon: LayoutList },
+            { id: "compose", label: "Compose", icon: FilePenLine },
+            {
+              id: "library",
+              label: "Library",
+              icon: Database,
+              count: documents.data?.length ?? 0,
+            },
+            {
+              id: "archive",
+              label: "Archives",
+              icon: ImageIcon,
+              count: visualDocuments.length + portraitDocuments.length,
+            },
+          ]}
+          value={tab}
+          onChange={next => setTab(next as StudioTab)}
         />
 
-        <StudioGalleryAnalytics />
-
-        <StudioLeaderboardManager />
-
-        <StudioPageMirror
-          documents={documents.data ?? []}
-          onEditType={type => openEditorForType(type as DocumentType)}
-        />
-
-        <section
-          id="studio-quick-actions"
-          className="overflow-hidden rounded-2xl border border-cyan-200/10 bg-cyan-200/[0.035] p-5 shadow-2xl shadow-black/10 sm:p-6"
-        >
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-200/70">
-                Quick actions
-              </p>
-              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white">
-                Mau update apa hari ini?
-              </h2>
-            </div>
-            <p className="max-w-md text-xs leading-5 text-white/45">
-              Pilih alur utama di bawah. Dashboard akan mengurus tipe dokumen
-              dan slug secara otomatis.
-            </p>
-          </div>
-          <div className="mt-5 grid gap-3 md:grid-cols-3">
-            {primaryWorkflows.map(workflow => {
-              const Icon = workflow.icon;
-              const active = documentType === workflow.type && !editingId;
-              return (
-                <button
-                  type="button"
-                  key={workflow.type}
-                  onClick={() => resetEditor(workflow.type)}
-                  className={`group rounded-xl border p-4 text-left transition ${active ? "border-cyan-200/45 bg-cyan-200/[0.1]" : "border-white/[0.09] bg-black/[0.12] hover:border-cyan-200/25 hover:bg-white/[0.04]"}`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <span
-                      className={`grid h-9 w-9 place-items-center rounded-lg ${active ? "bg-cyan-200 text-[#071014]" : "bg-white/[0.07] text-cyan-100/70"}`}
-                    >
-                      <Icon size={17} />
-                    </span>
-                    <Plus
-                      size={15}
-                      className="text-white/25 transition group-hover:text-cyan-100/70"
-                    />
-                  </div>
-                  <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.18em] text-cyan-100/45">
-                    {workflow.eyebrow} / workflow
-                  </p>
-                  <h3 className="mt-1 text-sm font-semibold text-white">
-                    {workflow.title}
-                  </h3>
-                  <p className="mt-1 text-xs leading-5 text-white/40">
-                    {workflow.description}
-                  </p>
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-100/70">
-                    {workflow.action} <ArrowUpRight size={12} />
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </section>
-
-        <StudioVisualArchive
-          documents={(documents.data ?? [])
-            .filter(document => document.documentType === "visual")
-            .map(document => ({
-              ...document,
-              documentType: "visual" as const,
-            }))}
-          fallbacks={videos.map((visual, index) => ({
-            id: `fallback-${index}`,
-            title: visual.title,
-            label: visual.label,
-            href: visual.href,
-            image: visual.image,
-          }))}
-          onAdd={() => {
-            resetEditor("visual");
-            window.requestAnimationFrame(() =>
-              document
-                .getElementById("studio-compose")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" })
-            );
-          }}
-          onEdit={visualDocument => {
-            loadDocument(visualDocument);
-            window.requestAnimationFrame(() =>
-              document
-                .getElementById("studio-compose")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" })
-            );
-          }}
-          onImportFallback={visual => {
-            setDocumentType("visual");
-            setSlug(slugify(visual.title));
-            setPayload({
-              title: visual.title,
-              label: visual.label,
-              youtubeId: visual.href.split("/").pop() || "",
-              url: visual.href,
-              imageUrl: visual.image,
-            });
-            setSortOrder(0);
-            setIsPublished(true);
-            setEditingId(null);
-            setShowAdvanced(false);
-            setIsDirty(true);
-            window.requestAnimationFrame(() =>
-              document
-                .getElementById("studio-compose")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" })
-            );
-          }}
-        />
-
-        <StudioPortraitArchive
-          documents={(documents.data ?? [])
-            .filter(document => document.documentType === "portrait")
-            .map(document => ({
-              ...document,
-              documentType: "portrait" as const,
-            }))}
-          fallbacks={publicPortraitStudies(null)}
-          onAdd={() => {
-            resetEditor("portrait");
-            window.requestAnimationFrame(() =>
-              document
-                .getElementById("studio-compose")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" })
-            );
-          }}
-          onEdit={portraitDocument => {
-            loadDocument(portraitDocument);
-            window.requestAnimationFrame(() =>
-              document
-                .getElementById("studio-compose")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" })
-            );
-          }}
-          onImportFallback={study => {
-            setDocumentType("portrait");
-            setSlug(slugify(study.title));
-            setPayload({
-              title: study.title,
-              titleEn: study.titleEn || "",
-              label: study.label || "STUDI POTRET",
-              imageUrl: study.imageUrl,
-              copyId: study.copyId || "",
-              copyEn: study.copyEn || "",
-              altId: study.altId || "",
-              altEn: study.altEn || "",
-            });
-            setSortOrder(study.order || 0);
-            setIsPublished(true);
-            setEditingId(null);
-            setShowAdvanced(true);
-            setIsDirty(true);
-            window.requestAnimationFrame(() =>
-              document
-                .getElementById("studio-compose")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" })
-            );
-          }}
-        />
-
-        <div className="grid items-start gap-5 2xl:grid-cols-[minmax(0,1.08fr)_minmax(390px,0.92fr)]">
-          <section
-            id="studio-compose"
-            className="overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.03] shadow-2xl shadow-black/20"
-          >
-            <div className="border-b border-white/[0.08] bg-white/[0.025] px-5 py-5 sm:px-7">
-              {" "}
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-200/70">
-                    <FilePenLine size={13} />
-                    01 // Compose
-                  </div>
-                  <h2 className="mt-2 text-xl font-semibold tracking-tight text-white">
-                    {editingId
-                      ? "Edit existing content"
-                      : currentWorkflow?.title || "Start a new document"}
-                  </h2>
-                  <p className="mt-1 text-xs text-white/40">
-                    {currentWorkflow?.description || selectedType?.description}
-                  </p>
-                  <p className="mt-2 inline-flex rounded-full border border-amber-200/15 bg-amber-200/[0.05] px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] text-amber-100/65">
-                    {editingId
-                      ? "Sumber: CMS tersimpan"
-                      : "Sumber: isi publik / fallback terverifikasi"}
-                  </p>
-                  {documentType === "release" || documentType === "event" ? (
-                    <p className="mt-2 text-[10px] uppercase tracking-[0.12em] text-cyan-100/45">
-                      Slug auto-generated from title when left as default
-                    </p>
-                  ) : null}
-                </div>
-                {editingId ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => resetEditor()}
-                    className="h-9 rounded-lg border-white/10 bg-white/[0.03] text-xs text-white/65 hover:bg-white/[0.08] hover:text-white"
-                  >
-                    New document
-                  </Button>
-                ) : (
-                  <span className="flex items-center gap-2 rounded-full border border-white/10 bg-black/15 px-2.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.15em] text-white/35">
-                    <Sparkles size={11} className="text-cyan-200/70" /> Draft
-                    first
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="sticky top-2 z-20 flex flex-col gap-3 border-b border-cyan-200/10 bg-[#0b1117]/95 px-5 py-3 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between sm:px-7">
-              <div className="min-w-0">
-                <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cyan-100/55">
-                  02 // Save state
-                </p>
-                <p className="mt-1 truncate text-xs text-white/65">
-                  {editingId
-                    ? `Mengedit ${selectedType?.label || documentType}`
-                    : `Dokumen baru · ${selectedType?.label || documentType}`}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] ${isDirty ? "border-amber-200/25 bg-amber-200/[0.08] text-amber-100/85" : "border-white/10 bg-black/15 text-white/45"}`}
-                >
-                  {isDirty ? "Belum disimpan" : "Tidak ada perubahan"}
-                </span>
-                <span
-                  className={`hidden rounded-full border px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.12em] sm:inline-flex ${isPublished ? "border-emerald-200/20 bg-emerald-200/[0.07] text-emerald-100/80" : "border-amber-200/20 bg-amber-200/[0.07] text-amber-100/75"}`}
-                >
-                  {isPublished ? "Tayang setelah simpan" : "Draft saja"}
-                </span>
-                <Button
-                  type="submit"
-                  form="studio-editor-form"
-                  className="h-9 rounded-lg bg-cyan-300 px-3 text-xs font-semibold text-[#071014] hover:bg-cyan-200"
-                >
-                  {isPublished ? "Simpan & tampilkan" : "Simpan draft"}
-                </Button>
-              </div>
-            </div>
-            <form
-              id="studio-editor-form"
-              onSubmit={submit}
-              className="space-y-6 p-5 sm:p-7"
-            >
-              <StudioPublishChecklist documentType={documentType} payload={payload} isPublished={isPublished} />
-              {isPrimaryDocument && !showAdvanced ? (
-                <div className="flex flex-col gap-4 rounded-xl border border-cyan-200/15 bg-cyan-200/[0.055] p-4 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cyan-100/55">
-                      Workflow aktif
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-white">
-                      {currentWorkflow?.title}
-                    </p>
-                    <p className="mt-1 text-xs text-white/45">
-                      {currentWorkflow?.description}
-                    </p>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setShowAdvanced(true)}
-                    className="h-9 shrink-0 rounded-lg border-cyan-200/20 bg-black/15 text-xs text-cyan-100/80 hover:bg-cyan-200/[0.08]"
-                  >
-                    Pengaturan lanjutan <ChevronDown size={13} />
-                  </Button>
-                </div>
-              ) : (
-                <div className="grid gap-4 sm:grid-cols-[1.1fr_0.9fr]">
-                  <div className="space-y-2">
-                    <label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">
-                      Document type
-                    </label>
-                    <select
-                      value={documentType}
-                      onChange={event =>
-                        resetEditor(event.target.value as DocumentType)
-                      }
-                      className="h-12 w-full rounded-xl border border-cyan-200/20 bg-cyan-200/[0.06] px-3 text-sm font-medium text-white outline-none transition focus:border-cyan-200/60 focus:ring-2 focus:ring-cyan-200/10"
-                    >
-                      {documentTypes.map(type => (
-                        <option
-                          value={type.value}
-                          key={type.value}
-                          className="bg-[#12141a]"
-                        >
-                          {type.eyebrow} / {type.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">
-                        Slug internal
-                      </label>
-                      <span className="text-[9px] uppercase tracking-[0.12em] text-white/30">
-                        Opsional
-                      </span>
-                    </div>
-                    <Input
-                      value={slug}
-                      onChange={event => {
-                        setSlug(event.target.value);
-                        setIsDirty(true);
-                      }}
-                      placeholder="Otomatis dari judul"
-                      className="h-12 rounded-xl border-white/10 bg-black/20 text-white placeholder:text-white/25 focus:border-cyan-200/50 focus:ring-cyan-200/10"
-                    />
-                  </div>
-                </div>
-              )}
-              <div className="h-px bg-white/[0.07]" />
-              <div className="grid gap-x-4 gap-y-5 sm:grid-cols-2">
-                {visibleFields.map(field => (
-                  <StudioField
-                    documentType={documentType}
-                    field={field}
-                    payload={payload}
-                    updateField={updateField}
-                    key={field.key}
-                  />
-                ))}
-              </div>
-              {documentType === "release" ? (
-                <label className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-black/15 px-4 py-3 text-xs text-white/65">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 accent-cyan-300"
-                    checked={Boolean(payload.isCurrent)}
-                    onChange={event =>
-                      updateField("isCurrent", event.target.checked)
-                    }
-                  />{" "}
-                  Jadikan rilisan terbaru di homepage
-                </label>
-              ) : null}
-              {documentType === "legal" ? (
-                <label className="flex items-center gap-3 rounded-xl border border-amber-200/10 bg-amber-200/[0.04] px-4 py-3 text-xs text-amber-100/70">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 accent-amber-300"
-                    checked={Boolean(payload.readyForPublic)}
-                    onChange={event =>
-                      updateField("readyForPublic", event.target.checked)
-                    }
-                  />{" "}
-                  Tampilkan dokumen legal ke publik
-                </label>
-              ) : null}
-              {documentType === "event" ? (
-                <label className="flex items-center gap-3 rounded-xl border border-cyan-200/10 bg-cyan-200/[0.04] px-4 py-3 text-xs text-cyan-100/70">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 accent-cyan-300"
-                    checked={Boolean(payload.isFeatured)}
-                    onChange={event =>
-                      updateField("isFeatured", event.target.checked)
-                    }
-                  />{" "}
-                  Jadikan jadwal utama / show berikutnya
-                </label>
-              ) : null}
-              {documentType === "game" ? (
-                <label className="flex items-center gap-3 rounded-xl border border-cyan-200/10 bg-cyan-200/[0.04] px-4 py-3 text-xs text-cyan-100/70">
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 accent-cyan-300"
-                    checked={payload.isEnabled !== false}
-                    onChange={event => updateField("isEnabled", event.target.checked)}
-                  />{" "}
-                  Aktifkan route game dan teaser homepage
-                </label>
-              ) : null}
-              <div className="grid gap-4 border-t border-white/[0.08] pt-5 sm:grid-cols-[0.8fr_1.2fr]">
-                <div className="space-y-2">
-                  <label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">
-                    Urutan tampil
-                  </label>
-                  <Input
-                    type="number"
-                    min="0"
-                    value={sortOrder}
-                    onChange={event => {
-                      setSortOrder(Number(event.target.value));
-                      setIsDirty(true);
-                    }}
-                    className="h-11 rounded-xl border-white/10 bg-black/20 text-white focus:border-cyan-200/50 focus:ring-cyan-200/10"
-                  />
-                </div>
-                <label
-                  className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-xs transition ${isPublished ? "border-emerald-200/20 bg-emerald-200/[0.06] text-emerald-100/80" : "border-white/10 bg-black/15 text-white/50"}`}
-                >
-                  <span>
-                    <span className="block font-medium">
-                      {isPublished
-                        ? "Tampilkan ke publik"
-                        : "Simpan sebagai draft"}
-                    </span>
-                    <span className="mt-1 block text-[10px] opacity-60">
-                      {isPublished
-                        ? "Perubahan terlihat di website setelah disimpan"
-                        : "Belum terlihat publik sampai siap"}
-                    </span>
-                  </span>
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 accent-emerald-300"
-                    checked={isPublished}
-                    onChange={event => {
-                      setIsPublished(event.target.checked);
-                      setIsDirty(true);
-                    }}
-                  />
-                </label>
-              </div>
-              <div className="rounded-xl border border-cyan-200/10 bg-cyan-200/[0.035] px-4 py-3 text-xs leading-5 text-white/45">
-                <span className="font-medium text-cyan-100/75">
-                  Media & preview:
-                </span>{" "}
-                upload atau ganti gambar/audio/video/PDF langsung dari field
-                media. URL akan menampilkan preview platform dan tombol buka
-                sebelum disimpan.
-              </div>
-              <Button
-                type="submit"
-                className="h-12 w-full rounded-xl bg-cyan-300 text-sm font-semibold text-[#071014] shadow-lg shadow-cyan-300/10 transition hover:bg-cyan-200 active:scale-[0.99]"
-                disabled={save.isPending}
+        {tab === "overview" ? (
+          <div className="space-y-5 st-rise">
+            <section id="studio-quick-actions">
+              <Panel
+                eyebrow="Quick actions"
+                icon={Sparkles}
+                title="Mau update apa hari ini?"
+                description="Pilih alur utama di bawah. Studio mengurus tipe dokumen dan slug secara otomatis."
               >
-                {save.isPending
-                  ? "Menyimpan…"
-                  : isPublished
-                    ? "Simpan & tampilkan"
-                    : "Simpan sebagai draft"}
-              </Button>
-            </form>
-          </section>
+                <div className="grid gap-3 md:grid-cols-3">
+                  {primaryWorkflows.map(workflow => {
+                    const Icon = workflow.icon;
+                    const active = documentType === workflow.type && !editingId;
+                    return (
+                      <button
+                        type="button"
+                        key={workflow.type}
+                        onClick={() => {
+                          resetEditor(workflow.type);
+                          focusCompose();
+                        }}
+                        className={`group rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 ${active ? "border-cyan-200/45 bg-cyan-200/[0.1]" : "border-white/[0.09] bg-black/[0.14] hover:border-cyan-200/25 hover:bg-white/[0.04]"}`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <span
+                            className={`grid h-10 w-10 place-items-center rounded-xl ${active ? "bg-cyan-200 text-[#071014]" : "bg-white/[0.07] text-cyan-100/70"}`}
+                          >
+                            <Icon size={17} />
+                          </span>
+                          <Plus
+                            size={15}
+                            className="text-white/25 transition group-hover:text-cyan-100/70"
+                          />
+                        </div>
+                        <p className="mt-5 font-mono text-[9px] uppercase tracking-[0.2em] text-cyan-100/45">
+                          {workflow.eyebrow} / workflow
+                        </p>
+                        <h3 className="mt-1 text-sm font-semibold text-white">
+                          {workflow.title}
+                        </h3>
+                        <p className="mt-1 text-xs leading-5 text-white/40">
+                          {workflow.description}
+                        </p>
+                        <span className="mt-4 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-cyan-100/70">
+                          {workflow.action} <ArrowUpRight size={12} />
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </Panel>
+            </section>
 
-          <aside className="space-y-5 2xl:sticky 2xl:top-6">
-            <StudioDocumentPreview
-              documentType={documentType}
-              payload={payload}
-              slug={slug}
+            <StudioPageMirror
+              documents={documents.data ?? []}
+              onEditType={type => openEditorForType(type as DocumentType)}
             />
 
-          <section
-            id="studio-document-library"
-            className="overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.03] shadow-2xl shadow-black/20"
-          >
-            <div className="border-b border-white/[0.08] bg-white/[0.025] px-5 py-5 sm:px-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-violet-200/70">
-                    <LayoutList size={13} />
-                    02 // Library
-                  </div>
-                  <h2 className="mt-2 text-xl font-semibold tracking-tight text-white">
-                    Managed documents
+            <StudioGalleryAnalytics />
+          </div>
+        ) : null}
+
+        {tab === "compose" ? (
+          <div className="grid items-start gap-5 st-rise 2xl:grid-cols-[minmax(0,1.1fr)_minmax(380px,0.9fr)]">
+            <section id="studio-compose" className="st-panel">
+              <header className="st-panel-head">
+                <div className="min-w-0">
+                  <Eyebrow icon={FilePenLine}>01 // Compose</Eyebrow>
+                  <h2 className="st-title">
+                    {editingId
+                      ? "Edit konten yang sudah ada"
+                      : currentWorkflow?.title || "Mulai dokumen baru"}
                   </h2>
-                  <p className="mt-1 text-xs text-white/40">
-                    {documents.data?.length ?? 0} documents in the editor
-                    database
+                  <p className="st-sub">
+                    {currentWorkflow?.description || selectedType?.description}
                   </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Pill tone="draft">
+                      {editingId
+                        ? "Sumber: CMS tersimpan"
+                        : "Sumber: isi publik / fallback terverifikasi"}
+                    </Pill>
+                    {documentType === "release" || documentType === "event" ? (
+                      <Pill>Slug otomatis dari judul</Pill>
+                    ) : null}
+                  </div>
                 </div>
-                <span className="rounded-lg border border-white/10 bg-black/15 px-2.5 py-1.5 font-mono text-[10px] text-white/40">
-                  {documents.isLoading
-                    ? "—"
-                    : `${documents.data?.length ?? 0} total`}
-                </span>
+                {editingId ? (
+                  <StudioButton type="button" onClick={() => resetEditor()}>
+                    Dokumen baru
+                  </StudioButton>
+                ) : (
+                  <Pill tone="accent">
+                    <Sparkles size={11} /> Draft first
+                  </Pill>
+                )}
+              </header>
+
+              <div className="px-4 pt-4 sm:px-6">
+                <div className="st-savebar" data-dirty={isDirty}>
+                  <div className="min-w-0">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cyan-100/55">
+                      02 // Save state
+                    </p>
+                    <p className="mt-1 truncate text-xs text-white/65">
+                      {editingId
+                        ? `Mengedit ${selectedType?.label || documentType}`
+                        : `Dokumen baru · ${selectedType?.label || documentType}`}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Pill tone={isDirty ? "draft" : "neutral"}>
+                      {isDirty ? "Belum disimpan" : "Tidak ada perubahan"}
+                    </Pill>
+                    <span className="hidden sm:inline-flex">
+                      <Pill tone={isPublished ? "live" : "draft"}>
+                        {isPublished ? "Tayang setelah simpan" : "Draft saja"}
+                      </Pill>
+                    </span>
+                    <StudioButton
+                      type="submit"
+                      form="studio-editor-form"
+                      variant="primary"
+                      disabled={save.isPending}
+                    >
+                      <Save size={13} />
+                      {isPublished ? "Simpan & tampilkan" : "Simpan draft"}
+                    </StudioButton>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="space-y-3 p-4 sm:p-5">
+
+              <form
+                id="studio-editor-form"
+                onSubmit={submit}
+                className="space-y-6 p-4 sm:p-6"
+              >
+                <StudioPublishChecklist
+                  documentType={documentType}
+                  payload={payload}
+                  isPublished={isPublished}
+                />
+                {isPrimaryDocument && !showAdvanced ? (
+                  <div className="flex flex-col gap-4 rounded-2xl border border-cyan-200/15 bg-cyan-200/[0.055] p-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-cyan-100/55">
+                        Workflow aktif
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-white">
+                        {currentWorkflow?.title}
+                      </p>
+                      <p className="mt-1 text-xs text-white/45">
+                        {currentWorkflow?.description}
+                      </p>
+                    </div>
+                    <StudioButton
+                      type="button"
+                      onClick={() => setShowAdvanced(true)}
+                    >
+                      Pengaturan lanjutan <ChevronDown size={13} />
+                    </StudioButton>
+                  </div>
+                ) : (
+                  <div className="grid gap-4 sm:grid-cols-[1.1fr_0.9fr]">
+                    <div className="space-y-2">
+                      <label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">
+                        Document type
+                      </label>
+                      <select
+                        value={documentType}
+                        onChange={event =>
+                          resetEditor(event.target.value as DocumentType)
+                        }
+                        className="h-12 w-full rounded-xl border border-cyan-200/20 bg-cyan-200/[0.06] px-3 text-sm font-medium text-white outline-none transition focus:border-cyan-200/60"
+                      >
+                        {documentTypes.map(type => (
+                          <option
+                            value={type.value}
+                            key={type.value}
+                            className="bg-[#12141a]"
+                          >
+                            {type.eyebrow} / {type.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">
+                          Slug internal
+                        </label>
+                        <span className="text-[9px] uppercase tracking-[0.12em] text-white/30">
+                          Opsional
+                        </span>
+                      </div>
+                      <Input
+                        value={slug}
+                        onChange={event => {
+                          setSlug(event.target.value);
+                          setIsDirty(true);
+                        }}
+                        placeholder="Otomatis dari judul"
+                        className="h-12 rounded-xl border-white/10 bg-black/20 text-white placeholder:text-white/25 focus:border-cyan-200/50"
+                      />
+                    </div>
+                  </div>
+                )}
+                <div className="h-px bg-white/[0.07]" />
+                <div className="grid gap-x-4 gap-y-5 sm:grid-cols-2">
+                  {visibleFields.map(field => (
+                    <StudioField
+                      documentType={documentType}
+                      field={field}
+                      payload={payload}
+                      updateField={updateField}
+                      key={field.key}
+                    />
+                  ))}
+                </div>
+                {documentType === "release" ? (
+                  <label className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-black/15 px-4 py-3 text-xs text-white/65">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-cyan-300"
+                      checked={Boolean(payload.isCurrent)}
+                      onChange={event =>
+                        updateField("isCurrent", event.target.checked)
+                      }
+                    />{" "}
+                    Jadikan rilisan terbaru di homepage
+                  </label>
+                ) : null}
+                {documentType === "legal" ? (
+                  <label className="flex items-center gap-3 rounded-xl border border-amber-200/10 bg-amber-200/[0.04] px-4 py-3 text-xs text-amber-100/70">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-amber-300"
+                      checked={Boolean(payload.readyForPublic)}
+                      onChange={event =>
+                        updateField("readyForPublic", event.target.checked)
+                      }
+                    />{" "}
+                    Tampilkan dokumen legal ke publik
+                  </label>
+                ) : null}
+                {documentType === "event" ? (
+                  <label className="flex items-center gap-3 rounded-xl border border-cyan-200/10 bg-cyan-200/[0.04] px-4 py-3 text-xs text-cyan-100/70">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-cyan-300"
+                      checked={Boolean(payload.isFeatured)}
+                      onChange={event =>
+                        updateField("isFeatured", event.target.checked)
+                      }
+                    />{" "}
+                    Jadikan jadwal utama / show berikutnya
+                  </label>
+                ) : null}
+                {documentType === "game" ? (
+                  <label className="flex items-center gap-3 rounded-xl border border-cyan-200/10 bg-cyan-200/[0.04] px-4 py-3 text-xs text-cyan-100/70">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-cyan-300"
+                      checked={payload.isEnabled !== false}
+                      onChange={event =>
+                        updateField("isEnabled", event.target.checked)
+                      }
+                    />{" "}
+                    Aktifkan route game dan teaser homepage
+                  </label>
+                ) : null}
+                <div className="grid gap-4 border-t border-white/[0.08] pt-5 sm:grid-cols-[0.8fr_1.2fr]">
+                  <div className="space-y-2">
+                    <label className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-white/50">
+                      Urutan tampil
+                    </label>
+                    <Input
+                      type="number"
+                      min="0"
+                      value={sortOrder}
+                      onChange={event => {
+                        setSortOrder(Number(event.target.value));
+                        setIsDirty(true);
+                      }}
+                      className="h-11 rounded-xl border-white/10 bg-black/20 text-white focus:border-cyan-200/50"
+                    />
+                  </div>
+                  <label
+                    className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-xs transition ${isPublished ? "border-emerald-200/20 bg-emerald-200/[0.06] text-emerald-100/80" : "border-white/10 bg-black/15 text-white/50"}`}
+                  >
+                    <span>
+                      <span className="block font-medium">
+                        {isPublished
+                          ? "Tampilkan ke publik"
+                          : "Simpan sebagai draft"}
+                      </span>
+                      <span className="mt-1 block text-[10px] opacity-60">
+                        {isPublished
+                          ? "Perubahan terlihat di website setelah disimpan"
+                          : "Belum terlihat publik sampai siap"}
+                      </span>
+                    </span>
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-emerald-300"
+                      checked={isPublished}
+                      onChange={event => {
+                        setIsPublished(event.target.checked);
+                        setIsDirty(true);
+                      }}
+                    />
+                  </label>
+                </div>
+                <div className="rounded-xl border border-cyan-200/10 bg-cyan-200/[0.035] px-4 py-3 text-xs leading-5 text-white/45">
+                  <span className="font-medium text-cyan-100/75">
+                    Media & preview:
+                  </span>{" "}
+                  upload atau ganti gambar/audio/video/PDF langsung dari field
+                  media. URL akan menampilkan preview platform dan tombol buka
+                  sebelum disimpan. Tekan{" "}
+                  <kbd className="rounded border border-white/10 bg-black/30 px-1.5 py-0.5 font-mono text-[10px]">
+                    ⌘S
+                  </kbd>{" "}
+                  untuk menyimpan.
+                </div>
+                <StudioButton
+                  type="submit"
+                  variant="primary"
+                  className="h-12 w-full"
+                  disabled={save.isPending}
+                >
+                  {save.isPending
+                    ? "Menyimpan…"
+                    : isPublished
+                      ? "Simpan & tampilkan"
+                      : "Simpan sebagai draft"}
+                </StudioButton>
+              </form>
+            </section>
+
+            <aside className="space-y-5 2xl:sticky 2xl:top-24">
+              <StudioDocumentPreview
+                documentType={documentType}
+                payload={payload}
+                slug={slug}
+              />
+            </aside>
+          </div>
+        ) : null}
+
+        {tab === "library" ? (
+          <section id="studio-document-library" className="st-panel st-rise">
+            <header className="st-panel-head">
+              <div className="min-w-0">
+                <Eyebrow icon={LayoutList}>02 // Library</Eyebrow>
+                <h2 className="st-title">Managed documents</h2>
+                <p className="st-sub">
+                  {documents.data?.length ?? 0} dokumen tersimpan ·{" "}
+                  {filteredDocuments.length} ditampilkan
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="relative">
+                  <Search
+                    size={13}
+                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/30"
+                  />
+                  <Input
+                    value={libraryQuery}
+                    onChange={event => setLibraryQuery(event.target.value)}
+                    placeholder="Cari judul atau slug…"
+                    className="h-9 w-56 rounded-xl border-white/10 bg-black/25 pl-8 text-xs text-white placeholder:text-white/25 focus:border-cyan-200/50"
+                  />
+                </div>
+                <select
+                  value={libraryType}
+                  onChange={event => setLibraryType(event.target.value)}
+                  className="h-9 rounded-xl border border-white/10 bg-black/25 px-2.5 text-xs text-white outline-none focus:border-cyan-200/50"
+                >
+                  <option value="all" className="bg-[#12141a]">
+                    Semua tipe
+                  </option>
+                  {documentTypes.map(type => (
+                    <option
+                      key={type.value}
+                      value={type.value}
+                      className="bg-[#12141a]"
+                    >
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  value={libraryStatus}
+                  onChange={event =>
+                    setLibraryStatus(event.target.value as LibraryStatus)
+                  }
+                  className="h-9 rounded-xl border border-white/10 bg-black/25 px-2.5 text-xs text-white outline-none focus:border-cyan-200/50"
+                >
+                  <option value="all" className="bg-[#12141a]">
+                    Semua status
+                  </option>
+                  <option value="published" className="bg-[#12141a]">
+                    Published
+                  </option>
+                  <option value="draft" className="bg-[#12141a]">
+                    Draft
+                  </option>
+                </select>
+              </div>
+            </header>
+            <div className="st-panel-body">
               {documents.isLoading ? (
-                <div className="rounded-xl border border-dashed border-white/10 p-8 text-center text-sm text-white/40">
-                  Loading document library…
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  {Array.from({ length: 6 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="h-32 animate-pulse rounded-2xl bg-white/[0.04]"
+                    />
+                  ))}
                 </div>
               ) : documents.isError ? (
                 <div className="rounded-xl border border-red-200/15 bg-red-200/[0.05] p-5 text-sm text-red-100/75">
-                  Could not load managed documents.
+                  Dokumen tidak dapat dimuat.
+                </div>
+              ) : filteredDocuments.length ? (
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  {filteredDocuments.map(document => (
+                    <article
+                      className={`group relative overflow-hidden rounded-2xl border p-4 transition hover:-translate-y-0.5 ${editingId === document.id ? "border-cyan-200/45 bg-cyan-200/[0.08]" : "border-white/[0.08] bg-black/[0.14] hover:border-white/20 hover:bg-white/[0.04]"}`}
+                      key={document.id}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <button
+                          type="button"
+                          className="min-w-0 flex-1 text-left"
+                          onClick={() => {
+                            loadDocument(document);
+                            focusCompose();
+                          }}
+                        >
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/35">
+                              {document.documentType}
+                            </span>
+                            <span className="text-white/20">/</span>
+                            <span className="truncate font-mono text-[9px] text-white/45">
+                              {document.slug}
+                            </span>
+                          </div>
+                          <p className="mt-3 truncate text-sm font-medium text-white/85">
+                            {textValue(document.payload, "title") ||
+                              textValue(document.payload, "siteTitle") ||
+                              textValue(document.payload, "heroTitle") ||
+                              document.slug}
+                          </p>
+                          <p className="mt-1 text-[10px] text-white/35">
+                            Updated{" "}
+                            {new Date(document.updatedAt).toLocaleString()}
+                          </p>
+                          <p className="mt-2 text-[10px] leading-4 text-cyan-100/45">
+                            Dipakai di:{" "}
+                            {libraryDestination(document.documentType)}
+                          </p>
+                        </button>
+                        <div className="flex flex-col items-end gap-2">
+                          <Pill tone={document.isPublished ? "live" : "draft"}>
+                            {document.isPublished ? "Live" : "Draft"}
+                          </Pill>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 shrink-0 rounded-lg px-2 text-red-200/55 hover:bg-red-200/10 hover:text-red-100"
+                            onClick={() => confirmDelete(document)}
+                            disabled={remove.isPending}
+                          >
+                            <Trash2 size={14} />
+                          </Button>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
                 </div>
               ) : documents.data?.length ? (
-                documents.data.map(document => (
-                  <article
-                    className={`rounded-xl border p-4 transition ${editingId === document.id ? "border-cyan-200/40 bg-cyan-200/[0.07]" : "border-white/[0.08] bg-black/[0.12] hover:border-white/20 hover:bg-white/[0.04]"}`}
-                    key={document.id}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <button
-                        type="button"
-                        className="min-w-0 flex-1 text-left"
-                        onClick={() => loadDocument(document)}
-                      >
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/35">
-                            {document.documentType}
-                          </span>
-                          <span className="text-white/20">/</span>
-                          <span className="truncate font-mono text-[9px] text-white/45">
-                            {document.slug}
-                          </span>
-                          <span
-                            className={`rounded-full px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.1em] ${document.isPublished ? "bg-emerald-200/10 text-emerald-100/80" : "bg-white/[0.08] text-white/45"}`}
-                          >
-                            {document.isPublished ? "Published" : "Draft"}
-                          </span>
-                        </div>
-                        <p className="mt-3 truncate text-sm font-medium text-white/85">
-                          {textValue(document.payload, "title") ||
-                            textValue(document.payload, "siteTitle") ||
-                            textValue(document.payload, "heroTitle") ||
-                            document.slug}
-                        </p>
-                        <p className="mt-1 text-[10px] text-white/35">
-                          Updated{" "}
-                          {new Date(document.updatedAt).toLocaleString()}
-                        </p>
-                        <p className="mt-2 text-[10px] text-cyan-100/45">
-                          Dipakai di:{" "}
-                          {document.documentType === "release"
-                            ? "Homepage + Music + EPK"
-                            : document.documentType === "journey"
-                              ? "Homepage Artist Journey + About / Universe"
-                              : document.documentType === "photoStory"
-                                ? "Homepage Photo Story + Visuals"
-                                : document.documentType === "event" ||
-                                document.documentType === "live"
-                              ? "Live + Homepage"
-                              : document.documentType === "profile"
-                                ? "About + Universe + EPK"
-                                : document.documentType === "pressKit"
-                                  ? "EPK"
-                                  : document.documentType === "visual"
-                                    ? "Visuals + Homepage"
-                                    : document.documentType === "portrait"
-                                      ? "Visuals → Portrait gallery"
-                                      : document.documentType === "legal"
-                                      ? "Privacy / Legal"
-                                      : "Homepage + metadata"}
-                        </p>
-                      </button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 shrink-0 rounded-lg px-2 text-red-200/55 hover:bg-red-200/10 hover:text-red-100"
-                        onClick={() => confirmDelete(document)}
-                        disabled={remove.isPending}
-                      >
-                        <Trash2 size={14} />
-                      </Button>
-                    </div>
-                  </article>
-                ))
+                <EmptyState
+                  icon={Search}
+                  title="Tidak ada dokumen yang cocok."
+                  description="Ubah kata kunci, tipe, atau status filter untuk melihat dokumen lain."
+                />
               ) : (
-                <div className="rounded-xl border border-dashed border-white/10 p-8 text-center">
-                  <Database className="mx-auto h-7 w-7 text-white/20" />
-                  <p className="mt-3 text-sm text-white/45">
-                    No custom documents yet.
-                  </p>
-                  <p className="mt-1 text-xs leading-5 text-white/30">
-                    The public site keeps its verified local fallback until you
-                    publish a document here.
-                  </p>
-                </div>
+                <EmptyState
+                  icon={Database}
+                  title="Belum ada dokumen tersimpan."
+                  description="Situs publik memakai fallback terverifikasi sampai dokumen pertama dipublikasikan di sini."
+                  action={
+                    <StudioButton
+                      type="button"
+                      variant="primary"
+                      onClick={() => focusCompose()}
+                    >
+                      <Plus size={14} /> Buat dokumen pertama
+                    </StudioButton>
+                  }
+                />
               )}
             </div>
           </section>
-          </aside>
-        </div>
+        ) : null}
+
+        {tab === "archive" ? (
+          <div className="space-y-5 st-rise">
+            <StudioVisualArchive
+              documents={visualDocuments.map(document => ({
+                ...document,
+                documentType: "visual" as const,
+              }))}
+              fallbacks={videos.map((visual, index) => ({
+                id: `fallback-${index}`,
+                title: visual.title,
+                label: visual.label,
+                href: visual.href,
+                image: visual.image,
+              }))}
+              onAdd={() => {
+                resetEditor("visual");
+                focusCompose();
+              }}
+              onEdit={visualDocument => {
+                loadDocument(visualDocument);
+                focusCompose();
+              }}
+              onImportFallback={visual => {
+                setDocumentType("visual");
+                setSlug(slugify(visual.title));
+                setPayload({
+                  title: visual.title,
+                  label: visual.label,
+                  youtubeId: visual.href.split("/").pop() || "",
+                  url: visual.href,
+                  imageUrl: visual.image,
+                });
+                setSortOrder(0);
+                setIsPublished(true);
+                setEditingId(null);
+                setShowAdvanced(false);
+                setIsDirty(true);
+                focusCompose();
+              }}
+            />
+
+            <StudioPortraitArchive
+              documents={portraitDocuments.map(document => ({
+                ...document,
+                documentType: "portrait" as const,
+              }))}
+              fallbacks={publicPortraitStudies(null)}
+              onAdd={() => {
+                resetEditor("portrait");
+                focusCompose();
+              }}
+              onEdit={portraitDocument => {
+                loadDocument(portraitDocument);
+                focusCompose();
+              }}
+              onImportFallback={study => {
+                setDocumentType("portrait");
+                setSlug(slugify(study.title));
+                setPayload({
+                  title: study.title,
+                  titleEn: study.titleEn || "",
+                  label: study.label || "STUDI POTRET",
+                  imageUrl: study.imageUrl,
+                  copyId: study.copyId || "",
+                  copyEn: study.copyEn || "",
+                  altId: study.altId || "",
+                  altEn: study.altEn || "",
+                });
+                setSortOrder(study.order || 0);
+                setIsPublished(true);
+                setEditingId(null);
+                setShowAdvanced(true);
+                setIsDirty(true);
+                focusCompose();
+              }}
+            />
+
+            <StudioLeaderboardManager />
+          </div>
+        ) : null}
       </div>
     </DashboardLayout>
   );

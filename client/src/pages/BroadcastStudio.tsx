@@ -1,13 +1,30 @@
-import { ArrowUpRight, CheckCircle2, Mail, Radio, ShieldCheck, Send, TriangleAlert } from "lucide-react";
+import {
+  ArrowUpRight,
+  CheckCircle2,
+  Mail,
+  Radio,
+  ShieldCheck,
+  Send,
+  TriangleAlert,
+} from "lucide-react";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 import { startLogin } from "@/const";
 import { useAuth } from "@/_core/hooks/useAuth";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
+import {
+  EmptyState,
+  Panel,
+  Pill,
+  Stat,
+  StatGrid,
+  StudioButton,
+  StudioHero,
+  StudioLink,
+} from "@/studio/StudioKit";
 
 const starterHtml = `<div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;background:#071114;color:#f2eadc;padding:40px 28px">
   <p style="font-size:12px;letter-spacing:.18em;color:#7fe6d0">AN // FAN SIGNAL</p>
@@ -25,23 +42,30 @@ type BroadcastForm = {
 
 function AccessGate({ authenticated }: { authenticated: boolean }) {
   return (
-    <main className="grid min-h-[70vh] place-items-center p-6">
-      <section className="max-w-md text-center">
-        <ShieldCheck className="mx-auto mb-5 h-9 w-9 text-primary" />
-        <h1 className="text-3xl font-semibold">Owner access required</h1>
-        <p className="mt-3 text-muted-foreground">
+    <main className="studio-os grid min-h-dvh place-items-center p-6">
+      <section className="st-panel relative z-[1] max-w-md p-8 text-center">
+        <ShieldCheck className="mx-auto h-9 w-9 text-cyan-200" />
+        <h1 className="mt-5 text-2xl font-semibold text-white">
+          Owner access required
+        </h1>
+        <p className="st-sub mx-auto">
           {authenticated
             ? "Broadcast Studio hanya bisa dipakai oleh owner situs."
-            : "Sign in untuk mengelola Fan Signal dengan aman."}
+            : "Masuk untuk mengelola Fan Signal dengan aman."}
         </p>
         {authenticated ? (
-          <a className="mt-7 inline-flex items-center gap-2 underline" href="/">
-            Return to public site <ArrowUpRight size={15} />
+          <a className="st-btn mx-auto mt-6" href="/">
+            Kembali ke situs publik <ArrowUpRight size={14} />
           </a>
         ) : (
-          <Button className="mt-7" onClick={() => startLogin()}>
-            Sign in to continue
-          </Button>
+          <button
+            type="button"
+            className="st-btn mx-auto mt-6"
+            data-variant="primary"
+            onClick={() => startLogin()}
+          >
+            Masuk untuk melanjutkan
+          </button>
         )}
       </section>
     </main>
@@ -67,17 +91,26 @@ export default function BroadcastStudio() {
       setSendConfirmed(false);
       toast.success("Draft broadcast berhasil dibuat di Resend.");
     },
-    onError: error => toast.error(error.message || "Draft broadcast belum bisa dibuat."),
+    onError: error =>
+      toast.error(error.message || "Draft broadcast belum bisa dibuat."),
   });
   const sendBroadcast = trpc.fanSignal.sendBroadcast.useMutation({
     onSuccess: () => {
       setSendConfirmed(false);
       toast.success("Broadcast dikirim ke segment Fan Signal.");
     },
-    onError: error => toast.error(error.message || "Broadcast belum bisa dikirim."),
+    onError: error =>
+      toast.error(error.message || "Broadcast belum bisa dikirim."),
   });
 
-  if (loading) return <div className="min-h-screen grid place-items-center text-sm">Checking studio access…</div>;
+  if (loading)
+    return (
+      <div className="studio-os grid min-h-dvh place-items-center text-sm text-white/50">
+        <span className="relative z-[1] font-mono text-[11px] uppercase tracking-[0.3em]">
+          Memeriksa akses studio…
+        </span>
+      </div>
+    );
   if (!user) return <AccessGate authenticated={false} />;
   if (user.role !== "admin") return <AccessGate authenticated />;
 
@@ -87,77 +120,200 @@ export default function BroadcastStudio() {
   };
 
   return (
-    <DashboardLayout>
-      <div className="mx-auto max-w-6xl space-y-8">
-        <header className="flex flex-wrap items-end justify-between gap-5">
-          <div>
-            <p className="text-xs font-mono tracking-[.16em] text-muted-foreground">AN // FAN SIGNAL</p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight">Broadcast Studio</h1>
-            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-              Buat draft email untuk subscriber Fan Signal. Tidak ada email yang terkirim saat membuat draft; pengiriman selalu membutuhkan langkah konfirmasi kedua.
-            </p>
-          </div>
-          <a className="inline-flex items-center gap-2 text-sm underline" href="/admin">
-            Back to control room <ArrowUpRight size={15} />
-          </a>
-        </header>
+    <DashboardLayout title="Broadcast" kicker="AN // Signals">
+      <div className="space-y-6">
+        <StudioHero
+          kicker="AN // Fan Signal"
+          title={
+            <>
+              Broadcast <em>studio.</em>
+            </>
+          }
+          lead="Buat draft email untuk subscriber Fan Signal. Tidak ada email yang terkirim saat membuat draft; pengiriman selalu membutuhkan langkah konfirmasi kedua."
+          actions={
+            <StudioLink href="/admin">
+              Kembali ke Control Room <ArrowUpRight size={13} />
+            </StudioLink>
+          }
+          aside={
+            <Pill tone={readiness.data?.configured ? "live" : "draft"}>
+              {readiness.data?.configured
+                ? "Resend siap"
+                : "Menunggu konfigurasi"}
+            </Pill>
+          }
+        />
 
-        <section className="grid gap-4 md:grid-cols-3">
-          <article className="rounded-xl border bg-card p-5">
-            {readiness.data?.configured ? <CheckCircle2 className="h-5 w-5 text-emerald-500" /> : <TriangleAlert className="h-5 w-5 text-amber-500" />}
-            <p className="mt-5 text-sm font-semibold">Resend connection</p>
-            <p className="mt-1 text-sm text-muted-foreground">{readiness.isLoading ? "Checking…" : readiness.data?.configured ? "API ready in production" : "Waiting for API key"}</p>
-          </article>
-          <article className="rounded-xl border bg-card p-5">
-            <Radio className="h-5 w-5 text-primary" />
-            <p className="mt-5 text-sm font-semibold">Audience segment</p>
-            <p className="mt-1 text-sm text-muted-foreground">{readiness.data?.segmentConfigured ? "Configured for Fan Signal" : "Segment ID belum dipasang"}</p>
-          </article>
-          <article className="rounded-xl border bg-card p-5">
-            <Mail className="h-5 w-5 text-primary" />
-            <p className="mt-5 text-sm font-semibold">Sender</p>
-            <p className="mt-1 break-all text-sm text-muted-foreground">{readiness.data?.fromEmail || "Sender belum dikonfigurasi"}</p>
-          </article>
-        </section>
+        <StatGrid>
+          <Stat
+            icon={readiness.data?.configured ? CheckCircle2 : TriangleAlert}
+            kicker="Resend"
+            value={
+              readiness.isLoading
+                ? "\u2014"
+                : readiness.data?.configured
+                  ? "READY"
+                  : "SETUP"
+            }
+            label={
+              readiness.data?.configured
+                ? "API aktif di production"
+                : "Menunggu API key"
+            }
+            tone={readiness.data?.configured ? "mint" : "amber"}
+          />
+          <Stat
+            icon={Radio}
+            kicker="Segment"
+            value={readiness.data?.segmentConfigured ? "LINKED" : "EMPTY"}
+            label={
+              readiness.data?.segmentConfigured
+                ? "Terhubung ke Fan Signal"
+                : "Segment ID belum dipasang"
+            }
+            tone={readiness.data?.segmentConfigured ? "cyan" : "amber"}
+          />
+          <Stat
+            icon={Mail}
+            kicker="Sender"
+            value={readiness.data?.fromEmail ? "SET" : "—"}
+            label={readiness.data?.fromEmail || "Sender belum dikonfigurasi"}
+            tone="violet"
+          />
+        </StatGrid>
 
-        <div className="grid gap-7 lg:grid-cols-[1.1fr_.9fr]">
-          <form onSubmit={submitDraft} className="rounded-xl border bg-card p-5 shadow-sm">
-            <div className="mb-5 flex items-center gap-2"><Mail size={18} /><h2 className="font-semibold">Compose draft</h2></div>
-            <label className="grid gap-2 text-sm">Internal name<Input required value={form.name} onChange={event => setForm({ ...form, name: event.target.value })} /></label>
-            <label className="mt-4 grid gap-2 text-sm">Subject<Input required value={form.subject} onChange={event => setForm({ ...form, subject: event.target.value })} /></label>
-            <label className="mt-4 grid gap-2 text-sm">HTML body<Textarea required className="min-h-72 font-mono text-xs" value={form.html} onChange={event => setForm({ ...form, html: event.target.value })} /></label>
-            <label className="mt-4 grid gap-2 text-sm">Plain-text fallback<Textarea className="min-h-32" value={form.text} onChange={event => setForm({ ...form, text: event.target.value })} /></label>
-            <Button className="mt-6 w-full" disabled={createDraft.isPending || !readiness.data?.configured || !readiness.data?.segmentConfigured}>
-              {createDraft.isPending ? "CREATING DRAFT…" : "CREATE RESEND DRAFT"}
-              <ArrowUpRight size={16} />
-            </Button>
-            {(!readiness.data?.configured || !readiness.data?.segmentConfigured) && <p className="mt-3 text-xs text-amber-600">Lengkapi API key dan segment ID Production sebelum membuat broadcast.</p>}
-          </form>
+        <div className="grid items-start gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+          <Panel
+            eyebrow="01 // Compose"
+            icon={Mail}
+            title="Susun draft"
+            description="Isi disimpan sebagai draft di Resend, belum terkirim ke siapa pun."
+          >
+            <form onSubmit={submitDraft} className="space-y-4">
+              <label className="grid gap-2 text-xs text-white/60">
+                Nama internal
+                <Input
+                  required
+                  value={form.name}
+                  onChange={event =>
+                    setForm({ ...form, name: event.target.value })
+                  }
+                  className="h-11 rounded-xl border-white/10 bg-black/25 text-white focus:border-cyan-200/50"
+                />
+              </label>
+              <label className="grid gap-2 text-xs text-white/60">
+                Subject
+                <Input
+                  required
+                  value={form.subject}
+                  onChange={event =>
+                    setForm({ ...form, subject: event.target.value })
+                  }
+                  className="h-11 rounded-xl border-white/10 bg-black/25 text-white focus:border-cyan-200/50"
+                />
+              </label>
+              <label className="grid gap-2 text-xs text-white/60">
+                HTML body
+                <Textarea
+                  required
+                  className="min-h-72 rounded-xl border-white/10 bg-black/25 font-mono text-[11px] text-white focus:border-cyan-200/50"
+                  value={form.html}
+                  onChange={event =>
+                    setForm({ ...form, html: event.target.value })
+                  }
+                />
+              </label>
+              <label className="grid gap-2 text-xs text-white/60">
+                Plain-text fallback
+                <Textarea
+                  className="min-h-32 rounded-xl border-white/10 bg-black/25 text-xs text-white focus:border-cyan-200/50"
+                  value={form.text}
+                  onChange={event =>
+                    setForm({ ...form, text: event.target.value })
+                  }
+                />
+              </label>
+              <StudioButton
+                type="submit"
+                variant="primary"
+                className="h-11 w-full"
+                disabled={
+                  createDraft.isPending ||
+                  !readiness.data?.configured ||
+                  !readiness.data?.segmentConfigured
+                }
+              >
+                {createDraft.isPending
+                  ? "MEMBUAT DRAFT…"
+                  : "BUAT DRAFT DI RESEND"}
+                <ArrowUpRight size={15} />
+              </StudioButton>
+              {!readiness.data?.configured ||
+              !readiness.data?.segmentConfigured ? (
+                <p className="rounded-xl border border-amber-200/20 bg-amber-200/[0.06] px-3 py-2.5 text-[11px] leading-5 text-amber-100/80">
+                  Lengkapi API key dan segment ID Production sebelum membuat
+                  broadcast.
+                </p>
+              ) : null}
+            </form>
+          </Panel>
 
-          <section className="rounded-xl border bg-card p-5">
-            <div className="mb-5 flex items-center gap-2"><Send size={18} /><h2 className="font-semibold">Send control</h2></div>
+          <Panel
+            eyebrow="02 // Send control"
+            icon={Send}
+            title="Kontrol pengiriman"
+            description="Dua langkah: buat draft, lalu konfirmasi kirim secara sadar."
+          >
             {broadcastId ? (
-              <>
-                <p className="text-sm text-muted-foreground">Draft siap dikirim. ID broadcast:</p>
-                <code className="mt-3 block break-all rounded-lg bg-muted p-3 text-xs">{broadcastId}</code>
-                <label className="mt-6 flex gap-3 rounded-lg border border-amber-500/40 bg-amber-500/5 p-3 text-sm">
-                  <input type="checkbox" checked={sendConfirmed} onChange={event => setSendConfirmed(event.target.checked)} />
-                  <span>Saya paham tombol berikut akan mengirim email ke subscriber yang masih opt-in.</span>
+              <div className="space-y-4">
+                <p className="text-xs text-white/50">
+                  Draft siap dikirim. ID broadcast:
+                </p>
+                <code className="block break-all rounded-xl border border-white/10 bg-black/30 p-3 font-mono text-[11px] text-cyan-100/80">
+                  {broadcastId}
+                </code>
+                <label className="flex gap-3 rounded-xl border border-amber-300/25 bg-amber-300/[0.06] p-3 text-xs leading-5 text-amber-100/85">
+                  <input
+                    type="checkbox"
+                    className="mt-0.5 h-4 w-4 accent-amber-300"
+                    checked={sendConfirmed}
+                    onChange={event => setSendConfirmed(event.target.checked)}
+                  />
+                  <span>
+                    Saya paham tombol berikut akan mengirim email ke subscriber
+                    yang masih opt-in.
+                  </span>
                 </label>
-                <Button className="mt-4 w-full" variant="outline" disabled={!sendConfirmed || sendBroadcast.isPending} onClick={() => sendBroadcast.mutate({ broadcastId, confirm: true })}>
-                  {sendBroadcast.isPending ? "SENDING…" : "SEND BROADCAST"}
-                  <Send size={16} />
-                </Button>
-                <button type="button" className="mt-3 w-full text-xs text-muted-foreground underline" onClick={() => { setBroadcastId(""); setSendConfirmed(false); }}>
-                  Clear draft selection
+                <StudioButton
+                  type="button"
+                  className="h-11 w-full"
+                  disabled={!sendConfirmed || sendBroadcast.isPending}
+                  onClick={() =>
+                    sendBroadcast.mutate({ broadcastId, confirm: true })
+                  }
+                >
+                  {sendBroadcast.isPending ? "MENGIRIM…" : "KIRIM BROADCAST"}
+                  <Send size={15} />
+                </StudioButton>
+                <button
+                  type="button"
+                  className="w-full text-[11px] text-white/35 underline underline-offset-4 hover:text-white/60"
+                  onClick={() => {
+                    setBroadcastId("");
+                    setSendConfirmed(false);
+                  }}
+                >
+                  Bersihkan pilihan draft
                 </button>
-              </>
-            ) : (
-              <div className="rounded-lg border border-dashed p-6 text-sm leading-6 text-muted-foreground">
-                Buat draft terlebih dahulu. Fan Signal menyimpan subscriber di Resend sebagai contact dan unsubscribe bawaan Resend tetap dihormati saat broadcast dikirim.
               </div>
+            ) : (
+              <EmptyState
+                icon={Send}
+                title="Belum ada draft terpilih."
+                description="Buat draft terlebih dahulu. Fan Signal menyimpan subscriber di Resend sebagai contact, dan unsubscribe bawaan Resend tetap dihormati saat broadcast dikirim."
+              />
             )}
-          </section>
+          </Panel>
         </div>
       </div>
     </DashboardLayout>

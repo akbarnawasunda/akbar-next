@@ -152,3 +152,5 @@
 - [x] Perbaiki exposure portrait hero agar wajah terlihat lebih jelas di desktop dan mobile tanpa mengurangi keterbacaan copy atau particle RMX.
 - [ ] Dokumentasikan penggunaan portrait resmi yang saat ini hanya berada di homepage dan verifikasi visual pembaruan platform/hero.
 - [ ] Jalankan quality gate, dorong revisi platform dan portrait ke GitHub/Vercel, lalu uji production.
+- [x] Hapus Sanity Studio (`cms/sanity-studio`) karena pengelolaan konten sepenuhnya memakai Studio internal di `/studio`.
+- [x] Perbarui layout dan UI/UX workspace owner (Studio OS): shell baru dengan sidebar rail, topbar lengket, command palette ⌘K, dock mobile, dan kit komponen `client/src/studio/`.
