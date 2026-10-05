@@ -9,7 +9,7 @@
    Roster inti yang berlaku di semua permukaan publik:
    1. Recons — primary display
    2. NEXROID — secondary display
-   3. FHWASeriesEmod2020plus — primary text dan seluruh UI
+   3. Good Times — primary text dan seluruh UI
    4. Towards — signature Latin di dekat aksara Sunda
    5. Noto Sans Sundanese — aksara Sunda
    6. Fluorite — dunia game JEDAG RUN
@@ -33,8 +33,8 @@
 }
 
 @font-face {
-  font-family: "FHWASeriesEmod2020plus";
-  src: url("/assets/fonts/fontsource/FHWASeriesEmod2020plus0.woff2")
+  font-family: "Good Times";
+  src: url("/assets/fonts/fontsource/Good Times Rg.woff2")
     format("woff2");
   font-weight: 400;
   font-style: normal;
@@ -76,21 +76,21 @@
 :root {
   /* --- Core type roles --------------------------------------- */
   /* Primary display: merek, H1, dan momen judul paling dominan. */
-  --font-title: "Recons", "FHWASeriesEmod2020plus", sans-serif;
+  --font-title: "Recons", "Good Times", sans-serif;
   /* Secondary display: H2–H4, judul section, nama rilisan, dan title card. */
-  --font-display: "NEXROID", "FHWASeriesEmod2020plus", sans-serif;
+  --font-display: "NEXROID", "Good Times", sans-serif;
   /* One readable voice for copy, controls, nav, label, and metadata. */
-  --font-body: "FHWASeriesEmod2020plus", -apple-system, BlinkMacSystemFont,
+  --font-body: "Good Times", -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
-  --font-mono: "FHWASeriesEmod2020plus", -apple-system, BlinkMacSystemFont,
+  --font-mono: "Good Times", -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
-  --font-label: "FHWASeriesEmod2020plus", -apple-system, BlinkMacSystemFont,
+  --font-label: "Good Times", -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
   /* Signature hanya untuk bacaan Latin di pelat aksara Sunda. */
-  --font-signature: "Towards", "FHWASeriesEmod2020plus", cursive, sans-serif;
-  --font-sunda: "Noto Sans Sundanese", "FHWASeriesEmod2020plus", sans-serif;
+  --font-signature: "Towards", "Good Times", cursive, sans-serif;
+  --font-sunda: "Noto Sans Sundanese", "Good Times", sans-serif;
   /* Dunia game memiliki display sendiri, tidak bocor ke halaman publik. */
-  --font-game: "Fluorite", "FHWASeriesEmod2020plus", sans-serif;
+  --font-game: "Fluorite", "Good Times", sans-serif;
   /* Alias kompatibilitas untuk markup hero lama: keduanya tetap primary
      display Recons, bukan font khusus tambahan. */
   --font-hero-akbar: var(--font-title);

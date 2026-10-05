@@ -29,7 +29,7 @@ const LOCAL_FONTS = [
   // Core type system: semua aset di-host lokal oleh aplikasi.
   "Recons",
   "NEXROID",
-  "FHWASeriesEmod2020plus",
+  "Good Times",
   "Towards",
   "Noto Sans Sundanese",
   "Fluorite",

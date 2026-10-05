@@ -104,7 +104,7 @@ const WORDMARK = STAGE_PHRASES[0];
 
 /** Canvas does not resolve CSS variables, so the primary display is named here. */
 const WORDMARK_FONT =
-  '"Recons", "FHWASeriesEmod2020plus", sans-serif';
+  '"Recons", "Good Times", sans-serif';
 
 /** Mode yang menyusun huruf; butuh titik lebih banyak agar terbaca. */
 const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency", "transit"];

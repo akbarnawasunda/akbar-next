@@ -76,7 +76,7 @@ describe("high-performance image optimization & non-Google typography", () => {
     for (const file of [
       "fonts/fontsource/Recons-Regular.woff2",
       "fonts/fontsource/NEXROID-Regular.woff2",
-      "fonts/fontsource/FHWASeriesEmod2020plus0.woff2",
+      "fonts/fontsource/Good Times Rg.woff2",
       "fonts/fontsource/Towards-Regular.woff2",
       "fonts/fontsource/Fluorite.woff2",
       "fonts/fontsource/noto-sans-sundanese-400.woff2",
@@ -88,7 +88,7 @@ describe("high-performance image optimization & non-Google typography", () => {
     for (const family of [
       "Recons",
       "NEXROID",
-      "FHWASeriesEmod2020plus",
+      "Good Times",
       "Towards",
       "Fluorite",
       "Noto Sans Sundanese",
@@ -97,9 +97,9 @@ describe("high-performance image optimization & non-Google typography", () => {
     }
     expect(indexCss).toContain('--font-title: "Recons"');
     expect(indexCss).toContain('--font-display: "NEXROID"');
-    expect(indexCss).toContain('--font-body: "FHWASeriesEmod2020plus"');
-    expect(indexCss).toContain('--font-mono: "FHWASeriesEmod2020plus"');
-    expect(indexCss).toContain('--font-label: "FHWASeriesEmod2020plus"');
+    expect(indexCss).toContain('--font-body: "Good Times"');
+    expect(indexCss).toContain('--font-mono: "Good Times"');
+    expect(indexCss).toContain('--font-label: "Good Times"');
     expect(indexCss).toContain('--font-signature: "Towards"');
     expect(indexCss).toContain('--font-game: "Fluorite"');
 

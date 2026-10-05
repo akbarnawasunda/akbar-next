@@ -9,7 +9,7 @@ kontekstual khusus pada teks uppercase yang diukur).
 Roster yang diperiksa:
   - Recons: primary display / H1 / wordmark
   - NEXROID: secondary display / H2–H4
-  - FHWASeriesEmod2020plus: body dan UI
+  - Good Times: body dan UI
 
 Jalankan: `pip install fonttools brotli && python3 scripts/measure-title-type.py`
 """
@@ -25,7 +25,7 @@ except ImportError:  # pragma: no cover - alat bantu, bukan bagian build
 FONTS = {
     "Recons (primary display)": "client/public/assets/fonts/fontsource/Recons-Regular.woff2",
     "NEXROID (secondary display)": "client/public/assets/fonts/fontsource/NEXROID-Regular.woff2",
-    "FHWASeriesEmod2020plus (text/UI)": "client/public/assets/fonts/fontsource/FHWASeriesEmod2020plus0.woff2",
+    "Good Times (text/UI)": "client/public/assets/fonts/fontsource/Good Times Rg.woff2",
 }
 WORDS = ["NAWASUNDA.", "NAWASUNDA", "AKBAR", "AKBAR NAWASUNDA"]
 TRACKING = [0.0, 0.02]
