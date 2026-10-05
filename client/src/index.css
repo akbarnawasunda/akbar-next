@@ -219,11 +219,11 @@
   --text-h2:    clamp(1.85rem, 4.2vw, 4rem);
   --text-h3:    clamp(1.25rem, 2vw, 2rem);
   /* Good Times reads wider than the former UI face. Keep its supporting
-     typography a touch smaller and tighter without changing display roles. */
-  --text-lede:  clamp(0.94rem, 1.16vw, 1.08rem);
-  --text-body:  0.94rem;
-  --text-small: 0.82rem;
-  --text-meta:  0.68rem;
+     typography compact and secondary to the display roles. */
+  --text-lede:  clamp(0.9rem, 1.1vw, 1.02rem);
+  --text-body:  0.9rem;
+  --text-small: 0.78rem;
+  --text-meta:  0.64rem;
 
   /* -- Tangga kontras (FASE 7, nomor 3) --------------------------
      TOKEN SAJA — belum dipasang ke selektor mana pun di sini. Nomor 4
@@ -237,6 +237,7 @@
 
      Tangga ini rasionya 1,5× (bukan 1,2×) dari dasar 1rem, naik dan
      turun: `--step-0` = 1rem, setiap langkah ke atas ×1,5, ke bawah ÷1,5.
+     Tangga display ini sengaja terpisah dari ukuran primary text/UI.
      Prinsip pemakaiannya (nomor 4-5): SATU layar hanya boleh memakai TIGA
      tingkat — raksasa, sedang, mikro — tidak pernah tingkat yang
      berdekatan. `--step-3` (titik tengah angka -1..7) SENGAJA tidak
