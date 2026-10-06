@@ -1,136 +1,38 @@
-/* ============================================================
-   AN CUT — custom pointer mark
-   Dua bidang tajam membentuk A terbuka + counterform N. Tidak ada dot,
-   ring, halo, glow, blur, atau logo teks; siluet tetap memegang identitas.
-   ============================================================ */
-
+/* Cursor signal. Dekoratif: pointer-events none, cursor sistem tetap ada,
+   focus ring tidak pernah disentuh. */
 .an-cursor-signal {
-  --cursor-x: -9999px;
-  --cursor-y: -9999px;
-  --cursor-lean: 0deg;
-  --cursor-stretch: 1;
   position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.an-cursor-dot,
+.an-cursor-ring {
+  position: absolute;
   top: 0;
   left: 0;
-  z-index: var(--z-cursor);
-  width: 24px;
-  height: 28px;
-  pointer-events: none;
-  opacity: 0;
-  transform: translate3d(var(--cursor-x), var(--cursor-y), 0);
-  transition: opacity var(--dur-fast) var(--ease);
+  border-radius: 999px;
   will-change: transform;
 }
 
-.an-cursor-signal[data-active="true"] {
-  opacity: 1;
-}
-
-.an-cursor-mark {
-  position: absolute;
-  inset: 0;
-  transform: translate(-3px, -3px) rotate(var(--cursor-lean))
-    scaleY(var(--cursor-stretch));
-  transform-origin: 3px 3px;
-  transition: transform 90ms linear;
-}
-
-.an-cursor-cut {
-  position: absolute;
-  display: block;
-  background: var(--paper);
-  transition:
-    clip-path var(--dur) var(--ease),
-    inset var(--dur) var(--ease),
-    background-color var(--dur-fast) var(--ease),
-    opacity var(--dur-fast) var(--ease),
-    transform var(--dur) var(--ease);
-}
-
-/* Ujung A: pointer-hotspot berada tepat di pojok 0,0. */
-.an-cursor-cut--primary {
-  inset: 0 7px 7px 0;
-  clip-path: polygon(0 0, 100% 43%, 61% 54%, 49% 100%, 35% 92%, 43% 51%, 0 0);
-  background: var(--paper);
-}
-
-/* Potongan N tidak menyentuh bidang utama; celahnya adalah identitas mark. */
-.an-cursor-cut--counter {
-  inset: 9px 0 0 10px;
-  clip-path: polygon(0 0, 38% 12%, 100% 100%, 60% 89%);
+.an-cursor-dot {
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
   background: var(--acid);
 }
 
-/* Bayangan material padat yang tertinggal sedikit karena inertia. Ini bukan
-   trail dekoratif: satu potong counterform, tanpa pengulangan frame. */
-.an-cursor-cut--echo {
-  inset: 5px 8px 10px 5px;
-  clip-path: polygon(0 0, 100% 45%, 62% 58%, 46% 100%, 30% 86%, 40% 52%);
-  background: var(--acid);
-  opacity: 0.24;
-  z-index: -1;
-  transition: opacity var(--dur-fast) var(--ease);
+.an-cursor-ring {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border: 1px solid color-mix(in srgb, var(--acid) 55%, transparent);
+  transition: border-color 200ms ease;
 }
 
-/* Aksi: dua potongan membuka counterform. Bukan ring membesar. */
-.an-cursor-signal[data-state="interactive"] .an-cursor-cut--primary {
-  clip-path: polygon(0 0, 100% 38%, 66% 52%, 54% 100%, 37% 91%, 46% 50%, 0 0);
-}
-
-.an-cursor-signal[data-state="interactive"] .an-cursor-cut--counter {
-  transform: translate3d(3px, 1px, 0);
-  background: var(--paper);
-}
-
-/* Artwork: mark menjadi sudut crop yang terbuka, mengikuti bahasa frame foto. */
-.an-cursor-signal[data-state="artwork"] .an-cursor-cut--primary {
-  inset: -2px 3px 3px -2px;
-  clip-path: polygon(0 0, 100% 0, 100% 13%, 16% 13%, 16% 100%, 0 100%);
-  background: var(--paper);
-}
-
-.an-cursor-signal[data-state="artwork"] .an-cursor-cut--counter {
-  inset: 12px -2px -2px 12px;
-  clip-path: polygon(84% 0, 100% 0, 100% 100%, 0 100%, 0 86%, 84% 86%);
-  background: var(--acid);
-}
-
-.an-cursor-signal[data-state="artwork"] .an-cursor-cut--echo {
-  opacity: 0;
-}
-
-/* Musik: dua potongan pendek terpisah seperti dua head/tail penanda edit,
-   sengaja tidak memakai ikon play generik atau waveform. */
-.an-cursor-signal[data-state="music"] .an-cursor-cut--primary {
-  inset: 2px 9px 2px 3px;
-  clip-path: polygon(0 0, 100% 18%, 66% 48%, 100% 82%, 0 100%, 22% 50%);
-  background: var(--acid);
-}
-
-.an-cursor-signal[data-state="music"] .an-cursor-cut--counter {
-  inset: 7px 0 7px 15px;
-  clip-path: polygon(0 0, 100% 20%, 48% 50%, 100% 80%, 0 100%, 34% 50%);
-  background: var(--paper);
-}
-
-/* Area seret memanjangkan counterform secara horizontal. */
-.an-cursor-signal[data-state="drag"] .an-cursor-mark {
-  transform: translate(-3px, -3px) rotate(var(--cursor-lean)) scaleX(1.28)
-    scaleY(var(--cursor-stretch));
-}
-
-.an-cursor-signal[data-pressed="true"] .an-cursor-mark {
-  transform: translate(-1px, -1px) rotate(var(--cursor-lean)) scale(0.78)
-    scaleY(var(--cursor-stretch));
-  transition-duration: 80ms;
-}
-
-/* Kursor native hanya diganti jika runtime kustom benar-benar terpasang.
-   Keyboard/reduced-motion/touch tidak menerima atribut ini. */
-html[data-signature-cursor="an-cut"],
-html[data-signature-cursor="an-cut"]
-  :is(a, button, input, select, textarea, summary, [role="button"]) {
-  cursor: none;
+.an-cursor-ring[data-interactive="true"] {
+  border-color: var(--paper);
 }
 
 [data-signal-magnetic] {

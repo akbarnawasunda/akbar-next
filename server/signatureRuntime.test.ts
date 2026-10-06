@@ -219,24 +219,6 @@ describe("kontrak runtime yang tidak muncul di HTML", () => {
     expect(css).toContain("--an-embed-audio-h: 166px");
   });
 
-  it("memakai mark kursor AN, bukan dot dan ring generik", () => {
-    const component = source(
-      "client/src/components/signature/CursorSignal.tsx"
-    );
-    const css = source("client/src/components/signature/CursorSignal.css");
-
-    expect(component).toContain("an-cursor-cut--primary");
-    expect(component).toContain("an-cursor-cut--counter");
-    expect(component).toContain('data-state="default"');
-    expect(component).toContain('"artwork"');
-    expect(component).toContain('"music"');
-    expect(component).toContain('"drag"');
-    expect(component).not.toContain("an-cursor-dot");
-    expect(component).not.toContain("an-cursor-ring");
-    expect(css).not.toMatch(/\.an-cursor-(?:dot|ring)\b/);
-    expect(css).not.toMatch(/filter:\s*(?:blur|drop-shadow)/);
-  });
-
   it("menonaktifkan efek signature saat reduced motion", () => {
     // Aturan media query hanya ada di file CSS.
     for (const file of [
@@ -274,13 +256,7 @@ describe("kontrak runtime yang tidak muncul di HTML", () => {
 
     // Desktop normal: ribuan titik.
     const full = particleBudget(
-      {
-        ...base,
-        tier: "full",
-        coarsePointer: false,
-        deviceScore: 0.8,
-        viewport: "wide",
-      },
+      { ...base, tier: "full", coarsePointer: false, deviceScore: 0.8, viewport: "wide" },
       1440 * 900
     );
     expect(full).toBeGreaterThan(1500);
@@ -300,19 +276,15 @@ describe("kontrak runtime yang tidak muncul di HTML", () => {
       /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.an-signature-stage-track \{\s*min-height: 0;/
     );
     // Layar kecil tidak boleh kebagian jalur sepanjang desktop.
-    expect(css).toMatch(
-      /@media \(max-width: 640px\)[\s\S]*?min-height: 115vh;/
-    );
+    expect(css).toMatch(/@media \(max-width: 640px\)[\s\S]*?min-height: 115vh;/);
     // Sticky memakai svh supaya bilah URL mobile tidak memotong panggung,
     // dan tingginya di bawah satu layar penuh supaya section berikutnya
     // selalu mengintip — panggung bukan ruangan khusus partikel.
-    const sticky =
-      /\.an-signature-stage-sticky \{[\s\S]*?min-height: (\d+)svh;/.exec(css);
+    const sticky = /\.an-signature-stage-sticky \{[\s\S]*?min-height: (\d+)svh;/.exec(css);
     expect(sticky, "tinggi sticky panggung").toBeTruthy();
     expect(Number(sticky?.[1])).toBeLessThanOrEqual(80);
     // Jalur desktop juga tidak boleh kembali sepanjang dua layar lebih.
-    const track =
-      /\.an-signature-stage-track \{[\s\S]*?min-height: (\d+)vh;/.exec(css);
+    const track = /\.an-signature-stage-track \{[\s\S]*?min-height: (\d+)vh;/.exec(css);
     expect(Number(track?.[1])).toBeLessThanOrEqual(150);
   });
 

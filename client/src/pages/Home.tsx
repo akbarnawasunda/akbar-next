@@ -1,95 +1,160 @@
-import { Fragment, type CSSProperties, useEffect, useState } from "react";
-import { ArrowDown, ArrowUpRight, Pause, Play } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowLeft,
+  ArrowUpRight,
+  ArrowRight,
+  Play,
+  Sparkles,
+  Ticket,
+} from "lucide-react";
+import {
+  Fragment,
+  type CSSProperties,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Link } from "wouter";
-import FanSignalSection from "@/components/FanSignalSection";
-import { MusicEmbed } from "@/components/MusicEmbed";
-import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { PlatformMarquee } from "@/components/PlatformMarquee";
+import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
-import { SignatureStage } from "@/components/signature/SignatureStage";
-import { SundaScript } from "@/components/signature/SundaScript";
+import { MusicEmbed } from "@/components/MusicEmbed";
+import FanSignalSection from "@/components/FanSignalSection";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
+import { Reveal } from "@/components/Reveal";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import {
+  CtaPanel,
+  CurrentSignalBoard,
+  EditorialSection,
+  SignalIndicator,
+  type SignalRow,
+} from "@/components/editorial/EditorialKit";
+import { NightHeader, NightFooter } from "@/components/NightFrequencyChrome";
+import { BirthdayNote } from "@/components/StudioClock";
+import { trpc } from "@/lib/trpc";
+import {
+  publicPlatformLinks,
+  publicUpcomingEvents,
+  usePublicArtistContent,
+} from "@/content/publicContent";
 import {
   currentRelease,
   officialBrand,
   releases,
+  videos,
+  youtubeThumbnail,
 } from "@/content/artistPlatform";
-import {
-  publicPlatformLinks,
-  usePublicArtistContent,
-} from "@/content/publicContent";
+import { SignatureStage } from "@/components/signature/SignatureStage";
+import { SundaScript } from "@/components/signature/SundaScript";
 import { SUNDA_NAME } from "@/content/sundaneseScript";
-import { trpc } from "@/lib/trpc";
 import "@/components/OfficialBrand.css";
 import "./Home.css";
+// Komposisi baru beranda (checkpoint A). Dimuat setelah Home.css: nama kelas
+// `.an-*` di dalamnya tidak dipakai kulit lama, jadi tidak ada perang
+// spesifisitas dan tidak ada `!important` baru.
 import "./HomeStage.css";
-import "./ResonanceHome.css";
 
-const releaseSlug = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+const formatEventDate = (date: string) => {
+  const parsed = new Date(date);
+  return Number.isNaN(parsed.getTime())
+    ? date
+    : new Intl.DateTimeFormat("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+        .format(parsed)
+        .toUpperCase();
+};
+
+const youtubeIdFrom = (url: string | null | undefined) => {
+  if (!url) return undefined;
+  const match = url.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/i
+  );
+  return match?.[1];
+};
+
+const managedVideoImage = (
+  imageUrl: string | null | undefined,
+  href?: string | null
+) => {
+  if (!imageUrl) {
+    const id = youtubeIdFrom(href);
+    return id ? youtubeThumbnail(id) : officialBrand.socialPreview;
+  }
+  return /\/manus-storage\/[^/?#]*stage[^/?#]*/i.test(imageUrl)
+    ? "/assets/akbar-night-frequency-stage-optimized.webp"
+    : imageUrl;
+};
 
 export default function Home() {
+  const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
+  const [playerOpen, setPlayerOpen] = useState(false);
+  const releaseCatalogRef = useRef<HTMLDivElement>(null);
+  // [BUGFIX] `.an-site main > section.is-revealed` punya dekorasi garis
+  // aksen yang tumbuh saat kelihatan (lihat NightFrequencySignature.css),
+  // tapi tidak ada apa pun yang pernah menambahkan kelas `is-revealed` —
+  // `useScrollReveal` sudah lama ada sebagai berkas tapi tidak pernah
+  // dipakai di mana pun. Hero sengaja TIDAK dipasangi (harus langsung
+  // kelihatan tanpa fade-in); ADEGAN 3 (rilisan) sudah punya animasinya
+  // sendiri lewat `<Reveal>`/`.an-rise` jadi tidak diikutkan juga.
+  const channelsRevealRef = useScrollReveal<HTMLElement>();
+  const pauseRevealRef = useScrollReveal<HTMLElement>();
+  const gameTeaserRevealRef = useScrollReveal<HTMLElement>();
+
   const publicContent = usePublicArtistContent();
-  const managedQuery = trpc.content.list.useQuery(undefined, {
+  const contentQuery = trpc.content.list.useQuery(undefined, {
     enabled: publicContent.isError,
   });
-  const managedContent = managedQuery.data ?? [];
-  const contentIsLoading = publicContent.isLoading || managedQuery.isLoading;
+
+  const editablePlatformLinks = publicPlatformLinks(publicContent.data);
+  const cmsEvents = publicUpcomingEvents(publicContent.data);
+  const featuredEvent =
+    cmsEvents.find(event => event.isFeatured) || cmsEvents[0];
+  const managedContent = contentQuery.data ?? [];
+  const contentIsLoading = publicContent.isLoading || contentQuery.isLoading;
+
   const managedHero = managedContent.find(item => item.kind === "hero");
   const managedRelease = managedContent.find(item => item.kind === "release");
+  const managedVideos = managedContent
+    .filter(item => item.kind === "video")
+    .slice(0, 3);
   const rawManagedLive = managedContent.find(item => item.kind === "live");
-  // Keep an unconfirmed legacy event out of the public register.
   const managedLive =
     rawManagedLive && !/no date announced|tba/i.test(rawManagedLive.title)
       ? rawManagedLive
       : undefined;
-  void managedLive;
-
-  const cmsHero = publicContent.data?.hero;
-  const cmsProfile = publicContent.data?.profile;
-  const cmsReleases = publicContent.data?.releases ?? [];
-  const cmsCurrentRelease =
-    cmsReleases.find(item => item.isCurrent) || cmsReleases[0];
-
-  const catalog = cmsReleases.length
-    ? cmsReleases.map(item => {
-        const archive = releases.find(
-          release =>
-            release.title.trim().toLowerCase() ===
-            item.title.trim().toLowerCase()
-        );
-        return {
-          title: item.title,
-          format: item.format || archive?.format || "Release",
-          year: item.year || archive?.year || "—",
-          platform: item.platform || archive?.platform || "Official",
-          href:
-            item.url ||
-            archive?.href ||
-            "https://soundcloud.com/akbarnawasunda",
-          image:
-            item.artworkUrl || archive?.image || officialBrand.socialPreview,
-        };
-      })
-    : releases;
 
   const normalizeManagedTitle = (value: string) =>
     value.toLowerCase() === "garam & madu × backpacker"
       ? "Garam & Madu × Backpacker"
       : value;
-  const fallbackReleaseYear =
-    releases.find(
-      release =>
-        release.title.trim().toLowerCase() ===
-        currentRelease.title.trim().toLowerCase()
-    )?.year || "—";
 
+  const cmsReleases = publicContent.data?.releases ?? [];
+  const cmsCurrentRelease =
+    cmsReleases.find(item => item.isCurrent) || cmsReleases[0];
+
+  const cmsCatalog = cmsReleases.map(item => {
+    const fallback = releases.find(
+      release =>
+        release.title.trim().toLowerCase() === item.title.trim().toLowerCase()
+    );
+    return {
+      title: item.title,
+      format: item.format || fallback?.format || "Release",
+      year: item.year || fallback?.year || "—",
+      platform: item.platform || fallback?.platform || "Official link",
+      href:
+        item.url || fallback?.href || "https://soundcloud.com/akbarnawasunda",
+      image: item.artworkUrl || fallback?.image || officialBrand.socialPreview,
+    };
+  });
+
+  const activeReleaseStory =
+    cmsCurrentRelease?.story ?? managedRelease?.subtitle;
   const activeRelease = cmsCurrentRelease
     ? {
         ...currentRelease,
@@ -100,8 +165,6 @@ export default function Home() {
           currentRelease.type,
         href: cmsCurrentRelease.url || currentRelease.href,
         image: cmsCurrentRelease.artworkUrl || currentRelease.image,
-        story: cmsCurrentRelease.story,
-        year: cmsCurrentRelease.year || fallbackReleaseYear,
       }
     : managedRelease
       ? {
@@ -114,352 +177,499 @@ export default function Home() {
             managedRelease.imageUrl !== officialBrand.socialPreview
               ? managedRelease.imageUrl
               : currentRelease.image,
-          story: managedRelease.subtitle,
-          year: fallbackReleaseYear,
         }
-      : { ...currentRelease, story: undefined, year: fallbackReleaseYear };
+      : currentRelease;
 
-  const configuredPortrait =
-    cmsHero?.heroImage || cmsProfile?.portraitImage || officialBrand.portrait;
-  const [portraitSrc, setPortraitSrc] = useState(configuredPortrait);
-  const [playerOpen, setPlayerOpen] = useState(false);
-  useEffect(() => setPortraitSrc(configuredPortrait), [configuredPortrait]);
-
+  const cmsHero = publicContent.data?.hero;
+  const cmsProfile = publicContent.data?.profile;
+  const heroKicker =
+    cmsHero?.heroKicker || managedHero?.label || "AKBAR NAWASUNDA";
   const suppliedHeroTitle = cmsHero?.heroTitle || managedHero?.title;
-  // Retire the old "make the night move" campaign line without allowing
-  // stale CMS copy to displace the artist's name.
   const heroTitle = /make the night move/i.test(suppliedHeroTitle || "")
     ? undefined
     : suppliedHeroTitle;
-  const displayHeroTitle = (heroTitle || "AKBAR NAWASUNDA.").trim();
-  const heroTitleWords = displayHeroTitle.split(/\s+/);
   const heroBody =
     cmsHero?.heroBody ||
     managedHero?.subtitle ||
     "Produser musik, remixer, dan DJ dari Bandung Barat. Breakbeat, electronic bass, dan remix untuk rilisan serta kolaborasi.";
-  const platforms = publicPlatformLinks(publicContent.data);
-  const archivePreview = catalog.slice(0, 6);
+  /* RILISAN ADALAH SATU SUMBER (risiko R2, Phase 5b): CTA hero, papan
+     signal, dokumen rilisan (slot 4), dan player global semuanya menunjuk
+     `activeRelease` (isCurrent CMS/katalog). URL & label aksi CMS hero
+     tidak lagi menimpa target — sebelumnya itu bisa membuat hero menunjuk
+     track yang berbeda dari dokumen rilisan di halaman yang sama. */
+  const heroActionUrl = activeRelease.href;
+  const heroActionIsVisual = /youtube\.com|youtu\.be/i.test(heroActionUrl);
+  const heroActionLabel = heroActionIsVisual
+    ? "TONTON VISUAL"
+    : "DENGAR SEKARANG";
+
+  const gameConfig = publicContent.data?.game;
+  const gameEnabled = gameConfig?.isEnabled !== false;
+
+  const configuredPortrait =
+    cmsHero?.heroImage || cmsProfile?.portraitImage || officialBrand.portrait;
+  useEffect(() => {
+    setPortraitSrc(configuredPortrait);
+  }, [configuredPortrait]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.location.hash) return;
+    const targetId = decodeURIComponent(window.location.hash.slice(1));
+    const frame = window.requestAnimationFrame(() => {
+      document
+        .getElementById(targetId)
+        ?.scrollIntoView({ behavior: "auto", block: "start" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [contentIsLoading]);
+
+  const heroDeckSpec =
+    [
+      cmsCurrentRelease?.format || activeRelease.type,
+      cmsCurrentRelease?.year,
+      cmsCurrentRelease?.platform,
+    ]
+      .filter(Boolean)
+      .join(" · ")
+      .toUpperCase() || currentRelease.eyebrow;
+
+  const currentSignalRows: SignalRow[] = [
+    {
+      label: "RILISAN TERBARU",
+      value: activeRelease.title,
+      note: heroDeckSpec,
+      href: `/music/${activeRelease.title
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "")}`,
+      actionLabel: "DETAIL",
+    },
+    featuredEvent
+      ? {
+          label: "LIVE BERIKUTNYA",
+          value: featuredEvent.title,
+          note: [
+            formatEventDate(featuredEvent.date),
+            featuredEvent.venue,
+            featuredEvent.city,
+          ]
+            .filter(Boolean)
+            .join(" · "),
+          href: "/live",
+          actionLabel: "JADWAL",
+        }
+      : {
+          label: "STATUS BOOKING",
+          value: "TERBUKA UNTUK BOOKING & REMIX",
+          note: "Belum ada jadwal publik yang dikonfirmasi.",
+          href: "/inquire?type=booking&source=home",
+          actionLabel: "AJUKAN",
+        },
+    {
+      label: "STUDIO",
+      value: "BANDUNG BARAT · BREAKBEAT / INDO BASS",
+      note: "Remix custom, produksi, dan kolaborasi.",
+      href: "/inquire?type=remix&source=home",
+      actionLabel: "KIRIM BRIEF",
+    },
+  ];
+
+  const displayHeroTitle = (heroTitle || "AKBAR NAWASUNDA.").trim();
+  const heroTitleWords = displayHeroTitle.split(/\s+/);
 
   return (
-    <div className="an-site" data-page="home" data-home-edition="resonance">
-      <NightHeader />
+    <>
+      <div className="an-site" data-page="home">
+        {/* Rute arsip tetap dipusatkan di NightHeader: href="/universe" (label "ARSIP"). */}
+        <NightHeader />
 
-      <main id="top" tabIndex={-1}>
-        <section
-          className="an-hero-scene resonance-opening"
-          aria-labelledby="hero-title"
-        >
-          <div className="resonance-folio" aria-hidden="true">
-            <span>AN / PUBLIC REGISTER</span>
-            <span>06° 52′ S · 107° 28′ E</span>
-          </div>
+        <main id="top" tabIndex={-1}>
+          {/* ADEGAN 1 — pembuka sinematik: satu foto resmi sebagai panggung,
+              tipografi masuk dari kiri bawah di atas scrim gelap, dan rilisan
+              terbaru hadir sebagai artefak yang bisa diklik. Semua isinya data
+              nyata dari CMS/katalog. */}
+          <section className="an-hero-scene" aria-labelledby="hero-title">
+            <figure className="an-hero-plate">
+              <picture className="home-hero-picture">
+                <source
+                  media="(max-width: 640px)"
+                  srcSet="/assets/akbar-official-portrait-optimized.webp"
+                  type="image/webp"
+                />
+                <source
+                  srcSet="/assets/akbar-nawasunda-official-portrait-1000.webp"
+                  type="image/webp"
+                />
+                <img
+                  src={portraitSrc}
+                  alt="Portrait resmi Akbar Nawasunda"
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  width={800}
+                  height={1000}
+                  onError={() => {
+                    if (portraitSrc !== officialBrand.portraitFallback) {
+                      setPortraitSrc(officialBrand.portraitFallback);
+                    }
+                  }}
+                />
+              </picture>
+              <img
+                className="an-hero-mascot"
+                src="/assets/akbar-mascot-doodle.webp"
+                alt=""
+                aria-hidden="true"
+                width={168}
+                height={168}
+                loading="lazy"
+                fetchPriority="low"
+                decoding="async"
+              />
+              <figcaption className="an-hero-plate-note">
+                <span>Portrait resmi</span>
+                <span aria-hidden="true">·</span>
+                <span>Bandung Barat</span>
+              </figcaption>
+            </figure>
 
-          <div className="an-hero-inner resonance-opening__copy">
-            <p className="resonance-kicker">
-              <span>Bandung Barat</span>
-              <span>Independent electronic artist</span>
-            </p>
-            <h1
-              className="hero-title-editorial"
-              id="hero-title"
-              data-no-scramble="true"
-              aria-label={displayHeroTitle}
-            >
-              <span className="sr-only">{displayHeroTitle}</span>
-              <span aria-hidden="true">
-                {heroTitleWords.map((word, index) => (
-                  <Fragment key={`${word}-${index}`}>
-                    {index > 0 ? " " : null}
-                    <span
-                      className="hero-title-mask"
-                      style={{ "--hero-word-index": index } as CSSProperties}
-                    >
-                      <span className="hero-title-word">{word}</span>
-                    </span>
-                  </Fragment>
-                ))}
-              </span>
-            </h1>
-            <div className="resonance-opening__statement">
+            <div className="an-hero-inner">
+              <p className="an-kicker">
+                <span className="an-kicker-dot" aria-hidden="true" />
+                {heroKicker}
+              </p>
+              <h1
+                className="hero-title-editorial"
+                id="hero-title"
+                data-no-scramble="true"
+                aria-label={displayHeroTitle}
+              >
+                <span className="sr-only">{displayHeroTitle}</span>
+                <span aria-hidden="true">
+                  {/* Spasi antar kata WAJIB di luar `.hero-title-mask`.
+                      Mask itu inline-block, dan spasi di ujung inline-block
+                      dipangkas browser — dulu judulnya terbaca menyatu
+                      "AKBARNAWASUNDA". Fragment di bawah menaruh spasi
+                      sebagai simpul saudara, bukan anak. */}
+                  {heroTitleWords.map((word, index) => (
+                    <Fragment key={`${word}-${index}`}>
+                      {index > 0 ? " " : null}
+                      <span
+                        className="hero-title-mask"
+                        style={{ "--hero-word-index": index } as CSSProperties}
+                      >
+                        <span className="hero-title-word">{word}</span>
+                      </span>
+                    </Fragment>
+                  ))}
+                </span>
+              </h1>
+              {/* Pelat nama aksara Sunda. Bukan karakter lepas: komponennya
+                  selalu membawa kunci baca (label + bacaan Latin) dan
+                  line-height longgar supaya tanda tempel aksaranya tidak
+                  terpotong. Isi dari client/src/content/sundaneseScript.ts;
+                  transliterasi masih menunggu konfirmasi pemilik. */}
               <SundaScript entry={SUNDA_NAME} lang="id" tone="hero" />
               <p className="an-hero-lede">{heroBody}</p>
-            </div>
-            <a
-              className="resonance-primary-action"
-              href={activeRelease.href}
-              target="_blank"
-              rel="noreferrer"
-              data-signal-magnetic
-              data-signal-interactive
-              data-cursor="music"
-            >
-              <span>DENGAR SEKARANG</span>
-              <ArrowUpRight size={16} aria-hidden="true" />
-            </a>
-          </div>
 
-          <figure className="an-hero-plate resonance-opening__portrait">
-            <picture className="home-hero-picture">
-              <source
-                media="(max-width: 640px)"
-                srcSet="/assets/akbar-official-portrait-optimized.webp"
-                type="image/webp"
-              />
-              <source
-                srcSet="/assets/akbar-nawasunda-official-portrait-1000.webp"
-                type="image/webp"
-              />
-              <img
-                src={portraitSrc}
-                alt="Portrait resmi Akbar Nawasunda"
-                width={800}
-                height={1000}
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                onError={() => {
-                  if (portraitSrc !== officialBrand.portraitFallback) {
-                    setPortraitSrc(officialBrand.portraitFallback);
-                  }
-                }}
-              />
-            </picture>
-            <figcaption className="resonance-portrait-caption">
-              <span>Fig. 01</span>
-              <span>Artist portrait / Bandung Barat</span>
-            </figcaption>
-          </figure>
+              {/* Hanya tampil otomatis pada 1 November (waktu Jakarta). */}
+              <BirthdayNote />
 
-          <a className="an-hero-scroll" href="#current">
-            <span>Masuk ke frekuensi</span>
-            <ArrowDown size={14} aria-hidden="true" />
-          </a>
-        </section>
-
-        <section
-          className="resonance-current"
-          id="signal"
-          aria-labelledby="current-title"
-          aria-busy={contentIsLoading}
-        >
-          <header className="resonance-section-heading">
-            <p>
-              <span>01</span> Current transmission
-            </p>
-            <p>Master object / listen on demand</p>
-          </header>
-          <dl
-            className="ed-signal-board resonance-status"
-            aria-label="Status terbaru"
-          >
-            <div>
-              <dt>RILISAN TERBARU</dt>
-              <dd>{activeRelease.title}</dd>
-              <span>{activeRelease.type}</span>
-            </div>
-            <div>
-              <dt>STATUS BOOKING</dt>
-              <dd>Terbuka untuk booking &amp; remix</dd>
-              <span>Kontak langsung / tanpa perantara</span>
-            </div>
-            <div>
-              <dt>Studio</dt>
-              <dd>Bandung Barat</dd>
-              <span>Breakbeat / electronic bass</span>
-            </div>
-          </dl>
-          <div className="resonance-current__layout">
-            <figure className="resonance-current__art" data-cursor="artwork">
-              <ResilientArtworkImage
-                src={activeRelease.image}
-                backupSrc={officialBrand.socialPreview}
-                alt={`Artwork ${activeRelease.title}`}
-              />
-              <figcaption>{activeRelease.type}</figcaption>
-            </figure>
-            <div className="resonance-current__copy">
-              <p className="resonance-current__year">{activeRelease.year}</p>
-              <h2 id="current-title">{activeRelease.title}</h2>
-              <p className="resonance-current__story">
-                {activeRelease.story ||
-                  "Rilisan aktif dari arsip Akbar Nawasunda. Dengarkan melalui player resmi atau buka sumbernya langsung."}
-              </p>
-              <div className="resonance-current__actions">
-                <button
-                  type="button"
-                  onClick={() => setPlayerOpen(open => !open)}
-                  aria-expanded={playerOpen}
-                  data-cursor="music"
-                >
-                  {playerOpen ? (
-                    <Pause size={13} />
-                  ) : (
-                    <Play size={13} fill="currentColor" />
-                  )}
-                  {playerOpen ? "Tutup player" : "Putar di sini"}
-                </button>
-                <Link href={`/music/${releaseSlug(activeRelease.title)}`}>
-                  Catatan rilisan <ArrowUpRight size={14} />
-                </Link>
-              </div>
-              {playerOpen ? (
-                <div className="an-feature-player" data-cursor="music">
-                  <MusicEmbed
-                    url={activeRelease.href}
-                    title={activeRelease.title}
-                  />
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </section>
-
-        <SignatureStage alsoKnownAs="Juga dikenal sebagai DJ Akbar Remix dan akbarnawasunda.my.id." />
-
-        <section
-          className="resonance-register"
-          aria-labelledby="register-title"
-        >
-          <header className="resonance-register__head">
-            <div>
-              <p className="resonance-section-number">02 / Selected archive</p>
-              <h2 id="register-title">Catatan suara.</h2>
-            </div>
-            <Link href="/music">
-              Seluruh arsip <ArrowUpRight size={14} />
-            </Link>
-          </header>
-          <ol className="resonance-release-index">
-            {archivePreview.map((release, index) => (
-              <li key={`${release.title}-${release.year}`}>
-                <Link
-                  href={`/music/${releaseSlug(release.title)}`}
-                  data-cursor="artwork"
-                >
-                  <span className="resonance-release-index__number">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="resonance-release-index__title">
-                    {release.title}
-                  </span>
-                  <span>{release.format}</span>
-                  <span>{release.platform}</span>
-                  <span>{release.year}</span>
-                  <ArrowUpRight size={15} aria-hidden="true" />
-                </Link>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section
-          className="resonance-crossing"
-          aria-labelledby="crossing-title"
-        >
-          <div className="resonance-crossing__alias">
-            <p>Previous transmission identity</p>
-            <img
-              src={officialBrand.rmxMark}
-              alt="DJ Akbar Remix"
-              width={640}
-              height={360}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-          <div className="resonance-crossing__copy">
-            <p className="resonance-section-number">03 / Continuum</p>
-            <h2 id="crossing-title">
-              Dua nama.
-              <br />
-              Satu lintasan.
-            </h2>
-            <p>
-              DJ Akbar Remix bukan catatan kaki. Ia adalah lapisan awal dari
-              bahasa produksi yang kini bergerak sebagai Akbar Nawasunda.
-            </p>
-            <Link href="/universe">
-              Baca perjalanan <ArrowUpRight size={14} />
-            </Link>
-          </div>
-        </section>
-
-        <section
-          className="an-channels resonance-channels"
-          aria-labelledby="channels-title"
-        >
-          <header className="resonance-register__head">
-            <div>
-              <p className="resonance-section-number">04 / Official channels</p>
-              <h2 id="channels-title">Sumber resmi.</h2>
-            </div>
-            <p>{platforms.length} kanal terverifikasi</p>
-          </header>
-          <ul className="an-channels-list">
-            {platforms.map((platform, index) => (
-              <li key={platform.label} className="an-channel-row">
+              <div className="an-hero-cta">
                 <a
-                  className={`an-channel platform-${platform.label.toLowerCase().replace(/\s+/g, "-")}`}
-                  href={platform.href}
+                  className="an-btn an-btn--solid"
+                  href={heroActionUrl}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
+                  data-signal-magnetic
+                  data-signal-interactive
                 >
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <span className="an-channel-name">{platform.label}</span>
-                  <span className="an-channel-mark" aria-hidden="true">
-                    <PlatformIcon label={platform.label} />
-                  </span>
-                  <ArrowUpRight size={16} aria-hidden="true" />
+                  <Play size={13} fill="currentColor" />
+                  <span>{heroActionLabel}</span>
                 </a>
-              </li>
-            ))}
-          </ul>
-          <PlatformMarquee links={platforms} />
-        </section>
+                <Link
+                  className="an-btn an-btn--quiet"
+                  href="/visuals"
+                  data-signal-magnetic
+                >
+                  Lihat visual <ArrowRight size={15} />
+                </Link>
+              </div>
 
-        <section
-          className="resonance-exit ed-cta-shell"
-          aria-labelledby="exit-title"
-        >
-          <p className="resonance-section-number">05 / Exit route</p>
-          <h2 id="exit-title">
-            BAWA SUARA INI
-            <br />
-            ke panggungmu.
-          </h2>
-          <p>
-            Performance, remix custom, lisensi, atau kolaborasi. Kirim konteks,
-            tanggal, dan bentuk proyek; jawaban dimulai dari kebutuhan nyata.
-          </p>
-          <div className="resonance-exit__links">
-            <Link href="/inquire?source=home">
-              Mulai percakapan <ArrowUpRight size={15} />
-            </Link>
-            <Link href="/epk">
-              Buka EPK <ArrowUpRight size={15} />
-            </Link>
-            <Link href="/game/jedag-run">
-              JEDAG RUN <ArrowUpRight size={15} />
-            </Link>
-          </div>
-        </section>
+              <dl className="an-hero-facts">
+                <div>
+                  <dt>Basis</dt>
+                  <dd>Bandung Barat</dd>
+                </div>
+                <div>
+                  <dt>Sejak</dt>
+                  <dd>2020</dd>
+                </div>
+                <div>
+                  <dt>Genre</dt>
+                  <dd>Breakbeat / Indo Bass</dd>
+                </div>
+              </dl>
+            </div>
 
-        <FanSignalSection
-          source={FAN_SIGNAL_SOURCES.home}
-          anchorId="fan-signal"
-          title={
-            <>
-              JANGAN
-              <br />
-              KETINGGALAN.
-            </>
-          }
-          description="Rilisan baru, video, dan jadwal — langsung ke email kamu."
-        />
-      </main>
+            <a
+              className="an-hero-scroll"
+              href="#signal"
+              aria-label="Lihat kabar terbaru dari studio"
+            >
+              <span aria-hidden="true">Gulir</span>
+              <ArrowDownRight size={15} aria-hidden="true" />
+            </a>
+          </section>
 
-      <NightFooter />
-    </div>
+          <SignatureStage alsoKnownAs="Juga dikenal sebagai DJ Akbar Remix dan akbarnawasunda.my.id." />
+
+          <EditorialSection
+            id="signal"
+            title={
+              <>
+                YANG SEDANG
+                <br />
+                BERJALAN.
+              </>
+            }
+            lede="Rilisan terbaru, jadwal live terdekat, dan jalur kontak resmi."
+            aside={<SignalIndicator label="LIVE DARI STUDIO" />}
+          >
+            <CurrentSignalBoard rows={currentSignalRows} />
+          </EditorialSection>
+
+          {/* ADEGAN 3 — rilisan terbaru sebagai satu dokumen utuh: artwork
+              besar, metadata mono, dan pemutar resmi di tempat yang sama. */}
+          <Reveal>
+            <section
+              className="an-feature an-doc"
+              id="music"
+              aria-labelledby="feature-title"
+              aria-busy={contentIsLoading}
+            >
+              <figure className="an-doc-art an-rise">
+                <ResilientArtworkImage
+                  src={activeRelease.image}
+                  backupSrc={officialBrand.socialPreview}
+                  alt={`Artwork ${activeRelease.title}`}
+                />
+                <figcaption>
+                  {cmsCurrentRelease
+                    ? [
+                        cmsCurrentRelease.format || cmsCurrentRelease.platform,
+                        cmsCurrentRelease.year,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")
+                    : managedRelease?.label || currentRelease.eyebrow}
+                </figcaption>
+              </figure>
+
+              <div className="an-doc-copy an-rise">
+                <h2 id="feature-title">{activeRelease.title}</h2>
+                <p className="an-doc-story">
+                  {activeReleaseStory ||
+                    "Putar langsung di sini, atau buka versi lengkapnya di platform resmi."}
+                </p>
+                <div className="an-doc-actions">
+                  <button
+                    type="button"
+                    className="an-btn an-btn--solid"
+                    aria-expanded={playerOpen}
+                    onClick={() => setPlayerOpen(open => !open)}
+                  >
+                    {playerOpen ? (
+                      "Tutup player"
+                    ) : (
+                      <>
+                        <Play size={13} fill="currentColor" /> Putar di sini
+                      </>
+                    )}
+                  </button>
+                  <a
+                    className="an-btn an-btn--quiet"
+                    href={activeRelease.href}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Buka rilisan <ArrowUpRight size={14} />
+                  </a>
+                  <span className="an-feature-type">{activeRelease.type}</span>
+                </div>
+                {playerOpen ? (
+                  <div className="an-feature-player">
+                    <MusicEmbed
+                      url={activeRelease.href}
+                      title={activeRelease.title}
+                    />
+                  </div>
+                ) : null}
+                {contentIsLoading && <p className="an-meta">Memuat rilisan…</p>}
+              </div>
+            </section>
+          </Reveal>
+
+          {/* ADEGAN 4 — kanal resmi sebagai daftar tipografis, bukan deretan
+              kartu identik. Marquee di bawahnya tetap dipakai sebagai ritme. */}
+          <section
+            ref={channelsRevealRef}
+            className="an-channels"
+            id="platforms"
+            aria-labelledby="channels-title"
+          >
+            <header className="an-channels-head">
+              <h2 id="channels-title">Dengar di kanal resminya.</h2>
+              <p className="an-meta">
+                {editablePlatformLinks.length} kanal resmi · rilisan, remix, dan
+                set
+              </p>
+            </header>
+
+            <ul className="an-channels-list">
+              {editablePlatformLinks.map((platform, index) => (
+                <li
+                  key={platform.label}
+                  className="an-channel-row"
+                  style={{ "--i": index } as CSSProperties}
+                >
+                  <a
+                    className={`an-channel platform-${platform.label
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}`}
+                    href={platform.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`Buka Akbar Nawasunda di ${platform.label}`}
+                  >
+                    <span className="an-channel-mark" aria-hidden="true">
+                      <PlatformIcon label={platform.label} />
+                    </span>
+                    <span className="an-channel-name">{platform.label}</span>
+                    <ArrowUpRight
+                      className="an-channel-arrow"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div className="an-channels-foot">
+              <PlatformMarquee links={editablePlatformLinks} />
+              <Link className="an-btn an-btn--quiet" href="/music">
+                Buka katalog musik <ArrowRight size={14} />
+              </Link>
+            </div>
+          </section>
+
+          {/* FASE 7 nomor 7 — satu layar jeda. Sengaja hampir kosong: satu
+              baris mikro, bukan section baru dengan judul dan CTA. Kutipannya
+              BUKAN klaim baru — potongan verbatim dari `heroBody` di atas
+              (sendiri bersumber dari CMS/managed content), ditata ulang
+              sebagai kutipan tunggal huruf judul supaya layak jadi jeda,
+              bukan diulang sebagai paragraf. `aria-hidden` karena kalimatnya
+              sudah dibacakan screen reader lewat `.an-hero-lede`; mengulang
+              di sini hanya untuk mata, bukan telinga. Tidak ada aset gambar
+              baru; hanya CSS pada DOM yang sudah ringan ini. */}
+          <section ref={pauseRevealRef} className="an-pause" aria-hidden="true">
+            <p className="an-pause-quote">
+              Breakbeat, electronic bass, dan remix.
+            </p>
+          </section>
+
+          {/* Perjalanan & studi potret tidak diulang di beranda: bagian itu
+              milik /universe supaya pengunjung tidak melihat section yang
+              sama dua kali di halaman berbeda. */}
+
+          {/* Katalog lengkap tidak diulang di beranda — rail penuh hanya ada
+              di /music. Beranda cukup menautkannya dari bagian kanal. */}
+
+          {/* Ruang tayang video milik /visuals; beranda tidak mengulang
+              daftar video yang sama. */}
+
+          {/* Jadwal panggung milik /live — beranda tidak menampilkan
+              daftar tanggal yang sama dua kali. */}
+
+          {gameEnabled ? (
+            <section
+              ref={gameTeaserRevealRef}
+              className="section game-teaser-section"
+              id="game"
+              aria-labelledby="game-teaser-title"
+            >
+              <div className="game-teaser-art" aria-hidden="true">
+                <div className="game-teaser-scanline" />
+                <span className="game-teaser-sun" />
+                <span className="game-teaser-mountain game-teaser-mountain-a" />
+                <span className="game-teaser-mountain game-teaser-mountain-b" />
+                <span className="game-teaser-runner">AN</span>
+                <span className="game-teaser-note game-teaser-note-a" />
+                <span className="game-teaser-note game-teaser-note-b" />
+                <span className="game-teaser-gate" />
+                <span className="game-teaser-signal-line" />
+              </div>
+              <div className="game-teaser-copy">
+                <p className="eyebrow">
+                  <Sparkles size={13} /> {gameConfig?.kicker || "GAME MINI"}
+                </p>
+                <h2 id="game-teaser-title">
+                  MAIN
+                  <br />
+                  JEDAG RUN.
+                </h2>
+                <p>
+                  {gameConfig?.intro ||
+                    "Lari ikut ketukan, kumpulkan not, kejar drop-nya. Skor tertinggi masuk papan peringkat."}
+                </p>
+                <Link className="button-primary" href="/game/jedag-run">
+                  MAIN JEDAG RUN <ArrowRight size={14} />
+                </Link>
+              </div>
+            </section>
+          ) : null}
+
+          <CtaPanel
+            id="booking"
+            title={
+              <>
+                BAWA SUARA INI
+                <br />
+                KE PANGGUNGMU.
+              </>
+            }
+            copy="Performance, remix custom, lisensi musik, atau kolaborasi — kirim konteks proyek dan tanggalnya."
+            actions={
+              <>
+                <Link className="ed-button" href="/inquire?source=home">
+                  AJUKAN BOOKING <ArrowUpRight size={14} />
+                </Link>
+                <Link className="ed-button--ghost" href="/epk">
+                  LIHAT EPK <ArrowRight size={14} />
+                </Link>
+              </>
+            }
+          />
+
+          <FanSignalSection
+            source={FAN_SIGNAL_SOURCES.home}
+            anchorId="fan-signal"
+            title={
+              <>
+                JANGAN
+                <br />
+                KETINGGALAN.
+              </>
+            }
+            description="Rilisan baru, video, dan jadwal — langsung ke email kamu."
+          />
+        </main>
+
+        <NightFooter />
+      </div>
+    </>
   );
 }
