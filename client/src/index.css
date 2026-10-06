@@ -199,8 +199,8 @@
   --editorial-gap: clamp(12px, 1.7vw, 28px);
   --measure-copy: 64ch;
   --measure-caption: 32ch;
-  --text-impact: clamp(3.4rem, 7.4vw, 7.8rem);
-  --text-register: clamp(2.25rem, 4.8vw, 5.1rem);
+  --text-impact: clamp(4.2rem, 10.2vw, 10.8rem);
+  --text-register: clamp(2.6rem, 7vw, 7.4rem);
   --rule-quiet: color-mix(in srgb, var(--paper) 14%, transparent);
   --rule-present: color-mix(in srgb, var(--paper) 36%, transparent);
 
