@@ -9,6 +9,7 @@ import { PlatformMarquee } from "@/components/PlatformMarquee";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { SignatureStage } from "@/components/signature/SignatureStage";
 import { SundaScript } from "@/components/signature/SundaScript";
+import { BirthdayNote } from "@/components/StudioClock";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import {
   currentRelease,
@@ -139,6 +140,8 @@ export default function Home() {
     "Produser musik, remixer, dan DJ dari Bandung Barat. Breakbeat, electronic bass, dan remix untuk rilisan serta kolaborasi.";
   const platforms = publicPlatformLinks(publicContent.data);
   const archivePreview = catalog.slice(0, 6);
+  const gameConfig = publicContent.data?.game;
+  const gameEnabled = gameConfig?.isEnabled !== false;
 
   return (
     <div className="an-site" data-page="home" data-home-edition="resonance">
@@ -184,18 +187,24 @@ export default function Home() {
               <SundaScript entry={SUNDA_NAME} lang="id" tone="hero" />
               <p className="an-hero-lede">{heroBody}</p>
             </div>
-            <a
-              className="resonance-primary-action"
-              href={activeRelease.href}
-              target="_blank"
-              rel="noreferrer"
-              data-signal-magnetic
-              data-signal-interactive
-              data-cursor="music"
-            >
-              <span>DENGAR SEKARANG</span>
-              <ArrowUpRight size={16} aria-hidden="true" />
-            </a>
+            <BirthdayNote />
+            <div className="resonance-opening__actions">
+              <a
+                className="resonance-primary-action"
+                href={activeRelease.href}
+                target="_blank"
+                rel="noreferrer"
+                data-signal-magnetic
+                data-signal-interactive
+                data-cursor="music"
+              >
+                <span>DENGAR SEKARANG</span>
+                <ArrowUpRight size={16} aria-hidden="true" />
+              </a>
+              <Link className="resonance-secondary-action" href="/visuals">
+                Buka arsip visual <ArrowUpRight size={14} aria-hidden="true" />
+              </Link>
+            </div>
           </div>
 
           <figure className="an-hero-plate resonance-opening__portrait">
@@ -230,7 +239,7 @@ export default function Home() {
             </figcaption>
           </figure>
 
-          <a className="an-hero-scroll" href="#current">
+          <a className="an-hero-scroll" href="#signal">
             <span>Masuk ke frekuensi</span>
             <ArrowDown size={14} aria-hidden="true" />
           </a>
@@ -418,11 +427,36 @@ export default function Home() {
           <PlatformMarquee links={platforms} />
         </section>
 
+        {gameEnabled ? (
+          <section
+            className="resonance-side-project"
+            aria-labelledby="side-project-title"
+          >
+            <div className="resonance-side-project__visual" aria-hidden="true">
+              <span>AN</span>
+              <i />
+              <i />
+              <i />
+            </div>
+            <div className="resonance-side-project__copy">
+              <p className="resonance-section-number">05 / Side project</p>
+              <h2 id="side-project-title">JEDAG RUN.</h2>
+              <p>
+                {gameConfig?.intro ||
+                  "Lari ikut ketukan, kumpulkan not, dan kejar drop. Satu proyek playful dari dunia suara yang sama."}
+              </p>
+              <Link href="/game/jedag-run">
+                Mainkan sekarang <ArrowUpRight size={14} />
+              </Link>
+            </div>
+          </section>
+        ) : null}
+
         <section
           className="resonance-exit ed-cta-shell"
           aria-labelledby="exit-title"
         >
-          <p className="resonance-section-number">05 / Exit route</p>
+          <p className="resonance-section-number">06 / Exit route</p>
           <h2 id="exit-title">
             BAWA SUARA INI
             <br />
@@ -438,9 +472,6 @@ export default function Home() {
             </Link>
             <Link href="/epk">
               Buka EPK <ArrowUpRight size={15} />
-            </Link>
-            <Link href="/game/jedag-run">
-              JEDAG RUN <ArrowUpRight size={15} />
             </Link>
           </div>
         </section>
