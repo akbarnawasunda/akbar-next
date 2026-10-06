@@ -10,7 +10,7 @@
 
 **Fase aktif:** PRESSURE / ROOTS — creative reinvention complete, ready for review
 **Terakhir update:** 2026-10-06
-**Terakhir commit:** menunggu commit sesi Arena
+**Terakhir commit:** `592b1d7 [redesign] reinvent public music surfaces`
 
 ---
 
@@ -344,4 +344,4 @@ git checkout <file>
 - Build: lulus
 - Audit layout: surface baru bersih; audit global masih melaporkan dua pelanggaran lama di `client/src/studio/studio.css` (`overflow-x: hidden` dan `backdrop-filter`).
 - SSR crawler: semua konten/SEO route lulus terhadap dev server; tiga redirect Vercel (`/index.html`, `/archive`, trailing slash) tidak dapat diverifikasi lewat dev server karena rewrite Vercel tidak aktif lokal.
-- Commit: menunggu commit/push sesi Arena
+- Commit: `592b1d7 [redesign] reinvent public music surfaces`
