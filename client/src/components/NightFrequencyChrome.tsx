@@ -221,23 +221,6 @@ export function NightFooter() {
         />
         <strong>AKBAR NAWASUNDA</strong>
         <p>PRODUCER / REMIXER / INDONESIA</p>
-        <Link
-          className="nf-footer-mascot"
-          href="/"
-          aria-label="Kembali ke homepage"
-        >
-          <img
-            src="/assets/akbar-mascot-doodle.webp"
-            alt="Maskot doodle Akbar Nawasunda"
-            width={92}
-            height={92}
-            loading="lazy"
-            decoding="async"
-          />
-          <span>
-            KEMBALI KE BERANDA <ArrowUpRight size={12} />
-          </span>
-        </Link>
       </div>
       {/* Kaki halaman = himpunan rute yang tidak ada di nav (Phase 3 §7):
           Jadwal tetap di sini (nav-nya kondisional), JEDAG RUN masuk sebagai

@@ -137,7 +137,7 @@
   min-height: 44px;
   padding: 0 16px;
   border: 1px solid var(--editorial-rule);
-  border-radius: 999px;
+  border-radius: 2px;
   background: transparent;
   color: color-mix(in srgb, var(--paper) 74%, transparent);
   font-family: var(--font-body);
@@ -390,7 +390,7 @@
   margin-top: 6px;
   padding: 0 15px;
   border: 1px solid var(--editorial-rule);
-  border-radius: 999px;
+  border-radius: 2px;
   background: transparent;
   color: var(--paper);
   font-family: var(--font-body);

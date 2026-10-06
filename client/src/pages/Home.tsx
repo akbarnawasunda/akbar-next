@@ -16,7 +16,6 @@ import {
 } from "react";
 import { Link } from "wouter";
 import { PlatformIcon } from "@/components/PlatformIcon";
-import { PlatformMarquee } from "@/components/PlatformMarquee";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { MusicEmbed } from "@/components/MusicEmbed";
@@ -559,7 +558,6 @@ export default function Home() {
             </ul>
 
             <div className="an-channels-foot">
-              <PlatformMarquee links={editablePlatformLinks} />
               <Link className="an-btn an-btn--quiet" href="/music">
                 Buka katalog musik <ArrowRight size={14} />
               </Link>

@@ -41,7 +41,6 @@ import { VisualsView } from "./Visuals";
 import { ReleaseDetailView } from "./ReleaseDetail";
 import { MusicView } from "./Music";
 import { LicensingView } from "./Licensing";
-import { PlatformMarquee } from "@/components/PlatformMarquee";
 import {
   currentRelease,
   formatPublicIndex,
@@ -439,7 +438,6 @@ export function EnglishHome() {
               </a>
             ))}
           </div>
-          <PlatformMarquee links={editablePlatformLinks} />
         </section>
 
         {/* Journey + photo stories moved out of the EN home (Phase 3:

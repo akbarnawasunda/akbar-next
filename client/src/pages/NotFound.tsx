@@ -94,8 +94,18 @@ export default function NotFound({ locale = "id" }: Props) {
               sizes="(max-width: 1023.98px) 100vw, 46vw"
               objectFit="cover"
             />
-            <figcaption>{copy.caption}</figcaption>
-          </figure>
+              <figcaption>{copy.caption}</figcaption>
+              <img
+                className="an-notfound-mascot"
+                src="/assets/akbar-mascot-doodle.webp"
+                alt=""
+                aria-hidden="true"
+                width={72}
+                height={72}
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
         </section>
       </main>
       {english ? <EnglishFooter /> : <NightFooter />}

@@ -107,7 +107,10 @@
   min-height: 46px;
   padding: 0 20px;
   border: 1px solid var(--editorial-rule);
-  border-radius: 999px;
+  /* Tepi hampir persegi (DESIGN.md §10): pil kapsul adalah bahasa UI
+     generik, bukan milik sistem ini. Lingkaran disimpan untuk kontrol
+     berbentuk ikon (.an-catalog-controls), bukan tombol teks. */
+  border-radius: 2px;
   background: transparent;
   color: var(--paper);
   font-family: var(--font-body);

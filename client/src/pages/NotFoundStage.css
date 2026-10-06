@@ -48,6 +48,31 @@
   text-transform: uppercase;
 }
 
+/* Maskot muncul di sini dan di hero beranda saja (DESIGN.md §17: identity
+   detail, bukan dekorasi berulang) — melayang pelan di sudut plate, seperti
+   satu-satunya sinyal yang masih bergerak di halaman yang "hilang". */
+.an-public-shell.an-editorial .an-notfound-mascot {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: clamp(48px, 9vw, 72px);
+  height: auto;
+  opacity: 0.92;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.45));
+  animation: an-notfound-mascot-drift 8s ease-in-out infinite;
+}
+
+@keyframes an-notfound-mascot-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-public-shell.an-editorial .an-notfound-mascot {
+    animation: none;
+  }
+}
+
 /* Rute yang diminta bisa panjang tanpa spasi — jangan sampai melebar
    keluar kolom di 360px. */
 .an-public-shell.an-editorial .an-notfound-page .an-facts dd {

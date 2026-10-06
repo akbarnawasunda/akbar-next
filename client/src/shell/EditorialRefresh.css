@@ -936,12 +936,6 @@
   transform: none;
 }
 
-.an-public-shell.an-editorial .nf-footer-mascot,
-.an-public-shell.an-editorial .nf-footer-mascot img {
-  animation: none;
-  box-shadow: none;
-}
-
 /* The navigation drawer is portaled to document.body, so theme it locally. */
 .nf-mobile-drawer-root {
   --ink: #101211;

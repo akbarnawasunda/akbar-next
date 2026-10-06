@@ -394,9 +394,11 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: var(--space-lg);
   margin-top: var(--space-xl);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--ink-line);
 }
 
 /* ------------------------------------------------------------
@@ -932,45 +934,6 @@
 .an-site .an-channel:focus-visible .an-channel-mark,
 .an-site .an-channel:hover .an-channel-arrow,
 .an-site .an-channel:focus-visible .an-channel-arrow {
-  color: var(--band-accent);
-}
-
-  /* Marquee kanal memakai token gelap sendiri (berkas terpisah). */
-.an-site .an-channels .an-platform-marquee {
-  border-top-color: var(--band-rule);
-  color: var(--ink);
-}
-
-.an-site .an-channels .an-platform-marquee-heading {
-  border-bottom-color: var(--band-rule);
-  color: var(--band-mute);
-}
-
-.an-site .an-channels .an-platform-marquee-row {
-  border-bottom-color: var(--band-rule);
-}
-
-.an-site .an-channels .an-platform-marquee-item {
-  color: var(--ink);
-}
-
-/* Tanpa baris ini ikonnya tetap mewarisi `var(--paper)` dari aturan global
-   "ALL-DARK" di Home.css (dibuat untuk marquee di atas latar gelap) —
-   ikon krem di atas pita kertas krem sama-sama hampir putih, jadi SVG-nya
-   ada di DOM tapi tidak kelihatan sama sekali. Band kanal resmi ini
-   berlatar terang (`var(--paper)`), jadi ikonnya harus ikut `var(--ink)`
-   sama seperti teksnya, bukan cuma teksnya saja. */
-.an-site .an-channels .an-platform-marquee-item .an-platform-icon {
-  color: var(--ink);
-}
-
-.an-site .an-channels .an-platform-marquee-item:hover,
-.an-site .an-channels .an-platform-marquee-item:focus-visible {
-  color: var(--band-accent);
-}
-
-.an-site .an-channels .an-platform-marquee-item:hover .an-platform-icon,
-.an-site .an-channels .an-platform-marquee-item:focus-visible .an-platform-icon {
   color: var(--band-accent);
 }
 

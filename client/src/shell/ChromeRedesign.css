@@ -189,7 +189,7 @@
   min-height: 40px;
   padding: 0 16px;
   border: 1px solid var(--chrome-rule-strong);
-  border-radius: 999px;
+  border-radius: 2px;
   background: transparent;
   color: var(--paper);
   font-family: var(--font-mono);

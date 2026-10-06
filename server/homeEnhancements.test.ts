@@ -33,9 +33,13 @@ describe("beranda yang dilihat pengunjung", () => {
     expect(home).toMatch(/aria-busy="(true|false)"/);
   });
 
-  it("memasang progress scroll dan marquee platform", () => {
+  it("memasang progress scroll tanpa dekorasi berulang", () => {
     expect(home).toContain('class="an-scroll-progress"');
-    expect(home).toContain("an-platform-marquee-track");
+    // Marquee platform dihapus (redesign liquid-signal): kanal resminya
+    // sudah tertulis sekali sebagai daftar tipografis di atas; mengulangnya
+    // sebagai pita berjalan tanpa akhir hanya menambah gerak tanpa makna
+    // (DESIGN.md §7 "endless marquee text" dan §38 motion tanpa nilai).
+    expect(home).not.toContain("an-platform-marquee-track");
     // Judul section sudah menjelaskan isinya; indeks dan nomor dekoratif
     // hanya mengulang informasi dan membuat beranda terasa seperti template.
     expect(home).not.toContain('class="an-section-index"');
