@@ -15,8 +15,8 @@
 
 .an-public-shell.an-editorial .an-arc-hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
-  align-items: end;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  align-items: start;
   gap: clamp(28px, 5vw, 76px);
   max-width: var(--hx-max);
   margin-inline: auto;
@@ -24,30 +24,38 @@
     var(--space-xl);
 }
 
+/* Dulu bingkai berbatas ("ink-soft" + border, aspect-ratio 4/5) berisi
+   foto ("archivePortrait" — komposit AI "future city" palsu). Diganti dua
+   nama + dua tahun era, langsung dari data linimasa (publicEras) — tapi
+   bukan dipindah ke dalam kartu infobox baru. Plate sekarang TIDAK
+   berbingkai dan TIDAK beraspect-ratio tetap: dua nama itu sendiri yang
+   jadi elemen grafis utama halaman, skalanya mendekati judul <h1>, bukan
+   label kecil di dalam kotak. */
 .an-public-shell.an-editorial .an-arc-hero-plate {
   position: relative;
   margin: 0;
   display: grid;
-  align-content: center;
-  aspect-ratio: 4 / 5;
-  padding: clamp(24px, 4vw, 48px);
-  background: var(--ink-soft);
-  border: 1px solid var(--ink-line);
+  gap: clamp(18px, 2.6vw, 28px);
 }
 
-/* Dulu bingkai ini berisi foto ("archivePortrait" — komposit AI "future
-   city" palsu). Diganti dua nama + dua tahun era, langsung dari data
-   linimasa (publicEras): identitas asli halaman ini, bukan gambar
-   pengisi yang tidak berhubungan dengan apa pun di katalognya. */
+.an-public-shell.an-editorial .an-arc-hero-eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
 .an-public-shell.an-editorial .an-arc-hero-marks {
   display: grid;
-  gap: clamp(20px, 3vw, 36px);
+  gap: clamp(10px, 1.6vw, 18px);
   justify-items: start;
 }
 
 .an-public-shell.an-editorial .an-arc-hero-mark {
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
 .an-public-shell.an-editorial .an-arc-hero-mark-year {
@@ -60,31 +68,35 @@
 
 .an-public-shell.an-editorial .an-arc-hero-mark-name {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3.4vw, 2.4rem);
   font-weight: 500;
-  line-height: 1.05;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+}
+
+/* Nama pertama: lebih kecil, lebih redup — dia memudar ke masa lalu. */
+.an-public-shell.an-editorial .an-arc-hero-mark--from .an-arc-hero-mark-name {
+  font-size: clamp(1.9rem, 4.2vw, 3.2rem);
+  color: color-mix(in srgb, var(--paper) 42%, transparent);
+}
+
+/* Nama terbaru: elemen tipografis terbesar di halaman — lebih besar dari
+   <h1> lede-nya sendiri, karena ini jawaban pertanyaan "siapa dia
+   sekarang", bukan sekadar label arsip. */
+.an-public-shell.an-editorial .an-arc-hero-mark--to .an-arc-hero-mark-name {
+  font-size: clamp(3.2rem, 7.4vw, 6.4rem);
   color: var(--paper);
 }
 
+/* Garis penghubung: bukan lagi 1px vertikal pendek di dalam kartu, tapi
+   aturan diagonal yang melintasi dua nama — garis evolusi, bukan bingkai. */
 .an-public-shell.an-editorial .an-arc-hero-mark-link {
-  display: block;
-  width: 1px;
-  height: clamp(20px, 3vw, 32px);
+  justify-self: start;
+  width: clamp(64px, 11vw, 140px);
+  height: 1px;
   margin-left: 2px;
   background: var(--ink-line);
-}
-
-.an-public-shell.an-editorial .an-arc-hero-plate figcaption {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  padding: 10px 16px;
-  background: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 0.52rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--mute);
+  transform: rotate(-18deg);
+  transform-origin: left center;
 }
 
 .an-public-shell.an-editorial .an-arc-hero-copy {
@@ -439,9 +451,16 @@
     align-items: start;
   }
 
-  .an-public-shell.an-editorial .an-arc-hero-plate,
   .an-public-shell.an-editorial .an-ab-hero-plate {
     aspect-ratio: 4 / 3;
+  }
+
+  /* Plate linimasa /universe bukan foto — tidak perlu aspect-ratio tetap.
+     Di layar sempit dua nama era tetap jadi pembuka, tapi diberi ruang
+     bawah supaya tidak menempel langsung ke judul <h1> di bawahnya. */
+  .an-public-shell.an-editorial .an-arc-hero-plate {
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--ink-line);
   }
 
   .an-public-shell.an-editorial .an-arc-routes,
@@ -463,9 +482,22 @@
       var(--space-lg);
   }
 
-  .an-public-shell.an-editorial .an-arc-hero-plate,
   .an-public-shell.an-editorial .an-ab-hero-plate {
     aspect-ratio: 3 / 4;
+  }
+
+  /* Dua nama era mengecil tapi tetap jadi elemen grafis terbesar di
+     layar sempit — bukan diciutkan ke ukuran label seperti kartu info. */
+  .an-public-shell.an-editorial .an-arc-hero-mark--to .an-arc-hero-mark-name {
+    font-size: clamp(2.6rem, 13vw, 3.6rem);
+  }
+
+  .an-public-shell.an-editorial .an-arc-hero-mark--from .an-arc-hero-mark-name {
+    font-size: clamp(1.6rem, 7vw, 2rem);
+  }
+
+  .an-public-shell.an-editorial .an-arc-hero-mark-link {
+    width: clamp(40px, 18vw, 72px);
   }
 
   /* Potret /about memimpin di ponsel sampai ke tepi layar, sama seperti

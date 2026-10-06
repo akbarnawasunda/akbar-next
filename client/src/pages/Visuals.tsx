@@ -254,7 +254,16 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
 
       {/* Arsip visual: kolom berirama (dense grid), bukan kotak seragam.
             Kalau semua video sudah tampil sebagai tayangan, bagian ini
-            disembunyikan supaya tidak ada daftar kosong atau pengulangan. */}
+            disembunyikan supaya tidak ada daftar kosong atau pengulangan.
+            [Visual recomposition] Kalau arsipnya cuma sisa SATU entri
+            (fallback statis: 3 video dikurangi 2 yang sudah tampil di
+            ruang tayang = 1), dulu entri itu tetap dirender sebagai kartu
+            sempit (span 3 dari 6 kolom) dengan FilterBar penuh di
+            atasnya — kotak kecil mengambang di separuh panel gelap yang
+            lebar, dan filter untuk memilah satu video. Sekarang: filter
+            hanya tampil kalau benar-benar ada lebih dari satu entri untuk
+            dipilah, dan entri tunggal memegang penuh lebar panel sebagai
+            satu baris fitur besar — skala yang jujur soal jumlah isinya. */}
       {archiveItems.length > 0 && (
         <section
           className="an-section dark-panel"
@@ -271,14 +280,20 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
                   : t.archiveFromChannel(visibleArchive.length)}
               </p>
             </div>
-            <FilterBar
-              options={groups}
-              value={group}
-              onChange={setGroup}
-              label={t.archiveFilter}
-            />
+            {archiveItems.length > 1 && (
+              <FilterBar
+                options={groups}
+                value={group}
+                onChange={setGroup}
+                label={t.archiveFilter}
+              />
+            )}
           </header>
-          <div className="an-vis-archive">
+          <div
+            className={`an-vis-archive${
+              visibleArchive.length === 1 ? " an-vis-archive--solo" : ""
+            }`}
+          >
             {visibleArchive.map(video => (
               <InteractiveArtworkCard
                 key={video.title}

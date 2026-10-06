@@ -130,6 +130,12 @@
   grid-column: span 3;
 }
 
+/* Entri tunggal: bukan kartu sempit mengambang di panel lebar, tapi satu
+   baris fitur penuh lebar — lihat komentar Visuals.tsx. */
+.an-public-shell.an-editorial .an-vis-archive.an-vis-archive--solo > * {
+  grid-column: 1 / -1;
+}
+
 /* Thumbnail arsip ini berasal dari YouTube (`hqdefault.jpg`), yang berbentuk
    4:3 dengan bilah hitam di atas dan bawah untuk video 16:9. Bingkai persegi
    1:1 menampilkan bilah itu; bingkai 16:9 memotongnya persis di garis gambar
@@ -173,16 +179,18 @@
 }
 
 /* Keadaan sunyi: belum ada jadwal terkonfirmasi, jadi tidak ada foto
-   panggung untuk ditampilkan. Latar jadi gradien ink bertekstur halus
-   dengan warna --signal redup, bukan gambar karangan. */
+   pertunjukan untuk ditampilkan. `--ink` jadi warna dasar (kalau foto
+   panggung gagal dimuat) di belakang foto panggung teater kosong asli
+   (lihat Live.tsx `an-live-hero-bg--stage`) — bukan gradien dekoratif. */
 .an-public-shell.an-editorial .an-live-hero--quiet {
-  background:
-    radial-gradient(
-        120% 90% at 86% 8%,
-        color-mix(in srgb, var(--signal) 14%, transparent) 0%,
-        transparent 58%
-      )
-      var(--ink);
+  background: var(--ink);
+}
+
+.an-public-shell.an-editorial .an-live-hero-bg--stage {
+  object-position: 72% 50%;
+  /* Foto panggung aslinya terang di sisi kanan (lampu sorot) — geser
+     titik fokus ke kanan supaya lampu itu tidak tertimbun scrim dan
+     tetap jadi satu-satunya titik terang di balik tipografi. */
 }
 
 .an-public-shell.an-editorial .an-live-hero-mark {
@@ -279,6 +287,30 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+/* Panel sisi keadaan kosong: status + basis + genre asli — mengisi kolom
+   kedua grid `.an-live-next` dengan fakta nyata, bentuknya sama dengan
+   panel hitung mundur di keadaan terisi (lihat komentar Live.tsx). */
+.an-public-shell.an-editorial .an-live-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  padding: var(--space-sm, 10px) 0 0;
+  border-top: 1px solid var(--editorial-rule);
+  list-style: none;
+}
+
+.an-public-shell.an-editorial .an-live-genres li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--mute);
 }
 
 /* -- Indeks jadwal ------------------------------------------- */

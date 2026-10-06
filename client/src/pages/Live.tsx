@@ -1,4 +1,4 @@
-import { ArrowUpRight, MapPin, Ticket } from "lucide-react";
+import { ArrowUpRight, MapPin, Radio, Ticket } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { EventCountdown } from "@/components/editorial/EditorialKit";
 import { Link } from "wouter";
@@ -59,6 +59,9 @@ const copy = {
     emptyCopy:
       "Begitu ada show yang dikonfirmasi, tanggal, venue, zona waktu, dan tautan tiketnya akan tampil di sini lebih dulu.",
     emptyCta: "Ajukan tanggal",
+    emptyStatus: "TERBUKA UNTUK BOOKING",
+    emptyBasisLabel: "Basis",
+    emptyGenreLabel: "Genre",
     indexTitle: "Jadwal terkonfirmasi.",
     indexMeta: (count: number) => `${count} event · waktu lokal venue`,
     placeFallback: "Detail venue menyusul",
@@ -87,6 +90,9 @@ const copy = {
     emptyCopy:
       "Once a show is confirmed, the date, venue, time zone, and ticket link appear here first.",
     emptyCta: "Propose a date",
+    emptyStatus: "OPEN FOR BOOKING",
+    emptyBasisLabel: "Based in",
+    emptyGenreLabel: "Genre",
     indexTitle: "Confirmed dates.",
     indexMeta: (count: number) => `${count} events · local venue time`,
     placeFallback: "Venue details to follow",
@@ -111,12 +117,18 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
     <main id="main-content" tabIndex={-1}>
         {/* Panggung: saat ada foto pertunjukan nyata, itu jadi latar penuh.
             Tanpa jadwal terkonfirmasi (keadaan sekarang), halaman ini
-            TIDAK memaksa foto — dulu di sini "akbar-night-frequency-stage",
-            foto jalan malam asli yang ditumpuki teks chrome/neon 3D
-            "AKBAR NAWASUNDA RMX" dan tulisan kursif "SWAG" mengkilap: gaya
-            poster DJ generik yang persis dilarang DESIGN.md. Diganti latar
-            sunyi + tanda resmi (logo vektor asli), jujur soal "belum ada
-            tanggal" alih-alih menutupinya dengan gambar ramai. */}
+            TIDAK memaksa foto pertunjukan karangan — dulu di sini
+            "akbar-night-frequency-stage", foto jalan malam asli yang
+            ditumpuki teks chrome/neon 3D "AKBAR NAWASUNDA RMX" dan tulisan
+            kursif "SWAG" mengkilap: gaya poster DJ generik yang persis
+            dilarang DESIGN.md.
+            [Visual recomposition] Versi sebelumnya menggantinya dengan
+            latar RATA + logo kecil 0.5 opacity mengambang di pojok — jujur,
+            tapi nyaris kosong penuh (hero ini tingginya sampai 74svh).
+            Sekarang latarnya foto panggung teater KOSONG asli (satu lampu
+            sorot, tirai gelap) — bukan foto pertunjukan karangan, tapi
+            tetap foto NYATA yang relevan: panggung yang benar-benar ada,
+            menunggu tanggal. Metafora jujur, bukan gambar pengisi. */}
         <section
           className={`an-live-hero${
             featured?.posterUrl ? "" : " an-live-hero--quiet"
@@ -133,16 +145,26 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
               decoding="async"
             />
           ) : (
-            <img
-              className="an-live-hero-mark"
-              src={officialBrand.logo}
-              alt=""
-              aria-hidden="true"
-              width={220}
-              height={150}
-              loading="eager"
-              decoding="async"
-            />
+            <>
+              <img
+                className="an-live-hero-bg an-live-hero-bg--stage"
+                src="/assets/akbar-editorial-stage-bg.webp"
+                alt=""
+                aria-hidden="true"
+                loading="eager"
+                decoding="async"
+              />
+              <img
+                className="an-live-hero-mark"
+                src={officialBrand.logo}
+                alt=""
+                aria-hidden="true"
+                width={220}
+                height={150}
+                loading="eager"
+                decoding="async"
+              />
+            </>
           )}
           <span className="an-live-hero-scrim" aria-hidden="true" />
           <div className="an-live-hero-copy">
@@ -272,6 +294,30 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
                   {t.emailCta} <ArrowUpRight size={13} aria-hidden="true" />
                 </a>
               </div>
+            </div>
+            {/* [Visual recomposition] Kolom kedua grid ini dulu tidak
+                dirender sama sekali di keadaan kosong — `.an-live-next`
+                tetap dua kolom (1.15fr/0.85fr), jadi sisa 0.85fr-nya
+                adalah ruang kosong mentah, bukan jeda yang disengaja.
+                Diisi fakta nyata yang sudah ada di codebase (status,
+                basis, genre) — bukan dekorasi baru — supaya bentuknya
+                tetap sama persis dengan panel sisi "show berikutnya",
+                dan ruang itu akhirnya membawa informasi. */}
+            <div className="an-live-next-side">
+              <p className="an-meta">
+                {t.statusLabel}: {t.emptyStatus}
+              </p>
+              <p className="an-live-place">
+                <MapPin size={12} aria-hidden="true" />
+                <span>{verifiedArtistProfile.location}</span>
+              </p>
+              <ul className="an-live-genres">
+                {verifiedArtistProfile.genres.map(genre => (
+                  <li key={genre}>
+                    <Radio size={11} aria-hidden="true" /> {genre}
+                  </li>
+                ))}
+              </ul>
             </div>
           </section>
         )}

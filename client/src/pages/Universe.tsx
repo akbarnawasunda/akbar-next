@@ -34,7 +34,7 @@ const copy = {
     title: "Perjalanan Akbar Nawasunda.",
     lede:
       "Dari DJ Akbar Remix ke Akbar Nawasunda — satu katalog, beberapa babak, dan semua tautan resminya di satu tempat.",
-    portraitCaption: "Arsip visual",
+    portraitCaption: "Babak pertama → babak terbaru",
     facts: { since: "Mulai", based: "Basis", releases: "Rilisan" },
     basedValue: "Bandung Barat",
     exploreCta: "Telusuri babak",
@@ -72,7 +72,7 @@ const copy = {
     title: "The Akbar Nawasunda journey.",
     lede:
       "From DJ Akbar Remix to Akbar Nawasunda — one catalog, several chapters, and every official link in one place.",
-    portraitCaption: "Visual archive",
+    portraitCaption: "First chapter → latest chapter",
     facts: { since: "Started", based: "Based in", releases: "Releases" },
     basedValue: "Bandung Barat",
     exploreCta: "Explore the chapters",
@@ -141,17 +141,25 @@ export function UniverseView({ locale = "id" }: { locale?: "id" | "en" }) {
             phase 3), tapi dua nama dan tahunnya sendiri, besar dan
             tipografis. Ini satu-satunya cerita halaman ini: satu artis,
             dua nama lintas era — jadi pembukanya memvisualisasikan itu
-            langsung, bukan menampilkan gambar yang tidak berhubungan. */}
+            langsung, bukan menampilkan gambar yang tidak berhubungan.
+            [Visual recomposition] Nama pertama (eras[0]) sengaja tampil
+            redup/kecil — dia memudar ke masa lalu — sementara nama
+            terbaru tampil penuh, paling besar, dan paling gelap di
+            halaman ini. Kontrasnya sendiri yang bercerita: typography
+            yang membawa makna, bukan kartu info generik berbingkai. */}
         <section className="an-arc-hero" aria-labelledby="archive-title">
-          <figure className="an-arc-hero-plate">
-            {eras.length > 0 ? (
+          {eras.length > 0 ? (
+            <figure className="an-arc-hero-plate">
+              <figcaption className="an-arc-hero-eyebrow">
+                {t.portraitCaption}
+              </figcaption>
               <div className="an-arc-hero-marks">
-                <span className="an-arc-hero-mark">
+                <span className="an-arc-hero-mark an-arc-hero-mark--from">
                   <span className="an-arc-hero-mark-year">{eras[0].year}</span>
                   <span className="an-arc-hero-mark-name">{eras[0].title}</span>
                 </span>
                 <span className="an-arc-hero-mark-link" aria-hidden="true" />
-                <span className="an-arc-hero-mark">
+                <span className="an-arc-hero-mark an-arc-hero-mark--to">
                   <span className="an-arc-hero-mark-year">
                     {eras[eras.length - 1].year}
                   </span>
@@ -160,9 +168,8 @@ export function UniverseView({ locale = "id" }: { locale?: "id" | "en" }) {
                   </span>
                 </span>
               </div>
-            ) : null}
-            <figcaption>{t.portraitCaption}</figcaption>
-          </figure>
+            </figure>
+          ) : null}
           <div className="an-arc-hero-copy">
             <p className="an-kicker">
               <span className="an-kicker-dot" aria-hidden="true" />
