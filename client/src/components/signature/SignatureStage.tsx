@@ -1,4 +1,3 @@
-import { MaterialLiquidField } from "@/components/signature/MaterialLiquidField";
 import { SundaScript } from "@/components/signature/SundaScript";
 import { TabularCounter } from "@/components/signature/SignalType";
 import { SUNDA_NAME } from "@/content/sundaneseScript";
@@ -165,7 +164,6 @@ export function SignatureStage({
       >
         <div className="an-signature-stage-sticky">
           <div className="an-signature-stage-field" data-signal-stage>
-            <MaterialLiquidField />
             {/* Teks panggung mengikuti frasa yang sedang disusun partikel.
                 Dulu di sini selalu tertulis "AKBAR NAWASUNDA" sementara
                 partikel sudah berpindah ke alias — DOM dan layar bercerita
