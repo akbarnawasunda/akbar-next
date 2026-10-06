@@ -13,7 +13,13 @@
 
 .an-public-shell.an-editorial .an-vis-hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  /* [Visual recomposition loop 3] Ini halaman "video & potret" — kanal
+     visual. Kalau mau satu hal yang membedakan pembukanya dari /music dan
+     /about (yang sama-sama membuka dengan kolom teks + kolom gambar),
+     inilah halaman yang fotonya paling berhak dominan: rasio sebelumnya
+     (0.95/1.05) nyaris sama dengan dua halaman itu. Sekarang kolom teks
+     jadi secuil pengantar, foto memegang sebagian besar pembuka. */
+  grid-template-columns: minmax(0, 0.66fr) minmax(0, 1.34fr);
   align-items: end;
   gap: clamp(28px, 5vw, 72px);
   max-width: var(--hx-max);

@@ -190,7 +190,14 @@
 
 .an-public-shell.an-editorial .an-ab-hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+  /* [Visual recomposition loop 3] /music dan /visuals membuka dengan foto
+     yang dominan (arsip, galeri — itu memang isinya). /about punya
+     pekerjaan berbeda: ini halaman baca, bukan halaman lihat. Rasio
+     sebelumnya (0.94/1.06) nyaris sama persis dengan dua halaman itu,
+     jadi tiga pembuka situs terasa dipotong dari templat yang sama.
+     Sekarang dibalik dengan sengaja: potret jadi pendamping yang lebih
+     kecil, kolom teks yang memegang bacaannya. */
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
   align-items: end;
   gap: clamp(28px, 5vw, 76px);
   max-width: var(--hx-max);

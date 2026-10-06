@@ -14,7 +14,14 @@
 
 .an-public-shell.an-editorial .an-cat-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  /* [Visual recomposition loop 3] Rasio sebelumnya (1.05fr/0.95fr) nyaris
+     setengah-setengah — bersebelahan dengan rasio /visuals (0.95/1.05) dan
+     /about (0.94/1.06) dulu, tiga pembuka halaman terasa seperti potongan
+     templat dua-kolom yang sama, cuma foto dan judulnya ditukar. Komentar
+     di atas sudah bilang "artwork besar sebagai subjek" — sekarang
+     proporsinya benar-benar bilang begitu: artwork memegang lebih dari
+     separuh pembuka, kolom teks jadi kolom sempit di sampingnya. */
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   align-items: end;
   gap: clamp(28px, 5vw, 76px);
   max-width: var(--hx-max);

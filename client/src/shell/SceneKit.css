@@ -297,7 +297,13 @@
 
 .an-public-shell.an-editorial .an-doc {
   display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+  /* [Visual recomposition loop 3] Dokumen rilisan ini satu-satunya tempat
+     di beranda tempat SATU artwork dipajang penuh sebagai subjek (bukan
+     thumbnail arsip) — tapi rasionya dulu nyaris 50/50 (1.02fr/1fr),
+     berseberangan dengan komentar section-nya sendiri ("artwork besar").
+     Artwork sekarang benar-benar memegang lebih dari separuh adegan;
+     kolom copy jadi lebih ramping dan padat di sampingnya. */
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
   align-items: center;
   gap: clamp(28px, 5vw, 84px);
 }
