@@ -27,7 +27,10 @@ const ID_ROUTES = [
   "/game/jedag-run",
 ];
 
-const ROUTES = [...ID_ROUTES, ...ID_ROUTES.map(r => (r === "/" ? "/en" : `/en${r}`))];
+const ROUTES = [
+  ...ID_ROUTES,
+  ...ID_ROUTES.map(r => (r === "/" ? "/en" : `/en${r}`)),
+];
 
 const cache = new Map<string, Promise<string>>();
 
@@ -73,7 +76,8 @@ describe("aksesibilitas rute publik", () => {
         ...tagsOf(markup, "textarea"),
       ];
       // `<label>` yang membungkus kontrol juga sah sebagai nama.
-      const labelBlocks = markup.match(/<label\b[^>]*>[\s\S]*?<\/label>/g) || [];
+      const labelBlocks =
+        markup.match(/<label\b[^>]*>[\s\S]*?<\/label>/g) || [];
       for (const control of controls) {
         const type = attr(control, "type");
         if (type === "hidden") continue;
@@ -131,8 +135,8 @@ describe("aksesibilitas rute publik", () => {
       );
       expect(duplicates, `${route} id ganda`).toEqual([]);
 
-      const tabIndexes = (markup.match(/tabindex="(-?\d+)"/g) || []).map(found =>
-        Number(found.replace(/tabindex="|"/g, ""))
+      const tabIndexes = (markup.match(/tabindex="(-?\d+)"/g) || []).map(
+        found => Number(found.replace(/tabindex="|"/g, ""))
       );
       for (const value of tabIndexes) {
         expect(value, `${route} tabindex`).toBeLessThanOrEqual(0);
@@ -151,80 +155,22 @@ describe("aksesibilitas rute publik", () => {
   });
 });
 
-describe("panggung signature", () => {
-  it("hadir di beranda ID dan EN dengan teks lengkap", async () => {
-    const pairs: [string, string][] = [
-      ["/", "DJ Akbar Remix"],
-      ["/en", "DJ Akbar Remix"],
-    ];
-    for (const [route, alias] of pairs) {
-      const markup = await html(route);
-      expect(markup, `${route} jalur`).toContain("data-signal-stage-track");
-      expect(markup, `${route} kotak`).toContain("data-signal-stage");
-      // Nama alternatif ikut terkirim sebagai teks, bukan hanya partikel.
-      expect(markup, `${route} alias`).toContain(alias);
-      expect(markup, `${route} wordmark`).toContain("an-signature-stage-word");
-      // Canvas tetap urusan client.
-      expect(markup, `${route} canvas`).not.toContain("<canvas");
-    }
+describe("identitas pembuka", () => {
+  it("mengirim poster identitas yang terbaca tanpa JavaScript", async () => {
+    const markup = await html("/");
+    expect(markup).toContain("pressure-hero");
+    expect(markup).toContain('id="pressure-title"');
+    expect(markup).toContain("AKBAR");
+    expect(markup).toContain("NAWA");
+    expect(markup).toContain("SUNDA");
+    expect(markup).toContain("ᮃᮊ᮪ᮘᮁ ᮔᮝᮞᮥᮔ᮪ᮓ");
+    expect(markup).not.toContain("<canvas");
   });
 
-  it("tidak memakai judul bagian, nomor indeks, atau keterangan efek", async () => {
-    // Panggung boleh punya isi — tapi isinya fakta tentang musiknya, bukan
-    // label "00 — SIGNATURE" atau paragraf yang menjelaskan efeknya sendiri.
-    // Yang kedua membuat halaman terasa seperti demo, bukan situs milik
-    // seseorang.
-    for (const route of ["/", "/en"]) {
-      const markup = await html(route);
-      const marker = markup.indexOf("an-signature-stage");
-      const section = markup.slice(
-        markup.lastIndexOf("<section", marker),
-        markup.indexOf("</section>", marker)
-      );
-      expect(section, `${route} label bagian`).not.toContain("stage-head");
-      expect(section, `${route} nomor indeks`).not.toContain("stage-index");
-      expect(section, `${route} keterangan`).not.toContain("stage-note");
-      expect(section, `${route} label SIGNATURE`).not.toContain("SIGNATURE");
-      expect(section, `${route} eyebrow`).not.toContain("eyebrow");
-
-      const visible = section
-        .replace(/<p[^>]*class="sr-only"[^>]*>[\s\S]*?<\/p>/g, " ")
-        .replace(/<dt[^>]*class="sr-only"[^>]*>[\s\S]*?<\/dt>/g, " ")
-        .replace(/<[^>]+>/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
-
-      // Nama tetap jadi teks sungguhan di panggung.
-      expect(visible, `${route} nama`).toContain("AKBAR NAWASUNDA");
-      // Baris era/jalan-perjalanan dihapus dari panggung (Phase 3 §2 baris 1):
-      // isian itu milik /universe; panggung tinggal identitas + angka katalog.
-      expect(visible, `${route} era sekarang`).not.toContain("SEKARANG");
-      expect(visible, `${route} era awal`).not.toMatch(
-        route === "/en" ? /bedroom producer/i : /bedroom producer/i
-      );
-      // Alias (DJ Akbar Remix) tetap terbaca, tapi lewat baris aka sr-only —
-      // bukan sebagai baris era yang terlihat.
-      const markupNoSr = markup;
-      expect(markupNoSr, `${route} aka sr-only`).toMatch(/sr-only[^>]*>.*DJ Akbar Remix/s);
-      // Tiga angka katalog yang menghitung naik saat panggung masuk layar;
-      // nilai finalnya tetap ada di HTML untuk pembaca tanpa JavaScript.
-      expect(visible, `${route} angka`).toMatch(
-        route === "/en"
-          ? /RELEASES[\s\S]*SINCE[\s\S]*PLATFORMS/i
-          : /RILISAN[\s\S]*MULAI[\s\S]*PLATFORM/i
-      );
-
-      // Dan tidak ada satu kata pun tentang cara efeknya bekerja.
-      expect(visible.toLowerCase(), `${route} penjelasan efek`).not.toMatch(
-        /partikel|particle|canvas|scroll|gulir|animasi|animation/
-      );
-    }
-  });
-
-  it("tidak muncul di halaman selain beranda", async () => {
+  it("membatasi komposisi poster pada beranda Indonesia", async () => {
     for (const route of ["/music", "/en/music", "/universe", "/en/about"]) {
       const markup = await html(route);
-      expect(markup, route).not.toContain("data-signal-stage-track");
+      expect(markup, route).not.toContain("pressure-hero");
     }
   });
 });

@@ -1,0 +1,1270 @@
+/* ============================================================
+   PRESSURE / ROOTS — homepage as an artist poster
+   The old home styles remain available to the English legacy page. This file
+   scopes the new Indonesian front page into a different composition entirely:
+   a monolith, an archive index, and a set of exits — never a card grid.
+   ============================================================ */
+
+.an-public-shell.an-editorial .pressure-site {
+  --pressure-line: color-mix(in srgb, var(--paper) 16%, transparent);
+  --pressure-soft-line: color-mix(in srgb, var(--paper) 8%, transparent);
+  --pressure-dim: color-mix(in srgb, var(--paper) 62%, transparent);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial
+  .pressure-site
+  :is(h1, h2, h3, p, figure, dl, dd) {
+  margin: 0;
+}
+
+.an-public-shell.an-editorial .pressure-site a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* -- HERO: A directional poster, not a centered marketing banner. -------- */
+.an-public-shell.an-editorial .pressure-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    minmax(22px, 1fr) minmax(0, 0.92fr) minmax(0, 1.14fr)
+    minmax(22px, 1fr);
+  grid-template-rows: auto minmax(520px, 73svh) auto;
+  min-height: min(920px, 100svh);
+  overflow: hidden;
+  border-bottom: 1px solid var(--pressure-line);
+  isolation: isolate;
+  background: linear-gradient(
+    110deg,
+    var(--ink) 0%,
+    var(--ink) 46%,
+    color-mix(in srgb, var(--acid) 17%, var(--ink)) 100%
+  );
+}
+
+.an-public-shell.an-editorial .pressure-hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: min(58vw, 760px);
+  aspect-ratio: 1;
+  left: calc(50% - min(29vw, 380px));
+  top: 49%;
+  border: 1px solid color-mix(in srgb, var(--acid) 48%, transparent);
+  border-radius: 50%;
+  transform: translate(
+    calc((var(--pressure-x, 0.5) - 0.5) * 16px),
+    calc((var(--pressure-y, 0.5) - 0.5) * 16px)
+  );
+  transition: transform 260ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 49.85%,
+      var(--pressure-soft-line) 50%,
+      transparent 50.15%
+    ),
+    linear-gradient(
+      0deg,
+      transparent 49.85%,
+      var(--pressure-soft-line) 50%,
+      transparent 50.15%
+    );
+  background-size: 98px 98px;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 20%,
+    #000 80%,
+    transparent
+  );
+}
+
+.an-public-shell.an-editorial .pressure-hero__grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, var(--pressure-line) 1px, transparent 1px) 0 0 / 25%
+      100%,
+    linear-gradient(0deg, var(--pressure-soft-line) 1px, transparent 1px) 0 0 /
+      100% 25%;
+  opacity: 0.66;
+}
+
+.an-public-shell.an-editorial .pressure-hero__edition,
+.an-public-shell.an-editorial .pressure-hero__side,
+.an-public-shell.an-editorial .pressure-hero__portrait figcaption,
+.an-public-shell.an-editorial .pressure-eyebrow,
+.an-public-shell.an-editorial .pressure-index,
+.an-public-shell.an-editorial .pressure-current__art figcaption,
+.an-public-shell.an-editorial .pressure-current__margin,
+.an-public-shell.an-editorial .pressure-release-row__index,
+.an-public-shell.an-editorial .pressure-release-row__meta,
+.an-public-shell.an-editorial .pressure-exits__booking > p {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.13em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.an-public-shell.an-editorial .pressure-hero__edition {
+  grid-column: 2 / -2;
+  align-self: start;
+  padding-top: calc(var(--chrome-h, 68px) + clamp(20px, 3vw, 44px));
+  color: var(--pressure-dim);
+}
+
+.an-public-shell.an-editorial .pressure-hero__side {
+  position: absolute;
+  right: clamp(9px, 1.2vw, 18px);
+  top: 50%;
+  writing-mode: vertical-rl;
+  transform: translateY(-50%);
+  color: color-mix(in srgb, var(--paper) 38%, transparent);
+}
+
+.an-public-shell.an-editorial .pressure-hero__title {
+  z-index: 2;
+  grid-column: 2 / 4;
+  grid-row: 2;
+  align-self: center;
+  display: grid;
+  align-content: center;
+  width: max-content;
+  max-width: min(89vw, 1100px);
+  pointer-events: none;
+  font-family: var(--font-title);
+  font-size: clamp(4.3rem, 12.55vw, 13.2rem);
+  font-weight: 400;
+  letter-spacing: -0.065em;
+  line-height: 0.69;
+  text-transform: uppercase;
+}
+
+.an-public-shell.an-editorial .pressure-hero__title span {
+  display: block;
+  text-wrap: nowrap;
+}
+
+.an-public-shell.an-editorial .pressure-hero__title span:nth-child(1) {
+  padding-left: clamp(2px, 4vw, 60px);
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .pressure-hero__title span:nth-child(2) {
+  color: var(--acid);
+}
+
+.an-public-shell.an-editorial .pressure-hero__title span:nth-child(3) {
+  padding-left: clamp(24px, 9vw, 130px);
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.an-public-shell.an-editorial .pressure-hero__portrait {
+  z-index: 1;
+  grid-column: 3;
+  grid-row: 2;
+  align-self: stretch;
+  justify-self: end;
+  position: relative;
+  display: grid;
+  align-items: end;
+  width: min(100%, 530px);
+  margin: 0;
+}
+
+.an-public-shell.an-editorial .pressure-hero__portrait-frame {
+  align-self: stretch;
+  margin-left: clamp(20px, 5vw, 82px);
+  overflow: hidden;
+  border-inline: 1px solid var(--pressure-line);
+  border-top: 1px solid var(--pressure-line);
+  background: var(--ink-soft);
+}
+
+.an-public-shell.an-editorial .pressure-hero__portrait-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  mix-blend-mode: luminosity;
+  opacity: 0.9;
+  transform: scale(1.035);
+  transition:
+    transform 700ms var(--ease),
+    mix-blend-mode 360ms var(--ease);
+}
+
+.an-public-shell.an-editorial
+  .pressure-hero:hover
+  .pressure-hero__portrait-frame
+  img {
+  transform: scale(1);
+  mix-blend-mode: normal;
+}
+
+.an-public-shell.an-editorial .pressure-hero__portrait::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0 0 0 clamp(20px, 5vw, 82px);
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--ink) 72%, transparent),
+    transparent 40%
+  );
+}
+
+.an-public-shell.an-editorial .pressure-hero__portrait figcaption {
+  z-index: 2;
+  position: absolute;
+  inset: auto 0 0 clamp(20px, 5vw, 82px);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 15px;
+  border-top: 1px solid var(--pressure-line);
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .pressure-hero__copy {
+  z-index: 4;
+  grid-column: 2;
+  grid-row: 2;
+  align-self: end;
+  display: grid;
+  gap: clamp(16px, 2vw, 24px);
+  width: min(100%, 360px);
+  padding-bottom: clamp(28px, 5vw, 72px);
+}
+
+.an-public-shell.an-editorial .pressure-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--acid);
+}
+
+.an-public-shell.an-editorial .pressure-hero__copy > p:not(.pressure-eyebrow),
+.an-public-shell.an-editorial
+  .pressure-current__copy
+  > p:not(.pressure-eyebrow),
+.an-public-shell.an-editorial .pressure-origin__text > p,
+.an-public-shell.an-editorial .pressure-exits__intro > p:not(.pressure-index) {
+  color: var(--pressure-dim);
+  font-family: var(--font-body);
+  font-size: clamp(0.76rem, 1vw, 0.92rem);
+  line-height: 1.72;
+}
+
+.an-public-shell.an-editorial .pressure-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.an-public-shell.an-editorial .pressure-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 43px;
+  padding: 0 14px;
+  border: 1px solid var(--pressure-line);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.57rem;
+  letter-spacing: 0.11em;
+  line-height: 1;
+  text-transform: uppercase;
+  transition:
+    background-color 180ms var(--ease),
+    color 180ms var(--ease),
+    border-color 180ms var(--ease),
+    transform 180ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-action--solid {
+  border-color: var(--acid);
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.an-public-shell.an-editorial .pressure-action:hover,
+.an-public-shell.an-editorial .pressure-action:focus-visible {
+  border-color: var(--paper);
+  background: var(--paper);
+  color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.an-public-shell.an-editorial .pressure-scroll {
+  z-index: 4;
+  grid-column: 2 / -2;
+  grid-row: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: max-content;
+  min-width: 176px;
+  margin-bottom: 15px;
+  padding: 11px 0 0;
+  border-top: 1px solid var(--pressure-line);
+  color: var(--pressure-dim);
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: color 180ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-scroll:hover,
+.an-public-shell.an-editorial .pressure-scroll:focus-visible {
+  color: var(--acid);
+}
+
+.an-public-shell.an-editorial .pressure-hero__stamp {
+  position: absolute;
+  right: clamp(38px, 5vw, 86px);
+  bottom: 8%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: clamp(78px, 10vw, 135px);
+  aspect-ratio: 1;
+  border: 1px solid var(--pressure-line);
+  border-radius: 50%;
+  color: var(--paper);
+  transform: rotate(-14deg);
+}
+
+.an-public-shell.an-editorial .pressure-hero__stamp::before,
+.an-public-shell.an-editorial .pressure-hero__stamp::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px solid var(--pressure-soft-line);
+  border-radius: 50%;
+}
+
+.an-public-shell.an-editorial .pressure-hero__stamp::after {
+  inset: 22%;
+  background: var(--acid);
+  border: 0;
+}
+
+.an-public-shell.an-editorial .pressure-hero__stamp span,
+.an-public-shell.an-editorial .pressure-hero__stamp small {
+  z-index: 1;
+}
+
+.an-public-shell.an-editorial .pressure-hero__stamp span {
+  color: var(--ink);
+  font-family: var(--font-title);
+  font-size: clamp(1rem, 2vw, 1.8rem);
+}
+
+.an-public-shell.an-editorial .pressure-hero__stamp small {
+  position: absolute;
+  max-width: 60px;
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.37rem;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-align: center;
+}
+
+/* -- The moving baseline makes the transition from poster to publication. -- */
+.an-public-shell.an-editorial .pressure-runner {
+  overflow: hidden;
+  border-bottom: 1px solid var(--pressure-line);
+  background: var(--acid);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.an-public-shell.an-editorial .pressure-runner > div {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 48px);
+  min-width: max-content;
+  padding: 13px 0;
+  font-family: var(--font-display);
+  font-size: clamp(0.88rem, 1.5vw, 1.25rem);
+  letter-spacing: 0.055em;
+  animation: pressure-run 26s linear infinite;
+}
+
+.an-public-shell.an-editorial .pressure-runner b {
+  font-family: var(--font-body);
+  font-size: 0.75em;
+}
+
+@keyframes pressure-run {
+  to {
+    transform: translateX(-31%);
+  }
+}
+
+/* -- Origin: high contrast editorial pause. -------------------------------- */
+.an-public-shell.an-editorial .pressure-origin {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.56fr) minmax(0, 1.7fr) minmax(
+      220px,
+      0.74fr
+    );
+  gap: clamp(24px, 4vw, 70px);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(76px, 12vw, 180px) var(--gutter);
+  border-bottom: 1px solid var(--pressure-line);
+}
+
+.an-public-shell.an-editorial .pressure-index {
+  color: var(--acid);
+}
+
+.an-public-shell.an-editorial .pressure-origin h2,
+.an-public-shell.an-editorial .pressure-archive h2,
+.an-public-shell.an-editorial .pressure-exits h2 {
+  font-family: var(--font-title);
+  font-size: clamp(3rem, 7.3vw, 8rem);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 0.82;
+  text-transform: uppercase;
+}
+
+.an-public-shell.an-editorial .pressure-origin h2 em,
+.an-public-shell.an-editorial .pressure-archive h2 em {
+  color: var(--acid);
+  font-family: inherit;
+  font-style: normal;
+}
+
+.an-public-shell.an-editorial .pressure-origin__text {
+  display: grid;
+  align-content: end;
+  gap: 23px;
+  padding-bottom: 6px;
+}
+
+.an-public-shell.an-editorial .pressure-text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--pressure-line);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.57rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition:
+    border-color 160ms var(--ease),
+    color 160ms var(--ease),
+    gap 160ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-text-link:hover,
+.an-public-shell.an-editorial .pressure-text-link:focus-visible {
+  gap: 15px;
+  border-color: var(--acid);
+  color: var(--acid);
+}
+
+.an-public-shell.an-editorial .pressure-origin__facts {
+  display: grid;
+  align-content: end;
+  gap: 12px;
+}
+
+.an-public-shell.an-editorial .pressure-origin__facts > div {
+  display: grid;
+  gap: 5px;
+  padding-top: 11px;
+  border-top: 1px solid var(--pressure-line);
+}
+
+.an-public-shell.an-editorial .pressure-origin__facts dt {
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+}
+
+.an-public-shell.an-editorial .pressure-origin__facts dd {
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+/* -- Current release: image as a physical object, not a promo tile. ------- */
+.an-public-shell.an-editorial .pressure-current {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(76px, 10vw, 160px) var(--gutter);
+  border-bottom: 1px solid var(--pressure-line);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.an-public-shell.an-editorial .pressure-current::before {
+  content: "";
+  position: absolute;
+  width: min(100%, 1160px);
+  aspect-ratio: 1;
+  left: 51%;
+  top: 50%;
+  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  border-radius: 50%;
+  transform: translate(-40%, -50%);
+}
+
+.an-public-shell.an-editorial .pressure-section-head,
+.an-public-shell.an-editorial .pressure-current__layout {
+  position: relative;
+  z-index: 1;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.an-public-shell.an-editorial .pressure-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: clamp(34px, 5vw, 70px);
+  border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+.an-public-shell.an-editorial .pressure-section-head .pressure-index {
+  color: var(--ink);
+}
+
+.an-public-shell.an-editorial .pressure-section-head > p:last-child {
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.an-public-shell.an-editorial .pressure-current__layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(320px, 1.1fr) minmax(
+      86px,
+      0.23fr
+    );
+  gap: clamp(26px, 5vw, 88px);
+  align-items: center;
+  padding-top: clamp(34px, 6vw, 84px);
+}
+
+.an-public-shell.an-editorial .pressure-current__copy {
+  position: relative;
+  display: grid;
+  align-content: center;
+  gap: clamp(17px, 2.1vw, 28px);
+}
+
+.an-public-shell.an-editorial .pressure-current__number {
+  position: absolute;
+  left: -0.07em;
+  top: -0.57em;
+  z-index: -1;
+  color: color-mix(in srgb, var(--ink) 8%, transparent);
+  font-family: var(--font-title);
+  font-size: clamp(8rem, 19vw, 22rem);
+  line-height: 0.8;
+}
+
+.an-public-shell.an-editorial .pressure-current__copy .pressure-eyebrow,
+.an-public-shell.an-editorial
+  .pressure-current__copy
+  > p:not(.pressure-eyebrow) {
+  color: color-mix(in srgb, var(--ink) 68%, transparent);
+}
+
+.an-public-shell.an-editorial .pressure-current__copy h2 {
+  max-width: 10ch;
+  font-family: var(--font-title);
+  font-size: clamp(3.2rem, 6.5vw, 7.8rem);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  text-transform: uppercase;
+}
+
+.an-public-shell.an-editorial .pressure-current__art {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 540px);
+  margin: 0;
+}
+
+.an-public-shell.an-editorial .pressure-current__art picture,
+.an-public-shell.an-editorial .pressure-current__art img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.an-public-shell.an-editorial .pressure-current__art img {
+  position: relative;
+  z-index: 1;
+  object-fit: cover;
+  border: 1px solid color-mix(in srgb, var(--ink) 22%, transparent);
+  transform: rotate(3deg);
+  transition: transform 500ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-current__art:hover img {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.an-public-shell.an-editorial .pressure-current__art::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 7% -8% -7% 8%;
+  border: 1px solid color-mix(in srgb, var(--ink) 24%, transparent);
+  background: var(--acid);
+}
+
+.an-public-shell.an-editorial .pressure-current__orbit {
+  position: absolute;
+  z-index: 2;
+  left: -24px;
+  top: -31px;
+  display: grid;
+  place-items: center;
+  width: 95px;
+  aspect-ratio: 1;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.38rem;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  overflow: hidden;
+  text-align: center;
+  animation: pressure-orbit 18s linear infinite;
+}
+
+@keyframes pressure-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.an-public-shell.an-editorial .pressure-current__art figcaption {
+  position: relative;
+  z-index: 2;
+  margin-top: 20px;
+  color: color-mix(in srgb, var(--ink) 72%, transparent);
+}
+
+.an-public-shell.an-editorial .pressure-current__margin {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  min-height: 260px;
+  padding-left: 14px;
+  border-left: 1px solid color-mix(in srgb, var(--ink) 17%, transparent);
+  color: color-mix(in srgb, var(--ink) 60%, transparent);
+}
+
+.an-public-shell.an-editorial .pressure-current__margin strong {
+  color: var(--ink);
+  font-family: var(--font-title);
+  font-size: clamp(3.2rem, 6vw, 6rem);
+  font-weight: 400;
+  letter-spacing: -0.08em;
+  line-height: 0.8;
+}
+
+/* -- Archive: it reads like an inventory wall, not individual cards. ------- */
+.an-public-shell.an-editorial .pressure-archive {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: clamp(74px, 10vw, 150px) var(--gutter);
+}
+
+.an-public-shell.an-editorial .pressure-archive__head {
+  display: grid;
+  grid-template-columns: 0.56fr 1.2fr 0.55fr;
+  gap: clamp(22px, 4vw, 64px);
+  align-items: end;
+  padding-bottom: clamp(36px, 6vw, 84px);
+}
+
+.an-public-shell.an-editorial .pressure-archive__head .pressure-text-link {
+  justify-self: start;
+  margin-bottom: 6px;
+}
+
+.an-public-shell.an-editorial .pressure-archive__rows {
+  border-top: 1px solid var(--pressure-line);
+}
+
+.an-public-shell.an-editorial .pressure-release-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px 0 minmax(0, 1fr) minmax(66px, 0.22fr) 20px;
+  gap: clamp(12px, 2vw, 28px);
+  align-items: center;
+  min-height: clamp(76px, 9vw, 124px);
+  border-bottom: 1px solid var(--pressure-line);
+  overflow: visible;
+  transition:
+    color 180ms var(--ease),
+    padding 220ms var(--ease),
+    background-color 180ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-release-row__index,
+.an-public-shell.an-editorial .pressure-release-row__meta {
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .pressure-release-row__art {
+  z-index: 3;
+  width: clamp(86px, 12vw, 156px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transform: rotate(-6deg) scale(0.72);
+  transform-origin: center;
+  transition:
+    opacity 220ms var(--ease),
+    transform 330ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-release-row__art picture,
+.an-public-shell.an-editorial .pressure-release-row__art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.an-public-shell.an-editorial .pressure-release-row__art img {
+  object-fit: cover;
+}
+
+.an-public-shell.an-editorial .pressure-release-row__title {
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 2.4vw, 2.2rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  transition:
+    transform 250ms var(--ease),
+    color 180ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-release-row__arrow {
+  color: var(--mute);
+  transition:
+    transform 250ms var(--ease),
+    color 180ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-release-row:hover,
+.an-public-shell.an-editorial .pressure-release-row:focus-visible {
+  padding-left: 12px;
+  background: color-mix(in srgb, var(--paper) 5%, transparent);
+}
+
+.an-public-shell.an-editorial
+  .pressure-release-row:hover
+  .pressure-release-row__art,
+.an-public-shell.an-editorial
+  .pressure-release-row:focus-visible
+  .pressure-release-row__art {
+  opacity: 1;
+  transform: rotate(-6deg) scale(1);
+}
+
+.an-public-shell.an-editorial
+  .pressure-release-row:hover
+  .pressure-release-row__title,
+.an-public-shell.an-editorial
+  .pressure-release-row:focus-visible
+  .pressure-release-row__title {
+  color: var(--acid);
+  transform: translateX(8px);
+}
+
+.an-public-shell.an-editorial
+  .pressure-release-row:hover
+  .pressure-release-row__arrow,
+.an-public-shell.an-editorial
+  .pressure-release-row:focus-visible
+  .pressure-release-row__arrow {
+  color: var(--acid);
+  transform: translate(3px, -3px);
+}
+
+/* -- Exit routes: direct service/navigation, no block of repeated cards. --- */
+.an-public-shell.an-editorial .pressure-exits {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.12fr);
+  max-width: var(--max);
+  margin: 0 auto;
+  border-top: 1px solid var(--pressure-line);
+}
+
+.an-public-shell.an-editorial .pressure-exits__intro {
+  display: grid;
+  align-content: start;
+  gap: 24px;
+  padding: clamp(52px, 7vw, 100px) clamp(24px, 5vw, 88px)
+    clamp(52px, 7vw, 100px) var(--gutter);
+  border-right: 1px solid var(--pressure-line);
+}
+
+.an-public-shell.an-editorial .pressure-exits h2 {
+  font-size: clamp(3rem, 5.8vw, 6.7rem);
+}
+
+.an-public-shell.an-editorial .pressure-exits__links {
+  display: grid;
+  align-content: start;
+}
+
+.an-public-shell.an-editorial .pressure-exits__links a {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto 20px;
+  gap: 12px;
+  align-items: center;
+  min-height: 76px;
+  padding: 15px clamp(20px, 4vw, 62px);
+  border-bottom: 1px solid var(--pressure-line);
+  color: var(--paper);
+  transition:
+    background-color 180ms var(--ease),
+    color 180ms var(--ease),
+    padding 220ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-exits__links a span {
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.1em;
+}
+
+.an-public-shell.an-editorial .pressure-exits__links a strong {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.9vw, 1.6rem);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.an-public-shell.an-editorial .pressure-exits__links a > svg:not(:last-child) {
+  width: 18px;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .pressure-exits__links a > svg:last-child {
+  color: var(--mute);
+  transition:
+    transform 200ms var(--ease),
+    color 180ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-exits__links a:hover,
+.an-public-shell.an-editorial .pressure-exits__links a:focus-visible {
+  padding-left: calc(clamp(20px, 4vw, 62px) + 10px);
+  background: var(--acid);
+  color: var(--ink);
+}
+
+.an-public-shell.an-editorial .pressure-exits__links a:hover :is(span, svg),
+.an-public-shell.an-editorial
+  .pressure-exits__links
+  a:focus-visible
+  :is(span, svg) {
+  color: var(--ink);
+}
+
+.an-public-shell.an-editorial .pressure-exits__links a:hover > svg:last-child,
+.an-public-shell.an-editorial
+  .pressure-exits__links
+  a:focus-visible
+  > svg:last-child {
+  transform: translate(3px, -3px);
+}
+
+.an-public-shell.an-editorial .pressure-exits__booking {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 28px;
+  padding: clamp(26px, 4vw, 52px) var(--gutter);
+  border-top: 1px solid var(--pressure-line);
+  background: color-mix(in srgb, var(--paper) 4%, transparent);
+}
+
+.an-public-shell.an-editorial .pressure-exits__booking > p {
+  color: var(--acid);
+}
+
+.an-public-shell.an-editorial .pressure-exits__date {
+  margin-left: auto;
+  color: var(--pressure-dim);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-align: right;
+  text-transform: uppercase;
+  transition: color 180ms var(--ease);
+}
+
+.an-public-shell.an-editorial .pressure-exits__date:hover,
+.an-public-shell.an-editorial .pressure-exits__date:focus-visible {
+  color: var(--acid);
+}
+
+/* -- Responsive: type keeps the impact; details reflow into a mobile record. */
+@media (max-width: 900px) {
+  .an-public-shell.an-editorial .pressure-hero {
+    grid-template-columns: 22px minmax(0, 1fr) 22px;
+    grid-template-rows: auto minmax(600px, 75svh) auto;
+  }
+  .an-public-shell.an-editorial .pressure-hero__title {
+    grid-column: 2;
+    align-self: start;
+    padding-top: 10vh;
+    font-size: clamp(4.8rem, 16.5vw, 9.7rem);
+  }
+  .an-public-shell.an-editorial .pressure-hero__portrait {
+    grid-column: 2;
+    grid-row: 2;
+    width: min(72%, 440px);
+  }
+  .an-public-shell.an-editorial .pressure-hero__copy {
+    grid-column: 2;
+    z-index: 4;
+  }
+  .an-public-shell.an-editorial .pressure-hero__stamp {
+    right: 9%;
+    bottom: 14%;
+  }
+  .an-public-shell.an-editorial .pressure-origin {
+    grid-template-columns: 0.55fr 1.4fr;
+  }
+  .an-public-shell.an-editorial .pressure-origin__facts {
+    grid-column: 2;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .an-public-shell.an-editorial .pressure-current__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.84fr);
+  }
+  .an-public-shell.an-editorial .pressure-current__margin {
+    display: none;
+  }
+  .an-public-shell.an-editorial .pressure-archive__head {
+    grid-template-columns: 0.46fr 1.25fr;
+  }
+  .an-public-shell.an-editorial .pressure-archive__head .pressure-text-link {
+    grid-column: 2;
+  }
+  .an-public-shell.an-editorial .pressure-exits {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .an-public-shell.an-editorial .pressure-exits__intro {
+    border-right: 0;
+    border-bottom: 1px solid var(--pressure-line);
+    padding-right: var(--gutter);
+  }
+}
+
+@media (max-width: 620px) {
+  .an-public-shell.an-editorial .pressure-hero {
+    grid-template-columns: 16px minmax(0, 1fr) 16px;
+    grid-template-rows: auto minmax(560px, 82svh) auto;
+  }
+  .an-public-shell.an-editorial .pressure-hero__edition {
+    padding-top: calc(var(--chrome-h, 62px) + 18px);
+    font-size: 0.48rem;
+  }
+  .an-public-shell.an-editorial .pressure-hero__side {
+    display: none;
+  }
+  .an-public-shell.an-editorial .pressure-hero__title {
+    padding-top: 8vh;
+    max-width: 100%;
+    font-size: clamp(4rem, 19vw, 6.5rem);
+    line-height: 0.7;
+  }
+  .an-public-shell.an-editorial .pressure-hero__title span:nth-child(1) {
+    padding-left: 0;
+  }
+  .an-public-shell.an-editorial .pressure-hero__title span:nth-child(3) {
+    padding-left: 6vw;
+  }
+  .an-public-shell.an-editorial .pressure-hero__portrait {
+    align-self: end;
+    width: 72%;
+    height: 72%;
+  }
+  .an-public-shell.an-editorial .pressure-hero__portrait-frame {
+    margin-left: 0;
+  }
+  .an-public-shell.an-editorial .pressure-hero__portrait figcaption {
+    inset-inline-start: 0;
+    padding: 9px;
+    font-size: 0.42rem;
+  }
+  .an-public-shell.an-editorial .pressure-hero__copy {
+    width: min(100%, 248px);
+    padding-bottom: 22px;
+  }
+  .an-public-shell.an-editorial
+    .pressure-hero__copy
+    > p:not(.pressure-eyebrow) {
+    font-size: 0.64rem;
+    line-height: 1.55;
+  }
+  .an-public-shell.an-editorial .pressure-hero__copy .pressure-eyebrow {
+    font-size: 0.45rem;
+  }
+  .an-public-shell.an-editorial .pressure-hero__stamp {
+    right: 6%;
+    bottom: 14%;
+    width: 69px;
+  }
+  .an-public-shell.an-editorial .pressure-hero__stamp small {
+    display: none;
+  }
+  .an-public-shell.an-editorial .pressure-scroll {
+    min-width: 140px;
+    margin-bottom: 10px;
+    font-size: 0.45rem;
+  }
+  .an-public-shell.an-editorial .pressure-action {
+    min-height: 39px;
+    padding-inline: 10px;
+    font-size: 0.47rem;
+  }
+  .an-public-shell.an-editorial .pressure-origin {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+    padding-block: 78px;
+  }
+  .an-public-shell.an-editorial .pressure-origin h2,
+  .an-public-shell.an-editorial .pressure-archive h2,
+  .an-public-shell.an-editorial .pressure-exits h2 {
+    font-size: clamp(3rem, 16vw, 5rem);
+  }
+  .an-public-shell.an-editorial .pressure-origin__facts {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .an-public-shell.an-editorial .pressure-current {
+    padding-inline: 18px;
+  }
+  .an-public-shell.an-editorial .pressure-section-head {
+    display: grid;
+    gap: 8px;
+  }
+  .an-public-shell.an-editorial .pressure-section-head > p:last-child {
+    text-align: left;
+  }
+  .an-public-shell.an-editorial .pressure-current__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 45px;
+  }
+  .an-public-shell.an-editorial .pressure-current__copy {
+    padding-left: 2px;
+  }
+  .an-public-shell.an-editorial .pressure-current__copy h2 {
+    font-size: clamp(3rem, 15vw, 5rem);
+  }
+  .an-public-shell.an-editorial .pressure-current__art {
+    width: min(82vw, 400px);
+  }
+  .an-public-shell.an-editorial .pressure-archive__head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .an-public-shell.an-editorial .pressure-archive__head .pressure-text-link {
+    grid-column: auto;
+  }
+  .an-public-shell.an-editorial .pressure-release-row {
+    grid-template-columns: 30px 0 minmax(0, 1fr) 15px;
+    gap: 8px;
+    min-height: 76px;
+  }
+  .an-public-shell.an-editorial .pressure-release-row__meta {
+    display: none;
+  }
+  .an-public-shell.an-editorial .pressure-release-row__title {
+    font-size: clamp(0.95rem, 5vw, 1.35rem);
+  }
+  .an-public-shell.an-editorial .pressure-release-row__art {
+    width: 82px;
+  }
+  .an-public-shell.an-editorial .pressure-exits__links a {
+    grid-template-columns: 29px minmax(0, 1fr) 16px;
+    min-height: 68px;
+    padding-inline: 18px;
+  }
+  .an-public-shell.an-editorial
+    .pressure-exits__links
+    a
+    > svg:not(:last-child) {
+    display: none;
+  }
+  .an-public-shell.an-editorial .pressure-exits__booking {
+    padding-inline: 18px;
+  }
+  .an-public-shell.an-editorial .pressure-exits__date {
+    width: 100%;
+    margin-left: 0;
+    text-align: left;
+  }
+}
+
+/* The mailing list stays an active product surface, but takes the same
+   publication rhythm as the rest of the page instead of becoming a rounded
+   SaaS panel. */
+.an-public-shell.an-editorial .pressure-fan-signal.fan-signal-section {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.78fr);
+  gap: clamp(32px, 8vw, 126px);
+  padding: clamp(66px, 9vw, 124px) var(--gutter);
+  border-top: 1px solid var(--pressure-line);
+  border-bottom: 0;
+  background: var(--ink-soft);
+}
+
+.an-public-shell.an-editorial .pressure-fan-signal .fan-signal-copy h2 {
+  max-width: 12ch;
+  margin: 13px 0 19px;
+  font-family: var(--font-title);
+  font-size: clamp(3rem, 6.2vw, 7rem);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+}
+
+.an-public-shell.an-editorial .pressure-fan-signal .fan-signal-eyebrow {
+  color: var(--acid);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: 400;
+  letter-spacing: 0.13em;
+}
+
+.an-public-shell.an-editorial .pressure-fan-signal .fan-signal-eyebrow::before {
+  display: none;
+}
+
+.an-public-shell.an-editorial
+  .pressure-fan-signal
+  .fan-signal-copy
+  > p:last-child {
+  color: var(--pressure-dim);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+}
+
+.an-public-shell.an-editorial .pressure-fan-signal .fan-signal-form {
+  max-width: 500px;
+  padding-top: 4px;
+}
+
+.an-public-shell.an-editorial .pressure-fan-signal .fan-signal-form label,
+.an-public-shell.an-editorial .pressure-fan-signal .fan-signal-note {
+  font-family: var(--font-mono);
+  font-size: 0.53rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+}
+
+.an-public-shell.an-editorial .pressure-fan-signal .fan-signal-input-row {
+  min-height: 52px;
+  border-color: var(--pressure-line);
+  border-radius: 0;
+  background: var(--ink);
+  box-shadow: none;
+}
+
+.an-public-shell.an-editorial
+  .pressure-fan-signal
+  .fan-signal-input-row:focus-within {
+  border-color: var(--acid);
+  box-shadow: none;
+}
+
+.an-public-shell.an-editorial .pressure-fan-signal .fan-signal-input-row input {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+}
+
+.an-public-shell.an-editorial
+  .pressure-fan-signal
+  .fan-signal-input-row
+  button {
+  background: var(--acid);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 0.53rem;
+  font-weight: 400;
+}
+
+@media (max-width: 620px) {
+  .an-public-shell.an-editorial .pressure-fan-signal.fan-signal-section {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-public-shell.an-editorial .pressure-runner > div,
+  .an-public-shell.an-editorial .pressure-current__orbit {
+    animation: none;
+  }
+  .an-public-shell.an-editorial .pressure-hero__portrait-frame img,
+  .an-public-shell.an-editorial .pressure-current__art img,
+  .an-public-shell.an-editorial .pressure-action,
+  .an-public-shell.an-editorial .pressure-release-row,
+  .an-public-shell.an-editorial .pressure-release-row__art,
+  .an-public-shell.an-editorial .pressure-release-row__title,
+  .an-public-shell.an-editorial .pressure-release-row__arrow,
+  .an-public-shell.an-editorial .pressure-exits__links a,
+  .an-public-shell.an-editorial .pressure-exits__links a > svg:last-child {
+    transition: none;
+  }
+}

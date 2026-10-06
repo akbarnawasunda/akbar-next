@@ -25,9 +25,7 @@ describe("kanal resmi di beranda", () => {
       expect(home, `nama kanal ${platform.label} tidak terbaca`).toContain(
         `>${platform.label}<`
       );
-      expect(home).toContain(
-        platform.href.replace(/&/g, "&amp;")
-      );
+      expect(home).toContain(platform.href.replace(/&/g, "&amp;"));
     }
     expect(home).toContain("an-channel");
   });
@@ -40,10 +38,12 @@ describe("kanal resmi di beranda", () => {
 
   it("menjaga eksposur potret resmi beserta fallback-nya", () => {
     const home = source("client/src/pages/Home.tsx");
-    expect(home).toContain("src={portraitSrc}");
-    expect(home).toContain("setPortraitSrc(officialBrand.portraitFallback)");
-    expect(
-      source("client/src/content/artistPlatform.ts")
-    ).toContain('portraitFallback: "/assets/akbar-nawasunda-official-portrait.jpg"');
+    expect(home).toContain("src={heroImage}");
+    expect(home).toContain(
+      "event.currentTarget.src = officialBrand.portraitFallback"
+    );
+    expect(source("client/src/content/artistPlatform.ts")).toContain(
+      'portraitFallback: "/assets/akbar-nawasunda-official-portrait.jpg"'
+    );
   });
 });

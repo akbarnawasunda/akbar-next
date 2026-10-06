@@ -289,8 +289,8 @@ echo "== SSR crawler verification against $BASE =="
 #     hard error, not a silent skip.
 #   - 5th arg (paginated rows): substring the canonical href VALUE must contain,
 #     so a canonical collapsing back to page 1 turns the row red.
-check "/"                                      "DENGAR SEKARANG"                    "Akbar Nawasunda | Official Website" state,ogimage
-check "/music"                                "Dengar di kanal resminya."         "Music by Akbar Nawasunda" state,ogimage
+check "/"                                      "RAW BASS PRESSURE"                  "Akbar Nawasunda | Official Website" state,ogimage
+check "/music"                                "OFFICIAL DISCOGRAPHY"               "Music by Akbar Nawasunda" state,ogimage
 check "/about"                                "Profil artis"                    "About the Artist | Akbar Nawasunda" state,ogimage
 check "/visuals"                              "BIKIN VISUAL"                    "Videos by Akbar Nawasunda" state,ogimage
 check "/live"                                 "JADWAL / VENUE / TIKET"          "Live Dates | Akbar Nawasunda" state,ogimage

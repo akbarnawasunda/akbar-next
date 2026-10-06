@@ -21,10 +21,10 @@ beforeAll(async () => {
 });
 
 describe("beranda yang dilihat pengunjung", () => {
-  it("merender hero statis berbasis data rilisan, bukan placeholder", () => {
-    expect(home).toContain('class="hero-title-editorial"');
+  it("merender poster hero statis berbasis data artis, bukan placeholder", () => {
+    expect(home).toContain("pressure-hero__title");
     expect(home).toContain('data-no-scramble="true"');
-    expect(home).toContain("hero-title-mask");
+    expect(home).toContain("AKBAR");
     expect(home).toContain('fetchPriority="high"');
     expect(home).not.toContain("MANAGED RELEASE");
   });
@@ -33,15 +33,12 @@ describe("beranda yang dilihat pengunjung", () => {
     expect(home).toMatch(/aria-busy="(true|false)"/);
   });
 
-  it("memasang progress scroll dan marquee platform", () => {
+  it("memasang progress scroll dan transisi ritme yang nyata", () => {
     expect(home).toContain('class="an-scroll-progress"');
-    expect(home).toContain("an-platform-marquee-track");
-    // Judul section sudah menjelaskan isinya; indeks dan nomor dekoratif
-    // hanya mengulang informasi dan membuat beranda terasa seperti template.
+    expect(home).toContain("pressure-runner");
+    expect(home).toContain("pressure-exits__links");
     expect(home).not.toContain('class="an-section-index"');
     expect(home).not.toContain("01 — SINYAL");
-    expect(home).not.toContain("02 — Rilisan terbaru");
-    expect(home).not.toContain("03 — Kanal resmi");
     expect(home).not.toContain("ed-signal-row__num");
   });
 
@@ -53,7 +50,9 @@ describe("beranda yang dilihat pengunjung", () => {
 
     const live = (await render("/live", { documents: async () => [] as never }))
       .html;
-    expect(live).toContain("/assets/akbar-night-frequency-stage-optimized.webp");
+    expect(live).toContain(
+      "/assets/akbar-night-frequency-stage-optimized.webp"
+    );
     expect(live).not.toContain("/assets/akbar-night-frequency-stage.webp");
   });
 

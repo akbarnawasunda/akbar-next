@@ -21,6 +21,10 @@ import "./SceneKit.css";
 // Terakhir: lapisan instrumen (atmosfer, grid, grain, progres gulir, label
 // indeks). Dekoratif — tidak mengubah token, jarak, atau struktur halaman.
 import "./InstrumentLayer.css";
+// Final public-surface layer: turns the shared navigation/footer into the
+// pressure-system chrome used by the reinvention without coupling page layout
+// to the shell.
+import "./PressureChrome.css";
 
 /**
  * Lapisan signature global.

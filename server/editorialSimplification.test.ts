@@ -28,9 +28,10 @@ describe("editorial simplification", () => {
     expect(clientSources()).not.toContain("PlatformTicker");
     expect(clientSources()).not.toContain("ArtistSignalMotion");
     expect(home).not.toContain("future-section");
-    expect(home).toContain("make the night move");
-    expect(home).toContain('heroTitle || "AKBAR NAWASUNDA."');
-    expect(home).toContain("no date announced|tba");
+    expect(home).toContain("pressure-hero");
+    expect(home).toContain("pressure-current");
+    expect(home).toContain("DJ Akbar Remix");
+    expect(home).toContain("publicUpcomingEvents");
   });
 
   it("removes the previous generic campaign slogans from public page copy", () => {

@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE 5B — Animasi (menunggu approval)
-**Terakhir update:** 2026-09-19
-**Terakhir commit:** corrective typography + restrained visual hierarchy
+**Fase aktif:** PRESSURE / ROOTS — creative reinvention complete, ready for review
+**Terakhir update:** 2026-10-06
+**Terakhir commit:** menunggu commit sesi Arena
 
 ---
 
@@ -331,3 +331,17 @@ git checkout <file>
 - Commit: `d427167 [perf] optimize mascot assets and remove unused fonts`
 - Verifikasi production: Vercel READY; GitHub Actions success
 - Status: FINAL — performance hardening selesai
+
+### Pressure / Roots Reinvention
+- Tanggal: 2026-10-06
+- Fase: creative direction + end-to-end public surface reinvention
+- Selesai: shell, beranda Indonesia, dan katalog `/music` diganti menjadi sistem **Pressure / Roots** — poster monolitik, tipografi berlapis, gambar sebagai objek fisik, arsip rilisan sebagai indeks editorial, dan jalur kanal resmi yang langsung.
+- Perubahan: menambah `PressureHome.css`, `PressureCatalog.css`, dan `PressureChrome.css`; CMS releases, portrait, events, platform links, SSR, newsletter, fallback artwork, reduced motion, serta detail-route links tetap terhubung.
+- Player pihak ketiga tidak lagi dipaksa render pada katalog: halaman mengutamakan tautan resmi yang eksplisit dan bebas iframe.
+- Test kontrak lama yang mengunci komposisi kartu/embed diganti menjadi kontrak perilaku untuk poster, katalog, pintu kanal resmi, dan aksesibilitas baru; needle SSR diperbarui sesuai copy baru.
+- Hasil check: lulus
+- Hasil test: 56 files / 329 tests lulus
+- Build: lulus
+- Audit layout: surface baru bersih; audit global masih melaporkan dua pelanggaran lama di `client/src/studio/studio.css` (`overflow-x: hidden` dan `backdrop-filter`).
+- SSR crawler: semua konten/SEO route lulus terhadap dev server; tiga redirect Vercel (`/index.html`, `/archive`, trailing slash) tidak dapat diverifikasi lewat dev server karena rewrite Vercel tidak aktif lokal.
+- Commit: menunggu commit/push sesi Arena

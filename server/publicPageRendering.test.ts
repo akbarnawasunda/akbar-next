@@ -79,7 +79,7 @@ describe("halaman publik yang dirender server", () => {
   });
 
   it("memakai navigasi berbahasa Indonesia di rute Indonesia", async () => {
-    const { text } = await renderPage("/");
+    const { text, html } = await renderPage("/");
     for (const label of [
       "MUSIK",
       "VISUAL",
@@ -94,7 +94,9 @@ describe("halaman publik yang dirender server", () => {
     // (Phase 3 §2 baris 6). Konten uji tidak punya, jadi nav tetap 6 item
     // dan label "ARSIP" lama tidak boleh muncul lagi.
     expect(text).not.toContain("JADWAL");
-    expect(text).not.toContain("ARSIP");
+    // Kata "arsip" boleh muncul sebagai judul konten; yang tidak boleh
+    // kembali adalah label navigasi lama.
+    expect(html).not.toMatch(/href="\/universe"[^>]*>ARSIP</);
     // Label Inggris lama tidak boleh bocor ke navigasi berbahasa Indonesia.
     expect(text).not.toMatch(/\bVISUALS\b/);
     expect(text).not.toMatch(/\bARCHIVE\b/);
@@ -145,9 +147,7 @@ describe("halaman publik yang dirender server", () => {
 
   it("merender formulir langganan satu kali saja, di beranda", async () => {
     const home = await renderPage("/");
-    expect(
-      home.html.match(/data-fan-signal-source="home"/g)
-    ).toHaveLength(1);
+    expect(home.html.match(/data-fan-signal-source="home"/g)).toHaveLength(1);
     expect(home.text).toContain("JANGAN KETINGGALAN.");
 
     for (const route of ["/music", "/live", "/visuals", "/universe"]) {
@@ -156,14 +156,12 @@ describe("halaman publik yang dirender server", () => {
     }
   });
 
-  it("memakai satu konfigurasi SoundCloud audio yang tidak visual", async () => {
+  it("menyediakan jalur SoundCloud resmi tanpa memaksa player pihak ketiga", async () => {
     for (const route of ["/music", "/en/music"]) {
       const { html } = await renderPage(route);
-      expect(html).toMatch(
-        /data-embed-url="https:\/\/w\.soundcloud\.com\/player\/[^\"]*visual=false/
-      );
-      expect(html).not.toContain("%230a1737");
-      expect(html).not.toContain("visual=true");
+      expect(html).toContain("soundcloud.com/akbarnawasunda");
+      expect(html).toContain("pressure-catalog__services-links");
+      expect(html).not.toContain("<iframe");
     }
   });
 

@@ -32,8 +32,8 @@ describe("lightweight RMX brand mark", () => {
     // Panggung hero berubah nama kelas di redesign; yang dijaga adalah
     // potretnya benar-benar terkirim di HTML beranda lengkap dengan alt-nya.
     const home = await render("/", { documents: async () => [] as never });
-    expect(home.html).toContain("an-hero-plate");
-    expect(home.html).toContain("Portrait resmi Akbar Nawasunda");
+    expect(home.html).toContain("pressure-hero__portrait");
+    expect(home.html).toContain("Potret Akbar Nawasunda");
     expect(home.html).toContain('fetchPriority="high"');
   });
 });

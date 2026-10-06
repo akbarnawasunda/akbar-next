@@ -91,14 +91,13 @@ describe("rute publik sesudah redesign", () => {
     expect(english.html).toContain('href="/en/music"');
   });
 
-  it("menampilkan papan Current Signal di beranda ID dan EN", async () => {
+  it("menampilkan jalur rilisan dan booking yang nyata di beranda", async () => {
     const home = await renderPage("/");
-    expect(home.html).toContain('id="signal"');
-    // Label "CURRENT SIGNAL" di atas judul sudah dibuang; isi papannya
-    // yang harus tetap ada.
-    expect(home.text).toContain("RILISAN TERBARU");
-    expect(home.text).toContain("STATUS BOOKING");
-    expect(home.html).toContain("ed-signal-board");
+    expect(home.html).toContain('id="current-release"');
+    expect(home.html).toContain("pressure-current");
+    expect(home.text).toContain("CURRENT TRANSMISSION");
+    expect(home.text).toContain("PERFORMANCE / REMIX / LICENSING");
+    expect(home.html).toContain('href="/inquire?source=home"');
 
     const english = await renderPage("/en");
     expect(english.text).toContain("LATEST RELEASE");
@@ -106,10 +105,9 @@ describe("rute publik sesudah redesign", () => {
     expect(english.html).toContain("ed-signal-board");
   });
 
-  it("menampilkan panel CTA booking di beranda kedua bahasa", async () => {
+  it("menampilkan jalur booking yang dapat ditindaklanjuti di beranda kedua bahasa", async () => {
     const home = await renderPage("/");
-    expect(home.html).toContain("ed-cta");
-    expect(home.text).toContain("BAWA SUARA INI");
+    expect(home.text).toContain("KIRIM BRIEF");
     expect(home.html).toContain('href="/inquire?source=home"');
 
     const english = await renderPage("/en");
@@ -129,7 +127,7 @@ describe("rute publik sesudah redesign", () => {
       // panel yang disembunyikan di balik interaksi.
       expect(page.text, route).toContain(era);
       expect(page.text, route).toContain("2020");
-      expect(page.html, route).not.toContain("hidden=\"\"");
+      expect(page.html, route).not.toContain('hidden=""');
     }
   });
 
@@ -147,12 +145,12 @@ describe("rute publik sesudah redesign", () => {
     }
   });
 
-  it("membungkus embed audio dengan shell player dan URL SoundCloud yang benar", async () => {
+  it("menyediakan kanal dengar resmi tanpa menanam iframe pihak ketiga", async () => {
     const music = await renderPage("/music");
-    expect(music.html).toContain("ed-player");
+    expect(music.html).toContain("pressure-catalog__services-links");
     expect(music.html).toMatch(/soundcloud\.com/);
-    expect(music.html).toContain("visual=false");
-    expect(music.html).toMatch(/loading="lazy"/);
+    expect(music.html).toContain("pressure-catalog__button--dark");
+    expect(music.html).not.toContain("<iframe");
   });
 
   it("memberi arsip visual penyaring tanpa menghapus kartu arsip", async () => {
@@ -172,7 +170,9 @@ describe("rute publik sesudah redesign", () => {
 
     for (const route of ["/music", "/live", "/visuals", "/universe"]) {
       const page = await renderPage(route);
-      expect(page.html.match(/fan-signal-section/g) ?? [], route).toHaveLength(0);
+      expect(page.html.match(/fan-signal-section/g) ?? [], route).toHaveLength(
+        0
+      );
     }
   });
 

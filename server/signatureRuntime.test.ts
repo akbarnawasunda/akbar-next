@@ -132,12 +132,12 @@ describe("rute publik tetap halaman penuh di SSR", () => {
     }
   });
 
-  it("menjaga embed SoundCloud resmi tetap visual=false", async () => {
+  it("menjaga pintu dengar resmi tetap tersedia tanpa memaksa embed pihak ketiga", async () => {
     for (const route of ["/music", "/en/music"]) {
       const page = await renderPage(route);
-      expect(page.html, route).toMatch(/w\.soundcloud\.com\/player/);
-      expect(page.html, route).toContain("visual=false");
-      expect(page.html, route).not.toContain("visual=true");
+      expect(page.html, route).toContain("soundcloud.com/akbarnawasunda");
+      expect(page.html, route).toContain("pressure-catalog__services-links");
+      expect(page.html, route).not.toContain("<iframe");
     }
   });
 });
@@ -256,7 +256,13 @@ describe("kontrak runtime yang tidak muncul di HTML", () => {
 
     // Desktop normal: ribuan titik.
     const full = particleBudget(
-      { ...base, tier: "full", coarsePointer: false, deviceScore: 0.8, viewport: "wide" },
+      {
+        ...base,
+        tier: "full",
+        coarsePointer: false,
+        deviceScore: 0.8,
+        viewport: "wide",
+      },
       1440 * 900
     );
     expect(full).toBeGreaterThan(1500);
@@ -276,15 +282,19 @@ describe("kontrak runtime yang tidak muncul di HTML", () => {
       /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.an-signature-stage-track \{\s*min-height: 0;/
     );
     // Layar kecil tidak boleh kebagian jalur sepanjang desktop.
-    expect(css).toMatch(/@media \(max-width: 640px\)[\s\S]*?min-height: 115vh;/);
+    expect(css).toMatch(
+      /@media \(max-width: 640px\)[\s\S]*?min-height: 115vh;/
+    );
     // Sticky memakai svh supaya bilah URL mobile tidak memotong panggung,
     // dan tingginya di bawah satu layar penuh supaya section berikutnya
     // selalu mengintip — panggung bukan ruangan khusus partikel.
-    const sticky = /\.an-signature-stage-sticky \{[\s\S]*?min-height: (\d+)svh;/.exec(css);
+    const sticky =
+      /\.an-signature-stage-sticky \{[\s\S]*?min-height: (\d+)svh;/.exec(css);
     expect(sticky, "tinggi sticky panggung").toBeTruthy();
     expect(Number(sticky?.[1])).toBeLessThanOrEqual(80);
     // Jalur desktop juga tidak boleh kembali sepanjang dua layar lebih.
-    const track = /\.an-signature-stage-track \{[\s\S]*?min-height: (\d+)vh;/.exec(css);
+    const track =
+      /\.an-signature-stage-track \{[\s\S]*?min-height: (\d+)vh;/.exec(css);
     expect(Number(track?.[1])).toBeLessThanOrEqual(150);
   });
 

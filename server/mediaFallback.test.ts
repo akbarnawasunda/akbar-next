@@ -2,7 +2,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
+const source = (path: string) =>
+  readFileSync(resolve(process.cwd(), path), "utf8");
 
 describe("official media fallback and online EPK", () => {
   it("keeps an explicit official source action when an embedded provider is slow or blocked", () => {
@@ -15,10 +16,11 @@ describe("official media fallback and online EPK", () => {
     expect(media).toContain("PLAY HERE");
   });
 
-  it("defers third-party audio and video players behind the stable official media card", () => {
+  it("menjaga media publik bebas iframe dan tetap menyediakan jalur resmi", () => {
     const music = source("client/src/pages/Music.tsx");
     const visuals = source("client/src/pages/Visuals.tsx");
-    expect(music).toContain("OfficialMediaFrame");
+    expect(music).toContain("publicPlatformLinks");
+    expect(music).toContain("pressure-catalog__services-links");
     expect(visuals).toContain("OfficialMediaFrame");
     expect(music).not.toContain("<iframe");
     expect(visuals).not.toContain("<iframe");

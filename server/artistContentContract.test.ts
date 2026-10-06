@@ -52,11 +52,13 @@ describe("artist content contract", () => {
   it("merges published CMS releases with legacy catalog fallback instead of replacing it", () => {
     const musicPage = source("client/src/pages/Music.tsx");
 
-    expect(musicPage).toContain("const cmsCatalog = cmsReleases.map");
+    expect(musicPage).toContain(
+      "const managed: CatalogEntry[] = cmsReleases.map"
+    );
     expect(musicPage).toContain("const catalog = [");
-    expect(musicPage).toContain("...cmsCatalog");
-    expect(musicPage).toContain("...releases.filter(");
-    expect(musicPage).toContain("!cmsCatalog.some(");
+    expect(musicPage).toContain("...managed");
+    expect(musicPage).toContain("...releases");
+    expect(musicPage).toContain("!managed.some(");
   });
 
   it("keeps the JEDAG RUN game and editable audio connected across public and Studio surfaces", () => {
@@ -88,7 +90,9 @@ describe("artist content contract", () => {
     const picker = source("client/src/components/AssetPicker.tsx");
     const preview = source("client/src/components/StudioDocumentPreview.tsx");
     const archive = source("client/src/components/StudioVisualArchive.tsx");
-    const previewAssets = source("client/src/components/StudioAssetPreview.tsx");
+    const previewAssets = source(
+      "client/src/components/StudioAssetPreview.tsx"
+    );
     const home = source("client/src/pages/Home.tsx");
     const pressKit = source("client/src/pages/PressKit.tsx");
 
@@ -108,14 +112,18 @@ describe("artist content contract", () => {
     expect(archive).toContain("Fallback publik");
     expect(archive).toContain("Impor & edit");
     expect(previewAssets).toContain("StudioLinkPreview");
-    expect(home).toContain("configuredPortrait");
+    expect(home).toContain(
+      "hero?.heroImage || profile?.portraitImage || officialBrand.portrait"
+    );
     expect(pressKit).toContain("const portrait =");
     expect(pressKit).toContain("press?.editorialImage");
     expect(pressKit).toContain("profile?.portraitImage");
     expect(pressKit).toContain("const bio =");
     expect(pressKit).toContain("press?.snapshotBio");
     expect(pressKit).toContain("profile?.longBio");
-    expect(source("client/src/content/publicContent.ts")).toContain("editorialImage:");
+    expect(source("client/src/content/publicContent.ts")).toContain(
+      "editorialImage:"
+    );
   });
 
   it("uses platform SVGs and available per-release artwork in music discovery modules", () => {
@@ -130,9 +138,9 @@ describe("artist content contract", () => {
     expect(music).toContain("<PlatformIcon label={platform.label}");
     expect(content).toContain('image: "https://i.scdn.co/image/');
     expect(content).toContain('image: "https://i1.sndcdn.com/artworks-');
-    expect(home).toMatch(
-      /managedRelease\.imageUrl\s*!==\s*officialBrand\.socialPreview/
+    expect(home).toContain(
+      "release.artworkUrl || archived?.image || officialBrand.socialPreview"
     );
-    expect(home).toContain("currentRelease.image");
+    expect(home).toContain("const archive = catalog.slice(0, 8)");
   });
 });
