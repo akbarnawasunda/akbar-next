@@ -28,7 +28,7 @@ import {
 import { Fragment } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { Link } from "wouter";
-import { EnglishFooter, EnglishHeader } from "@/components/EnglishChrome";
+import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { PrivacyView } from "./PrivacyPolicy";
@@ -177,9 +177,9 @@ const englishSlug = (value: string) =>
 function EnglishFrame({ children }: { children: ReactNode }) {
   return (
     <div className="nf-page en-page an-site">
-      <EnglishHeader />
+      <NightHeader lang="en" />
       {children}
-      <EnglishFooter />
+      <NightFooter lang="en" />
     </div>
   );
 }

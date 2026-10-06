@@ -28,17 +28,35 @@ describe("international artist layer", () => {
     expect(english).not.toContain("FanSignalInline");
   });
 
-  it("keeps a visible language switcher in both public chrome implementations", () => {
-    const idChrome = source("client/src/components/NightFrequencyChrome.tsx");
-    const enChrome = source("client/src/components/EnglishChrome.tsx");
-    expect(idChrome).toContain('aria-label="Pilihan bahasa"');
-    expect(idChrome).toContain('href={englishPath}');
-    expect(enChrome).toContain('href={indonesianPath(pathname)}');
-    // CTA utama EN kini LISTEN → /en/music (Phase 3 §7, paritas dengan
-    // "Dengarkan" di chrome ID); inquiry tetap ada sebagai rute CONTACT.
-    expect(enChrome).toContain('href="/en/music"');
-    expect(enChrome).toContain('"/en/inquire"');
-    expect(enChrome).toContain('aria-controls="english-mobile-menu"');
+  it("keeps a visible language switcher in the one shared public chrome", async () => {
+    // ID dan EN dulu punya dua implementasi chrome paralel (NightFrequencyChrome
+    // + EnglishChrome) yang bisa menyimpang diam-diam (liquid-signal Phase 3 §2:
+    // EnglishChrome pernah salah jumlah anak grid nav). Sekarang satu komponen
+    // (`lang` prop) dipakai ID dan EN sekaligus — tes ini memeriksa HTML yang
+    // benar-benar dikirim ke kedua rute, bukan dua berkas sumber terpisah.
+    const chrome = source("client/src/components/NightFrequencyChrome.tsx");
+    expect(chrome).toContain('aria-label={lang === "en" ? "Language selection" : "Pilihan bahasa"}');
+    expect(chrome).toContain("href={englishPath}");
+    expect(chrome).toContain("href={idPath}");
+
+    const prefetch = { documents: async () => [] as never };
+    const id = await render("/", prefetch);
+    const en = await render("/en", prefetch);
+
+    for (const page of [id, en]) {
+      expect(page.html).toContain('class="an-language-switcher"');
+      expect(page.html).toContain(">ID<");
+      expect(page.html).toContain(">EN<");
+    }
+
+    // CTA utama EN tetap LISTEN → /en/music (paritas dengan "Dengarkan" di
+    // chrome ID); inquiry tetap ada sebagai rute CONTACT di kedua bahasa.
+    expect(id.html).toContain(">Dengarkan");
+    expect(id.html).toContain('href="/music"');
+    expect(en.html).toContain(">LISTEN");
+    expect(en.html).toContain('href="/en/music"');
+    expect(en.html).toContain('href="/en/inquire"');
+    expect(en.html).toContain('aria-controls="english-mobile-menu"');
   });
 
   it("emits route-aware canonical, language alternates, and only factual schema types", async () => {
