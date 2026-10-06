@@ -453,50 +453,9 @@
   grid-auto-columns: clamp(230px, 25vw, 340px);
 }
 
-/* ------------------------------------------------------------
-   ADEGAN 5 — JEDA (FASE 7 nomor 7)
-   ------------------------------------------------------------
-   Satu layar yang isinya nyaris tidak ada: ruang kosong di atas dan di
-   bawah jauh lebih besar dari biasanya, satu baris mikro di tengah.
-   Ini hanya masuk akal SETELAH nomor 6 (ornamen dipangkas) — kalau
-   instr-topo/instr-grain masih hidup, "kosong" ini akan tetap penuh
-   tekstur dan tidak terasa sebagai jeda sama sekali.
-   ------------------------------------------------------------ */
-
-.an-site .an-pause {
-  display: grid;
-  place-items: center;
-  /* Jauh lebih tinggi dari --space-3xl section lain: inilah yang
-     membuatnya terasa seperti helaan napas, bukan section pendek. */
-  min-height: clamp(260px, 38vh, 440px);
-  padding: 0 var(--hx-gutter);
-}
-
-.an-site .an-pause-quote {
-  margin: 0;
-  max-width: 28ch;
-  text-align: center;
-  /* FASE 7 nomor 5 — "kutipan tunggal": huruf judul dipakai di luar
-     konteks nama, di tingkat MIKRO (--step--1), bukan raksasa. Ini satu
-     dari tiga tingkat kontras yang disengaja (raksasa di hero, sedang di
-     nomor kanal, mikro di sini) — tingkat tengahnya memang tidak pernah
-     dipakai, lihat catatan --step-3 di index.css. */
-  font-family: var(--font-title);
-  font-size: var(--step--1);
-  font-weight: 500;
-  font-style: normal;
-  letter-spacing: 0.01em;
-  line-height: 1.5;
-  color: color-mix(in srgb, var(--paper) 46%, transparent);
-}
-
-.an-site .an-pause-quote::before {
-  content: "“";
-}
-
-.an-site .an-pause-quote::after {
-  content: "”";
-}
+/* ADEGAN 5 — JEDA (FASE 7 nomor 7) pindah ke client/src/shell/SceneKit.css
+   sebagai primitif bersama `.an-pause` (dipakai Home dan halaman lain yang
+   butuh satu napas di tengah urutan section, bukan hanya beranda). */
 
 /* ------------------------------------------------------------
    MOTION — hiasi isi yang sudah terlihat, jangan sembunyikan isi

@@ -82,6 +82,11 @@ const copy = {
     railPrev: "Rilisan sebelumnya",
     railNext: "Rilisan berikutnya",
     railLabel: "Katalog rilisan Akbar Nawasunda",
+    // Napas sebelum halaman menutup diri ke Spotify/CTA: mengulang kalimat
+    // hero lede apa adanya (bukan salinan baru), di tingkat mikro, karena
+    // itu memang poin halaman ini dan layak diingat setelah rail katalog.
+    pauseQuote:
+      "Setiap entri punya halaman sendiri: catatan, kredit, dan tautan platformnya.",
     bandTitle: "Rilisan ini juga tersedia di Spotify.",
     bandCta: "Buka Spotify",
     ctaTitle: (
@@ -143,6 +148,8 @@ const copy = {
     railPrev: "Previous release",
     railNext: "Next release",
     railLabel: "Akbar Nawasunda release catalog",
+    pauseQuote:
+      "Every entry has its own page: notes, credits, and platform links.",
     bandTitle: "This release is also available on Spotify.",
     bandCta: "Open Spotify",
     ctaTitle: (
@@ -464,6 +471,15 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
             </div>
           </section>
         </Reveal>
+
+        {/* JEDA — satu napas sebelum halaman menutup diri ke Spotify/CTA.
+            Primitif bersama dengan beranda (client/src/shell/SceneKit.css),
+            dipakai di sini karena katalog adalah satu-satunya halaman lain
+            dengan kepadatan setara: rail bisa digulir panjang, dan
+            pengunjung butuh titik berhenti sebelum dua ajakan terakhir. */}
+        <section className="an-pause" aria-hidden="true">
+          <p className="an-pause-quote">{t.pauseQuote}</p>
+        </section>
 
         {/* ADEGAN 6 — strip platform: satu ajakan, bukan satu section penuh. */}
         <section className="an-section an-cat-band" aria-labelledby="band-title">

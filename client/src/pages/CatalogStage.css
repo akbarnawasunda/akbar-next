@@ -387,9 +387,25 @@
   .an-public-shell.an-editorial .an-rel-hero-copy h1 {
     font-size: clamp(1.9rem, 9vw, 2.8rem);
   }
-  .an-public-shell.an-editorial .an-cat-hero-art,
   .an-public-shell.an-editorial .an-rel-plate {
     max-width: none;
+  }
+
+  /* Katalog di ponsel: sampul rilisan terbaru memimpin, bukan menyusul
+     judul lalu duduk sebagai kotak kecil di bawahnya. Ini sengaja
+     meniru keputusan hero beranda (foto dulu, full-bleed, baru
+     tipografi) supaya "gambar besar memimpin di ponsel" terasa seperti
+     satu bahasa situs, bukan kebetulan satu halaman. */
+  .an-public-shell.an-editorial .an-cat-hero-art {
+    order: -1;
+    margin-inline: calc(var(--hx-gutter) * -1);
+    width: calc(100% + var(--hx-gutter) * 2);
+    max-width: none;
+    aspect-ratio: 4 / 5;
+  }
+
+  .an-public-shell.an-editorial .an-cat-hero-art figcaption {
+    max-width: calc(100% - 32px);
   }
   .an-public-shell.an-editorial :is(.an-cat-note, .an-rel-story) {
     grid-template-columns: minmax(0, 1fr);

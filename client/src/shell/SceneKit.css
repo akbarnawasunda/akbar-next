@@ -571,6 +571,48 @@
   max-width: none;
 }
 
+/* -- Jeda (napas di tengah urutan section) --------------------
+   Satu layar yang isinya nyaris tidak ada: ruang kosong di atas dan di
+   bawah jauh lebih besar dari section biasa, satu baris mikro di tengah.
+   Lahir di beranda (FASE 7 nomor 7) sebagai penutup satu adegan padat;
+   dipakai di sini sebagai primitif bersama supaya halaman lain yang juga
+   punya satu titik padat (katalog, arsip) bisa memakai napas yang sama
+   tanpa menulis ulang CSS-nya — bukan dekorasi baru, satu device yang
+   sama dipakai di tempat yang memang butuh jeda. */
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .an-pause {
+  display: grid;
+  place-items: center;
+  /* Jauh lebih tinggi dari --space-3xl section lain: inilah yang
+     membuatnya terasa seperti helaan napas, bukan section pendek. */
+  min-height: clamp(260px, 38vh, 440px);
+  padding: 0 var(--hx-gutter);
+}
+
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .an-pause-quote {
+  margin: 0;
+  max-width: 28ch;
+  text-align: center;
+  /* FASE 7 nomor 5 — "kutipan tunggal": huruf judul dipakai di luar
+     konteks nama, di tingkat MIKRO (--step--1), bukan raksasa. Satu dari
+     tiga tingkat kontras yang disengaja (raksasa di hero, sedang di nomor
+     kanal, mikro di sini). */
+  font-family: var(--font-title);
+  font-size: var(--step--1);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--paper) 46%, transparent);
+}
+
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .an-pause-quote::before {
+  content: "“";
+}
+
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .an-pause-quote::after {
+  content: "”";
+}
+
 @media (max-width: 900px) {
   .an-public-shell.an-editorial .an-doc {
     grid-template-columns: minmax(0, 1fr);
