@@ -31,11 +31,9 @@ describe("lapisan signature global", () => {
     ]) {
       expect(shell, `shell kehilangan <${layer} />`).toContain(`<${layer} />`);
     }
-    // Partikel harus dirender sebelum konten berat lain agar urutan paint
-    // lapisan tetap sama seperti rancangan awal.
-    expect(shell.indexOf("<SignatureBackground />")).toBeLessThan(
-      shell.indexOf("<GlobalAudioPlayer />")
-    );
+    // Halaman publik memakai tautan rilis resmi, bukan player global yang
+    // mengambang dan dapat menutupi komposisi poster.
+    expect(shell).not.toContain("<GlobalAudioPlayer />");
   });
 
   it("mengembalikan status live panggung wordmark ke runtime", () => {
@@ -48,7 +46,7 @@ describe("lapisan signature global", () => {
     // Nama + alias tetap di DOM (teks nyata) walau partikel hidup, supaya
     // mesin pencari dan screen reader membacanya. Baris era lama dihapus
     // (Phase 3 §2 baris 1); isian journey tinggal di /universe.
-    expect(stage).toContain("<p className=\"sr-only\">{alsoKnownAs}</p>");
+    expect(stage).toContain('<p className="sr-only">{alsoKnownAs}</p>');
     expect(stage).toContain("AKBAR");
     expect(stage).not.toContain("an-signature-stage-eras");
   });

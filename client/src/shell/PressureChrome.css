@@ -1,45 +1,32 @@
-/* ============================================================
-   PRESSURE CHROME
-   Shared masthead and footer become a navigation instrument: a thin control
-   rail at the top and a numbered publishing colophon at the bottom.
-   ============================================================ */
-
+/* Shared chrome for the pressure pages: quiet utility navigation, not another
+   poster competing with the main page. */
 .an-public-shell.an-editorial .nf-nav {
+  --pressure-ui: "Helvetica Neue", Arial, sans-serif;
   --chrome-rule: color-mix(in srgb, var(--paper) 15%, transparent);
   position: sticky;
   top: 0;
   z-index: 90;
   display: grid;
-  grid-template-columns: minmax(210px, 0.72fr) minmax(0, 1fr) auto;
-  gap: clamp(18px, 3vw, 48px);
-  min-height: 72px;
-  padding: env(safe-area-inset-top) var(--gutter, clamp(20px, 4.5vw, 64px)) 0;
-  border-top: 2px solid var(--acid);
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1fr) auto;
+  gap: clamp(18px, 3vw, 42px);
+  min-height: 64px;
+  padding: 0 var(--gutter);
+  border-top: 0;
   border-bottom: 1px solid var(--chrome-rule);
-  background: color-mix(in srgb, var(--ink) 94%, transparent);
+  background: rgb(16 18 17 / 98%);
 }
 
 .an-public-shell.an-editorial .nf-nav::before {
-  content: "TRANSMISSION / AKBAR NAWASUNDA";
-  position: absolute;
-  left: var(--gutter, clamp(20px, 4.5vw, 64px));
-  bottom: 5px;
-  color: color-mix(in srgb, var(--paper) 37%, transparent);
-  font-family: var(--font-mono);
-  font-size: 0.37rem;
-  letter-spacing: 0.12em;
-  line-height: 1;
+  display: none;
 }
 
 .an-public-shell.an-editorial .nf-wordmark {
   gap: 9px;
-  padding-bottom: 9px;
-  color: var(--paper);
 }
 
 .an-public-shell.an-editorial .nf-wordmark .nf-brand-logo {
-  width: 28px;
-  height: 28px;
+  width: 29px;
+  height: 29px;
   padding: 4px;
   border: 1px solid var(--chrome-rule);
   border-radius: 50%;
@@ -52,39 +39,38 @@
 }
 
 .an-public-shell.an-editorial .nf-wordmark-text strong {
-  font-family: var(--font-display);
-  font-size: 0.77rem;
-  font-weight: 400;
-  letter-spacing: 0.08em;
+  font-family: var(--pressure-ui);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.045em;
 }
 
 .an-public-shell.an-editorial .nf-wordmark-text small {
   color: var(--mute);
-  font-family: var(--font-mono);
-  font-size: 0.41rem;
-  letter-spacing: 0.11em;
+  font-family: var(--pressure-ui);
+  font-size: 0.54rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
 }
 
 .an-public-shell.an-editorial .nf-nav nav {
-  align-items: center;
   align-self: stretch;
   justify-self: center;
-  gap: clamp(12px, 1.8vw, 28px);
-  padding-bottom: 9px;
+  gap: clamp(13px, 1.8vw, 26px);
 }
 
 .an-public-shell.an-editorial .nf-nav nav a {
-  padding: 4px 0;
-  color: color-mix(in srgb, var(--paper) 58%, transparent);
-  font-family: var(--font-mono);
-  font-size: 0.53rem;
-  font-weight: 400;
-  letter-spacing: 0.13em;
+  padding: 7px 0;
+  color: color-mix(in srgb, var(--paper) 68%, transparent);
+  font-family: var(--pressure-ui);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 .an-public-shell.an-editorial .nf-nav nav a::after {
-  bottom: -3px;
-  height: 2px;
+  bottom: -2px;
+  height: 1px;
   background: var(--acid);
 }
 
@@ -95,31 +81,28 @@
 }
 
 .an-public-shell.an-editorial .nf-nav-tools {
-  align-self: stretch;
   gap: 9px;
-  padding-bottom: 9px;
 }
 
 .an-public-shell.an-editorial .nf-nav .an-language-switcher {
-  padding-inline: 8px;
+  padding-inline: 9px;
   border-inline: 1px solid var(--chrome-rule);
+  font-family: var(--pressure-ui);
+  font-size: 0.66rem;
+  font-weight: 700;
 }
 
 .an-public-shell.an-editorial .nf-nav .nf-signal {
   min-height: 34px;
-  padding-inline: 11px;
-  border-color: var(--acid);
+  padding-inline: 13px;
+  border: 1px solid var(--acid);
   border-radius: 0;
   background: var(--acid);
   color: var(--ink);
-  font-size: 0.51rem;
-}
-
-.an-public-shell.an-editorial .nf-nav .nf-signal:hover,
-.an-public-shell.an-editorial .nf-nav .nf-signal:focus-visible {
-  border-color: var(--paper);
-  background: var(--paper);
-  color: var(--ink);
+  font-family: var(--pressure-ui);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.075em;
 }
 
 .an-public-shell.an-editorial .nf-menu-toggle {
@@ -128,23 +111,13 @@
   border-color: var(--chrome-rule);
 }
 
-/* Footer: reads as a colophon rather than a fourth navigation component. */
 .an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-footer {
-  grid-template-columns: minmax(0, 1.25fr) minmax(130px, 0.45fr) minmax(
-      150px,
-      0.58fr
-    );
-  gap: clamp(30px, 6vw, 90px);
-  padding: clamp(62px, 9vw, 130px) var(--gutter) clamp(28px, 4vw, 48px);
-  border-top: 2px solid var(--acid);
-  background:
-    linear-gradient(
-        90deg,
-        color-mix(in srgb, var(--acid) 8%, transparent) 1px,
-        transparent 1px
-      )
-      0 0 / 25% 100%,
-    var(--ink);
+  --pressure-ui: "Helvetica Neue", Arial, sans-serif;
+  grid-template-columns: minmax(0, 1.15fr) minmax(130px, 0.48fr) minmax(150px, 0.58fr);
+  gap: clamp(28px, 6vw, 82px);
+  padding: clamp(60px, 8vw, 110px) var(--gutter) clamp(28px, 4vw, 46px);
+  border-top: 1px solid var(--chrome-rule);
+  background: var(--ink-soft);
 }
 
 .an-public-shell.an-editorial .nf-footer-brand {
@@ -155,46 +128,48 @@
 }
 
 .an-public-shell.an-editorial .nf-footer-brand::before {
-  content: "[ END OF TRANSMISSION / START AGAIN ]";
+  content: "AKBAR NAWASUNDA / BANDUNG BARAT";
   color: var(--acid);
-  font-family: var(--font-mono);
-  font-size: 0.48rem;
-  letter-spacing: 0.13em;
+  font-family: var(--pressure-ui);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
 }
 
 .an-public-shell.an-editorial .nf-footer-logo {
-  width: 48px;
-  height: 48px;
-  padding: 8px;
+  width: 46px;
+  height: 46px;
+  padding: 7px;
   border: 1px solid var(--chrome-rule);
   border-radius: 50%;
-  background: var(--ink-soft);
+  background: var(--ink);
 }
 
 .an-public-shell.an-editorial .nf-footer-brand strong {
-  max-width: 9ch;
-  font-family: var(--font-title);
-  font-size: clamp(3rem, 5.7vw, 6.2rem);
-  font-weight: 400;
-  letter-spacing: -0.06em;
-  line-height: 0.77;
+  max-width: 12ch;
+  font-family: var(--pressure-ui);
+  font-size: clamp(1.75rem, 3.2vw, 3.4rem);
+  font-weight: 900;
+  letter-spacing: -0.055em;
+  line-height: 0.94;
 }
 
 .an-public-shell.an-editorial .nf-footer-brand p,
 .an-public-shell.an-editorial .nf-footer-column > span,
 .an-public-shell.an-editorial .nf-footer .footer-bottom {
-  font-family: var(--font-mono);
-  font-size: 0.5rem;
-  letter-spacing: 0.13em;
+  font-family: var(--pressure-ui);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 .an-public-shell.an-editorial .nf-footer-column {
   gap: 11px;
-  padding-top: 36px;
+  padding-top: 35px;
 }
 
 .an-public-shell.an-editorial .nf-footer-column > span {
-  margin-bottom: 9px;
+  margin-bottom: 7px;
   color: var(--acid);
 }
 
@@ -203,11 +178,10 @@
   align-items: center;
   gap: 6px;
   width: fit-content;
-  color: color-mix(in srgb, var(--paper) 72%, transparent);
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 400;
-  letter-spacing: 0;
+  color: color-mix(in srgb, var(--paper) 76%, transparent);
+  font-family: var(--pressure-ui);
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .an-public-shell.an-editorial .nf-footer-column a:hover,
@@ -216,7 +190,7 @@
 }
 
 .an-public-shell.an-editorial .nf-footer-mascot {
-  margin-top: 8px;
+  margin-top: 7px;
   border-top: 1px solid var(--chrome-rule);
   border-bottom: 1px solid var(--chrome-rule);
   color: var(--mute);
@@ -240,49 +214,30 @@
 @media (max-width: 1080px) {
   .an-public-shell.an-editorial .nf-nav {
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 12px;
   }
   .an-public-shell.an-editorial .nf-nav nav {
     display: none;
   }
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 700px) {
   .an-public-shell.an-editorial .nf-nav {
-    min-height: 62px;
-    border-top-width: 2px;
+    min-height: 58px;
+    padding-inline: 16px;
   }
-  .an-public-shell.an-editorial .nf-nav::before {
+  .an-public-shell.an-editorial .nf-wordmark-text small,
+  .an-public-shell.an-editorial .nf-nav .an-language-switcher {
     display: none;
   }
-  .an-public-shell.an-editorial .nf-wordmark {
-    padding-bottom: 0;
-  }
-  .an-public-shell.an-editorial .nf-nav-tools {
-    padding-bottom: 0;
-  }
   .an-public-shell.an-editorial .nf-nav .nf-signal {
-    min-height: 34px;
+    min-height: 32px;
+    padding-inline: 10px;
+    font-size: 0.59rem;
   }
   .an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-footer {
-    grid-template-columns: minmax(0, 1fr) minmax(110px, 0.65fr);
-    gap: 36px 22px;
-    padding-top: 60px;
-  }
-  .an-public-shell.an-editorial .nf-footer-brand,
-  .an-public-shell.an-editorial .nf-footer .footer-bottom {
-    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
   }
   .an-public-shell.an-editorial .nf-footer-column {
     padding-top: 0;
-  }
-  .an-public-shell.an-editorial .nf-footer-brand strong {
-    font-size: clamp(3.3rem, 17vw, 5.5rem);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .an-public-shell.an-editorial .nf-nav .nf-signal {
-    transition: none;
   }
 }

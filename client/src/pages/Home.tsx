@@ -22,9 +22,7 @@ import {
   publicUpcomingEvents,
   usePublicArtistContent,
 } from "@/content/publicContent";
-import "./Home.css";
 import "./PressureHome.css";
-import "./PressureCalibration.css";
 
 type CatalogEntry = {
   title: string;
@@ -224,8 +222,7 @@ export default function Home() {
             aria-label="Akbar Nawasunda"
           >
             <span>AKBAR</span>
-            <span>NAWA</span>
-            <span>SUNDA</span>
+            <span>NAWASUNDA</span>
           </h1>
 
           <figure className="pressure-hero__portrait">

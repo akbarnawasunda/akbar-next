@@ -3,7 +3,6 @@ import { useLocation } from "wouter";
 import { CommandPalette } from "@/components/CommandPalette";
 import { LightboxProvider } from "@/components/signature/LightboxProvider";
 import { CursorSignal } from "@/components/signature/CursorSignal";
-import { GlobalAudioPlayer } from "@/components/signature/GlobalAudioPlayer";
 import { RouteSignalCurtain } from "@/components/signature/RouteSignalCurtain";
 import { SignatureBackground } from "@/components/signature/SignatureBackground";
 import { NightAtmosphere } from "@/components/signature/NightAtmosphere";
@@ -29,13 +28,10 @@ import "./PressureChrome.css";
 /**
  * Lapisan signature global.
  *
- * Urutan render = urutan z-index: partikel (di belakang konten) → tirai rute →
- * cursor → player/menu di atasnya lewat z-index masing-masing. Semua lapisan
- * hanya hidup di client (gate `mounted`), jadi tidak ada canvas di HTML SSR.
- *
- * Particle field, cursor, dan tirai rute adalah identitas situs ini — bukan
- * dekorasi opsional. Jangan dilepas dari shell tanpa menggantinya dengan
- * sistem motion lain yang setara.
+ * Urutan render = urutan z-index: partikel transisi → tirai rute → cursor.
+ * Semua lapisan hanya hidup di client (gate `mounted`), jadi tidak ada canvas
+ * di HTML SSR. Audio tetap memakai pintu resmi di setiap rilisan; tidak ada
+ * player global yang menutupi komposisi halaman.
  */
 function ShellSurfaces() {
   const [mounted, setMounted] = useState(false);
@@ -60,7 +56,6 @@ function ShellSurfaces() {
       <SignatureBackground />
       <RouteSignalCurtain />
       <CursorSignal />
-      <GlobalAudioPlayer />
       <CommandPalette />
     </>
   );
