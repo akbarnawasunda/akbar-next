@@ -131,9 +131,46 @@
 }
 
 /* Entri tunggal: bukan kartu sempit mengambang di panel lebar, tapi satu
-   baris fitur penuh lebar — lihat komentar Visuals.tsx. */
+   baris fitur penuh lebar — lihat komentar Visuals.tsx.
+   [Visual recomposition loop 2] Awalnya baris ini masih pakai tata letak
+   kartu asli (media penuh lebar di atas, body sempit di bawah) yang hanya
+   direntangkan ke lebar penuh panel. Sumber gambarnya adalah thumbnail
+   YouTube `hqdefault.jpg` (480×360) — direntangkan sampai ~1100px+ lebar
+   gambarnya pecah/buram, masalah baru yang lebih kentara justru karena
+   "diperbesar". Sekarang baris fitur ini jadi satu bentangan dua kolom:
+   gambar dikunci ke lebar yang masih wajar untuk sumber beresolusi segitu,
+   teks duduk di sampingnya dan tipografinya naik kelas (judul sebesar
+   dokumen rilisan di beranda) — asimetri yang jujur ke kualitas materinya,
+   bukan gambar yang dipaksa besar. */
 .an-public-shell.an-editorial .an-vis-archive.an-vis-archive--solo > * {
   grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+  grid-template-rows: none;
+  gap: clamp(20px, 4vw, 48px);
+  align-items: center;
+}
+
+.an-public-shell.an-editorial .an-vis-archive--solo .an-artwork-card-body {
+  padding: 0;
+  gap: 12px;
+}
+
+.an-public-shell.an-editorial .an-vis-archive--solo .an-artwork-card-title {
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1.08;
+  max-width: 16ch;
+}
+
+.an-public-shell.an-editorial .an-vis-archive--solo .an-artwork-card-actions {
+  margin-top: 6px;
+}
+
+@media (max-width: 720px) {
+  .an-public-shell.an-editorial .an-vis-archive.an-vis-archive--solo > * {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* Thumbnail arsip ini berasal dari YouTube (`hqdefault.jpg`), yang berbentuk

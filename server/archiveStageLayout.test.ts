@@ -106,11 +106,19 @@ describe("komposisi arsip & profil", () => {
     const timeline = stripComments(source(ERA_TIMELINE));
     const tablet = media(timeline, "@media (max-width: 900px)");
     // Kolom ganda linimasa tidak boleh bertahan di layar sempit: itu yang
-    // membuat artwork sticky menutupi teks babak.
+    // dulu membuat artwork sticky menutupi teks babak.
     expect(block(tablet, ".an-era-timeline {")).toContain(
       "grid-template-columns: 1fr"
     );
-    expect(block(tablet, ".an-era-artwork {")).toContain("position: static");
+    // [Visual recomposition loop 2] Panel artwork bersama tidak lagi
+    // ditata ulang jadi statis di tablet — itu masih menyisakan SATU
+    // gambar yang sudah lewat di atas layar begitu pembaca mulai membaca
+    // babak kedua, jadi perubahan artwork terjadi di luar pandangan
+    // (lihat komentar EraTimeline.css). Kontraknya sekarang: panel
+    // bersama disembunyikan total, dan tiap babak membawa artwork
+    // kecilnya sendiri tepat di sebelah teksnya.
+    expect(block(tablet, ".an-era-artwork {")).toContain("display: none");
+    expect(block(tablet, ".an-era-item-art {")).toContain("display: block");
   });
 
   it("memberi jeda tipografis /about tinggi berbasis viewport, bukan px tetap", () => {
