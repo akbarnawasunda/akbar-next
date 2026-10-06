@@ -13,6 +13,8 @@ import {
 import { EraTimeline } from "@/components/signature/EraTimeline";
 import { publicEras } from "@/content/eras";
 import { Reveal } from "@/components/Reveal";
+import { SundaScript } from "@/components/signature/SundaScript";
+import { SUNDA_NAME } from "@/content/sundaneseScript";
 import "./EcosystemPages.css";
 import "./ArchiveStage.css";
 
@@ -129,6 +131,14 @@ export function UniverseView({ locale = "id" }: { locale?: "id" | "en" }) {
       .map(release => ({ title: release.title })),
   ];
   const eras = publicEras(cms.data, locale);
+  // Pelat aksara Sunda hanya menemani NAMA RESMI (lihat aturan yang sama di
+  // SignatureStage.tsx) — bukan alias panggung. Dicocokkan lewat teks babak
+  // terbaru, bukan diasumsikan: kalau suatu saat CMS mengubah urutan babak
+  // atau labelnya, pelat ini ikut diam, bukan menempel ke nama yang salah.
+  const latestEraIsOfficialName =
+    eras.length > 0 &&
+    eras[eras.length - 1].title.trim().toLowerCase() ===
+      SUNDA_NAME.latin.trim().toLowerCase();
   const readingGuide =
     locale === "en"
       ? journey.introEn || journey.intro
@@ -154,19 +164,34 @@ export function UniverseView({ locale = "id" }: { locale?: "id" | "en" }) {
                 {t.portraitCaption}
               </figcaption>
               <div className="an-arc-hero-marks">
-                <span className="an-arc-hero-mark an-arc-hero-mark--from">
+                {/* `<div>`, bukan `<span>`: pelat aksara di bawah bisa
+                    membawa `<p>` (lihat SundaScript.tsx), dan `<p>` di
+                    dalam `<span>` adalah HTML tidak valid (span = konten
+                    phrasing saja). */}
+                <div className="an-arc-hero-mark an-arc-hero-mark--from">
                   <span className="an-arc-hero-mark-year">{eras[0].year}</span>
                   <span className="an-arc-hero-mark-name">{eras[0].title}</span>
-                </span>
+                </div>
                 <span className="an-arc-hero-mark-link" aria-hidden="true" />
-                <span className="an-arc-hero-mark an-arc-hero-mark--to">
+                <div className="an-arc-hero-mark an-arc-hero-mark--to">
                   <span className="an-arc-hero-mark-year">
                     {eras[eras.length - 1].year}
                   </span>
                   <span className="an-arc-hero-mark-name">
                     {eras[eras.length - 1].title}
                   </span>
-                </span>
+                  {/* [Visual recomposition] Halaman ini menceritakan dua
+                      nama lintas era, tapi sampai sekarang tidak pernah
+                      menunjukkan satu fakta yang sebenarnya tidak berubah
+                      di antara keduanya: nama yang bertahan ditulis dalam
+                      aksara Sunda-nya sendiri. Ditempelkan di sini, bukan
+                      di tempat baru — nama yang sama yang baru saja
+                      dibaca sebagai elemen tipografis terbesar di
+                      halaman. */}
+                  {latestEraIsOfficialName ? (
+                    <SundaScript entry={SUNDA_NAME} lang={locale} tone="inline" />
+                  ) : null}
+                </div>
               </div>
             </figure>
           ) : null}

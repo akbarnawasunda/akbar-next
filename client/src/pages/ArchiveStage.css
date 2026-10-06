@@ -87,6 +87,14 @@
   color: var(--paper);
 }
 
+/* Pelat aksara Sunda yang menemani nama terbaru: `gap: 4px` milik
+   `.an-arc-hero-mark` dibuat untuk jarak tahun→nama, terlalu rapat untuk
+   nama raksasa→pelat aksara. Diberi jarak sendiri di sini, bukan dengan
+   menaikkan gap bersama (itu akan merapatkan tahun ke namanya juga). */
+.an-public-shell.an-editorial .an-arc-hero-mark--to .an-sunda {
+  margin-top: clamp(6px, 1.4vw, 14px);
+}
+
 /* Garis penghubung: bukan lagi 1px vertikal pendek di dalam kartu, tapi
    aturan diagonal yang melintasi dua nama — garis evolusi, bukan bingkai. */
 .an-public-shell.an-editorial .an-arc-hero-mark-link {
