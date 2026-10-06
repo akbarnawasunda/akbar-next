@@ -386,9 +386,17 @@
   .an-public-shell.an-editorial .an-live-hero-copy h1 {
     font-size: clamp(2.2rem, 10.5vw, 3.4rem);
   }
+  /* Galeri bilang "foto memegang panggung, tipografi jadi keterangannya"
+     — tapi di DOM, judul datang sebelum foto, jadi tanpa ini ponsel malah
+     menampilkan tipografi dulu, baru foto. Dibalik supaya klaimnya benar
+     di layar sempit juga, sama seperti keputusan yang sama di beranda,
+     /music, dan /about. */
   .an-public-shell.an-editorial .an-vis-hero-plate {
+    order: -1;
+    margin-inline: calc(var(--hx-gutter) * -1);
+    width: calc(100% + var(--hx-gutter) * 2);
     max-width: none;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 4 / 5;
   }
   .an-public-shell.an-editorial .an-vis-archive > * {
     grid-column: span 6;
