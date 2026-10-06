@@ -27,18 +27,51 @@
 .an-public-shell.an-editorial .an-arc-hero-plate {
   position: relative;
   margin: 0;
-  /* Sumbernya potret editorial 4:5 (800x1000) — bingkainya sama. */
+  display: grid;
+  align-content: center;
   aspect-ratio: 4 / 5;
-  overflow: hidden;
+  padding: clamp(24px, 4vw, 48px);
   background: var(--ink-soft);
+  border: 1px solid var(--ink-line);
 }
 
-.an-public-shell.an-editorial .an-arc-hero-plate img {
+/* Dulu bingkai ini berisi foto ("archivePortrait" — komposit AI "future
+   city" palsu). Diganti dua nama + dua tahun era, langsung dari data
+   linimasa (publicEras): identitas asli halaman ini, bukan gambar
+   pengisi yang tidak berhubungan dengan apa pun di katalognya. */
+.an-public-shell.an-editorial .an-arc-hero-marks {
+  display: grid;
+  gap: clamp(20px, 3vw, 36px);
+  justify-items: start;
+}
+
+.an-public-shell.an-editorial .an-arc-hero-mark {
+  display: grid;
+  gap: 6px;
+}
+
+.an-public-shell.an-editorial .an-arc-hero-mark-year {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-arc-hero-mark-name {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3.4vw, 2.4rem);
+  font-weight: 500;
+  line-height: 1.05;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-arc-hero-mark-link {
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 32%;
+  width: 1px;
+  height: clamp(20px, 3vw, 32px);
+  margin-left: 2px;
+  background: var(--ink-line);
 }
 
 .an-public-shell.an-editorial .an-arc-hero-plate figcaption {
@@ -85,53 +118,10 @@
   gap: 12px;
 }
 
-/* ------------------------------------------------------------
-   /universe — catatan studio (gambar + keterangan)
-   ------------------------------------------------------------ */
-
-.an-public-shell.an-editorial .an-arc-studio {
-  display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-  align-items: center;
-  gap: clamp(24px, 4vw, 64px);
-}
-
-.an-public-shell.an-editorial .an-arc-studio-plate {
-  margin: 0;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background: var(--ink-soft);
-}
-
-.an-public-shell.an-editorial .an-arc-studio-plate img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 24%;
-}
-
-.an-public-shell.an-editorial .an-arc-studio-copy {
-  display: grid;
-  gap: var(--space-sm);
-  align-content: center;
-}
-
-.an-public-shell.an-editorial .an-arc-studio-copy p {
-  margin: 0;
-  max-width: 44ch;
-  font-size: var(--text-body);
-  line-height: 1.78;
-  color: color-mix(in srgb, var(--paper) 78%, transparent);
-}
-
-.an-public-shell.an-editorial .an-arc-note {
-  font-family: var(--font-mono);
-  font-size: 0.54rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--mute);
-}
+/* [REMOVED liquid-signal/phase3] ".an-arc-studio" ("Catatan dari studio")
+   dulu di sini: satu foto ("editorialPortrait") + keterangan. Seksinya
+   dihapus dari Universe.tsx (lihat komentar di sana) jadi aturan CSS-nya
+   ikut dihapus, bukan dibiarkan jadi kelas mati. */
 
 /* ------------------------------------------------------------
    /universe — jalur resmi sebagai indeks
@@ -333,40 +323,33 @@
 }
 
 /* ------------------------------------------------------------
-   /about — pita potret penuh lebar
-   ------------------------------------------------------------ */
+   /about — jeda tipografis penuh lebar (bukan foto kedua)
+   ------------------------------------------------------------
+   Dulu band ini memajang foto "editorial portrait" kedua. Diganti nama
+   artis sendiri dalam aksara Sunda, besar dan sunyi: jeda yang datang dari
+   identitas asli, bukan gambar pengisi. Tinggi tetap berbasis viewport
+   (clamp + vw), bukan px tetap, supaya proporsional di semua layar. */
 
 .an-public-shell.an-editorial .an-ab-band {
   margin-top: var(--section-y);
-}
-
-.an-public-shell.an-editorial .an-ab-band-plate {
-  margin: 0;
-  height: clamp(320px, 46vw, 560px);
-  overflow: hidden;
-  background: var(--ink-soft);
-}
-
-.an-public-shell.an-editorial .an-ab-band-plate img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 30%;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-sm);
+  min-height: clamp(260px, 34vw, 420px);
+  padding: clamp(48px, 8vw, 96px) var(--hx-gutter);
+  border-top: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--ink-line);
 }
 
 .an-public-shell.an-editorial .an-ab-band-caption {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 24px;
-  max-width: var(--hx-max);
-  margin-inline: auto;
-  padding: var(--space-md) var(--hx-gutter) 0;
+  max-width: 46ch;
+  margin: 0;
+  text-align: center;
   font-family: var(--font-mono);
-  font-size: 0.54rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 0.66rem;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  text-transform: none;
   color: var(--mute);
 }
 
@@ -461,7 +444,6 @@
     aspect-ratio: 4 / 3;
   }
 
-  .an-public-shell.an-editorial .an-arc-studio,
   .an-public-shell.an-editorial .an-arc-routes,
   .an-public-shell.an-editorial .an-ab-bio {
     grid-template-columns: minmax(0, 1fr);
@@ -495,16 +477,8 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .an-public-shell.an-editorial .an-arc-studio-plate {
-    aspect-ratio: 1 / 1;
-  }
-
   .an-public-shell.an-editorial .an-arc-route-list .an-index-row {
     grid-template-columns: 1.9rem minmax(0, 1fr) auto;
-  }
-
-  .an-public-shell.an-editorial .an-ab-band-plate {
-    height: clamp(300px, 92vw, 440px);
   }
 }
 

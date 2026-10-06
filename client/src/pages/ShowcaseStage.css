@@ -172,12 +172,27 @@
   object-position: 50% 32%;
 }
 
-.an-public-shell.an-editorial .an-live-hero-bg img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 32%;
+/* Keadaan sunyi: belum ada jadwal terkonfirmasi, jadi tidak ada foto
+   panggung untuk ditampilkan. Latar jadi gradien ink bertekstur halus
+   dengan warna --signal redup, bukan gambar karangan. */
+.an-public-shell.an-editorial .an-live-hero--quiet {
+  background:
+    radial-gradient(
+        120% 90% at 86% 8%,
+        color-mix(in srgb, var(--signal) 14%, transparent) 0%,
+        transparent 58%
+      )
+      var(--ink);
+}
+
+.an-public-shell.an-editorial .an-live-hero-mark {
+  position: absolute;
+  z-index: -2;
+  top: calc(var(--chrome-h, 78px) + var(--space-lg));
+  right: var(--hx-gutter);
+  width: clamp(72px, 9vw, 120px);
+  height: auto;
+  opacity: 0.5;
 }
 
 .an-public-shell.an-editorial .an-live-hero-scrim {

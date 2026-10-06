@@ -2,7 +2,7 @@ import { ArrowUpRight, MapPin, Ticket } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { EventCountdown } from "@/components/editorial/EditorialKit";
 import { Link } from "wouter";
-import { verifiedArtistProfile } from "@/content/artistPlatform";
+import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
 import {
   publicConfirmedEvents,
   usePublicArtistContent,
@@ -109,9 +109,20 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
 
   return (
     <main id="main-content" tabIndex={-1}>
-        {/* Panggung: foto pertunjukan sebagai latar penuh, tipografi di
-            atas scrim. */}
-        <section className="an-live-hero" aria-labelledby="live-title">
+        {/* Panggung: saat ada foto pertunjukan nyata, itu jadi latar penuh.
+            Tanpa jadwal terkonfirmasi (keadaan sekarang), halaman ini
+            TIDAK memaksa foto — dulu di sini "akbar-night-frequency-stage",
+            foto jalan malam asli yang ditumpuki teks chrome/neon 3D
+            "AKBAR NAWASUNDA RMX" dan tulisan kursif "SWAG" mengkilap: gaya
+            poster DJ generik yang persis dilarang DESIGN.md. Diganti latar
+            sunyi + tanda resmi (logo vektor asli), jujur soal "belum ada
+            tanggal" alih-alih menutupinya dengan gambar ramai. */}
+        <section
+          className={`an-live-hero${
+            featured?.posterUrl ? "" : " an-live-hero--quiet"
+          }`}
+          aria-labelledby="live-title"
+        >
           {featured?.posterUrl ? (
             <img
               className="an-live-hero-bg"
@@ -122,26 +133,16 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
               decoding="async"
             />
           ) : (
-            <picture className="an-live-hero-bg">
-              <source
-                media="(max-width: 640px)"
-                srcSet="/assets/akbar-night-frequency-stage-mobile-optimized.webp"
-                type="image/webp"
-              />
-              <source
-                srcSet="/assets/akbar-night-frequency-stage-optimized.webp"
-                type="image/webp"
-              />
-              <img
-                src="/assets/akbar-night-frequency-stage-optimized.webp"
-                alt=""
-                aria-hidden="true"
-                width={1440}
-                height={1440}
-                loading="eager"
-                decoding="async"
-              />
-            </picture>
+            <img
+              className="an-live-hero-mark"
+              src={officialBrand.logo}
+              alt=""
+              aria-hidden="true"
+              width={220}
+              height={150}
+              loading="eager"
+              decoding="async"
+            />
           )}
           <span className="an-live-hero-scrim" aria-hidden="true" />
           <div className="an-live-hero-copy">

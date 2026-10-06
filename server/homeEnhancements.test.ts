@@ -49,16 +49,22 @@ describe("beranda yang dilihat pengunjung", () => {
     expect(home).not.toContain("ed-signal-row__num");
   });
 
-  it("tidak lagi memuat latar panggung berat; panggung milik /live", async () => {
-    // Latar panggung dipindah ke /live supaya beranda tidak mengulang
-    // halaman lain dan tidak menarik gambar besar untuk dekorasi.
+  it("tidak memuat gambar panggung karangan; /live jujur soal jadwal kosong", async () => {
+    // Beranda tidak menarik gambar besar untuk dekorasi (latar panggung
+    // dulu dipindah ke /live). Dan /live sendiri (liquid-signal phase 3)
+    // tidak lagi memaksa "akbar-night-frequency-stage" — komposit foto
+    // jalan malam asli yang ditumpuki teks chrome/neon "AKBAR NAWASUNDA
+    // RMX" dan tulisan "SWAG" — sebagai latar paksa saat belum ada jadwal
+    // terkonfirmasi. Keadaan kosongnya sekarang memakai logo resmi di
+    // latar sunyi, bukan gambar karangan.
     expect(home).not.toContain("akbar-night-frequency-hero-mobile-optimized");
     expect(home).not.toContain("/assets/akbar-night-frequency-hero.webp");
 
     const live = (await render("/live", { documents: async () => [] as never }))
       .html;
-    expect(live).toContain("/assets/akbar-night-frequency-stage-optimized.webp");
-    expect(live).not.toContain("/assets/akbar-night-frequency-stage.webp");
+    expect(live).not.toContain("akbar-night-frequency");
+    expect(live).toContain("an-live-hero--quiet");
+    expect(live).toContain("/assets/akbar-logo.webp");
   });
 
   it("menyertakan logo brand yang punya fallback", () => {

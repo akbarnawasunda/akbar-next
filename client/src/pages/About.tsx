@@ -3,6 +3,8 @@ import { Link } from "wouter";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { Reveal } from "@/components/Reveal";
+import { SundaScript } from "@/components/signature/SundaScript";
+import { SUNDA_NAME } from "@/content/sundaneseScript";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
 import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
@@ -27,9 +29,8 @@ const copy = {
     bioTitle: "Perjalanan musik.",
     statementFallback:
       "Karya orisinal dirilis sebagai Akbar Nawasunda; katalog remix juga dikenal melalui DJ Akbar Remix.",
-    bandLabel: "Potret editorial",
-    bandAlt: "Potret editorial Akbar Nawasunda dengan cahaya merah",
-    bandCaption: "Potret editorial",
+    bandLabel: "Nama, ditulis dengan aksara Sunda",
+    bandCaption: "Akbar Nawasunda ditulis dalam aksara Sunda — akar Bandung Barat yang tetap melekat di tiap rilisan.",
     outlineMeta: "Satu jalur keluar",
     outlineCopy:
       "Booking panggung, remix, lisensi, atau kolaborasi — semuanya masuk lewat satu jalur inquiry resmi.",
@@ -73,9 +74,8 @@ const copy = {
     bioTitle: "The musical journey.",
     statementFallback:
       "Original work is released as Akbar Nawasunda; the remix catalog is also known through DJ Akbar Remix.",
-    bandLabel: "Editorial portrait",
-    bandAlt: "Editorial portrait of Akbar Nawasunda in red light",
-    bandCaption: "Editorial portrait",
+    bandLabel: "His name, written in Sundanese script",
+    bandCaption: "Akbar Nawasunda written in Sundanese script — the West Bandung root that stays in every release.",
     outlineMeta: "One official route",
     outlineCopy:
       "Stage booking, remix, licensing, or collaboration — it all arrives through one official inquiry route.",
@@ -217,22 +217,14 @@ export function AboutView({ locale = "id" }: { locale?: "id" | "en" }) {
           </section>
         </Reveal>
 
-        {/* Pita potret penuh lebar — jeda visual sebelum jalur lanjut. */}
+        {/* Jeda visual sebelum jalur lanjut — bukan foto kedua (lihat
+            akbar-next#liquid-signal: foto editorial di sini dulu adalah
+            komposit AI "cyberpunk poster", bukan potret asli). Namanya
+            sendiri, dalam aksara Sunda, jadi gambarnya: identitas dari
+            materi yang nyata, bukan dekorasi karangan. */}
         <section className="an-ab-band" aria-label={t.bandLabel}>
-          <figure className="an-ab-band-plate">
-            <img
-              src={officialBrand.editorialPortrait}
-              alt={t.bandAlt}
-              width={667}
-              height={1000}
-              loading="lazy"
-              decoding="async"
-            />
-          </figure>
-          <p className="an-ab-band-caption">
-            <span>{t.bandCaption}</span>
-            <span>Akbar Nawasunda</span>
-          </p>
+          <SundaScript entry={SUNDA_NAME} lang={locale} tone="monument" />
+          <p className="an-ab-band-caption">{t.bandCaption}</p>
         </section>
 
         {/* Pitch booking direduksi jadi SATU jalur keluar (Phase 3:

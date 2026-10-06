@@ -1119,9 +1119,6 @@
 .an-site .live-section::after {
   content: none !important;
 }
-.an-site .live-backdrop {
-  display: none !important;
-}
 
 .an-site .live-copy {
   position: relative;

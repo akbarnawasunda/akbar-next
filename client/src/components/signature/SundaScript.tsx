@@ -41,8 +41,9 @@ export function SundaScript({
 }: {
   entry: SundaneseEntry;
   lang?: "id" | "en";
-  /** `hero` = pelat penuh dengan kunci baca · `inline` = satu baris ringkas. */
-  tone?: "hero" | "inline";
+  /** `hero` = pelat penuh dengan kunci baca · `inline` = satu baris ringkas ·
+   *  `monument` = jeda visual skala penuh (pengganti foto generik). */
+  tone?: "hero" | "inline" | "monument";
   decorative?: boolean;
 }) {
   return (

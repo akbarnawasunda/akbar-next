@@ -84,8 +84,12 @@ const managedVideoImage = (
     const id = youtubeIdFrom(href);
     return id ? youtubeThumbnail(id) : officialBrand.socialPreview;
   }
+  // [FIX liquid-signal/phase3] Path CMS lama `/manus-storage/*stage*` dulu
+  // jatuh ke "akbar-night-frequency-stage" — foto asli yang ditumpuki teks
+  // chrome/neon "AKBAR NAWASUNDA RMX". Diganti kartu brand resmi yang sama
+  // dipakai sebagai fallback umum di tempat lain, bukan gambar karangan.
   return /\/manus-storage\/[^/?#]*stage[^/?#]*/i.test(imageUrl)
-    ? "/assets/akbar-night-frequency-stage-optimized.webp"
+    ? officialBrand.socialPreview
     : imageUrl;
 };
 

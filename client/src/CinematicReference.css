@@ -342,7 +342,6 @@ body::before {
 .an-site .video-content span { color: var(--ref-cyan) !important; font-family: var(--ref-mono) !important; }
 .an-site .round-play { border-color: var(--ref-cyan) !important; background: var(--ref-cyan) !important; color: var(--ink) !important; }
 .an-site .live-section { min-height: 560px !important; background-color: var(--ref-bg-2) !important; }
-.an-site .live-backdrop { opacity: 0.38 !important; filter: saturate(0.55) contrast(1.16) brightness(0.58) !important; }
 .an-site .live-copy h2 { font-size: clamp(2.7rem, 6vw, 6.5rem) !important; }
 .an-site .live-stat { border-color: var(--ref-line) !important; background: rgba(5,9,15,0.58) !important; }
 

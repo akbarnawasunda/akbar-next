@@ -110,3 +110,29 @@
     letter-spacing: 0.1em;
   }
 }
+
+/* -- Nada: monument ---------------------------------------------
+   Jeda visual skala penuh — pengganti band foto generik (lihat
+   .an-ab-band di About.tsx). Nama artis sendiri yang jadi gambar:
+   bukan dekorasi, bukan foto karangan. Dipusatkan, besar, sunyi. */
+.an-sunda[data-tone="monument"] {
+  justify-items: center;
+  text-align: center;
+  gap: 18px;
+}
+
+.an-sunda[data-tone="monument"] .an-sunda-script {
+  font-size: clamp(3rem, 11vw, 7.5rem);
+  line-height: 1.55;
+  letter-spacing: 0;
+}
+
+.an-sunda[data-tone="monument"] .an-sunda-key {
+  font-size: 0.72rem;
+}
+
+@media (max-width: 480px) {
+  .an-sunda[data-tone="monument"] .an-sunda-script {
+    font-size: clamp(2.4rem, 15vw, 3.4rem);
+  }
+}

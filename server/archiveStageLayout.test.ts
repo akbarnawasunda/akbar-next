@@ -113,10 +113,12 @@ describe("komposisi arsip & profil", () => {
     expect(block(tablet, ".an-era-artwork {")).toContain("position: static");
   });
 
-  it("memberi band potret tinggi berbasis viewport, bukan px tetap", () => {
-    const band = block(css, ".an-ab-band-plate {");
-    expect(band).toMatch(/height:\s*clamp\([^)]*vw[^)]*\)/);
-    expect(block(css, ".an-ab-band-plate img {")).toContain("object-fit: cover");
+  it("memberi jeda tipografis /about tinggi berbasis viewport, bukan px tetap", () => {
+    // Band ini dulu foto ("an-ab-band-plate"); sejak redesign Phase 3
+    // isinya nama artis dalam aksara Sunda, bukan gambar — kontraknya
+    // tetap "tidak ada ukuran px tetap", bukan lagi "object-fit: cover".
+    const band = block(css, ".an-ab-band {");
+    expect(band).toMatch(/min-height:\s*clamp\([^)]*vw[^)]*\)/);
   });
 
   it("mematikan gerak saat pengunjung memintanya", () => {

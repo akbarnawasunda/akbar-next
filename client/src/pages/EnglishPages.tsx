@@ -539,13 +539,12 @@ export function EnglishHome() {
         </section>
 
         <section className="section live-section" id="live">
-          <div
-            className="live-backdrop"
-            style={{
-              backgroundImage:
-                "url(/assets/akbar-night-frequency-hero-optimized.webp)",
-            }}
-          />
+          {/* [REMOVED liquid-signal/phase3] `.live-backdrop` dulu memuat
+              "akbar-night-frequency-hero" (komposit neon/chrome palsu) —
+              sudah disembunyikan Home.css (`display: none !important`)
+              tapi masih rapuh (dua stylesheet lama berebut !important atas
+              selector yang sama). Dihapus dari markup supaya tidak ada lagi
+              cara gambar itu muncul, bukan cuma ditutup CSS. */}
           <div className="live-copy">
             <p className="eyebrow">LIVE</p>
             <h2>

@@ -67,26 +67,14 @@
 }
 .en-content::before { content: none !important; display: none !important; }
 
-.en-hero {
-  background-image:
-    linear-gradient(90deg, var(--ink) 18%, color-mix(in srgb, var(--ink) 62%, transparent) 62%, color-mix(in srgb, var(--ink) 22%, transparent) 100%),
-    var(--page-image, url("/assets/akbar-night-frequency-hero-optimized.webp"));
-  background-position: center;
-  background-size: cover;
-}
-.en-hero-copy { max-width: 760px; }
-
-.en-hero-portrait {
-  display: block;
-  width: min(100%, 420px);
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  object-position: center 22%;
-  margin: 30px 0 0 auto;
-  border: 1px solid var(--ink-line);
-  filter: brightness(1.05) saturate(0.94);
-  box-shadow: none;
-}
+/* [REMOVED liquid-signal/phase3] `.en-hero` / `.en-hero-copy` /
+   `.en-hero-portrait` dulu di sini: tidak ada JSX yang memakai kelas ini
+   lagi (hero EN sekarang `.an-hero` di EnglishPages.tsx, sama dengan ID),
+   dan fallback-nya menunjuk ke "akbar-night-frequency-hero-optimized" —
+   gambar yang sama persis dihapus dari /live karena komposit neon/chrome
+   palsu. Aturan mati dihapus, bukan dibiarkan sebagai jalur balik ke
+   gambar itu kalau suatu saat ada yang pasang `className="en-hero"` lagi
+   tanpa sadar. */
 .en-particle-lane {
   display: grid;
   justify-items: end;
