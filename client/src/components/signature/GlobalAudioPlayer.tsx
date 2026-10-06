@@ -156,6 +156,7 @@ export function GlobalAudioPlayer() {
       className="an-global-player"
       data-player-state={state}
       data-analyzable={analyzable ? "true" : "false"}
+      data-cursor="music"
       aria-label={lang === "en" ? "Global audio player" : "Pemutar audio global"}
     >
       <div className="an-global-player-bar">

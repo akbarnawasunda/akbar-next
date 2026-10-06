@@ -237,7 +237,7 @@ export function NightHeader({
           <LanguageSwitcher pathname={pathname} lang={lang} />
           {/* CTA utama header: membuka halaman musik, bukan anchor #signal yang
               hanya ada di beranda (dulu jadi tautan mati di halaman lain). */}
-          <Link className="nf-signal" href={`${prefix}/music`}>
+          <Link className="nf-signal" href={`${prefix}/music`} data-cursor="point">
             {t.listen} <ArrowUpRight size={13} aria-hidden="true" />
           </Link>
           <button

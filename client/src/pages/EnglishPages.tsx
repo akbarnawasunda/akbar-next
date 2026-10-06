@@ -332,6 +332,7 @@ export function EnglishHome() {
                 rel="noreferrer"
                 data-signal-magnetic
                 data-signal-interactive
+                data-cursor="point"
               >
                 <Play size={14} fill="currentColor" />
                 <span>LISTEN NOW</span>

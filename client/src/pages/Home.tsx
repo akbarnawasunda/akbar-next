@@ -388,6 +388,7 @@ export default function Home() {
                   rel="noreferrer"
                   data-signal-magnetic
                   data-signal-interactive
+                  data-cursor="point"
                 >
                   <Play size={13} fill="currentColor" />
                   <span>{heroActionLabel}</span>
@@ -531,7 +532,7 @@ export default function Home() {
               </p>
             </header>
 
-            <ul className="an-channels-list">
+            <ul className="an-channels-list" data-cursor="music">
               {editablePlatformLinks.map((platform, index) => (
                 <li
                   key={platform.label}

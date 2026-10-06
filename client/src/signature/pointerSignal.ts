@@ -12,8 +12,8 @@ import type { SignatureStore } from "./types";
  * tidak pernah diblokir.
  */
 
-const INTERACTIVE_SELECTOR =
-  "a[href], button, [role='button'], input, select, textarea, summary, [data-signal-interactive]";
+export const INTERACTIVE_SELECTOR =
+  "a[href], button, [role='button'], input, select, textarea, summary, [data-signal-interactive], [data-cursor]";
 
 /** Satu jam untuk semua sinyal: sama dengan timestamp requestAnimationFrame. */
 const now = () =>

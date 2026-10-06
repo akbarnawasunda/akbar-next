@@ -1,6 +1,7 @@
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { ArrowLeft, ArrowUpRight, ArrowRight, Play } from "lucide-react";
 import { useRef } from "react";
+import { useDragScroll } from "@/hooks/useDragScroll";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { soundcloudEmbedUrl } from "@/components/MusicEmbed";
 import { Reveal } from "@/components/Reveal";
@@ -181,6 +182,10 @@ const copy = {
 export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
   const t = copy[locale];
   const catalogRef = useRef<HTMLDivElement>(null);
+  // Rail katalog jadi benar-benar bisa digeser lewat klik-dan-tarik (mouse),
+  // bukan cuma tombol prev/next — inilah "interaksi katalog horizontal" yang
+  // membuat pose DRAGGING mascot punya sesuatu yang nyata untuk ditunjukkan.
+  useDragScroll(catalogRef);
   const cms = usePublicArtistContent();
   const editablePlatformLinks = publicPlatformLinks(cms.data);
   const cmsReleases = cms.data?.releases ?? [];
@@ -270,6 +275,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
                 href={featured.href}
                 target="_blank"
                 rel="noreferrer"
+                data-cursor="point"
               >
                 <Play size={13} fill="currentColor" /> {t.listenLatest}
               </a>
@@ -281,7 +287,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               </Link>
             </div>
           </div>
-          <figure className="an-cat-hero-art">
+          <figure className="an-cat-hero-art" data-cursor="music">
             <ResilientArtworkImage
               src={featured.artwork}
               backupSrc={officialBrand.socialPreview}
@@ -335,7 +341,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               {t.channelsMeta(editablePlatformLinks.length)}
             </p>
           </header>
-          <ul className="an-index">
+          <ul className="an-index" data-cursor="music">
             {editablePlatformLinks.map(platform => (
               <li key={platform.label}>
                 <a
@@ -372,7 +378,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               </div>
               <p className="an-cat-lede">{t.listenCopy}</p>
             </header>
-            <div className="an-cat-listen-grid">
+            <div className="an-cat-listen-grid" data-cursor="music">
               {players.map((drop, index) => {
                 const known = catalog.find(release =>
                   release.title
@@ -440,6 +446,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               ref={catalogRef}
               tabIndex={0}
               aria-label={t.railLabel}
+              data-cursor="drag"
             >
               {catalog.map((release, index) => (
                 <Link
@@ -447,6 +454,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
                   className="an-release"
                   href={`${t.musicHref}/${releaseSlug(release.title)}`}
                   data-signal-interactive
+                  data-cursor="music"
                 >
                   <span className="an-release-art">
                     <ResilientArtworkImage
@@ -491,6 +499,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
             href={spotifyHref}
             target="_blank"
             rel="noreferrer"
+            data-cursor="point"
           >
             <PlatformIcon label="Spotify" /> {t.bandCta}
           </a>
