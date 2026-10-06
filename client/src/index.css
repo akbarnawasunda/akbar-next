@@ -193,6 +193,17 @@
   --container-frame: 1180px;                /* grid editorial */
   --container-text:  62ch;                  /* blok baca */
 
+  /* Editorial architecture: a shared score, not a mandatory card grid.
+     Pages may span these tracks asymmetrically; reading routes stay narrow. */
+  --editorial-columns: 12;
+  --editorial-gap: clamp(12px, 1.7vw, 28px);
+  --measure-copy: 64ch;
+  --measure-caption: 32ch;
+  --text-impact: clamp(4.2rem, 10.2vw, 10.8rem);
+  --text-register: clamp(2.6rem, 7vw, 7.4rem);
+  --rule-quiet: color-mix(in srgb, var(--paper) 14%, transparent);
+  --rule-present: color-mix(in srgb, var(--paper) 36%, transparent);
+
   /* -- Spacing scale -------------------------------------------
      Skala 8px yang mengalir. Semua section baru wajib memakai ini
      supaya ritme antar halaman tidak lagi ditentukan per file. */
@@ -562,6 +573,29 @@ svg {
 
 .an-section { padding-block: var(--section-y); }
 .an-section--tight { padding-block: var(--space-xl); }
+
+/* Twelve-track score for image-led public compositions. Children choose
+   their span; the primitive deliberately does not manufacture equal cards. */
+.an-editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--editorial-columns), minmax(0, 1fr));
+  gap: var(--editorial-gap);
+}
+
+/* Archive register: semantic list with tactile rows and no card surface. */
+.an-register {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule-present);
+}
+
+.an-register > * { border-bottom: 1px solid var(--rule-quiet); }
+.an-reading-measure { width: min(100%, var(--measure-copy)); }
+
+@media (max-width: 767.98px) {
+  .an-editorial-grid { grid-template-columns: minmax(0, 1fr); }
+}
 
 .an-rule {
   height: 1px;

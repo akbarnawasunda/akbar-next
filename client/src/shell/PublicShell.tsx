@@ -73,12 +73,23 @@ function ShellBody({ children }: { children: ReactNode }) {
   const isEditorialRoute = !isStudioRoute && !isGameRoute;
   const path = location.split(/[?#]/, 1)[0] || "/";
   const skipTarget = path === "/" || path === "/en" ? "#top" : "#main-content";
+  const routeKind =
+    path === "/" || path === "/en"
+      ? "opening"
+      : /\/music(?:\/|$)/.test(path)
+        ? "sound-archive"
+        : /\/(?:visuals|universe)(?:\/|$)/.test(path)
+          ? "image-archive"
+          : /\/(?:privacy|licensing)(?:\/|$)/.test(path)
+            ? "reading"
+            : "editorial";
 
   return (
     <LightboxProvider lang={lang}>
       <div
         className={`an-public-shell${isEditorialRoute ? " an-editorial" : ""}`}
         data-shell-lang={lang}
+        data-public-route={routeKind}
       >
         {isEditorialRoute && (
           <a className="an-skip-link" href={skipTarget}>
