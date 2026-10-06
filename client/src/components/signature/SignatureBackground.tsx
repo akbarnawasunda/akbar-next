@@ -7,14 +7,11 @@ import {
 import "./SignatureBackground.css";
 
 /**
- * Lapisan partikel global.
+ * An exceptional canvas layer, not a permanently-running wallpaper.
  *
- * - Canvas selalu `aria-hidden` dan `pointer-events: none`; wordmark asli
- *   tetap hidup sebagai teks di DOM untuk SEO dan screen reader.
- * - Engine di-import dinamis setelah runtime menandai `fieldReady`
- *   (idle/▸1.4s), jadi tidak ikut menahan LCP.
- * - Mati total saat reduced motion, save-data, atau perangkat yang benar-benar
- *   lemah; perangkat sentuh normal tetap mendapat versi ringan.
+ * The public pages own their visual atmosphere locally. This field only wakes
+ * up for the explicit frequency state and short route-transition label, so it
+ * cannot add an always-on animation cost or compete with the composition.
  */
 export function SignatureBackground() {
   const { store } = useSignatureRuntime();
@@ -23,20 +20,15 @@ export function SignatureBackground() {
 
   const tier = useSignatureState(snapshot => snapshot.capability.tier);
   const ready = useSignatureState(snapshot => snapshot.fieldReady);
-  /* The public surfaces now carry their own composition, typography, and
-     movement. The canvas is therefore a restrained ambient instrument—not a
-     second hero competing with page content. Frequency mode remains a
-     deliberate opt-in; route transitions still temporarily take over inside
-     the field engine below. */
-  const mode = useSignatureState(snapshot =>
-    snapshot.frequency.active ? "frequency" : "quiet"
-  );
+  const frequency = useSignatureState(snapshot => snapshot.frequency.active);
   const transit = useSignatureState(
     snapshot => snapshot.transition.phase !== "idle"
   );
+  const active = frequency || transit;
+  const mode = frequency ? "frequency" : "quiet";
 
   useEffect(() => {
-    if (!ready || tier === "off") return;
+    if (!active || !ready || tier === "off") return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     let disposed = false;
@@ -54,7 +46,6 @@ export function SignatureBackground() {
             frequency: snapshot.frequency.active,
             era: { index: snapshot.era.index, total: snapshot.era.total },
             transition: snapshot.transition.phase,
-            // Label tujuan dibentuk partikel selama perpindahan halaman.
             transitLabel: snapshot.transition.targetLabel,
           };
         }
@@ -66,9 +57,9 @@ export function SignatureBackground() {
       fieldRef.current?.destroy();
       fieldRef.current = null;
     };
-  }, [ready, tier, store]);
+  }, [active, ready, tier, store]);
 
-  if (tier === "off") return null;
+  if (!active || tier === "off") return null;
 
   return (
     <div

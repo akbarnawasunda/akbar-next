@@ -1,19 +1,17 @@
 import { useEffect, useRef } from "react";
-import {
-  useSignatureRuntime,
-  useSignatureState,
-} from "@/signature/useSignature";
+import { useSignatureState } from "@/signature/useSignature";
 import "./CursorSignal.css";
 
+const INTERACTIVE_SELECTOR =
+  "a[href], button, [role='button'], input, select, textarea, summary, [data-signal-interactive]";
+
 /**
- * Cursor signal (desktop).
+ * A lightweight desktop pointer accent.
  *
- * Reticle presisi yang merespons elemen interaktif, plus magnetic pull halus
- * untuk tombol bertanda `data-signal-magnetic`. Tidak pernah tampil di
- * perangkat sentuh, tidak menyentuh focus ring, dan tidak menangkap pointer.
+ * It updates only when the visitor moves their pointer—there is no permanent
+ * animation loop. Native cursor and focus behavior remain intact.
  */
 export function CursorSignal() {
-  const { store } = useSignatureRuntime();
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const coarse = useSignatureState(
@@ -29,62 +27,63 @@ export function CursorSignal() {
     const dot = dotRef.current;
     const ring = ringRef.current;
     if (!dot || !ring) return;
-    const signals = store.signals;
-    let x = signals.pointerX;
-    let y = signals.pointerY;
-    let scale = 1;
-    let frame = 0;
     let magnetTarget: HTMLElement | null = null;
 
-    const applyMagnet = (element: HTMLElement | null) => {
-      if (magnetTarget && magnetTarget !== element) {
-        magnetTarget.style.setProperty("--magnetic-x", "0px");
-        magnetTarget.style.setProperty("--magnetic-y", "0px");
-      }
-      magnetTarget = element;
+    const releaseMagnet = () => {
+      if (!magnetTarget) return;
+      magnetTarget.style.setProperty("--magnetic-x", "0px");
+      magnetTarget.style.setProperty("--magnetic-y", "0px");
+      magnetTarget = null;
     };
 
     const onMove = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return;
-      // Do not hide the system cursor before the visitor has moved once. This
-      // avoids an invisible pointer during initial page paint.
-      document.documentElement.dataset.signatureCursor = "on";
-      const target =
+      const interactiveTarget =
+        event.target instanceof Element
+          ? event.target.closest<HTMLElement>(INTERACTIVE_SELECTOR)
+          : null;
+      const magneticTarget =
         event.target instanceof Element
           ? event.target.closest<HTMLElement>("[data-signal-magnetic]")
           : null;
-      applyMagnet(target);
-      if (!target) return;
-      const rect = target.getBoundingClientRect();
-      const offsetX = ((event.clientX - rect.left) / rect.width - 0.5) * 10;
-      const offsetY = ((event.clientY - rect.top) / rect.height - 0.5) * 7;
-      target.style.setProperty("--magnetic-x", `${offsetX.toFixed(2)}px`);
-      target.style.setProperty("--magnetic-y", `${offsetY.toFixed(2)}px`);
+      const interactive = Boolean(interactiveTarget);
+
+      dot.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
+      ring.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0) scale(${interactive ? "1.16" : "1"})`;
+      ring.dataset.interactive = String(interactive);
+
+      if (magnetTarget && magnetTarget !== magneticTarget) releaseMagnet();
+      if (!magneticTarget) return;
+      magnetTarget = magneticTarget;
+      const rect = magneticTarget.getBoundingClientRect();
+      const offsetX = ((event.clientX - rect.left) / rect.width - 0.5) * 7;
+      const offsetY = ((event.clientY - rect.top) / rect.height - 0.5) * 5;
+      magneticTarget.style.setProperty(
+        "--magnetic-x",
+        `${offsetX.toFixed(2)}px`
+      );
+      magneticTarget.style.setProperty(
+        "--magnetic-y",
+        `${offsetY.toFixed(2)}px`
+      );
     };
 
-    const loop = () => {
-      // Keep the expansion compact: an interaction cue, not a spotlight that
-      // covers typography or artwork underneath it.
-      const targetScale = signals.interactive ? 1.46 : 1;
-      x += (signals.pointerX - x) * 0.34;
-      y += (signals.pointerY - y) * 0.34;
-      scale += (targetScale - scale) * 0.19;
-      dot.style.transform = `translate3d(${signals.pointerX}px, ${signals.pointerY}px, 0)`;
-      ring.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale.toFixed(3)})`;
-      ring.dataset.interactive = String(signals.interactive);
-      frame = requestAnimationFrame(loop);
+    const onLeave = () => {
+      dot.style.transform = "translate3d(-9999px, -9999px, 0)";
+      ring.style.transform = "translate3d(-9999px, -9999px, 0)";
+      ring.dataset.interactive = "false";
+      releaseMagnet();
     };
 
     window.addEventListener("pointermove", onMove, { passive: true });
-    frame = requestAnimationFrame(loop);
+    document.addEventListener("pointerleave", onLeave, { passive: true });
 
     return () => {
-      cancelAnimationFrame(frame);
       window.removeEventListener("pointermove", onMove);
-      applyMagnet(null);
-      delete document.documentElement.dataset.signatureCursor;
+      document.removeEventListener("pointerleave", onLeave);
+      releaseMagnet();
     };
-  }, [enabled, store]);
+  }, [enabled]);
 
   if (!enabled) return null;
 

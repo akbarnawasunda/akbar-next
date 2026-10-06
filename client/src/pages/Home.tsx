@@ -6,7 +6,7 @@ import {
   Play,
   Radio,
 } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { type CSSProperties, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import FanSignalSection, {
   FAN_SIGNAL_SOURCES,
@@ -24,6 +24,7 @@ import {
 } from "@/content/publicContent";
 import "./Home.css";
 import "./PressureHome.css";
+import "./PressureCalibration.css";
 
 type CatalogEntry = {
   title: string;
@@ -54,6 +55,53 @@ function formatEventDate(value: string) {
   })
     .format(date)
     .toUpperCase();
+}
+
+const HERO_PARTICLES = [
+  [7, 27, 3],
+  [13, 67, 4],
+  [24, 19, 2],
+  [33, 78, 3],
+  [47, 29, 2],
+  [58, 71, 4],
+  [64, 18, 2],
+  [72, 47, 3],
+  [79, 24, 2],
+  [87, 76, 4],
+  [92, 39, 2],
+  [97, 63, 3],
+] as const;
+
+/** A composed, CSS-only current: visible motion without an always-on canvas. */
+function PressureAtmosphere() {
+  return (
+    <div className="pressure-hero__atmosphere" aria-hidden="true">
+      <svg
+        className="pressure-hero__tide"
+        viewBox="0 0 1200 280"
+        preserveAspectRatio="none"
+      >
+        <path d="M-30 178 C120 92 250 238 402 152 S692 80 842 154 S1082 244 1230 118" />
+        <path d="M-30 204 C124 128 264 246 416 176 S690 118 850 185 S1088 240 1230 152" />
+        <path d="M-30 232 C108 176 276 252 434 208 S724 156 878 218 S1092 252 1230 202" />
+      </svg>
+      <div className="pressure-hero__particles">
+        {HERO_PARTICLES.map(([x, y, size], index) => (
+          <span
+            key={`${x}-${y}`}
+            style={
+              {
+                "--particle-x": `${x}%`,
+                "--particle-y": `${y}%`,
+                "--particle-size": `${size}px`,
+                "--particle-delay": `${(index % 4) * -1.4}s`,
+              } as CSSProperties
+            }
+          />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -166,10 +214,8 @@ export default function Home() {
           aria-labelledby="pressure-title"
         >
           <div className="pressure-hero__grid" aria-hidden="true" />
+          <PressureAtmosphere />
           <p className="pressure-hero__edition">AN / 01—26 · BANDUNG BARAT</p>
-          <p className="pressure-hero__side">
-            SOUND IN MOTION · SOUND IN MOTION
-          </p>
 
           <h1
             className="pressure-hero__title hero-title-editorial"
@@ -197,6 +243,19 @@ export default function Home() {
                 }}
               />
             </div>
+            <picture className="pressure-hero__mascot" aria-hidden="true">
+              <source
+                srcSet="/assets/akbar-mascot-doodle.avif"
+                type="image/avif"
+              />
+              <img
+                src="/assets/akbar-mascot-doodle.webp"
+                alt=""
+                width={420}
+                height={420}
+                decoding="async"
+              />
+            </picture>
             <figcaption>
               <span>01 / PORTRAIT</span>
               <span>ROOTED IN WEST JAVA</span>
@@ -235,12 +294,6 @@ export default function Home() {
             <span>GULIR UNTUK MASUK</span>
             <ArrowDown size={17} aria-hidden="true" />
           </a>
-
-          <div className="pressure-hero__stamp" aria-hidden="true">
-            <span>AN</span>
-            <i />
-            <small>ORIGIN / RHYTHM / PRESSURE</small>
-          </div>
         </section>
 
         <div
