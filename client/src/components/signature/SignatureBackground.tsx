@@ -1,6 +1,9 @@
 import { useEffect, useRef } from "react";
 import type { ParticleField } from "@/signature/field/particleField";
-import { useSignatureRuntime, useSignatureState } from "@/signature/useSignature";
+import {
+  useSignatureRuntime,
+  useSignatureState,
+} from "@/signature/useSignature";
 import "./SignatureBackground.css";
 
 /**
@@ -20,8 +23,13 @@ export function SignatureBackground() {
 
   const tier = useSignatureState(snapshot => snapshot.capability.tier);
   const ready = useSignatureState(snapshot => snapshot.fieldReady);
+  /* The public surfaces now carry their own composition, typography, and
+     movement. The canvas is therefore a restrained ambient instrument—not a
+     second hero competing with page content. Frequency mode remains a
+     deliberate opt-in; route transitions still temporarily take over inside
+     the field engine below. */
   const mode = useSignatureState(snapshot =>
-    snapshot.frequency.active ? "frequency" : snapshot.route.mode
+    snapshot.frequency.active ? "frequency" : "quiet"
   );
   const transit = useSignatureState(
     snapshot => snapshot.transition.phase !== "idle"
@@ -35,18 +43,22 @@ export function SignatureBackground() {
 
     void import("@/signature/field/particleField").then(module => {
       if (disposed) return;
-      fieldRef.current = module.createParticleField(canvas, store.signals, () => {
-        const snapshot = store.getSnapshot();
-        return {
-          mode: snapshot.frequency.active ? "frequency" : snapshot.route.mode,
-          capability: snapshot.capability,
-          frequency: snapshot.frequency.active,
-          era: { index: snapshot.era.index, total: snapshot.era.total },
-          transition: snapshot.transition.phase,
-          // Label tujuan dibentuk partikel selama perpindahan halaman.
-          transitLabel: snapshot.transition.targetLabel,
-        };
-      });
+      fieldRef.current = module.createParticleField(
+        canvas,
+        store.signals,
+        () => {
+          const snapshot = store.getSnapshot();
+          return {
+            mode: snapshot.frequency.active ? "frequency" : "quiet",
+            capability: snapshot.capability,
+            frequency: snapshot.frequency.active,
+            era: { index: snapshot.era.index, total: snapshot.era.total },
+            transition: snapshot.transition.phase,
+            // Label tujuan dibentuk partikel selama perpindahan halaman.
+            transitLabel: snapshot.transition.targetLabel,
+          };
+        }
+      );
     });
 
     return () => {

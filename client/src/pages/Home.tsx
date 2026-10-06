@@ -216,11 +216,16 @@ export default function Home() {
                 href={featured.href}
                 target="_blank"
                 rel="noreferrer"
+                data-signal-magnetic
               >
                 <Play size={14} fill="currentColor" aria-hidden="true" />
                 DENGAR RILISAN
               </a>
-              <Link className="pressure-action" href="/visuals">
+              <Link
+                className="pressure-action"
+                href="/visuals"
+                data-signal-magnetic
+              >
                 MASUK KE VISUAL <ArrowUpRight size={14} aria-hidden="true" />
               </Link>
             </div>
@@ -323,6 +328,7 @@ export default function Home() {
                   href={featured.href}
                   target="_blank"
                   rel="noreferrer"
+                  data-signal-magnetic
                 >
                   <Play size={14} fill="currentColor" aria-hidden="true" />
                   PUTAR SEKARANG
@@ -330,6 +336,7 @@ export default function Home() {
                 <Link
                   className="pressure-action"
                   href={`/music/${slugFor(featured.title)}`}
+                  data-signal-magnetic
                 >
                   DETAIL RILISAN <ArrowUpRight size={14} aria-hidden="true" />
                 </Link>
@@ -448,6 +455,7 @@ export default function Home() {
             <Link
               href="/inquire?source=home"
               className="pressure-action pressure-action--solid"
+              data-signal-magnetic
             >
               KIRIM BRIEF <ArrowUpRight size={14} aria-hidden="true" />
             </Link>

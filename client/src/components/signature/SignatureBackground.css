@@ -17,12 +17,16 @@
   display: block;
 }
 
-.an-signature-field[data-signature-mode="wordmark"] { opacity: 1; }
-.an-signature-field[data-signature-mode="signal"] { opacity: 0.62; }
-.an-signature-field[data-signature-mode="dust"] { opacity: 0.34; }
-.an-signature-field[data-signature-mode="era"] { opacity: 0.42; }
-.an-signature-field[data-signature-mode="quiet"] { opacity: 0.26; }
-.an-signature-field[data-signature-mode="frequency"] { opacity: 0.9; }
+/* Public pages use only the quiet field by default. It has a tiny, stable
+   budget so it reads as atmosphere instead of a second layer of content.
+   The expressive modes remain reserved for the deliberate frequency state
+   and short route transition. */
+.an-signature-field[data-signature-mode="wordmark"] { opacity: 0.18; }
+.an-signature-field[data-signature-mode="signal"] { opacity: 0.16; }
+.an-signature-field[data-signature-mode="dust"] { opacity: 0.13; }
+.an-signature-field[data-signature-mode="era"] { opacity: 0.15; }
+.an-signature-field[data-signature-mode="quiet"] { opacity: 0.12; }
+.an-signature-field[data-signature-mode="frequency"] { opacity: 0.66; }
 
 /* Selama perpindahan halaman, label tujuan digambar partikel — lapisannya
    naik ke atas tirai supaya huruf itu yang terbaca, bukan tirainya. */
@@ -33,9 +37,12 @@
 
 /* Perangkat lite memakai kerapatan rendah; turunkan juga intensitasnya agar
    teks tetap kontras di layar kecil. */
-.an-signature-field[data-signature-tier="lite"] { opacity: 0.5; }
+.an-signature-field[data-signature-tier="lite"] { opacity: 0.1; }
 .an-signature-field[data-signature-tier="lite"][data-signature-mode="wordmark"] {
-  opacity: 0.92;
+  opacity: 0.14;
+}
+.an-signature-field[data-signature-tier="lite"][data-signature-mode="quiet"] {
+  opacity: 0.075;
 }
 
 @media (prefers-reduced-motion: reduce) {

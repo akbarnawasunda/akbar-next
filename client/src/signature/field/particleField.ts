@@ -103,8 +103,7 @@ function flowAngle(x: number, y: number, t: number) {
 const WORDMARK = STAGE_PHRASES[0];
 
 /** Canvas does not resolve CSS variables, so the primary display is named here. */
-const WORDMARK_FONT =
-  '"Recons", "Good Times", sans-serif';
+const WORDMARK_FONT = '"Recons", "Good Times", sans-serif';
 
 /** Mode yang menyusun huruf; butuh titik lebih banyak agar terbaca. */
 const TEXT_MODES: SignatureFieldMode[] = ["wordmark", "frequency", "transit"];
@@ -503,7 +502,15 @@ export function createParticleField(
   /** Jumlah titik untuk mode ini. Huruf butuh massa, ambient tidak. */
   function countFor(mode: SignatureFieldMode, capability: SignatureCapability) {
     const base = particleBudget(capability, width * height);
-    if (mode === "quiet") return Math.round(base * 0.35);
+    // Ambient is deliberately editorial, not confetti: it is a faint field of
+    // positional marks behind the page rather than hundreds of independent
+    // particles asking for attention. Route-specific shapes still exist for
+    // the transition curtain and the explicit frequency mode.
+    if (mode === "quiet") {
+      const ceiling = capability.tier === "lite" ? 56 : 132;
+      const floor = capability.tier === "lite" ? 28 : 52;
+      return Math.max(floor, Math.min(ceiling, Math.round(base * 0.045)));
+    }
     if (!TEXT_MODES.includes(mode)) return base;
     // Titik lebih kecil hanya terbaca kalau lebih rapat: kerapatan naik
     // bersama pengecilan ukuran titik, dan ceiling-nya dijaga pengukur frame.

@@ -8,9 +8,9 @@
 
 ## STATUS SEKARANG
 
-**Fase aktif:** PRESSURE / ROOTS — creative reinvention complete, ready for review
+**Fase aktif:** PRESSURE / ROOTS — creative reinvention + discipline polish, ready for review
 **Terakhir update:** 2026-10-06
-**Terakhir commit:** `592b1d7 [redesign] reinvent public music surfaces`
+**Terakhir commit:** `e89e3d5 [polish] discipline pressure field and cursor`
 
 ---
 
@@ -345,3 +345,13 @@ git checkout <file>
 - Audit layout: surface baru bersih; audit global masih melaporkan dua pelanggaran lama di `client/src/studio/studio.css` (`overflow-x: hidden` dan `backdrop-filter`).
 - SSR crawler: semua konten/SEO route lulus terhadap dev server; tiga redirect Vercel (`/index.html`, `/archive`, trailing slash) tidak dapat diverifikasi lewat dev server karena rewrite Vercel tidak aktif lokal.
 - Commit: `592b1d7 [redesign] reinvent public music surfaces`
+
+### Pressure / Roots Discipline Polish
+- Tanggal: 2026-10-06
+- Fase: visual discipline pass — layout clarity, cursor, and particle field
+- Selesai: field global dipindahkan ke mode ambient `quiet` pada surface publik; interaksi frequency dan label transit tetap eksplisit, tetapi wordmark/wave besar tidak lagi bersaing dengan poster, artwork, atau tipografi halaman.
+- Perubahan: budget ambient desktop dibatasi 52–132 titik (lite 28–56) dengan opacity sangat rendah; reticle desktop baru memakai crosshair presisi, status `OPEN`, dan magnetic pull pada CTA utama Home/Music. Kursor sistem hanya disembunyikan setelah pointer mouse pertama bergerak; touch, keyboard, dan reduced-motion tetap aman.
+- Hasil check: lulus
+- Hasil test: 56 files / 329 tests lulus
+- Build: lulus
+- Commit: `e89e3d5 [polish] discipline pressure field and cursor`

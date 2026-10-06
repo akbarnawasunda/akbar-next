@@ -205,12 +205,14 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               target="_blank"
               rel="noreferrer"
               className="pressure-catalog__button pressure-catalog__button--dark"
+              data-signal-magnetic
             >
               <Play size={14} fill="currentColor" aria-hidden="true" /> {t.play}
             </a>
             <Link
               href={`${root}/${slugFor(featured.title)}`}
               className="pressure-catalog__button"
+              data-signal-magnetic
             >
               {t.detail} <ArrowUpRight size={14} aria-hidden="true" />
             </Link>
@@ -302,6 +304,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
           <Link
             href={inquire}
             className="pressure-catalog__button pressure-catalog__button--acid"
+            data-signal-magnetic
           >
             {t.bookingCta} <ArrowUpRight size={14} aria-hidden="true" />
           </Link>

@@ -1,20 +1,27 @@
 import { useEffect, useRef } from "react";
-import { useSignatureRuntime, useSignatureState } from "@/signature/useSignature";
+import {
+  useSignatureRuntime,
+  useSignatureState,
+} from "@/signature/useSignature";
 import "./CursorSignal.css";
 
 /**
  * Cursor signal (desktop).
  *
- * Titik kecil + ring yang membesar di elemen interaktif, plus magnetic pull
- * halus untuk tombol bertanda `data-signal-magnetic`. Tidak pernah tampil di
+ * Reticle presisi yang merespons elemen interaktif, plus magnetic pull halus
+ * untuk tombol bertanda `data-signal-magnetic`. Tidak pernah tampil di
  * perangkat sentuh, tidak menyentuh focus ring, dan tidak menangkap pointer.
  */
 export function CursorSignal() {
   const { store } = useSignatureRuntime();
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-  const coarse = useSignatureState(snapshot => snapshot.capability.coarsePointer);
-  const reduced = useSignatureState(snapshot => snapshot.capability.reducedMotion);
+  const coarse = useSignatureState(
+    snapshot => snapshot.capability.coarsePointer
+  );
+  const reduced = useSignatureState(
+    snapshot => snapshot.capability.reducedMotion
+  );
   const enabled = !coarse && !reduced;
 
   useEffect(() => {
@@ -39,6 +46,9 @@ export function CursorSignal() {
 
     const onMove = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return;
+      // Do not hide the system cursor before the visitor has moved once. This
+      // avoids an invisible pointer during initial page paint.
+      document.documentElement.dataset.signatureCursor = "on";
       const target =
         event.target instanceof Element
           ? event.target.closest<HTMLElement>("[data-signal-magnetic]")
@@ -53,10 +63,12 @@ export function CursorSignal() {
     };
 
     const loop = () => {
-      const targetScale = signals.interactive ? 2.1 : 1;
-      x += (signals.pointerX - x) * 0.3;
-      y += (signals.pointerY - y) * 0.3;
-      scale += (targetScale - scale) * 0.16;
+      // Keep the expansion compact: an interaction cue, not a spotlight that
+      // covers typography or artwork underneath it.
+      const targetScale = signals.interactive ? 1.46 : 1;
+      x += (signals.pointerX - x) * 0.34;
+      y += (signals.pointerY - y) * 0.34;
+      scale += (targetScale - scale) * 0.19;
       dot.style.transform = `translate3d(${signals.pointerX}px, ${signals.pointerY}px, 0)`;
       ring.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale.toFixed(3)})`;
       ring.dataset.interactive = String(signals.interactive);
@@ -65,7 +77,6 @@ export function CursorSignal() {
 
     window.addEventListener("pointermove", onMove, { passive: true });
     frame = requestAnimationFrame(loop);
-    document.documentElement.dataset.signatureCursor = "on";
 
     return () => {
       cancelAnimationFrame(frame);
