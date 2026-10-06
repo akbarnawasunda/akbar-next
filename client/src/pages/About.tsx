@@ -195,7 +195,7 @@ export function AboutView({ locale = "id" }: { locale?: "id" | "en" }) {
               </p>
             </div>
             <div className="an-ab-bio-body an-rise">
-              <h2 id="about-bio-title" className="an-title">
+              <h2 id="about-bio-title" className="an-title an-title--human">
                 {t.bioTitle}
               </h2>
               <p className="an-ab-long">{longBio}</p>
@@ -243,7 +243,7 @@ export function AboutView({ locale = "id" }: { locale?: "id" | "en" }) {
         >
           <header className="an-head">
             <p className="an-meta">{t.pathMeta}</p>
-            <h2 id="about-path-title" className="an-title">
+            <h2 id="about-path-title" className="an-title an-title--human">
               {t.pathTitle}
             </h2>
           </header>

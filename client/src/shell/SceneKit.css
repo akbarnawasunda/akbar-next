@@ -65,6 +65,27 @@
   max-width: 24ch;
 }
 
+/* Register TEKNIS — dipakai pada judul yang menyajikan struktur/indeks
+   (daftar kanal, opsi dengar, rail katalog), bukan pernyataan editorial.
+   Huruf kapital kecil + jarak renggang terasa seperti label arsip, jadi
+   katalog tidak memakai "headline" berukuran sama di tiap seksi. */
+.an-public-shell.an-editorial .an-title--technical {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+/* Register MANUSIA — dipakai pada judul yang mengantar cerita langsung
+   (biografi, perjalanan pribadi), bukan struktur. Miring dan lebih ringan
+   supaya terasa ditulis, bukan diumumkan. */
+.an-public-shell.an-editorial .an-title--human {
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0em;
+}
+
 .an-public-shell.an-editorial .an-head {
   display: grid;
   gap: var(--space-sm);

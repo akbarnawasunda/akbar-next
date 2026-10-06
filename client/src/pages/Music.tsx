@@ -334,7 +334,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
           aria-labelledby="channels-title"
         >
           <header className="an-head">
-            <h2 id="channels-title" className="an-title">
+            <h2 id="channels-title" className="an-title an-title--technical">
               {t.channelsTitle}
             </h2>
             <p className="an-meta">
@@ -371,7 +371,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
           <section className="an-section" aria-labelledby="listen-title">
             <header className="an-head an-head--row">
               <div>
-                <h2 id="listen-title" className="an-title">
+                <h2 id="listen-title" className="an-title an-title--technical">
                   {t.listenTitle}
                 </h2>
                 <p className="an-meta">{t.listenMeta}</p>
@@ -412,7 +412,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
           <section className="an-section" aria-labelledby="catalog-rail-title">
             <header className="an-head an-head--row">
               <div>
-                <h2 id="catalog-rail-title" className="an-title">
+                <h2 id="catalog-rail-title" className="an-title an-title--technical">
                   {t.railTitle}
                 </h2>
                 <p className="an-meta">

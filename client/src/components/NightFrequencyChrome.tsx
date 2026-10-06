@@ -323,7 +323,7 @@ export function NightFooter({ lang = "id" }: { lang?: Lang } = {}) {
         <Link href={`${prefix}/live`}>{copy.live}</Link>
         <Link href={`${prefix}/universe`}>{copy.journey}</Link>
         <Link href={`${prefix}/about`}>{copy.about}</Link>
-        <Link href="/game/jedag-run">JEDAG RUN</Link>
+        <Link href={`${prefix}/game/jedag-run`}>JEDAG RUN</Link>
       </div>
       <div className="nf-footer-column">
         <span>{copy.connect}</span>

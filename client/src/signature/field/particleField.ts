@@ -504,6 +504,10 @@ export function createParticleField(
   function countFor(mode: SignatureFieldMode, capability: SignatureCapability) {
     const base = particleBudget(capability, width * height);
     if (mode === "quiet") return Math.round(base * 0.35);
+    // Visuals (dust): halaman berbasis foto, medan harus lapang supaya
+    // karya tetap yang utama. Lebih lega dari signal/era (Music/Universe
+    // penuh massa ambient) tapi tidak se-sepi quiet (About/EPK nyaris diam).
+    if (mode === "dust") return Math.round(base * 0.55);
     if (!TEXT_MODES.includes(mode)) return base;
     // Titik lebih kecil hanya terbaca kalau lebih rapat: kerapatan naik
     // bersama pengecilan ukuran titik, dan ceiling-nya dijaga pengukur frame.

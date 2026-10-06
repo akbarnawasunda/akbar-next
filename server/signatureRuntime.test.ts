@@ -125,8 +125,16 @@ describe("rute publik tetap halaman penuh di SSR", () => {
       expect(page.html.match(/data-fan-signal-source=/g), route).toBeNull();
     }
 
-    // Halaman Inggris juga tidak memasangnya (form berbahasa ID).
-    for (const route of ["/en", "/en/music", "/en/live"]) {
+    // EN home kini punya form yang sama persis (FanSignalSection lang="en"),
+    // bukan lagi CTA "contact" tanpa pendaftaran nyata — jadi diperiksa
+    // dengan aturan satu-pemilik yang sama dengan beranda ID di atas.
+    const enHome = await renderPage("/en");
+    const enMatches =
+      enHome.html.match(/data-fan-signal-source="([a-z]+)"/g) || [];
+    expect(enMatches.length).toBe(1);
+    expect(enMatches[0]).toBe('data-fan-signal-source="home"');
+
+    for (const route of ["/en/music", "/en/live"]) {
       const page = await renderPage(route);
       expect(page.html.match(/data-fan-signal-source=/g), route).toBeNull();
     }

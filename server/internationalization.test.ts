@@ -14,8 +14,12 @@ describe("international artist layer", () => {
     expect(app).toContain('path={"/en/music/:slug"} component={EnglishReleaseDetail}');
     expect(app).toContain('path={"/en/epk"} component={EnglishEpk}');
     expect(app).toContain('path={"/en/privacy"} component={EnglishPrivacy}');
-    expect(english).toContain("Producer, remixer, and electronic bass artist from Bandung");
-    expect(english).toContain("Barat, Indonesia.");
+    // Hero EN kini memakai satu bio terverifikasi (HomeView locale="en" di
+    // Home.tsx), bukan parafrase terpisah yang dulu hidup di EnglishPages.tsx
+    // — sama pola dengan About.tsx di baris berikut.
+    expect(source("client/src/pages/Home.tsx")).toContain(
+      "verifiedArtistProfile.shortBioEn"
+    );
     // Salinan panggung EN kini hidup di Live.tsx (LiveView dipakai /live dan
     // /en/live), bukan lagi disalin terpisah di EnglishPages.tsx.
     expect(source("client/src/pages/Live.tsx")).toContain(

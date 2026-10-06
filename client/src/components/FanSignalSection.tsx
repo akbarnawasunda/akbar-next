@@ -22,7 +22,48 @@ type FanSignalSectionProps = {
    * sendiri (beranda) wajib mengirim id lain agar tidak ada id ganda.
    */
   anchorId?: string;
+  /**
+   * Bahasa form (label, placeholder, status). EN ditambahkan supaya
+   * `/en` punya form newsletter yang sama persis fungsinya dengan `/`,
+   * bukan cuma tautan "CONTACT" tanpa pendaftaran nyata.
+   */
+  lang?: "id" | "en";
 };
+
+const formCopy = {
+  id: {
+    emailLabel: "EMAIL",
+    placeholder: "nama@kamu.com",
+    submit: "DAFTAR",
+    sending: "MENGIRIM",
+    defaultNote: "Berhenti kapan saja.",
+    success: {
+      synced: "Alamatmu sudah terdaftar. Kabar berikutnya akan dikirim ke email ini.",
+      saved: "Alamatmu sudah tersimpan. Pengiriman akan aktif saat kanal email siap.",
+    },
+    error: {
+      server: "Daftar update sedang bermasalah di server. Coba lagi beberapa saat.",
+      invalid: "Format email belum benar. Cek lagi alamatnya.",
+      generic: "Belum berhasil mendaftarkan alamat ini. Coba lagi beberapa saat.",
+    },
+  },
+  en: {
+    emailLabel: "EMAIL",
+    placeholder: "you@example.com",
+    submit: "SUBSCRIBE",
+    sending: "SENDING",
+    defaultNote: "Unsubscribe anytime.",
+    success: {
+      synced: "You're on the list. The next update goes straight to this address.",
+      saved: "Address saved. Delivery turns on as soon as the email channel is ready.",
+    },
+    error: {
+      server: "The update list is having server trouble. Try again shortly.",
+      invalid: "That email address doesn't look right. Check it and try again.",
+      generic: "Could not register this address yet. Try again shortly.",
+    },
+  },
+} as const;
 
 export default function FanSignalSection({
   source,
@@ -32,18 +73,18 @@ export default function FanSignalSection({
   indexLabel,
   className = "",
   anchorId = "signal",
+  lang = "id",
 }: FanSignalSectionProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<SignalStatus>(null);
+  const t = formCopy[lang];
   const subscribe = trpc.fanSignal.subscribe.useMutation({
     onSuccess: result => {
       setEmail("");
       setStatus({
         type: "success",
         message:
-          result.delivery === "synced"
-            ? "Alamatmu sudah terdaftar. Kabar berikutnya akan dikirim ke email ini."
-            : "Alamatmu sudah tersimpan. Pengiriman akan aktif saat kanal email siap.",
+          result.delivery === "synced" ? t.success.synced : t.success.saved,
       });
     },
     onError: error => {
@@ -51,10 +92,10 @@ export default function FanSignalSection({
       const message = error.message.toLowerCase();
       const friendlyMessage =
         message.includes("database") || message.includes("connect")
-          ? "Daftar update sedang bermasalah di server. Coba lagi beberapa saat."
+          ? t.error.server
           : message.includes("invalid") || message.includes("email")
-            ? "Format email belum benar. Cek lagi alamatnya."
-            : "Belum berhasil mendaftarkan alamat ini. Coba lagi beberapa saat.";
+            ? t.error.invalid
+            : t.error.generic;
       setStatus({ type: "error", message: friendlyMessage });
     },
   });
@@ -94,11 +135,8 @@ export default function FanSignalSection({
         <p>{description}</p>
       </div>
 
-      <form
-        className="fan-signal-form"
-        onSubmit={submit}
-      >
-        <label htmlFor={`fan-email-${source}`}>EMAIL</label>
+      <form className="fan-signal-form" onSubmit={submit}>
+        <label htmlFor={`fan-email-${source}`}>{t.emailLabel}</label>
         <div className="fan-signal-input-row">
           <Mail size={17} aria-hidden="true" />
           <input
@@ -110,13 +148,13 @@ export default function FanSignalSection({
               setEmail(event.target.value);
               if (status) setStatus(null);
             }}
-            placeholder="nama@kamu.com"
+            placeholder={t.placeholder}
             autoComplete="email"
             aria-describedby={noteId}
             aria-invalid={status?.type === "error"}
           />
           <button type="submit" disabled={subscribe.isPending}>
-            {subscribe.isPending ? "MENGIRIM" : "DAFTAR"}
+            {subscribe.isPending ? t.sending : t.submit}
             <ArrowRight size={16} aria-hidden="true" />
           </button>
         </div>
@@ -125,8 +163,7 @@ export default function FanSignalSection({
           className={`fan-signal-note ${status ? `is-${status.type}` : ""}`}
           aria-live="polite"
         >
-          {status?.message ||
-            "Berhenti kapan saja."}
+          {status?.message || t.defaultNote}
         </small>
       </form>
     </section>
