@@ -37,7 +37,6 @@ const copy = {
     lede: "Video musik, visualizer, dan studi potret dari kanal resmi Akbar Nawasunda.",
     youtubeCta: "Buka YouTube",
     portraitsCta: "Studi potret",
-    facts: { videos: "Video", portraits: "Studi potret", channel: "Kanal" },
     portraitAlt: "Potret resmi Akbar Nawasunda",
     plateNote: "Studio portrait",
     screeningTitle: "Tayangan resmi.",
@@ -81,11 +80,6 @@ const copy = {
     lede: "Music videos, visualizers, and portrait studies from the official Akbar Nawasunda channel.",
     youtubeCta: "Open YouTube",
     portraitsCta: "Portrait studies",
-    facts: {
-      videos: "Videos",
-      portraits: "Portrait studies",
-      channel: "Channel",
-    },
     portraitAlt: "Official portrait of Akbar Nawasunda",
     plateNote: "Studio portrait",
     screeningTitle: "Official screenings.",
@@ -207,20 +201,13 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
               {t.portraitsCta} <ArrowUpRight size={14} />
             </a>
           </div>
-          <dl className="an-vis-facts">
-            <div>
-              <dt>{t.facts.videos}</dt>
-              <dd>{archive.length}</dd>
-            </div>
-            <div>
-              <dt>{t.facts.portraits}</dt>
-              <dd>{portraitContent.length}</dd>
-            </div>
-            <div>
-              <dt>{t.facts.channel}</dt>
-              <dd>YouTube</dd>
-            </div>
-          </dl>
+          {/* Dulu ada kotak statistik (Video/Studi potret/Kanal) di sini —
+              bentuk yang sama persis dengan hero /about dan /universe, jadi
+              tiga halaman terasa dipotong dari templat yang sama. Jumlah
+              video/foto juga bukan informasi yang penting bagi pengunjung
+              di halaman "arsip", beda dengan /universe yang memang halaman
+              pencatatan. Dihapus; biarkan hero ini tenang sebelum ruang
+              tayang di bawah jadi padat. */}
         </div>
         <figure className="an-vis-hero-plate">
           <ResilientArtworkImage

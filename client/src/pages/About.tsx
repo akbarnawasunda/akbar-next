@@ -153,20 +153,16 @@ export function AboutView({ locale = "id" }: { locale?: "id" | "en" }) {
             </p>
             <h1 id="about-title">{t.heroTitle}</h1>
             <p className="an-ab-lede">{shortBio}</p>
-            <dl className="an-facts">
-              <div>
-                <dt>{t.facts.based}</dt>
-                <dd>{location}</dd>
-              </div>
-              <div>
-                <dt>{t.facts.alias}</dt>
-                <dd>{verifiedArtistProfile.aliases.join(" / ")}</dd>
-              </div>
-              <div>
-                <dt>{t.facts.since}</dt>
-                <dd>2020</dd>
-              </div>
-            </dl>
+            {/* Dulu tiga kotak statistik (Basis/Alias/Sejak) — bentuk yang
+                sama persis diulang di /visuals dan /universe, jadi halaman
+                ini terasa seperti templat "infobox" generik. Alias-nya pun
+                sudah tertulis lagi di bawah (baris "Aka ..." pada aside
+                biografi). Sekarang basis & tahun aktif jadi satu baris
+                keterangan — bahasa metadata yang sama dipakai label
+                platform/tanggal di seluruh situs, bukan kartu statistik. */}
+            <p className="an-meta an-ab-meta-line">
+              {t.facts.based} {location} · {t.facts.since.toLowerCase()} 2020
+            </p>
             <div className="an-ab-hero-actions">
               <Link className="an-btn an-btn--solid" href={t.listenHref}>
                 {t.listenCta} <ArrowUpRight size={14} aria-hidden="true" />

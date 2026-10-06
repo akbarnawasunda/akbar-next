@@ -253,6 +253,12 @@
   color: color-mix(in srgb, var(--paper) 78%, transparent);
 }
 
+/* Satu baris keterangan (basis + tahun aktif) menggantikan kotak statistik
+   tiga kolom yang dulu diulang di sini, di /visuals, dan di /universe. */
+.an-public-shell.an-editorial .an-ab-meta-line {
+  margin: 2px 0 0;
+}
+
 .an-public-shell.an-editorial .an-ab-hero-actions {
   display: flex;
   flex-wrap: wrap;

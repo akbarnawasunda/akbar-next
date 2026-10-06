@@ -306,3 +306,148 @@ This was a corrective pass, not a rebuild, because the honest assessment of
 the existing system did not support a rebuild: most of DESIGN.md's intent
 was already implemented, and the remaining gaps were specific, nameable,
 and fixable without touching the parts that already work.
+
+## 7. Round two — testing for "could this only belong to Akbar Nawasunda"
+
+The first pass fixed rule violations. This pass asked a harder question:
+with the name, portrait, and artwork removed, would the remaining
+*composition* still be distinguishable from a generic electronic-artist
+template? That required reading every interior page's actual rendered
+markup (not just grepping for banned keywords) and comparing them against
+each other, because genericness here is a **structural, cross-page**
+problem — a single page can look fine in isolation and still feel
+templated the moment you notice four other pages do the exact same thing.
+
+### What was found
+
+Every interior page (`/music`, `/visuals`, `/live`, `/universe`, `/about`,
+`/epk`, `/inquire`, `/privacy`) is built from one shared editorial system
+(`EditorialKit.tsx`/`.css`, plus the `.an-*` primitives in `SceneKit.css`).
+That system is a genuine strength — it's why the site doesn't have five
+different half-finished design languages. But two specific primitives in
+it had drifted into the exact kind of furniture that makes any portfolio
+site feel interchangeable, regardless of its color palette:
+
+1. **The `dl.an-facts` "three-stat infobox."** A row of three small
+   label/value pairs (Based in / Alias / Active since, or Videos /
+   Portraits / Channel) placed directly under the hero copy. This is the
+   single most common "personal brand site" device there is — it's the
+   same shape as a LinkedIn header, a Notion bio page, or a no-code
+   portfolio template. It appeared, with near-identical markup, under the
+   hero on **About**, **Visuals**, and **Universe**. Worse, About's
+   "Alias" stat duplicated a line that already exists a few hundred pixels
+   lower on the same page (the "Aka DJ Akbar Remix / ..." caption next to
+   the biography), and About's "Based"/"Since" duplicated Universe's
+   "Based"/"Since" word-for-word. A visitor moving from About to Universe
+   would see the same two facts presented in the same three-box shape
+   twice.
+2. **The `.ed-cta` "agency CTA band."** A bordered card with a thick
+   accent-colored left stripe, a tinted background, a bold headline, and
+   two stacked buttons — appearing, byte-for-byte identical in structure,
+   at the close of **Home**, **Music**, and **Visuals** (and their English
+   mirrors, so six instances total). This exact shape — boxed panel,
+   colored left rule, "problem copy + two CTAs" — is the default closing
+   section of countless unrelated SaaS, agency, and freelancer websites.
+   It is not tied to anything about Akbar Nawasunda; the copy was specific
+   and honest, but the *container* could have shipped on any business site.
+
+Both were real, repeatable, and traceable to a cause in the code (not a
+vague feeling) — exactly the standard asked for.
+
+### What was changed
+
+- **`.ed-cta` was de-boxed.** `EditorialKit.css` no longer wraps the
+  closing CTA in a bordered, tinted panel with a thick accent stripe. It
+  now sits flush with the page (the wrapping `.ed-section` already
+  supplies a hairline top rule and the page's own padding), with a single
+  thin `border-left: 1px solid var(--ink-line)` acting as a quiet reading
+  guide — the same register as a pull-quote, not a conversion widget. This
+  is a single CSS change with no JSX changes, so it instantly affects all
+  six occurrences across both languages — the same "one definition, whole
+  site" leverage as the earlier button-radius fix.
+- **The redundant stat-box was removed from About and Visuals**, and kept
+  only on **Universe**, where it is the one page explicitly framed as an
+  archival record (`/universe` sits next to a real timeline and is the one
+  place DESIGN.md's "record of becoming" language applies literally). On
+  **About**, the same real facts (location, active-since year) now appear
+  as a single quiet metadata caption line under the lede — turning
+  bureaucratic infobox chips into one sentence of editorial voice, and
+  removing the alias duplication entirely (it still reads once, correctly,
+  next to the biography). On **Visuals**, the stat row (video count,
+  portrait count, "Channel: YouTube") was removed outright — that content
+  measured activity the way an Instagram profile header does, which
+  directly contradicts §22's instruction that Visuals "should not feel
+  like an Instagram clone," and removing it gives the hero a quieter beat
+  before the screening-room section gets dense, which is the
+  dense/quiet/dense rhythm §6 asks for rather than identical furniture on
+  every hero.
+
+No copy was invented or removed to make this work — every fact that was
+visible before (location, start year, alias, video/portrait counts) is
+still true and still real; only the three-page-repeated container and one
+literal duplication were removed.
+
+### What was re-examined and deliberately left alone
+
+Several places that looked, on first read, like they might be generic were
+checked against their actual implementation and found to already be
+specific, bespoke, and worth preserving:
+
+- **The DJ Akbar Remix → Akbar Nawasunda transformation
+  (`EraTimeline.tsx` on `/universe`).** This is not a static timeline
+  component. Scrolling through it drives an `IntersectionObserver` that
+  reports the active era into the Signature Runtime
+  (`useSignatureRuntime().actions.setEra`), which the particle engine
+  (`particleField.ts`, `case "era":`) uses to reshape the ambient particle
+  field to match the chapter in view. The alias transition is genuinely
+  told through the particle system reacting to scroll position, which is
+  exactly the "archival layering / timeline transition" device §13 asks
+  for — not a flashy logo animation, not two names side by side. Left
+  untouched.
+- **The Visuals archive grid (`.an-vis-archive`).** Already an
+  asymmetrical dense grid (a deliberate 3,3,2,2,2 column-span rhythm, not
+  a uniform square grid), satisfying §22's "asymmetrical image/video
+  composition" direction. Left untouched.
+- **The Music catalogue (`CatalogStage.css`/`Music.tsx`).** Already rows
+  (`.an-rail`/`.an-release`, `.an-index-row` for platform links), not
+  cards — satisfies §20's explicit "avoid repetitive generic cards"
+  instruction. Left untouched.
+- **The Live page (`Live.tsx`).** Already rows for confirmed dates and an
+  honest, specific empty state when there are none — no invented tour
+  data. Left untouched.
+- **Global navigation (`NightFrequencyChrome.tsx`).** Already the compact
+  left/center/right masthead §14 asks for, with real, localized labels
+  (`MUSIK`/`VISUAL`/`PERJALANAN`/`TENTANG`/`EPK`/`KONTAK`, with `JADWAL`
+  appearing only when a confirmed event exists). "Perjalanan" (Journey) as
+  the label for `/universe` is a small, specific choice rather than a
+  bland "Archive" — left untouched.
+- **`EcosystemPages.css`** (1593 lines) is mostly **dead** CSS from an
+  earlier design generation — classes like `.nf-page-hero`,
+  `.nf-catalog-card`, `.nf-visual-card`, `.nf-universe-card`, and
+  `.an-event-card` that would read as the exact kind of generic
+  card-grid/hero template this audit went looking for, if they were still
+  rendered. They are not: nothing in the current `.tsx` files references
+  them. The file is still imported on every page (it supplies a handful of
+  genuinely live rules, like `.nf-page`), so it is a bundle-size and
+  clarity debt worth a future cleanup pass, but it has no effect on what a
+  visitor actually sees today, so it was left out of this round's scope
+  rather than risk an unrelated, large, hard-to-verify deletion.
+
+### Net effect
+
+This round's diff is five files, no new dependencies, no new components,
+and no layout rebuild — two component-level primitives were corrected
+(one CSS-only, one content-and-CSS) because they were the specific,
+demonstrable source of "this could be anyone's site" furniture, while the
+page-level systems that already carry Akbar Nawasunda's identity (the
+era-reactive particle field, the asymmetrical archive grid, the editorial
+rail, the honest empty states, the real navigation) were verified in
+detail and preserved rather than disturbed for the sake of a bigger diff.
+
+Re-run after this round: `pnpm check` clean, `pnpm test` 333/333,
+`pnpm build` succeeds end-to-end, `pnpm audit:layout` unchanged (the same
+two pre-existing, out-of-scope `studio.css` findings, no new ones). Dev
+server HTML was diffed directly for `/about`, `/visuals`, and `/universe`
+to confirm the stat-box is gone from the first two and still present on
+the third, and the EditorialKit CSS served by the dev server was fetched
+directly to confirm the CTA panel's new, de-boxed rule is live.
