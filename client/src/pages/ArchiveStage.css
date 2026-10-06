@@ -468,6 +468,18 @@
     aspect-ratio: 3 / 4;
   }
 
+  /* Potret /about memimpin di ponsel sampai ke tepi layar, sama seperti
+     sampul rilisan di /music dan foto hero beranda — bukan diulang
+     sebagai efek, tapi satu keputusan yang sama: foto asli memegang
+     layar dulu sebelum tipografi, di tiap halaman yang punya foto asli
+     untuk dipimpinkan. Plate linimasa /universe TIDAK ikut (isinya kartu
+     bertipografi berbingkai, bukan foto — full-bleed akan merusak
+     bingkainya, bukan menguatkannya). */
+  .an-public-shell.an-editorial .an-ab-hero-plate {
+    margin-inline: calc(var(--hx-gutter) * -1);
+    width: calc(100% + var(--hx-gutter) * 2);
+  }
+
   .an-public-shell.an-editorial .an-arc-hero-copy h1,
   .an-public-shell.an-editorial .an-ab-hero-copy h1 {
     font-size: clamp(2.1rem, 9.6vw, 3.2rem);
