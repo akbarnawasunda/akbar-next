@@ -70,6 +70,31 @@ const copy = {
     rowInfo: "Info",
     rowAria: (title: string) => `${title} — buka sumber resmi`,
     venueMap: "Lihat peta",
+    // Keadaan kosong (belum ada tanggal) dulu berhenti persis di blok
+    // "show berikutnya" — satu-satunya halaman utama tanpa jalur lanjut
+    // ke halaman lain, jadi terasa terpotong dibanding /about dan
+    // /universe yang selalu menutup dengan indeks ke halaman lain. Tiga
+    // tautan nyata di bawah ini (bukan kalender/tanggal karangan) dipakai
+    // untuk mengisi jeda itu dengan niat, bukan ruang kosong mentah.
+    emptyPathMeta: "Sambil menunggu tanggal",
+    emptyPathTitle: "Dengar dulu, atau telusuri perjalanannya.",
+    emptyPath: [
+      {
+        href: "/music",
+        title: "Dengar rilisan",
+        copy: "Katalog lengkap dengan artwork, metadata, dan tautan dengar resmi.",
+      },
+      {
+        href: "/universe",
+        title: "Telusuri perjalanan",
+        copy: "Satu nama, dua era — linimasa babak dan rilisannya.",
+      },
+      {
+        href: "/epk",
+        title: "EPK & press kit",
+        copy: "Bio siap pakai, foto resmi, dan kebutuhan promo untuk media.",
+      },
+    ],
   },
   en: {
     kickerFeatured: "Next show",
@@ -101,6 +126,25 @@ const copy = {
     rowInfo: "Info",
     rowAria: (title: string) => `${title} — open the official source`,
     venueMap: "View map",
+    emptyPathMeta: "While you wait for a date",
+    emptyPathTitle: "Hear the music, or follow the journey.",
+    emptyPath: [
+      {
+        href: "/en/music",
+        title: "Hear the releases",
+        copy: "The full catalog with artwork, metadata, and official listening links.",
+      },
+      {
+        href: "/en/universe",
+        title: "Follow the journey",
+        copy: "One name, two eras — the chapter timeline and its releases.",
+      },
+      {
+        href: "/en/epk",
+        title: "EPK & press kit",
+        copy: "A ready biography, official photos, and promo material for media.",
+      },
+    ],
   },
 } as const;
 
@@ -318,6 +362,43 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
                   </li>
                 ))}
               </ul>
+            </div>
+          </section>
+        )}
+
+        {/* Jalur lanjut — hanya saat keadaan kosong (belum ada tanggal).
+            Begitu sudah ada show terkonfirmasi, halaman ini sudah punya isi
+            (show berikutnya + indeks jadwal) yang menutupnya dengan cukup;
+            blok ini dulu hilang total di keadaan kosong, jadi /live jadi
+            satu-satunya halaman utama yang berhenti tanpa menunjuk ke mana
+            pun. Tiga tautan di sini sama persis dengan pola "jalur lanjut"
+            di /about — bukan pola baru, primitif yang sama dipakai di sini
+            karena masalahnya sama. */}
+        {!featured && (
+          <section
+            className="an-section an-live-path"
+            aria-labelledby="live-path-title"
+          >
+            <header className="an-head">
+              <p className="an-meta">{t.emptyPathMeta}</p>
+              <h2 id="live-path-title" className="an-title an-title--human">
+                {t.emptyPathTitle}
+              </h2>
+            </header>
+            <div className="an-live-path-grid">
+              {t.emptyPath.map(item => (
+                <Link
+                  className="an-live-path-item"
+                  href={item.href}
+                  key={item.title}
+                >
+                  <span>
+                    <strong>{item.title}</strong>
+                    <small>{item.copy}</small>
+                  </span>
+                  <ArrowUpRight size={16} aria-hidden="true" />
+                </Link>
+              ))}
             </div>
           </section>
         )}

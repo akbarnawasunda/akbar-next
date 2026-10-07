@@ -122,3 +122,69 @@
     border-top: 1px solid var(--ink);
   }
 }
+
+/* ------------------------------------------------------------
+   /live — jalur lanjut (hanya keadaan kosong, lihat Live.tsx)
+   Pola sama persis dengan .an-ab-path-* di ArchiveStage.css — bukan
+   tatanan baru, primitif daftar-bertautan yang sudah ada dipakai ulang
+   karena /live di keadaan kosong punya masalah yang sama persis dengan
+   yang pernah dipecahkan di /about: halaman berhenti tanpa menunjuk ke
+   mana pun.
+   ------------------------------------------------------------ */
+
+.an-public-shell.an-editorial .an-live-path-grid {
+  display: grid;
+}
+
+.an-public-shell.an-editorial .an-live-path-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-md);
+  padding: clamp(16px, 2vw, 24px) 0;
+  border-top: 1px solid var(--editorial-rule);
+  color: var(--paper);
+  text-decoration: none;
+  transition: padding-left 260ms var(--ease, ease);
+}
+
+.an-public-shell.an-editorial .an-live-path-item:last-child {
+  border-bottom: 1px solid var(--editorial-rule);
+}
+
+.an-public-shell.an-editorial .an-live-path-item:hover,
+.an-public-shell.an-editorial .an-live-path-item:focus-visible {
+  padding-left: 14px;
+}
+
+.an-public-shell.an-editorial .an-live-path-item span {
+  display: grid;
+  gap: 6px;
+}
+
+.an-public-shell.an-editorial .an-live-path-item strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1.9vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: 0em;
+  color: var(--paper);
+}
+
+.an-public-shell.an-editorial .an-live-path-item small {
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--mute);
+  max-width: 52ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .an-public-shell.an-editorial .an-live-path-item {
+    transition: none;
+  }
+
+  .an-public-shell.an-editorial .an-live-path-item:hover,
+  .an-public-shell.an-editorial .an-live-path-item:focus-visible {
+    padding-left: 0;
+  }
+}

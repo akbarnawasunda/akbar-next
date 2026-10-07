@@ -443,9 +443,16 @@
   .an-public-shell.an-editorial .an-vis-screening-grid {
     grid-template-columns: minmax(0, 1fr);
   }
-  .an-public-shell.an-editorial .an-vis-archive > *,
-  .an-public-shell.an-editorial .an-vis-archive > :nth-child(5n + 1),
-  .an-public-shell.an-editorial .an-vis-archive > :nth-child(5n + 2) {
+  /* `:not(.an-vis-archive--solo)` sengaja ditambahkan: tanpa ini,
+     selector `:nth-child(5n+1)/(5n+2)` di breakpoint ini punya
+     spesifisitas yang SAMA dengan aturan "entri tunggal = satu baris
+     penuh lebar" di atas (keduanya 4 kelas), dan karena blok ini muncul
+     lebih akhir di berkas, `span 3` menang dan memotong kartu solo jadi
+     setengah lebar — persis di lebar ponsel seperti 390px, sampul arsip
+     jadi terasa hilang/terlalu kecil karena dipaksa ke kolom yang sudah
+     disusun untuk tata letak gambar-kiri-teks-kanan yang jauh lebih
+     sempit dari itu. */
+  .an-public-shell.an-editorial .an-vis-archive:not(.an-vis-archive--solo) > * {
     grid-column: span 3;
   }
 }

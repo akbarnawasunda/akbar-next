@@ -147,6 +147,22 @@
    /universe — jalur resmi sebagai indeks
    ------------------------------------------------------------ */
 
+/* Jarak #timeline → .an-arc-routes dulu dobel: `.ed-section` (komponen
+   bersama EditorialKit, pembungkus linimasa) sudah punya padding-block
+   bawah sendiri (maks 128px), lalu `.an-section` di sini menambah
+   padding-block ATAS-nya sendiri (maks 116px) — totalnya sampai ~244px,
+   jauh lebih lebar dari jeda antar-section lain di halaman yang sama,
+   padahal isi "Jalur keluar" di bawahnya pendek (dua baris tautan) jadi
+   kelihatan seperti ada ruang kosong yang tidak disengaja. Bukan sticky
+   atau ukuran struktural — murni dua sistem padding section yang tidak
+   saling tahu. Diperkecil di sisi linimasa saja (lihat `#timeline` di
+   bawah) supaya totalnya kembali ke kisaran satu jeda section biasa,
+   tanpa mengubah `.ed-section` bersama (dipakai halaman lain juga).
+   ID selector dipakai supaya tidak tergantung urutan impor CSS. */
+#timeline.ed-section {
+  padding-block-end: clamp(32px, 4vw, 56px);
+}
+
 .an-public-shell.an-editorial .an-arc-routes {
   display: grid;
   grid-template-columns: minmax(0, 0.38fr) minmax(0, 0.62fr);
@@ -384,7 +400,20 @@
    /about — satu jalur keluar (pitch booking, Phase 3: satu baris)
    ------------------------------------------------------------ */
 
-.an-public-shell.an-editorial .an-ab-outline {
+/* `.an-ab-outline` di markup selalu `className="an-section an-ab-outline"`
+   — niatnya padding kompak `--space-lg` di sini (section "satu baris",
+   lihat judul blok di atas), TAPI selector dasar `.an-section`
+   (".an-public-shell.an-editorial :is(.nf-page, .an-site) .an-section")
+   specificity-nya (0,4,0) sedangkan selector di bawah cuma (0,3,0) — jadi
+   padding `--section-y` (maks 116px) dari `.an-section` selalu menang,
+   dan `--space-lg` (maks 44px) di bawah ini TIDAK PERNAH benar-benar
+   terpakai. Akibatnya section CTA satu-baris ini kebagian padding
+   sebesar section linimasa, jadi jedanya ke `.an-ab-path` di bawahnya
+   kelihatan tidak proporsional untuk isi sependek itu. Kelas diulang
+   (`.an-ab-outline.an-ab-outline`) supaya specificity-nya (0,5,0) pasti
+   menang, bukan `!important` — angka paddingnya sendiri tidak diubah,
+   cuma akhirnya benar-benar diterapkan sesuai niat semula. */
+.an-public-shell.an-editorial .an-ab-outline.an-ab-outline {
   max-width: var(--hx-max, 1560px);
   margin-inline: auto;
   padding: var(--space-lg, 40px) var(--hx-gutter, clamp(20px, 5vw, 88px));
