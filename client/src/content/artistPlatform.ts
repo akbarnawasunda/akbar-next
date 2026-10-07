@@ -21,8 +21,18 @@ export const officialBrand = {
   portraitFallback: "/assets/akbar-nawasunda-official-portrait.jpg",
   favicon: "/assets/akbar-favicon.jpg",
   rmxMark: "/assets/akbar-rmx-mark.webp",
-  editorialPortrait: "/assets/akbar-future-red.webp",
-  archivePortrait: "/assets/akbar-future-yellow.webp",
+  // [FIX liquid-signal/phase3] `akbar-future-red.webp` / `akbar-future-yellow.webp`
+  // dulu di sini: dua komposit AI "cyberpunk poster" (aksara Jepang palsu,
+  // barcode/globe ikon palsu, wajah yang tidak cocok dengan potret asli) —
+  // melanggar DESIGN.md §46/§47 (dilarang: fotografi futuristik karangan,
+  // wajah "terlihat-AI", kompositing sci-fi dekoratif). Diganti ke potret
+  // resmi yang nyata; setiap pemanggil generik (press kit, Studio admin)
+  // sekarang jatuh ke foto asli, bukan artwork karangan. Tempat yang
+  // tadinya memajang keduanya sebagai gambar kedua (pita potret /about,
+  // pembuka & catatan studio /universe) sudah dirombak jadi komposisi
+  // tanpa foto kedua — lihat About.tsx dan Universe.tsx.
+  editorialPortrait: "/assets/akbar-nawasunda-official-portrait-1000.webp",
+  archivePortrait: "/assets/akbar-nawasunda-official-portrait-1000.webp",
 };
 
 export const portraitStudies = [

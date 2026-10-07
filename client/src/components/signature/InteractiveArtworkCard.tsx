@@ -109,7 +109,12 @@ export function InteractiveArtworkCard({
   };
 
   return (
-    <article className="an-artwork-card" ref={cardRef} data-previewing={previewing}>
+    <article
+      className="an-artwork-card"
+      ref={cardRef}
+      data-previewing={previewing}
+      data-cursor={previewUrl ? "music" : undefined}
+    >
       <div className="an-artwork-card-media">
         <div className="an-artwork-card-layer">
           <ResilientArtworkImage

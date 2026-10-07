@@ -157,8 +157,16 @@ describe("rute publik sesudah redesign", () => {
 
   it("memberi arsip visual penyaring tanpa menghapus kartu arsip", async () => {
     const visuals = await renderPage("/visuals");
-    expect(visuals.html).toContain("ed-filters");
-    expect(visuals.text).toContain("SEMUA");
+    // [Visual recomposition] Dengan katalog fallback statis, arsip (video
+    // yang belum tampil di ruang tayang) hanya tersisa SATU entri. Dulu
+    // FilterBar tetap dirender untuk satu entri itu — kotak penyaring
+    // penuh di atas satu kartu, tidak ada apa pun yang benar-benar bisa
+    // disaring. Sekarang FilterBar hanya muncul kalau ada LEBIH dari satu
+    // entri untuk dipilah; satu entri yang tersisa memegang penuh lebar
+    // panel sebagai baris fitur (`an-vis-archive--solo`), bukan kartu
+    // sempit mengambang di sebelah filter yang tidak berguna.
+    expect(visuals.html).not.toContain("ed-filters");
+    expect(visuals.html).toContain("an-vis-archive--solo");
     // Kartu arsip tetap terkirim lengkap dengan judul, label, dan tautan
     // resmi — bentuk komponennya boleh berubah.
     expect(visuals.text).toContain("BUKA VIDEO");

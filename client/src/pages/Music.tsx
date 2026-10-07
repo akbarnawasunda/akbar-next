@@ -1,6 +1,7 @@
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { ArrowLeft, ArrowUpRight, ArrowRight, Play } from "lucide-react";
 import { useRef } from "react";
+import { useDragScroll } from "@/hooks/useDragScroll";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { soundcloudEmbedUrl } from "@/components/MusicEmbed";
 import { Reveal } from "@/components/Reveal";
@@ -82,6 +83,11 @@ const copy = {
     railPrev: "Rilisan sebelumnya",
     railNext: "Rilisan berikutnya",
     railLabel: "Katalog rilisan Akbar Nawasunda",
+    // Napas sebelum halaman menutup diri ke Spotify/CTA: mengulang kalimat
+    // hero lede apa adanya (bukan salinan baru), di tingkat mikro, karena
+    // itu memang poin halaman ini dan layak diingat setelah rail katalog.
+    pauseQuote:
+      "Setiap entri punya halaman sendiri: catatan, kredit, dan tautan platformnya.",
     bandTitle: "Rilisan ini juga tersedia di Spotify.",
     bandCta: "Buka Spotify",
     ctaTitle: (
@@ -143,6 +149,8 @@ const copy = {
     railPrev: "Previous release",
     railNext: "Next release",
     railLabel: "Akbar Nawasunda release catalog",
+    pauseQuote:
+      "Every entry has its own page: notes, credits, and platform links.",
     bandTitle: "This release is also available on Spotify.",
     bandCta: "Open Spotify",
     ctaTitle: (
@@ -174,6 +182,10 @@ const copy = {
 export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
   const t = copy[locale];
   const catalogRef = useRef<HTMLDivElement>(null);
+  // Rail katalog jadi benar-benar bisa digeser lewat klik-dan-tarik (mouse),
+  // bukan cuma tombol prev/next — inilah "interaksi katalog horizontal" yang
+  // membuat pose DRAGGING mascot punya sesuatu yang nyata untuk ditunjukkan.
+  useDragScroll(catalogRef);
   const cms = usePublicArtistContent();
   const editablePlatformLinks = publicPlatformLinks(cms.data);
   const cmsReleases = cms.data?.releases ?? [];
@@ -263,6 +275,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
                 href={featured.href}
                 target="_blank"
                 rel="noreferrer"
+                data-cursor="point"
               >
                 <Play size={13} fill="currentColor" /> {t.listenLatest}
               </a>
@@ -274,7 +287,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               </Link>
             </div>
           </div>
-          <figure className="an-cat-hero-art">
+          <figure className="an-cat-hero-art" data-cursor="music">
             <ResilientArtworkImage
               src={featured.artwork}
               backupSrc={officialBrand.socialPreview}
@@ -321,14 +334,14 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
           aria-labelledby="channels-title"
         >
           <header className="an-head">
-            <h2 id="channels-title" className="an-title">
+            <h2 id="channels-title" className="an-title an-title--technical">
               {t.channelsTitle}
             </h2>
             <p className="an-meta">
               {t.channelsMeta(editablePlatformLinks.length)}
             </p>
           </header>
-          <ul className="an-index">
+          <ul className="an-index" data-cursor="music">
             {editablePlatformLinks.map(platform => (
               <li key={platform.label}>
                 <a
@@ -358,14 +371,14 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
           <section className="an-section" aria-labelledby="listen-title">
             <header className="an-head an-head--row">
               <div>
-                <h2 id="listen-title" className="an-title">
+                <h2 id="listen-title" className="an-title an-title--technical">
                   {t.listenTitle}
                 </h2>
                 <p className="an-meta">{t.listenMeta}</p>
               </div>
               <p className="an-cat-lede">{t.listenCopy}</p>
             </header>
-            <div className="an-cat-listen-grid">
+            <div className="an-cat-listen-grid" data-cursor="music">
               {players.map((drop, index) => {
                 const known = catalog.find(release =>
                   release.title
@@ -399,7 +412,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
           <section className="an-section" aria-labelledby="catalog-rail-title">
             <header className="an-head an-head--row">
               <div>
-                <h2 id="catalog-rail-title" className="an-title">
+                <h2 id="catalog-rail-title" className="an-title an-title--technical">
                   {t.railTitle}
                 </h2>
                 <p className="an-meta">
@@ -433,6 +446,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               ref={catalogRef}
               tabIndex={0}
               aria-label={t.railLabel}
+              data-cursor="drag"
             >
               {catalog.map((release, index) => (
                 <Link
@@ -440,6 +454,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
                   className="an-release"
                   href={`${t.musicHref}/${releaseSlug(release.title)}`}
                   data-signal-interactive
+                  data-cursor="music"
                 >
                   <span className="an-release-art">
                     <ResilientArtworkImage
@@ -465,6 +480,15 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
           </section>
         </Reveal>
 
+        {/* JEDA — satu napas sebelum halaman menutup diri ke Spotify/CTA.
+            Primitif bersama dengan beranda (client/src/shell/SceneKit.css),
+            dipakai di sini karena katalog adalah satu-satunya halaman lain
+            dengan kepadatan setara: rail bisa digulir panjang, dan
+            pengunjung butuh titik berhenti sebelum dua ajakan terakhir. */}
+        <section className="an-pause" aria-hidden="true">
+          <p className="an-pause-quote">{t.pauseQuote}</p>
+        </section>
+
         {/* ADEGAN 6 — strip platform: satu ajakan, bukan satu section penuh. */}
         <section className="an-section an-cat-band" aria-labelledby="band-title">
           <h2 id="band-title" className="an-cat-band-title">
@@ -475,6 +499,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
             href={spotifyHref}
             target="_blank"
             rel="noreferrer"
+            data-cursor="point"
           >
             <PlatformIcon label="Spotify" /> {t.bandCta}
           </a>

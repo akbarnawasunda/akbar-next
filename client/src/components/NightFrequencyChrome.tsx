@@ -18,11 +18,15 @@ import "./PublicMotion.css";
 
 export { MobileNav, MobileSlideMenu, useLockBodyScroll };
 
-/* Nav desktop = 6 item permanen (Phase 3 §2 baris 6 + §10). JADWAL tidak
+/* Nav desktop = 6 item permanen (Phase 3 §2 baris 6 + §10). JADWAL/LIVE tidak
    permanen: ia mengisi slot 3 HANYA saat CMS mempublikasikan jadwal yang
    terkonfirmasi (lihat `buildNavItems` di bawah). Label "ARSIP" pensiun —
-   halaman itu kini PERJALANAN; URL-nya tetap /universe. */
-const baseNavItems = [
+   halaman itu kini PERJALANAN/JOURNEY; URL-nya tetap /universe.
+   Satu komponen dipakai ID dan EN (bukan dua chrome paralel yang bisa
+   menyimpang) — lihat `NightHeader`/`NightFooter` di bawah. */
+type Lang = "id" | "en";
+
+const idNavItems = [
   { href: "/music", label: "MUSIK" },
   { href: "/visuals", label: "VISUAL" },
   { href: "/universe", label: "PERJALANAN" },
@@ -31,16 +35,35 @@ const baseNavItems = [
   { href: "/inquire", label: "KONTAK" },
 ];
 
-const scheduleNavItem = { href: "/live", label: "JADWAL" };
+const enNavItems = [
+  { href: "/en/music", label: "MUSIC" },
+  { href: "/en/visuals", label: "VISUALS" },
+  { href: "/en/universe", label: "JOURNEY" },
+  { href: "/en/about", label: "ABOUT" },
+  { href: "/en/epk", label: "EPK" },
+  { href: "/en/inquire", label: "CONTACT" },
+];
 
-function buildNavItems(hasConfirmedEvents: boolean) {
-  if (!hasConfirmedEvents) return baseNavItems;
-  const items = [...baseNavItems];
-  items.splice(2, 0, scheduleNavItem);
+const scheduleNavItem: Record<Lang, { href: string; label: string }> = {
+  id: { href: "/live", label: "JADWAL" },
+  en: { href: "/en/live", label: "LIVE" },
+};
+
+function buildNavItems(lang: Lang, hasConfirmedEvents: boolean) {
+  const base = lang === "en" ? enNavItems : idNavItems;
+  if (!hasConfirmedEvents) return base;
+  const items = [...base];
+  items.splice(2, 0, scheduleNavItem[lang]);
   return items;
 }
 
-function LanguageSwitcher({ pathname }: { pathname: string }) {
+function LanguageSwitcher({
+  pathname,
+  lang = "id",
+}: {
+  pathname: string;
+  lang?: Lang;
+}) {
   const isEnglish = pathname === "/en" || pathname.startsWith("/en/");
   const idPath = isEnglish ? pathname.replace(/^\/en/, "") || "/" : pathname;
   const englishPath = isEnglish
@@ -49,7 +72,10 @@ function LanguageSwitcher({ pathname }: { pathname: string }) {
       ? "/en"
       : `/en${pathname}`;
   return (
-    <div className="an-language-switcher" aria-label="Pilihan bahasa">
+    <div
+      className="an-language-switcher"
+      aria-label={lang === "en" ? "Language selection" : "Pilihan bahasa"}
+    >
       <Link
         className={!isEnglish ? "is-active" : ""}
         href={idPath}
@@ -69,31 +95,56 @@ function LanguageSwitcher({ pathname }: { pathname: string }) {
   );
 }
 
-export function NightHeader({ active }: { active?: string }) {
+export function NightHeader({
+  active,
+  lang = "id",
+}: {
+  active?: string;
+  lang?: Lang;
+}) {
   const [pathname, navigate] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const cms = usePublicArtistContent();
   const hasConfirmedEvents = publicConfirmedEvents(cms.data).length > 0;
-  const navItems = buildNavItems(hasConfirmedEvents);
+  const navItems = buildNavItems(lang, hasConfirmedEvents);
+  const prefix = lang === "en" ? "/en" : "";
   const activeRoute =
     active ??
-    (pathname.startsWith("/music")
-      ? "/music"
-      : pathname.startsWith("/visuals")
-        ? "/visuals"
-        : pathname.startsWith("/live")
-          ? "/live"
-          : pathname.startsWith("/universe")
-            ? "/universe"
-            : pathname.startsWith("/about")
-              ? "/about"
-              : pathname.startsWith("/epk")
-                ? "/epk"
-                : pathname.startsWith("/inquire")
-                  ? "/inquire"
+    (pathname.startsWith(`${prefix}/music`)
+      ? `${prefix}/music`
+      : pathname.startsWith(`${prefix}/visuals`)
+        ? `${prefix}/visuals`
+        : pathname.startsWith(`${prefix}/live`)
+          ? `${prefix}/live`
+          : pathname.startsWith(`${prefix}/universe`)
+            ? `${prefix}/universe`
+            : pathname.startsWith(`${prefix}/about`)
+              ? `${prefix}/about`
+              : pathname.startsWith(`${prefix}/epk`)
+                ? `${prefix}/epk`
+                : pathname.startsWith(`${prefix}/inquire`)
+                  ? `${prefix}/inquire`
                   : undefined);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const t =
+    lang === "en"
+      ? {
+          tagline: "Producer · Remixer · West Bandung",
+          navLabel: "Primary navigation",
+          listen: "LISTEN",
+          openNav: "Open navigation",
+          closeNav: "Close navigation",
+          menuId: "english-mobile-menu",
+        }
+      : {
+          tagline: "Producer · Remixer · Bandung Barat",
+          navLabel: "Navigasi utama",
+          listen: "Dengarkan",
+          openNav: "Buka navigasi",
+          closeNav: "Tutup navigasi",
+          menuId: "night-mobile-menu",
+        };
 
   // Header jadi solid setelah pengunjung mulai menggulir. Di beranda, header
   // transparan di posisi paling atas supaya foto hero terbaca sebagai satu
@@ -122,17 +173,17 @@ export function NightHeader({ active }: { active?: string }) {
 
       const key = e.key.toLowerCase();
       if (key === "m") {
-        navigate("/music");
+        navigate(`${prefix}/music`);
       } else if (key === "v") {
-        navigate("/visuals");
+        navigate(`${prefix}/visuals`);
       } else if (key === "e") {
-        navigate("/epk");
+        navigate(`${prefix}/epk`);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [navigate]);
+  }, [navigate, prefix]);
 
   const closeAndReturnFocus = () => {
     setIsOpen(false);
@@ -153,7 +204,7 @@ export function NightHeader({ active }: { active?: string }) {
   return (
     <>
       <header className="nf-nav" data-scrolled={scrolled ? "true" : "false"}>
-        <Link className="nf-wordmark" href="/">
+        <Link className="nf-wordmark" href={prefix || "/"}>
           <ResilientBrandImage
             className="nf-brand-logo"
             alt="Akbar Nawasunda"
@@ -161,10 +212,10 @@ export function NightHeader({ active }: { active?: string }) {
           />
           <span className="nf-wordmark-text">
             <strong>Akbar Nawasunda</strong>
-            <small>Producer · Remixer · Bandung Barat</small>
+            <small>{t.tagline}</small>
           </span>
         </Link>
-        <nav className="nf-nav-links" aria-label="Navigasi utama">
+        <nav className="nf-nav-links" aria-label={t.navLabel}>
           {navItems.map(item => (
             <Link
               key={item.href}
@@ -176,21 +227,27 @@ export function NightHeader({ active }: { active?: string }) {
           ))}
         </nav>
         <div className="nf-nav-tools">
-          <BirthdayChip />
-          <LanguageSwitcher pathname={pathname} />
+          {/* Jam studio hidup (Bandung Barat/WIB) di dekat tombol bahasa —
+              satu detail nyata yang tidak bisa dipunyai templat generik:
+              ini bukan jam dekoratif, ini memang waktu lokasi studionya. */}
+          <span className="nf-nav-clock">
+            <StudioClock locale={lang} />
+          </span>
+          <BirthdayChip locale={lang} />
+          <LanguageSwitcher pathname={pathname} lang={lang} />
           {/* CTA utama header: membuka halaman musik, bukan anchor #signal yang
               hanya ada di beranda (dulu jadi tautan mati di halaman lain). */}
-          <Link className="nf-signal" href="/music">
-            Dengarkan <ArrowUpRight size={13} aria-hidden="true" />
+          <Link className="nf-signal" href={`${prefix}/music`} data-cursor="point">
+            {t.listen} <ArrowUpRight size={13} aria-hidden="true" />
           </Link>
           <button
             ref={triggerRef}
             className="nf-menu-toggle"
             type="button"
             onClick={() => setIsOpen(value => !value)}
-            aria-label={isOpen ? "Tutup navigasi" : "Buka navigasi"}
+            aria-label={isOpen ? t.closeNav : t.openNav}
             aria-expanded={isOpen}
-            aria-controls="night-mobile-menu"
+            aria-controls={t.menuId}
           >
             {isOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -202,18 +259,48 @@ export function NightHeader({ active }: { active?: string }) {
         pathname={pathname}
         active={activeRoute}
         onClose={closeAndReturnFocus}
-        lang="id"
+        lang={lang}
         hasConfirmedEvents={hasConfirmedEvents}
       />
     </>
   );
 }
 
-export function NightFooter() {
+export function NightFooter({ lang = "id" }: { lang?: Lang } = {}) {
   const cms = usePublicArtistContent();
   const links = publicPlatformLinks(cms.data);
+  const [pathname] = useLocation();
+  const prefix = lang === "en" ? "/en" : "";
+  const copy =
+    lang === "en"
+      ? {
+          discover: "DISCOVER",
+          connect: "CONNECT",
+          music: "Music",
+          visuals: "Visuals",
+          live: "Live",
+          journey: "Journey",
+          about: "About",
+          epk: "EPK / Booking",
+          privacy: "Privacy",
+        }
+      : {
+          discover: "JELAJAHI",
+          connect: "HUBUNGI",
+          music: "Musik",
+          visuals: "Visual",
+          live: "Jadwal",
+          journey: "Perjalanan",
+          about: "Tentang",
+          epk: "EPK / Booking",
+          privacy: "Privasi",
+        };
   return (
     <footer className="nf-footer">
+      {/* Kolofon, bukan kartu-kartu seragam: nama artis memegang satu baris
+          penuh di atas (seperti baris penutup majalah), jam studio hidup
+          menempel di sana juga — bukti bahwa situs ini bukan templat, lalu
+          dua kolom tautan disusun tidak simetris di bawahnya. */}
       <div className="nf-footer-brand">
         <ResilientBrandImage
           className="nf-footer-logo"
@@ -221,52 +308,36 @@ export function NightFooter() {
         />
         <strong>AKBAR NAWASUNDA</strong>
         <p>PRODUCER / REMIXER / INDONESIA</p>
-        <Link
-          className="nf-footer-mascot"
-          href="/"
-          aria-label="Kembali ke homepage"
-        >
-          <img
-            src="/assets/akbar-mascot-doodle.webp"
-            alt="Maskot doodle Akbar Nawasunda"
-            width={92}
-            height={92}
-            loading="lazy"
-            decoding="async"
-          />
-          <span>
-            KEMBALI KE BERANDA <ArrowUpRight size={12} />
-          </span>
-        </Link>
+        <div className="nf-footer-live">
+          <StudioClock locale={lang} />
+          <BirthdayChip locale={lang} />
+        </div>
       </div>
       {/* Kaki halaman = himpunan rute yang tidak ada di nav (Phase 3 §7):
           Jadwal tetap di sini (nav-nya kondisional), JEDAG RUN masuk sebagai
           baris footer, dan Privasi kini setara di kedua bahasa. */}
       <div className="nf-footer-column">
-        <span>JELAJAHI</span>
-        <Link href="/music">Musik</Link>
-        <Link href="/visuals">Visual</Link>
-        <Link href="/live">Jadwal</Link>
-        <Link href="/universe">Perjalanan</Link>
-        <Link href="/about">Tentang</Link>
-        <Link href="/game/jedag-run">JEDAG RUN</Link>
+        <span>{copy.discover}</span>
+        <Link href={`${prefix}/music`}>{copy.music}</Link>
+        <Link href={`${prefix}/visuals`}>{copy.visuals}</Link>
+        <Link href={`${prefix}/live`}>{copy.live}</Link>
+        <Link href={`${prefix}/universe`}>{copy.journey}</Link>
+        <Link href={`${prefix}/about`}>{copy.about}</Link>
+        <Link href={`${prefix}/game/jedag-run`}>JEDAG RUN</Link>
       </div>
       <div className="nf-footer-column">
-        <span>HUBUNGI</span>
+        <span>{copy.connect}</span>
         {links.map(link => (
           <a key={link.label} href={link.href} target="_blank" rel="noreferrer">
             {link.label} <ArrowUpRight size={13} />
           </a>
         ))}
-        <Link href="/epk">EPK / Booking</Link>
-        <Link href="/privacy">Privasi</Link>
+        <Link href={`${prefix}/epk`}>{copy.epk}</Link>
+        <Link href={`${prefix}/privacy`}>{copy.privacy}</Link>
       </div>
       <p className="footer-bottom">
         <span>© {new Date().getFullYear()} AKBAR NAWASUNDA</span>
-        <span className="footer-bottom__clock">
-          <StudioClock />
-          <BirthdayChip />
-        </span>
+        <LanguageSwitcher pathname={pathname || prefix || "/"} lang={lang} />
       </p>
     </footer>
   );

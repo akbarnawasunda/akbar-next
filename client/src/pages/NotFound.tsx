@@ -1,6 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link, useLocation } from "wouter";
-import { EnglishFooter, EnglishHeader } from "@/components/EnglishChrome";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { OptimizedEditorialImage } from "@/components/OptimizedEditorialImage";
 import { officialBrand } from "@/content/artistPlatform";
@@ -54,7 +53,7 @@ export default function NotFound({ locale = "id" }: Props) {
 
   return (
     <div className={`nf-page an-notfound-page${english ? " en-page" : ""}`}>
-      {english ? <EnglishHeader /> : <NightHeader />}
+      <NightHeader lang={locale} />
       <main id="main-content" tabIndex={-1}>
         <section className="an-page-hero">
           <div className="an-page-hero-copy">
@@ -94,11 +93,21 @@ export default function NotFound({ locale = "id" }: Props) {
               sizes="(max-width: 1023.98px) 100vw, 46vw"
               objectFit="cover"
             />
-            <figcaption>{copy.caption}</figcaption>
-          </figure>
+              <figcaption>{copy.caption}</figcaption>
+              <img
+                className="an-notfound-mascot"
+                src="/assets/akbar-mascot-doodle.webp"
+                alt=""
+                aria-hidden="true"
+                width={72}
+                height={72}
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
         </section>
       </main>
-      {english ? <EnglishFooter /> : <NightFooter />}
+      <NightFooter lang={locale} />
     </div>
   );
 }

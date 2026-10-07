@@ -15,8 +15,8 @@
 
 .an-public-shell.an-editorial .an-arc-hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
-  align-items: end;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  align-items: start;
   gap: clamp(28px, 5vw, 76px);
   max-width: var(--hx-max);
   margin-inline: auto;
@@ -24,34 +24,87 @@
     var(--space-xl);
 }
 
+/* Dulu bingkai berbatas ("ink-soft" + border, aspect-ratio 4/5) berisi
+   foto ("archivePortrait" — komposit AI "future city" palsu). Diganti dua
+   nama + dua tahun era, langsung dari data linimasa (publicEras) — tapi
+   bukan dipindah ke dalam kartu infobox baru. Plate sekarang TIDAK
+   berbingkai dan TIDAK beraspect-ratio tetap: dua nama itu sendiri yang
+   jadi elemen grafis utama halaman, skalanya mendekati judul <h1>, bukan
+   label kecil di dalam kotak. */
 .an-public-shell.an-editorial .an-arc-hero-plate {
   position: relative;
   margin: 0;
-  /* Sumbernya potret editorial 4:5 (800x1000) — bingkainya sama. */
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  background: var(--ink-soft);
+  display: grid;
+  gap: clamp(18px, 2.6vw, 28px);
 }
 
-.an-public-shell.an-editorial .an-arc-hero-plate img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 32%;
-}
-
-.an-public-shell.an-editorial .an-arc-hero-plate figcaption {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  padding: 10px 16px;
-  background: var(--ink);
+.an-public-shell.an-editorial .an-arc-hero-eyebrow {
+  margin: 0;
   font-family: var(--font-mono);
-  font-size: 0.52rem;
-  letter-spacing: 0.14em;
+  font-size: 0.56rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-arc-hero-marks {
+  display: grid;
+  gap: clamp(10px, 1.6vw, 18px);
+  justify-items: start;
+}
+
+.an-public-shell.an-editorial .an-arc-hero-mark {
+  display: grid;
+  gap: 4px;
+}
+
+.an-public-shell.an-editorial .an-arc-hero-mark-year {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+.an-public-shell.an-editorial .an-arc-hero-mark-name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+}
+
+/* Nama pertama: lebih kecil, lebih redup — dia memudar ke masa lalu. */
+.an-public-shell.an-editorial .an-arc-hero-mark--from .an-arc-hero-mark-name {
+  font-size: clamp(1.9rem, 4.2vw, 3.2rem);
+  color: color-mix(in srgb, var(--paper) 42%, transparent);
+}
+
+/* Nama terbaru: elemen tipografis terbesar di halaman — lebih besar dari
+   <h1> lede-nya sendiri, karena ini jawaban pertanyaan "siapa dia
+   sekarang", bukan sekadar label arsip. */
+.an-public-shell.an-editorial .an-arc-hero-mark--to .an-arc-hero-mark-name {
+  font-size: clamp(3.2rem, 7.4vw, 6.4rem);
+  color: var(--paper);
+}
+
+/* Pelat aksara Sunda yang menemani nama terbaru: `gap: 4px` milik
+   `.an-arc-hero-mark` dibuat untuk jarak tahun→nama, terlalu rapat untuk
+   nama raksasa→pelat aksara. Diberi jarak sendiri di sini, bukan dengan
+   menaikkan gap bersama (itu akan merapatkan tahun ke namanya juga). */
+.an-public-shell.an-editorial .an-arc-hero-mark--to .an-sunda {
+  margin-top: clamp(6px, 1.4vw, 14px);
+}
+
+/* Garis penghubung: bukan lagi 1px vertikal pendek di dalam kartu, tapi
+   aturan diagonal yang melintasi dua nama — garis evolusi, bukan bingkai. */
+.an-public-shell.an-editorial .an-arc-hero-mark-link {
+  justify-self: start;
+  width: clamp(64px, 11vw, 140px);
+  height: 1px;
+  margin-left: 2px;
+  background: var(--ink-line);
+  transform: rotate(-18deg);
+  transform-origin: left center;
 }
 
 .an-public-shell.an-editorial .an-arc-hero-copy {
@@ -85,57 +138,30 @@
   gap: 12px;
 }
 
-/* ------------------------------------------------------------
-   /universe — catatan studio (gambar + keterangan)
-   ------------------------------------------------------------ */
-
-.an-public-shell.an-editorial .an-arc-studio {
-  display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-  align-items: center;
-  gap: clamp(24px, 4vw, 64px);
-}
-
-.an-public-shell.an-editorial .an-arc-studio-plate {
-  margin: 0;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background: var(--ink-soft);
-}
-
-.an-public-shell.an-editorial .an-arc-studio-plate img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 24%;
-}
-
-.an-public-shell.an-editorial .an-arc-studio-copy {
-  display: grid;
-  gap: var(--space-sm);
-  align-content: center;
-}
-
-.an-public-shell.an-editorial .an-arc-studio-copy p {
-  margin: 0;
-  max-width: 44ch;
-  font-size: var(--text-body);
-  line-height: 1.78;
-  color: color-mix(in srgb, var(--paper) 78%, transparent);
-}
-
-.an-public-shell.an-editorial .an-arc-note {
-  font-family: var(--font-mono);
-  font-size: 0.54rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--mute);
-}
+/* [REMOVED liquid-signal/phase3] ".an-arc-studio" ("Catatan dari studio")
+   dulu di sini: satu foto ("editorialPortrait") + keterangan. Seksinya
+   dihapus dari Universe.tsx (lihat komentar di sana) jadi aturan CSS-nya
+   ikut dihapus, bukan dibiarkan jadi kelas mati. */
 
 /* ------------------------------------------------------------
    /universe — jalur resmi sebagai indeks
    ------------------------------------------------------------ */
+
+/* Jarak #timeline → .an-arc-routes dulu dobel: `.ed-section` (komponen
+   bersama EditorialKit, pembungkus linimasa) sudah punya padding-block
+   bawah sendiri (maks 128px), lalu `.an-section` di sini menambah
+   padding-block ATAS-nya sendiri (maks 116px) — totalnya sampai ~244px,
+   jauh lebih lebar dari jeda antar-section lain di halaman yang sama,
+   padahal isi "Jalur keluar" di bawahnya pendek (dua baris tautan) jadi
+   kelihatan seperti ada ruang kosong yang tidak disengaja. Bukan sticky
+   atau ukuran struktural — murni dua sistem padding section yang tidak
+   saling tahu. Diperkecil di sisi linimasa saja (lihat `#timeline` di
+   bawah) supaya totalnya kembali ke kisaran satu jeda section biasa,
+   tanpa mengubah `.ed-section` bersama (dipakai halaman lain juga).
+   ID selector dipakai supaya tidak tergantung urutan impor CSS. */
+#timeline.ed-section {
+  padding-block-end: clamp(32px, 4vw, 56px);
+}
 
 .an-public-shell.an-editorial .an-arc-routes {
   display: grid;
@@ -188,7 +214,14 @@
 
 .an-public-shell.an-editorial .an-ab-hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.06fr);
+  /* [Visual recomposition loop 3] /music dan /visuals membuka dengan foto
+     yang dominan (arsip, galeri — itu memang isinya). /about punya
+     pekerjaan berbeda: ini halaman baca, bukan halaman lihat. Rasio
+     sebelumnya (0.94/1.06) nyaris sama persis dengan dua halaman itu,
+     jadi tiga pembuka situs terasa dipotong dari templat yang sama.
+     Sekarang dibalik dengan sengaja: potret jadi pendamping yang lebih
+     kecil, kolom teks yang memegang bacaannya. */
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
   align-items: end;
   gap: clamp(28px, 5vw, 76px);
   max-width: var(--hx-max);
@@ -251,6 +284,12 @@
   font-size: var(--text-lede);
   line-height: 1.72;
   color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+/* Satu baris keterangan (basis + tahun aktif) menggantikan kotak statistik
+   tiga kolom yang dulu diulang di sini, di /visuals, dan di /universe. */
+.an-public-shell.an-editorial .an-ab-meta-line {
+  margin: 2px 0 0;
 }
 
 .an-public-shell.an-editorial .an-ab-hero-actions {
@@ -327,40 +366,33 @@
 }
 
 /* ------------------------------------------------------------
-   /about — pita potret penuh lebar
-   ------------------------------------------------------------ */
+   /about — jeda tipografis penuh lebar (bukan foto kedua)
+   ------------------------------------------------------------
+   Dulu band ini memajang foto "editorial portrait" kedua. Diganti nama
+   artis sendiri dalam aksara Sunda, besar dan sunyi: jeda yang datang dari
+   identitas asli, bukan gambar pengisi. Tinggi tetap berbasis viewport
+   (clamp + vw), bukan px tetap, supaya proporsional di semua layar. */
 
 .an-public-shell.an-editorial .an-ab-band {
   margin-top: var(--section-y);
-}
-
-.an-public-shell.an-editorial .an-ab-band-plate {
-  margin: 0;
-  height: clamp(320px, 46vw, 560px);
-  overflow: hidden;
-  background: var(--ink-soft);
-}
-
-.an-public-shell.an-editorial .an-ab-band-plate img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 30%;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-sm);
+  min-height: clamp(260px, 34vw, 420px);
+  padding: clamp(48px, 8vw, 96px) var(--hx-gutter);
+  border-top: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--ink-line);
 }
 
 .an-public-shell.an-editorial .an-ab-band-caption {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 24px;
-  max-width: var(--hx-max);
-  margin-inline: auto;
-  padding: var(--space-md) var(--hx-gutter) 0;
+  max-width: 46ch;
+  margin: 0;
+  text-align: center;
   font-family: var(--font-mono);
-  font-size: 0.54rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 0.66rem;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+  text-transform: none;
   color: var(--mute);
 }
 
@@ -368,7 +400,20 @@
    /about — satu jalur keluar (pitch booking, Phase 3: satu baris)
    ------------------------------------------------------------ */
 
-.an-public-shell.an-editorial .an-ab-outline {
+/* `.an-ab-outline` di markup selalu `className="an-section an-ab-outline"`
+   — niatnya padding kompak `--space-lg` di sini (section "satu baris",
+   lihat judul blok di atas), TAPI selector dasar `.an-section`
+   (".an-public-shell.an-editorial :is(.nf-page, .an-site) .an-section")
+   specificity-nya (0,4,0) sedangkan selector di bawah cuma (0,3,0) — jadi
+   padding `--section-y` (maks 116px) dari `.an-section` selalu menang,
+   dan `--space-lg` (maks 44px) di bawah ini TIDAK PERNAH benar-benar
+   terpakai. Akibatnya section CTA satu-baris ini kebagian padding
+   sebesar section linimasa, jadi jedanya ke `.an-ab-path` di bawahnya
+   kelihatan tidak proporsional untuk isi sependek itu. Kelas diulang
+   (`.an-ab-outline.an-ab-outline`) supaya specificity-nya (0,5,0) pasti
+   menang, bukan `!important` — angka paddingnya sendiri tidak diubah,
+   cuma akhirnya benar-benar diterapkan sesuai niat semula. */
+.an-public-shell.an-editorial .an-ab-outline.an-ab-outline {
   max-width: var(--hx-max, 1560px);
   margin-inline: auto;
   padding: var(--space-lg, 40px) var(--hx-gutter, clamp(20px, 5vw, 88px));
@@ -450,12 +495,18 @@
     align-items: start;
   }
 
-  .an-public-shell.an-editorial .an-arc-hero-plate,
   .an-public-shell.an-editorial .an-ab-hero-plate {
     aspect-ratio: 4 / 3;
   }
 
-  .an-public-shell.an-editorial .an-arc-studio,
+  /* Plate linimasa /universe bukan foto — tidak perlu aspect-ratio tetap.
+     Di layar sempit dua nama era tetap jadi pembuka, tapi diberi ruang
+     bawah supaya tidak menempel langsung ke judul <h1> di bawahnya. */
+  .an-public-shell.an-editorial .an-arc-hero-plate {
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--ink-line);
+  }
+
   .an-public-shell.an-editorial .an-arc-routes,
   .an-public-shell.an-editorial .an-ab-bio {
     grid-template-columns: minmax(0, 1fr);
@@ -475,9 +526,34 @@
       var(--space-lg);
   }
 
-  .an-public-shell.an-editorial .an-arc-hero-plate,
   .an-public-shell.an-editorial .an-ab-hero-plate {
     aspect-ratio: 3 / 4;
+  }
+
+  /* Dua nama era mengecil tapi tetap jadi elemen grafis terbesar di
+     layar sempit — bukan diciutkan ke ukuran label seperti kartu info. */
+  .an-public-shell.an-editorial .an-arc-hero-mark--to .an-arc-hero-mark-name {
+    font-size: clamp(2.6rem, 13vw, 3.6rem);
+  }
+
+  .an-public-shell.an-editorial .an-arc-hero-mark--from .an-arc-hero-mark-name {
+    font-size: clamp(1.6rem, 7vw, 2rem);
+  }
+
+  .an-public-shell.an-editorial .an-arc-hero-mark-link {
+    width: clamp(40px, 18vw, 72px);
+  }
+
+  /* Potret /about memimpin di ponsel sampai ke tepi layar, sama seperti
+     sampul rilisan di /music dan foto hero beranda — bukan diulang
+     sebagai efek, tapi satu keputusan yang sama: foto asli memegang
+     layar dulu sebelum tipografi, di tiap halaman yang punya foto asli
+     untuk dipimpinkan. Plate linimasa /universe TIDAK ikut (isinya kartu
+     bertipografi berbingkai, bukan foto — full-bleed akan merusak
+     bingkainya, bukan menguatkannya). */
+  .an-public-shell.an-editorial .an-ab-hero-plate {
+    margin-inline: calc(var(--hx-gutter) * -1);
+    width: calc(100% + var(--hx-gutter) * 2);
   }
 
   .an-public-shell.an-editorial .an-arc-hero-copy h1,
@@ -489,16 +565,8 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .an-public-shell.an-editorial .an-arc-studio-plate {
-    aspect-ratio: 1 / 1;
-  }
-
   .an-public-shell.an-editorial .an-arc-route-list .an-index-row {
     grid-template-columns: 1.9rem minmax(0, 1fr) auto;
-  }
-
-  .an-public-shell.an-editorial .an-ab-band-plate {
-    height: clamp(300px, 92vw, 440px);
   }
 }
 

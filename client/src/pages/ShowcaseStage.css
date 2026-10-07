@@ -13,7 +13,13 @@
 
 .an-public-shell.an-editorial .an-vis-hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  /* [Visual recomposition loop 3] Ini halaman "video & potret" — kanal
+     visual. Kalau mau satu hal yang membedakan pembukanya dari /music dan
+     /about (yang sama-sama membuka dengan kolom teks + kolom gambar),
+     inilah halaman yang fotonya paling berhak dominan: rasio sebelumnya
+     (0.95/1.05) nyaris sama dengan dua halaman itu. Sekarang kolom teks
+     jadi secuil pengantar, foto memegang sebagian besar pembuka. */
+  grid-template-columns: minmax(0, 0.66fr) minmax(0, 1.34fr);
   align-items: end;
   gap: clamp(28px, 5vw, 72px);
   max-width: var(--hx-max);
@@ -50,32 +56,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-}
-
-.an-public-shell.an-editorial .an-vis-facts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-md) var(--space-xl);
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--editorial-rule);
-}
-
-.an-public-shell.an-editorial .an-vis-facts dt {
-  margin: 0 0 5px;
-  font-family: var(--font-mono);
-  font-size: 0.5rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--mute);
-}
-
-.an-public-shell.an-editorial .an-vis-facts dd {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 500;
-  letter-spacing: 0em;
-  color: var(--paper);
 }
 
 .an-public-shell.an-editorial .an-vis-hero-plate {
@@ -156,6 +136,49 @@
   grid-column: span 3;
 }
 
+/* Entri tunggal: bukan kartu sempit mengambang di panel lebar, tapi satu
+   baris fitur penuh lebar — lihat komentar Visuals.tsx.
+   [Visual recomposition loop 2] Awalnya baris ini masih pakai tata letak
+   kartu asli (media penuh lebar di atas, body sempit di bawah) yang hanya
+   direntangkan ke lebar penuh panel. Sumber gambarnya adalah thumbnail
+   YouTube `hqdefault.jpg` (480×360) — direntangkan sampai ~1100px+ lebar
+   gambarnya pecah/buram, masalah baru yang lebih kentara justru karena
+   "diperbesar". Sekarang baris fitur ini jadi satu bentangan dua kolom:
+   gambar dikunci ke lebar yang masih wajar untuk sumber beresolusi segitu,
+   teks duduk di sampingnya dan tipografinya naik kelas (judul sebesar
+   dokumen rilisan di beranda) — asimetri yang jujur ke kualitas materinya,
+   bukan gambar yang dipaksa besar. */
+.an-public-shell.an-editorial .an-vis-archive.an-vis-archive--solo > * {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+  grid-template-rows: none;
+  gap: clamp(20px, 4vw, 48px);
+  align-items: center;
+}
+
+.an-public-shell.an-editorial .an-vis-archive--solo .an-artwork-card-body {
+  padding: 0;
+  gap: 12px;
+}
+
+.an-public-shell.an-editorial .an-vis-archive--solo .an-artwork-card-title {
+  font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+  font-weight: 500;
+  line-height: 1.08;
+  max-width: 16ch;
+}
+
+.an-public-shell.an-editorial .an-vis-archive--solo .an-artwork-card-actions {
+  margin-top: 6px;
+}
+
+@media (max-width: 720px) {
+  .an-public-shell.an-editorial .an-vis-archive.an-vis-archive--solo > * {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* Thumbnail arsip ini berasal dari YouTube (`hqdefault.jpg`), yang berbentuk
    4:3 dengan bilah hitam di atas dan bawah untuk video 16:9. Bingkai persegi
    1:1 menampilkan bilah itu; bingkai 16:9 memotongnya persis di garis gambar
@@ -198,12 +221,29 @@
   object-position: 50% 32%;
 }
 
-.an-public-shell.an-editorial .an-live-hero-bg img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 50% 32%;
+/* Keadaan sunyi: belum ada jadwal terkonfirmasi, jadi tidak ada foto
+   pertunjukan untuk ditampilkan. `--ink` jadi warna dasar (kalau foto
+   panggung gagal dimuat) di belakang foto panggung teater kosong asli
+   (lihat Live.tsx `an-live-hero-bg--stage`) — bukan gradien dekoratif. */
+.an-public-shell.an-editorial .an-live-hero--quiet {
+  background: var(--ink);
+}
+
+.an-public-shell.an-editorial .an-live-hero-bg--stage {
+  object-position: 72% 50%;
+  /* Foto panggung aslinya terang di sisi kanan (lampu sorot) — geser
+     titik fokus ke kanan supaya lampu itu tidak tertimbun scrim dan
+     tetap jadi satu-satunya titik terang di balik tipografi. */
+}
+
+.an-public-shell.an-editorial .an-live-hero-mark {
+  position: absolute;
+  z-index: -2;
+  top: calc(var(--chrome-h, 78px) + var(--space-lg));
+  right: var(--hx-gutter);
+  width: clamp(72px, 9vw, 120px);
+  height: auto;
+  opacity: 0.5;
 }
 
 .an-public-shell.an-editorial .an-live-hero-scrim {
@@ -290,6 +330,30 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+/* Panel sisi keadaan kosong: status + basis + genre asli — mengisi kolom
+   kedua grid `.an-live-next` dengan fakta nyata, bentuknya sama dengan
+   panel hitung mundur di keadaan terisi (lihat komentar Live.tsx). */
+.an-public-shell.an-editorial .an-live-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  padding: var(--space-sm, 10px) 0 0;
+  border-top: 1px solid var(--editorial-rule);
+  list-style: none;
+}
+
+.an-public-shell.an-editorial .an-live-genres li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--mute);
 }
 
 /* -- Indeks jadwal ------------------------------------------- */
@@ -379,9 +443,16 @@
   .an-public-shell.an-editorial .an-vis-screening-grid {
     grid-template-columns: minmax(0, 1fr);
   }
-  .an-public-shell.an-editorial .an-vis-archive > *,
-  .an-public-shell.an-editorial .an-vis-archive > :nth-child(5n + 1),
-  .an-public-shell.an-editorial .an-vis-archive > :nth-child(5n + 2) {
+  /* `:not(.an-vis-archive--solo)` sengaja ditambahkan: tanpa ini,
+     selector `:nth-child(5n+1)/(5n+2)` di breakpoint ini punya
+     spesifisitas yang SAMA dengan aturan "entri tunggal = satu baris
+     penuh lebar" di atas (keduanya 4 kelas), dan karena blok ini muncul
+     lebih akhir di berkas, `span 3` menang dan memotong kartu solo jadi
+     setengah lebar — persis di lebar ponsel seperti 390px, sampul arsip
+     jadi terasa hilang/terlalu kecil karena dipaksa ke kolom yang sudah
+     disusun untuk tata letak gambar-kiri-teks-kanan yang jauh lebih
+     sempit dari itu. */
+  .an-public-shell.an-editorial .an-vis-archive:not(.an-vis-archive--solo) > * {
     grid-column: span 3;
   }
 }
@@ -397,9 +468,17 @@
   .an-public-shell.an-editorial .an-live-hero-copy h1 {
     font-size: clamp(2.2rem, 10.5vw, 3.4rem);
   }
+  /* Galeri bilang "foto memegang panggung, tipografi jadi keterangannya"
+     — tapi di DOM, judul datang sebelum foto, jadi tanpa ini ponsel malah
+     menampilkan tipografi dulu, baru foto. Dibalik supaya klaimnya benar
+     di layar sempit juga, sama seperti keputusan yang sama di beranda,
+     /music, dan /about. */
   .an-public-shell.an-editorial .an-vis-hero-plate {
+    order: -1;
+    margin-inline: calc(var(--hx-gutter) * -1);
+    width: calc(100% + var(--hx-gutter) * 2);
     max-width: none;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 4 / 5;
   }
   .an-public-shell.an-editorial .an-vis-archive > * {
     grid-column: span 6;

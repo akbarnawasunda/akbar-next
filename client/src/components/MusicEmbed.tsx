@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ExternalLink, Play, Radio, Volume2 } from "lucide-react";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
@@ -63,6 +63,17 @@ export function formatEmbedUrl(url: string, platform: EmbedPlatform): string {
 /**
  * Unified, responsive, platform-aware MusicEmbed component
  */
+// Iframe lintas-domain (SoundCloud/Spotify/YouTube) memicu `onLoad` begitu
+// dokumen HTML kosongnya sendiri selesai — jauh sebelum widget pihak
+// ketiga itu benar-benar menggambar waveform/player-nya. Kalau placeholder
+// gelap kita dilepas tepat saat `onLoad`, pengunjung sempat melihat
+// dokumen iframe yang masih putih/kosong selama widget-nya menyusul —
+// persis seperti kartu media jadi "kotak kosong keputihan" sesaat setelah
+// tombol kedua (PUTAR DI SINI) ditekan. Placeholder bermerek kita ditahan
+// minimal durasi ini supaya pergantian ke player asli tidak pernah
+// menampakkan jeda kosong itu.
+const MIN_VISIBLE_LOADING_MS = 700;
+
 export function MusicEmbed({
   url,
   title,
@@ -75,20 +86,31 @@ export function MusicEmbed({
   const embedSrc = formatEmbedUrl(url, platform);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isSlow, setIsSlow] = useState(false);
+  const loadStartRef = useRef(0);
+  const revealTimerRef = useRef<number>(0);
 
   useEffect(() => {
     setIsLoaded(false);
     setIsSlow(false);
+    loadStartRef.current = Date.now();
     const timer = window.setTimeout(() => {
       setIsSlow(true);
     }, 4500);
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(revealTimerRef.current);
+    };
   }, [embedSrc]);
 
   const handleIframeLoad = () => {
-    setIsLoaded(true);
-    setIsSlow(false);
-    onLoaded?.();
+    const elapsed = Date.now() - loadStartRef.current;
+    const remaining = Math.max(0, MIN_VISIBLE_LOADING_MS - elapsed);
+    window.clearTimeout(revealTimerRef.current);
+    revealTimerRef.current = window.setTimeout(() => {
+      setIsLoaded(true);
+      setIsSlow(false);
+      onLoaded?.();
+    }, remaining);
   };
 
   return (

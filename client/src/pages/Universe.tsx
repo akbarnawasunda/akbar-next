@@ -1,10 +1,7 @@
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { Link } from "wouter";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
-import {
-  officialBrand,
-  releases,
-} from "@/content/artistPlatform";
+import { releases } from "@/content/artistPlatform";
 import {
   publicJourney,
   usePublicArtistContent,
@@ -16,6 +13,8 @@ import {
 import { EraTimeline } from "@/components/signature/EraTimeline";
 import { publicEras } from "@/content/eras";
 import { Reveal } from "@/components/Reveal";
+import { SundaScript } from "@/components/signature/SundaScript";
+import { SUNDA_NAME } from "@/content/sundaneseScript";
 import "./EcosystemPages.css";
 import "./ArchiveStage.css";
 
@@ -37,8 +36,7 @@ const copy = {
     title: "Perjalanan Akbar Nawasunda.",
     lede:
       "Dari DJ Akbar Remix ke Akbar Nawasunda — satu katalog, beberapa babak, dan semua tautan resminya di satu tempat.",
-    portraitAlt: "Artwork editorial Akbar Nawasunda dengan tema future city",
-    portraitCaption: "Arsip visual",
+    portraitCaption: "Babak pertama → babak terbaru",
     facts: { since: "Mulai", based: "Basis", releases: "Rilisan" },
     basedValue: "Bandung Barat",
     exploreCta: "Telusuri babak",
@@ -52,13 +50,6 @@ const copy = {
     timelineLede:
       "Setiap babak terbaca penuh di halaman ini. Gulir untuk melihat garis babak menyala dan artwork terkait berganti.",
     timelineIndicator: "ARSIP INTERAKTIF",
-    studioMeta: "Catatan visual",
-    studioTitle: "Dari studio.",
-    studioCopy:
-      "Salah satu arah visual dari dunia Akbar Nawasunda: industrial, kontras, dan dekat dengan energi electronic bass.",
-    studioNote: "Bukan rilisan audio",
-    studioAlt: "Potret editorial Akbar Nawasunda dengan cahaya merah",
-    studioCta: "Lihat visual",
     exitsMeta: "Jalur keluar",
     exitsTitle: "Lanjut dari sini.",
     exitsCopy:
@@ -83,8 +74,7 @@ const copy = {
     title: "The Akbar Nawasunda journey.",
     lede:
       "From DJ Akbar Remix to Akbar Nawasunda — one catalog, several chapters, and every official link in one place.",
-    portraitAlt: "Editorial artwork of Akbar Nawasunda with a future city theme",
-    portraitCaption: "Visual archive",
+    portraitCaption: "First chapter → latest chapter",
     facts: { since: "Started", based: "Based in", releases: "Releases" },
     basedValue: "Bandung Barat",
     exploreCta: "Explore the chapters",
@@ -98,13 +88,6 @@ const copy = {
     timelineLede:
       "Every chapter reads in full on this page. Scroll to see the chapter line light up and the related artwork change.",
     timelineIndicator: "INTERACTIVE ARCHIVE",
-    studioMeta: "Visual note",
-    studioTitle: "From the studio.",
-    studioCopy:
-      "One visual direction from the Akbar Nawasunda world: industrial, high contrast, and close to the energy of electronic bass.",
-    studioNote: "Not an audio release",
-    studioAlt: "Editorial portrait of Akbar Nawasunda in red light",
-    studioCta: "See the visuals",
     exitsMeta: "Exit routes",
     exitsTitle: "Continue from here.",
     exitsCopy:
@@ -148,6 +131,14 @@ export function UniverseView({ locale = "id" }: { locale?: "id" | "en" }) {
       .map(release => ({ title: release.title })),
   ];
   const eras = publicEras(cms.data, locale);
+  // Pelat aksara Sunda hanya menemani NAMA RESMI (lihat aturan yang sama di
+  // SignatureStage.tsx) — bukan alias panggung. Dicocokkan lewat teks babak
+  // terbaru, bukan diasumsikan: kalau suatu saat CMS mengubah urutan babak
+  // atau labelnya, pelat ini ikut diam, bukan menempel ke nama yang salah.
+  const latestEraIsOfficialName =
+    eras.length > 0 &&
+    eras[eras.length - 1].title.trim().toLowerCase() ===
+      SUNDA_NAME.latin.trim().toLowerCase();
   const readingGuide =
     locale === "en"
       ? journey.introEn || journey.intro
@@ -155,20 +146,55 @@ export function UniverseView({ locale = "id" }: { locale?: "id" | "en" }) {
 
   return (
     <main id="main-content" tabIndex={-1}>
-        {/* Pembuka arsip: satu potret arsip sebagai jangkar, dua nama di
-            lede, dan pedoman baca yang menjelaskan cara membaca halaman. */}
+        {/* Pembuka arsip: jangkarnya bukan lagi foto ("archivePortrait"
+            dulu komposit AI "future city" palsu — lihat liquid-signal
+            phase 3), tapi dua nama dan tahunnya sendiri, besar dan
+            tipografis. Ini satu-satunya cerita halaman ini: satu artis,
+            dua nama lintas era — jadi pembukanya memvisualisasikan itu
+            langsung, bukan menampilkan gambar yang tidak berhubungan.
+            [Visual recomposition] Nama pertama (eras[0]) sengaja tampil
+            redup/kecil — dia memudar ke masa lalu — sementara nama
+            terbaru tampil penuh, paling besar, dan paling gelap di
+            halaman ini. Kontrasnya sendiri yang bercerita: typography
+            yang membawa makna, bukan kartu info generik berbingkai. */}
         <section className="an-arc-hero" aria-labelledby="archive-title">
-          <figure className="an-arc-hero-plate">
-            <img
-              src={officialBrand.archivePortrait}
-              alt={t.portraitAlt}
-              width={800}
-              height={1000}
-              loading="eager"
-              decoding="async"
-            />
-            <figcaption>{t.portraitCaption}</figcaption>
-          </figure>
+          {eras.length > 0 ? (
+            <figure className="an-arc-hero-plate">
+              <figcaption className="an-arc-hero-eyebrow">
+                {t.portraitCaption}
+              </figcaption>
+              <div className="an-arc-hero-marks">
+                {/* `<div>`, bukan `<span>`: pelat aksara di bawah bisa
+                    membawa `<p>` (lihat SundaScript.tsx), dan `<p>` di
+                    dalam `<span>` adalah HTML tidak valid (span = konten
+                    phrasing saja). */}
+                <div className="an-arc-hero-mark an-arc-hero-mark--from">
+                  <span className="an-arc-hero-mark-year">{eras[0].year}</span>
+                  <span className="an-arc-hero-mark-name">{eras[0].title}</span>
+                </div>
+                <span className="an-arc-hero-mark-link" aria-hidden="true" />
+                <div className="an-arc-hero-mark an-arc-hero-mark--to">
+                  <span className="an-arc-hero-mark-year">
+                    {eras[eras.length - 1].year}
+                  </span>
+                  <span className="an-arc-hero-mark-name">
+                    {eras[eras.length - 1].title}
+                  </span>
+                  {/* [Visual recomposition] Halaman ini menceritakan dua
+                      nama lintas era, tapi sampai sekarang tidak pernah
+                      menunjukkan satu fakta yang sebenarnya tidak berubah
+                      di antara keduanya: nama yang bertahan ditulis dalam
+                      aksara Sunda-nya sendiri. Ditempelkan di sini, bukan
+                      di tempat baru — nama yang sama yang baru saja
+                      dibaca sebagai elemen tipografis terbesar di
+                      halaman. */}
+                  {latestEraIsOfficialName ? (
+                    <SundaScript entry={SUNDA_NAME} lang={locale} tone="inline" />
+                  ) : null}
+                </div>
+              </div>
+            </figure>
+          ) : null}
           <div className="an-arc-hero-copy">
             <p className="an-kicker">
               <span className="an-kicker-dot" aria-hidden="true" />
@@ -210,41 +236,15 @@ export function UniverseView({ locale = "id" }: { locale?: "id" | "en" }) {
           <EraTimeline eras={eras} lang={locale} />
         </EditorialSection>
 
-        {/* Catatan dari studio: satu gambar, satu keterangan — jembatan
-            menuju arsip visual tanpa memindah konten /visuals ke sini. */}
-        <Reveal>
-          <section
-            className="an-section an-arc-studio"
-            aria-labelledby="archive-studio-title"
-          >
-            <figure className="an-arc-studio-plate an-rise">
-              <img
-                src={officialBrand.editorialPortrait}
-                alt={t.studioAlt}
-                width={667}
-                height={1000}
-                loading="lazy"
-                decoding="async"
-              />
-            </figure>
-            <div className="an-arc-studio-copy an-rise">
-              <p className="an-meta">{t.studioMeta}</p>
-              <h2 id="archive-studio-title" className="an-title">
-                {t.studioTitle}
-              </h2>
-              <p>{t.studioCopy}</p>
-              <p className="an-arc-note">{t.studioNote}</p>
-              <div className="an-arc-hero-actions">
-                <Link
-                  className="an-btn an-btn--quiet"
-                  href={locale === "en" ? "/en/visuals" : "/visuals"}
-                >
-                  {t.studioCta} <ArrowUpRight size={14} aria-hidden="true" />
-                </Link>
-              </div>
-            </div>
-          </section>
-        </Reveal>
+        {/* [REMOVED liquid-signal/phase3] "Catatan dari studio" dulu di
+            sini: satu foto ("editorialPortrait" — komposit AI cyberpunk
+            palsu) dengan keterangan yang menjelaskan arah visual
+            "industrial, kontras" yang sebenarnya cuma menjelaskan gambar
+            karangan itu sendiri, bukan material asli. Dihapus, bukan
+            diganti gambar lain: halaman ini sudah berjanji (lihat komentar
+            pembuka file) tidak memuat blok foto, dan jalur ke /visuals
+            sudah ada di seksi "Jalur keluar" di bawah — bridge ganda tidak
+            perlu. */}
 
         {/* Indeks jalur keluar: dua rute resmi. Baris layanan (remix/
             booking/licensing) adalah tugas /epk, bukan halaman cerita. */}

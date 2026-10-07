@@ -296,7 +296,7 @@ check "/visuals"                              "BIKIN VISUAL"                    
 check "/live"                                 "JADWAL / VENUE / TIKET"          "Live Dates | Akbar Nawasunda" state,ogimage
 check "/universe"                             "PERJALANAN"                      "About the Work | Akbar Nawasunda" state,ogimage
 check "/inquire?type=licensing&source=release" "KIRIM INQUIRY"                  "Inquire | Akbar Nawasunda" state,ogimage
-check "/en"                                   "Masih Mencintainya"              "Akbar Nawasunda | Official Website" state,ogimage
+check "/en"                                   "LISTEN NOW"                      "Akbar Nawasunda | Official Website" state,ogimage
 check "/en/about"                             "ARTIST PROFILE"                  "About the Artist | Akbar Nawasunda" state,ogimage
 check "/en/live"                              "No confirmed show is public yet"  "Live Dates | Akbar Nawasunda" state,ogimage
 check "/music/masih-mencintainya-papinka"     "Masih Mencintainya"              "Masih Mencintainya" state,ogimage

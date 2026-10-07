@@ -65,6 +65,27 @@
   max-width: 24ch;
 }
 
+/* Register TEKNIS — dipakai pada judul yang menyajikan struktur/indeks
+   (daftar kanal, opsi dengar, rail katalog), bukan pernyataan editorial.
+   Huruf kapital kecil + jarak renggang terasa seperti label arsip, jadi
+   katalog tidak memakai "headline" berukuran sama di tiap seksi. */
+.an-public-shell.an-editorial .an-title--technical {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+/* Register MANUSIA — dipakai pada judul yang mengantar cerita langsung
+   (biografi, perjalanan pribadi), bukan struktur. Miring dan lebih ringan
+   supaya terasa ditulis, bukan diumumkan. */
+.an-public-shell.an-editorial .an-title--human {
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0em;
+}
+
 .an-public-shell.an-editorial .an-head {
   display: grid;
   gap: var(--space-sm);
@@ -107,7 +128,10 @@
   min-height: 46px;
   padding: 0 20px;
   border: 1px solid var(--editorial-rule);
-  border-radius: 999px;
+  /* Tepi hampir persegi (DESIGN.md §10): pil kapsul adalah bahasa UI
+     generik, bukan milik sistem ini. Lingkaran disimpan untuk kontrol
+     berbentuk ikon (.an-catalog-controls), bukan tombol teks. */
+  border-radius: 2px;
   background: transparent;
   color: var(--paper);
   font-family: var(--font-body);
@@ -294,7 +318,13 @@
 
 .an-public-shell.an-editorial .an-doc {
   display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+  /* [Visual recomposition loop 3] Dokumen rilisan ini satu-satunya tempat
+     di beranda tempat SATU artwork dipajang penuh sebagai subjek (bukan
+     thumbnail arsip) — tapi rasionya dulu nyaris 50/50 (1.02fr/1fr),
+     berseberangan dengan komentar section-nya sendiri ("artwork besar").
+     Artwork sekarang benar-benar memegang lebih dari separuh adegan;
+     kolom copy jadi lebih ramping dan padat di sampingnya. */
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
   align-items: center;
   gap: clamp(28px, 5vw, 84px);
 }
@@ -566,6 +596,48 @@
 
 .an-public-shell.an-editorial :is(.nf-page, .an-site) .an-section--full {
   max-width: none;
+}
+
+/* -- Jeda (napas di tengah urutan section) --------------------
+   Satu layar yang isinya nyaris tidak ada: ruang kosong di atas dan di
+   bawah jauh lebih besar dari section biasa, satu baris mikro di tengah.
+   Lahir di beranda (FASE 7 nomor 7) sebagai penutup satu adegan padat;
+   dipakai di sini sebagai primitif bersama supaya halaman lain yang juga
+   punya satu titik padat (katalog, arsip) bisa memakai napas yang sama
+   tanpa menulis ulang CSS-nya — bukan dekorasi baru, satu device yang
+   sama dipakai di tempat yang memang butuh jeda. */
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .an-pause {
+  display: grid;
+  place-items: center;
+  /* Jauh lebih tinggi dari --space-3xl section lain: inilah yang
+     membuatnya terasa seperti helaan napas, bukan section pendek. */
+  min-height: clamp(260px, 38vh, 440px);
+  padding: 0 var(--hx-gutter);
+}
+
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .an-pause-quote {
+  margin: 0;
+  max-width: 28ch;
+  text-align: center;
+  /* FASE 7 nomor 5 — "kutipan tunggal": huruf judul dipakai di luar
+     konteks nama, di tingkat MIKRO (--step--1), bukan raksasa. Satu dari
+     tiga tingkat kontras yang disengaja (raksasa di hero, sedang di nomor
+     kanal, mikro di sini). */
+  font-family: var(--font-title);
+  font-size: var(--step--1);
+  font-weight: 500;
+  font-style: normal;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--paper) 46%, transparent);
+}
+
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .an-pause-quote::before {
+  content: "“";
+}
+
+.an-public-shell.an-editorial :is(.an-site, .nf-page) .an-pause-quote::after {
+  content: "”";
 }
 
 @media (max-width: 900px) {

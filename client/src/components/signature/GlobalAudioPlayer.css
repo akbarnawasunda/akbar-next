@@ -160,7 +160,20 @@
 }
 
 /* Player melayang di atas konten; sisakan ruang supaya bagian bawah halaman
-   (footer, tombol terakhir) tidak pernah tertimbun permanen di layar kecil. */
+   (footer, paragraf penutup, dokumen arsip) tidak pernah tertimbun permanen.
+   Sebelumnya cadangan ruang ini hanya aktif di ≤640px — di desktop player
+   tetap melayang di pojok kanan-bawah tanpa jaminan apa pun, jadi konten
+   apa pun yang secara alami berakhir di sana (mis. entri terakhir linimasa
+   /universe) bisa tertimbun. Ini masalah penempatan global, bukan satu
+   halaman — jadi perbaikannya di sini (satu sumber kebenaran untuk semua
+   halaman), bukan padding khusus pada satu paragraf. */
+html[data-an-player="visible"] body {
+  padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+}
+html[data-an-player="visible"][data-an-player-shelf="open"] body {
+  padding-bottom: calc(88px + var(--an-embed-audio-h, 166px) + env(safe-area-inset-bottom, 0px));
+}
+
 @media (max-width: 640px) {
   html[data-an-player="visible"] body {
     padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));

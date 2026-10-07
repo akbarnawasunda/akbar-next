@@ -39,6 +39,12 @@
   position: relative;
 }
 
+/* Hanya relevan di komposisi mobile (lihat breakpoint di bawah) — di
+   desktop panel artwork sticky sudah memegang peran ini. */
+.an-era-item-art {
+  display: none;
+}
+
 .an-era-item::before {
   content: "";
   position: absolute;
@@ -145,9 +151,65 @@
   .an-era-timeline {
     grid-template-columns: 1fr;
   }
+
+  /* [Visual recomposition] Di desktop, satu panel artwork sticky di kanan
+     berganti isi saat babak aktif berubah — itu yang membuat timeline ini
+     terasa seperti arsip interaktif, bukan daftar teks. `position: sticky`
+     tidak berarti apa-apa lagi begitu kolomnya dilipat jadi satu di
+     mobile: panel itu jadi SATU gambar statis yang sudah lewat di atas
+     layar begitu pembaca mulai membaca babak kedua, jadi perubahan
+     gambarnya terjadi di luar pandangan. Daripada memaksakan pola
+     desktop, mobile dapat komposisinya sendiri: panel bersama dilepas,
+     dan tiap babak membawa artwork kecilnya sendiri tepat di sebelah
+     tahun/judulnya, supaya gambar selalu terlihat bersama teks yang
+     sedang dibaca. */
   .an-era-artwork {
-    position: static;
-    order: -1;
+    display: none;
+  }
+
+  .an-era-item {
+    display: grid;
+    grid-template-columns: clamp(64px, 20vw, 84px) minmax(0, 1fr);
+    column-gap: var(--space-sm, 12px);
+    row-gap: 0;
+  }
+
+  .an-era-item-art {
+    display: block;
+    grid-row: 1 / 3;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+    opacity: 0.78;
+    transition: opacity 240ms ease;
+  }
+
+  .an-era-item[data-active="true"] .an-era-item-art {
+    opacity: 1;
+  }
+
+  .an-era-item-art img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .an-era-year {
+    grid-column: 2;
+  }
+
+  .an-era-title {
+    grid-column: 2;
+  }
+
+  .an-era-copy,
+  .an-era-link {
+    grid-column: 1 / -1;
+  }
+
+  .an-era-copy {
+    margin-top: 10px;
   }
 }
 

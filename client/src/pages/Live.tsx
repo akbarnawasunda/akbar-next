@@ -1,8 +1,8 @@
-import { ArrowUpRight, MapPin, Ticket } from "lucide-react";
+import { ArrowUpRight, MapPin, Radio, Ticket } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { EventCountdown } from "@/components/editorial/EditorialKit";
 import { Link } from "wouter";
-import { verifiedArtistProfile } from "@/content/artistPlatform";
+import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
 import {
   publicConfirmedEvents,
   usePublicArtistContent,
@@ -59,6 +59,9 @@ const copy = {
     emptyCopy:
       "Begitu ada show yang dikonfirmasi, tanggal, venue, zona waktu, dan tautan tiketnya akan tampil di sini lebih dulu.",
     emptyCta: "Ajukan tanggal",
+    emptyStatus: "TERBUKA UNTUK BOOKING",
+    emptyBasisLabel: "Basis",
+    emptyGenreLabel: "Genre",
     indexTitle: "Jadwal terkonfirmasi.",
     indexMeta: (count: number) => `${count} event · waktu lokal venue`,
     placeFallback: "Detail venue menyusul",
@@ -67,6 +70,31 @@ const copy = {
     rowInfo: "Info",
     rowAria: (title: string) => `${title} — buka sumber resmi`,
     venueMap: "Lihat peta",
+    // Keadaan kosong (belum ada tanggal) dulu berhenti persis di blok
+    // "show berikutnya" — satu-satunya halaman utama tanpa jalur lanjut
+    // ke halaman lain, jadi terasa terpotong dibanding /about dan
+    // /universe yang selalu menutup dengan indeks ke halaman lain. Tiga
+    // tautan nyata di bawah ini (bukan kalender/tanggal karangan) dipakai
+    // untuk mengisi jeda itu dengan niat, bukan ruang kosong mentah.
+    emptyPathMeta: "Sambil menunggu tanggal",
+    emptyPathTitle: "Dengar dulu, atau telusuri perjalanannya.",
+    emptyPath: [
+      {
+        href: "/music",
+        title: "Dengar rilisan",
+        copy: "Katalog lengkap dengan artwork, metadata, dan tautan dengar resmi.",
+      },
+      {
+        href: "/universe",
+        title: "Telusuri perjalanan",
+        copy: "Satu nama, dua era — linimasa babak dan rilisannya.",
+      },
+      {
+        href: "/epk",
+        title: "EPK & press kit",
+        copy: "Bio siap pakai, foto resmi, dan kebutuhan promo untuk media.",
+      },
+    ],
   },
   en: {
     kickerFeatured: "Next show",
@@ -87,6 +115,9 @@ const copy = {
     emptyCopy:
       "Once a show is confirmed, the date, venue, time zone, and ticket link appear here first.",
     emptyCta: "Propose a date",
+    emptyStatus: "OPEN FOR BOOKING",
+    emptyBasisLabel: "Based in",
+    emptyGenreLabel: "Genre",
     indexTitle: "Confirmed dates.",
     indexMeta: (count: number) => `${count} events · local venue time`,
     placeFallback: "Venue details to follow",
@@ -95,6 +126,25 @@ const copy = {
     rowInfo: "Info",
     rowAria: (title: string) => `${title} — open the official source`,
     venueMap: "View map",
+    emptyPathMeta: "While you wait for a date",
+    emptyPathTitle: "Hear the music, or follow the journey.",
+    emptyPath: [
+      {
+        href: "/en/music",
+        title: "Hear the releases",
+        copy: "The full catalog with artwork, metadata, and official listening links.",
+      },
+      {
+        href: "/en/universe",
+        title: "Follow the journey",
+        copy: "One name, two eras — the chapter timeline and its releases.",
+      },
+      {
+        href: "/en/epk",
+        title: "EPK & press kit",
+        copy: "A ready biography, official photos, and promo material for media.",
+      },
+    ],
   },
 } as const;
 
@@ -109,9 +159,26 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
 
   return (
     <main id="main-content" tabIndex={-1}>
-        {/* Panggung: foto pertunjukan sebagai latar penuh, tipografi di
-            atas scrim. */}
-        <section className="an-live-hero" aria-labelledby="live-title">
+        {/* Panggung: saat ada foto pertunjukan nyata, itu jadi latar penuh.
+            Tanpa jadwal terkonfirmasi (keadaan sekarang), halaman ini
+            TIDAK memaksa foto pertunjukan karangan — dulu di sini
+            "akbar-night-frequency-stage", foto jalan malam asli yang
+            ditumpuki teks chrome/neon 3D "AKBAR NAWASUNDA RMX" dan tulisan
+            kursif "SWAG" mengkilap: gaya poster DJ generik yang persis
+            dilarang DESIGN.md.
+            [Visual recomposition] Versi sebelumnya menggantinya dengan
+            latar RATA + logo kecil 0.5 opacity mengambang di pojok — jujur,
+            tapi nyaris kosong penuh (hero ini tingginya sampai 74svh).
+            Sekarang latarnya foto panggung teater KOSONG asli (satu lampu
+            sorot, tirai gelap) — bukan foto pertunjukan karangan, tapi
+            tetap foto NYATA yang relevan: panggung yang benar-benar ada,
+            menunggu tanggal. Metafora jujur, bukan gambar pengisi. */}
+        <section
+          className={`an-live-hero${
+            featured?.posterUrl ? "" : " an-live-hero--quiet"
+          }`}
+          aria-labelledby="live-title"
+        >
           {featured?.posterUrl ? (
             <img
               className="an-live-hero-bg"
@@ -122,26 +189,26 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
               decoding="async"
             />
           ) : (
-            <picture className="an-live-hero-bg">
-              <source
-                media="(max-width: 640px)"
-                srcSet="/assets/akbar-night-frequency-stage-mobile-optimized.webp"
-                type="image/webp"
-              />
-              <source
-                srcSet="/assets/akbar-night-frequency-stage-optimized.webp"
-                type="image/webp"
-              />
+            <>
               <img
-                src="/assets/akbar-night-frequency-stage-optimized.webp"
+                className="an-live-hero-bg an-live-hero-bg--stage"
+                src="/assets/akbar-editorial-stage-bg.webp"
                 alt=""
                 aria-hidden="true"
-                width={1440}
-                height={1440}
                 loading="eager"
                 decoding="async"
               />
-            </picture>
+              <img
+                className="an-live-hero-mark"
+                src={officialBrand.logo}
+                alt=""
+                aria-hidden="true"
+                width={220}
+                height={150}
+                loading="eager"
+                decoding="async"
+              />
+            </>
           )}
           <span className="an-live-hero-scrim" aria-hidden="true" />
           <div className="an-live-hero-copy">
@@ -271,6 +338,67 @@ export function LiveView({ locale = "id" }: { locale?: "id" | "en" }) {
                   {t.emailCta} <ArrowUpRight size={13} aria-hidden="true" />
                 </a>
               </div>
+            </div>
+            {/* [Visual recomposition] Kolom kedua grid ini dulu tidak
+                dirender sama sekali di keadaan kosong — `.an-live-next`
+                tetap dua kolom (1.15fr/0.85fr), jadi sisa 0.85fr-nya
+                adalah ruang kosong mentah, bukan jeda yang disengaja.
+                Diisi fakta nyata yang sudah ada di codebase (status,
+                basis, genre) — bukan dekorasi baru — supaya bentuknya
+                tetap sama persis dengan panel sisi "show berikutnya",
+                dan ruang itu akhirnya membawa informasi. */}
+            <div className="an-live-next-side">
+              <p className="an-meta">
+                {t.statusLabel}: {t.emptyStatus}
+              </p>
+              <p className="an-live-place">
+                <MapPin size={12} aria-hidden="true" />
+                <span>{verifiedArtistProfile.location}</span>
+              </p>
+              <ul className="an-live-genres">
+                {verifiedArtistProfile.genres.map(genre => (
+                  <li key={genre}>
+                    <Radio size={11} aria-hidden="true" /> {genre}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
+
+        {/* Jalur lanjut — hanya saat keadaan kosong (belum ada tanggal).
+            Begitu sudah ada show terkonfirmasi, halaman ini sudah punya isi
+            (show berikutnya + indeks jadwal) yang menutupnya dengan cukup;
+            blok ini dulu hilang total di keadaan kosong, jadi /live jadi
+            satu-satunya halaman utama yang berhenti tanpa menunjuk ke mana
+            pun. Tiga tautan di sini sama persis dengan pola "jalur lanjut"
+            di /about — bukan pola baru, primitif yang sama dipakai di sini
+            karena masalahnya sama. */}
+        {!featured && (
+          <section
+            className="an-section an-live-path"
+            aria-labelledby="live-path-title"
+          >
+            <header className="an-head">
+              <p className="an-meta">{t.emptyPathMeta}</p>
+              <h2 id="live-path-title" className="an-title an-title--human">
+                {t.emptyPathTitle}
+              </h2>
+            </header>
+            <div className="an-live-path-grid">
+              {t.emptyPath.map(item => (
+                <Link
+                  className="an-live-path-item"
+                  href={item.href}
+                  key={item.title}
+                >
+                  <span>
+                    <strong>{item.title}</strong>
+                    <small>{item.copy}</small>
+                  </span>
+                  <ArrowUpRight size={16} aria-hidden="true" />
+                </Link>
+              ))}
             </div>
           </section>
         )}

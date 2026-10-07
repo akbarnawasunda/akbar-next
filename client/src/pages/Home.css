@@ -1119,9 +1119,6 @@
 .an-site .live-section::after {
   content: none !important;
 }
-.an-site .live-backdrop {
-  display: none !important;
-}
 
 .an-site .live-copy {
   position: relative;
@@ -2565,53 +2562,6 @@
 .an-site .live-status small {
   color: var(--mute);
 }
-.an-site .an-platform-marquee {
-  margin-top: clamp(56px, 7vw, 96px);
-  overflow: hidden;
-  border-top: 1px solid var(--ink-line);
-  color: var(--ink);
-}
-.an-site .an-platform-marquee-heading {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--ink-line);
-  color: var(--mute);
-  font: 600 0.62rem/1 var(--font-mono);
-  letter-spacing: 0.13em;
-}
-.an-site .an-platform-marquee-row {
-  overflow: hidden;
-  width: 100%;
-  border-bottom: 1px solid var(--ink-line);
-}
-.an-site .an-platform-marquee-track {
-  display: flex;
-  width: max-content;
-}
-.an-site .an-platform-marquee-set {
-  display: flex;
-  flex: 0 0 auto;
-  gap: 32px;
-  padding: 20px 32px 20px 0;
-}
-.an-site .an-platform-marquee-item {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 10px;
-  min-width: max-content;
-  color: var(--ink);
-  white-space: nowrap;
-  font: 600 0.72rem/1 var(--font-mono);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.an-site .an-platform-marquee-item .an-platform-icon {
-  color: var(--ink);
-}
-
 /* REFINED ALL-DARK — surgical cascade over the previous paper-surface experiment */
 .an-site .section,
 .an-site .home-signal-deck,
@@ -2723,25 +2673,6 @@
     transparent 2px 6px
   );
 }
-.an-site .an-platform-marquee {
-  border-color: var(--paper-line);
-  color: var(--paper);
-}
-.an-site .an-platform-marquee-heading,
-.an-site .an-platform-marquee-row {
-  border-color: var(--paper-line);
-}
-.an-site .an-platform-marquee-heading {
-  color: var(--mute);
-}
-.an-site .an-platform-marquee-set {
-  gap: 32px;
-}
-.an-site .an-platform-marquee-item,
-.an-site .an-platform-marquee-item .an-platform-icon {
-  color: var(--paper);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .an-site .home-platform-card:hover,
   .an-site .release-card:hover,

@@ -2,9 +2,6 @@
    ENGLISH LAYER — /en/* variants
    ============================================================ */
 
-.en-nav { gap: clamp(12px, 1.6vw, 22px); }
-.en-nav .nf-wordmark { white-space: nowrap; }
-
 .an-language-switcher {
   display: inline-flex;
   align-items: center;
@@ -29,64 +26,20 @@
   outline-offset: 4px;
 }
 
-.en-mobile-language {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 14px;
-  padding-top: 16px;
-  border-top: 1px solid var(--ink-line);
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.13em;
-  color: var(--mute);
-  text-transform: uppercase;
-}
-.en-mobile-language .an-language-switcher { color: var(--paper); }
-
-.en-footer-bottom {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid var(--ink-line);
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 0.12em;
-  color: var(--mute-soft);
-  text-transform: uppercase;
-}
-.en-footer-bottom .an-language-switcher { font-size: 0.58rem; }
-
 .en-content {
   position: relative;
   isolation: isolate;
 }
 .en-content::before { content: none !important; display: none !important; }
 
-.en-hero {
-  background-image:
-    linear-gradient(90deg, var(--ink) 18%, color-mix(in srgb, var(--ink) 62%, transparent) 62%, color-mix(in srgb, var(--ink) 22%, transparent) 100%),
-    var(--page-image, url("/assets/akbar-night-frequency-hero-optimized.webp"));
-  background-position: center;
-  background-size: cover;
-}
-.en-hero-copy { max-width: 760px; }
-
-.en-hero-portrait {
-  display: block;
-  width: min(100%, 420px);
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  object-position: center 22%;
-  margin: 30px 0 0 auto;
-  border: 1px solid var(--ink-line);
-  filter: brightness(1.05) saturate(0.94);
-  box-shadow: none;
-}
+/* [REMOVED liquid-signal/phase3] `.en-hero` / `.en-hero-copy` /
+   `.en-hero-portrait` dulu di sini: tidak ada JSX yang memakai kelas ini
+   lagi (hero EN sekarang `.an-hero` di EnglishPages.tsx, sama dengan ID),
+   dan fallback-nya menunjuk ke "akbar-night-frequency-hero-optimized" —
+   gambar yang sama persis dihapus dari /live karena komposit neon/chrome
+   palsu. Aturan mati dihapus, bukan dibiarkan sebagai jalur balik ke
+   gambar itu kalau suatu saat ada yang pasang `className="en-hero"` lagi
+   tanpa sadar. */
 .en-particle-lane {
   display: grid;
   justify-items: end;
@@ -597,7 +550,6 @@
 }
 
 @media (max-width: 900px) {
-  .en-nav .an-language-switcher { display: none; }
   .en-catalog { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .en-visual-grid { grid-template-columns: 1fr; }
   .en-two-column { grid-template-columns: 1fr; gap: 40px; }
@@ -623,11 +575,6 @@
   .en-signal-strip { display: block; }
   .en-signal-strip .nf-button { margin-top: 18px; }
   .en-legal-index { grid-template-columns: 1fr; }
-  .en-footer-bottom {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-  .en-footer-bottom .an-language-switcher { align-self: flex-start; }
 }
 
 @media (prefers-reduced-motion: reduce) {

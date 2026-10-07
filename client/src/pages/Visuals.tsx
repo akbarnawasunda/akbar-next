@@ -37,7 +37,6 @@ const copy = {
     lede: "Video musik, visualizer, dan studi potret dari kanal resmi Akbar Nawasunda.",
     youtubeCta: "Buka YouTube",
     portraitsCta: "Studi potret",
-    facts: { videos: "Video", portraits: "Studi potret", channel: "Kanal" },
     portraitAlt: "Potret resmi Akbar Nawasunda",
     plateNote: "Studio portrait",
     screeningTitle: "Tayangan resmi.",
@@ -81,11 +80,6 @@ const copy = {
     lede: "Music videos, visualizers, and portrait studies from the official Akbar Nawasunda channel.",
     youtubeCta: "Open YouTube",
     portraitsCta: "Portrait studies",
-    facts: {
-      videos: "Videos",
-      portraits: "Portrait studies",
-      channel: "Channel",
-    },
     portraitAlt: "Official portrait of Akbar Nawasunda",
     plateNote: "Studio portrait",
     screeningTitle: "Official screenings.",
@@ -200,6 +194,7 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
               href="https://www.youtube.com/@akbarnawasunda"
               target="_blank"
               rel="noreferrer"
+              data-cursor="point"
             >
               {t.youtubeCta} <ArrowUpRight size={14} />
             </a>
@@ -207,20 +202,13 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
               {t.portraitsCta} <ArrowUpRight size={14} />
             </a>
           </div>
-          <dl className="an-vis-facts">
-            <div>
-              <dt>{t.facts.videos}</dt>
-              <dd>{archive.length}</dd>
-            </div>
-            <div>
-              <dt>{t.facts.portraits}</dt>
-              <dd>{portraitContent.length}</dd>
-            </div>
-            <div>
-              <dt>{t.facts.channel}</dt>
-              <dd>YouTube</dd>
-            </div>
-          </dl>
+          {/* Dulu ada kotak statistik (Video/Studi potret/Kanal) di sini —
+              bentuk yang sama persis dengan hero /about dan /universe, jadi
+              tiga halaman terasa dipotong dari templat yang sama. Jumlah
+              video/foto juga bukan informasi yang penting bagi pengunjung
+              di halaman "arsip", beda dengan /universe yang memang halaman
+              pencatatan. Dihapus; biarkan hero ini tenang sebelum ruang
+              tayang di bawah jadi padat. */}
         </div>
         <figure className="an-vis-hero-plate">
           <ResilientArtworkImage
@@ -266,7 +254,16 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
 
       {/* Arsip visual: kolom berirama (dense grid), bukan kotak seragam.
             Kalau semua video sudah tampil sebagai tayangan, bagian ini
-            disembunyikan supaya tidak ada daftar kosong atau pengulangan. */}
+            disembunyikan supaya tidak ada daftar kosong atau pengulangan.
+            [Visual recomposition] Kalau arsipnya cuma sisa SATU entri
+            (fallback statis: 3 video dikurangi 2 yang sudah tampil di
+            ruang tayang = 1), dulu entri itu tetap dirender sebagai kartu
+            sempit (span 3 dari 6 kolom) dengan FilterBar penuh di
+            atasnya — kotak kecil mengambang di separuh panel gelap yang
+            lebar, dan filter untuk memilah satu video. Sekarang: filter
+            hanya tampil kalau benar-benar ada lebih dari satu entri untuk
+            dipilah, dan entri tunggal memegang penuh lebar panel sebagai
+            satu baris fitur besar — skala yang jujur soal jumlah isinya. */}
       {archiveItems.length > 0 && (
         <section
           className="an-section dark-panel"
@@ -283,14 +280,20 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
                   : t.archiveFromChannel(visibleArchive.length)}
               </p>
             </div>
-            <FilterBar
-              options={groups}
-              value={group}
-              onChange={setGroup}
-              label={t.archiveFilter}
-            />
+            {archiveItems.length > 1 && (
+              <FilterBar
+                options={groups}
+                value={group}
+                onChange={setGroup}
+                label={t.archiveFilter}
+              />
+            )}
           </header>
-          <div className="an-vis-archive">
+          <div
+            className={`an-vis-archive${
+              visibleArchive.length === 1 ? " an-vis-archive--solo" : ""
+            }`}
+          >
             {visibleArchive.map(video => (
               <InteractiveArtworkCard
                 key={video.title}

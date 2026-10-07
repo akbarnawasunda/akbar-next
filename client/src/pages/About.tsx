@@ -3,6 +3,8 @@ import { Link } from "wouter";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { Reveal } from "@/components/Reveal";
+import { SundaScript } from "@/components/signature/SundaScript";
+import { SUNDA_NAME } from "@/content/sundaneseScript";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
 import { usePublicArtistContent } from "@/content/publicContent";
 import "./EcosystemPages.css";
@@ -27,9 +29,8 @@ const copy = {
     bioTitle: "Perjalanan musik.",
     statementFallback:
       "Karya orisinal dirilis sebagai Akbar Nawasunda; katalog remix juga dikenal melalui DJ Akbar Remix.",
-    bandLabel: "Potret editorial",
-    bandAlt: "Potret editorial Akbar Nawasunda dengan cahaya merah",
-    bandCaption: "Potret editorial",
+    bandLabel: "Nama, ditulis dengan aksara Sunda",
+    bandCaption: "Akbar Nawasunda ditulis dalam aksara Sunda — akar Bandung Barat yang tetap melekat di tiap rilisan.",
     outlineMeta: "Satu jalur keluar",
     outlineCopy:
       "Booking panggung, remix, lisensi, atau kolaborasi — semuanya masuk lewat satu jalur inquiry resmi.",
@@ -73,9 +74,8 @@ const copy = {
     bioTitle: "The musical journey.",
     statementFallback:
       "Original work is released as Akbar Nawasunda; the remix catalog is also known through DJ Akbar Remix.",
-    bandLabel: "Editorial portrait",
-    bandAlt: "Editorial portrait of Akbar Nawasunda in red light",
-    bandCaption: "Editorial portrait",
+    bandLabel: "His name, written in Sundanese script",
+    bandCaption: "Akbar Nawasunda written in Sundanese script — the West Bandung root that stays in every release.",
     outlineMeta: "One official route",
     outlineCopy:
       "Stage booking, remix, licensing, or collaboration — it all arrives through one official inquiry route.",
@@ -153,20 +153,16 @@ export function AboutView({ locale = "id" }: { locale?: "id" | "en" }) {
             </p>
             <h1 id="about-title">{t.heroTitle}</h1>
             <p className="an-ab-lede">{shortBio}</p>
-            <dl className="an-facts">
-              <div>
-                <dt>{t.facts.based}</dt>
-                <dd>{location}</dd>
-              </div>
-              <div>
-                <dt>{t.facts.alias}</dt>
-                <dd>{verifiedArtistProfile.aliases.join(" / ")}</dd>
-              </div>
-              <div>
-                <dt>{t.facts.since}</dt>
-                <dd>2020</dd>
-              </div>
-            </dl>
+            {/* Dulu tiga kotak statistik (Basis/Alias/Sejak) — bentuk yang
+                sama persis diulang di /visuals dan /universe, jadi halaman
+                ini terasa seperti templat "infobox" generik. Alias-nya pun
+                sudah tertulis lagi di bawah (baris "Aka ..." pada aside
+                biografi). Sekarang basis & tahun aktif jadi satu baris
+                keterangan — bahasa metadata yang sama dipakai label
+                platform/tanggal di seluruh situs, bukan kartu statistik. */}
+            <p className="an-meta an-ab-meta-line">
+              {t.facts.based} {location} · {t.facts.since.toLowerCase()} 2020
+            </p>
             <div className="an-ab-hero-actions">
               <Link className="an-btn an-btn--solid" href={t.listenHref}>
                 {t.listenCta} <ArrowUpRight size={14} aria-hidden="true" />
@@ -199,7 +195,7 @@ export function AboutView({ locale = "id" }: { locale?: "id" | "en" }) {
               </p>
             </div>
             <div className="an-ab-bio-body an-rise">
-              <h2 id="about-bio-title" className="an-title">
+              <h2 id="about-bio-title" className="an-title an-title--human">
                 {t.bioTitle}
               </h2>
               <p className="an-ab-long">{longBio}</p>
@@ -221,22 +217,14 @@ export function AboutView({ locale = "id" }: { locale?: "id" | "en" }) {
           </section>
         </Reveal>
 
-        {/* Pita potret penuh lebar — jeda visual sebelum jalur lanjut. */}
+        {/* Jeda visual sebelum jalur lanjut — bukan foto kedua (lihat
+            akbar-next#liquid-signal: foto editorial di sini dulu adalah
+            komposit AI "cyberpunk poster", bukan potret asli). Namanya
+            sendiri, dalam aksara Sunda, jadi gambarnya: identitas dari
+            materi yang nyata, bukan dekorasi karangan. */}
         <section className="an-ab-band" aria-label={t.bandLabel}>
-          <figure className="an-ab-band-plate">
-            <img
-              src={officialBrand.editorialPortrait}
-              alt={t.bandAlt}
-              width={667}
-              height={1000}
-              loading="lazy"
-              decoding="async"
-            />
-          </figure>
-          <p className="an-ab-band-caption">
-            <span>{t.bandCaption}</span>
-            <span>Akbar Nawasunda</span>
-          </p>
+          <SundaScript entry={SUNDA_NAME} lang={locale} tone="monument" />
+          <p className="an-ab-band-caption">{t.bandCaption}</p>
         </section>
 
         {/* Pitch booking direduksi jadi SATU jalur keluar (Phase 3:
@@ -255,7 +243,7 @@ export function AboutView({ locale = "id" }: { locale?: "id" | "en" }) {
         >
           <header className="an-head">
             <p className="an-meta">{t.pathMeta}</p>
-            <h2 id="about-path-title" className="an-title">
+            <h2 id="about-path-title" className="an-title an-title--human">
               {t.pathTitle}
             </h2>
           </header>

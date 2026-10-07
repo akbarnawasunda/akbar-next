@@ -394,9 +394,11 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: var(--space-lg);
   margin-top: var(--space-xl);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--ink-line);
 }
 
 /* ------------------------------------------------------------
@@ -451,50 +453,9 @@
   grid-auto-columns: clamp(230px, 25vw, 340px);
 }
 
-/* ------------------------------------------------------------
-   ADEGAN 5 — JEDA (FASE 7 nomor 7)
-   ------------------------------------------------------------
-   Satu layar yang isinya nyaris tidak ada: ruang kosong di atas dan di
-   bawah jauh lebih besar dari biasanya, satu baris mikro di tengah.
-   Ini hanya masuk akal SETELAH nomor 6 (ornamen dipangkas) — kalau
-   instr-topo/instr-grain masih hidup, "kosong" ini akan tetap penuh
-   tekstur dan tidak terasa sebagai jeda sama sekali.
-   ------------------------------------------------------------ */
-
-.an-site .an-pause {
-  display: grid;
-  place-items: center;
-  /* Jauh lebih tinggi dari --space-3xl section lain: inilah yang
-     membuatnya terasa seperti helaan napas, bukan section pendek. */
-  min-height: clamp(260px, 38vh, 440px);
-  padding: 0 var(--hx-gutter);
-}
-
-.an-site .an-pause-quote {
-  margin: 0;
-  max-width: 28ch;
-  text-align: center;
-  /* FASE 7 nomor 5 — "kutipan tunggal": huruf judul dipakai di luar
-     konteks nama, di tingkat MIKRO (--step--1), bukan raksasa. Ini satu
-     dari tiga tingkat kontras yang disengaja (raksasa di hero, sedang di
-     nomor kanal, mikro di sini) — tingkat tengahnya memang tidak pernah
-     dipakai, lihat catatan --step-3 di index.css. */
-  font-family: var(--font-title);
-  font-size: var(--step--1);
-  font-weight: 500;
-  font-style: normal;
-  letter-spacing: 0.01em;
-  line-height: 1.5;
-  color: color-mix(in srgb, var(--paper) 46%, transparent);
-}
-
-.an-site .an-pause-quote::before {
-  content: "“";
-}
-
-.an-site .an-pause-quote::after {
-  content: "”";
-}
+/* ADEGAN 5 — JEDA (FASE 7 nomor 7) pindah ke client/src/shell/SceneKit.css
+   sebagai primitif bersama `.an-pause` (dipakai Home dan halaman lain yang
+   butuh satu napas di tengah urutan section, bukan hanya beranda). */
 
 /* ------------------------------------------------------------
    MOTION — hiasi isi yang sudah terlihat, jangan sembunyikan isi
@@ -932,45 +893,6 @@
 .an-site .an-channel:focus-visible .an-channel-mark,
 .an-site .an-channel:hover .an-channel-arrow,
 .an-site .an-channel:focus-visible .an-channel-arrow {
-  color: var(--band-accent);
-}
-
-  /* Marquee kanal memakai token gelap sendiri (berkas terpisah). */
-.an-site .an-channels .an-platform-marquee {
-  border-top-color: var(--band-rule);
-  color: var(--ink);
-}
-
-.an-site .an-channels .an-platform-marquee-heading {
-  border-bottom-color: var(--band-rule);
-  color: var(--band-mute);
-}
-
-.an-site .an-channels .an-platform-marquee-row {
-  border-bottom-color: var(--band-rule);
-}
-
-.an-site .an-channels .an-platform-marquee-item {
-  color: var(--ink);
-}
-
-/* Tanpa baris ini ikonnya tetap mewarisi `var(--paper)` dari aturan global
-   "ALL-DARK" di Home.css (dibuat untuk marquee di atas latar gelap) —
-   ikon krem di atas pita kertas krem sama-sama hampir putih, jadi SVG-nya
-   ada di DOM tapi tidak kelihatan sama sekali. Band kanal resmi ini
-   berlatar terang (`var(--paper)`), jadi ikonnya harus ikut `var(--ink)`
-   sama seperti teksnya, bukan cuma teksnya saja. */
-.an-site .an-channels .an-platform-marquee-item .an-platform-icon {
-  color: var(--ink);
-}
-
-.an-site .an-channels .an-platform-marquee-item:hover,
-.an-site .an-channels .an-platform-marquee-item:focus-visible {
-  color: var(--band-accent);
-}
-
-.an-site .an-channels .an-platform-marquee-item:hover .an-platform-icon,
-.an-site .an-channels .an-platform-marquee-item:focus-visible .an-platform-icon {
   color: var(--band-accent);
 }
 

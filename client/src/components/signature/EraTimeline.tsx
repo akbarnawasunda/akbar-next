@@ -111,6 +111,17 @@ export function EraTimeline({
             data-era-index={index}
             data-active={index === active}
           >
+            {/* Jangkar gambar per-babak: di desktop disembunyikan (panel
+                artwork sticky di `.an-era-artwork` sudah memegang peran
+                itu), tapi di mobile `.an-era-artwork` berhenti sticky dan
+                jadi satu gambar statis yang sudah lewat begitu pembaca
+                mulai menggulir babak kedua. Komposisi mobile sendiri:
+                tiap babak membawa artworknya sendiri supaya gambar tetap
+                terlihat saat teks babak itu dibaca, bukan tertinggal di
+                atas layar. */}
+            <div className="an-era-item-art" aria-hidden="true">
+              <ResilientArtworkImage src={era.artwork || ""} alt="" />
+            </div>
             <p className="an-era-year">{era.year}</p>
             <h3 className="an-era-title">{era.title}</h3>
             <p className="an-era-copy">{era.description}</p>

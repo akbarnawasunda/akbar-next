@@ -311,16 +311,22 @@
   }
 }
 
-/* -- CTA panel ------------------------------------------------ */
+/* -- CTA panel ------------------------------------------------
+   Dulu ini kartu bertepi penuh dengan garis aksen tebal di kiri dan latar
+   lebih terang — persis bentuk "kotak CTA agensi" yang muncul di hampir
+   semua situs portofolio generik, diulang identik di penutup /, /music,
+   dan /visuals (dan padanan EN-nya). Sekarang menyatu dengan latar
+   halaman: satu garis tipis di kiri sebagai penanda baca (bahasa yang
+   sama dengan rel/kutipan editorial), tanpa kotak, tanpa panel terang.
+   Section pembungkusnya (.ed-section) sudah punya rule atas dan padding
+   sendiri, jadi tidak digandakan di sini. ------------------------------- */
 .ed-cta {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  align-items: center;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  align-items: start;
   gap: clamp(22px, 3vw, 56px);
-  padding: clamp(26px, 4vw, 64px);
-  border: 1px solid var(--ink-line);
-  border-left: 2px solid var(--acid);
-  background: var(--ink-card);
+  padding-left: clamp(16px, 2vw, 26px);
+  border-left: 1px solid var(--ink-line);
 }
 @media (max-width: 860px) {
   .ed-cta {
