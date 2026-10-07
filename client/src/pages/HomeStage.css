@@ -794,15 +794,19 @@
   .an-site .an-hero-lede {
     max-width: 54ch;
     /* FASE 7 nomor 4 — "teks pendamping turun ke mikro": dulu nyaris
-       sama besar dengan badan teks biasa (1-1,18rem). Sekarang memakai
-       tingkat MIKRO (--step--1 = 0,667rem) sebagai lantai, dengan
-       plafon 0,8rem supaya tetap bisa dibaca sebagai kalimat pada layar
-       lebar — bukan 1,18rem seperti sebelumnya. [TAFSIR/RISIKO] 10,7px
-       pada lebar sempit lebih kecil dari anjuran umum ~12px untuk teks
-       baca; dipakai di sini karena perannya memang pendamping singkat
-       (dua baris), bukan badan artikel, tapi ini belum diuji dengan
-       pengguna nyata — lihat docs/phase7-laporan.md. */
-    font-size: clamp(var(--step--1), 1vw, 0.8rem);
+       sama besar dengan badan teks biasa (1-1,18rem). Lede memang
+       pendamping singkat, bukan badan artikel, jadi ia tetap di bawah
+       teks baca biasa.
+
+       Ukuran hurufnya sengaja TIDAK ditulis ulang di sini lagi. Blok
+       FASE 7 pernah memasang `clamp(var(--step--1), 1vw, 0.8rem)` khusus
+       desktop: lantainya 0,667rem = 10,7px dan plafonnya 0,8rem = 12,8px,
+       sehingga lede di desktop justru LEBIH KECIL daripada lede yang sama
+       di ponsel (0,9rem = 14,4px lewat `var(--text-lede)` di aturan
+       dasar). Risiko itu sudah dicatat di docs/phase7-laporan.md
+       §"Risiko yang BELUM terbukti" nomor 1. Sekarang aturan dasar yang
+       berlaku di semua lebar layar, jadi ukurannya naik satu arah dan
+       tidak ada lagi nilai khusus desktop yang lebih kecil dari ponsel. */
   }
 
   /* Maskot dulu duduk di sudut kiri-atas plate (yang mulai di 62%),
