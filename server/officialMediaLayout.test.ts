@@ -79,6 +79,18 @@ describe("kartu media resmi — geometri", () => {
     expect(frame.includes("!important")).toBe(false);
   });
 
+  it("mempertahankan kontras tautan BUKA YOUTUBE di atas isian terang", () => {
+    // `.nf-page a { color: inherit }` mengatur ulang warna tautan umum.
+    // Selector komponen ini sengaja lebih spesifik agar label dan ikon
+    // tetap berwarna ink saat latar tautan berwarna paper.
+    const openLink = rule(
+      frame,
+      ".an-official-media .an-official-media-actions a {"
+    );
+    expect(openLink).toMatch(/background:\s*var\(--paper\)/);
+    expect(openLink).toMatch(/color:\s*var\(--ink\)/);
+  });
+
   it("tidak menyisakan selektor mati .an-official-player (tanpa -wrap)", () => {
     expect(/\.an-official-player\s*\{/.test(frame)).toBe(false);
     expect(/\.an-official-player\s+iframe/.test(frame)).toBe(false);
