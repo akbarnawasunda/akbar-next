@@ -273,8 +273,24 @@
    membuat tombol kiri selalu lebih lebar (±10%) sehingga tepi kanannya
    tidak sejajar dengan tombol di sebelahnya. Dengan basis sama,
    keduanya tumbuh seimbang dan tetap turun ke baris sendiri saat
-   kartu sempit. */
-.an-official-media-actions a {
+   kartu sempit.
+
+   Kelas diulang (`.an-official-media-actions.an-official-media-actions`)
+   bukan kosmetik: tautan "BUKA {PROVIDER}" ini TAMPIL SEBAGAI KOTAK PUCAT
+   TANPA LABEL TERBACA di render nyata. Sebabnya murni cascade — bukan
+   loading/timing, bukan sticky, bukan iframe:
+   `.nf-page a { color: inherit; }` (EcosystemPages.css) dan aturan
+   `color: var(--ink)` di sini sama-sama specificity (0,1,1) (satu kelas +
+   elemen `a`). `EcosystemPages.css` dimuat belakangan (di-import paling
+   akhir oleh setiap halaman yang memakai kartu ini), jadi seri itu
+   menang dan `color` balik jadi `inherit` — yang di posisi ini mewarisi
+   `color: var(--paper)` dari `.nf-page`. Hasilnya teks putih di atas
+   `background: var(--paper)` yang JUGA putih: label hilang total,
+   tapi kotak latar belakangnya tetap tampak — persis "kotak pucat tanpa
+   label" yang dilaporkan. Kelas diulang menaikkan specificity jadi
+   (0,2,1) supaya warna teks di sini selalu menang, berapa pun urutan
+   impor CSS halaman yang memakainya. */
+.an-official-media-actions.an-official-media-actions a {
   flex: 1 1 160px;
   border-color: var(--paper);
   background: var(--paper);
