@@ -335,10 +335,10 @@ export function NightFooter({ lang = "id" }: { lang?: Lang } = {}) {
         <Link href={`${prefix}/epk`}>{copy.epk}</Link>
         <Link href={`${prefix}/privacy`}>{copy.privacy}</Link>
       </div>
-      <p className="footer-bottom">
+      <div className="footer-bottom">
         <span>© {new Date().getFullYear()} AKBAR NAWASUNDA</span>
         <LanguageSwitcher pathname={pathname || prefix || "/"} lang={lang} />
-      </p>
+      </div>
     </footer>
   );
 }

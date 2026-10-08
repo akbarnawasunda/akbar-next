@@ -51,6 +51,9 @@ import "./GlobalAudioPlayer.css";
 
 const STATE_KEY = "an-player-state";
 const PLAY_LATEST_EVENT = "an-player:play-latest";
+/** Dua arah eksklusi antara bilah dok dan pemutar sematan di kartu. */
+export const DOCK_STOP_EVENT = "an-player:dock-stop";
+export const INLINE_STOP_EVENT = "an-player:inline-stop";
 
 /** Dipanggil dari dokumen rilisan: buka dan putar rilisan terbaru. */
 export function requestLatestReleasePlayback() {
@@ -114,10 +117,24 @@ export function GlobalAudioPlayer() {
       actions.setAudioState("paused");
       return;
     }
+    // Satu aliran pada satu waktu: pemutar sematan di kartu musik ditutup dulu.
+    window.dispatchEvent(new Event(INLINE_STOP_EVENT));
     setHasOpened(true);
     setAutoPlay(true);
     actions.openTrack(track);
   }, [actions, playing, track]);
+
+  // Pemutar sematan kartu dibuka: bilah ini berhenti (rak embed ikut lepas).
+  useEffect(() => {
+    const onInlineOpen = () => {
+      if (state === "loading" || state === "playing" || state === "paused") {
+        setAutoPlay(false);
+        actions.setAudioState("minimized");
+      }
+    };
+    window.addEventListener(DOCK_STOP_EVENT, onInlineOpen);
+    return () => window.removeEventListener(DOCK_STOP_EVENT, onInlineOpen);
+  }, [actions, state]);
 
   // Client-only: tidak pernah ikut ke HTML SSR.
   useEffect(() => {

@@ -221,6 +221,10 @@
   height: 40%;
   background: color-mix(in srgb, var(--acid) 70%, transparent);
   animation: ed-wave 1.5s var(--ease, ease) infinite;
+  /* Diam sebagai keadaan istirahat. Pemutar sematan (widget SoundCloud)
+     tidak memberi tahu aplikasi apakah sedang berbunyi, jadi batang tidak
+     boleh berayun seolah ada yang diputar. */
+  animation-play-state: paused;
 }
 .ed-wave span:nth-child(2n) {
   animation-delay: 0.15s;
@@ -580,7 +584,6 @@
 .ed-player .ed-player__shelf[data-player-shelf="true"] { grid-template-rows: 1fr; }
 .ed-player:has(.ed-player__toggle[aria-expanded="false"]) .ed-player__shelf { grid-template-rows: 0fr; }
 .ed-player:has(.ed-player__toggle[aria-expanded="false"]) .ed-player__body { padding-block: 0; }
-.ed-player[data-player-state="loading"] .ed-wave span { animation-play-state: running; }
 .ed-player__bar {
   display: flex;
   align-items: center;

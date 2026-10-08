@@ -30,7 +30,7 @@
 
 .an-global-player-bar {
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto auto;
   align-items: center;
   gap: 12px;
   width: 100%;
@@ -169,6 +169,7 @@
 
 @media (max-width: 640px) {
   .an-global-player-bar {
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
     gap: 10px;
     padding: 10px 14px;
   }
