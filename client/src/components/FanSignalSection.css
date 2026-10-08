@@ -27,7 +27,9 @@
   letter-spacing: 0.13em;
   text-transform: uppercase;
 }
-.fan-signal-index span:first-child { color: var(--paper); }
+.fan-signal-index span:first-child {
+  color: var(--paper);
+}
 .fan-signal-index i {
   display: block;
   height: 1px;
@@ -48,10 +50,10 @@
   margin: 24px 0 28px;
   color: var(--paper);
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 4rem);
+  font-size: var(--display-section);
   font-weight: 400;
   letter-spacing: 0em;
-  line-height: 1.06;
+  line-height: 1.02;
 }
 .fan-signal-copy > p:last-child {
   max-width: 44ch;
@@ -102,7 +104,9 @@
   border: 1px solid var(--paper-line);
   border-radius: var(--r-sm, 4px);
   background: var(--ink);
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
 }
 .fan-signal-input-row:focus-within {
   border-color: var(--acid);
@@ -125,7 +129,9 @@
   font: inherit;
   font-size: 0.95rem;
 }
-.fan-signal-input-row input::placeholder { color: var(--mute); }
+.fan-signal-input-row input::placeholder {
+  color: var(--mute);
+}
 .fan-signal-input-row button {
   display: inline-flex;
   align-items: center;
@@ -143,7 +149,9 @@
   text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
-  transition: background 160ms ease, transform 140ms ease;
+  transition:
+    background 160ms ease,
+    transform 140ms ease;
 }
 .fan-signal-input-row button:hover:not(:disabled) {
   background: var(--acid);
@@ -161,17 +169,31 @@
   font-size: 0.8rem;
   line-height: 1.6;
 }
-.fan-signal-note.is-success { color: var(--state-ok); }
-.fan-signal-note.is-error { color: var(--state-err); }
+.fan-signal-note.is-success {
+  color: var(--state-ok);
+}
+.fan-signal-note.is-error {
+  color: var(--state-err);
+}
 
 @media (max-width: 820px) {
-  .fan-signal-section { grid-template-columns: 1fr; gap: 32px; }
-  .fan-signal-form { justify-self: stretch; max-width: none; }
+  .fan-signal-section {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .fan-signal-form {
+    justify-self: stretch;
+    max-width: none;
+  }
 }
 
 @media (max-width: 560px) {
-  .fan-signal-input-row { flex-wrap: wrap; }
-  .fan-signal-input-row input { min-height: 52px; }
+  .fan-signal-input-row {
+    flex-wrap: wrap;
+  }
+  .fan-signal-input-row input {
+    min-height: 52px;
+  }
   .fan-signal-input-row button {
     width: 100%;
     justify-content: center;

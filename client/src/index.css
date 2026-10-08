@@ -254,6 +254,27 @@
   --step-6:  11.391rem;  /* raksasa */
   --step-7:  17.086rem;  /* raksasa maksimum — jarang dipakai, nyaris tidak pernah tercapai di viewport nyata (lihat nomor 4) */
 
+  /* -- Gerak: satu grammar untuk kedatangan ----------------------------
+     Semua elemen yang masuk ke layar memakai durasi, kurva, dan jarak
+     yang sama. Yang berbeda hanya PERAN geraknya (lihat docs/design-reference). */
+  --motion-arrive: 560ms;
+  --motion-ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-travel: 18px;
+
+  /* -- Register judul publik ------------------------------------------
+     Empat register, bukan satu ukuran "judul besar" untuk semua. Setiap
+     judul memilih satu register berdasarkan peran isinya:
+     - statement : momen tunggal per halaman (penutup, kalimat ajakan).
+     - route     : judul halaman katalog/arsip (satu per halaman).
+     - section   : judul bagian yang membawa informasi (sinyal, rilisan).
+     - index     : judul daftar/indeks yang langsung disusul baris data.
+     Di luar empat ini (hero, panggung wordmark, JEDAG RUN) memakai
+     aturannya sendiri karena identitasnya memang khusus. */
+  --display-statement: clamp(2.4rem, 4.2vw, 4.2rem);
+  --display-route: clamp(2.6rem, 4.4vw, 4.2rem);
+  --display-section: clamp(2rem, 3.3vw, 3.1rem);
+  --display-index: clamp(1.5rem, 2.3vw, 2.1rem);
+
   /* -- Media / image system ------------------------------------- */
   --ratio-square: 1 / 1;
   --ratio-portrait: 4 / 5;

@@ -5,16 +5,11 @@ import {
   Play,
   Sparkles,
 } from "lucide-react";
-import {
-  Fragment,
-  type CSSProperties,
-  useEffect,
-  useState,
-} from "react";
+import { Fragment, type CSSProperties, useEffect, useState } from "react";
 import { Link } from "wouter";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
-import { MusicEmbed } from "@/components/MusicEmbed";
+import { requestLatestReleasePlayback } from "@/components/signature/GlobalAudioPlayer";
 import FanSignalSection from "@/components/FanSignalSection";
 import { FAN_SIGNAL_SOURCES } from "@shared/types";
 import { Reveal } from "@/components/Reveal";
@@ -89,7 +84,6 @@ const HOME_COPY: Record<
     };
     doc: {
       storyFallback: string;
-      closePlayer: string;
       playHere: string;
       openRelease: string;
       loading: string;
@@ -108,7 +102,13 @@ const HOME_COPY: Record<
       introFallback: string;
       cta: string;
     };
-    cta: { line1: string; line2: string; copy: string; book: string; epk: string };
+    cta: {
+      line1: string;
+      line2: string;
+      copy: string;
+      book: string;
+      epk: string;
+    };
     fanSignal: { line1: string; line2: string; description: string };
   }
 > = {
@@ -123,7 +123,8 @@ const HOME_COPY: Record<
     heroScrollLabel: "Gulir",
     heroScrollAria: "Lihat kabar terbaru dari studio",
     heroFacts: { based: "Basis", since: "Sejak", genre: "Genre" },
-    alsoKnownAs: "Juga dikenal sebagai DJ Akbar Remix dan akbarnawasunda.my.id.",
+    alsoKnownAs:
+      "Juga dikenal sebagai DJ Akbar Remix dan akbarnawasunda.my.id.",
     signal: {
       line1: "YANG SEDANG",
       line2: "BERJALAN.",
@@ -147,7 +148,6 @@ const HOME_COPY: Record<
     doc: {
       storyFallback:
         "Putar langsung di sini, atau buka versi lengkapnya di platform resmi.",
-      closePlayer: "Tutup player",
       playHere: "Putar di sini",
       openRelease: "Buka rilisan",
       loading: "Memuat rilisan…",
@@ -219,7 +219,6 @@ const HOME_COPY: Record<
     doc: {
       storyFallback:
         "Play it right here, or open the full version on the official platform.",
-      closePlayer: "Close player",
       playHere: "Play here",
       openRelease: "Open release",
       loading: "Loading release…",
@@ -249,16 +248,13 @@ const HOME_COPY: Record<
     fanSignal: {
       line1: "DON'T",
       line2: "MISS A THING.",
-      description: "New releases, videos, and show dates — straight to your inbox.",
+      description:
+        "New releases, videos, and show dates — straight to your inbox.",
     },
   },
 };
 
-const formatEventDate = (
-  date: string,
-  locale: HomeLocale,
-  time?: string
-) => {
+const formatEventDate = (date: string, locale: HomeLocale, time?: string) => {
   const parsed = new Date(date);
   if (Number.isNaN(parsed.getTime())) return date;
   const dateText = new Intl.DateTimeFormat(
@@ -287,7 +283,6 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
   const prefix = locale === "en" ? "/en" : "";
 
   const [portraitSrc, setPortraitSrc] = useState(officialBrand.portrait);
-  const [playerOpen, setPlayerOpen] = useState(false);
   // [BUGFIX] `.an-site main > section.is-revealed` punya dekorasi garis
   // aksen yang tumbuh saat kelihatan (lihat NightFrequencySignature.css),
   // tapi tidak ada apa pun yang pernah menambahkan kelas `is-revealed` —
@@ -296,8 +291,6 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
   // kelihatan tanpa fade-in); ADEGAN 3 (rilisan) sudah punya animasinya
   // sendiri lewat `<Reveal>`/`.an-rise` jadi tidak diikutkan juga.
   const channelsRevealRef = useScrollReveal<HTMLElement>();
-  const pauseRevealRef = useScrollReveal<HTMLElement>();
-  const gameTeaserRevealRef = useScrollReveal<HTMLElement>();
 
   const publicContent = usePublicArtistContent();
   const contentQuery = trpc.content.list.useQuery(undefined, {
@@ -551,18 +544,13 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
               href={heroActionUrl}
               target="_blank"
               rel="noreferrer"
-              data-signal-magnetic
               data-signal-interactive
               data-cursor="point"
             >
               <Play size={13} fill="currentColor" />
               <span>{heroActionLabel}</span>
             </a>
-            <Link
-              className="an-btn an-btn--quiet"
-              href={`${prefix}/visuals`}
-              data-signal-magnetic
-            >
+            <Link className="an-btn an-btn--quiet" href={`${prefix}/visuals`}>
               {copy.heroVisualsCta} <ArrowRight size={15} />
             </Link>
           </div>
@@ -649,16 +637,10 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
               <button
                 type="button"
                 className="an-btn an-btn--solid"
-                aria-expanded={playerOpen}
-                onClick={() => setPlayerOpen(open => !open)}
+                onClick={requestLatestReleasePlayback}
+                data-cursor="music"
               >
-                {playerOpen ? (
-                  copy.doc.closePlayer
-                ) : (
-                  <>
-                    <Play size={13} fill="currentColor" /> {copy.doc.playHere}
-                  </>
-                )}
+                <Play size={13} fill="currentColor" /> {copy.doc.playHere}
               </button>
               <a
                 className="an-btn an-btn--quiet"
@@ -670,11 +652,6 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
               </a>
               <span className="an-feature-type">{activeRelease.type}</span>
             </div>
-            {playerOpen ? (
-              <div className="an-feature-player">
-                <MusicEmbed url={activeRelease.href} title={activeRelease.title} />
-              </div>
-            ) : null}
             {contentIsLoading && <p className="an-meta">{copy.doc.loading}</p>}
           </div>
         </section>
@@ -690,7 +667,9 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
       >
         <header className="an-channels-head">
           <h2 id="channels-title">{copy.channels.heading}</h2>
-          <p className="an-meta">{copy.channels.meta(editablePlatformLinks.length)}</p>
+          <p className="an-meta">
+            {copy.channels.meta(editablePlatformLinks.length)}
+          </p>
         </header>
 
         <ul className="an-channels-list" data-cursor="music">
@@ -739,7 +718,7 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
           sudah dibacakan screen reader lewat `.an-hero-lede`; mengulang
           di sini hanya untuk mata, bukan telinga. Tidak ada aset gambar
           baru; hanya CSS pada DOM yang sudah ringan ini. */}
-      <section ref={pauseRevealRef} className="an-pause" aria-hidden="true">
+      <section className="an-pause" aria-hidden="true">
         <p className="an-pause-quote">{copy.pauseQuote}</p>
       </section>
 
@@ -758,7 +737,6 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
 
       {gameEnabled ? (
         <section
-          ref={gameTeaserRevealRef}
           className="section game-teaser-section"
           id="game"
           aria-labelledby="game-teaser-title"
@@ -776,7 +754,8 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
           </div>
           <div className="game-teaser-copy">
             <p className="eyebrow">
-              <Sparkles size={13} /> {gameConfig?.kicker || copy.game.kickerFallback}
+              <Sparkles size={13} />{" "}
+              {gameConfig?.kicker || copy.game.kickerFallback}
             </p>
             <h2 id="game-teaser-title">
               {copy.game.line1}

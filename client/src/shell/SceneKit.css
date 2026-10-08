@@ -44,14 +44,12 @@
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--acid) 14%, transparent);
 }
 
-
-
 .an-public-shell.an-editorial :is(.an-site, .nf-page) :is(h1, h2, h3).an-title,
 .an-public-shell.an-editorial .an-title {
   margin: 0;
   max-width: 22ch;
   font-family: var(--font-display);
-  font-size: var(--text-h2);
+  font-size: var(--display-section);
   font-weight: 500;
   letter-spacing: 0em;
   line-height: 1.02;
@@ -69,8 +67,10 @@
    (daftar kanal, opsi dengar, rail katalog), bukan pernyataan editorial.
    Huruf kapital kecil + jarak renggang terasa seperti label arsip, jadi
    katalog tidak memakai "headline" berukuran sama di tiap seksi. */
-.an-public-shell.an-editorial .an-title--technical {
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+.an-public-shell.an-editorial
+  :is(.an-site, .nf-page)
+  .an-title.an-title--technical {
+  font-size: var(--display-index);
   font-weight: 600;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -180,7 +180,6 @@
   color: var(--acid);
 }
 
-
 /* ------------------------------------------------------------
    Primitif lokal: daftar fakta (dipakai kedua halaman)
    ------------------------------------------------------------ */
@@ -285,7 +284,7 @@
 @keyframes an-scene-rise {
   from {
     opacity: 0;
-    transform: translate3d(0, 20px, 0) scale(0.99);
+    transform: translate3d(0, var(--motion-travel), 0);
   }
   to {
     opacity: 1;
@@ -294,7 +293,7 @@
 }
 
 .an-public-shell.an-editorial .an-reveal.is-visible .an-rise {
-  animation: an-scene-rise 760ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: an-scene-rise var(--motion-arrive) var(--motion-ease-arrive) both;
 }
 
 .an-public-shell.an-editorial .an-reveal.is-visible .an-rise:nth-child(2) {
@@ -612,30 +611,34 @@
    punya satu titik padat (katalog, arsip) bisa memakai napas yang sama
    tanpa menulis ulang CSS-nya — bukan dekorasi baru, satu device yang
    sama dipakai di tempat yang memang butuh jeda. */
+/* JEDA — satu napas di antara dua bagian yang ramai. Sengaja:
+   - Latar solid (--ink): partikel sinyal di belakang berhenti sejenak.
+     Musiknya "berhenti", bukan panelnya kosong.
+   - Tidak setinggi layar. Lebih pendek dari bagian mana pun di sekitarnya.
+   - Kutipan rata kiri di gutter editorial, dibaca sebagai kalimat, bukan
+     ditaruh di tengah ruang kosong seperti label yang lupa diisi. */
 .an-public-shell.an-editorial :is(.an-site, .nf-page) .an-pause {
-  display: grid;
-  place-items: center;
-  /* Jauh lebih tinggi dari --space-3xl section lain: inilah yang
-     membuatnya terasa seperti helaan napas, bukan section pendek. */
-  min-height: clamp(260px, 38vh, 440px);
-  padding: 0 var(--hx-gutter);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: clamp(150px, 24vh, 230px);
+  padding: clamp(40px, 6vh, 64px) var(--hx-gutter);
+  background: var(--ink);
+  border-top: 1px solid var(--ink-line);
+  border-bottom: 1px solid var(--ink-line);
 }
 
 .an-public-shell.an-editorial :is(.an-site, .nf-page) .an-pause-quote {
   margin: 0;
-  max-width: 28ch;
-  text-align: center;
-  /* FASE 7 nomor 5 — "kutipan tunggal": huruf judul dipakai di luar
-     konteks nama, di tingkat MIKRO (--step--1), bukan raksasa. Satu dari
-     tiga tingkat kontras yang disengaja (raksasa di hero, sedang di nomor
-     kanal, mikro di sini). */
+  max-width: 34ch;
+  text-align: left;
   font-family: var(--font-title);
-  font-size: var(--step--1);
+  font-size: clamp(1.15rem, 2vw, 1.65rem);
   font-weight: 500;
   font-style: normal;
   letter-spacing: 0.01em;
-  line-height: 1.5;
-  color: color-mix(in srgb, var(--paper) 46%, transparent);
+  line-height: 1.35;
+  color: color-mix(in srgb, var(--paper) 76%, transparent);
 }
 
 .an-public-shell.an-editorial :is(.an-site, .nf-page) .an-pause-quote::before {

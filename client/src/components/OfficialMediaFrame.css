@@ -279,12 +279,26 @@
    specificity yang sama dengan `.an-official-media-actions a` dan
    dapat membuat label + ikon menyatu dengan isian paper pada urutan CSS
    halaman. Komponen ini harus mempertahankan foreground ink-nya. */
+/* Hierarki kartu: "Putar di sini" adalah tindakan utama (kartu ini untuk
+   mulai mendengar), tautan resmi ke platform menjadi sekunder. */
 .an-official-media .an-official-media-actions a {
   flex: 1 1 160px;
+  border-color: var(--ink-line, rgba(241, 239, 233, 0.22));
+  background: transparent;
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.an-official-media .an-official-media-actions button:not([aria-expanded="true"]) {
   border-color: var(--paper);
   background: var(--paper);
   color: var(--ink);
-  text-decoration: none;
+}
+
+.an-official-media .an-official-media-actions button:not([aria-expanded="true"]):hover {
+  border-color: var(--acid);
+  background: color-mix(in srgb, var(--paper) 86%, var(--acid));
+  color: var(--ink);
 }
 
 .an-official-media-actions a:hover {

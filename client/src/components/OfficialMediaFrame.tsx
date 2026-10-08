@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowUpRight, Play, Volume2 } from "lucide-react";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { MusicEmbed, EmbedPlatform } from "@/components/MusicEmbed";
+import {
+  DOCK_STOP_EVENT,
+  INLINE_STOP_EVENT,
+} from "@/components/signature/GlobalAudioPlayer";
 import "./OfficialMediaFrame.css";
 
 type OfficialMediaFrameProps = {
@@ -46,8 +50,19 @@ export function OfficialMediaFrame({
   const [playerRequested, setPlayerRequested] = useState(false);
 
   const togglePlayer = () => {
-    setPlayerRequested(prev => !prev);
+    setPlayerRequested(prev => {
+      // Membuka pemutar kartu menghentikan bilah dok, supaya tidak ada dua aliran.
+      if (!prev) window.dispatchEvent(new Event(DOCK_STOP_EVENT));
+      return !prev;
+    });
   };
+
+  // Bilah dok mulai memutar: pemutar sematan kartu ini menutup dirinya.
+  useEffect(() => {
+    const onDockStart = () => setPlayerRequested(false);
+    window.addEventListener(INLINE_STOP_EVENT, onDockStart);
+    return () => window.removeEventListener(INLINE_STOP_EVENT, onDockStart);
+  }, []);
 
   const providerClass = provider.toLowerCase().replace(/\s+/g, "-");
   const platformVariant: EmbedPlatform = provider

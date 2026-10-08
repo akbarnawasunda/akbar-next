@@ -1,27 +1,43 @@
-/* Player global. Solid, tanpa backdrop-filter, dan tidak menutupi konten. */
+/* Dock pemutar global. Satu permukaan dengar untuk seluruh situs.
+   - Bilah datar di tepi bawah, bukan kartu mengambang dengan bingkai.
+   - Solid (tanpa backdrop-filter) dan tidak menutupi konten di luar rak.
+   - Rak embed terbuka ke ATAS bilah (column-reverse), jadi kontrol tetap
+     berada di tepi bawah layar dan tidak pernah loncat. */
 .an-global-player {
   position: fixed;
-  right: clamp(12px, 3vw, 28px);
-  /* Area aman: bilah gestur Android dan home indicator iOS. */
-  bottom: calc(clamp(12px, 3vw, 24px) + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 48;
-  /* `100%` pada elemen fixed diukur dari initial containing block (viewport
-     tanpa scrollbar), sedangkan `100vw` ikut menghitung scrollbar sehingga
-     bilah player bisa melewati tepi kanan. Di ≤640px lebar diganti
-     `left/right: 12px` + `width: auto`. */
-  width: min(420px, calc(100% - 24px));
-  border: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
-  background: var(--ink-card);
+  display: flex;
+  flex-direction: column-reverse;
+  background: var(--ink-soft);
+  border-top: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
   color: var(--paper);
   font-family: var(--font-mono);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation: an-dock-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes an-dock-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
 }
 
 .an-global-player-bar {
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto auto minmax(0, 1fr) auto auto auto;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
+  gap: 12px;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 10px var(--hx-gutter, clamp(22px, 6vw, 104px));
+  box-sizing: border-box;
 }
 
 .an-global-player-toggle,
@@ -41,6 +57,15 @@
   background: var(--acid);
   color: var(--ink);
   border-color: var(--acid);
+}
+
+/* Saat jeda, tombol tidak lagi berwarna penuh: pemutar tetap ada, tetapi
+   tidak lagi merebut perhatian dari halaman. */
+.an-global-player[data-player-state="paused"] .an-global-player-toggle,
+.an-global-player[data-player-state="minimized"] .an-global-player-toggle {
+  background: transparent;
+  color: var(--paper);
+  border-color: color-mix(in srgb, var(--paper) 40%, transparent);
 }
 
 .an-global-player-toggle:hover,
@@ -77,8 +102,12 @@
 }
 
 @keyframes an-player-wave {
-  from { opacity: 0.55; }
-  to { opacity: 1; }
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .an-global-player-meta {
@@ -129,17 +158,20 @@
 .an-global-player-shelf iframe {
   display: block;
   width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
   /* Tinggi embed audio resmi: token tetap 166px. */
   height: var(--an-embed-audio-h, 166px);
   border: 0;
-  border-top: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+  box-sizing: border-box;
 }
 
 @media (max-width: 640px) {
-  .an-global-player {
-    left: 12px;
-    right: 12px;
-    width: auto;
+  .an-global-player-bar {
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+    gap: 10px;
+    padding: 10px 14px;
   }
   .an-global-player-link {
     display: none;
@@ -155,23 +187,22 @@
   }
   .an-global-player-bar {
     gap: 8px;
-    padding: 8px 10px;
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 }
 
-/* Player melayang di atas konten; sisakan ruang supaya bagian bawah halaman
-   (footer, paragraf penutup, dokumen arsip) tidak pernah tertimbun permanen.
-   Sebelumnya cadangan ruang ini hanya aktif di ≤640px — di desktop player
-   tetap melayang di pojok kanan-bawah tanpa jaminan apa pun, jadi konten
-   apa pun yang secara alami berakhir di sana (mis. entri terakhir linimasa
-   /universe) bisa tertimbun. Ini masalah penempatan global, bukan satu
-   halaman — jadi perbaikannya di sini (satu sumber kebenaran untuk semua
-   halaman), bukan padding khusus pada satu paragraf. */
+/* Ruang di bawah halaman = tinggi bilah (+ rak bila terbuka). Dulu ini hanya
+   aktif di ≤640px dan hanya untuk mengatasi bilah yang selalu tampil; sekarang
+   bilah hanya tampil setelah ada pemutaran, dan ruangnya ikut tinggi bilah
+   yang sebenarnya, jadi footer selalu berada di atas dock. */
 html[data-an-player="visible"] body {
-  padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px));
 }
 html[data-an-player="visible"][data-an-player-shelf="open"] body {
-  padding-bottom: calc(88px + var(--an-embed-audio-h, 166px) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(
+    68px + var(--an-embed-audio-h, 166px) + env(safe-area-inset-bottom, 0px)
+  );
 }
 
 @media (max-width: 640px) {
@@ -179,11 +210,27 @@ html[data-an-player="visible"][data-an-player-shelf="open"] body {
     padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   }
   html[data-an-player="visible"][data-an-player-shelf="open"] body {
-    padding-bottom: calc(76px + var(--an-embed-audio-h, 166px) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(
+      76px + var(--an-embed-audio-h, 166px) + env(safe-area-inset-bottom, 0px)
+    );
+  }
+}
+
+@media (pointer: coarse) {
+  html[data-an-player="visible"] body {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  }
+  html[data-an-player="visible"][data-an-player-shelf="open"] body {
+    padding-bottom: calc(
+      80px + var(--an-embed-audio-h, 166px) + env(safe-area-inset-bottom, 0px)
+    );
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .an-global-player {
+    animation: none;
+  }
   .an-global-player-shelf {
     transition: none;
   }

@@ -18,20 +18,38 @@
   height: 1px;
   content: "";
   pointer-events: none;
-  background: linear-gradient(90deg, transparent, var(--acid) 18%, transparent 82%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--acid) 18%,
+    transparent 82%
+  );
   transform: scaleX(0);
   transform-origin: left center;
-  animation: nf-carrier-scan 780ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)) 80ms both;
+  animation: nf-carrier-scan 780ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1))
+    80ms both;
 }
 
 @keyframes nf-route-lock {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes nf-carrier-scan {
-  0%   { opacity: 0; transform: scaleX(0); }
-  22%  { opacity: 1; }
-  100% { opacity: 0.72; transform: scaleX(1); }
+  0% {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  22% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.72;
+    transform: scaleX(1);
+  }
 }
 
 .nf-page main > section,
@@ -51,11 +69,19 @@
   height: 1px;
   content: "";
   pointer-events: none;
-  background: linear-gradient(90deg, transparent, var(--acid) 18%, var(--ink-line) 55%, transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--acid) 18%,
+    var(--ink-line) 55%,
+    transparent
+  );
   opacity: 0.2;
   transform: scaleX(0.12);
   transform-origin: left center;
-  transition: opacity 700ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)), transform 900ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+  transition:
+    opacity 700ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform 900ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
 }
 .nf-page main > section.is-motion-in-view:not(.nf-page-hero)::before,
 .an-site main > section.is-revealed:not(.an-hero)::before {
@@ -77,13 +103,13 @@
    sudah dibungkus `<Reveal>` sendiri (bukan anak langsung `main`). */
 .an-site main > section.reveal-ready:not(.an-hero-scene) {
   transition:
-    opacity 520ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)),
-    transform 520ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+    opacity var(--motion-arrive) var(--motion-ease-arrive),
+    transform var(--motion-arrive) var(--motion-ease-arrive);
   will-change: opacity, transform;
 }
 .an-site main > section.reveal-ready:not(.an-hero-scene):not(.is-revealed) {
   opacity: 0;
-  transform: translate3d(0, 18px, 0);
+  transform: translate3d(0, var(--motion-travel), 0);
 }
 .an-site main > section.is-revealed:not(.an-hero-scene) {
   opacity: 1;
@@ -122,8 +148,14 @@
   transform-origin: top center;
   transition: transform 720ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
 }
-.nf-page main > section.is-motion-in-view:not(.nf-page-hero) .nf-section-title::before,
-.nf-page main > section.is-motion-in-view:not(.nf-page-hero) .en-section-intro::before,
+.nf-page
+  main
+  > section.is-motion-in-view:not(.nf-page-hero)
+  .nf-section-title::before,
+.nf-page
+  main
+  > section.is-motion-in-view:not(.nf-page-hero)
+  .en-section-intro::before,
 .an-site main > section.is-revealed:not(.an-hero) .section-heading::before,
 .an-site main > section.is-revealed:not(.an-hero) .home-signal-copy::before,
 .an-site main > section.is-revealed:not(.an-hero) .live-copy::before {
@@ -163,7 +195,10 @@
   box-shadow: none;
   opacity: 0.48;
   transform: translate3d(0, -50%, 0);
-  transition: opacity 220ms var(--ease, ease), border-color 220ms var(--ease, ease), background-color 220ms var(--ease, ease);
+  transition:
+    opacity 220ms var(--ease, ease),
+    border-color 220ms var(--ease, ease),
+    background-color 220ms var(--ease, ease);
 }
 .nf-signature-rail:hover,
 .nf-signature-rail:focus-within {
@@ -194,7 +229,9 @@
   list-style: none;
 }
 .nf-signature-rail li,
-.nf-signature-rail button { min-width: 0; }
+.nf-signature-rail button {
+  min-width: 0;
+}
 
 .nf-signature-rail button {
   display: grid;
@@ -232,7 +269,9 @@
   width: 12px;
 }
 
-.nf-signature-rail-index { opacity: 0.74; }
+.nf-signature-rail-index {
+  opacity: 0.74;
+}
 .nf-signature-rail-name {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -267,7 +306,9 @@
   opacity: 0;
   transform: scaleX(0.18);
   transform-origin: center;
-  transition: opacity 240ms var(--ease, ease), transform 420ms var(--ease, ease);
+  transition:
+    opacity 240ms var(--ease, ease),
+    transform 420ms var(--ease, ease);
 }
 .nf-page .nf-catalog-card:hover::after,
 .nf-page .nf-catalog-card:focus-within::after,
@@ -302,7 +343,9 @@
     padding: 11px 9px;
   }
   .nf-signature-rail-label,
-  .nf-signature-rail-name { display: none; }
+  .nf-signature-rail-name {
+    display: none;
+  }
   .nf-signature-rail button {
     grid-template-columns: 12px 1fr;
     gap: 5px;
@@ -310,9 +353,13 @@
 }
 
 @media (max-width: 820px) {
-  .route-motion::before { animation-duration: 520ms; }
+  .route-motion::before {
+    animation-duration: 520ms;
+  }
   .nf-page main > section,
-  .an-site main > section { scroll-margin-top: 76px; }
+  .an-site main > section {
+    scroll-margin-top: 76px;
+  }
   .nf-page main > section:not(.nf-page-hero)::before,
   .an-site main > section:not(.an-hero)::before {
     right: 20px;
@@ -343,15 +390,24 @@
     width: 14px;
     padding: 5px 1px;
   }
-  .nf-signature-rail-tick { width: 12px; height: 2px; }
-  .nf-signature-rail button.is-active .nf-signature-rail-tick { width: 14px; }
+  .nf-signature-rail-tick {
+    width: 12px;
+    height: 2px;
+  }
+  .nf-signature-rail button.is-active .nf-signature-rail-tick {
+    width: 14px;
+  }
   .nf-signature-rail-index,
-  .nf-signature-rail-status { display: none; }
+  .nf-signature-rail-status {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .route-motion,
-  .route-motion::before { animation: none; }
+  .route-motion::before {
+    animation: none;
+  }
   .nf-page main > section:not(.nf-page-hero)::before,
   .an-site main > section:not(.an-hero)::before,
   .nf-page main > section:not(.nf-page-hero) .nf-section-title::before,

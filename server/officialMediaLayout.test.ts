@@ -79,16 +79,21 @@ describe("kartu media resmi — geometri", () => {
     expect(frame.includes("!important")).toBe(false);
   });
 
-  it("mempertahankan kontras tautan BUKA YOUTUBE di atas isian terang", () => {
-    // `.nf-page a { color: inherit }` mengatur ulang warna tautan umum.
-    // Selector komponen ini sengaja lebih spesifik agar label dan ikon
-    // tetap berwarna ink saat latar tautan berwarna paper.
+  it("mempertahankan kontras tombol utama PUTAR DI SINI di atas isian terang", () => {
+    // Tombol putar adalah tindakan utama kartu (isian paper, label ink).
+    // Tautan resmi menjadi sekunder: teks paper di atas latar gelap kartu.
+    // `.nf-page a { color: inherit }` tetap dikalahkan oleh selector komponen.
+    const playButton = rule(
+      frame,
+      ".an-official-media .an-official-media-actions button:not([aria-expanded=\"true\"]) {"
+    );
+    expect(playButton).toMatch(/background:\s*var\(--paper\)/);
+    expect(playButton).toMatch(/color:\s*var\(--ink\)/);
     const openLink = rule(
       frame,
       ".an-official-media .an-official-media-actions a {"
     );
-    expect(openLink).toMatch(/background:\s*var\(--paper\)/);
-    expect(openLink).toMatch(/color:\s*var\(--ink\)/);
+    expect(openLink).toMatch(/color:\s*var\(--paper\)/);
   });
 
   it("tidak menyisakan selektor mati .an-official-player (tanpa -wrap)", () => {

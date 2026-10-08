@@ -20,7 +20,9 @@
      (0.95/1.05) nyaris sama dengan dua halaman itu. Sekarang kolom teks
      jadi secuil pengantar, foto memegang sebagian besar pembuka. */
   grid-template-columns: minmax(0, 0.66fr) minmax(0, 1.34fr);
-  align-items: end;
+  /* Teks di atas, bukan di dasar: foto tinggi membuat dasar pembuka jatuh
+     di bawah lipatan dan nama halaman tidak terbaca di layar pertama. */
+  align-items: start;
   gap: clamp(28px, 5vw, 72px);
   max-width: var(--hx-max);
   margin-inline: auto;
@@ -37,7 +39,7 @@
   margin: 0;
   max-width: 14ch;
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 7vw, 6rem);
+  font-size: var(--display-route);
   font-weight: 500;
   letter-spacing: 0em;
   line-height: 0.96;
@@ -250,13 +252,12 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background:
-    linear-gradient(
-      0deg,
-      color-mix(in srgb, var(--ink) 94%, transparent) 0%,
-      color-mix(in srgb, var(--ink) 58%, transparent) 52%,
-      color-mix(in srgb, var(--ink) 26%, transparent) 100%
-    );
+  background: linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--ink) 94%, transparent) 0%,
+    color-mix(in srgb, var(--ink) 58%, transparent) 52%,
+    color-mix(in srgb, var(--ink) 26%, transparent) 100%
+  );
 }
 
 .an-public-shell.an-editorial .an-live-hero-copy {
@@ -269,7 +270,7 @@
   margin: 0;
   max-width: 18ch;
   font-family: var(--font-display);
-  font-size: clamp(2.6rem, 6.6vw, 5.6rem);
+  font-size: var(--display-route);
   font-weight: 500;
   letter-spacing: 0em;
   line-height: 0.98;
@@ -424,7 +425,9 @@
 }
 
 .an-public-shell.an-editorial .an-live-row-place .an-event-location-link:hover,
-.an-public-shell.an-editorial .an-live-row-place .an-event-location-link:focus-visible {
+.an-public-shell.an-editorial
+  .an-live-row-place
+  .an-event-location-link:focus-visible {
   color: var(--acid);
 }
 
