@@ -28,7 +28,7 @@ import "./GlobalAudioPlayer.css";
 /**
  * Pemutar global: satu permukaan dengar untuk seluruh situs.
  *
- * Model interaksinya (lihat docs/design-reference/…, Fase 3):
+ * Model interaksinya (lihat DESIGN.md §12 dan Section 15 di docs/design-reference/martin-garrix-reference-analysis.md):
  * - Tidak tampil saat pengunjung baru tiba. Bilah muncul hanya setelah ada
  *   sesuatu yang diputar, supaya tidak menjadi widget yang menutupi katalog.
  * - Dimulai dari tombol "Putar di sini" di dokumen rilisan beranda lewat

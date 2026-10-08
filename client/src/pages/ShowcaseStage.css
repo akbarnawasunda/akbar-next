@@ -20,7 +20,9 @@
      (0.95/1.05) nyaris sama dengan dua halaman itu. Sekarang kolom teks
      jadi secuil pengantar, foto memegang sebagian besar pembuka. */
   grid-template-columns: minmax(0, 0.66fr) minmax(0, 1.34fr);
-  align-items: end;
+  /* Teks di atas, bukan di dasar: foto tinggi membuat dasar pembuka jatuh
+     di bawah lipatan dan nama halaman tidak terbaca di layar pertama. */
+  align-items: start;
   gap: clamp(28px, 5vw, 72px);
   max-width: var(--hx-max);
   margin-inline: auto;

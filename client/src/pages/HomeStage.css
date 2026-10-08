@@ -99,10 +99,12 @@
 
 /* Maskot = lencana kecil di sudut plate, bukan artwork hero. Ukurannya
    dikunci di sini supaya tidak pernah ikut terentang oleh aturan foto. */
+/* Desktop: lencana pindah ke sudut kanan-atas plate. Di kiri-atas ia
+   menumpuk kicker dan judul "Akbar Nawasunda" di lebar 1366. */
 .an-site .an-hero-mascot {
   position: absolute;
-  top: clamp(18px, 3vh, 34px);
-  left: clamp(18px, 3vw, 40px);
+  top: calc(var(--chrome-h, 78px) + clamp(18px, 3vh, 34px));
+  right: clamp(18px, 3vw, 40px);
   z-index: 2;
   width: clamp(56px, 7vw, 92px);
   max-width: 26%;
@@ -804,10 +806,12 @@
   /* Maskot dulu duduk di sudut kiri-atas plate (yang mulai di 62%),
      jadi ia tidak pernah bertabrakan dengan logo di masthead. Sekarang
      foto menutupi seluruh adegan, jadi maskot dipindah ke bawah bar:
-     sejajar gutter, di sebelah kanan siku bingkai kiri-atas. */
+     Di 1366 ia menumpuk kicker dan judul di kiri, jadi sekarang ia
+     duduk di kanan-atas plate, di bawah masthead. */
   .an-site .an-hero-mascot {
     top: calc(var(--chrome-h, 78px) + clamp(10px, 1.8vh, 22px));
-    left: calc(var(--hx-gutter) + 38px);
+    left: auto;
+    right: clamp(18px, 3vw, 40px);
     width: clamp(58px, 5.6vw, 84px);
   }
 
