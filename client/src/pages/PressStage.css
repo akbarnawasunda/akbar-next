@@ -35,7 +35,7 @@
   margin: 0;
   max-width: 18ch;
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5.4vw, 4.8rem);
+  font-size: var(--display-route);
   font-weight: 500;
   letter-spacing: 0em;
   line-height: 0.98;
@@ -98,7 +98,9 @@
 }
 
 /* Baris bio singkat: teks lebih panjang jadi penuh lebar (satu kolom). */
-.an-public-shell.an-editorial .an-press-sheet-facts > div.an-press-sheet-row--stack {
+.an-public-shell.an-editorial
+  .an-press-sheet-facts
+  > div.an-press-sheet-row--stack {
   grid-template-columns: 1fr;
   gap: 6px;
 }

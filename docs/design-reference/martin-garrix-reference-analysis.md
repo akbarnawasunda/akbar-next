@@ -340,3 +340,62 @@ Garrix's site works because its frames are consistent, its text is brief, its li
 Akbar's current site is not weak in identity. It is loud in one place (seven display headings in one scroll), quiet by accident in another (the pause band), and it runs more motion systems than its content needs. The fixes are about restraint and ownership: fewer display moments, legible silence, one motion grammar, and a global player that does not cover the work.
 
 The distinct parts of Akbar's identity (aksara, the particle signal, the release document, the JEDAG RUN layer, and the editorial darkness with paper beats) should stay exactly as they are. They are the parts that make it impossible to mistake this site for anyone else's.
+
+---
+
+## 15. Decisions applied (implementation pass)
+
+This section records what was changed, not a new study. Visual checks were done at 1440px and 390px on the running dev build.
+
+**Typography: four registers, assigned by content role** (`--display-*` in `index.css`)
+
+- `statement` (closing CTA): 60px at 1440. Used once per page.
+- `route` (page title): 63px desktop, 37–47px mobile. Was 74–96px on every route.
+- `section` (informative headings and the release title): 48px desktop, 32px mobile. Was 60px on every route.
+- `index` (headings directly above data rows, e.g. channels and "technical" titles): 33px desktop. Was 60px.
+- Hero, the particle wordmark, and JEDAG RUN keep their own identity scale.
+
+**Pause band: a deliberate interruption**
+
+- Solid ink background, so the particle signal goes silent in the band.
+- Shorter than neighbouring sections (150–230px).
+- Quote left-aligned on the editorial gutter, readable (1.15–1.65rem, 76% paper), replacing the 10px centred quote at 46% opacity.
+
+**Global player: listening surface, not a widget**
+
+- Hidden on arrival. It appears only after something plays.
+- Entry point: "Putar di sini" in the home release document. Its inline embed was removed, so there is one player.
+- Flat bottom bar, full width. The embed shelf opens upward, so controls never leave the bottom edge.
+- Paused and minimised states drop the filled accent button.
+- Hidden and paused on JEDAG RUN routes (ID and EN).
+- Reserved page padding matches the bar height, so footer and last catalogue rows sit above it.
+
+**Motion: one arrival grammar, one owner per section**
+
+- Shared tokens: `--motion-arrive` (560ms), `--motion-ease-arrive`, `--motion-travel` (18px).
+- Replaced 42px/720ms, 20px/760ms, and 18px/520ms variants.
+- The pause band and game teaser no longer run a second reveal; the global orchestrator owns them.
+- The channel list keeps its per-row stagger, because the row sequence is the index's meaning.
+
+**Pointer effects**
+
+- Removed magnetic pull from the hero CTAs. The cursor and particle response remain.
+
+**Mobile header**
+
+- Hid the "Dengarkan" header button under 480px, where it collided with the wordmark. The menu drawer still links to music.
+
+**Route personality**
+
+- The existing per-route signal modes in `routeSignal.ts` are unchanged; they were already the right model.
+
+**Verified**
+
+- `pnpm test`: 59 files, 347 tests pass. `tsc --noEmit` clean.
+- `pnpm audit:layout`: two errors in `client/src/studio/studio.css` (an overflow-x hidden and a backdrop-filter on a studio surface). Both are pre-existing and outside this change.
+- ID and EN parity confirmed for heading tiers, pause text, and the play action.
+
+**Known limits**
+
+- SoundCloud embeds cannot load in the sandbox, so the playing shelf shows a blank white frame here. The embed's own colour in production is not verified.
+- Mobile was checked for the home page and header. Other mobile routes were checked by heading metrics only, not by eye.
