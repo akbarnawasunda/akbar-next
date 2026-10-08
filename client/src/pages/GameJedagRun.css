@@ -436,7 +436,19 @@
   .game-page-brand { font-size: 0.52rem; }
   .game-page-header-links a { font-size: 0.52rem; }
   .game-page-copy h1 { font-size: clamp(3.25rem, 18vw, 5.5rem); }
-  .game-page-footer { font-size: 0.48rem; }
+  /* Kaki halaman dulu dipaksa 0,48rem (7,7px): turun dari 0,62rem versi
+     desktop, dan di bawah lantai mikro yang dipakai seluruh situs
+     (0,5rem) — padahal isinya bukan hiasan, tapi label rute + hak cipta.
+     0,58rem menyamakannya dengan metadata terkecil lain di berkas ini
+     (mis. .game-leaderboard-message). Akibatnya kedua span jadi lebih
+     lebar daripada kotak isi di layar 320px (butuh ~376px, tersedia
+     ~294px), jadi barisnya diberi izin melipat — sebelumnya kelebihan
+     itu tidak punya jalan keluar dan hanya tertutup `overflow-x: clip`
+     di public shell, yaitu teks terpotong. */
+  .game-page-footer {
+    flex-wrap: wrap;
+    font-size: 0.58rem;
+  }
 }
 
 @media (max-width: 420px) {

@@ -215,6 +215,12 @@
   letter-spacing: 0em;
   line-height: 1.2;
   color: var(--paper);
+  /* Nilai fakta bisa berupa satu token tanpa spasi — rute yang diminta di
+     404, alamat email, atau URL. Tanpa ini, token sepanjang itu melebarkan
+     kotaknya sendiri dan hanya tertutup `overflow-x: clip` di public shell.
+     Halaman yang menampilkan rute/email sudah menambal ini satu per satu;
+     aturan bersama ini membuat primitifnya aman dengan sendirinya. */
+  overflow-wrap: anywhere;
 }
 
 /* -- Baris indeks bernomor (kanal, jadwal, tautan) ------------ */

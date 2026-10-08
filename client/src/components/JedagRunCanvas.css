@@ -111,7 +111,9 @@
   border-radius: 0;
   color: var(--acid);
   background: color-mix(in srgb, var(--acid) 10%, transparent);
-  font-size: clamp(0.46rem, 1vw, 0.56rem);
+  /* Lantai clamp dinaikkan dari 0,46rem (7,4px) ke lantai mikro situs
+     (0,5rem = 8px): di 320px nilai lama merender teks terkecil di kanvas. */
+  font-size: clamp(0.5rem, 1vw, 0.56rem);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -133,7 +135,8 @@
   gap: 0.35rem;
   margin-top: 0.2rem;
   color: var(--acid);
-  font-size: clamp(0.48rem, 1.1vw, 0.62rem);
+  /* Lantai 0,48rem (7,7px) -> 0,5rem (8px); plafon tidak diubah. */
+  font-size: clamp(0.5rem, 1.1vw, 0.62rem);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-align: center;
@@ -167,7 +170,8 @@
 }
 .jedag-run-mode {
   color: var(--mute);
-  font-size: clamp(0.48rem, 1.05vw, 0.6rem);
+  /* Lantai 0,48rem (7,7px) -> 0,5rem (8px); plafon tidak diubah. */
+  font-size: clamp(0.5rem, 1.05vw, 0.6rem);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -441,7 +445,13 @@
     right: 0.85rem;
     bottom: 0.7rem;
     left: 0.85rem;
-    font-size: 0.48rem;
+    /* Dulu 0,48rem (7,7px): lebih kecil daripada 0,55rem versi desktop,
+       padahal baris ini memuat skor "BEST 00000" — satu-satunya angka
+       yang dibawa pemain keluar dari permainan. Dipulihkan ke 0,58rem,
+       tingkat mikro yang sama dengan metadata terkecil lain di berkas
+       ini (.jedag-run-active-powerups). Pada 320px baris ini masih muat
+       (butuh ~275px, tersedia ~293px). */
+    font-size: 0.58rem;
   }
 }
 
