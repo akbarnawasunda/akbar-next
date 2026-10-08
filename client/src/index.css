@@ -286,20 +286,21 @@
 
   /* -- Z-index scale -------------------------------------------
      Urutan lapisan global — satu sumber kebenaran. Aturannya:
-     1. cursor signal adalah lapisan TERATAS antarmuka publik: ia harus
-        selalu terlihat di atas nav, player, lightbox, palette, tirai rute,
-        dan overlay drawer (docs/desktop-visual-qa-cursor-pass.md §6);
+     1. lapisan teratas UI publik adalah overlay drawer (9999) — di atas nav,
+        player, lightbox, palette, dan tirai rute;
      2. hanya splash preloader (di luar aplikasi, sementara) yang boleh
         berada di atasnya;
-     3. angka lama di bawah cursor dipertahankan supaya tidak ada elemen
-        yang berpindah tumpukan; token baru ditambah untuk lapisan yang
-        dulu hardcoded (rail, carrier, field-transit). */
+     3. tidak ada lagi lapisan kursor — kursor kustom dihapus dan kursor
+        kembali native (docs/signal-mark-pass.md). */
   --z-base:      1;
   --z-field:     3;    /* particle field global */
-  --z-hint:      40;   /* shell hint */
+  --z-hint:      40;   /* shell hint (dekoratif, di bawah player) */
   --z-player:    48;   /* global audio player */
   --z-curtain:   58;   /* route curtain */
   --z-field-transit: 59; /* particle field saat transit rute (di atas tirai) */
+  --z-mark:      60;   /* Signal Mark — di atas tirai agar sapuan transisinya
+                         terlihat, di bawah lightbox; secara spasial ia
+                         mengangkat diri di atas dock (lihat SignalMark.css) */
   --z-lightbox:  70;   /* lightbox */
   --z-rail:      80;   /* signature rail (section index) */
   --z-nav:       90;   /* sticky navigation */
@@ -307,7 +308,6 @@
   --z-palette:   500;  /* command palette */
   --z-transition: 9000; /* route progress (transient) */
   --z-overlay:   9999; /* mobile drawer / overlay */
-  --z-cursor:    10000; /* cursor signal — di atas seluruh UI publik */
   --z-splash:    999999; /* preloader (index.html) */
 
   /* -- Breakpoints (dokumentasi; dipakai lewat media query) -----

@@ -142,7 +142,6 @@ export default function PortraitStudiesSection({
             className="an-pg-trigger"
             onClick={() => lightbox.open(lightboxItems, 0)}
             aria-label={t.openLabel(titleOf(lead))}
-            data-signal-interactive
           >
             <OptimizedEditorialImage
               src={lead.imageUrl || officialBrand.socialPreview}
@@ -174,7 +173,6 @@ export default function PortraitStudiesSection({
                       className="an-pg-trigger"
                       onClick={() => lightbox.open(lightboxItems, index)}
                       aria-label={t.openLabel(titleOf(study))}
-                      data-signal-interactive
                     >
                       <OptimizedEditorialImage
                         src={study.imageUrl || officialBrand.socialPreview}

@@ -544,8 +544,6 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
               href={heroActionUrl}
               target="_blank"
               rel="noreferrer"
-              data-signal-interactive
-              data-cursor="point"
             >
               <Play size={13} fill="currentColor" />
               <span>{heroActionLabel}</span>
@@ -638,7 +636,6 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
                 type="button"
                 className="an-btn an-btn--solid"
                 onClick={requestLatestReleasePlayback}
-                data-cursor="music"
               >
                 <Play size={13} fill="currentColor" /> {copy.doc.playHere}
               </button>
@@ -672,7 +669,7 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
           </p>
         </header>
 
-        <ul className="an-channels-list" data-cursor="music">
+        <ul className="an-channels-list">
           {editablePlatformLinks.map((platform, index) => (
             <li
               key={platform.label}

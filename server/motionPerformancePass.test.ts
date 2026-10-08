@@ -3,10 +3,10 @@
  * (docs/motion-performance-liquid-signal-pass.md).
  *
  * Yang dijaga: mesin idle engine partikel, pemisahan listener pointer
- * (satu loop kursor, tanpa listener ganda), elisi penulisan style,
- * pembatasan pompa lenis, dan perilaku per-rute (intensitas). Mengikuti
- * docs/notes/testing-policy.md pasal 3 — hal yang tidak muncul di HTML
- * diuji dari source.
+ * (satu pemilik sinyal di pointerSignal; Signal Mark murni CSS tanpa loop),
+ * elisi penulisan style, pembatasan pompa lenis, dan perilaku per-rute
+ * (intensitas). Mengikuti docs/notes/testing-policy.md pasal 3 — hal yang
+ * tidak muncul di HTML diuji dari source.
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -17,7 +17,8 @@ const source = (path: string) =>
 
 const field = source("client/src/signature/field/particleField.ts");
 const pointer = source("client/src/signature/pointerSignal.ts");
-const cursor = source("client/src/components/signature/CursorSignal.tsx");
+const mark = source("client/src/components/signature/SignalMark.tsx");
+const markCss = source("client/src/components/signature/SignalMark.css");
 const smooth = source("client/src/lib/smoothScroll.ts");
 const chrome = source("client/src/components/NightFrequencyChrome.tsx");
 const era = source("client/src/components/signature/EraTimeline.tsx");
@@ -75,42 +76,44 @@ describe("mesin idle engine partikel", () => {
   });
 });
 
-describe("satu loop kursor — tanpa listener ganda", () => {
-  it("CursorSignal tidak lagi memasang listener pointer sendiri", () => {
-    // Status hover/pressed/dragging/magnetik di-resolve pointerSignal;
-    // CursorSignal hanya menjalankan loop rAF.
-    expect(cursor).not.toContain('addEventListener("pointermove"');
-    expect(cursor).not.toContain('addEventListener("pointerdown"');
-    expect(cursor).not.toContain('addEventListener("focusin"');
-    expect(cursor).not.toContain("INTERACTIVE_SELECTOR");
-    expect(cursor).not.toContain("resolveHover");
+describe("Signal Mark — tanpa loop runtime tambahan", () => {
+  it("tidak memasang listener pointer, scroll, atau rAF sendiri", () => {
+    // Seluruh gerakannya CSS-only; status datang dari atribut di <html>
+    // (data-signal-scroll, data-audio-state) dan kelas .is-transit yang
+    // sudah ditulis sistem sinyal bersama.
+    expect(mark).not.toContain('addEventListener("pointermove"');
+    expect(mark).not.toContain('addEventListener("pointerdown"');
+    expect(mark).not.toContain('addEventListener("scroll"');
+    expect(mark).not.toContain("requestAnimationFrame");
+    expect(mark).not.toContain("pointerSignal");
   });
 
-  it("CursorSignal membaca status dari sinyal bersama", () => {
-    expect(cursor).toContain("signals.pointerPressed");
-    expect(cursor).toContain("signals.dragging");
-    expect(cursor).toContain("signals.hover");
-    expect(cursor).toContain("signals.magneticElement");
+  it("membaca status dari sinyal bersama, bukan mesin baru", () => {
+    // Hanya IntersectionObserver untuk menyembunyikan diri di footer —
+    // bukan pelacakan pointer atau scroll.
+    expect(mark).toContain("IntersectionObserver");
+    expect(mark).toContain("aria-hidden");
+    expect(markCss).toContain('html[data-signal-scroll="up"]');
+    expect(markCss).toContain("html[data-signal-scroll] .an-signal-mark-trace");
+    expect(mark).toContain("data-audio-state");
+    expect(markCss).toContain(".an-signal-mark.is-playing");
+    expect(markCss).toContain(".is-transit");
   });
 
-  it("pointerSignal adalah satu-satunya pemilik resolve hover/drag/magnetik", () => {
-    expect(pointer).toContain("STOP_SELECTOR");
-    expect(pointer).toContain("MUSIC_SELECTOR");
-    expect(pointer).toContain("POINT_SELECTOR");
-    expect(pointer).toContain("DRAG_SELECTOR");
-    expect(pointer).toContain("resolveHover");
-    expect(pointer).toContain("signals.hover");
-    expect(pointer).toContain("signals.dragging");
-    expect(pointer).toContain("signals.magneticElement");
-    // Satu listener untuk seluruh situs (tidak ada duplikasi di komponen lain).
-    expect(cursor).not.toContain("attachPointerSignal");
-  });
-
-  it("menulis transform seperlunya (elisi saat pointer diam)", () => {
-    expect(cursor).toContain("lastDotX");
-    expect(cursor).toContain("converged");
-    // Tidak menulis style setiap frame tanpa perubahan.
-    expect(cursor).toMatch(/if \(signals\.pointerX !== lastDotX \|\| signals\.pointerY !== lastDotY\)/);
+  it("pointerSignal tetap satu pemilik sinyal pointer — tanpa resolve hover/drag/magnetik", () => {
+    // Sejak sistem kursor dihapus, tidak ada lagi resolusi hover/drag/
+    // magnetik. Yang tersisa: posisi/kecepatan/pressed pointer untuk
+    // menggerakkan partikel, sinyal scroll, dan burst.
+    expect(pointer).not.toContain("resolveHover");
+    expect(pointer).not.toContain("INTERACTIVE_SELECTOR");
+    expect(pointer).not.toContain("signals.hover");
+    expect(pointer).not.toContain("signals.dragging");
+    expect(pointer).not.toContain("signals.magneticElement");
+    // Yang memang dipakai engine partikel tetap ada.
+    expect(pointer).toContain("signals.pointerPressed");
+    expect(pointer).toContain("signals.pointerX");
+    // Jembatan atribut ke <html> untuk CSS Signal Mark.
+    expect(pointer).toContain("dataset.signalScroll");
   });
 });
 

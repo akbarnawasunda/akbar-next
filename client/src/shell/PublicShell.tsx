@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { useLocation } from "wouter";
 import { CommandPalette } from "@/components/CommandPalette";
 import { LightboxProvider } from "@/components/signature/LightboxProvider";
-import { CursorSignal } from "@/components/signature/CursorSignal";
+import { SignalMark } from "@/components/signature/SignalMark";
 import { GlobalAudioPlayer } from "@/components/signature/GlobalAudioPlayer";
 import { RouteSignalCurtain } from "@/components/signature/RouteSignalCurtain";
 import { SignatureBackground } from "@/components/signature/SignatureBackground";
@@ -26,8 +26,10 @@ import "./InstrumentLayer.css";
  * Lapisan signature global.
  *
  * Urutan render = urutan z-index: partikel (di belakang konten) → tirai rute →
- * cursor → player/menu di atasnya lewat z-index masing-masing. Semua lapisan
- * hanya hidup di client (gate `mounted`), jadi tidak ada canvas di HTML SSR.
+ * Signal Mark (ambient, dekoratif) → player/menu di atasnya lewat z-index
+ * masing-masing. Semua lapisan hanya hidup di client (gate `mounted`), jadi
+ * tidak ada canvas di HTML SSR. Kursor kustom dihapus — kursor kembali native
+ * (docs/signal-mark-pass.md).
  *
  * Particle field, cursor, dan tirai rute adalah identitas situs ini — bukan
  * dekorasi opsional. Jangan dilepas dari shell tanpa menggantinya dengan
@@ -55,7 +57,7 @@ function ShellSurfaces() {
       <NightAtmosphere />
       <SignatureBackground />
       <RouteSignalCurtain />
-      <CursorSignal />
+      <SignalMark />
       <GlobalAudioPlayer />
       <CommandPalette />
     </>

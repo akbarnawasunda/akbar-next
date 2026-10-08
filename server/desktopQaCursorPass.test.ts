@@ -1,12 +1,13 @@
 /**
  * Kontrak untuk pass "Desktop Visual QA + Cursor System"
- * (docs/desktop-visual-qa-cursor-pass.md).
+ * (docs/desktop-visual-qa-cursor-pass.md) dan pass lanjutan "Signal Mark"
+ * (docs/signal-mark-pass.md).
  *
  * Yang dijaga di sini adalah arsitektur yang tidak terlihat di HTML hasil
- * render: skala z-index, portal lapisan kursor, kebijakan wrap untuk teks
- * panjang, tangga lebar masthead, dan offset ganda masthead. Mengikuti
- * docs/notes/testing-policy.md pasal 3 — tes source hanya untuk yang memang
- * tidak muncul di HTML.
+ * render: skala z-index (tanpa lapisan kursor), kebijakan kursor native,
+ * kebijakan wrap untuk teks panjang, tangga lebar masthead, dan offset ganda
+ * masthead. Mengikuti docs/notes/testing-policy.md pasal 3 — tes source hanya
+ * untuk yang memang tidak muncul di HTML.
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -17,8 +18,6 @@ const source = (path: string) =>
 
 const indexCss = source("client/src/index.css");
 const editorial = source("client/src/shell/EditorialRefresh.css");
-const cursorTsx = source("client/src/components/signature/CursorSignal.tsx");
-const cursorCss = source("client/src/components/signature/CursorSignal.css");
 const chromeTsx = source("client/src/components/NightFrequencyChrome.tsx");
 const chromeRedesign = source("client/src/shell/ChromeRedesign.css");
 
@@ -45,32 +44,21 @@ function ruleBlock(css: string, selector: string): string {
   return css.slice(open);
 }
 
-describe("skala z-index — cursor di atas seluruh UI publik", () => {
-  it("menempatkan --z-cursor di atas setiap lapisan publik, di bawah splash saja", () => {
-    const cursor = zToken("--z-cursor");
-    const below = [
-      "--z-base",
-      "--z-field",
-      "--z-hint",
-      "--z-player",
-      "--z-curtain",
-      "--z-field-transit",
-      "--z-lightbox",
-      "--z-rail",
-      "--z-nav",
-      "--z-carrier",
-      "--z-palette",
-      "--z-transition",
-      "--z-overlay",
-    ];
-    for (const name of below) {
-      expect(
-        cursor,
-        `--z-cursor (${cursor}) harus di atas ${name} (${zToken(name)})`
-      ).toBeGreaterThan(zToken(name));
-    }
-    // Hanya preloader splash (di luar aplikasi, sementara) yang boleh di atas.
-    expect(cursor).toBeLessThan(zToken("--z-splash"));
+describe("skala z-index — tanpa lapisan kursor di atas UI", () => {
+  it("menghapus --z-cursor: kursor native, tidak ada lapisan di atas UI publik", () => {
+    // Pass Signal Mark menghapus seluruh sistem kursor kustom. Token lamanya
+    // tidak boleh kembali tanpa sengaja.
+    expect(indexCss).not.toContain("--z-cursor");
+    // Signal Mark punya token sendiri: di atas tirai rute (tirai menutupi layar
+    // saat transisi — tanpa ini sapuan transisi mark tidak akan terlihat),
+    // tetap di bawah lightbox. Ia tidak bersaing dengan dock: secara spasial
+    // ia mengangkat diri di atas dock (lihat SignalMark.css).
+    const mark = zToken("--z-mark");
+    expect(mark).toBeGreaterThan(zToken("--z-curtain"));
+    expect(mark).toBeGreaterThan(zToken("--z-field-transit"));
+    expect(mark).toBeLessThan(zToken("--z-lightbox"));
+    // Shell hint tetap dekoratif di bawah player.
+    expect(zToken("--z-hint")).toBeLessThan(zToken("--z-player"));
   });
 
   it("memakai token, bukan angka mentah, pada lapisan global publik", () => {
@@ -138,32 +126,61 @@ describe("skala z-index — cursor di atas seluruh UI publik", () => {
   });
 });
 
-describe("lapisan kursor — arsitektur", () => {
-  it("dirender lewat portal ke <body> (root stacking context)", () => {
-    // Drawer mobile diportal ke <body> dan berada di luar `isolation:
-    // isolate` milik .an-public-shell — tanpa portal, tidak ada z-index di
-    // dalam shell yang bisa mengalahkannya.
-    expect(cursorTsx).toContain("createPortal");
-    expect(cursorTsx).toContain("document.body");
+describe("kursor native — tidak ada sisa sistem kursor kustom", () => {
+  it("tidak menyembunyikan kursor native di CSS publik mana pun", () => {
+    // Gate `cursor: none` dihapus total (docs/signal-mark-pass.md): kursor
+    // browser harus normal di tombol, tautan, iframe, audio, sentuhan, dan fokus.
+    const cssFiles = [
+      "client/src/index.css",
+      "client/src/shell/EditorialRefresh.css",
+      "client/src/components/NightFrequencyChrome.css",
+      "client/src/components/signature/GlobalAudioPlayer.css",
+      "client/src/components/signature/SignalMark.css",
+      "client/src/components/signature/SignatureBackground.css",
+    ];
+    for (const file of cssFiles) {
+      const css = source(file);
+      expect(css, `${file} masih menyembunyikan kursor`).not.toMatch(
+        /cursor:\s*none/
+      );
+      expect(css, `${file} masih punya token kursor`).not.toContain(
+        "--z-cursor"
+      );
+    }
+    expect(indexCss).not.toContain("data-signature-cursor");
   });
 
-  it("tetap dekoratif: pointer-events none dan z-index dari token", () => {
-    const block = ruleBlock(cursorCss, ".an-cursor-signal {");
+  it("tidak ada atribut data-cursor / data-signal-interactive tersisa di source", () => {
+    const tsxFiles = [
+      "client/src/components/NightFrequencyChrome.tsx",
+      "client/src/components/PortraitStudiesSection.tsx",
+      "client/src/components/signature/EraTimeline.tsx",
+      "client/src/components/signature/GlobalAudioPlayer.tsx",
+      "client/src/components/signature/InteractiveArtworkCard.tsx",
+      "client/src/pages/Home.tsx",
+      "client/src/pages/Music.tsx",
+      "client/src/pages/Visuals.tsx",
+    ];
+    for (const file of tsxFiles) {
+      const tsx = source(file);
+      expect(tsx, `${file} masih punya data-cursor`).not.toContain(
+        "data-cursor"
+      );
+      expect(tsx, `${file} masih punya data-signal-interactive`).not.toContain(
+        "data-signal-interactive"
+      );
+    }
+  });
+
+  it("shell tidak lagi memasang CursorSignal, melainkan SignalMark", () => {
+    const shell = source("client/src/shell/PublicShell.tsx");
+    expect(shell).not.toContain("CursorSignal");
+    expect(shell).toContain("<SignalMark />");
+    // Signal Mark tetap dekoratif: pointer-events none di CSS-nya.
+    const markCss = source("client/src/components/signature/SignalMark.css");
+    const block = ruleBlock(markCss, ".an-signal-mark {");
     expect(block).toContain("pointer-events: none");
-    expect(block).toContain("z-index: var(--z-cursor");
-  });
-
-  it("menyembunyikan kursor native hanya saat lapisan benar-benar hidup", () => {
-    // Atribut dipasang di frame pertama loop (bukan sebelum loop siap), jadi
-    // tidak pernah ada momen tanpa kursor sama sekali.
-    expect(cursorTsx).toContain('dataset.signatureCursor = "on"');
-    expect(cursorCss).toMatch(/html\[data-signature-cursor="on"\][^{]*\{[^}]*cursor:\s*none/);
-  });
-
-  it("menyembunyikan lapisan saat pointer tidak aktif, bukan mengejar -9999", () => {
-    expect(cursorCss).toContain(".an-cursor-signal.is-idle");
-    expect(cursorCss).toMatch(/\.an-cursor-signal\.is-idle\s*\{[^}]*visibility:\s*hidden/);
-    expect(cursorTsx).toContain('classList.toggle("is-idle"');
+    expect(block).toContain("z-index: var(--z-mark");
   });
 });
 

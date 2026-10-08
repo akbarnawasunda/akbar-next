@@ -131,9 +131,6 @@ export type SignatureSnapshot = {
  * Sinyal frekuensi tinggi. Dibaca langsung oleh canvas setiap frame dan
  * TIDAK memicu render React.
  */
-/** Status hover hasil resolve elemen di bawah pointer/fokus. */
-export type CursorHoverState = "stop" | "music" | "point" | "aware" | null;
-
 export type SignatureSignals = {
   pointerX: number;
   pointerY: number;
@@ -143,23 +140,8 @@ export type SignatureSignals = {
   pointerVY: number;
   /** Timestamp gerakan terakhir; dipakai meluruhkan kecepatan. */
   pointerMovedAt: number;
+  /** Tombol pointer sedang ditekan — aktivitas (dibaca particle field). */
   pointerPressed: boolean;
-  /** Elemen interaktif yang sedang di bawah pointer/fokus. */
-  interactive: boolean;
-  magnetic: boolean;
-  /**
-   * Status hover untuk pose kursor (stop/music/point/aware) — di-resolve
-   * sekali di pointerSignal, dibaca cursor loop tiap frame. Sebelumnya
-   * CursorSignal memasang listener pointer-nya sendiri; sekarang ia hanya
-   * membaca sinyal (docs/motion-performance-liquid-signal-pass.md §5.2).
-   */
-  hover: CursorHoverState;
-  /** Elemen yang menjadi dasar status hover (untuk efek magnetik). */
-  hoverElement: Element | null;
-  /** Elemen `data-signal-magnetic` di bawah pointer, bila ada. */
-  magneticElement: HTMLElement | null;
-  /** Tekan-tahan pada elemen `data-cursor="drag"` melebihi ambang → drag. */
-  dragging: boolean;
   scrollY: number;
   /**
    * Kecepatan gulir dalam px/ms, bertanda (positif = turun), dihaluskan EMA

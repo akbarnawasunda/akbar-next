@@ -140,7 +140,6 @@ export function EraTimeline({
                     ? `${releaseHrefPrefix}/music/${era.releaseSlug}`
                     : `${releaseHrefPrefix}/music`
                 }
-                data-signal-interactive
               >
                 {copy.release} · {era.relatedRelease}{" "}
                 <ArrowUpRight size={13} aria-hidden="true" />

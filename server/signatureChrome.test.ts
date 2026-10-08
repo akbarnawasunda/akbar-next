@@ -27,7 +27,7 @@ describe("lapisan signature global", () => {
     for (const layer of [
       "SignatureBackground",
       "RouteSignalCurtain",
-      "CursorSignal",
+      "SignalMark",
     ]) {
       expect(shell, `shell kehilangan <${layer} />`).toContain(`<${layer} />`);
     }
@@ -60,7 +60,7 @@ describe("lapisan signature global", () => {
       for (const needle of [
         "<canvas",
         "an-signature-field",
-        "an-cursor-signal",
+        "an-signal-mark",
         "an-route-signal",
       ]) {
         expect(page.html, `${route} membocorkan ${needle}`).not.toContain(

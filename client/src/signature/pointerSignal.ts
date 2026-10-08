@@ -1,34 +1,19 @@
-import { DRAG_THRESHOLD_PX } from "./cursorPose";
 import { phraseFor } from "./stagePhrases";
-import type { CursorHoverState, SignatureStore } from "./types";
+import type { SignatureStore } from "./types";
 
 /**
  * Pointer + scroll signal.
  *
- * Satu listener global untuk seluruh situs. Particle field, cursor, dan
- * parallax artwork membaca angka yang sama, jadi tidak ada halaman yang
- * memasang listener pointer sendiri — termasuk cursor: status hover
- * (stop/music/point/aware), elemen magnetik, dan drag di-resolve di sini
- * sekali per event, lalu dibaca cursor loop tiap frame tanpa listener
- * tambahan (docs/motion-performance-liquid-signal-pass.md §5.2).
+ * Satu listener global untuk seluruh situs. Particle field dan komponen lain
+ * membaca angka yang sama, jadi tidak ada halaman yang memasang listener
+ * pointer sendiri. Kursor kustom sudah dihapus (docs/signal-mark-pass.md) —
+ * yang tersisa di sini adalah sinyal yang memang dipakai bersama: posisi dan
+ * kecepatan pointer (reaksi partikel), status tekan (aktivitas), burst klik
+ * (ripple partikel), dan kecepatan gulir.
  *
  * Semua listener pasif: scroll native, keyboard, dan assistive technology
  * tidak pernah diblokir.
  */
-
-export const INTERACTIVE_SELECTOR =
-  "a[href], button, [role='button'], input, select, textarea, summary, [data-signal-interactive], [data-cursor]";
-
-/** Area yang tidak bisa disentuh (pose kursor: stop). */
-export const STOP_SELECTOR =
-  "[data-cursor='stop'], [disabled], [aria-disabled='true'], fieldset[disabled]";
-/** Area dengar (pose kursor: music). */
-export const MUSIC_SELECTOR = "[data-cursor='music'], audio, video";
-/** Area tunjuk (pose kursor: pointing) + target seret magnetik. */
-export const POINT_SELECTOR = '[data-cursor="point"]';
-export const MAGNETIC_SELECTOR = "[data-signal-magnetic]";
-/** Area seret (pose kursor: drag) — mis. rail katalog. */
-export const DRAG_SELECTOR = '[data-cursor="drag"]';
 
 /** Satu jam untuk semua sinyal: sama dengan timestamp requestAnimationFrame. */
 const now = () =>
@@ -37,53 +22,6 @@ const now = () =>
 export function attachPointerSignal(store: SignatureStore) {
   if (typeof window === "undefined") return () => undefined;
   const signals = store.signals;
-
-  /**
-   * Resolve status hover dari satu target event. Dipakai bersama oleh
-   * pointermove dan focusin (keyboard): satu tempat, satu hasil.
-   */
-  const resolveHover = (
-    target: EventTarget | null
-  ): {
-    hover: CursorHoverState;
-    element: Element | null;
-    magnetic: HTMLElement | null;
-  } => {
-    const element = target instanceof Element ? target : null;
-    if (!element) return { hover: null, element: null, magnetic: null };
-    const stop = element.closest(STOP_SELECTOR);
-    if (stop) return { hover: "stop", element: stop, magnetic: null };
-    const music = element.closest(MUSIC_SELECTOR);
-    if (music) return { hover: "music", element: music, magnetic: null };
-    const magnetic = element.closest<HTMLElement>(MAGNETIC_SELECTOR);
-    if (magnetic) return { hover: "point", element: magnetic, magnetic };
-    const point = element.closest(POINT_SELECTOR);
-    if (point) return { hover: "point", element: point, magnetic: null };
-    const interactive = element.closest(INTERACTIVE_SELECTOR);
-    return {
-      hover: interactive ? "aware" : null,
-      element: interactive,
-      magnetic: null,
-    };
-  };
-
-  const applyHover = (target: EventTarget | null) => {
-    const resolved = resolveHover(target);
-    const magnetic = Boolean(resolved.magnetic);
-    const interactive = resolved.hover !== null;
-    if (signals.hover !== resolved.hover) signals.hover = resolved.hover;
-    if (signals.hoverElement !== resolved.element)
-      signals.hoverElement = resolved.element;
-    if (signals.magneticElement !== resolved.magnetic)
-      signals.magneticElement = resolved.magnetic;
-    if (signals.interactive !== interactive) signals.interactive = interactive;
-    if (signals.magnetic !== magnetic) signals.magnetic = magnetic;
-  };
-
-  /** Drag sungguhan: tekan pada elemen drag lalu bergerak melebihi ambang. */
-  let dragCandidate: HTMLElement | null = null;
-  let dragDownX = 0;
-  let dragDownY = 0;
 
   const onPointerMove = (event: PointerEvent) => {
     const previousX = signals.pointerX;
@@ -103,17 +41,6 @@ export function attachPointerSignal(store: SignatureStore) {
     signals.pointerX = event.clientX;
     signals.pointerY = event.clientY;
     signals.pointerActive = true;
-    applyHover(event.target);
-    if (signals.pointerPressed && dragCandidate) {
-      const dx = event.clientX - dragDownX;
-      const dy = event.clientY - dragDownY;
-      if (
-        !signals.dragging &&
-        dx * dx + dy * dy > DRAG_THRESHOLD_PX * DRAG_THRESHOLD_PX
-      ) {
-        signals.dragging = true;
-      }
-    }
     if (event.pointerType !== "mouse" && signals.pointerPressed) {
       // Drag di layar sentuh menyebarkan titik sepanjang lintasan.
       store.burst(event.clientX, event.clientY, 0.45);
@@ -125,33 +52,18 @@ export function attachPointerSignal(store: SignatureStore) {
     signals.pointerX = event.clientX;
     signals.pointerY = event.clientY;
     signals.pointerActive = true;
-    const target = event.target;
-    dragCandidate =
-      target instanceof Element
-        ? target.closest<HTMLElement>(DRAG_SELECTOR)
-        : null;
-    dragDownX = event.clientX;
-    dragDownY = event.clientY;
-    applyHover(event.target);
+    // Ripple partikel dari satu ketukan — bagian dari medan sinyal, bukan
+    // dari kursor (kursor kustom sudah dihapus).
     store.burst(event.clientX, event.clientY, 1);
   };
 
   const onPointerUp = () => {
     signals.pointerPressed = false;
-    signals.dragging = false;
-    dragCandidate = null;
   };
 
   const onPointerLeave = () => {
     signals.pointerActive = false;
     signals.pointerPressed = false;
-    signals.dragging = false;
-    dragCandidate = null;
-    signals.interactive = false;
-    signals.magnetic = false;
-    signals.hover = null;
-    signals.hoverElement = null;
-    signals.magneticElement = null;
     signals.pointerX = -9999;
     signals.pointerY = -9999;
     signals.pointerVX = 0;
@@ -159,10 +71,10 @@ export function attachPointerSignal(store: SignatureStore) {
   };
 
   const onFocusIn = (event: FocusEvent) => {
-    // Keyboard user tetap menggerakkan signal: ring mengikuti elemen fokus.
+    // Keyboard user tetap menggerakkan signal: posisi sinyal mengikuti elemen
+    // fokus, sehingga partikel di sekitarnya tetap bereaksi.
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
-    applyHover(target);
     const rect = target.getBoundingClientRect();
     if (!rect.width && !rect.height) return;
     signals.pointerX = rect.left + rect.width / 2;
@@ -174,6 +86,8 @@ export function attachPointerSignal(store: SignatureStore) {
   let lastScrollAt = now();
   /** Sampel pertama hanya menyetel titik acuan, bukan kecepatan. */
   let scrollPrimed = false;
+  /** Arah terakhir yang dilaporkan ke Signal Mark (tidak ditulis ulang). */
+  let lastScrollDir = "";
   const readStage = () => {
     // Satu panggung per halaman. Diukur hanya saat scroll/resize yang sudah
     // dibatasi rAF, jadi tidak memicu layout tiap frame.
@@ -243,6 +157,22 @@ export function attachPointerSignal(store: SignatureStore) {
     // Rect panggung hanya berubah kalau halaman benar-benar bergeser; frame
     // peluruhan tidak perlu membayar layout read lagi.
     if (moved || !signals.stage) readStage();
+
+    // Jembatan ke Signal Mark: laporkan arah gulir sebagai atribut data di
+    // <html>, hanya saat arah atau keadaan berubah (bergulir → diam, atau
+    // arah berubah). CSS yang merespons; tanpa gulir tidak ada pekerjaan apa pun.
+    const dir =
+      signals.scrollVelocity > 0.05
+        ? "down"
+        : signals.scrollVelocity < -0.05
+          ? "up"
+          : "";
+    if (dir !== lastScrollDir) {
+      lastScrollDir = dir;
+      const root = document.documentElement;
+      if (dir) root.dataset.signalScroll = dir;
+      else delete root.dataset.signalScroll;
+    }
 
     // Terus ukur sampai kecepatannya habis, supaya dorongan partikel
     // mereda mulus alih-alih berhenti mendadak di frame terakhir.

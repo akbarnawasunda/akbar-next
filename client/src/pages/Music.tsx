@@ -275,7 +275,6 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
                 href={featured.href}
                 target="_blank"
                 rel="noreferrer"
-                data-cursor="point"
               >
                 <Play size={13} fill="currentColor" /> {t.listenLatest}
               </a>
@@ -287,7 +286,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               </Link>
             </div>
           </div>
-          <figure className="an-cat-hero-art" data-cursor="music">
+          <figure className="an-cat-hero-art">
             <ResilientArtworkImage
               src={featured.artwork}
               backupSrc={officialBrand.socialPreview}
@@ -341,7 +340,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               {t.channelsMeta(editablePlatformLinks.length)}
             </p>
           </header>
-          <ul className="an-index" data-cursor="music">
+          <ul className="an-index">
             {editablePlatformLinks.map(platform => (
               <li key={platform.label}>
                 <a
@@ -378,7 +377,7 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               </div>
               <p className="an-cat-lede">{t.listenCopy}</p>
             </header>
-            <div className="an-cat-listen-grid" data-cursor="music">
+            <div className="an-cat-listen-grid">
               {players.map((drop, index) => {
                 const known = catalog.find(release =>
                   release.title
@@ -446,15 +445,12 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
               ref={catalogRef}
               tabIndex={0}
               aria-label={t.railLabel}
-              data-cursor="drag"
             >
               {catalog.map((release, index) => (
                 <Link
                   key={`${release.title}-${index}`}
                   className="an-release"
                   href={`${t.musicHref}/${releaseSlug(release.title)}`}
-                  data-signal-interactive
-                  data-cursor="music"
                 >
                   <span className="an-release-art">
                     <ResilientArtworkImage
@@ -499,7 +495,6 @@ export function MusicView({ locale = "id" }: { locale?: "id" | "en" }) {
             href={spotifyHref}
             target="_blank"
             rel="noreferrer"
-            data-cursor="point"
           >
             <PlatformIcon label="Spotify" /> {t.bandCta}
           </a>

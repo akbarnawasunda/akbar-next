@@ -231,7 +231,7 @@ describe("kontrak runtime yang tidak muncul di HTML", () => {
     // Aturan media query hanya ada di file CSS.
     for (const file of [
       "client/src/components/signature/SignatureBackground.css",
-      "client/src/components/signature/CursorSignal.css",
+      "client/src/components/signature/SignalMark.css",
       "client/src/components/signature/RouteSignalCurtain.css",
       "client/src/components/signature/SignalType.css",
       "client/src/components/signature/EraTimeline.css",
@@ -353,6 +353,7 @@ describe("sinyal gulir", () => {
     globals.document = {
       addEventListener: () => undefined,
       removeEventListener: () => undefined,
+      documentElement: { dataset: {} },
       querySelector: (selector: string) => {
         if (selector === "[data-signal-stage]") {
           return {

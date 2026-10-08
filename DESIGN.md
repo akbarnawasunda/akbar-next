@@ -902,55 +902,32 @@ Requirements:
 
 The drawer should feel designed, not like a stock hamburger implementation.
 
-# 16. CUSTOM CURSOR
+# 16. NATIVE CURSOR + SIGNAL MARK
 
-The custom cursor is an identity detail, not a gimmick.
+The pointer stays native. Do not replace, hide, decorate, or animate the
+cursor — no custom dot, no companion, no trail, no magnetic pull, no
+`cursor: none` anywhere.
 
-On fine-pointer devices only:
+The brand lives in the world of the website, not in a cursor following the
+user's hand. Touch devices use the native pointer model.
 
+The one ambient interaction element is the Signal Mark: a tiny steel-blue
+signal trace (hairline + three segments + one slow point) in the bottom-right
+safe area. It is atmosphere, not UI — a residual signal still moving through
+the room while the page is idle.
 
-- preserve native usability
+Signal Mark rules:
 
-- use a small precise signal marker
-
-- allow subtle state changes over interactive elements
-
-- allow particle interaction when appropriate
-
-
-Possible states:
-
-### Default
-
-Small point or minimal ring.
-
-### Link
-
-Subtle change in scale or geometry.
-
-### Image
-
-A restrained aperture / crosshair / media indicator.
-
-### Particle field
-
-Signal becomes a magnetic interaction point.
-
-The cursor must not become:
-
-
-- a huge circle
-
-- a glowing blob
-
-- an exaggerated trail
-
-- a permanent decorative shape
-
-
-No heavy frame-by-frame effects just to make the cursor feel "fancy".
-
-Touch devices use the native pointer model.
+- decorative only (`aria-hidden`); never semantic information
+- extremely small footprint; easy to miss, hard to resent
+- never covers text, buttons, artwork, the audio dock, footer, or game controls
+  (it lifts above the dock and suppresses itself near the footer)
+- motion lives in CSS keyframes only: no RAF loop, no pointer tracking,
+  no canvas, no per-frame React state
+- states: idle (barely breathing), scroll (brief stretch, direction-aware),
+  audio playing (slightly more alive — amplitude breathes, never an equalizer),
+  route transition (one short sweep), reduced motion (static mark)
+- JEDAG RUN keeps its own visual language; the mark is absent there
 
 # 17. MASCOT SYSTEM
 
