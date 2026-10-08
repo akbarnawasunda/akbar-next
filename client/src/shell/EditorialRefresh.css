@@ -124,14 +124,22 @@
   display: none !important;
 }
 
+/* Satu baris dengan empat zona bermakna: IDENTITY (wordmark) → NAVIGATION
+   → STATUS/UTILITY (jam studio, bahasa) → PRIMARY CTA. Tiga track saja:
+   track ke-4 dulu untuk tombol menu yang tersembunyi di desktop hanya
+   membuang satu gap (~36px di 1440px). Lebar tiap rung diukur dengan metrik
+   font asli — lihat tangga di bawah dan docs/desktop-visual-qa-cursor-pass.md §1. */
 .an-public-shell.an-editorial :is(.an-site, .nf-page) .nf-nav {
   position: sticky;
   top: 0;
-  z-index: 90;
+  z-index: var(--z-nav, 90);
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
   align-items: center;
-  gap: clamp(16px, 2.5vw, 36px);
+  /* Sedikit lebih rapat dari 2.5vw/36px: di rung teroria (1081px, 7 item nav)
+     ini bagian dari margin aman yang terukur (docs/desktop-visual-qa-
+     cursor-pass.md §1). */
+  gap: clamp(14px, 2.2vw, 32px);
   min-height: 76px;
   height: auto;
   padding: 0 var(--editorial-gutter);
@@ -169,6 +177,11 @@
   gap: clamp(14px, 1.75vw, 28px);
 }
 
+/* Navigasi adalah peran METADATA: label kembali ke suara metadata yang
+   dipakai seluruh situs (uppercase, tracked, Good Times 0.66rem — di antara
+   --an-meta 0.58rem dan body 0.9rem). Sebelumnya 0.82rem tanpa tracking:
+   hampir sebesar teks baca sehingga nav tampak setara penting dengan konten
+   dan memakan ~620px untuk 7 item (docs/desktop-visual-qa-cursor-pass.md §1-2). */
 .an-public-shell.an-editorial .nf-nav nav a {
   position: relative;
   padding: 9px 0;
@@ -176,10 +189,11 @@
   /* FASE 12: aturan ini yang menang (dimuat setelah ChromeRedesign.css,
      spesifisitas sama) -- ikut dipindah ke --font-label. */
   font-family: var(--font-label);
-  font-size: 0.82rem;
+  font-size: 0.66rem;
   font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
   transition: color 160ms ease;
 }
 
@@ -240,6 +254,35 @@
   border-color: var(--editorial-accent);
   background: rgb(155 185 193 / 8%);
   color: var(--paper);
+}
+
+/* --- Tangga lebar masthead (desktop) --------------------------------
+   Satu baris: identity | nav | status/utility | CTA. Tiap anak tangga melepas
+   SATU zona yang punya rumah tetap di footer atau drawer — tidak ada font
+   yang dikecilkan untuk sekadar muat. Diukur dengan metrik font asli, kasus
+   terburuk = 7 item nav (JADWAL tampil saat ada jadwal terkonfirmasi):
+   - ≥1360px   : semua zona muat (kebutuhan terukur ~1315px)
+   - ≥1240px   : jam studio (tanggal) pindah ke footer
+   - ≥1081px   : switch bahasa pindah ke footer bawah + drawer
+   - ≤1080px   : drawer (sudah ada di bawah) */
+@media (max-width: 1359.98px) {
+  /* Status: jam studio versi lengkap (tanggal + detik, ~266px) terlalu lebar
+     untuk satu baris; versi ringkas sudah dipakai, dan di bawah 1360px bahkan
+     versi ringkas pun dilepaskan — jam lengkap tetap menempel di footer. */
+  .an-public-shell.an-editorial .nf-nav .nf-nav-clock {
+    display: none;
+  }
+}
+
+@media (max-width: 1239.98px) {
+  /* Bahasa: ID / EN tetap tersedia di baris hak cipta footer dan di footer
+     drawer — tidak ada fungsi yang hilang. CTA merapat padding-nya. */
+  .an-public-shell.an-editorial .nf-nav .an-language-switcher {
+    display: none;
+  }
+  .an-public-shell.an-editorial .nf-nav .nf-signal {
+    padding: 0 10px;
+  }
 }
 
 .an-public-shell.an-editorial .nf-menu-toggle {

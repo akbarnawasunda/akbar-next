@@ -1,0 +1,220 @@
+/* ============================================================
+   SIGNAL MARK — sisa sinyal di sudut aman viewport.
+
+   Bukan kursor, bukan indikator: jejak sinyal 48×12px (garis rambut +
+   tiga segmen baja + satu titik yang berjalan pelan). Semua gerak di CSS
+   (transform/opacity) — tanpa loop rAF, tanpa pointer tracking, tanpa canvas.
+   (docs/signal-mark-pass.md)
+   ============================================================ */
+.an-signal-mark {
+  position: fixed;
+  right: 28px;
+  bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  z-index: var(--z-mark, 60);
+  width: 48px;
+  height: 12px;
+  pointer-events: none;
+  opacity: 0.92;
+  transition:
+    opacity 320ms ease,
+    visibility 320ms ease;
+}
+
+/* Jangan pernah menutupi bar bawah footer (jam studio di kanan bawah). */
+.an-signal-mark.is-near-footer {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Angkat mark di atas dock audio saat dock terlihat — tanpa tumpang tindih.
+   Memakai atribut state milik dock sendiri (data-an-player*), termasuk tinggi
+   dock di layar kecil dan saat rak embed terbuka. */
+html[data-an-player="visible"] .an-signal-mark {
+  bottom: calc(68px + 28px + env(safe-area-inset-bottom, 0px));
+}
+html[data-an-player="visible"][data-an-player-shelf="open"] .an-signal-mark {
+  bottom: calc(
+    68px + var(--an-embed-audio-h, 166px) + 28px +
+      env(safe-area-inset-bottom, 0px)
+  );
+}
+
+@media (max-width: 640px) {
+  html[data-an-player="visible"] .an-signal-mark {
+    bottom: calc(76px + 20px + env(safe-area-inset-bottom, 0px));
+  }
+  html[data-an-player="visible"][data-an-player-shelf="open"] .an-signal-mark {
+    bottom: calc(
+      76px + var(--an-embed-audio-h, 166px) + 20px +
+        env(safe-area-inset-bottom, 0px)
+    );
+  }
+}
+
+@media (pointer: coarse) {
+  html[data-an-player="visible"] .an-signal-mark {
+    bottom: calc(80px + 20px + env(safe-area-inset-bottom, 0px));
+  }
+  html[data-an-player="visible"][data-an-player-shelf="open"] .an-signal-mark {
+    bottom: calc(
+      80px + var(--an-embed-audio-h, 166px) + 20px +
+        env(safe-area-inset-bottom, 0px)
+    );
+  }
+}
+
+/* --- Jejak: garis rambut selebar mark ------------------------------- */
+.an-signal-mark-trace {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  margin-top: -0.5px;
+  background: var(--ink-line);
+  transform-origin: left center;
+  transition: transform 420ms var(--ease, ease);
+}
+
+/* --- Segmen: kode sinyal minimal, asimetris -------------------------- */
+.an-signal-mark-seg {
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  margin-top: -0.5px;
+  background: var(--acid);
+  animation: an-signal-mark-breathe 6.4s ease-in-out infinite alternate;
+}
+.an-signal-mark-seg--a {
+  left: 0;
+  width: 10px;
+}
+.an-signal-mark-seg--b {
+  left: 18px;
+  width: 16px;
+  animation-delay: -2.1s;
+}
+.an-signal-mark-seg--c {
+  left: 40px;
+  width: 6px;
+  animation-delay: -4.2s;
+}
+
+@keyframes an-signal-mark-breathe {
+  from {
+    opacity: calc(0.3 + var(--an-signal-amp, 0) * 0.25);
+  }
+  to {
+    opacity: calc(0.7 + var(--an-signal-amp, 0) * 0.25);
+  }
+}
+
+/* --- Titik: satu titik sinyal yang berjalan pelan --------------------- */
+.an-signal-mark-point {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0;
+  border-radius: 50%;
+  background: var(--acid);
+  animation:
+    an-signal-mark-drift 9s ease-in-out infinite alternate,
+    an-signal-mark-pulse 3.6s ease-in-out infinite alternate;
+}
+
+@keyframes an-signal-mark-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(45px, 0, 0);
+  }
+}
+
+@keyframes an-signal-mark-pulse {
+  from {
+    opacity: calc(0.35 + var(--an-signal-amp, 0) * 0.3);
+  }
+  to {
+    opacity: calc(0.8 + var(--an-signal-amp, 0) * 0.2);
+  }
+}
+
+/* --- GULIR: regangkan jejak, percepat titik, ikuti arah gulir -----------
+   (data-signal-scroll dipasang/dihapus oleh pointerSignal hanya saat arah
+   atau keadaan berubah — saat diam tidak ada apa-apa yang dihitung.) */
+html[data-signal-scroll] .an-signal-mark-trace {
+  transform: scaleX(1.12);
+}
+html[data-signal-scroll] .an-signal-mark-point {
+  animation-duration: 2.8s, 1.6s;
+}
+html[data-signal-scroll="up"] .an-signal-mark-point {
+  animation-direction: alternate-reverse, alternate;
+}
+
+/* --- AUDIO: sedikit lebih hidup saat benar-benar diputar ----------------
+   (--an-signal-amp ditulis loop bersama yang sudah ada, hanya saat playing;
+   responsnya napas, bukan equalizer.) */
+.an-signal-mark.is-playing .an-signal-mark-point {
+  animation-duration: 5.2s, 2.2s;
+}
+
+/* --- TRANSISI RUTE: satu sapuan pendek --------------------------------- */
+.an-signal-mark.is-transit .an-signal-mark-trace {
+  animation: an-signal-mark-sweep 640ms var(--ease, ease) forwards;
+}
+.an-signal-mark.is-transit .an-signal-mark-point {
+  animation:
+    an-signal-mark-dash 640ms cubic-bezier(0.65, 0, 0.35, 1) forwards,
+    an-signal-mark-pulse 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes an-signal-mark-sweep {
+  0% {
+    transform: scaleX(0.7);
+  }
+  55% {
+    transform: scaleX(1.14);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* Sapuan titik: melesat menyeberang lalu kembali pelan. Berakhir tepat di
+   titik awal drift idle — saat kelas is-transit dilepas, drift dipasang lagi
+   dari awal (translate3d(0)), jadi tidak ada loncatan sedikit pun. */
+@keyframes an-signal-mark-dash {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  55% {
+    transform: translate3d(45px, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* --- Reduced motion: mark statis, tanpa gerakan apa pun ---------------- */
+@media (prefers-reduced-motion: reduce) {
+  .an-signal-mark-trace,
+  .an-signal-mark-seg,
+  .an-signal-mark-point {
+    animation: none;
+    transition: none;
+  }
+  .an-signal-mark-seg {
+    opacity: 0.5;
+  }
+  .an-signal-mark-seg--b {
+    opacity: 0.6;
+  }
+  .an-signal-mark-point {
+    opacity: 0.55;
+    transform: none;
+  }
+}

@@ -2,6 +2,8 @@ import type Lenis from "lenis";
 
 let lenisInstance: Lenis | null = null;
 let rafId = 0;
+/** Bangunkan pompa rAF lenis dari luar (mis. scrollToTop programmatic). */
+let wakePump: (() => void) | null = null;
 
 /**
  * Smooth scroll sengaja dibatasi: hanya desktop dengan mouse/trackpad.
@@ -39,11 +41,33 @@ export async function setupSmoothScroll() {
 
   lenisInstance = lenis;
 
+  /**
+   * Pompa rAF untuk lenis — di-gate, tidak selalu menyala.
+   *
+   * `lenis.isScrolling` bernilai `false` saat lenis tidak sedang bekerja
+   * ("smooth" selama scroll teranimasi, "native" 400ms setelah scroll native
+   * terakhir — timeout-nya milik lenis, terlepas dari rAF). Saat idle, pompa
+   * BERHENTI: halaman yang sedang dibaca tidak menjalankan loop scroll sama
+   * sekali. Bangun instan oleh event (wheel/touch/scroll/keydown) dan setiap
+   * scrollTo programmatic (docs/motion-performance-liquid-signal-pass.md §5.6).
+   */
   const raf = (time: number) => {
     lenis.raf(time);
-    rafId = requestAnimationFrame(raf);
+    rafId = 0;
+    if (lenis.isScrolling) rafId = requestAnimationFrame(raf);
   };
+  const wake = () => {
+    if (!rafId) rafId = requestAnimationFrame(raf);
+  };
+  wakePump = wake;
   rafId = requestAnimationFrame(raf);
+
+  window.addEventListener("wheel", wake, { passive: true });
+  window.addEventListener("touchmove", wake, { passive: true });
+  // Scroll native (scrollbar, keyboard): lenis menandainya "native" dan
+  // meresetnya sendiri 400ms setelah scroll terakhir.
+  window.addEventListener("scroll", wake, { passive: true });
+  document.addEventListener("keydown", wake);
 
   const handleAnchorClick = (event: MouseEvent) => {
     const target = event.target;
@@ -56,11 +80,19 @@ export async function setupSmoothScroll() {
     if (!destination) return;
     event.preventDefault();
     lenis.scrollTo(destination, { offset: -80, duration: 1.4 });
+    // scrollTo menghidupkan animasi — pompa harus ikut bangun.
+    wake();
   };
   document.addEventListener("click", handleAnchorClick);
 
   return () => {
     cancelAnimationFrame(rafId);
+    rafId = 0;
+    wakePump = null;
+    window.removeEventListener("wheel", wake);
+    window.removeEventListener("touchmove", wake);
+    window.removeEventListener("scroll", wake);
+    document.removeEventListener("keydown", wake);
     document.removeEventListener("click", handleAnchorClick);
     lenis.destroy();
     lenisInstance = null;
@@ -70,6 +102,8 @@ export async function setupSmoothScroll() {
 export function scrollToTop(immediate = true) {
   if (lenisInstance) {
     lenisInstance.scrollTo(0, { immediate });
+    // scrollTo dengan animasi menghidupkan lenis — pompa harus ikut bangun.
+    if (!immediate) wakePump?.();
   } else if (typeof window !== "undefined") {
     window.scrollTo({ top: 0, behavior: immediate ? "auto" : "smooth" });
   }

@@ -194,7 +194,6 @@ export function VisualsView({ locale = "id" }: { locale?: "id" | "en" }) {
               href="https://www.youtube.com/@akbarnawasunda"
               target="_blank"
               rel="noreferrer"
-              data-cursor="point"
             >
               {t.youtubeCta} <ArrowUpRight size={14} />
             </a>

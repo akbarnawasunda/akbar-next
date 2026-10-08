@@ -59,6 +59,7 @@ function setupDom(
 ) {
   const drawn: Drawn[] = [];
   const frames: ((time: number) => void)[] = [];
+  const timeouts: (() => void)[] = [];
 
   const stack: { composite: string; alpha: number }[] = [];
   const mainContext: Record<string, unknown> & {
@@ -136,8 +137,13 @@ function setupDom(
     devicePixelRatio: 2,
     addEventListener: () => undefined,
     removeEventListener: () => undefined,
-    setTimeout: () => 0,
-    clearTimeout: () => undefined,
+    setTimeout: (callback: () => void) => {
+      timeouts.push(callback);
+      return timeouts.length;
+    },
+    clearTimeout: (id: number) => {
+      timeouts[id - 1] = () => undefined;
+    },
   };
 
   const globals = globalThis as unknown as Record<string, unknown>;
@@ -191,7 +197,7 @@ function setupDom(
     Math.random = previous.random;
   };
 
-  return { canvas, drawn, frames, restore };
+  return { canvas, drawn, frames, timeouts, restore };
 }
 
 function capability(tier: SignatureCapability["tier"]): SignatureCapability {
@@ -216,8 +222,6 @@ function signalsStub(stage: SignatureSignals["stage"] = null): SignatureSignals 
     pointerVY: 0,
     pointerMovedAt: 0,
     pointerPressed: false,
-    interactive: false,
-    magnetic: false,
     scrollY: 0,
     scrollVelocity: 0,
     heroProgress: 0,
@@ -252,6 +256,7 @@ function runWordmark(
       era: { index: 0, total: 0 },
       transition: "idle" as const,
       transitLabel: "",
+      intensity: 1,
     })
   );
 
@@ -259,7 +264,16 @@ function runWordmark(
   const early: Drawn[] = [];
   const mid: Drawn[] = [];
   for (let i = 0; i < 160; i++) {
-    const next = dom.frames.pop();
+    let next = dom.frames.pop();
+    if (!next) {
+      // Engine bisa tidur di mode idle (setTimeout, bukan rAF) — bangunkan
+      // lewat timeout-nya supaya frame berikutnya tetap bisa dipop.
+      const timer = dom.timeouts.pop();
+      if (timer) {
+        timer();
+        next = dom.frames.pop();
+      }
+    }
     dom.frames.length = 0;
     if (!next) break;
     dom.drawn.length = 0; // tiap tangkapan hanya berisi satu frame
@@ -320,6 +334,7 @@ function scenario(
       era: { index: 0, total: 0 },
       transition: "idle" as const,
       transitLabel: "",
+      intensity: 1,
     })
   );
 
@@ -329,7 +344,15 @@ function scenario(
     drawn: () => dom.drawn,
     frames(count: number) {
       for (let i = 0; i < count; i++) {
-        const next = dom.frames.pop();
+        let next = dom.frames.pop();
+        if (!next) {
+          // Mode idle: bangunkan lewat timeout, lalu ambil frame berikutnya.
+          const timer = dom.timeouts.pop();
+          if (timer) {
+            timer();
+            next = dom.frames.pop();
+          }
+        }
         dom.frames.length = 0;
         if (!next) break;
         dom.drawn.length = 0;
@@ -490,12 +513,21 @@ describe("particle field", () => {
         era: { index: 0, total: 0 },
         transition: "idle" as const,
         transitLabel: "",
+        intensity: 1,
       })
     );
 
     const run = (frames: number, from: number) => {
       for (let i = 0; i < frames; i++) {
-        const next = dom.frames.pop();
+        let next = dom.frames.pop();
+        if (!next) {
+          // Mode idle: bangunkan lewat timeout, lalu ambil frame berikutnya.
+          const timer = dom.timeouts.pop();
+          if (timer) {
+            timer();
+            next = dom.frames.pop();
+          }
+        }
         dom.frames.length = 0;
         if (!next) break;
         dom.drawn.length = 0;
@@ -557,12 +589,21 @@ describe("particle field", () => {
         era: { index: 0, total: 0 },
         transition: phase.value,
         transitLabel: "MUSIK",
+        intensity: 1,
       })
     );
 
     const run = (frames: number, from: number) => {
       for (let i = 0; i < frames; i++) {
-        const next = dom.frames.pop();
+        let next = dom.frames.pop();
+        if (!next) {
+          // Mode idle: bangunkan lewat timeout, lalu ambil frame berikutnya.
+          const timer = dom.timeouts.pop();
+          if (timer) {
+            timer();
+            next = dom.frames.pop();
+          }
+        }
         dom.frames.length = 0;
         if (!next) break;
         dom.drawn.length = 0;
@@ -779,6 +820,7 @@ describe("particle field", () => {
           era: { index: 0, total: 0 },
           transition: "idle" as const,
           transitLabel: "",
+          intensity: 1,
         })
       );
       dom.frames.forEach(frame => frame(16));
@@ -800,6 +842,7 @@ describe("particle field", () => {
         era: { index: 0, total: 0 },
         transition: "idle" as const,
         transitLabel: "",
+        intensity: 1,
       })
     );
     dom.frames.forEach(frame => frame(16));

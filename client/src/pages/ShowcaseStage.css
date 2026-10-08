@@ -26,7 +26,7 @@
   gap: clamp(28px, 5vw, 72px);
   max-width: var(--hx-max);
   margin-inline: auto;
-  padding: calc(var(--chrome-h, 78px) + var(--space-xl)) var(--hx-gutter)
+  padding: var(--space-xl) var(--hx-gutter)
     var(--space-xl);
 }
 
@@ -83,7 +83,7 @@
 
 .an-public-shell.an-editorial .an-vis-hero-plate figcaption span {
   font-family: var(--font-mono);
-  font-size: 0.5rem;
+  font-size: 0.58rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--acid);
@@ -208,7 +208,7 @@
   align-content: end;
   gap: var(--space-md);
   min-height: clamp(520px, 74svh, 820px);
-  padding: calc(var(--chrome-h, 78px) + var(--space-xl)) var(--hx-gutter)
+  padding: var(--space-xl) var(--hx-gutter)
     var(--space-xl);
   overflow: hidden;
 }
@@ -397,7 +397,7 @@
   gap: 6px;
   justify-self: end;
   font-family: var(--font-mono);
-  font-size: 0.52rem;
+  font-size: 0.58rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--acid);

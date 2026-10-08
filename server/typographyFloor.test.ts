@@ -22,18 +22,13 @@ const ROOT = resolve(process.cwd(), "client/src");
 const SCAN_ROOT = "client/src";
 
 /**
- * Deklarasi yang memang di bawah lantai. Satu-satunya sekarang adalah tagline
- * di wordmark header — bagian navigasi, yang sengaja tidak disentuh pass ini.
- * Kalau navigasi dirapikan nanti, hapus baris ini; jangan tambah entri baru
- * tanpa alasan peran yang sama jelasnya.
+ * Deklarasi yang memang di bawah lantai. Tidak ada lagi: tagline wordmark
+ * (satu-satunya pengecualian lama) sudah tidak dirender di masthead —
+ * navigasi dirapikan di docs/desktop-visual-qa-cursor-pass.md §1, dan entri
+ * pengecualian ini ikut dihapus seperti yang diperintahkan komentarnya.
+ * Jangan tambah entri baru tanpa alasan peran yang sama jelasnya.
  */
-const ALLOWED: { file: string; contains: string; reason: string }[] = [
-  {
-    file: "client/src/shell/ChromeRedesign.css",
-    contains: ".nf-nav .nf-wordmark-text small",
-    reason: "tagline wordmark di masthead (navigasi — di luar cakupan pass ini)",
-  },
-];
+const ALLOWED: { file: string; contains: string; reason: string }[] = [];
 
 /** Nilai absolut terkecil yang boleh dipakai teks apa pun, dalam px. */
 const FLOOR_PX = 8; // 0,5rem
@@ -121,8 +116,8 @@ describe("lantai ukuran teks mikro", () => {
   });
 
   it("tetap mencatat pengecualian yang sudah tidak berlaku", () => {
-    // Kalau tagline navigasi diperbaiki, entri pengecualian harus ikut hilang
-    // supaya tidak jadi izin lama yang membusuk.
+    // Pengecualian yang sudah tidak berlaku harus hilang dari daftar —
+    // kalau tidak, ia jadi izin lama yang membusuk.
     for (const allowed of ALLOWED) {
       const stillSmall = declarations.some(
         d =>

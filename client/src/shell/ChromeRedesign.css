@@ -62,12 +62,13 @@
   text-transform: none;
 }
 
+/* Wordmark di masthead hanya memuat nama (strong). Tagline tidak lagi
+   dirender di sini — lihat komentar di NightFrequencyChrome.tsx. */
 .an-public-shell.an-editorial .nf-nav .nf-wordmark-text {
   display: grid;
   gap: 4px;
   min-width: 0;
 }
-
 
 .an-public-shell.an-editorial .nf-nav .nf-wordmark-text strong {
 
@@ -76,16 +77,6 @@
   font-weight: 400;
   letter-spacing: 0.03em;
   color: var(--paper);
-  white-space: nowrap;
-}
-
-.an-public-shell.an-editorial .nf-nav .nf-wordmark-text small {
-  font-family: var(--font-mono);
-  font-size: 0.5rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--mute);
   white-space: nowrap;
 }
 
@@ -294,7 +285,7 @@
 .an-public-shell.an-editorial .nf-footer-column > span {
   /* FASE 12: label kolom footer ("JELAJAHI"/"HUBUNGI") -> --font-label. */
   font-family: var(--font-label);
-  font-size: 0.52rem;
+  font-size: 0.58rem;
   letter-spacing: 0.18em;
   color: var(--mute);
 }
@@ -315,7 +306,7 @@
 .an-public-shell.an-editorial .nf-footer .footer-bottom {
   /* FASE 12: baris hak cipta -> --font-label. */
   font-family: var(--font-label);
-  font-size: 0.52rem;
+  font-size: 0.58rem;
   letter-spacing: 0.16em;
   color: var(--mute);
 }
@@ -383,10 +374,6 @@
 
     font-size: 0.9rem;
   }
-  .an-public-shell.an-editorial .nf-nav .nf-wordmark-text small {
-    font-size: 0.46rem;
-    letter-spacing: 0.13em;
-  }
   .an-public-shell.an-editorial .nf-nav .nf-brand-logo {
     width: 28px;
     height: 28px;
@@ -394,9 +381,6 @@
 }
 
 @media (max-width: 420px) {
-  .an-public-shell.an-editorial .nf-nav .nf-wordmark-text small {
-    display: none; /* logam metadata ditanggalkan; nama tetap terbaca penuh */
-  }
   .an-public-shell.an-editorial .nf-nav .nf-brand-logo {
     width: 26px;
     height: 26px;

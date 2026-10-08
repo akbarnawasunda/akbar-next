@@ -113,7 +113,6 @@ export function InteractiveArtworkCard({
       className="an-artwork-card"
       ref={cardRef}
       data-previewing={previewing}
-      data-cursor={previewUrl ? "music" : undefined}
     >
       <div className="an-artwork-card-media">
         <div className="an-artwork-card-layer">
@@ -146,7 +145,6 @@ export function InteractiveArtworkCard({
               className="an-artwork-card-preview"
               onClick={startPreview}
               aria-pressed={previewing}
-              data-signal-interactive
             >
               {previewing ? <Square size={12} /> : <Play size={12} fill="currentColor" />}
               {previewing ? "STOP" : "PREVIEW 15S"}
@@ -158,7 +156,6 @@ export function InteractiveArtworkCard({
               type="button"
               className="an-artwork-card-open"
               onClick={onOpen}
-              data-signal-interactive
             >
               {openLabel || "LIHAT"} <ArrowUpRight size={13} aria-hidden="true" />
             </button>
@@ -170,7 +167,6 @@ export function InteractiveArtworkCard({
             <Link
               className="an-artwork-card-link"
               href={href}
-              data-signal-interactive
             >
               {openLabel || "BUKA"} <ArrowUpRight size={13} aria-hidden="true" />
             </Link>
@@ -180,7 +176,6 @@ export function InteractiveArtworkCard({
               href={href}
               target="_blank"
               rel="noreferrer"
-              data-signal-interactive
             >
               {openLabel || "BUKA"} <ArrowUpRight size={13} aria-hidden="true" />
             </a>

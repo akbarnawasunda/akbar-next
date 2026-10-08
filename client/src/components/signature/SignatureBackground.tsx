@@ -35,18 +35,27 @@ export function SignatureBackground() {
 
     void import("@/signature/field/particleField").then(module => {
       if (disposed) return;
-      fieldRef.current = module.createParticleField(canvas, store.signals, () => {
-        const snapshot = store.getSnapshot();
-        return {
-          mode: snapshot.frequency.active ? "frequency" : snapshot.route.mode,
-          capability: snapshot.capability,
-          frequency: snapshot.frequency.active,
-          era: { index: snapshot.era.index, total: snapshot.era.total },
-          transition: snapshot.transition.phase,
-          // Label tujuan dibentuk partikel selama perpindahan halaman.
-          transitLabel: snapshot.transition.targetLabel,
-        };
-      });
+      fieldRef.current = module.createParticleField(
+        canvas,
+        store.signals,
+        () => {
+          const snapshot = store.getSnapshot();
+          return {
+            mode: snapshot.frequency.active ? "frequency" : snapshot.route.mode,
+            capability: snapshot.capability,
+            frequency: snapshot.frequency.active,
+            era: { index: snapshot.era.index, total: snapshot.era.total },
+            transition: snapshot.transition.phase,
+            // Label tujuan dibentuk partikel selama perpindahan halaman.
+            transitLabel: snapshot.transition.targetLabel,
+            // Intensitas gerak per rute (LIVE lebih energik, halaman senyap
+            // hampir diam).
+            intensity: snapshot.route.intensity,
+          };
+        },
+        // Perubahan state diskrit membangunkan engine dari mode idle.
+        wake => store.subscribe(wake)
+      );
     });
 
     return () => {

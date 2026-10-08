@@ -4,16 +4,16 @@ import type { SignatureStore } from "./types";
 /**
  * Pointer + scroll signal.
  *
- * Satu listener global untuk seluruh situs. Particle field, cursor, dan
- * parallax artwork membaca angka yang sama, jadi tidak ada halaman yang
- * memasang listener pointer sendiri.
+ * Satu listener global untuk seluruh situs. Particle field dan komponen lain
+ * membaca angka yang sama, jadi tidak ada halaman yang memasang listener
+ * pointer sendiri. Kursor kustom sudah dihapus (docs/signal-mark-pass.md) —
+ * yang tersisa di sini adalah sinyal yang memang dipakai bersama: posisi dan
+ * kecepatan pointer (reaksi partikel), status tekan (aktivitas), burst klik
+ * (ripple partikel), dan kecepatan gulir.
  *
  * Semua listener pasif: scroll native, keyboard, dan assistive technology
  * tidak pernah diblokir.
  */
-
-export const INTERACTIVE_SELECTOR =
-  "a[href], button, [role='button'], input, select, textarea, summary, [data-signal-interactive], [data-cursor]";
 
 /** Satu jam untuk semua sinyal: sama dengan timestamp requestAnimationFrame. */
 const now = () =>
@@ -22,17 +22,6 @@ const now = () =>
 export function attachPointerSignal(store: SignatureStore) {
   if (typeof window === "undefined") return () => undefined;
   const signals = store.signals;
-
-  const updateInteractive = (target: EventTarget | null) => {
-    const element =
-      target instanceof Element ? target.closest(INTERACTIVE_SELECTOR) : null;
-    const interactive = Boolean(element);
-    const magnetic = Boolean(
-      element && element.hasAttribute("data-signal-magnetic")
-    );
-    if (signals.interactive !== interactive) signals.interactive = interactive;
-    if (signals.magnetic !== magnetic) signals.magnetic = magnetic;
-  };
 
   const onPointerMove = (event: PointerEvent) => {
     const previousX = signals.pointerX;
@@ -52,7 +41,6 @@ export function attachPointerSignal(store: SignatureStore) {
     signals.pointerX = event.clientX;
     signals.pointerY = event.clientY;
     signals.pointerActive = true;
-    updateInteractive(event.target);
     if (event.pointerType !== "mouse" && signals.pointerPressed) {
       // Drag di layar sentuh menyebarkan titik sepanjang lintasan.
       store.burst(event.clientX, event.clientY, 0.45);
@@ -64,6 +52,8 @@ export function attachPointerSignal(store: SignatureStore) {
     signals.pointerX = event.clientX;
     signals.pointerY = event.clientY;
     signals.pointerActive = true;
+    // Ripple partikel dari satu ketukan — bagian dari medan sinyal, bukan
+    // dari kursor (kursor kustom sudah dihapus).
     store.burst(event.clientX, event.clientY, 1);
   };
 
@@ -74,8 +64,6 @@ export function attachPointerSignal(store: SignatureStore) {
   const onPointerLeave = () => {
     signals.pointerActive = false;
     signals.pointerPressed = false;
-    signals.interactive = false;
-    signals.magnetic = false;
     signals.pointerX = -9999;
     signals.pointerY = -9999;
     signals.pointerVX = 0;
@@ -83,10 +71,10 @@ export function attachPointerSignal(store: SignatureStore) {
   };
 
   const onFocusIn = (event: FocusEvent) => {
-    // Keyboard user tetap menggerakkan signal: ring mengikuti elemen fokus.
+    // Keyboard user tetap menggerakkan signal: posisi sinyal mengikuti elemen
+    // fokus, sehingga partikel di sekitarnya tetap bereaksi.
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
-    updateInteractive(target);
     const rect = target.getBoundingClientRect();
     if (!rect.width && !rect.height) return;
     signals.pointerX = rect.left + rect.width / 2;
@@ -98,6 +86,8 @@ export function attachPointerSignal(store: SignatureStore) {
   let lastScrollAt = now();
   /** Sampel pertama hanya menyetel titik acuan, bukan kecepatan. */
   let scrollPrimed = false;
+  /** Arah terakhir yang dilaporkan ke Signal Mark (tidak ditulis ulang). */
+  let lastScrollDir = "";
   const readStage = () => {
     // Satu panggung per halaman. Diukur hanya saat scroll/resize yang sudah
     // dibatasi rAF, jadi tidak memicu layout tiap frame.
@@ -167,6 +157,22 @@ export function attachPointerSignal(store: SignatureStore) {
     // Rect panggung hanya berubah kalau halaman benar-benar bergeser; frame
     // peluruhan tidak perlu membayar layout read lagi.
     if (moved || !signals.stage) readStage();
+
+    // Jembatan ke Signal Mark: laporkan arah gulir sebagai atribut data di
+    // <html>, hanya saat arah atau keadaan berubah (bergulir → diam, atau
+    // arah berubah). CSS yang merespons; tanpa gulir tidak ada pekerjaan apa pun.
+    const dir =
+      signals.scrollVelocity > 0.05
+        ? "down"
+        : signals.scrollVelocity < -0.05
+          ? "up"
+          : "";
+    if (dir !== lastScrollDir) {
+      lastScrollDir = dir;
+      const root = document.documentElement;
+      if (dir) root.dataset.signalScroll = dir;
+      else delete root.dataset.signalScroll;
+    }
 
     // Terus ukur sampai kecepatannya habis, supaya dorongan partikel
     // mereda mulus alih-alih berhenti mendadak di frame terakhir.

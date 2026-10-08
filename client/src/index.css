@@ -285,16 +285,26 @@
   --image-fade: 320ms;
 
   /* -- Z-index scale -------------------------------------------
-     Urutan lapisan global. Angka lama dipertahankan supaya tidak
-     ada elemen yang berpindah tumpukan; yang berubah hanya nama. */
+     Urutan lapisan global — satu sumber kebenaran. Aturannya:
+     1. lapisan teratas UI publik adalah overlay drawer (9999) — di atas nav,
+        player, lightbox, palette, dan tirai rute;
+     2. hanya splash preloader (di luar aplikasi, sementara) yang boleh
+        berada di atasnya;
+     3. tidak ada lagi lapisan kursor — kursor kustom dihapus dan kursor
+        kembali native (docs/signal-mark-pass.md). */
   --z-base:      1;
   --z-field:     3;    /* particle field global */
-  --z-hint:      40;   /* shell hint */
+  --z-hint:      40;   /* shell hint (dekoratif, di bawah player) */
   --z-player:    48;   /* global audio player */
   --z-curtain:   58;   /* route curtain */
-  --z-cursor:    60;   /* cursor signal */
+  --z-field-transit: 59; /* particle field saat transit rute (di atas tirai) */
+  --z-mark:      60;   /* Signal Mark — di atas tirai agar sapuan transisinya
+                         terlihat, di bawah lightbox; secara spasial ia
+                         mengangkat diri di atas dock (lihat SignalMark.css) */
   --z-lightbox:  70;   /* lightbox */
+  --z-rail:      80;   /* signature rail (section index) */
   --z-nav:       90;   /* sticky navigation */
+  --z-carrier:   95;   /* garis carrier (route scan + progres gulir) */
   --z-palette:   500;  /* command palette */
   --z-transition: 9000; /* route progress (transient) */
   --z-overlay:   9999; /* mobile drawer / overlay */
@@ -543,7 +553,11 @@ blockquote {
   overflow-wrap: break-word;
 }
 
-a,
+/* Anchor TIDAK dipaksa `overflow-wrap: normal` lagi: email, URL, dan judul
+   panjang yang dirender sebagai teks tautan harus mewarisi kebijakan wrap
+   dari kontainernya (dd/paragraph yang memang panjang-token) supaya tidak
+   menembus batas. Label tombol tetap `normal` — teks tombol tidak boleh
+   patah di tengah kata. (docs/desktop-visual-qa-cursor-pass.md §3) */
 button,
 label {
   overflow-wrap: normal;

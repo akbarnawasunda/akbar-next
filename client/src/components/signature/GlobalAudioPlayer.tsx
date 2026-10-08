@@ -190,20 +190,40 @@ export function GlobalAudioPlayer() {
     };
   }, [visible, expanded]);
 
-  // Amplitudo → CSS var, dibaca waveform tanpa render React.
+  // Amplitudo → CSS var, dibaca waveform tanpa render React. Ditulis hanya
+  // saat nilainya benar-benar berubah (epsilon) — bukan setiap frame
+  // (docs/motion-performance-liquid-signal-pass.md §5.5). Varian di root
+  // dokumen juga dipakai Signal Mark sebagai napas saat audio menyala.
   useEffect(() => {
     if (!visible) return;
     if (state !== "playing" && state !== "loading") return;
     const node = rootRef.current;
     if (!node) return;
     let frame = 0;
+    let lastAmp = -1;
     const loop = () => {
-      node.style.setProperty("--an-amp", store.signals.amplitude.toFixed(3));
+      const amp = store.signals.amplitude;
+      if (Math.abs(amp - lastAmp) >= 0.004) {
+        lastAmp = amp;
+        node.style.setProperty("--an-amp", amp.toFixed(3));
+        document.documentElement.style.setProperty(
+          "--an-signal-amp",
+          amp.toFixed(3)
+        );
+      }
       frame = requestAnimationFrame(loop);
     };
     frame = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(frame);
   }, [visible, state, store]);
+
+  // Saat audio berhenti, kembalikan napas Signal Mark ke idle: tanpa reset,
+  // nilai amplitudo terakhir akan terus terbaca dan mark tetap sedikit lebih
+  // "hidup" dari seharusnya setelah musik berhenti.
+  useEffect(() => {
+    if (state === "playing" || state === "loading") return;
+    document.documentElement.style.removeProperty("--an-signal-amp");
+  }, [state]);
 
   if (!visible) return null;
 
@@ -236,7 +256,6 @@ export function GlobalAudioPlayer() {
       className="an-global-player"
       data-player-state={state}
       data-analyzable={analyzable ? "true" : "false"}
-      data-cursor="music"
       aria-label={
         lang === "en" ? "Global audio player" : "Pemutar audio global"
       }
@@ -247,7 +266,6 @@ export function GlobalAudioPlayer() {
           className="an-global-player-toggle"
           onClick={togglePlayback}
           aria-label={playing ? copy.pause : copy.play}
-          data-signal-interactive
         >
           {playing ? (
             <Pause size={14} />
@@ -274,7 +292,6 @@ export function GlobalAudioPlayer() {
           href={track.sourceUrl}
           target="_blank"
           rel="noreferrer"
-          data-signal-interactive
         >
           {copy.open} <ExternalLink size={12} aria-hidden="true" />
         </a>
@@ -288,7 +305,6 @@ export function GlobalAudioPlayer() {
           onClick={() =>
             actions.setAudioState(expanded ? "minimized" : "paused")
           }
-          data-signal-interactive
         >
           {expanded ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
         </button>
@@ -301,7 +317,6 @@ export function GlobalAudioPlayer() {
             setAutoPlay(false);
             actions.setAudioState("closed");
           }}
-          data-signal-interactive
         >
           <X size={14} />
         </button>

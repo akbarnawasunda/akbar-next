@@ -1,5 +1,7 @@
 import { useEffect, type RefObject } from "react";
-import { DRAG_THRESHOLD_PX } from "@/signature/cursorPose";
+
+/** Jarak minimum (px) sebelum pointerdown dianggap sebagai drag sungguhan. */
+const DRAG_THRESHOLD_PX = 6;
 
 /**
  * Drag-to-scroll untuk rail horizontal (katalog rilisan, dsb).
@@ -8,10 +10,6 @@ import { DRAG_THRESHOLD_PX } from "@/signature/cursorPose";
  * (momentum scroll bawaan), jadi menambah logika sentuh di sini justru akan
  * merusaknya. Klik yang berakhir sebagai drag sungguhan ditekan supaya kartu
  * di dalam rail tidak ikut ter-navigasi setelah menggeser.
- *
- * Elemen yang dipasangi hook ini diberi `data-dragging="true"` selama drag
- * berlangsung — dipakai cursor companion (lihat CursorSignal.tsx) untuk
- * menunjukkan pose DRAGGING, dan oleh CSS untuk `cursor: grabbing`.
  */
 export function useDragScroll(ref: RefObject<HTMLElement | null>) {
   useEffect(() => {
@@ -28,7 +26,6 @@ export function useDragScroll(ref: RefObject<HTMLElement | null>) {
       down = false;
       dragging = false;
       pointerId = null;
-      delete el.dataset.dragging;
     };
 
     const onPointerDown = (event: PointerEvent) => {

@@ -28,7 +28,7 @@
 .an-site .an-nav {
   position: sticky;
   top: 0;
-  z-index: 90;
+  z-index: var(--z-nav, 90);
   display: grid;
   grid-template-columns: auto 1fr auto auto;
   align-items: center;
@@ -2956,7 +2956,7 @@
   .desktop-spec-item span {
     display: block;
     font-family: var(--font-mono, monospace);
-    font-size: 0.52rem;
+    font-size: 0.58rem;
     color: var(--mute);
     letter-spacing: 0.08em;
   }

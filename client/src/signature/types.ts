@@ -40,12 +40,19 @@ export type SignatureCapability = {
 
 export type SignatureLanguage = "id" | "en";
 
+/** Seberapa "hidup" sinyal di sebuah rute (skala 1 = beranda). */
 export type SignatureRouteInfo = {
   path: string;
   lang: SignatureLanguage;
   /** Label pendek untuk route curtain: MUSIK / VISUAL / LIVE / ARSIP … */
   label: string;
   mode: SignatureFieldMode;
+  /**
+   * Intensitas gerak untuk halaman ini (docs/motion-performance-liquid-
+   * signal-pass.md §5.7): LIVE lebih energik dari MUSIC, VISUAL lebih
+   * atmosferis dan lambat, halaman senyap (EPK/INQUIRY/LISENSI) hampir diam.
+   */
+  intensity: number;
 };
 
 export type RouteTransitionPhase = "idle" | "sweep" | "settle";
@@ -133,10 +140,8 @@ export type SignatureSignals = {
   pointerVY: number;
   /** Timestamp gerakan terakhir; dipakai meluruhkan kecepatan. */
   pointerMovedAt: number;
+  /** Tombol pointer sedang ditekan — aktivitas (dibaca particle field). */
   pointerPressed: boolean;
-  /** Elemen interaktif yang sedang di bawah pointer/fokus. */
-  interactive: boolean;
-  magnetic: boolean;
   scrollY: number;
   /**
    * Kecepatan gulir dalam px/ms, bertanda (positif = turun), dihaluskan EMA

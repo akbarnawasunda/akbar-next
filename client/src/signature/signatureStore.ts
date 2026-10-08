@@ -16,7 +16,7 @@ import type {
 
 export const INITIAL_SNAPSHOT: SignatureSnapshot = {
   capability: serverCapability(),
-  route: { path: "/", lang: "id", label: "BERANDA", mode: "wordmark" },
+  route: { path: "/", lang: "id", label: "BERANDA", mode: "wordmark", intensity: 1 },
   transition: { phase: "idle", targetLabel: "", startedAt: 0 },
   audio: { state: "idle", analyzable: false, track: null },
   frequency: { active: false, enabled: true, triggered: false },
@@ -34,8 +34,6 @@ function createSignals(): SignatureSignals {
     pointerVY: 0,
     pointerMovedAt: 0,
     pointerPressed: false,
-    interactive: false,
-    magnetic: false,
     scrollY: 0,
     scrollVelocity: 0,
     heroProgress: 0,

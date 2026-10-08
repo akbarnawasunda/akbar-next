@@ -200,7 +200,7 @@
 
 .an-public-shell.an-editorial .an-facts dt {
   font-family: var(--font-mono);
-  font-size: 0.5rem;
+  font-size: 0.58rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--mute);
@@ -217,8 +217,14 @@
   /* Nilai fakta bisa berupa satu token tanpa spasi — rute yang diminta di
      404, alamat email, atau URL. Tanpa ini, token sepanjang itu melebarkan
      kotaknya sendiri dan hanya tertutup `overflow-x: clip` di public shell.
-     Halaman yang menampilkan rute/email sudah menambal ini satu per satu;
-     aturan bersama ini membuat primitifnya aman dengan sendirinya. */
+     Aturan bersama ini membuat primitifnya aman dengan sendirinya. */
+  overflow-wrap: anywhere;
+}
+
+/* Token panjang yang dirender sebagai teks TAUTAN (email di fakta kontak,
+   URL) mewarisi `anywhere` dari dd — tapi aturan global lama `a { overflow-wrap:
+   normal }` menimpanya; link harus menambal dirinya sendiri. */
+.an-public-shell.an-editorial .an-facts dd a {
   overflow-wrap: anywhere;
 }
 
@@ -437,7 +443,7 @@
 
 .an-public-shell.an-editorial .an-release-meta small {
   font-family: var(--font-mono);
-  font-size: 0.5rem;
+  font-size: 0.58rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--mute);
@@ -450,6 +456,10 @@
   letter-spacing: 0em;
   line-height: 1.16;
   color: var(--paper);
+  /* Judul rilisan bisa sangat panjang ("DJ DIE WITH A SMILE X WARGA 62 …
+     — DJ AKBAR REMIX") dan duduk langsung di dalam kartu tautan; izinkan
+     patah antar kata, bukan menembus bingkai kartu rail. */
+  overflow-wrap: break-word;
 }
 
 .an-public-shell.an-editorial .an-release-meta em {
@@ -457,7 +467,7 @@
   align-items: center;
   gap: 5px;
   font-family: var(--font-mono);
-  font-size: 0.52rem;
+  font-size: 0.58rem;
   font-style: normal;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -496,6 +506,13 @@
    Satu geometri, jadi halaman-halaman itu terbaca sebagai keluarga
    yang sama tanpa harus menyalin aturan satu per satu. */
 
+/* Pembuka halaman dalam. Masthead itu sticky (mengalir di dalam flow),
+   jadi padding atas TIDAK lagi menghitung --chrome-h: hanya jeda sengaja
+   (--space-xl) di bawah bar. Dulu padding-nya `calc(chrome-h + space-xl)`
+   — offset itu hanya untuk hero beranda yang memang ditarik ke bawah bar
+   transparan (margin-top negatif); di halaman dalam ia hanya menyisakan
+   ~78px ruang gelap yang tidak disengaja (docs/desktop-visual-qa-cursor-
+   pass.md §4). */
 .an-public-shell.an-editorial .an-page-hero {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
@@ -503,7 +520,7 @@
   gap: clamp(28px, 4.6vw, 72px);
   max-width: var(--hx-max, 1560px);
   margin-inline: auto;
-  padding: calc(var(--chrome-h, 78px) + var(--space-xl)) var(--hx-gutter)
+  padding: var(--space-xl) var(--hx-gutter)
     var(--space-xl);
 }
 
@@ -517,7 +534,9 @@
   margin: 0;
   max-width: 16ch;
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5.6vw, 5rem);
+  /* Register route: sama dengan H1 halaman katalog/arsip lainnya —
+     sebelumnya 5rem, melebihi register yang dipakai semua hero lain. */
+  font-size: var(--display-route);
   font-weight: 500;
   letter-spacing: 0em;
   line-height: 0.98;
@@ -573,7 +592,7 @@
 
 @media (max-width: 767.98px) {
   .an-public-shell.an-editorial .an-page-hero {
-    padding: calc(var(--chrome-h, 58px) + var(--space-lg)) var(--hx-gutter)
+    padding: var(--space-lg) var(--hx-gutter)
       var(--space-lg);
   }
 
