@@ -163,6 +163,10 @@ describe("Signal Mark — state machine via sinyal bersama", () => {
     expect(markTsx).toContain('phase === "sweep"');
     expect(markCss).toContain(".an-signal-mark.is-transit");
     expect(markCss).toContain("@keyframes an-signal-mark-dash");
+    // Sapuan titik harus berakhir di titik awal (translate3d(0)) — drift idle
+    // dipasang lagi dari awal saat kelas dilepas, jadi titik tidak meloncat.
+    const dash = markCss.slice(markCss.indexOf("@keyframes an-signal-mark-dash"));
+    expect(dash).toMatch(/100%\s*\{\s*transform:\s*translate3d\(0, 0, 0\)/);
   });
 });
 
