@@ -217,6 +217,14 @@ export function GlobalAudioPlayer() {
     return () => cancelAnimationFrame(frame);
   }, [visible, state, store]);
 
+  // Saat audio berhenti, kembalikan napas Signal Mark ke idle: tanpa reset,
+  // nilai amplitudo terakhir akan terus terbaca dan mark tetap sedikit lebih
+  // "hidup" dari seharusnya setelah musik berhenti.
+  useEffect(() => {
+    if (state === "playing" || state === "loading") return;
+    document.documentElement.style.removeProperty("--an-signal-amp");
+  }, [state]);
+
   if (!visible) return null;
 
   const copy =

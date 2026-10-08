@@ -149,6 +149,9 @@ describe("Signal Mark — state machine via sinyal bersama", () => {
   it("audio: napas amplitudo dari loop bersama, bukan equalizer", () => {
     // Varian root ditulis loop epsilon player yang sudah ada.
     expect(player).toContain('"--an-signal-amp"');
+    // Saat audio berhenti, var dihapus — mark kembali ke napas idle murni,
+    // tidak "mengingat" amplitudo terakhir.
+    expect(player).toContain('removeProperty("--an-signal-amp")');
     expect(markCss).toContain("var(--an-signal-amp");
     expect(markCss).toContain(".an-signal-mark.is-playing");
     // Respons audio berupa napas opacity/durasi — tidak ada FFT/waveform.
