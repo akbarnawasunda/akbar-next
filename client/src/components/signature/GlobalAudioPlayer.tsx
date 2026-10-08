@@ -190,15 +190,22 @@ export function GlobalAudioPlayer() {
     };
   }, [visible, expanded]);
 
-  // Amplitudo → CSS var, dibaca waveform tanpa render React.
+  // Amplitudo → CSS var, dibaca waveform tanpa render React. Ditulis hanya
+  // saat nilainya benar-benar berubah (epsilon) — bukan setiap frame
+  // (docs/motion-performance-liquid-signal-pass.md §5.5).
   useEffect(() => {
     if (!visible) return;
     if (state !== "playing" && state !== "loading") return;
     const node = rootRef.current;
     if (!node) return;
     let frame = 0;
+    let lastAmp = -1;
     const loop = () => {
-      node.style.setProperty("--an-amp", store.signals.amplitude.toFixed(3));
+      const amp = store.signals.amplitude;
+      if (Math.abs(amp - lastAmp) >= 0.004) {
+        lastAmp = amp;
+        node.style.setProperty("--an-amp", amp.toFixed(3));
+      }
       frame = requestAnimationFrame(loop);
     };
     frame = requestAnimationFrame(loop);

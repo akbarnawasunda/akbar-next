@@ -35,6 +35,8 @@ export type FieldStateReader = () => {
   transition: "idle" | "sweep" | "settle";
   /** Label tujuan saat berpindah halaman (MUSIK/VISUAL/ARSIP/…). */
   transitLabel: string;
+  /** Intensitas gerak halaman ini (1 = penuh; lihat routeSignal). */
+  intensity: number;
 };
 
 /** Status titik di panggung. */
@@ -158,6 +160,23 @@ const COST_GROW_HOLD_MS = 2000;
 /** Lantai: di bawah ini wordmark mulai tidak terbaca. */
 const COST_FLOOR_RATIO = 0.3;
 
+/**
+ * MODE IDLE — "quiet when idle" (docs/motion-performance-liquid-signal-pass.md
+ * §5.1).
+ *
+ * Saat tidak ada aktivitas — pointer diam, gulir sudah mereda, tidak ada
+ * audio, tidak ada transisi, tidak ada pembentukan/pelepasan — loop TIDAK
+ * berhenti total (wordmark tetap bernapas, debu tetap melayang: "residual
+ * life"), tapi tidur ke frekuensi rendah lewat setTimeout. Biaya frame turun
+ * sekitar 7,5×; begitu ada gerakan pointer, gulir, atau perubahan state
+ * diskrit, loop bangun instan ke rAF penuh.
+ */
+const IDLE_FRAME_MS = 120;
+/** Pointer dianggap "baru bergerak" selama 1,2 detik terakhir. */
+const POINTER_ACTIVE_MS = 1200;
+/** Amplitudo di bawah ambang ini dianggap hening. */
+const AMPLITUDE_ACTIVE = 0.015;
+
 function readToken(name: string, fallback: string) {
   if (typeof window === "undefined") return fallback;
   const value = getComputedStyle(document.documentElement)
@@ -184,7 +203,13 @@ export type ParticleField = {
 export function createParticleField(
   canvas: HTMLCanvasElement,
   signals: SignatureSignals,
-  readState: FieldStateReader
+  readState: FieldStateReader,
+  /**
+   * Hook untuk memasang sumber bangun eksternal — dipakai pemilik field
+   * untuk mendaftarkan perubahan state diskrit (rute, transisi, audio, era)
+   * sebagai pemicu bangun dari mode idle. Mengembalikan fungsi lepas.
+   */
+  onWake?: (wake: () => void) => () => void
 ): ParticleField {
   const context = canvas.getContext("2d", { alpha: true });
   if (!context) {
@@ -216,10 +241,16 @@ export function createParticleField(
   let lastTransition: "idle" | "sweep" | "settle" = "idle";
   /** Masih ada titik yang terbang bebas → frame berikutnya tetap digambar. */
   let flying = 0;
+  /** Titik non-ambient yang masih terbang (pelepasan/pembentukan nyata). */
+  let flyingCore = 0;
   /** Masih ada titik yang menempel → masih ada yang perlu dilepas. */
   let attached = 1;
   let wasReleasing = false;
   let idleCleared = false;
+  /** Timer tidur mode idle (0 = tidak tidur; frame = rAF aktif). */
+  let idleTimer = 0;
+  /** Lepas hook bangun eksternal (bila dipasang). */
+  let disposeWake: (() => void) | undefined;
 
   // Pengukur frame: rata-rata bergulir, bukan EMA — satu frame buruk tidak
   // boleh memangkas titik, dan satu frame baik tidak boleh menaikkannya.
@@ -584,6 +615,7 @@ export function createParticleField(
     formationStart = -1;
     formationMs = mode === "transit" ? TRANSIT_FORMATION_MS : FORMATION_MS;
     flying = 0;
+    flyingCore = 0;
     attached = next.length;
     wasReleasing = false;
     resetCostWindow();
@@ -619,6 +651,7 @@ export function createParticleField(
     // Ganti mode = kontrak ulang: titik yang sedang terbang ikut dipanggil.
     for (let i = 0; i < points.length; i++) points[i].state = ATTACHED;
     flying = 0;
+    flyingCore = 0;
     attached = points.length;
     wasReleasing = false;
   }
@@ -699,6 +732,34 @@ export function createParticleField(
     }
     ctx.stroke();
   }
+
+  /**
+   * Jadwalkan frame berikutnya. Aktif → rAF penuh (60fps). Idle → tidur ke
+   * frekuensi rendah: frame berikutnya baru dieksekusi setelah IDLE_FRAME_MS,
+   * kecuali ada event yang membangunkan lebih dulu (lihat `wake`).
+   */
+  const scheduleNext = (active: boolean) => {
+    if (!running || destroyed) return;
+    if (active) {
+      frame = requestAnimationFrame(step);
+      return;
+    }
+    frame = 0;
+    idleTimer = window.setTimeout(() => {
+      idleTimer = 0;
+      if (running && !destroyed) frame = requestAnimationFrame(step);
+    }, IDLE_FRAME_MS) as unknown as number;
+  };
+
+  /** Bangun dari tidur idle: batalkan timeout, langsung kembali ke rAF. */
+  const wake = () => {
+    if (destroyed || !running) return;
+    if (idleTimer) {
+      window.clearTimeout(idleTimer);
+      idleTimer = 0;
+    }
+    if (!frame) frame = requestAnimationFrame(step);
+  };
 
   function step(time: number) {
     if (!running) return;
@@ -788,12 +849,13 @@ export function createParticleField(
 
       // Panggung jauh di luar layar, tidak ada titik yang masih terbang, dan
       // tidak ada lagi yang menunggu dilepas: tidak ada gunanya menggambar.
+      // Ini adalah idle terdalam — tidur, bukan sekadar melewati frame.
       if (stage.visibility <= 0.02 && flying === 0 && attached === 0) {
         if (!idleCleared) {
           ctx.clearRect(0, 0, width, height);
           idleCleared = true;
         }
-        frame = requestAnimationFrame(step);
+        scheduleNext(false);
         return;
       }
     } else {
@@ -926,13 +988,18 @@ export function createParticleField(
     const base =
       state.capability.tier === "lite" ? DOT_SIZE_LITE : DOT_SIZE_FULL;
     const size = textMode ? base : base * 0.62;
-    const wobble = frequency ? 2.4 + amplitude * 9 : 1.6 + amplitude * 3.4;
+    // Intensitas per rute (LIVE lebih energik, VISUAL lebih lambat, halaman
+    // senyap hampir diam) — hanya menggeser "kehidupan" residual, bukan
+    // struktur atau formasi.
+    const intensity = state.intensity > 0 ? state.intensity : 1;
+    const wobble =
+      (frequency ? 2.4 + amplitude * 9 : 1.6 + amplitude * 3.4) * intensity;
     const wobbleTimeX = time * 0.0006;
     const wobbleTimeY = time * 0.0007;
     const flowTime = time * 0.00022;
     const sparkleTime = time * 0.0031;
-    const driftSway = fastSin(time * 0.00042) * 0.012;
-    const driftSwayY = fastCos(time * 0.00031) * 0.012;
+    const driftSway = fastSin(time * 0.00042) * 0.012 * intensity;
+    const driftSwayY = fastCos(time * 0.00031) * 0.012 * intensity;
     const marginX = width * 0.1;
     const marginY = height * 0.1;
     const returnRadius = Math.max(width, height) * 0.72;
@@ -963,6 +1030,8 @@ export function createParticleField(
 
     const buckets = colors.length;
     let airborne = 0;
+    /** Titik non-ambient yang masih terbang — pembentukan/pelepasan nyata. */
+    let airborneCore = 0;
     let holding = 0;
     for (let b = 0; b < buckets; b++) {
       ctx.fillStyle = colors[b];
@@ -1090,6 +1159,7 @@ export function createParticleField(
             }
           }
           airborne++;
+          if (!point.ambient) airborneCore++;
           ctx.fillRect(point.x, point.y, dotSize, dotSize);
           continue;
         }
@@ -1185,6 +1255,7 @@ export function createParticleField(
 
     ctx.globalAlpha = 1;
     flying = airborne;
+    flyingCore = airborneCore;
     attached = holding;
 
     if (sweepEnergy > 0.001) sweepEnergy *= 0.9;
@@ -1219,7 +1290,23 @@ export function createParticleField(
       }
     }
 
-    frame = requestAnimationFrame(step);
+    // --- mode idle: aktivitas menentukan jadwal frame berikutnya ---------
+    // Aktif = ada interaksi yang baru terjadi (pointer, tekan, gulir yang
+    // belum mereda, audio yang menyala, transisi rute, burst, pembentukan,
+    // atau pelepasan yang sedang berjalan). Tanpa itu, engine tidur ke
+    // frekuensi rendah — pembaca mendapatkan hening dengan sisa hidup.
+    // `pointerAge` sudah dihitung di atas (dipakai efek seret).
+    const active =
+      (signals.pointerActive && pointerAge < POINTER_ACTIVE_MS) ||
+      signals.pointerPressed ||
+      signals.scrollVelocity !== 0 ||
+      signals.amplitude > AMPLITUDE_ACTIVE ||
+      state.transition !== "idle" ||
+      signals.bursts.length > 0 ||
+      releasing ||
+      formation < 1 ||
+      flyingCore > 0;
+    scheduleNext(active);
   }
 
   /* --------------------------------------------------------------- lifecycle */
@@ -1230,6 +1317,10 @@ export function createParticleField(
     if (state.capability.tier === "off") return;
     running = true;
     lastTime = performance.now();
+    if (idleTimer) {
+      window.clearTimeout(idleTimer);
+      idleTimer = 0;
+    }
     frame = requestAnimationFrame(step);
   }
 
@@ -1237,6 +1328,8 @@ export function createParticleField(
     running = false;
     if (frame) cancelAnimationFrame(frame);
     frame = 0;
+    if (idleTimer) window.clearTimeout(idleTimer);
+    idleTimer = 0;
   }
 
   function resize() {
@@ -1275,6 +1368,18 @@ export function createParticleField(
   document.addEventListener("visibilitychange", onVisibility);
   window.addEventListener("resize", onResize, { passive: true });
   window.addEventListener("orientationchange", onResize, { passive: true });
+
+  // Sumber bangun dari mode idle: gerakan pointer dan gulir adalah alasan
+  // paling umum sistem kembali hidup. Listener pasif; handler-nya hanya
+  // memeriksa satu boolean, hampir tanpa biaya.
+  const onWakeEvent = () => wake();
+  window.addEventListener("pointermove", onWakeEvent, { passive: true });
+  window.addEventListener("pointerdown", onWakeEvent, { passive: true });
+  window.addEventListener("scroll", onWakeEvent, { passive: true });
+  // Perubahan state diskrit (rute, transisi, audio, era, kapabilitas) ikut
+  // membangunkan — dipasang lewat hook dari pemilik field.
+  disposeWake = onWake?.(wake);
+
   resize();
 
   // Wordmark disampling dari font brand. Kalau font-nya belum selesai dimuat,
@@ -1304,6 +1409,10 @@ export function createParticleField(
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("orientationchange", onResize);
+      window.removeEventListener("pointermove", onWakeEvent);
+      window.removeEventListener("pointerdown", onWakeEvent);
+      window.removeEventListener("scroll", onWakeEvent);
+      disposeWake?.();
       if (resizeFrame) window.clearTimeout(resizeFrame);
       ctx.clearRect(0, 0, width, height);
       points = [];

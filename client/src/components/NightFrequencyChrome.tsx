@@ -147,11 +147,22 @@ export function NightHeader({
   // Header jadi solid setelah pengunjung mulai menggulir. Di beranda, header
   // transparan di posisi paling atas supaya foto hero terbaca sebagai satu
   // adegan penuh; setelah lewat ambang itu bar-nya menutup diri jadi tipis.
+  // Di-throttle ke satu setState per frame — bukan per event scroll.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 32);
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        setScrolled(window.scrollY > 32);
+      });
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   // Desktop keyboard hotkeys for instant navigation

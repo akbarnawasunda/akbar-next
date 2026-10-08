@@ -1,12 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useSignatureRuntime, useSignatureState } from "@/signature/useSignature";
-import { INTERACTIVE_SELECTOR } from "@/signature/pointerSignal";
 import {
-  DRAG_THRESHOLD_PX,
   STILL_THRESHOLD_MS,
   resolveCursorPose,
-  type CursorHover,
   type CursorPose,
 } from "@/signature/cursorPose";
 import "./CursorSignal.css";
@@ -26,27 +23,20 @@ import "./CursorSignal.css";
  * Tidak pernah tampil di perangkat sentuh atau saat reduced motion, tidak
  * pernah menyentuh focus ring asli, dan tidak pernah menangkap pointer
  * (seluruh lapisan ini aria-hidden + pointer-events: none).
+ *
+ * Arsitektur performa (docs/motion-performance-liquid-signal-pass.md §5.2):
+ * SEMUA status pointer (hover, pressed, dragging, target magnetik) di-resolve
+ * oleh pointerSignal — satu listener global untuk seluruh situs. Komponen ini
+ * hanya menjalankan SATU loop rAF yang membaca sinyal; tidak ada listener
+ * pointer tambahan dan tidak ada setState per gerakan pointer. Penulisan
+ * transform di-elide: selama pointer diam dan mascot sudah konvergen, loop
+ * tidak menulis style sama sekali.
  */
-
-const STOP_SELECTOR =
-  '[data-cursor="stop"], [aria-disabled="true"], [disabled], button:disabled, input:disabled, select:disabled, textarea:disabled';
-const MUSIC_SELECTOR = '[data-cursor="music"]';
-const POINT_SELECTOR = '[data-cursor="point"], [data-signal-magnetic]';
-const DRAG_SELECTOR = '[data-cursor="drag"]';
 
 /** Jarak tetap mascot dari posisi pointer sebenarnya — tidak pernah menutupi
  *  titik presisi atau teks/tombol di baliknya. */
 const COMPANION_OFFSET_X = 16;
 const COMPANION_OFFSET_Y = 20;
-
-function resolveHover(target: EventTarget | null): CursorHover {
-  if (!(target instanceof Element)) return null;
-  if (target.closest(STOP_SELECTOR)) return "stop";
-  if (target.closest(MUSIC_SELECTOR)) return "music";
-  if (target.closest(POINT_SELECTOR)) return "point";
-  if (target.closest(INTERACTIVE_SELECTOR)) return "aware";
-  return null;
-}
 
 const now = () =>
   typeof performance !== "undefined" ? performance.now() : Date.now();
@@ -72,72 +62,24 @@ export function CursorSignal() {
     let x = signals.pointerX;
     let y = signals.pointerY;
     let frame = 0;
-    let magnetTarget: HTMLElement | null = null;
-
-    let hover: CursorHover = null;
-    let pressed = false;
-    let dragging = false;
-    let dragCandidate = false;
-    let downX = 0;
-    let downY = 0;
     let lastPose: CursorPose = "idle";
     let wasActive = signals.pointerActive;
+    let magnetTarget: HTMLElement | null = null;
+    let lastMagnetX = -1;
+    let lastMagnetY = -1;
+    // Elision: nilai transform terakhir yang benar-benar ditulis ke DOM.
+    let lastDotX = -1;
+    let lastDotY = -1;
+    let lastMascotX = "";
+    let lastMascotY = "";
 
     const applyMagnet = (element: HTMLElement | null) => {
-      if (magnetTarget && magnetTarget !== element) {
+      if (magnetTarget === element) return;
+      if (magnetTarget) {
         magnetTarget.style.setProperty("--magnetic-x", "0px");
         magnetTarget.style.setProperty("--magnetic-y", "0px");
       }
       magnetTarget = element;
-    };
-
-    const onMove = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse") return;
-      hover = resolveHover(event.target);
-
-      const magneticTarget =
-        event.target instanceof Element
-          ? event.target.closest<HTMLElement>("[data-signal-magnetic]")
-          : null;
-      applyMagnet(magneticTarget);
-      if (magneticTarget) {
-        const rect = magneticTarget.getBoundingClientRect();
-        const offsetX = ((event.clientX - rect.left) / rect.width - 0.5) * 10;
-        const offsetY = ((event.clientY - rect.top) / rect.height - 0.5) * 7;
-        magneticTarget.style.setProperty("--magnetic-x", `${offsetX.toFixed(2)}px`);
-        magneticTarget.style.setProperty("--magnetic-y", `${offsetY.toFixed(2)}px`);
-      }
-
-      if (pressed && dragCandidate && !dragging) {
-        const dx = event.clientX - downX;
-        const dy = event.clientY - downY;
-        if (Math.hypot(dx, dy) > DRAG_THRESHOLD_PX) dragging = true;
-      }
-    };
-
-    // Keyboard navigation menggerakkan pointer signal (lihat focusin di
-    // pointerSignal.ts), tapi tidak pernah memicu pointermove — tanpa ini
-    // mascot tidak pernah sadar elemen fokus itu apa.
-    const onFocusIn = (event: FocusEvent) => {
-      hover = resolveHover(event.target);
-    };
-
-    const onPointerDown = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse") return;
-      pressed = true;
-      dragging = false;
-      downX = event.clientX;
-      downY = event.clientY;
-      dragCandidate =
-        event.target instanceof Element
-          ? Boolean(event.target.closest(DRAG_SELECTOR))
-          : false;
-    };
-
-    const onPointerUp = () => {
-      pressed = false;
-      dragging = false;
-      dragCandidate = false;
     };
 
     const loop = () => {
@@ -160,7 +102,14 @@ export function CursorSignal() {
       const still =
         signals.pointerActive && now() - signals.pointerMovedAt > STILL_THRESHOLD_MS;
 
-      const nextPose = resolveCursorPose({ pressed, dragging, hover, still });
+      // Pose dari sinyal yang sudah di-resolve pointerSignal — tanpa
+      // listener tambahan dan tanpa closest() di sini.
+      const nextPose = resolveCursorPose({
+        pressed: signals.pointerPressed,
+        dragging: signals.dragging,
+        hover: signals.hover,
+        still,
+      });
       if (nextPose !== lastPose) {
         lastPose = nextPose;
         setPose(nextPose);
@@ -169,17 +118,49 @@ export function CursorSignal() {
       x += (signals.pointerX - x) * 0.22;
       y += (signals.pointerY - y) * 0.22;
 
-      dot.style.transform = `translate3d(${signals.pointerX}px, ${signals.pointerY}px, 0)`;
-      companion.style.transform = `translate3d(${(x + COMPANION_OFFSET_X).toFixed(1)}px, ${(y + COMPANION_OFFSET_Y).toFixed(1)}px, 0)`;
+      // Tulis seperlunya: titik hanya saat posisi pointer berubah.
+      if (signals.pointerX !== lastDotX || signals.pointerY !== lastDotY) {
+        lastDotX = signals.pointerX;
+        lastDotY = signals.pointerY;
+        dot.style.transform = `translate3d(${signals.pointerX}px, ${signals.pointerY}px, 0)`;
+      }
+      // Mascot: hanya ditulis selama belum konvergen (epsilon) — begitu
+      // menempel di posisi, tidak ada lagi DOM write per frame.
+      const converged =
+        Math.abs(signals.pointerX - x) < 0.05 &&
+        Math.abs(signals.pointerY - y) < 0.05;
+      const mascotX = (x + COMPANION_OFFSET_X).toFixed(1);
+      const mascotY = (y + COMPANION_OFFSET_Y).toFixed(1);
+      if (!converged || mascotX !== lastMascotX || mascotY !== lastMascotY) {
+        lastMascotX = mascotX;
+        lastMascotY = mascotY;
+        companion.style.transform = `translate3d(${mascotX}px, ${mascotY}px, 0)`;
+      }
+
+      // Efek magnetik pada elemen sasaran — hanya dihitung ulang saat pointer
+      // bergerak (menghindari layout read per frame), sama seperti perilaku
+      // lama yang dipicu pointermove.
+      if (signals.pointerActive) {
+        applyMagnet(signals.magneticElement);
+        if (
+          magnetTarget &&
+          (signals.pointerX !== lastMagnetX || signals.pointerY !== lastMagnetY)
+        ) {
+          lastMagnetX = signals.pointerX;
+          lastMagnetY = signals.pointerY;
+          const rect = magnetTarget.getBoundingClientRect();
+          const offsetX = ((signals.pointerX - rect.left) / rect.width - 0.5) * 10;
+          const offsetY = ((signals.pointerY - rect.top) / rect.height - 0.5) * 7;
+          magnetTarget.style.setProperty("--magnetic-x", `${offsetX.toFixed(2)}px`);
+          magnetTarget.style.setProperty("--magnetic-y", `${offsetY.toFixed(2)}px`);
+        }
+      } else {
+        applyMagnet(null);
+      }
 
       frame = requestAnimationFrame(loop);
     };
 
-    window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("pointerdown", onPointerDown, { passive: true });
-    window.addEventListener("pointerup", onPointerUp, { passive: true });
-    window.addEventListener("pointercancel", onPointerUp, { passive: true });
-    document.addEventListener("focusin", onFocusIn);
     frame = requestAnimationFrame(() => {
       // Atribut dipasang di frame pertama loop yang benar-benar jalan: sampai
       // titik ini kursor native tetap aktif, jadi tidak pernah ada momen tanpa
@@ -190,11 +171,6 @@ export function CursorSignal() {
 
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("pointerup", onPointerUp);
-      window.removeEventListener("pointercancel", onPointerUp);
-      document.removeEventListener("focusin", onFocusIn);
       applyMagnet(null);
       delete document.documentElement.dataset.signatureCursor;
     };

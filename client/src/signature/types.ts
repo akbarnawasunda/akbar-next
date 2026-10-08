@@ -40,12 +40,19 @@ export type SignatureCapability = {
 
 export type SignatureLanguage = "id" | "en";
 
+/** Seberapa "hidup" sinyal di sebuah rute (skala 1 = beranda). */
 export type SignatureRouteInfo = {
   path: string;
   lang: SignatureLanguage;
   /** Label pendek untuk route curtain: MUSIK / VISUAL / LIVE / ARSIP … */
   label: string;
   mode: SignatureFieldMode;
+  /**
+   * Intensitas gerak untuk halaman ini (docs/motion-performance-liquid-
+   * signal-pass.md §5.7): LIVE lebih energik dari MUSIC, VISUAL lebih
+   * atmosferis dan lambat, halaman senyap (EPK/INQUIRY/LISENSI) hampir diam.
+   */
+  intensity: number;
 };
 
 export type RouteTransitionPhase = "idle" | "sweep" | "settle";
@@ -124,6 +131,9 @@ export type SignatureSnapshot = {
  * Sinyal frekuensi tinggi. Dibaca langsung oleh canvas setiap frame dan
  * TIDAK memicu render React.
  */
+/** Status hover hasil resolve elemen di bawah pointer/fokus. */
+export type CursorHoverState = "stop" | "music" | "point" | "aware" | null;
+
 export type SignatureSignals = {
   pointerX: number;
   pointerY: number;
@@ -137,6 +147,19 @@ export type SignatureSignals = {
   /** Elemen interaktif yang sedang di bawah pointer/fokus. */
   interactive: boolean;
   magnetic: boolean;
+  /**
+   * Status hover untuk pose kursor (stop/music/point/aware) — di-resolve
+   * sekali di pointerSignal, dibaca cursor loop tiap frame. Sebelumnya
+   * CursorSignal memasang listener pointer-nya sendiri; sekarang ia hanya
+   * membaca sinyal (docs/motion-performance-liquid-signal-pass.md §5.2).
+   */
+  hover: CursorHoverState;
+  /** Elemen yang menjadi dasar status hover (untuk efek magnetik). */
+  hoverElement: Element | null;
+  /** Elemen `data-signal-magnetic` di bawah pointer, bila ada. */
+  magneticElement: HTMLElement | null;
+  /** Tekan-tahan pada elemen `data-cursor="drag"` melebihi ambang → drag. */
+  dragging: boolean;
   scrollY: number;
   /**
    * Kecepatan gulir dalam px/ms, bertanda (positif = turun), dihaluskan EMA

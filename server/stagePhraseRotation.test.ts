@@ -85,6 +85,10 @@ function signalsStub(stage: SignatureSignals["stage"]): SignatureSignals {
     pointerPressed: false,
     interactive: false,
     magnetic: false,
+    hover: null,
+    hoverElement: null,
+    magneticElement: null,
+    dragging: false,
     scrollY: 0,
     scrollVelocity: 0,
     heroProgress: 0,
@@ -153,14 +157,20 @@ function setupDom(width: number, height: number) {
       return offscreen;
     },
   };
+  const timeouts: (() => void)[] = [];
   globals.window = {
     innerWidth: width,
     innerHeight: height,
     devicePixelRatio: 2,
     addEventListener: () => undefined,
     removeEventListener: () => undefined,
-    setTimeout: () => 0,
-    clearTimeout: () => undefined,
+    setTimeout: (callback: () => void) => {
+      timeouts.push(callback);
+      return timeouts.length;
+    },
+    clearTimeout: (id: number) => {
+      timeouts[id - 1] = () => undefined;
+    },
   };
   globals.getComputedStyle = () => ({ getPropertyValue: () => "#eceae5" });
   globals.requestAnimationFrame = (callback: (time: number) => void) => {
@@ -172,6 +182,7 @@ function setupDom(width: number, height: number) {
   return {
     canvas,
     frames,
+    timeouts,
     restore() {
       globals.window = previous.window;
       globals.document = previous.document;
@@ -212,6 +223,7 @@ function scrollThroughStage(width = 1440, height = 900) {
       era: { index: 0, total: 0 },
       transition: "idle" as const,
       transitLabel: "",
+      intensity: 1,
     })
   );
   teardown = () => {
@@ -222,7 +234,16 @@ function scrollThroughStage(width = 1440, height = 900) {
   let clock = 0;
   const advance = (count: number) => {
     for (let i = 0; i < count; i++) {
-      const next = dom.frames.pop();
+      let next = dom.frames.pop();
+      if (!next) {
+        // Engine bisa tidur di mode idle (setTimeout, bukan rAF) — bangunkan
+        // lewat timeout-nya supaya frame berikutnya tetap bisa dipop.
+        const timer = dom.timeouts.pop();
+        if (timer) {
+          timer();
+          next = dom.frames.pop();
+        }
+      }
       dom.frames.length = 0;
       if (!next) break;
       clock += 16.67;

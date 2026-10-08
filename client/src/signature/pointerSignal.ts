@@ -1,12 +1,16 @@
+import { DRAG_THRESHOLD_PX } from "./cursorPose";
 import { phraseFor } from "./stagePhrases";
-import type { SignatureStore } from "./types";
+import type { CursorHoverState, SignatureStore } from "./types";
 
 /**
  * Pointer + scroll signal.
  *
  * Satu listener global untuk seluruh situs. Particle field, cursor, dan
  * parallax artwork membaca angka yang sama, jadi tidak ada halaman yang
- * memasang listener pointer sendiri.
+ * memasang listener pointer sendiri — termasuk cursor: status hover
+ * (stop/music/point/aware), elemen magnetik, dan drag di-resolve di sini
+ * sekali per event, lalu dibaca cursor loop tiap frame tanpa listener
+ * tambahan (docs/motion-performance-liquid-signal-pass.md §5.2).
  *
  * Semua listener pasif: scroll native, keyboard, dan assistive technology
  * tidak pernah diblokir.
@@ -14,6 +18,17 @@ import type { SignatureStore } from "./types";
 
 export const INTERACTIVE_SELECTOR =
   "a[href], button, [role='button'], input, select, textarea, summary, [data-signal-interactive], [data-cursor]";
+
+/** Area yang tidak bisa disentuh (pose kursor: stop). */
+export const STOP_SELECTOR =
+  "[data-cursor='stop'], [disabled], [aria-disabled='true'], fieldset[disabled]";
+/** Area dengar (pose kursor: music). */
+export const MUSIC_SELECTOR = "[data-cursor='music'], audio, video";
+/** Area tunjuk (pose kursor: pointing) + target seret magnetik. */
+export const POINT_SELECTOR = '[data-cursor="point"]';
+export const MAGNETIC_SELECTOR = "[data-signal-magnetic]";
+/** Area seret (pose kursor: drag) — mis. rail katalog. */
+export const DRAG_SELECTOR = '[data-cursor="drag"]';
 
 /** Satu jam untuk semua sinyal: sama dengan timestamp requestAnimationFrame. */
 const now = () =>
@@ -23,16 +38,52 @@ export function attachPointerSignal(store: SignatureStore) {
   if (typeof window === "undefined") return () => undefined;
   const signals = store.signals;
 
-  const updateInteractive = (target: EventTarget | null) => {
-    const element =
-      target instanceof Element ? target.closest(INTERACTIVE_SELECTOR) : null;
-    const interactive = Boolean(element);
-    const magnetic = Boolean(
-      element && element.hasAttribute("data-signal-magnetic")
-    );
+  /**
+   * Resolve status hover dari satu target event. Dipakai bersama oleh
+   * pointermove dan focusin (keyboard): satu tempat, satu hasil.
+   */
+  const resolveHover = (
+    target: EventTarget | null
+  ): {
+    hover: CursorHoverState;
+    element: Element | null;
+    magnetic: HTMLElement | null;
+  } => {
+    const element = target instanceof Element ? target : null;
+    if (!element) return { hover: null, element: null, magnetic: null };
+    const stop = element.closest(STOP_SELECTOR);
+    if (stop) return { hover: "stop", element: stop, magnetic: null };
+    const music = element.closest(MUSIC_SELECTOR);
+    if (music) return { hover: "music", element: music, magnetic: null };
+    const magnetic = element.closest<HTMLElement>(MAGNETIC_SELECTOR);
+    if (magnetic) return { hover: "point", element: magnetic, magnetic };
+    const point = element.closest(POINT_SELECTOR);
+    if (point) return { hover: "point", element: point, magnetic: null };
+    const interactive = element.closest(INTERACTIVE_SELECTOR);
+    return {
+      hover: interactive ? "aware" : null,
+      element: interactive,
+      magnetic: null,
+    };
+  };
+
+  const applyHover = (target: EventTarget | null) => {
+    const resolved = resolveHover(target);
+    const magnetic = Boolean(resolved.magnetic);
+    const interactive = resolved.hover !== null;
+    if (signals.hover !== resolved.hover) signals.hover = resolved.hover;
+    if (signals.hoverElement !== resolved.element)
+      signals.hoverElement = resolved.element;
+    if (signals.magneticElement !== resolved.magnetic)
+      signals.magneticElement = resolved.magnetic;
     if (signals.interactive !== interactive) signals.interactive = interactive;
     if (signals.magnetic !== magnetic) signals.magnetic = magnetic;
   };
+
+  /** Drag sungguhan: tekan pada elemen drag lalu bergerak melebihi ambang. */
+  let dragCandidate: HTMLElement | null = null;
+  let dragDownX = 0;
+  let dragDownY = 0;
 
   const onPointerMove = (event: PointerEvent) => {
     const previousX = signals.pointerX;
@@ -52,7 +103,17 @@ export function attachPointerSignal(store: SignatureStore) {
     signals.pointerX = event.clientX;
     signals.pointerY = event.clientY;
     signals.pointerActive = true;
-    updateInteractive(event.target);
+    applyHover(event.target);
+    if (signals.pointerPressed && dragCandidate) {
+      const dx = event.clientX - dragDownX;
+      const dy = event.clientY - dragDownY;
+      if (
+        !signals.dragging &&
+        dx * dx + dy * dy > DRAG_THRESHOLD_PX * DRAG_THRESHOLD_PX
+      ) {
+        signals.dragging = true;
+      }
+    }
     if (event.pointerType !== "mouse" && signals.pointerPressed) {
       // Drag di layar sentuh menyebarkan titik sepanjang lintasan.
       store.burst(event.clientX, event.clientY, 0.45);
@@ -64,18 +125,33 @@ export function attachPointerSignal(store: SignatureStore) {
     signals.pointerX = event.clientX;
     signals.pointerY = event.clientY;
     signals.pointerActive = true;
+    const target = event.target;
+    dragCandidate =
+      target instanceof Element
+        ? target.closest<HTMLElement>(DRAG_SELECTOR)
+        : null;
+    dragDownX = event.clientX;
+    dragDownY = event.clientY;
+    applyHover(event.target);
     store.burst(event.clientX, event.clientY, 1);
   };
 
   const onPointerUp = () => {
     signals.pointerPressed = false;
+    signals.dragging = false;
+    dragCandidate = null;
   };
 
   const onPointerLeave = () => {
     signals.pointerActive = false;
     signals.pointerPressed = false;
+    signals.dragging = false;
+    dragCandidate = null;
     signals.interactive = false;
     signals.magnetic = false;
+    signals.hover = null;
+    signals.hoverElement = null;
+    signals.magneticElement = null;
     signals.pointerX = -9999;
     signals.pointerY = -9999;
     signals.pointerVX = 0;
@@ -86,7 +162,7 @@ export function attachPointerSignal(store: SignatureStore) {
     // Keyboard user tetap menggerakkan signal: ring mengikuti elemen fokus.
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
-    updateInteractive(target);
+    applyHover(target);
     const rect = target.getBoundingClientRect();
     if (!rect.width && !rect.height) return;
     signals.pointerX = rect.left + rect.width / 2;

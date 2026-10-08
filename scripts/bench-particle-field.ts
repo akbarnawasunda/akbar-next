@@ -94,14 +94,20 @@ function setupDom(viewportWidth: number, viewportHeight: number) {
   };
 
   const globals = globalThis as unknown as Record<string, unknown>;
+  const timeouts: (() => void)[] = [];
   globals.window = {
     innerWidth: viewportWidth,
     innerHeight: viewportHeight,
     devicePixelRatio: 2,
     addEventListener: () => undefined,
     removeEventListener: () => undefined,
-    setTimeout: () => 0,
-    clearTimeout: () => undefined,
+    setTimeout: (callback: () => void) => {
+      timeouts.push(callback);
+      return timeouts.length;
+    },
+    clearTimeout: (id: number) => {
+      timeouts[id - 1] = () => undefined;
+    },
   };
   globals.document = {
     hidden: false,
@@ -128,6 +134,7 @@ function setupDom(viewportWidth: number, viewportHeight: number) {
   return {
     canvas,
     frames,
+    timeouts,
     stats: () => ({ drawn, sink }),
     resetDrawn: () => {
       drawn = 0;
@@ -159,6 +166,10 @@ function signalsStub(stage: Stage): SignatureSignals {
     pointerPressed: false,
     interactive: false,
     magnetic: false,
+    hover: null,
+    hoverElement: null,
+    magneticElement: null,
+    dragging: false,
     scrollY: 0,
     scrollVelocity: 0,
     heroProgress: 0,
@@ -205,6 +216,7 @@ function run(
       era: { index: 0, total: 0 },
       transition: "idle" as const,
       transitLabel: "",
+      intensity: 1,
     })
   );
 
@@ -215,9 +227,18 @@ function run(
     const costs: number[] = [];
     let drawn = 0;
     for (let i = 0; i < count; i++) {
-      const next = dom.frames.pop();
+      let next = dom.frames.pop();
+      if (!next) {
+        // Engine sedang tidur di mode idle — bangunkan lewat timeout-nya,
+        // lalu ambil frame yang baru dijadwalkan.
+        const timer = dom.timeouts.pop();
+        if (!timer) break;
+        clock += 120;
+        timer();
+        next = dom.frames.pop();
+        if (!next) break;
+      }
       dom.frames.length = 0;
-      if (!next) break;
       dom.resetDrawn();
       clock += 16.67;
       const started = performance.now();
@@ -250,6 +271,64 @@ function run(
   stage.visibility = 0.01;
   runPhase("debu", 120);
 
+  // 5. Fase "diam" — membaca tenang: panggung terlihat (wordmark terkunci,
+  //    bernapas), semua sinyal tenang. Engine harus tidur ke frekuensi
+  //    rendah: ukur berapa frame yang benar-benar dieksekusi dalam 10 detik
+  //    waktu tiruan (docs/motion-performance-liquid-signal-pass.md §5.1).
+  stage.visibility = 1;
+  stage.progress = 0;
+  signals.pointerActive = false;
+  signals.pointerMovedAt = 0;
+  signals.pointerPressed = false;
+  signals.amplitude = 0;
+  const IDLE_WALL_MS = 10_000;
+  // Selesaikan dulu pembentukan ulang (scroll balik memutar ulang koreografi
+  // masuk) supaya yang diukur adalah laju idle murni, bukan ekor fase aktif.
+  for (let i = 0; i < 200; i++) {
+    const settleNext = dom.frames.pop();
+    if (settleNext) {
+      dom.frames.length = 0;
+      clock += 16.67;
+      settleNext(clock);
+    } else {
+      const settleTimer = dom.timeouts.pop();
+      if (!settleTimer) break;
+      clock += 120;
+      settleTimer();
+    }
+  }
+  let idleExecuted = 0;
+  let idleWall = 0;
+  let idleDrawn = 0;
+  while (idleWall < IDLE_WALL_MS) {
+    if (dom.frames.length) {
+      const next = dom.frames.pop();
+      dom.frames.length = 0;
+      if (!next) break;
+      dom.resetDrawn();
+      clock += 16.67;
+      idleWall += 16.67;
+      next(clock);
+      idleExecuted += 1;
+      idleDrawn = dom.stats().drawn;
+    } else {
+      // Timeout hanya membangunkan frame berikutnya — yang dihitung sebagai
+      // eksekusi adalah frame-nya, bukan timeout-nya sendiri.
+      const timer = dom.timeouts.pop();
+      if (!timer) break;
+      clock += 120;
+      idleWall += 120;
+      timer();
+    }
+  }
+  phases.push({
+    name: "diam",
+    costs: [],
+    drawn: idleDrawn,
+    idleExecuted,
+    idleWall,
+  } as (typeof phases)[number] & { idleExecuted: number; idleWall: number });
+
   if (quiet) {
     field.destroy();
     return;
@@ -259,6 +338,17 @@ function run(
     "  fase        frame  rata-rata     p95      maks   titik digambar"
   );
   for (const phase of phases) {
+    const idle = phase as (typeof phase) & {
+      idleExecuted?: number;
+      idleWall?: number;
+    };
+    if (idle.idleExecuted !== undefined && idle.idleWall !== undefined) {
+      const fps = (idle.idleExecuted / idle.idleWall) * 1000;
+      console.log(
+        `  ${phase.name.padEnd(10)} ${String(idle.idleExecuted).padStart(5)} frame dalam ${(idle.idleWall / 1000).toFixed(0)}s ≈ ${fps.toFixed(1)}fps (vs 60fps penuh) ${String(phase.drawn).padStart(10)} titik`
+      );
+      continue;
+    }
     const average =
       phase.costs.reduce((total, value) => total + value, 0) /
       Math.max(1, phase.costs.length);

@@ -25,8 +25,8 @@ export function EraTimeline({
 }) {
   const { actions } = useSignatureRuntime();
   const listRef = useRef<HTMLOListElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
-  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const list = listRef.current;
@@ -53,6 +53,9 @@ export function EraTimeline({
     items.forEach(item => observer.observe(item));
 
     // Progres garis mengikuti scroll native; tidak ada scroll hijacking.
+    // Ditulis sebagai CSS var langsung pada root — bukan setState per frame,
+    // supaya scroll tidak memicu re-render React (docs/motion-performance-
+    // liquid-signal-pass.md §5.4).
     let frame = 0;
     const update = () => {
       frame = 0;
@@ -60,7 +63,10 @@ export function EraTimeline({
       const viewport = window.innerHeight || 1;
       const total = rect.height + viewport * 0.4;
       const passed = Math.min(Math.max(viewport * 0.6 - rect.top, 0), total);
-      setProgress(Math.min(1, passed / total));
+      rootRef.current?.style.setProperty(
+        "--era-progress",
+        Math.min(1, passed / total).toFixed(3)
+      );
     };
     const onScroll = () => {
       if (frame) return;
@@ -97,8 +103,9 @@ export function EraTimeline({
 
   return (
     <div
+      ref={rootRef}
       className="an-era-timeline"
-      style={{ ["--era-progress" as string]: progress.toFixed(3) }}
+      style={{ ["--era-progress" as string]: "0" }}
     >
       <ol className="an-era-list" ref={listRef}>
         <span className="an-era-rail" aria-hidden="true">
