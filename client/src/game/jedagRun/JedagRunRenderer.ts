@@ -6,18 +6,23 @@ const palette = [
   { cyan: "#ffe36e", magenta: "#ff6f91", amber: "#ffffff", sky: "#211025", road: "#220e26" },
 ];
 
-const expressionEmoji: Record<PlayerExpression, string> = {
-  neutral: "😐",
-  running: "😏",
-  jump: "😮",
-  collect: "🤩",
-  "near-miss": "😎",
-  hit: "😨",
-  drop: "🤯",
-  "level-up": "🥳",
-  paused: "😶‍🌫️",
-  "game-over": "😵",
+/** Mouth shape per expression for the geometric fallback face (used until the mascot image is ready). */
+type MouthShape = "smile" | "open" | "flat" | "frown";
+const expressionMouth: Record<PlayerExpression, MouthShape> = {
+  neutral: "flat",
+  running: "flat",
+  jump: "open",
+  collect: "smile",
+  "near-miss": "smile",
+  hit: "frown",
+  drop: "open",
+  "level-up": "smile",
+  paused: "flat",
+  "game-over": "frown",
 };
+
+const MASCOT_SRC = "/assets/akbar-mascot-doodle.webp";
+const HIT_SHAKE_PX = 6;
 
 const expressionGlow: Record<PlayerExpression, string> = {
   neutral: "#70f0ff",
@@ -37,6 +42,8 @@ export class JedagRunRenderer {
   private readonly context: CanvasRenderingContext2D;
   private readonly logicalWidth: number;
   private readonly logicalHeight: number;
+  private readonly mascot: HTMLImageElement | null;
+  private mascotReady = false;
 
   constructor(canvas: HTMLCanvasElement, logicalWidth: number, logicalHeight: number) {
     const context = canvas.getContext("2d");
@@ -45,6 +52,15 @@ export class JedagRunRenderer {
     this.context = context;
     this.logicalWidth = logicalWidth;
     this.logicalHeight = logicalHeight;
+    // One image load per renderer. Until it decodes, the geometric face is drawn instead.
+    this.mascot = typeof Image === "undefined" ? null : new Image();
+    if (this.mascot) {
+      this.mascot.decoding = "async";
+      this.mascot.onload = () => {
+        this.mascotReady = true;
+      };
+      this.mascot.src = MASCOT_SRC;
+    }
     this.resize();
   }
 
@@ -60,12 +76,13 @@ export class JedagRunRenderer {
   draw(state: GameRenderState, reducedMotion = false) {
     const ctx = this.context;
     const colors = palette[state.level % palette.length];
-    const shake = reducedMotion ? 0 : Math.min(5, state.level > 1 ? 2 : 0);
+    // Hit shake only: decays in the world, and is off entirely under reduced motion.
+    const shake = reducedMotion ? 0 : state.shake * HIT_SHAKE_PX / 10;
     ctx.save();
-    if (shake && state.mode === "running") ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+    if (shake > 0) ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
     this.drawBackground(state, colors, reducedMotion);
     if (state.dropActive) this.drawDropPulse(state, colors, reducedMotion);
-    this.drawRoad(state, colors);
+    this.drawRoad(state, colors, reducedMotion);
     this.drawSignalRibbons(state, colors, reducedMotion);
     this.drawNotes(state, colors, reducedMotion);
     this.drawPowerUps(state, colors, reducedMotion);
@@ -73,7 +90,8 @@ export class JedagRunRenderer {
     this.drawPlayer(state, colors, reducedMotion);
     this.drawParticles(state, reducedMotion);
     this.drawPopups(state, reducedMotion);
-    this.drawDamageFlash(state);
+    this.drawDamageFlash(state, reducedMotion);
+    this.drawCountdown(state);
     ctx.restore();
   }
 
@@ -171,7 +189,7 @@ export class JedagRunRenderer {
     ctx.restore();
   }
 
-  private drawRoad(state: GameRenderState, colors: (typeof palette)[number]) {
+  private drawRoad(state: GameRenderState, colors: (typeof palette)[number], reducedMotion: boolean) {
     const ctx = this.context;
     ctx.fillStyle = colors.road;
     ctx.fillRect(0, 400, this.logicalWidth, 140);
@@ -180,8 +198,10 @@ export class JedagRunRenderer {
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(0, 432);
+    // The road line swells on every beat (decays in the world); no swell under reduced motion.
+    const beatSwell = reducedMotion ? 0 : state.beatPulse * 4;
     for (let x = 0; x <= this.logicalWidth; x += 18) {
-      const pulse = Math.sin((x + state.frame * 3.2) * 0.055) * 2.5;
+      const pulse = Math.sin((x + state.frame * 3.2) * 0.055) * 2.5 + beatSwell;
       ctx.lineTo(x, 432 + pulse);
     }
     ctx.stroke();
@@ -347,10 +367,17 @@ export class JedagRunRenderer {
     ctx.strokeStyle = glow;
     ctx.lineWidth = 1.5;
     ctx.stroke();
-    ctx.font = "27px 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(expressionEmoji[expression], 0, -59);
+    if (this.mascotReady && this.mascot) {
+      // Mascot head: circular crop of the doodle, so the black square corners never show.
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(0, -59, 16, 0, Math.PI * 2);
+      ctx.clip();
+      ctx.drawImage(this.mascot, -16, -75, 32, 32);
+      ctx.restore();
+    } else {
+      this.drawFallbackFace(expression, glow);
+    }
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
 
@@ -367,6 +394,49 @@ export class JedagRunRenderer {
     ctx.fillStyle = glow;
     ctx.fillRect(-25 - stride, -25, 14, 2);
     ctx.fillRect(-30 - stride * 0.6, -18, 10, 1);
+    ctx.restore();
+  }
+
+  /** Geometric face used until the mascot decodes, or if it never does. Eyes + mouth per expression. */
+  private drawFallbackFace(expression: PlayerExpression, color: string) {
+    const ctx = this.context;
+    ctx.fillStyle = color;
+    ctx.fillRect(-8, -63, 4, 5);
+    ctx.fillRect(4, -63, 4, 5);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    const mouth = expressionMouth[expression];
+    if (mouth === "open") {
+      ctx.arc(0, -52, 3, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (mouth === "smile") {
+      ctx.arc(0, -55, 6, 0.15 * Math.PI, 0.85 * Math.PI);
+      ctx.stroke();
+    } else if (mouth === "frown") {
+      ctx.arc(0, -48, 6, 1.15 * Math.PI, 1.85 * Math.PI);
+      ctx.stroke();
+    } else {
+      ctx.moveTo(-5, -52);
+      ctx.lineTo(5, -52);
+      ctx.stroke();
+    }
+  }
+
+  private drawCountdown(state: GameRenderState) {
+    if (state.mode !== "running" || state.countdown <= 0) return;
+    const ctx = this.context;
+    // Three steps across the countdown: 3 → 2 → 1.
+    const step = Math.min(3, Math.ceil(state.countdown * 3));
+    ctx.save();
+    ctx.globalAlpha = 0.9;
+    ctx.fillStyle = "#f2f5ff";
+    ctx.shadowColor = "#70f0ff";
+    ctx.shadowBlur = 14;
+    ctx.font = "700 64px JetBrains Mono, monospace";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(String(step), this.logicalWidth / 2, 230);
     ctx.restore();
   }
 
@@ -396,8 +466,14 @@ export class JedagRunRenderer {
     ctx.textAlign = "left";
   }
 
-  private drawDamageFlash(state: GameRenderState) {
-    if (state.mode !== "running") return;
-    // The runtime exposes a damage flash through the canvas CSS layer; keep the renderer clean.
+  private drawDamageFlash(state: GameRenderState, reducedMotion: boolean) {
+    if (state.damageFlash <= 0) return;
+    // Thin red wash that fades with the world's hit timer. Half strength under reduced motion.
+    const ctx = this.context;
+    ctx.save();
+    ctx.globalAlpha = state.damageFlash * (reducedMotion ? 0.18 : 0.36);
+    ctx.fillStyle = "#ff5c82";
+    ctx.fillRect(0, 0, this.logicalWidth, this.logicalHeight);
+    ctx.restore();
   }
 }

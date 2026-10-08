@@ -123,6 +123,12 @@ export type GameRenderState = {
   notesCollected: number;
   nearMisses: number;
   highestCombo: number;
+  newBest: boolean;
+  countdown: number;
+  beatIndex: number;
+  beatPulse: number;
+  damageFlash: number;
+  shake: number;
   player: GamePlayerState;
   obstacles: GameObstacle[];
   notes: GameNote[];
@@ -133,5 +139,5 @@ export type GameRenderState = {
 
 export type GameSnapshot = Pick<
   GameRenderState,
-  "mode" | "score" | "best" | "lives" | "combo" | "multiplier" | "level" | "dropMeter" | "dropActive" | "phase" | "shieldTime" | "slowTime" | "doubleScoreTime" | "notesCollected" | "nearMisses" | "highestCombo"
+  "mode" | "score" | "best" | "lives" | "combo" | "multiplier" | "level" | "dropMeter" | "dropActive" | "phase" | "shieldTime" | "slowTime" | "doubleScoreTime" | "notesCollected" | "nearMisses" | "highestCombo" | "newBest" | "countdown" | "beatIndex"
 >;
