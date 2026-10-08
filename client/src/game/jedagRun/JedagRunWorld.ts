@@ -25,6 +25,13 @@ const BEST_SCORE_KEY = "akbar_jedag_run_best_v2";
 export const BEAT_SECONDS = 0.5;
 /** READY countdown before the run starts; nothing moves during it. */
 export const COUNTDOWN_SECONDS = 1;
+/** A jump executed within this many seconds of a beat tick is a JEDAG jump. */
+export const JEDAG_WINDOW_SECONDS = 0.1;
+const JEDAG_CHAIN_CAP = 5;
+const JEDAG_BONUS_PER_CHAIN = 10;
+const GRAVITY_RISE = 2050;
+/** Heavier on the way down, so landings feel snappy instead of floaty. */
+const GRAVITY_FALL = 2400;
 
 function browserBestScore() {
   if (typeof window === "undefined") return 0;
@@ -89,6 +96,8 @@ export class JedagRunWorld {
   private beatIndex = -1;
   private beatTick = false;
   private beatPulse = 0;
+  private jedagChain = 0;
+  private jedagFlash = 0;
 
   readonly player = {
     x: PLAYER_X,
@@ -135,6 +144,7 @@ export class JedagRunWorld {
       newBest: this.newBest,
       countdown: this.countdown,
       beatIndex: Math.max(0, this.beatIndex),
+      jedagChain: this.jedagChain,
     };
   }
 
@@ -168,6 +178,7 @@ export class JedagRunWorld {
       particles: this.particles.map(item => ({ ...item })),
       popups: this.popups.map(item => ({ ...item })),
       beatPulse: this.beatPulse,
+      jedagFlash: this.jedagFlash,
       damageFlash: this.hitFlash / HIT_FLASH_SECONDS,
       shake: this.shake,
     };
@@ -239,6 +250,7 @@ export class JedagRunWorld {
     this.hitFlash = Math.max(0, this.hitFlash - dt);
     this.shake = Math.max(0, this.shake - dt * 18);
     this.beatPulse = Math.max(0, this.beatPulse - dt * 4);
+    this.jedagFlash = Math.max(0, this.jedagFlash - dt);
     this.expressionTimer = Math.max(0, this.expressionTimer - dt);
     this.shieldTime = Math.max(0, this.shieldTime - dt);
     this.slowTime = Math.max(0, this.slowTime - dt);
@@ -334,6 +346,8 @@ export class JedagRunWorld {
     this.beatIndex = -1;
     this.beatTick = false;
     this.beatPulse = 0;
+    this.jedagChain = 0;
+    this.jedagFlash = 0;
     this.hitFlash = 0;
     this.shake = 0;
     this.obstacleTimer = 0.9;
@@ -359,10 +373,19 @@ export class JedagRunWorld {
     this.player.expression = "neutral";
   }
 
+  /** Distance in seconds from the nearest beat tick (0 = exactly on the beat). */
+  private beatOffset() {
+    const phase = this.beatClock % BEAT_SECONDS;
+    return Math.min(phase, BEAT_SECONDS - phase);
+  }
+
   private jump() {
     if (!(this.player.onGround || this.coyoteTime > 0 || this.player.jumps < 2)) return;
     const isDouble = !this.player.onGround && this.player.jumps > 0;
-    this.player.vy = isDouble ? -690 : -760;
+    const jedag = this.beatOffset() <= JEDAG_WINDOW_SECONDS;
+    // A JEDAG jump gets a little extra lift: the beat pushes you up.
+    const lift = jedag ? 1.06 : 1;
+    this.player.vy = (isDouble ? -690 : -760) * lift;
     this.player.onGround = false;
     this.player.jumps += 1;
     this.player.squash = 1.16;
@@ -370,14 +393,26 @@ export class JedagRunWorld {
     this.coyoteTime = 0;
     this.jumpBuffer = 0;
     this.burst(this.player.x + this.player.width / 2, this.player.y, "#70f0ff", isDouble ? 10 : 7);
-    this.emit({ type: isDouble ? "double-jump" : "jump" });
+    if (jedag) {
+      this.jedagChain = Math.min(JEDAG_CHAIN_CAP, this.jedagChain + 1);
+      const bonus = JEDAG_BONUS_PER_CHAIN * this.jedagChain;
+      this.bonus += bonus;
+      this.jedagFlash = 0.35;
+      this.addPopup(`JEDAG ×${this.jedagChain} +${bonus}`, this.player.x + 30, this.player.y - 104, "#ffcf5a");
+      this.burst(this.player.x + 17, GROUND, "#ffcf5a", 12);
+      this.emit({ type: "jedag", value: this.jedagChain });
+    } else {
+      // Off-beat jump breaks the chain: the pulse is the skill.
+      this.jedagChain = 0;
+      this.emit({ type: isDouble ? "double-jump" : "jump" });
+    }
   }
 
   private updatePlayer(dt: number) {
     if (this.jumpBuffer > 0 && (this.player.onGround || this.coyoteTime > 0 || this.player.jumps < 2)) {
       this.jump();
     }
-    this.player.vy += 2050 * dt;
+    this.player.vy += (this.player.vy < 0 ? GRAVITY_RISE : GRAVITY_FALL) * dt;
     this.player.y += this.player.vy * dt;
     this.player.squash += (1 - this.player.squash) * Math.min(1, dt * 13);
     if (this.player.y >= GROUND) {
@@ -568,6 +603,7 @@ export class JedagRunWorld {
     this.player.invulnerable = 1.15;
     this.player.squash = 0.78;
     this.hitFlash = HIT_FLASH_SECONDS;
+    this.jedagChain = 0;
     this.shake = 10;
     this.burst(this.player.x + 18, this.player.y - 32, "#ff5c82", 20);
     this.addPopup("-1 LIFE", this.player.x + 18, this.player.y - 94, "#ff5c82");
@@ -611,7 +647,7 @@ export class JedagRunWorld {
       popup.life -= dt;
     }
     this.particles.splice(0, this.particles.length, ...this.particles.filter(item => item.life > 0));
-    if (this.particles.length > 180) this.particles.splice(0, this.particles.length - 180);
+    if (this.particles.length > 120) this.particles.splice(0, this.particles.length - 120);
     this.popups.splice(0, this.popups.length, ...this.popups.filter(item => item.life > 0));
   }
 

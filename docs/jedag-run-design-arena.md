@@ -127,3 +127,24 @@ akan lebih khas tetapi merupakan game baru dan melanggar batasan handoff.
 
 Lihat commit dan PR untuk daftar file. Tidak ada perubahan di luar folder game,
 `JedagRunCanvas.tsx/.css`, dan test game.
+
+---
+
+## 8. Revisi 1 — "berat" dan "kurang khas"
+
+Umpan balik: game terasa berat, dan kurang khas. Pilihan user: berat = performa + gameplay + visual; khas = mekanik baru.
+
+**Berat (performa):**
+- Langit dan bintang di-cache sekali per palet dan ukuran canvas (`skyCache`). Bintang tidak lagi berkedip, supaya layer bisa di-cache.
+- `shadowBlur` dihapus seluruhnya (11 titik per frame, biaya terbesar). Diganti halo stroke/fill beralpha rendah.
+- Partikel dibatasi 120 (sebelumnya 180).
+
+**Berat (gameplay):**
+- Gravitasi saat jatuh 2400 (naik tetap 2050). Tinggi lompatan tidak berubah; pendaratan lebih gesit.
+
+**Khas (mekanik baru — JEDAG JUMP):**
+- Lompat yang dieksekusi dalam ±0,1 detik dari ketukan (120 BPM) adalah **JEDAG jump**: lift +6%, bonus 10 × rantai (maks 5), cincin emas dari kaki, popup "JEDAG ×n".
+- Lompat di luar ketukan memutus rantai. Ketukan jadi keterampilan, bukan hiasan.
+- HUD menampilkan rantai JEDAG. Hit juga memutus rantai.
+
+**Batasan:** semua angka (window ±0,1 s, bonus, gravitasi jatuh) adalah hipotesis. Belum diukur di browser. Perlu playtest manual untuk FPS dan rasa.

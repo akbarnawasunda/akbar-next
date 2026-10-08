@@ -85,7 +85,7 @@ export class JedagRunAudio {
 
   playEvent(event: GameEvent) {
     if (this.muted) return;
-    const name: SoundName | null = event.type === "double-jump" ? "jump" : event.type === "collect" ? "collect" : event.type === "near-miss" ? "near-miss" : event.type === "hit" ? "hit" : event.type === "drop" ? "drop" : event.type === "level-up" ? "level-up" : event.type === "game-over" ? "game-over" : null;
+    const name: SoundName | null = event.type === "double-jump" ? "jump" : event.type === "jedag" ? "collect" : event.type === "collect" ? "collect" : event.type === "near-miss" ? "near-miss" : event.type === "hit" ? "hit" : event.type === "drop" ? "drop" : event.type === "level-up" ? "level-up" : event.type === "game-over" ? "game-over" : null;
     if (!name) return;
     void this.play(name);
   }

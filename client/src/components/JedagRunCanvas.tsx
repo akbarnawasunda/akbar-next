@@ -32,6 +32,7 @@ const initialSnapshot: GameSnapshot = {
   newBest: false,
   countdown: 0,
   beatIndex: 0,
+  jedagChain: 0,
 };
 
 const TUTORIAL_STORAGE_KEY = "an_jedag_run_tutorial_seen";
@@ -249,6 +250,7 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
           <span className="jedag-run-hud-label">SCORE</span>
           <strong>{String(snapshot.score).padStart(5, "0")}</strong>
           <span className="jedag-run-hud-label">CHAIN <b>{snapshot.combo > 0 ? snapshot.combo : "—"}</b></span>
+          <span className="jedag-run-hud-label">JEDAG <b>{snapshot.jedagChain > 0 ? `×${snapshot.jedagChain}` : "—"}</b></span>
           <span className="jedag-run-hud-label">MULTI <b>{snapshot.multiplier > 1 ? `×${snapshot.multiplier}` : "—"}</b></span>
           <span className="jedag-run-hud-label">LV <b>{String(snapshot.level + 1).padStart(2, "0")}</b></span>
           <span className="jedag-run-lives" aria-label={`${snapshot.lives} lives remaining`}>{lives || "×"}</span>
@@ -289,6 +291,7 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
             <div className="jedag-run-tutorial">
               <strong>HOW TO CATCH THE SIGNAL</strong>
               <span><b>SPACE / TAP</b> lompat · bisa double jump</span>
+              <span>Lompat <b>tepat di ketukan</b> untuk JEDAG (bonus + rantai)</span>
               <span>Ambil note untuk CHAIN dan isi DROP METER</span>
               <span>Orb <b>S</b>, <b>◒</b>, <b>×2</b> memberi power-up sementara</span>
               <button type="button" className="jedag-run-tutorial-dismiss" onClick={dismissTutorial}>GOT IT</button>

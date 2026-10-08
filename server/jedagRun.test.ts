@@ -248,4 +248,43 @@ describe("JEDAG RUN world", () => {
     expect(canvasSource).toContain('role="status" aria-live="polite"');
     expect(canvasSource).toContain("announcementFor");
   });
+
+  it("rewards jumps on the beat as JEDAG and breaks the chain on off-beat jumps", () => {
+    const world = new JedagRunWorld();
+    world.start();
+    skipCountdown(world);
+    // Wait for a beat tick (clock just past a boundary), then jump: an on-beat JEDAG jump.
+    while (world.beatTime % BEAT_SECONDS > 1 / 60 + 1e-9) world.update(1 / 60);
+    const scoreBeforeOnBeat = world.snapshot.score;
+    world.input("jump");
+    world.update(1 / 60);
+    expect(world.snapshot.jedagChain).toBe(1);
+    expect(world.getRenderState().jedagFlash).toBeGreaterThan(0);
+    expect(world.snapshot.score).toBeGreaterThanOrEqual(scoreBeforeOnBeat);
+
+    // Land, then jump exactly mid-beat (far from any tick): chain resets.
+    for (let frame = 0; frame < 120 && !world.player.onGround; frame += 1) world.update(1 / 60);
+    while (Math.min(world.beatTime % BEAT_SECONDS, BEAT_SECONDS - (world.beatTime % BEAT_SECONDS)) < 0.2) world.update(1 / 60);
+    world.input("jump");
+    world.update(1 / 60);
+    expect(world.snapshot.jedagChain).toBe(0);
+  });
+
+  it("keeps the beat-locked jump bonus deterministic for the same seed", () => {
+    const run = () => {
+      const world = new JedagRunWorld({ demo: true });
+      world.start();
+      skipCountdown(world);
+      for (let frame = 0; frame < 900; frame += 1) world.update(1 / 60);
+      return { score: world.snapshot.score, chain: world.snapshot.jedagChain };
+    };
+    expect(run()).toEqual(run());
+  });
+
+  it("uses lighter, cached rendering: no per-frame shadow blur, sky cached per palette", () => {
+    // Perf contract: shadowBlur was the largest per-frame cost. Not visible in HTML, so checked in source.
+    const rendererSource = readFileSync(resolve(process.cwd(), "client/src/game/jedagRun/JedagRunRenderer.ts"), "utf8");
+    expect(rendererSource).not.toContain("shadowBlur");
+    expect(rendererSource).toContain("skyCache");
+  });
 });

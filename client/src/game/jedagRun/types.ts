@@ -17,6 +17,7 @@ export type PlayerExpression =
   | "game-over";
 
 export type GameEventType =
+  | "jedag"
   | "jump"
   | "double-jump"
   | "collect"
@@ -124,6 +125,8 @@ export type GameRenderState = {
   nearMisses: number;
   highestCombo: number;
   newBest: boolean;
+  jedagChain: number;
+  jedagFlash: number;
   countdown: number;
   beatIndex: number;
   beatPulse: number;
@@ -139,5 +142,5 @@ export type GameRenderState = {
 
 export type GameSnapshot = Pick<
   GameRenderState,
-  "mode" | "score" | "best" | "lives" | "combo" | "multiplier" | "level" | "dropMeter" | "dropActive" | "phase" | "shieldTime" | "slowTime" | "doubleScoreTime" | "notesCollected" | "nearMisses" | "highestCombo" | "newBest" | "countdown" | "beatIndex"
+  "mode" | "score" | "best" | "lives" | "combo" | "multiplier" | "level" | "dropMeter" | "dropActive" | "phase" | "shieldTime" | "slowTime" | "doubleScoreTime" | "notesCollected" | "nearMisses" | "highestCombo" | "newBest" | "countdown" | "beatIndex" | "jedagChain"
 >;

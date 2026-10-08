@@ -21,6 +21,7 @@ const expressionMouth: Record<PlayerExpression, MouthShape> = {
   "game-over": "frown",
 };
 
+const GROUND_Y = 432;
 const MASCOT_SRC = "/assets/akbar-mascot-doodle.webp";
 const HIT_SHAKE_PX = 6;
 
@@ -44,6 +45,8 @@ export class JedagRunRenderer {
   private readonly logicalHeight: number;
   private readonly mascot: HTMLImageElement | null;
   private mascotReady = false;
+  /** Static sky + stars, rendered once per palette and canvas size. Cleared on resize. */
+  private readonly skyCache = new Map<number, HTMLCanvasElement>();
 
   constructor(canvas: HTMLCanvasElement, logicalWidth: number, logicalHeight: number) {
     const context = canvas.getContext("2d");
@@ -71,6 +74,7 @@ export class JedagRunRenderer {
     this.canvas.height = Math.max(1, Math.floor(rect.height * dpr));
     this.context.setTransform(this.canvas.width / this.logicalWidth, 0, 0, this.canvas.height / this.logicalHeight, 0, 0);
     this.context.imageSmoothingEnabled = true;
+    this.skyCache.clear();
   }
 
   draw(state: GameRenderState, reducedMotion = false) {
@@ -80,7 +84,7 @@ export class JedagRunRenderer {
     const shake = reducedMotion ? 0 : state.shake * HIT_SHAKE_PX / 10;
     ctx.save();
     if (shake > 0) ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
-    this.drawBackground(state, colors, reducedMotion);
+    this.drawBackground(state, colors, state.level % palette.length);
     if (state.dropActive) this.drawDropPulse(state, colors, reducedMotion);
     this.drawRoad(state, colors, reducedMotion);
     this.drawSignalRibbons(state, colors, reducedMotion);
@@ -90,28 +94,52 @@ export class JedagRunRenderer {
     this.drawPlayer(state, colors, reducedMotion);
     this.drawParticles(state, reducedMotion);
     this.drawPopups(state, reducedMotion);
+    this.drawJedagRing(state, reducedMotion);
     this.drawDamageFlash(state, reducedMotion);
     this.drawCountdown(state);
     ctx.restore();
   }
 
-  private drawBackground(state: GameRenderState, colors: (typeof palette)[number], reducedMotion: boolean) {
-    const ctx = this.context;
+  /** Builds the static sky once: gradient plus a fixed star field. Stars no longer pulse, so the layer stays cacheable. */
+  private skyFor(index: number, colors: (typeof palette)[number]) {
+    const cached = this.skyCache.get(index);
+    if (cached) return cached;
+    if (typeof document === "undefined") return null;
+    const layer = document.createElement("canvas");
+    layer.width = this.canvas.width;
+    layer.height = this.canvas.height;
+    const ctx = layer.getContext("2d");
+    if (!ctx) return null;
+    ctx.setTransform(layer.width / this.logicalWidth, 0, 0, layer.height / this.logicalHeight, 0, 0);
     const gradient = ctx.createLinearGradient(0, 0, 0, this.logicalHeight);
     gradient.addColorStop(0, "#04050c");
     gradient.addColorStop(0.62, colors.sky);
     gradient.addColorStop(1, colors.road);
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, this.logicalWidth, this.logicalHeight);
-
     ctx.globalAlpha = 0.36;
-    for (let index = 0; index < 56; index += 1) {
-      const x = (index * 173 + 31) % this.logicalWidth;
-      const y = 32 + ((index * 71) % 238);
-      const pulse = reducedMotion ? 1 : 0.55 + Math.abs(Math.sin(state.frame * 0.016 + index)) * 0.45;
-      ctx.fillStyle = index % 3 === 0 ? colors.magenta : "#f2f5ff";
-      ctx.globalAlpha = 0.15 + pulse * 0.28;
-      ctx.fillRect(x, y, index % 4 === 0 ? 2 : 1, index % 5 === 0 ? 2 : 1);
+    for (let star = 0; star < 56; star += 1) {
+      const x = (star * 173 + 31) % this.logicalWidth;
+      const y = 32 + ((star * 71) % 238);
+      ctx.fillStyle = star % 3 === 0 ? colors.magenta : "#f2f5ff";
+      ctx.globalAlpha = 0.3 + ((star * 37) % 10) / 40;
+      ctx.fillRect(x, y, star % 4 === 0 ? 2 : 1, star % 5 === 0 ? 2 : 1);
+    }
+    this.skyCache.set(index, layer);
+    return layer;
+  }
+
+  private drawBackground(state: GameRenderState, colors: (typeof palette)[number], paletteIndex: number) {
+    const ctx = this.context;
+    const sky = this.skyFor(paletteIndex, colors);
+    if (sky) {
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.drawImage(sky, 0, 0);
+      ctx.restore();
+    } else {
+      ctx.fillStyle = colors.sky;
+      ctx.fillRect(0, 0, this.logicalWidth, this.logicalHeight);
     }
     ctx.globalAlpha = 1;
 
@@ -223,13 +251,16 @@ export class JedagRunRenderer {
       const y = note.y + (reducedMotion ? 0 : Math.sin(note.phase) * 7);
       ctx.save();
       ctx.translate(note.x, y);
-      ctx.shadowColor = colors.amber;
-      ctx.shadowBlur = reducedMotion ? 7 : 15;
+      ctx.globalAlpha = 0.2;
+      ctx.fillStyle = colors.amber;
+      ctx.beginPath();
+      ctx.arc(0, 0, note.radius + 9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
       ctx.fillStyle = "#171321";
       ctx.beginPath();
       ctx.arc(0, 0, note.radius, 0, Math.PI * 2);
       ctx.fill();
-      ctx.shadowBlur = 0;
       ctx.strokeStyle = colors.amber;
       ctx.lineWidth = 2;
       ctx.stroke();
@@ -265,13 +296,10 @@ export class JedagRunRenderer {
       ctx.arc(0, 0, powerUp.radius + 8 + (reducedMotion ? 0 : Math.sin(powerUp.phase) * 2), 0, Math.PI * 2);
       ctx.fill();
       ctx.globalAlpha = 1;
-      ctx.shadowColor = color;
-      ctx.shadowBlur = reducedMotion ? 6 : 15;
       ctx.fillStyle = "#111020";
       ctx.beginPath();
       ctx.arc(0, 0, powerUp.radius, 0, Math.PI * 2);
       ctx.fill();
-      ctx.shadowBlur = 0;
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
       ctx.stroke();
@@ -334,13 +362,16 @@ export class JedagRunRenderer {
       ctx.globalAlpha = 1;
     }
     ctx.scale(1 + (1 - stretch) * 0.45, stretch);
-    ctx.shadowColor = colors.cyan;
-    ctx.shadowBlur = expression === "drop" ? 22 : 12;
+    ctx.globalAlpha = expression === "drop" ? 0.32 : 0.18;
+    ctx.fillStyle = colors.cyan;
+    ctx.beginPath();
+    ctx.roundRect(-20, -52, 40, 47, 9);
+    ctx.fill();
+    ctx.globalAlpha = 1;
     ctx.fillStyle = "#edf8ff";
     ctx.beginPath();
     ctx.roundRect(-16, -48, 32, 39, 6);
     ctx.fill();
-    ctx.shadowBlur = 0;
     ctx.fillStyle = colors.magenta;
     ctx.fillRect(-16, -48, 32, 5);
     ctx.fillStyle = "#101020";
@@ -357,13 +388,10 @@ export class JedagRunRenderer {
       ctx.globalAlpha = 1;
     }
 
-    ctx.shadowColor = glow;
-    ctx.shadowBlur = expression === "hit" || expression === "game-over" ? 18 : 12;
     ctx.fillStyle = "#151321";
     ctx.beginPath();
     ctx.arc(0, -59, 16, 0, Math.PI * 2);
     ctx.fill();
-    ctx.shadowBlur = 0;
     ctx.strokeStyle = glow;
     ctx.lineWidth = 1.5;
     ctx.stroke();
@@ -394,6 +422,22 @@ export class JedagRunRenderer {
     ctx.fillStyle = glow;
     ctx.fillRect(-25 - stride, -25, 14, 2);
     ctx.fillRect(-30 - stride * 0.6, -18, 10, 1);
+    ctx.restore();
+  }
+
+  /** Ring that expands from the feet on a JEDAG jump. Fixed size under reduced motion. */
+  private drawJedagRing(state: GameRenderState, reducedMotion: boolean) {
+    if (state.jedagFlash <= 0) return;
+    const ctx = this.context;
+    const t = 1 - state.jedagFlash / 0.35;
+    const radius = reducedMotion ? 40 : 22 + t * 70;
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, state.jedagFlash / 0.35) * 0.85;
+    ctx.strokeStyle = "#ffcf5a";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.ellipse(state.player.x + state.player.width / 2, GROUND_Y, radius, radius * 0.28, 0, 0, Math.PI * 2);
+    ctx.stroke();
     ctx.restore();
   }
 
@@ -431,8 +475,6 @@ export class JedagRunRenderer {
     ctx.save();
     ctx.globalAlpha = 0.9;
     ctx.fillStyle = "#f2f5ff";
-    ctx.shadowColor = "#70f0ff";
-    ctx.shadowBlur = 14;
     ctx.font = "700 64px JetBrains Mono, monospace";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -457,11 +499,8 @@ export class JedagRunRenderer {
     for (const popup of state.popups) {
       ctx.globalAlpha = Math.min(1, popup.life * 2) * (reducedMotion ? 0.75 : 1);
       ctx.fillStyle = popup.color;
-      ctx.shadowColor = popup.color;
-      ctx.shadowBlur = 8;
       ctx.fillText(popup.text, popup.x, popup.y);
     }
-    ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
     ctx.textAlign = "left";
   }
