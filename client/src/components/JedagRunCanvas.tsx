@@ -29,6 +29,10 @@ const initialSnapshot: GameSnapshot = {
   notesCollected: 0,
   nearMisses: 0,
   highestCombo: 0,
+  newBest: false,
+  countdown: 0,
+  beatIndex: 0,
+  jedagChain: 0,
 };
 
 const TUTORIAL_STORAGE_KEY = "an_jedag_run_tutorial_seen";
@@ -45,11 +49,21 @@ function phaseLabel(phase: GameSnapshot["phase"]) {
   return "INTRO SIGNAL";
 }
 
-function modeLabel(mode: GameMode) {
+function modeLabel(mode: GameMode, countdown: number) {
   if (mode === "paused") return "PAUSED";
   if (mode === "game-over") return "SIGNAL ENDED";
-  if (mode === "running") return "LIVE SIGNAL";
+  if (mode === "running") return countdown > 0 ? "READY" : "LIVE SIGNAL";
   return "READY TO RUN";
+}
+
+/** Screen-reader text. Only mode changes are announced, never the per-frame HUD. */
+function announcementFor(snapshot: GameSnapshot) {
+  if (snapshot.mode === "game-over") {
+    return `Signal ended. Score ${snapshot.score}.${snapshot.newBest ? " New best." : ""}`;
+  }
+  if (snapshot.mode === "paused") return "Signal paused.";
+  if (snapshot.mode === "running") return snapshot.countdown > 0 ? "Ready. Starting in three." : "Live signal.";
+  return "";
 }
 
 export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagRunCanvasProps) {
@@ -61,6 +75,8 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
   const frameRef = useRef<number | null>(null);
   const [snapshot, setSnapshot] = useState<GameSnapshot>(initialSnapshot);
   const [muted, setMuted] = useState(false);
+  const [announcement, setAnnouncement] = useState("");
+  const announcedKeyRef = useRef("");
   const [tutorialSeen, setTutorialSeen] = useState(hasSeenTutorial);
   const reducedMotion = useMemo(() => typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches, []);
 
@@ -95,7 +111,17 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
       last = now;
       world.update(delta);
       renderer.draw(world.getRenderState(), reducedMotion);
-      if (world.snapshot.mode !== snapshot.mode || world.frameNumber % 3 === 0) setSnapshot(world.snapshot);
+      const current = world.snapshot;
+      // Mode changes (including READY → LIVE) update the announcement and HUD at once.
+      const key = `${current.mode}|${current.countdown > 0 ? "ready" : "live"}`;
+      if (key !== announcedKeyRef.current) {
+        announcedKeyRef.current = key;
+        setAnnouncement(announcementFor(current));
+        setSnapshot(current);
+      } else if (world.frameNumber % 3 === 0) {
+        // Throttled HUD refresh; the HUD is not a live region, so this is quiet for screen readers.
+        setSnapshot(current);
+      }
       frameRef.current = window.requestAnimationFrame(tick);
     };
     frameRef.current = window.requestAnimationFrame(tick);
@@ -218,11 +244,13 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
   return (
     <div ref={stageRef} className={`jedag-run-stage${isGameOver ? " is-game-over" : ""}`}>
       <canvas ref={canvasRef} className="jedag-run-canvas" aria-label="JEDAG RUN Night Frequency game canvas" />
-      <div className="jedag-run-hud" aria-live="polite">
+      <div className="jedag-run-sr-only" role="status" aria-live="polite">{announcement}</div>
+      <div className="jedag-run-hud">
         <div className="jedag-run-hud-left">
           <span className="jedag-run-hud-label">SCORE</span>
           <strong>{String(snapshot.score).padStart(5, "0")}</strong>
           <span className="jedag-run-hud-label">CHAIN <b>{snapshot.combo > 0 ? snapshot.combo : "—"}</b></span>
+          <span className="jedag-run-hud-label">JEDAG <b>{snapshot.jedagChain > 0 ? `×${snapshot.jedagChain}` : "—"}</b></span>
           <span className="jedag-run-hud-label">MULTI <b>{snapshot.multiplier > 1 ? `×${snapshot.multiplier}` : "—"}</b></span>
           <span className="jedag-run-hud-label">LV <b>{String(snapshot.level + 1).padStart(2, "0")}</b></span>
           <span className="jedag-run-lives" aria-label={`${snapshot.lives} lives remaining`}>{lives || "×"}</span>
@@ -236,7 +264,7 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
           <span className="jedag-run-active-powerups" aria-label="Active power-ups">
             {snapshot.shieldTime > 0 ? "S" : ""}{snapshot.slowTime > 0 ? "◒" : ""}{snapshot.doubleScoreTime > 0 ? "×2" : ""}
           </span>
-          <span className="jedag-run-mode">{modeLabel(snapshot.mode)}</span>
+          <span className="jedag-run-mode">{modeLabel(snapshot.mode, snapshot.countdown)}</span>
           <button type="button" onClick={toggleMute} aria-label={muted ? "Unmute game audio" : "Mute game audio"} className="jedag-run-icon-button">
             {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}
           </button>
@@ -250,6 +278,7 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
         <div className="jedag-run-overlay">
           <span className="jedag-run-overlay-kicker">{config.kicker}</span>
           <h2>{isGameOver ? `SIGNAL ENDED / ${snapshot.score}` : isPaused ? "SIGNAL PAUSED" : config.title}</h2>
+          {isGameOver && snapshot.newBest ? <span className="jedag-run-new-best">NEW BEST</span> : null}
           <p>{isGameOver ? `Best score: ${snapshot.best}. Run again and chase a cleaner drop.` : isPaused ? "Tekan continue untuk kembali ke signal." : config.intro}</p>
           {isGameOver ? (
             <div className="jedag-run-run-summary" aria-label="Run summary">
@@ -262,6 +291,7 @@ export default function JedagRunCanvas({ config, onGameOver, onRestart }: JedagR
             <div className="jedag-run-tutorial">
               <strong>HOW TO CATCH THE SIGNAL</strong>
               <span><b>SPACE / TAP</b> lompat · bisa double jump</span>
+              <span>Lompat <b>tepat di ketukan</b> untuk JEDAG (bonus + rantai)</span>
               <span>Ambil note untuk CHAIN dan isi DROP METER</span>
               <span>Orb <b>S</b>, <b>◒</b>, <b>×2</b> memberi power-up sementara</span>
               <button type="button" className="jedag-run-tutorial-dismiss" onClick={dismissTutorial}>GOT IT</button>
