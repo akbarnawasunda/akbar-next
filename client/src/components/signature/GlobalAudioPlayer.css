@@ -8,7 +8,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 48;
+  z-index: var(--z-player, 48);
   display: flex;
   flex-direction: column-reverse;
   background: var(--ink-soft);

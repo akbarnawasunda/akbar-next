@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight, Download, Mail, Printer } from "lucide-react";
 import { Link } from "wouter";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
+import { EmailText } from "@/components/EmailText";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import {
@@ -382,11 +383,15 @@ export function PressView({ locale = "id" }: { locale?: "id" | "en" }) {
                 <dt>{t.sheetFacts.genres}</dt>
                 <dd>{genres.join(" · ")}</dd>
               </div>
-              <div>
+              {/* Baris kontak memegang lebar penuh sheet (seperti baris bio):
+                  email adalah fakta terpenting dan satu token terpanjang —
+                  satu kolom 58% tidak cukup untuknya di banyak lebar desktop
+                  (docs/desktop-visual-qa-cursor-pass.md §3). */}
+              <div className="an-press-sheet-row--stack">
                 <dt>{t.sheetFacts.contact}</dt>
                 <dd>
                   <a href={mail(pressEmail, t.mailSubjects.pressInquiry)}>
-                    {pressEmail}
+                    <EmailText value={pressEmail} />
                   </a>
                 </dd>
               </div>

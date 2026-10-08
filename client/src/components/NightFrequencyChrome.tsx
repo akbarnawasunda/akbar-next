@@ -130,7 +130,6 @@ export function NightHeader({
   const t =
     lang === "en"
       ? {
-          tagline: "Producer · Remixer · West Bandung",
           navLabel: "Primary navigation",
           listen: "LISTEN",
           openNav: "Open navigation",
@@ -138,7 +137,6 @@ export function NightHeader({
           menuId: "english-mobile-menu",
         }
       : {
-          tagline: "Producer · Remixer · Bandung Barat",
           navLabel: "Navigasi utama",
           listen: "Dengarkan",
           openNav: "Buka navigasi",
@@ -204,6 +202,12 @@ export function NightHeader({
   return (
     <>
       <header className="nf-nav" data-scrolled={scrolled ? "true" : "false"}>
+        {/* Identitas di bar = logo + nama. Deskriptor ("Producer · Remixer ·
+            Bandung Barat") sengaja tidak lagi di bar: di masthead ia hanya
+            bisa tampil 8px — tidak terbaca dan memakan ~146px yang membuat
+            nav bertabrakan dengan identitas. Rumah tetapnya: blok brand
+            footer, copy hero beranda, dan splash (docs/desktop-visual-qa-
+            cursor-pass.md §1). */}
         <Link className="nf-wordmark" href={prefix || "/"}>
           <ResilientBrandImage
             className="nf-brand-logo"
@@ -212,7 +216,6 @@ export function NightHeader({
           />
           <span className="nf-wordmark-text">
             <strong>Akbar Nawasunda</strong>
-            <small>{t.tagline}</small>
           </span>
         </Link>
         <nav className="nf-nav-links" aria-label={t.navLabel}>
@@ -229,11 +232,17 @@ export function NightHeader({
         <div className="nf-nav-tools">
           {/* Jam studio hidup (Bandung Barat/WIB) di dekat tombol bahasa —
               satu detail nyata yang tidak bisa dipunyai templat generik:
-              ini bukan jam dekoratif, ini memang waktu lokasi studionya. */}
+              ini bukan jam dekoratif, ini memang waktu lokasi studionya.
+              Di bar hanya versi ringkas (detik + pulse); tanggal penuh tetap
+              menempel di footer — jam lengkap di masthead terlalu lebar untuk
+              satu baris (docs/desktop-visual-qa-cursor-pass.md §1). */}
           <span className="nf-nav-clock">
-            <StudioClock locale={lang} />
+            <StudioClock locale={lang} compact />
           </span>
-          <BirthdayChip locale={lang} />
+          {/* Lencana ulang tahun sengaja tidak lagi di masthead: ~242px,
+              tidak muat di baris terukur pada lebar mana pun. Perayaannya
+              tetap ada di catatan hero, garis aksen header/footer, dan
+              splash — serta tetap di footer (lihat nf-footer-live). */}
           <LanguageSwitcher pathname={pathname} lang={lang} />
           {/* CTA utama header: membuka halaman musik, bukan anchor #signal yang
               hanya ada di beranda (dulu jadi tautan mati di halaman lain). */}

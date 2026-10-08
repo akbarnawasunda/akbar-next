@@ -40,7 +40,14 @@ Semua font inti di-self-host pada `client/public/assets/fonts/fontsource/`. Tida
 | Permukaan | Recons | NEXROID | Good Times | Khusus |
 |---|---|---|---|---|
 | Splash | `Akbar`, `Nawasunda` | — | WIB, jam, tanggal, lokasi, `Producer · Remixer · Bandung Barat`, durasi, ucapan ulang tahun | Aksara → Noto |
-| Header | wordmark `Akbar Nawasunda` | — | tagline, `MUSIK`, `VISUAL`, `PERJALANAN`, `TENTANG`, `EPK`, `KONTAK`, `JADWAL`, `ID / EN`, `Dengarkan` / `LISTEN`, menu mobile | — |
+| Header | wordmark `Akbar Nawasunda` | — | `MUSIK`, `VISUAL`, `PERJALANAN`, `TENTANG`, `EPK`, `KONTAK`, `JADWAL`, `ID / EN`, `Dengarkan` / `LISTEN`, menu mobile | — |
+
+> Pembaruan 8 Oktober 2026 (docs/desktop-visual-qa-cursor-pass.md §1): tagline
+> `Producer · Remixer · Bandung Barat` tidak lagi dirender di masthead — pada
+> 8px ia tidak terbaca dan memakan ruang yang membuat nav bertabrakan dengan
+> identitas. Rumah tetapnya: blok brand footer, copy hero beranda, dan splash.
+> Label nav juga kembali ke skala metadata (0,66rem uppercase tracked), bukan
+> 0,82rem seperti huruf baca.
 | Footer | `AKBAR NAWASUNDA` | — | tagline, judul kolom, seluruh tautan, platform, copyright, jam | — |
 | Tirai rute / player / command palette | — | judul hasil bila ada | label rute, status pemutar, judul track, shortcut, kontrol | aksara tirai → Noto |
 

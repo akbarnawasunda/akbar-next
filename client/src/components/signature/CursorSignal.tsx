@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useSignatureRuntime, useSignatureState } from "@/signature/useSignature";
 import { INTERACTIVE_SELECTOR } from "@/signature/pointerSignal";
 import {
@@ -52,6 +53,7 @@ const now = () =>
 
 export function CursorSignal() {
   const { store } = useSignatureRuntime();
+  const layerRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const companionRef = useRef<HTMLDivElement>(null);
   const coarse = useSignatureState(snapshot => snapshot.capability.coarsePointer);
@@ -61,9 +63,10 @@ export function CursorSignal() {
 
   useEffect(() => {
     if (!enabled) return;
+    const layer = layerRef.current;
     const dot = dotRef.current;
     const companion = companionRef.current;
-    if (!dot || !companion) return;
+    if (!layer || !dot || !companion) return;
     const signals = store.signals;
 
     let x = signals.pointerX;
@@ -78,6 +81,7 @@ export function CursorSignal() {
     let downX = 0;
     let downY = 0;
     let lastPose: CursorPose = "idle";
+    let wasActive = signals.pointerActive;
 
     const applyMagnet = (element: HTMLElement | null) => {
       if (magnetTarget && magnetTarget !== element) {
@@ -137,6 +141,22 @@ export function CursorSignal() {
     };
 
     const loop = () => {
+      // Lapisan hanya hidup selama pointer benar-benar di dalam dokumen.
+      // Saat pointer meninggalkan jendela (atau masuk ke iframe SoundCloud di
+      // rak player), pointerleave pada pointerSignal.ts menandai pointer tidak
+      // aktif — lapisan disembunyikan, bukan dikejar sampai koordinat -9999
+      // yang membuat mascot menyapu layar. Saat pointer kembali, mascot
+      // langsung menempel di posisi pointer (tidak ada fly-in).
+      const active = signals.pointerActive;
+      if (active !== wasActive) {
+        wasActive = active;
+        layer.classList.toggle("is-idle", !active);
+        if (active) {
+          x = signals.pointerX;
+          y = signals.pointerY;
+        }
+      }
+
       const still =
         signals.pointerActive && now() - signals.pointerMovedAt > STILL_THRESHOLD_MS;
 
@@ -160,8 +180,13 @@ export function CursorSignal() {
     window.addEventListener("pointerup", onPointerUp, { passive: true });
     window.addEventListener("pointercancel", onPointerUp, { passive: true });
     document.addEventListener("focusin", onFocusIn);
-    frame = requestAnimationFrame(loop);
-    document.documentElement.dataset.signatureCursor = "on";
+    frame = requestAnimationFrame(() => {
+      // Atribut dipasang di frame pertama loop yang benar-benar jalan: sampai
+      // titik ini kursor native tetap aktif, jadi tidak pernah ada momen tanpa
+      // kursor sama sekali bila loop belum sempat hidup.
+      document.documentElement.dataset.signatureCursor = "on";
+      loop();
+    });
 
     return () => {
       cancelAnimationFrame(frame);
@@ -197,12 +222,21 @@ export function CursorSignal() {
 
   if (!enabled) return null;
 
-  return (
-    <div className="an-cursor-signal" aria-hidden="true">
+  // Portal ke <body>: lapisan kursor harus hidup di stacking context AKAR.
+  // `.an-public-shell` memakai `isolation: isolate` dan drawer mobile diportal
+  // ke <body> — tanpa portal ini, tidak ada z-index di dalam shell yang bisa
+  // pernah mengalahkan overlay tersebut (docs/desktop-visual-qa-cursor-pass.md §6).
+  return createPortal(
+    <div
+      className="an-cursor-signal is-idle"
+      aria-hidden="true"
+      ref={layerRef}
+    >
       <div className="an-cursor-dot" ref={dotRef} />
       <div className="an-cursor-mascot" ref={companionRef}>
         <div key={pose} className="an-cursor-mascot-pose" data-pose={pose} />
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

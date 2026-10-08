@@ -20,7 +20,7 @@
   gap: clamp(28px, 5vw, 76px);
   max-width: var(--hx-max);
   margin-inline: auto;
-  padding: calc(var(--chrome-h, 78px) + var(--space-xl)) var(--hx-gutter)
+  padding: var(--space-xl) var(--hx-gutter)
     var(--space-xl);
 }
 
@@ -226,7 +226,7 @@
   gap: clamp(28px, 5vw, 76px);
   max-width: var(--hx-max);
   margin-inline: auto;
-  padding: calc(var(--chrome-h, 78px) + var(--space-xl)) var(--hx-gutter)
+  padding: var(--space-xl) var(--hx-gutter)
     var(--space-xl);
 }
 
@@ -255,7 +255,7 @@
   padding: 10px 16px;
   background: var(--ink);
   font-family: var(--font-mono);
-  font-size: 0.52rem;
+  font-size: 0.58rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--mute);
@@ -521,7 +521,7 @@
 @media (max-width: 767.98px) {
   .an-public-shell.an-editorial .an-arc-hero,
   .an-public-shell.an-editorial .an-ab-hero {
-    padding: calc(var(--chrome-h, 58px) + var(--space-lg)) var(--hx-gutter)
+    padding: var(--space-lg) var(--hx-gutter)
       var(--space-lg);
   }
 

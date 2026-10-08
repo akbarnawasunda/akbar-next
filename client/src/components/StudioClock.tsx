@@ -89,13 +89,22 @@ export function BirthdayMode() {
  * Jam studio: tanggal + jam Jakarta yang berdetak tiap detik.
  * `aria-hidden` karena pembaca layar tidak perlu dibacakan tiap detik —
  * keterangan statisnya sudah ada di `title`.
+ *
+ * `compact` = varian untuk masthead: hanya detik yang hidup (ditambah pulse),
+ * tanpa tanggal. Tanggal lengkap tetap dipakai footer (`jakartaClockLabel`).
  */
-export function StudioClock({ locale = "id" }: { locale?: "id" | "en" }) {
+export function StudioClock({
+  locale = "id",
+  compact = false,
+}: {
+  locale?: "id" | "en";
+  compact?: boolean;
+}) {
   const now = useJakartaNow(1000);
 
   return (
     <span
-      className="nf-clock"
+      className={compact ? "nf-clock nf-clock--time" : "nf-clock"}
       data-studio-clock
       aria-hidden="true"
       title={
@@ -107,9 +116,11 @@ export function StudioClock({ locale = "id" }: { locale?: "id" | "en" }) {
       }
     >
       <span className="nf-clock__pulse" />
-      <span className="nf-clock__date">
-        {now ? jakartaDateLabel(now, locale) : "Bandung Barat · WIB"}
-      </span>
+      {!compact && (
+        <span className="nf-clock__date">
+          {now ? jakartaDateLabel(now, locale) : "Bandung Barat · WIB"}
+        </span>
+      )}
       <span className="nf-clock__time">
         {now ? jakartaTimeLabel(now) : "--.--.--"}
       </span>
@@ -117,7 +128,8 @@ export function StudioClock({ locale = "id" }: { locale?: "id" | "en" }) {
   );
 }
 
-/** Lencana kecil untuk header. */
+/** Lencana kecil — dipakai di footer (masthead sengaja tidak memuatnya,
+ * lihat komentar di NightFrequencyChrome.tsx). */
 export function BirthdayChip({ locale = "id" }: { locale?: "id" | "en" }) {
   const active = useBirthdayMode();
   if (!active) return null;

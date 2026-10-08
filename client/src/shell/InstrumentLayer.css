@@ -76,7 +76,7 @@
 .instr-progress {
   position: fixed;
   inset: 0 0 auto 0;
-  z-index: 95; /* di atas nav (90), di bawah cursor (60) tidak relevan */
+  z-index: var(--z-carrier, 95); /* di atas nav, di bawah cursor — cursor kini lapisan teratas UI publik */
   height: 2px;
   transform: scaleX(0);
   transform-origin: 0 50%;

@@ -2,7 +2,7 @@
 .an-signature-field {
   position: fixed;
   inset: 0;
-  z-index: 3;
+  z-index: var(--z-field, 3);
   pointer-events: none;
   opacity: 0;
   transition: opacity 600ms ease;
@@ -27,7 +27,7 @@
 /* Selama perpindahan halaman, label tujuan digambar partikel — lapisannya
    naik ke atas tirai supaya huruf itu yang terbaca, bukan tirainya. */
 .an-signature-field[data-signature-transit="true"] {
-  z-index: 59;
+  z-index: var(--z-field-transit, 59);
   opacity: 1;
 }
 

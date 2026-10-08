@@ -2,6 +2,7 @@ import { useMemo, useRef, useState, type FormEvent } from "react";
 import { useSearch } from "wouter";
 import { toast } from "sonner";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
+import { EmailText } from "@/components/EmailText";
 import { Reveal } from "@/components/Reveal";
 import { verifiedArtistProfile } from "@/content/artistPlatform";
 import { trpc } from "@/lib/trpc";
@@ -422,7 +423,7 @@ export function InquiryView({ locale = "id" }: { locale?: "id" | "en" }) {
             <dt>{t.directContactLabel}</dt>
             <dd>
               <a href={`mailto:${verifiedArtistProfile.bookingEmail}`}>
-                {verifiedArtistProfile.bookingEmail}
+                <EmailText value={verifiedArtistProfile.bookingEmail} />
               </a>
             </dd>
           </div>
@@ -445,7 +446,7 @@ export function InquiryView({ locale = "id" }: { locale?: "id" | "en" }) {
               className="an-inq-email"
               href={`mailto:${verifiedArtistProfile.bookingEmail}`}
             >
-              {verifiedArtistProfile.bookingEmail}
+              <EmailText value={verifiedArtistProfile.bookingEmail} />
             </a>
           </aside>
 

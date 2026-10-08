@@ -1,13 +1,37 @@
-/* Cursor companion. Dekoratif: pointer-events none, cursor sistem tetap ada,
-   focus ring tidak pernah disentuh. Posisi (translate3d) diatur per-frame
-   lewat JS — jangan taruh transition di properti itu, nanti mengejar sendiri
-   setiap frame dan terasa lembek. Hanya POSE (gambar + ukuran) yang bertransisi,
-   lewat remount `key` di CursorSignal.tsx yang memicu animasi di bawah. */
+/* Cursor companion. Dekoratif: pointer-events none, focus ring tidak pernah
+   disentuh. Posisi (translate3d) diatur per-frame lewat JS — jangan taruh
+   transition di properti itu, nanti mengejar sendiri setiap frame dan terasa
+   lembek. Hanya POSE (gambar + ukuran) yang bertransisi, lewat remount `key`
+   di CursorSignal.tsx yang memicu animasi di bawah. */
 .an-cursor-signal {
   position: fixed;
   inset: 0;
-  z-index: var(--z-cursor, 60);
+  /* Lapisan teratas UI publik (di bawah splash preloader saja) — lihat skala
+     --z-* di index.css. Dipasang lewat portal ke <body> (root stacking
+     context) supaya bisa berada di atas drawer/overlay yang juga diportal. */
+  z-index: var(--z-cursor, 10000);
   pointer-events: none;
+}
+
+/* Selama pointer tidak aktif (keluar jendela / masuk iframe), lapisan
+   disembunyikan — kursor native yang terlihat di dalam iframe, bukan mascot
+   yang menyapu layar mengejar koordinat -9999. */
+.an-cursor-signal.is-idle {
+  visibility: hidden;
+}
+
+/* Titik presisi adalah kursor itu sendiri begitu lapisan ini benar-benar
+   hidup: kursor native disembunyikan supaya tidak terbaca sebagai "hantu"
+   yang diikuti elemen visual. Atribut hanya dipasang CursorSignal.tsx pada
+   frame pertama loop — sampai saat itu (dan pada reduced-motion / sentuh /
+   rute game & studio) kursor native tetap aktif. Aturan menyapu semua elemen
+   dengan spesifisitas (0,1,2) sehingga menang atas utilitas cursor-pointer
+   dan aturan cursor per komponen. */
+html[data-signature-cursor="on"] body,
+html[data-signature-cursor="on"] *,
+html[data-signature-cursor="on"] *::before,
+html[data-signature-cursor="on"] *::after {
+  cursor: none;
 }
 
 .an-cursor-dot {

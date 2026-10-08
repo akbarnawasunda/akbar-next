@@ -31,7 +31,7 @@
 .nf-mobile-drawer-root {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: var(--z-overlay, 9999);
   isolation: isolate;
 }
 
@@ -104,7 +104,7 @@
   display: block;
   margin-top: 1px;
   font-family: var(--font-mono, monospace);
-  font-size: 0.52rem;
+  font-size: 0.58rem;
   letter-spacing: 0.13em;
   color: var(--acid);
   text-transform: uppercase;
@@ -397,14 +397,14 @@
 }
 .nf-mobile-drawer-meta-sub {
   font-family: var(--font-mono, monospace);
-  font-size: 0.52rem;
+  font-size: 0.58rem;
   letter-spacing: 0.1em;
   color: var(--mute-soft);
   text-transform: uppercase;
 }
 .nf-mobile-drawer-swipe-hint {
   font-family: var(--font-mono, monospace);
-  font-size: 0.5rem;
+  font-size: 0.58rem;
   letter-spacing: 0.05em;
   color: rgba(162, 171, 185, 0.45);
 }
@@ -632,7 +632,7 @@
 .nf-nav {
   position: sticky;
   top: 0;
-  z-index: 90;
+  z-index: var(--z-nav, 90);
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;

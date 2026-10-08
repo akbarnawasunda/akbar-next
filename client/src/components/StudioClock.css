@@ -50,6 +50,17 @@
   letter-spacing: 0.12em;
 }
 
+/* Varian ringkas untuk masthead: hanya detik + pulse hidup. Tanpa tanggal,
+   jam memakan ~71px alih-alih ~266px — cukup untuk satu baris yang juga
+   memuat identitas, navigasi, bahasa, dan CTA (docs/desktop-visual-qa-
+   cursor-pass.md §1). Tanggal lengkap tetap tampil di footer. */
+.nf-clock--time {
+  min-width: 0;
+}
+.nf-clock--time .nf-clock__date {
+  display: none;
+}
+
 /* Footer berdesakan di layar sempit: cukup jamnya saja. */
 @media (max-width: 640px) {
   .nf-clock {
@@ -84,7 +95,9 @@
 
 /* ---------- Aksen hari ulang tahun ----------
    Token --an-birthday didefinisikan di :root (client/src/index.css) —
-   satu sumber kebenaran; di sini hanya dipakai. */
+   satu sumber kebenaran; di sini hanya dipakai. Lencana (chip) ulang tahun
+   tidak lagi dipakai di masthead — lihat komentar di NightFrequencyChrome.tsx;
+   perayaannya tetap hidup lewat catatan hero, aksen garis, dan splash. */
 
 .nf-birthday-chip {
   display: inline-flex;
@@ -99,14 +112,6 @@
   text-transform: uppercase;
   color: var(--an-birthday);
   white-space: nowrap;
-}
-
-/* Header di ponsel sudah padat: lencana cukup di layar lebar, dan
-   perayaannya tetap ada di hero, footer, serta splash. */
-@media (max-width: 900px) {
-  .nf-birthday-chip {
-    display: none;
-  }
 }
 
 .nf-birthday-note {
@@ -130,17 +135,14 @@
   background: color-mix(in srgb, var(--an-birthday) 70%, transparent);
 }
 
-/* Aksen tipis di chrome: garis header/footer dan satu kata di wordmark. */
+/* Aksen tipis di chrome: garis header/footer. (Tagline wordmark sudah tidak
+   lagi dirender di masthead — aksen ulang tahun untuknya ikut hilang.) */
 [data-birthday="on"] .nf-nav {
   border-bottom-color: color-mix(in srgb, var(--an-birthday) 42%, transparent);
 }
 
 [data-birthday="on"] .nf-footer {
   border-top-color: color-mix(in srgb, var(--an-birthday) 32%, transparent);
-}
-
-[data-birthday="on"] .nf-wordmark-text small {
-  color: var(--an-birthday);
 }
 
 [data-birthday="on"] .nf-clock__pulse {

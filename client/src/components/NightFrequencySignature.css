@@ -11,7 +11,7 @@
 
 .route-motion::before {
   position: fixed;
-  z-index: 120;
+  z-index: var(--z-carrier, 95);
   top: 0;
   left: 0;
   width: 100%;
@@ -62,7 +62,7 @@
 .nf-page main > section:not(.nf-page-hero)::before,
 .an-site main > section:not(.an-hero)::before {
   position: absolute;
-  z-index: 3;
+  z-index: var(--z-field, 3);
   top: 0;
   right: var(--gutter, clamp(20px, 4.5vw, 64px));
   left: var(--gutter, clamp(20px, 4.5vw, 64px));
@@ -183,7 +183,7 @@
 
 .nf-signature-rail {
   position: fixed;
-  z-index: 80;
+  z-index: var(--z-rail, 80);
   top: 50%;
   right: 18px;
   display: grid;
@@ -210,7 +210,7 @@
 .nf-signature-rail-label,
 .nf-signature-rail-status {
   font-family: var(--font-mono);
-  font-size: 0.5rem;
+  font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   color: var(--mute-soft);
@@ -244,7 +244,7 @@
   background: transparent;
   color: var(--mute);
   font-family: var(--font-mono);
-  font-size: 0.5rem;
+  font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-align: left;
