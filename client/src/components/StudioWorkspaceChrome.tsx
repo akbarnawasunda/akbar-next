@@ -1,11 +1,5 @@
 import { CheckCircle2, CircleDashed, ListChecks } from "lucide-react";
 
-type PublishChecklistProps = {
-  documentType: string;
-  payload: Record<string, unknown>;
-  isPublished: boolean;
-};
-
 function text(payload: Record<string, unknown>, key: string) {
   return typeof payload[key] === "string" ? String(payload[key]).trim() : "";
 }
@@ -13,16 +7,16 @@ function text(payload: Record<string, unknown>, key: string) {
 function destinationFor(documentType: string) {
   if (documentType === "hero") return "/";
   if (documentType === "profile") return "/about + /universe";
-  if (documentType === "journey") return "Homepage Artist Journey + /about";
+  if (documentType === "journey") return "Homepage Journey + /about";
   if (documentType === "pressKit") return "/epk";
   if (documentType === "siteSettings") return "Homepage + metadata";
   if (documentType === "legal") return "/privacy";
-  if (documentType === "release") return "/music + release detail";
+  if (documentType === "release") return "/music + detail rilisan";
   if (documentType === "visual") return "/visuals";
   if (documentType === "portrait") return "/visuals#portraits";
-  if (documentType === "photoStory") return "Homepage Photo Story + /visuals";
+  if (documentType === "photoStory") return "Homepage + /visuals";
   if (documentType === "event" || documentType === "live") return "/live";
-  if (documentType === "game") return "/game/jedag-run + homepage teaser";
+  if (documentType === "game") return "/game/jedag-run";
   return "Public site";
 }
 
@@ -30,74 +24,37 @@ export function StudioPublishChecklist({
   documentType,
   payload,
   isPublished,
-}: PublishChecklistProps) {
-  const titleReady = Boolean(
-    text(payload, "title") ||
-    text(payload, "heroTitle") ||
-    text(payload, "siteTitle")
-  );
+}: {
+  documentType: string;
+  payload: Record<string, unknown>;
+  isPublished: boolean;
+}) {
+  const titleReady = Boolean(text(payload, "title") || text(payload, "heroTitle") || text(payload, "siteTitle"));
   const mediaReady =
-    documentType === "siteSettings" ||
-    documentType === "live" ||
-    documentType === "event" ||
-    documentType === "game" ||
-    documentType === "journey"
-      ? true
-      : Boolean(
-          text(payload, "imageUrl") ||
-          text(payload, "artworkUrl") ||
-          text(payload, "portraitImage") ||
-          text(payload, "heroImage") ||
-          text(payload, "socialPreviewUrl")
-        );
-  const routeReady = Boolean(destinationFor(documentType));
+    ["siteSettings", "live", "event", "game", "journey"].includes(documentType) ||
+    Boolean(text(payload, "imageUrl") || text(payload, "artworkUrl") || text(payload, "portraitImage") || text(payload, "heroImage"));
   const checks = [
     { label: "Judul / identitas terisi", ready: titleReady },
-    {
-      label:
-        documentType === "game"
-          ? "Audio opsional / fallback siap"
-          : documentType === "journey"
-            ? "Visual journey opsional"
-            : "Media utama tersedia",
-      ready: mediaReady,
-    },
-    { label: "Halaman tujuan jelas", ready: routeReady },
+    { label: "Media utama ada (atau opsional)", ready: mediaReady },
+    { label: "Tujuan halaman jelas", ready: true },
   ];
-  const passed = checks.filter(check => check.ready).length;
+  const passed = checks.filter(c => c.ready).length;
+
   return (
-    <details className="rounded-xl border border-white/[0.08] bg-black/[0.14]">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-xs text-white/65 [&::-webkit-details-marker]:hidden">
-        <span className="inline-flex items-center gap-2">
-          <ListChecks size={14} className="text-cyan-200/70" /> Publish
-          checklist
-        </span>
-        <span
-          className={`rounded-full px-2 py-1 font-mono text-[9px] uppercase tracking-[0.1em] ${passed === checks.length ? "bg-emerald-200/10 text-emerald-100/75" : "bg-amber-200/10 text-amber-100/75"}`}
-        >
-          {passed}/{checks.length} siap
-        </span>
+    <details className="rounded-xl border border-zinc-800 bg-zinc-900/50">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-[13px] text-zinc-300 [&::-webkit-details-marker]:hidden">
+        <span className="inline-flex items-center gap-2"><ListChecks size={14} className="text-zinc-500" /> Checklist sebelum publish</span>
+        <span className={`rounded-full px-2 py-0.5 font-mono text-[10px] ${passed === checks.length ? "bg-emerald-950/50 text-emerald-300" : "bg-amber-950/50 text-amber-300"}`}>{passed}/{checks.length}</span>
       </summary>
-      <div className="space-y-2 border-t border-white/[0.07] px-4 py-3">
+      <div className="space-y-2 border-t border-zinc-800 px-4 py-3">
         {checks.map(check => (
-          <div
-            key={check.label}
-            className="flex items-center gap-2 text-[11px] text-white/50"
-          >
-            {check.ready ? (
-              <CheckCircle2 size={13} className="text-emerald-200/75" />
-            ) : (
-              <CircleDashed size={13} className="text-amber-200/75" />
-            )}
+          <div key={check.label} className="flex items-center gap-2 text-[12px] text-zinc-400">
+            {check.ready ? <CheckCircle2 size={13} className="text-emerald-400" /> : <CircleDashed size={13} className="text-amber-300" />}
             <span>{check.label}</span>
           </div>
         ))}
-        <div className="mt-3 border-t border-white/[0.07] pt-3 text-[10px] leading-5 text-white/40">
-          <span className="text-cyan-100/65">Tujuan:</span>{" "}
-          {destinationFor(documentType)}.{" "}
-          {isPublished
-            ? "Perubahan akan terlihat setelah disimpan dan dipublikasikan."
-            : "Dokumen ini akan tetap menjadi draft sampai lu mengaktifkan tampil ke publik."}
+        <div className="mt-3 border-t border-zinc-800 pt-3 text-[11px] leading-5 text-zinc-500">
+          Tujuan: <span className="text-zinc-300">{destinationFor(documentType)}</span>. {isPublished ? "Akan langsung terlihat setelah disimpan." : "Masih draft — belum terlihat publik."}
         </div>
       </div>
     </details>

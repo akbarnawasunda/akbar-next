@@ -1,7 +1,6 @@
 /**
- * STUDIO KIT — primitif UI untuk workspace owner (/admin, /studio, /assets).
- * Semua permukaan studio memakai komponen ini supaya ritme, radius, dan
- * tipografi tetap satu bahasa dan tidak lagi ditulis ulang per halaman.
+ * STUDIO KIT v2 — primitif UI yang tenang dan mudah dibaca.
+ * Fokus: hierarki jelas, kontras aman, tanpa spark/animasi berlebihan.
  */
 import type { LucideIcon } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
@@ -80,31 +79,21 @@ export function Panel({
   );
 }
 
-const toneGlow: Record<string, string> = {
-  cyan: "rgba(110,231,240,0.2)",
-  violet: "rgba(167,139,250,0.2)",
-  amber: "rgba(255,210,122,0.18)",
-  mint: "rgba(127,242,195,0.18)",
-  coral: "rgba(255,159,138,0.18)",
-};
+export type StatTone = "neutral" | "live" | "warn" | "info";
 
-const toneColor: Record<string, string> = {
-  cyan: "#6ee7f0",
-  violet: "#b39cff",
-  amber: "#ffd27a",
-  mint: "#7ff2c3",
-  coral: "#ff9f8a",
+const toneMap: Record<StatTone, string> = {
+  neutral: "#a1a1aa",
+  live: "#86efac",
+  warn: "#fde68a",
+  info: "#7dd3fc",
 };
-
-export type StatTone = keyof typeof toneGlow;
 
 export function Stat({
   icon: Icon,
   kicker,
   value,
   label,
-  tone = "cyan",
-  spark,
+  tone = "neutral",
   href,
 }: {
   icon: LucideIcon;
@@ -112,36 +101,21 @@ export function Stat({
   value: ReactNode;
   label: string;
   tone?: StatTone;
-  spark?: number[];
   href?: string;
 }) {
-  const Wrapper = (href ? "a" : "article") as "a";
+  const Wrapper = (href ? "a" : "div") as any;
   return (
     <Wrapper
       href={href}
       className="st-stat"
-      style={{ "--st-glow": toneGlow[tone] } as CSSProperties}
+      style={{ "--st-glow": toneMap[tone] } as CSSProperties}
     >
-      <div className="st-stat-top" style={{ color: toneColor[tone] }}>
-        <Icon size={16} />
+      <div className="st-stat-top">
         <span className="st-stat-k">{kicker}</span>
+        <Icon size={14} style={{ color: toneMap[tone] }} />
       </div>
       <p className="st-stat-v">{value}</p>
       <p className="st-stat-l">{label}</p>
-      {spark?.length ? (
-        <div className="st-spark" aria-hidden>
-          {spark.map((point, index) => (
-            <i
-              key={index}
-              style={{
-                height: `${Math.max(8, Math.min(100, point))}%`,
-                animationDelay: `${index * 40}ms`,
-                background: `linear-gradient(180deg, ${toneColor[tone]}bb, ${toneColor[tone]}14)`,
-              }}
-            />
-          ))}
-        </div>
-      ) : null}
     </Wrapper>
   );
 }
@@ -163,7 +137,7 @@ export function EmptyState({
 }) {
   return (
     <div className="st-empty">
-      <Icon size={22} className="text-white/25" />
+      <Icon size={20} className="text-zinc-600" />
       <b>{title}</b>
       {description ? <span>{description}</span> : null}
       {action ? <div className="mt-3">{action}</div> : null}
@@ -188,14 +162,11 @@ export function StudioHero({
     <header className="st-hero st-rise">
       <div className="st-hero-grid">
         <div className="min-w-0">
-          <Eyebrow>
-            <span className="studio-dot" />
-            {kicker}
-          </Eyebrow>
+          <Eyebrow>{kicker}</Eyebrow>
           <h1>{title}</h1>
           {lead ? <p>{lead}</p> : null}
           {actions ? (
-            <div className="mt-6 flex flex-wrap gap-2">{actions}</div>
+            <div className="mt-5 flex flex-wrap gap-2">{actions}</div>
           ) : null}
         </div>
         {aside ? <div className="shrink-0">{aside}</div> : null}
@@ -265,5 +236,47 @@ export function StudioLink({
 }) {
   return (
     <a {...props} data-variant={variant} className={cn("st-btn", className)} />
+  );
+}
+
+export function FieldGroup({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="st-section">
+      <div className="st-section-title">{label}</div>
+      {hint ? <p className="st-field-hint mb-4">{hint}</p> : null}
+      <div className="grid gap-4">{children}</div>
+    </div>
+  );
+}
+
+export function HelpCallout({
+  children,
+  tone = "neutral",
+}: {
+  children: ReactNode;
+  tone?: "neutral" | "warn" | "live";
+}) {
+  return (
+    <div
+      className={cn(
+        "rounded-xl border px-4 py-3 text-[12px] leading-5",
+        tone === "warn" &&
+          "border-amber-200/20 bg-amber-200/[0.06] text-amber-100/80",
+        tone === "live" &&
+          "border-emerald-200/20 bg-emerald-200/[0.06] text-emerald-100/80",
+        tone === "neutral" &&
+          "border-zinc-800 bg-zinc-900/50 text-zinc-400"
+      )}
+    >
+      {children}
+    </div>
   );
 }
