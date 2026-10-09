@@ -1,23 +1,16 @@
 /**
- * CONTROL ROOM (/admin) — beranda workspace owner.
- * Ringkasan sinyal, jalur kerja, dan status delivery dalam satu layar.
+ * CONTROL ROOM v2 — ringkas, tenang, langsung paham.
  */
 import {
   ArrowUpRight,
-  CheckCircle2,
   Code2,
   Database,
   ExternalLink,
   FilePenLine,
   FolderOpen,
-  Gauge,
   Globe2,
   Inbox,
-  LayoutDashboard,
-  Radio,
   ShieldCheck,
-  Sparkles,
-  Users,
 } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -30,156 +23,85 @@ import {
   StatGrid,
   StudioHero,
   StudioLink,
-  type StatTone,
 } from "@/studio/StudioKit";
 
 type Tool = {
   icon: typeof Database;
-  eyebrow: string;
   title: string;
-  copy: string;
-  detail: string;
+  desc: string;
+  meta: string;
   href: string;
   action: string;
   external?: boolean;
-  tone: StatTone;
 };
 
 const tools: Tool[] = [
   {
-    icon: Database,
-    eyebrow: "PRIMARY EDITOR",
-    title: "Custom Website Editor",
-    copy: "Edit hero, profile, EPK, releases, visuals, live signal, event, SEO, dan legal dari dashboard website.",
-    detail: "OWNER-ONLY · DATABASE-BACKED",
+    icon: FilePenLine,
+    title: "Editor Konten",
+    desc: "Tulis rilisan, atur visual, edit halaman. Semua dari satu tempat.",
+    meta: "Utama · dipakai tiap hari",
     href: "/studio",
-    action: "OPEN WEBSITE EDITOR",
-    external: false,
-    tone: "mint",
-  },
-  {
-    icon: Inbox,
-    eyebrow: "INBOX",
-    title: "Inquiry Inbox",
-    copy: "Review booking, remix, collaboration, dan licensing request dari satu alur kerja.",
-    detail: "BOOKING · REMIX · COLLAB · LICENSING",
-    href: "/studio/inquiries",
-    action: "REVIEW INQUIRIES",
-    tone: "coral",
+    action: "Buka editor",
   },
   {
     icon: FolderOpen,
-    eyebrow: "MEDIA",
-    title: "Asset Library",
-    copy: "Upload dan kelola gambar, audio, video, atau PDF untuk kebutuhan site.",
-    detail: "MAX 10 MB PER FILE",
+    title: "Media Library",
+    desc: "Upload foto, audio, video, PDF. Max 10MB per file.",
+    meta: "Media · terkelola",
     href: "/assets",
-    action: "MANAGE ASSETS",
-    tone: "violet",
+    action: "Kelola media",
+  },
+  {
+    icon: Inbox,
+    title: "Inbox",
+    desc: "Booking, remix, collab, licensing — balas langsung dari sini.",
+    meta: "Sinyal masuk",
+    href: "/studio/inquiries",
+    action: "Lihat inbox",
   },
   {
     icon: Code2,
-    eyebrow: "SYSTEM",
-    title: "Code & Deploy",
-    copy: "Layout, font, warna, motion, route, dan fitur baru dikerjakan melalui source code.",
-    detail: "GITHUB → MAIN → VERCEL",
+    title: "Source Code",
+    desc: "Layout, warna, font, animasi — semua di GitHub.",
+    meta: "GitHub → main → Vercel",
     href: "https://github.com/akbarnawasunda/akbar-next",
-    action: "OPEN REPOSITORY",
+    action: "Buka repo",
     external: true,
-    tone: "cyan",
   },
   {
     icon: Globe2,
-    eyebrow: "PUBLIC",
-    title: "Live Preview",
-    copy: "Buka website publik untuk mengecek hasil konten dan deployment terbaru.",
-    detail: "AKBARNAWASUNDA.MY.ID",
+    title: "Website Publik",
+    desc: "Cek hasil akhir seperti yang dilihat pengunjung.",
+    meta: "akbarnawasunda.my.id",
     href: "/",
-    action: "VIEW PUBLIC SITE",
-    tone: "cyan",
+    action: "Lihat website",
   },
   {
-    icon: LayoutDashboard,
-    eyebrow: "DELIVERY",
-    title: "Vercel Dashboard",
-    copy: "Pantau build, deployment, domain, environment, dan rollback production.",
-    detail: "DEPLOYMENT MONITORING",
+    icon: Database,
+    title: "Vercel",
+    desc: "Pantau build, deployment, domain, dan rollback.",
+    meta: "Monitoring",
     href: "https://vercel.com/dashboard",
-    action: "OPEN VERCEL",
+    action: "Buka Vercel",
     external: true,
-    tone: "amber",
   },
 ];
-
-const workflow = [
-  {
-    step: "01",
-    title: "Edit di Content Studio",
-    copy: "Hero, profile, EPK, release, visual, live signal, event, SEO, dan legal.",
-  },
-  {
-    step: "02",
-    title: "Save & publish",
-    copy: "Pilih Simpan & tampilkan; situs publik membaca data terbaru tanpa redeploy.",
-  },
-  {
-    step: "03",
-    title: "Verify di preview",
-    copy: "Buka situs publik, cek tampilan mobile, baru bagikan linknya.",
-  },
-];
-
-function sparkFrom(seed: number, length = 12) {
-  return Array.from({ length }, (_, index) => {
-    const value = Math.sin(seed + index * 1.7) * 0.5 + 0.5;
-    return 22 + value * 78;
-  });
-}
 
 function ControlRoomStats() {
   const content = trpc.content.listAll.useQuery();
   const inquiries = trpc.inquiry.list.useQuery();
   const leads = trpc.fanSignal.list.useQuery();
-  const published = content.data?.filter(item => item.isPublished).length ?? 0;
+  const published = content.data?.filter(i => i.isPublished).length ?? 0;
   const drafts = (content.data?.length ?? 0) - published;
-  const newInquiries =
-    inquiries.data?.filter(item => item.status === "new").length ?? 0;
+  const newInquiries = inquiries.data?.filter(i => i.status === "new").length ?? 0;
 
   return (
     <StatGrid>
-      <Stat
-        icon={Database}
-        kicker="Published entries"
-        value={content.isLoading ? "—" : published}
-        label={`${drafts} dokumen masih draft`}
-        tone="cyan"
-        spark={sparkFrom(published + 1)}
-      />
-      <Stat
-        icon={Inbox}
-        kicker="New inquiries"
-        value={inquiries.isLoading ? "—" : newInquiries}
-        label="Booking, remix, collab, licensing"
-        tone="coral"
-        href="/studio/inquiries"
-        spark={sparkFrom(newInquiries + 3)}
-      />
-      <Stat
-        icon={Users}
-        kicker="Fan signal leads"
-        value={leads.isLoading ? "—" : (leads.data?.length ?? 0)}
-        label="Subscriber yang masih opt-in"
-        tone="violet"
-        spark={sparkFrom((leads.data?.length ?? 0) + 5)}
-      />
-      <Stat
-        icon={CheckCircle2}
-        kicker="Control room"
-        value="LIVE"
-        label="Semua jalur owner aktif"
-        tone="mint"
-        spark={sparkFrom(9)}
-      />
+      <Stat icon={Database} kicker="Konten tayang" value={content.isLoading ? "—" : published} label={`${drafts} draft menunggu`} tone="neutral" />
+      <Stat icon={Inbox} kicker="Inbox baru" value={inquiries.isLoading ? "—" : newInquiries} label="Belum dibalas" tone={newInquiries ? "warn" : "neutral"} href="/studio/inquiries" />
+      <Stat icon={Database} kicker="Fan signal" value={leads.isLoading ? "—" : (leads.data?.length ?? 0)} label="Subscriber opt-in" tone="live" />
+      <Stat icon={ShieldCheck} kicker="Status" value="Aktif" label="Semua jalur owner jalan" tone="live" />
     </StatGrid>
   );
 }
@@ -188,40 +110,25 @@ function ToolCard({ tool }: { tool: Tool }) {
   const Icon = tool.icon;
   return (
     <a
-      className="group relative overflow-hidden rounded-[18px] border border-white/[0.09] bg-white/[0.03] p-5 transition hover:-translate-y-0.5 hover:border-cyan-200/30 hover:bg-white/[0.05]"
+      className="group rounded-[14px] border border-zinc-800 bg-zinc-900/50 p-5 transition hover:bg-zinc-900 hover:border-zinc-700"
       href={tool.href}
       target={tool.external ? "_blank" : undefined}
       rel={tool.external ? "noreferrer" : undefined}
     >
-      <div className="pointer-events-none absolute -right-10 -top-12 h-32 w-32 rounded-full bg-cyan-300/10 blur-3xl transition group-hover:bg-cyan-300/20" />
-      <div className="relative flex items-start justify-between">
-        <span className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-white/[0.05] text-cyan-200 transition group-hover:border-cyan-200/35 group-hover:bg-cyan-200/10">
-          <Icon size={17} />
+      <div className="flex items-start justify-between gap-3">
+        <span className="grid h-9 w-9 place-items-center rounded-[10px] bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 group-hover:text-white transition">
+          <Icon size={16} />
         </span>
-        <span className="text-white/25 transition group-hover:text-cyan-200">
-          {tool.external ? (
-            <ExternalLink size={15} />
-          ) : (
-            <ArrowUpRight size={15} />
-          )}
+        <span className="text-zinc-600 group-hover:text-zinc-300 transition">
+          {tool.external ? <ExternalLink size={14} /> : <ArrowUpRight size={14} />}
         </span>
       </div>
-      <p className="relative mt-6 font-mono text-[9px] uppercase tracking-[0.22em] text-cyan-100/50">
-        {tool.eyebrow}
-      </p>
-      <h3 className="relative mt-1.5 text-[15px] font-semibold tracking-tight text-white">
-        {tool.title}
-      </h3>
-      <p className="relative mt-2 text-xs leading-6 text-white/45">
-        {tool.copy}
-      </p>
-      <div className="relative mt-5 flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.07] pt-4">
-        <small className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/30">
-          {tool.detail}
-        </small>
-        <strong className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-cyan-100/80">
-          {tool.action}
-        </strong>
+      <p className="mt-4 font-mono text-[10px] uppercase tracking-wider text-zinc-500">{tool.meta}</p>
+      <h3 className="mt-1.5 text-[14px] font-semibold text-white">{tool.title}</h3>
+      <p className="mt-1.5 text-[12px] leading-5 text-zinc-400">{tool.desc}</p>
+      <div className="mt-4 pt-4 border-t border-zinc-800 flex items-center justify-between">
+        <span className="text-[11px] font-medium text-zinc-300">{tool.action}</span>
+        <ArrowUpRight size={12} className="text-zinc-600 group-hover:text-white transition" />
       </div>
     </a>
   );
@@ -231,17 +138,11 @@ function AccessDenied() {
   return (
     <main className="studio-os grid min-h-dvh place-items-center p-6">
       <section className="st-panel relative z-[1] max-w-md p-8 text-center">
-        <ShieldCheck size={38} className="mx-auto text-cyan-200" />
-        <p className="st-eyebrow mt-5 justify-center">AN // OWNER ACCESS</p>
-        <h1 className="mt-3 text-2xl font-semibold text-white">
-          Owner access required.
-        </h1>
-        <p className="st-sub mx-auto">
-          Admin records are available only to the authenticated site owner.
-        </p>
-        <a className="st-btn mx-auto mt-6" href="/">
-          RETURN TO PUBLIC SITE <ArrowUpRight size={14} />
-        </a>
+        <ShieldCheck size={32} className="mx-auto text-zinc-500" />
+        <p className="st-eyebrow mt-5 justify-center">Owner only</p>
+        <h1 className="mt-3 text-xl font-semibold text-white">Akses khusus owner.</h1>
+        <p className="st-sub mx-auto mt-2">Halaman ini hanya untuk pemilik situs yang sudah login.</p>
+        <a className="st-btn mx-auto mt-6" href="/">Kembali ke website <ArrowUpRight size={14} /></a>
       </section>
     </main>
   );
@@ -254,111 +155,59 @@ function AdminContent() {
   return (
     <div className="space-y-6">
       <StudioHero
-        kicker="AN // Control Room"
-        title={
-          <>
-            Make the site <em>move.</em>
-          </>
-        }
-        lead="Satu pintu untuk mengelola konten, menerima inquiry, menyiapkan asset, dan memeriksa delivery website Akbar Nawasunda."
+        kicker="Studio / Ringkasan"
+        title={<>Semua kendali <em>di satu tempat.</em></>}
+        lead="Mau update konten, cek inbox, atau upload media — mulai dari sini. Simple, tanpa ribet."
         actions={
           <>
-            <StudioLink href="/studio" variant="primary">
-              <FilePenLine size={14} /> Buka Content Studio
-            </StudioLink>
-            <StudioLink href="/" target="_blank" rel="noreferrer">
-              <Globe2 size={14} /> Situs publik <ArrowUpRight size={13} />
-            </StudioLink>
+            <StudioLink href="/studio" variant="primary"><FilePenLine size={14} /> Buka editor</StudioLink>
+            <StudioLink href="/" target="_blank" rel="noreferrer"><Globe2 size={14} /> Lihat website <ArrowUpRight size={12} /></StudioLink>
           </>
         }
-        aside={
-          <div className="flex flex-col items-start gap-2 sm:items-end">
-            <Pill tone="live">
-              <span className="studio-dot" /> Deployment healthy
-            </Pill>
-            <Pill tone="accent">
-              <Gauge size={11} /> Edge · Vercel
-            </Pill>
-          </div>
-        }
+        aside={<div className="flex flex-col gap-2"><Pill tone="live"><span className="studio-dot" /> Live</Pill><Pill tone="neutral">Edge · Vercel</Pill></div>}
       />
 
       <ControlRoomStats />
 
-      <Panel
-        eyebrow="Workspace routes"
-        icon={Sparkles}
-        title="Everything in reach."
-        description="Konten editorial masuk ke Content Studio; sistem dan desain tetap lewat source code."
-        actions={<Pill>{tools.length} jalur</Pill>}
-      >
+      <Panel eyebrow="Jalan pintas" title="Mau ngapain hari ini?" description="Pilih salah satu. Semua perubahan konten langsung tayang tanpa deploy ulang." actions={<Pill>{tools.length} jalur</Pill>}>
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {tools.map(tool => (
-            <ToolCard key={tool.title} tool={tool} />
-          ))}
+          {tools.map(tool => <ToolCard key={tool.title} tool={tool} />)}
         </div>
       </Panel>
 
-      <div className="grid gap-5 xl:grid-cols-[1.25fr_0.75fr]">
-        <Panel
-          eyebrow="The clean workflow"
-          icon={CheckCircle2}
-          title="Edit. Publish. Verify."
-          description="Tiga langkah yang sama setiap kali, biar tidak ada perubahan yang bocor sebelum siap."
-        >
+      <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
+        <Panel eyebrow="Cara kerja" title="3 langkah, selesai." description="Alur yang sama tiap kali biar gak ada yang kelewat.">
           <ol className="grid gap-3">
-            {workflow.map(item => (
-              <li
-                key={item.step}
-                className="flex gap-4 rounded-2xl border border-white/[0.08] bg-black/[0.16] p-4 transition hover:border-cyan-200/25"
-              >
-                <b className="font-mono text-base text-cyan-200/70">
-                  {item.step}
-                </b>
+            {[
+              { n: "01", t: "Tulis di editor", d: "Buka /studio, pilih tipe konten (rilisan, visual, jadwal, dll), isi form." },
+              { n: "02", t: "Simpan & tayangkan", d: "Pilih 'Simpan & tayangkan' — langsung muncul di website publik." },
+              { n: "03", t: "Cek hasilnya", d: "Buka website, cek di HP juga. Kalau oke, baru share linknya." },
+            ].map(s => (
+              <li key={s.n} className="flex gap-4 rounded-xl border border-zinc-800 bg-zinc-900/30 p-4">
+                <b className="font-mono text-sm text-zinc-500">{s.n}</b>
                 <span>
-                  <strong className="block text-sm font-semibold text-white">
-                    {item.title}
-                  </strong>
-                  <span className="mt-1 block text-xs leading-6 text-white/45">
-                    {item.copy}
-                  </span>
+                  <strong className="block text-[13px] font-semibold text-white">{s.t}</strong>
+                  <span className="mt-1 block text-[12px] leading-5 text-zinc-400">{s.d}</span>
                 </span>
               </li>
             ))}
           </ol>
         </Panel>
 
-        <Panel eyebrow="System notes" icon={Radio} title="Status jalur">
+        <Panel eyebrow="Catatan" title="Yang perlu diingat">
           <div className="space-y-3">
-            <div className="rounded-2xl border border-amber-200/20 bg-amber-200/[0.06] p-4">
-              <Eyebrow className="!text-amber-200/80">
-                <ShieldCheck size={12} /> Broadcast
-              </Eyebrow>
-              <p className="mt-2 text-xs font-semibold leading-5 text-amber-100/90">
-                NEWSLETTER / BROADCAST IS CURRENTLY PAUSED.
-              </p>
-              <p className="mt-2 text-[11px] leading-5 text-white/40">
-                Jangan gunakan jalur broadcast sampai backend delivery
-                dinyatakan stabil.
-              </p>
+            <div className="rounded-xl border border-amber-900/30 bg-amber-950/20 p-4">
+              <Eyebrow className="!text-amber-300">Broadcast paused</Eyebrow>
+              <p className="mt-2 text-[12px] font-medium leading-5 text-amber-100">Jangan pakai fitur broadcast dulu.</p>
+              <p className="mt-1 text-[11px] leading-5 text-zinc-400">Backend email masih dalam perbaikan. Fokus ke konten & inbox dulu.</p>
             </div>
-            <div className="rounded-2xl border border-white/[0.08] bg-black/[0.16] p-4">
-              <Eyebrow>
-                <Database size={12} /> Content source
-              </Eyebrow>
-              <p className="mt-2 text-xs leading-6 text-white/50">
-                Semua isi publik dibaca dari editor internal ini. Tidak ada CMS
-                pihak ketiga, tidak ada langganan tambahan.
-              </p>
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-4">
+              <Eyebrow>Konten</Eyebrow>
+              <p className="mt-2 text-[12px] leading-5 text-zinc-400">Semua isi website dibaca dari editor internal. Gak ada CMS eksternal, gak ada biaya tambahan.</p>
             </div>
-            <div className="rounded-2xl border border-white/[0.08] bg-black/[0.16] p-4">
-              <Eyebrow>
-                <Code2 size={12} /> Delivery
-              </Eyebrow>
-              <p className="mt-2 text-xs leading-6 text-white/50">
-                Perubahan kode mengikuti alur GitHub → main → Vercel; konten
-                tayang tanpa redeploy.
-              </p>
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/30 p-4">
+              <Eyebrow>Deploy</Eyebrow>
+              <p className="mt-2 text-[12px] leading-5 text-zinc-400">Perubahan kode: GitHub → main → Vercel. Konten: langsung tayang tanpa deploy.</p>
             </div>
           </div>
         </Panel>
@@ -369,7 +218,7 @@ function AdminContent() {
 
 export default function Admin() {
   return (
-    <DashboardLayout title="Control Room" kicker="AN // Operate">
+    <DashboardLayout title="Ringkasan" kicker="Studio">
       <AdminContent />
     </DashboardLayout>
   );

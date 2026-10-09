@@ -1,11 +1,6 @@
 /**
- * STUDIO SHELL — chrome untuk seluruh workspace owner.
- *
- * Satu kerangka dipakai oleh /admin, /studio, /studio/inquiries,
- * /studio/broadcasts, dan /assets: sidebar rail yang bisa diciutkan,
- * topbar lengket dengan breadcrumb + jam WIB, command palette (⌘K),
- * dan dock navigasi khusus layar kecil. Nama berkas dipertahankan
- * (`DashboardLayout`) supaya seluruh halaman studio tidak perlu diubah.
+ * STUDIO SHELL v2 — lebih tenang, lebih jelas.
+ * Sidebar: 2 grup saja (Konten & Sistem), label ringkas, tanpa glow berlebihan.
  */
 import {
   ArrowUpRight,
@@ -23,7 +18,6 @@ import {
   PanelLeftClose,
   Radio,
   Rocket,
-  Satellite,
   X,
 } from "lucide-react";
 import {
@@ -64,52 +58,52 @@ type MenuItem = {
   label: string;
   caption: string;
   path: string;
-  group: string;
+  group: "Konten" | "Sistem";
   external?: boolean;
 };
 
 const menuItems: MenuItem[] = [
   {
     icon: LayoutDashboard,
-    label: "Control Room",
-    caption: "Ringkasan & jalur kerja",
+    label: "Ringkasan",
+    caption: "Status & jalan pintas",
     path: "/admin",
-    group: "Operate",
+    group: "Konten",
   },
   {
     icon: FilePenLine,
-    label: "Content Studio",
-    caption: "Editor isi website",
+    label: "Editor",
+    caption: "Tulis & kelola halaman",
     path: "/studio",
-    group: "Operate",
+    group: "Konten",
   },
   {
     icon: FolderOpen,
-    label: "Asset Library",
-    caption: "Gambar, audio, video, PDF",
+    label: "Media",
+    caption: "Gambar, audio, file",
     path: "/assets",
-    group: "Operate",
+    group: "Konten",
   },
   {
     icon: Inbox,
-    label: "Inquiry Inbox",
-    caption: "Booking & kolaborasi",
+    label: "Inbox",
+    caption: "Booking & kerja sama",
     path: "/studio/inquiries",
-    group: "Signals",
+    group: "Sistem",
   },
   {
-    icon: Satellite,
-    label: "Broadcast",
-    caption: "Fan Signal (paused)",
+    icon: Radio,
+    label: "Siaran",
+    caption: "Fan Signal",
     path: "/studio/broadcasts",
-    group: "Signals",
+    group: "Sistem",
   },
   {
     icon: Globe2,
-    label: "Public Site",
-    caption: "Buka website publik",
+    label: "Lihat Website",
+    caption: "Buka situs publik",
     path: "/",
-    group: "Signals",
+    group: "Sistem",
     external: true,
   },
 ];
@@ -118,7 +112,7 @@ const dockItems = menuItems.filter(item =>
   ["/admin", "/studio", "/assets", "/studio/inquiries"].includes(item.path)
 );
 
-const RAIL_KEY = "studio-rail-collapsed";
+const RAIL_KEY = "studio-rail-collapsed-v2";
 
 function initialsOf(value?: string | null) {
   if (!value) return "A";
@@ -202,7 +196,7 @@ export default function DashboardLayout({
       />
     );
 
-  const clock = now ? jakartaTimeLabel(now) : "—.—.—";
+  const clock = now ? jakartaTimeLabel(now) : "—:—";
 
   return (
     <div className="studio-os">
@@ -223,20 +217,20 @@ export default function DashboardLayout({
         >
           <div className="studio-side-head">
             <span className="studio-mark" aria-hidden>
-              <span className="studio-mark-glyph">AN</span>
+              AN
             </span>
             <div className="studio-side-id">
-              <b>Akbar Nawasunda</b>
-              <span>Studio OS</span>
+              <b>Studio</b>
+              <span>Akbar Nawasunda</span>
             </div>
             <button
               type="button"
               className="studio-rail-toggle hidden lg:grid"
               onClick={toggleRail}
               aria-label="Ciutkan navigasi"
-              title="Ciutkan navigasi (⌘B)"
+              title="Ciutkan (⌘B)"
             >
-              <PanelLeftClose size={15} />
+              <PanelLeftClose size={14} />
             </button>
             <button
               type="button"
@@ -244,20 +238,20 @@ export default function DashboardLayout({
               onClick={() => setDrawer(false)}
               aria-label="Tutup navigasi"
             >
-              <X size={15} />
+              <X size={14} />
             </button>
           </div>
 
           <div className="studio-pulse">
             <span className="studio-dot" aria-hidden />
             <div className="studio-pulse-copy">
-              <b>Live site</b>
+              <b>Live</b>
               <span>WIB {clock}</span>
             </div>
           </div>
 
           <div className="studio-side-scroll">
-            {["Operate", "Signals"].map(group => (
+            {(["Konten", "Sistem"] as const).map(group => (
               <div className="studio-nav-group" key={group}>
                 <p className="studio-nav-label">
                   <span>{group}</span>
@@ -278,14 +272,14 @@ export default function DashboardLayout({
                         title={rail ? item.label : undefined}
                       >
                         <span className="studio-nav-icon">
-                          <item.icon size={15} />
+                          <item.icon size={14} />
                         </span>
                         <span className="studio-nav-text">
                           <b>{item.label}</b>
                           <span>{item.caption}</span>
                         </span>
                         {item.external ? (
-                          <ExternalLink size={12} className="opacity-40" />
+                          <ExternalLink size={11} className="opacity-40" />
                         ) : null}
                       </button>
                     );
@@ -297,14 +291,13 @@ export default function DashboardLayout({
               type="button"
               className="studio-nav-item"
               onClick={() => setPalette(true)}
-              title="Command palette"
             >
               <span className="studio-nav-icon">
-                <CommandIcon size={15} />
+                <CommandIcon size={14} />
               </span>
               <span className="studio-nav-text">
-                <b>Command palette</b>
-                <span>Lompat cepat · ⌘K</span>
+                <b>Cari cepat</b>
+                <span>Lompat halaman · ⌘K</span>
               </span>
             </button>
           </div>
@@ -314,33 +307,33 @@ export default function DashboardLayout({
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex w-full items-center gap-3 rounded-xl px-1 py-1 text-left transition hover:bg-white/[0.05]"
+                  className="flex w-full items-center gap-3 rounded-xl px-1 py-1 text-left transition hover:bg-white/[0.04]"
                 >
                   <span className="studio-avatar">
                     {initialsOf(user.name || user.email)}
                   </span>
                   <span className="studio-user-copy">
                     <b>{user.name || "Owner"}</b>
-                    <span>{user.email || "private session"}</span>
+                    <span>{user.email || "private"}</span>
                   </span>
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="w-56 border-white/10 bg-[#0d1016] text-white"
+                className="w-56 border-zinc-800 bg-zinc-900 text-white"
               >
-                <DropdownMenuLabel className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
-                  Owner session
+                <DropdownMenuLabel className="font-mono text-[10px] uppercase tracking-wider text-zinc-400">
+                  Sesi owner
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-white/10" />
+                <DropdownMenuSeparator className="bg-zinc-800" />
                 <DropdownMenuItem
-                  className="cursor-pointer text-white/75 focus:bg-white/10 focus:text-white"
+                  className="cursor-pointer text-zinc-300 focus:bg-zinc-800 focus:text-white"
                   onClick={() => window.open("/", "_blank", "noreferrer")}
                 >
                   <Globe2 className="mr-2 h-4 w-4" /> Buka situs publik
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  className="cursor-pointer text-red-200 focus:bg-red-400/10 focus:text-red-100"
+                  className="cursor-pointer text-red-300 focus:bg-red-950/50 focus:text-red-200"
                   onClick={logout}
                 >
                   <LogOut className="mr-2 h-4 w-4" /> Keluar
@@ -358,7 +351,7 @@ export default function DashboardLayout({
               onClick={() => setDrawer(true)}
               aria-label="Buka navigasi"
             >
-              <Menu size={16} />
+              <Menu size={15} />
             </button>
             {rail ? (
               <button
@@ -368,15 +361,13 @@ export default function DashboardLayout({
                 aria-label="Buka navigasi"
                 title="Buka navigasi (⌘B)"
               >
-                <PanelLeft size={16} />
+                <PanelLeft size={15} />
               </button>
             ) : null}
 
             <nav className="studio-crumbs" aria-label="Breadcrumb">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">
-                {kicker || "AN // Studio"}
-              </span>
-              <ChevronRight size={13} className="studio-crumb-sep" />
+              <span>{kicker || "Studio"}</span>
+              <ChevronRight size={12} className="studio-crumb-sep" />
               <b>{title || active.label}</b>
             </nav>
 
@@ -385,8 +376,8 @@ export default function DashboardLayout({
               className="studio-chip hidden sm:inline-flex"
               onClick={() => setPalette(true)}
             >
-              <CommandIcon size={13} />
-              Cari & lompat
+              <CommandIcon size={12} />
+              Cari
               <kbd>⌘K</kbd>
             </button>
             <button
@@ -395,7 +386,7 @@ export default function DashboardLayout({
               onClick={() => setPalette(true)}
               aria-label="Command palette"
             >
-              <CommandIcon size={16} />
+              <CommandIcon size={14} />
             </button>
             <a
               className="studio-chip hidden md:inline-flex"
@@ -403,9 +394,9 @@ export default function DashboardLayout({
               target="_blank"
               rel="noreferrer"
             >
-              <Radio size={13} className="text-emerald-300" />
+              <Globe2 size={12} />
               Live
-              <ArrowUpRight size={12} />
+              <ArrowUpRight size={11} />
             </a>
           </header>
 
@@ -422,13 +413,13 @@ export default function DashboardLayout({
               data-active={active.path === item.path}
               onClick={() => go(item)}
             >
-              <item.icon size={17} />
-              {item.label.split(" ")[0]}
+              <item.icon size={16} />
+              {item.label}
             </button>
           ))}
           <button type="button" onClick={() => setPalette(true)}>
-            <CommandIcon size={17} />
-            Jump
+            <CommandIcon size={16} />
+            Cari
           </button>
         </nav>
       </div>
@@ -437,12 +428,12 @@ export default function DashboardLayout({
         open={palette}
         onOpenChange={setPalette}
         title="Studio command"
-        description="Lompat ke bagian workspace atau jalankan aksi cepat."
+        description="Lompat ke bagian workspace."
       >
         <CommandInput placeholder="Ketik halaman atau aksi…" />
         <CommandList>
           <CommandEmpty>Tidak ada hasil.</CommandEmpty>
-          <CommandGroup heading="Navigasi">
+          <CommandGroup heading="Halaman">
             {menuItems.map(item => (
               <CommandItem
                 key={item.path}
@@ -459,9 +450,9 @@ export default function DashboardLayout({
             ))}
           </CommandGroup>
           <CommandSeparator />
-          <CommandGroup heading="Aksi cepat">
+          <CommandGroup heading="Aksi">
             <CommandItem
-              value="rilisan baru release"
+              value="rilisan baru"
               onSelect={() => {
                 setPalette(false);
                 setLocation("/studio?compose=release");
@@ -470,32 +461,32 @@ export default function DashboardLayout({
               <Rocket className="mr-2 h-4 w-4" /> Tulis rilisan baru
             </CommandItem>
             <CommandItem
-              value="upload asset media"
+              value="upload asset"
               onSelect={() => {
                 setPalette(false);
                 setLocation("/assets");
               }}
             >
-              <FolderOpen className="mr-2 h-4 w-4" /> Upload media baru
+              <FolderOpen className="mr-2 h-4 w-4" /> Upload media
             </CommandItem>
             <CommandItem
-              value="toggle sidebar rail"
+              value="toggle sidebar"
               onSelect={() => {
                 setPalette(false);
                 toggleRail();
               }}
             >
-              <PanelLeft className="mr-2 h-4 w-4" /> Ciutkan / buka sidebar
+              <PanelLeft className="mr-2 h-4 w-4" /> Ciutkan sidebar
               <CommandShortcut>⌘B</CommandShortcut>
             </CommandItem>
             <CommandItem
-              value="logout keluar"
+              value="logout"
               onSelect={() => {
                 setPalette(false);
                 void logout();
               }}
             >
-              <LogOut className="mr-2 h-4 w-4" /> Keluar dari studio
+              <LogOut className="mr-2 h-4 w-4" /> Keluar
             </CommandItem>
           </CommandGroup>
         </CommandList>

@@ -1,23 +1,9 @@
-import {
-  ArrowUpRight,
-  ExternalLink,
-  FileText,
-  Image as ImageIcon,
-  Link2,
-  Pencil,
-  Radio,
-  Sparkles,
-} from "lucide-react";
+/**
+ * PAGE MIRROR v2 — lebih ringkas, tanpa cyan overload.
+ */
+import { ArrowUpRight, ExternalLink, FileText, Image as ImageIcon, Link2, Pencil, Radio } from "lucide-react";
 import { useMemo, useState } from "react";
-import {
-  allPlatformLinks,
-  currentRelease,
-  officialBrand,
-  portraitStudies,
-  releases,
-  verifiedArtistProfile,
-  videos,
-} from "@/content/artistPlatform";
+import { allPlatformLinks, currentRelease, officialBrand, portraitStudies, releases, verifiedArtistProfile, videos } from "@/content/artistPlatform";
 import { StudioAssetPreview, StudioLinkPreview } from "./StudioAssetPreview";
 
 type EditorDocument = {
@@ -29,214 +15,62 @@ type EditorDocument = {
   isPublished: boolean;
 };
 
-type StudioPageMirrorProps = {
-  documents: EditorDocument[];
-  onEditType: (type: string) => void;
-};
-
-type MirrorItem = {
-  label: string;
-  value: string;
-  kind?: "text" | "link" | "media";
-};
-
-type MirrorSection = {
-  title: string;
-  detail: string;
-  icon: typeof FileText;
-  editType?: string;
-  items: MirrorItem[];
-  sourceLabel: string;
-};
-
-type MirrorPage = {
-  route: string;
-  title: string;
-  marker: string;
-  summary: string;
-  sections: MirrorSection[];
-};
+type MirrorItem = { label: string; value: string; kind?: "text" | "link" | "media" };
+type MirrorSection = { title: string; detail: string; icon: typeof FileText; editType?: string; items: MirrorItem[]; sourceLabel: string };
+type MirrorPage = { route: string; title: string; marker: string; summary: string; sections: MirrorSection[] };
 
 function stringValue(payload: Record<string, unknown>, key: string) {
   return typeof payload[key] === "string" ? String(payload[key]).trim() : "";
 }
-
 function parsePlatformLinks(value: unknown) {
   if (!Array.isArray(value)) return [];
-  return value
-    .filter(item =>
-      Boolean(item && typeof item === "object" && !Array.isArray(item))
-    )
-    .map(item => {
-      const record = item as Record<string, unknown>;
-      return {
-        label: typeof record.label === "string" ? record.label.trim() : "",
-        href: typeof record.href === "string" ? record.href.trim() : "",
-      };
-    })
-    .filter(item => item.label && item.href);
+  return value.filter(i => Boolean(i && typeof i === "object" && !Array.isArray(i))).map(item => {
+    const r = item as Record<string, unknown>;
+    return { label: typeof r.label === "string" ? r.label.trim() : "", href: typeof r.href === "string" ? r.href.trim() : "" };
+  }).filter(i => i.label && i.href);
 }
-
-function parsePlatformText(value: string) {
-  return value
-    .split("\n")
-    .map(line => {
-      const [label, ...hrefParts] = line.split("|").map(item => item.trim());
-      return { label, href: hrefParts.join(" | ") };
-    })
-    .filter(item => item.label && item.href);
+function firstDocument(docs: EditorDocument[], type: string) {
+  return docs.filter(d => d.documentType === type).sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id)[0];
 }
-
-function firstDocument(documents: EditorDocument[], type: string) {
-  return documents
-    .filter(document => document.documentType === type)
-    .sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id)[0];
+function documentsOf(docs: EditorDocument[], type: string) {
+  return docs.filter(d => d.documentType === type).sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id);
 }
+function textItem(label: string, value: string): MirrorItem { return { label, value, kind: "text" }; }
+function linkItem(label: string, value: string): MirrorItem { return { label, value, kind: "link" }; }
+function mediaItem(label: string, value: string): MirrorItem { return { label, value, kind: "media" }; }
 
-function documentsOf(documents: EditorDocument[], type: string) {
-  return documents
-    .filter(document => document.documentType === type)
-    .sort((a, b) => a.sortOrder - b.sortOrder || a.id - b.id);
-}
-
-function textItem(label: string, value: string): MirrorItem {
-  return { label, value, kind: "text" };
-}
-
-function linkItem(label: string, value: string): MirrorItem {
-  return { label, value, kind: "link" };
-}
-
-function mediaItem(label: string, value: string): MirrorItem {
-  return { label, value, kind: "media" };
-}
-
-function releaseItems(documents: EditorDocument[]): MirrorItem[] {
-  const managed = documentsOf(documents, "release");
-  if (managed.length) {
-    return managed.map(document => {
-      const payload = document.payload;
-      const title = stringValue(payload, "title") || document.slug;
-      const href = stringValue(payload, "url") || stringValue(payload, "href");
-      return linkItem(title, href || "Dokumen release belum memiliki URL");
-    });
-  }
-  return releases.map(release => linkItem(release.title, release.href));
-}
-
-function visualItems(documents: EditorDocument[]): MirrorItem[] {
-  const managed = documentsOf(documents, "visual");
-  if (managed.length) {
-    return managed.map(document => {
-      const payload = document.payload;
-      return linkItem(
-        stringValue(payload, "title") || document.slug,
-        stringValue(payload, "url") ||
-          stringValue(payload, "href") ||
-          "Visual belum memiliki URL"
-      );
-    });
-  }
-  return videos.map(video => linkItem(video.title, video.href));
-}
-
-function eventItems(documents: EditorDocument[]): MirrorItem[] {
-  const managed = documentsOf(documents, "event");
-  if (managed.length) {
-    return managed.map(document => {
-      const payload = document.payload;
-      const title = stringValue(payload, "title") || document.slug;
-      const venue = [
-        stringValue(payload, "venue"),
-        stringValue(payload, "city"),
-      ]
-        .filter(Boolean)
-        .join(", ");
-      const date = stringValue(payload, "date");
-      return textItem(
-        title,
-        [date, venue].filter(Boolean).join(" · ") || "Event belum lengkap"
-      );
-    });
-  }
-  return [textItem("Status", "Belum ada jadwal pertunjukan yang diumumkan.")];
-}
-
-function MirrorSectionCard({
-  section,
-  onEditType,
-}: {
-  section: MirrorSection;
-  onEditType: (type: string) => void;
-}) {
+function MirrorSectionCard({ section, onEditType }: { section: MirrorSection; onEditType: (type: string) => void }) {
   const Icon = section.icon;
   return (
-    <article className="overflow-hidden rounded-xl border border-white/[0.08] bg-black/[0.14]">
-      <div className="flex items-start justify-between gap-3 border-b border-white/[0.07] px-4 py-4">
-        <div className="flex min-w-0 items-start gap-3">
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-cyan-200/15 bg-cyan-200/[0.05] text-cyan-100/70">
-            <Icon size={14} />
-          </span>
-          <div className="min-w-0">
-            <h4 className="text-sm font-medium text-white/90">
-              {section.title}
-            </h4>
-            <p className="mt-1 text-[11px] leading-5 text-white/40">
-              {section.detail}
-            </p>
+    <article className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/40">
+      <div className="flex items-start justify-between gap-3 border-b border-zinc-800 px-4 py-3">
+        <div className="flex items-start gap-2.5">
+          <span className="grid h-7 w-7 place-items-center rounded-lg bg-zinc-800 text-zinc-400"><Icon size={13} /></span>
+          <div>
+            <h4 className="text-[13px] font-medium text-white">{section.title}</h4>
+            <p className="mt-0.5 text-[11px] leading-4 text-zinc-500">{section.detail}</p>
           </div>
         </div>
-        {section.editType ? (
-          <button
-            type="button"
-            onClick={() => onEditType(section.editType!)}
-            className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-white/10 px-2 py-1.5 text-[9px] font-medium uppercase tracking-[0.1em] text-white/50 transition hover:border-cyan-200/30 hover:bg-cyan-200/[0.07] hover:text-cyan-100"
-          >
-            <Pencil size={10} />
-            <span className="hidden sm:inline">Edit</span>
-          </button>
-        ) : null}
+        {section.editType ? <button type="button" onClick={() => onEditType(section.editType!)} className="inline-flex items-center gap-1 rounded-lg border border-zinc-800 px-2 py-1 text-[10px] text-zinc-400 hover:text-white hover:bg-zinc-800"><Pencil size={10} />Edit</button> : null}
       </div>
       <div className="space-y-2 p-4">
-        <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-emerald-100/55">
-          {section.sourceLabel}
-        </p>
+        <p className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">{section.sourceLabel}</p>
         {section.items.length ? (
           <div className="space-y-2">
             {section.items.map(item => (
-              <div
-                key={`${item.label}-${item.value}`}
-                className="rounded-lg border border-white/[0.07] bg-white/[0.025] p-3"
-              >
-                <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/35">
-                  {item.label}
-                </p>
-                {item.kind === "media" ? (
-                  <StudioAssetPreview value={item.value} label={item.label} />
-                ) : item.kind === "link" && item.value.startsWith("http") ? (
-                  <StudioLinkPreview value={item.value} label={item.label} />
-                ) : (
-                  <p className="mt-1 break-words text-xs leading-5 text-white/75">
-                    {item.value}
-                  </p>
-                )}
+              <div key={`${item.label}-${item.value}`} className="rounded-lg border border-zinc-800/80 bg-zinc-950 p-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">{item.label}</p>
+                {item.kind === "media" ? <StudioAssetPreview value={item.value} label={item.label} /> : item.kind === "link" && item.value.startsWith("http") ? <StudioLinkPreview value={item.value} label={item.label} /> : <p className="mt-1 break-words text-[12px] leading-5 text-zinc-300">{item.value}</p>}
               </div>
             ))}
           </div>
-        ) : (
-          <p className="rounded-lg border border-dashed border-white/10 px-3 py-4 text-xs text-white/35">
-            Belum ada data pada bagian ini.
-          </p>
-        )}
+        ) : <p className="rounded-lg border border-dashed border-zinc-800 px-3 py-3 text-[12px] text-zinc-500">Belum ada data.</p>}
       </div>
     </article>
   );
 }
 
-export default function StudioPageMirror({
-  documents,
-  onEditType,
-}: StudioPageMirrorProps) {
+export default function StudioPageMirror({ documents, onEditType }: { documents: EditorDocument[]; onEditType: (type: string) => void }) {
   const [selectedRoute, setSelectedRoute] = useState("/");
   const content = useMemo(() => {
     const hero = firstDocument(documents, "hero")?.payload ?? {};
@@ -247,890 +81,110 @@ export default function StudioPageMirror({
     const legal = firstDocument(documents, "legal")?.payload ?? {};
     const game = firstDocument(documents, "game")?.payload ?? {};
     const journey = firstDocument(documents, "journey")?.payload ?? {};
-    const photoStoryDocuments = documentsOf(documents, "photoStory");
-    const managedPlatforms = parsePlatformLinks(settings.platformLinks);
-    const textPlatforms = parsePlatformText(
-      stringValue(settings, "platformLinksText")
-    );
-    const platforms = managedPlatforms.length
-      ? managedPlatforms
-      : textPlatforms.length
-        ? textPlatforms
-        : allPlatformLinks;
-    const portrait =
-      stringValue(profile, "portraitImage") || officialBrand.portrait;
-    const editorialImage =
-      stringValue(pressKit, "editorialImage") ||
-      portrait ||
-      officialBrand.editorialPortrait;
+    const platforms = parsePlatformLinks(settings.platformLinks).length ? parsePlatformLinks(settings.platformLinks) : allPlatformLinks;
+    const portrait = stringValue(profile, "portraitImage") || officialBrand.portrait;
+    const editorialImage = stringValue(pressKit, "editorialImage") || portrait || officialBrand.editorialPortrait;
     const featuredRelease = firstDocument(documents, "release")?.payload ?? {};
-    const releaseArtwork =
-      stringValue(featuredRelease, "artworkUrl") || currentRelease.image;
-    const profileLocation =
-      stringValue(profile, "location") || verifiedArtistProfile.location;
-    const profileBio =
-      stringValue(profile, "longBio") || verifiedArtistProfile.longBio;
+    const releaseArtwork = stringValue(featuredRelease, "artworkUrl") || currentRelease.image;
+    const profileLocation = stringValue(profile, "location") || verifiedArtistProfile.location;
+    const profileBio = stringValue(profile, "longBio") || verifiedArtistProfile.longBio;
     const pressBio = stringValue(pressKit, "snapshotBio") || profileBio;
-    const pressLocation =
-      stringValue(pressKit, "snapshotLocation") || profileLocation;
-    const pressGenres =
-      stringValue(pressKit, "snapshotGenresText") ||
-      verifiedArtistProfile.genres.join(", ");
-    const pressAlias =
-      stringValue(pressKit, "snapshotAlias") ||
-      verifiedArtistProfile.aliases.join(" / ");
-    const pressEmail =
-      stringValue(pressKit, "pressEmail") || verifiedArtistProfile.bookingEmail;
-    const journeyMilestones = Array.isArray(journey.milestones)
-      ? journey.milestones.flatMap(item => {
-          if (!item || typeof item !== "object" || Array.isArray(item))
-            return [];
-          const record = item as Record<string, unknown>;
-          return [
-            textItem(
-              String(record.year || "Milestone"),
-              `${String(record.title || "")} — ${String(record.body || "")}`
-            ),
-          ];
-        })
-      : [];
+
+    const journeyMilestones = Array.isArray(journey.milestones) ? (journey.milestones as any[]).filter(Boolean).map((r: any) => textItem(String(r.year || "Milestone"), `${String(r.title || "")} — ${String(r.body || "")}`)) : [];
+
     const pages: MirrorPage[] = [
       {
         route: "/",
         title: "Homepage",
-        marker: "ORIGIN SIGNAL",
-        summary:
-          "Cermin homepage: hero, CTA, platform, rilisan, visual, live, game, newsletter, dan footer.",
+        marker: "Origin",
+        summary: "Hero, platform, rilisan, visual, live, game.",
         sections: [
-          {
-            title: "Hero, foto & CTA",
-            detail: "Isi yang terlihat pada first impression homepage.",
-            icon: ImageIcon,
-            editType: "hero",
-            sourceLabel: firstDocument(documents, "hero")
-              ? "CMS · Homepage hero"
-              : "Fallback resmi · Homepage hero",
-            items: [
-              textItem(
-                "Judul",
-                stringValue(hero, "heroTitle") || "AKBAR NAWASUNDA."
-              ),
-              textItem(
-                "Copy",
-                stringValue(hero, "heroBody") || verifiedArtistProfile.shortBio
-              ),
-              linkItem(
-                "CTA utama",
-                stringValue(hero, "primaryActionUrl") || currentRelease.href
-              ),
-              mediaItem(
-                "Foto hero",
-                stringValue(hero, "heroImage") || portrait
-              ),
-            ],
-          },
-          {
-            title: "Navigasi, CTA & footer routes",
-            detail:
-              "Link internal dan CTA yang terlihat pada header, hero, section, serta footer homepage.",
-            icon: Link2,
-            sourceLabel: "Fixed routes · Homepage navigation",
-            items: [
-              linkItem("Music", "/music"),
-              linkItem("Visuals", "/visuals"),
-              linkItem("Live", "/live"),
-              linkItem("Archive", "/universe"),
-              linkItem("About", "/about"),
-              linkItem("EPK / Booking", "/epk"),
-              linkItem("Contact / Inquiry", "/inquire"),
-              linkItem("Licensing", "/licensing"),
-              linkItem("Privacy", "/privacy"),
-              linkItem("Hero → Kabar terbaru", "#signal"),
-            ],
-          },
-          {
-            title: "Semua link platform",
-            detail:
-              "Link yang muncul pada blok Links Musik dan koneksi footer homepage.",
-            icon: Link2,
-            editType: "siteSettings",
-            sourceLabel: firstDocument(documents, "siteSettings")
-              ? "CMS · Site settings"
-              : "Fallback resmi · Platform links",
-            items: platforms.map(link => linkItem(link.label, link.href)),
-          },
-          {
-            title: "Rilisan terbaru",
-            detail:
-              "Featured release, cover, metadata, dan tombol Buka Rilisan.",
-            icon: Radio,
-            editType: "release",
-            sourceLabel: firstDocument(documents, "release")
-              ? "CMS · Release document"
-              : "Fallback resmi · Current release",
-            items: [
-              linkItem(
-                stringValue(featuredRelease, "title") || currentRelease.title,
-                stringValue(featuredRelease, "url") || currentRelease.href
-              ),
-              mediaItem("Cover rilisan", releaseArtwork),
-            ],
-          },
-          {
-            title: "Artist Journey / Biography",
-            detail:
-              "Biografi, milestone, dan foto opsional pada scene perjalanan homepage.",
-            icon: FileText,
-            editType: "journey",
-            sourceLabel: firstDocument(documents, "journey")
-              ? "CMS · Artist Journey"
-              : "Fallback resmi · Verified artist profile",
-            items: [
-              textItem(
-                "Judul",
-                stringValue(journey, "title") || "PERJALANAN MUSIK."
-              ),
-              textItem("Intro", stringValue(journey, "intro") || profileBio),
-              ...journeyMilestones,
-            ].filter(item => item.value),
-          },
-          {
-            title: "Photo Story / visual scene",
-            detail:
-              "Foto, caption, dan alt text yang tampil sebagai cerita visual homepage.",
-            icon: ImageIcon,
-            editType: "photoStory",
-            sourceLabel: photoStoryDocuments.length
-              ? "CMS · Photo Story documents"
-              : "Fallback resmi · Portrait studies",
-            items: photoStoryDocuments.length
-              ? photoStoryDocuments.map(document =>
-                  mediaItem(
-                    stringValue(document.payload, "title") || document.slug,
-                    stringValue(document.payload, "imageUrl")
-                  )
-                )
-              : portraitStudies
-                  .slice(0, 2)
-                  .map(study => mediaItem(study.titleId, study.src)),
-          },
-          {
-            title: "Katalog dan video resmi",
-            detail:
-              "Semua kartu rilisan serta visual video yang tampil pada homepage.",
-            icon: FileText,
-            editType: "release",
-            sourceLabel:
-              documentsOf(documents, "release").length ||
-              documentsOf(documents, "visual").length
-                ? "CMS · Release / Visual documents"
-                : "Fallback resmi · Artist catalog",
-            items: [
-              ...releaseItems(documents).slice(0, 8),
-              ...visualItems(documents).slice(0, 3),
-            ],
-          },
-          {
-            title: "Live, game & Fan Signal",
-            detail: "Status jadwal, teaser JEDAG RUN, dan form newsletter.",
-            icon: Sparkles,
-            editType: documentsOf(documents, "event").length ? "event" : "game",
-            sourceLabel:
-              documentsOf(documents, "event").length ||
-              firstDocument(documents, "game")
-                ? "CMS · Event / Game"
-                : "Fallback resmi · Newsletter adalah sistem tetap",
-            items: [
-              ...eventItems(documents),
-              textItem(
-                "Game",
-                stringValue(game, "title") || "JEDAG RUN — NIGHT FREQUENCY"
-              ),
-              textItem(
-                "Newsletter",
-                "Fan Signal · form update email di bagian News"
-              ),
-            ],
-          },
+          { title: "Hero", detail: "First impression homepage", icon: ImageIcon, editType: "hero", sourceLabel: firstDocument(documents, "hero") ? "CMS · Hero" : "Fallback", items: [textItem("Judul", stringValue(hero, "heroTitle") || "AKBAR NAWASUNDA."), textItem("Copy", stringValue(hero, "heroBody") || verifiedArtistProfile.shortBio), linkItem("CTA", stringValue(hero, "primaryActionUrl") || currentRelease.href), mediaItem("Foto", stringValue(hero, "heroImage") || portrait)] },
+          { title: "Platform", detail: "Link streaming homepage", icon: Link2, editType: "siteSettings", sourceLabel: "Platform links", items: platforms.map(l => linkItem(l.label, l.href)) },
+          { title: "Rilisan", detail: "Featured release", icon: Radio, editType: "release", sourceLabel: "Release", items: [linkItem(stringValue(featuredRelease, "title") || currentRelease.title, stringValue(featuredRelease, "url") || currentRelease.href), mediaItem("Cover", releaseArtwork)] },
+          { title: "Journey", detail: "Biografi & milestone", icon: FileText, editType: "journey", sourceLabel: "Journey", items: [textItem("Judul", stringValue(journey, "title") || "PERJALANAN MUSIK."), textItem("Intro", stringValue(journey, "intro") || profileBio), ...journeyMilestones].filter(i => i.value) },
         ],
       },
       {
         route: "/music",
         title: "Music",
-        marker: "FREQUENCY ARCHIVE",
-        summary:
-          "Platform, rilisan pilihan, player opsional, dan katalog lengkap.",
+        marker: "Archive",
+        summary: "Platform & katalog rilisan.",
         sections: [
-          {
-            title: "Platform resmi Music",
-            detail: "Semua tautan streaming yang digunakan halaman Music.",
-            icon: Link2,
-            editType: "siteSettings",
-            sourceLabel: firstDocument(documents, "siteSettings")
-              ? "CMS · Site settings"
-              : "Fallback resmi",
-            items: platforms.map(link => linkItem(link.label, link.href)),
-          },
-          {
-            title: "Featured release & catalog",
-            detail: "Rilisan pilihan, cover, metadata, cerita, dan link resmi.",
-            icon: Radio,
-            editType: "release",
-            sourceLabel: documentsOf(documents, "release").length
-              ? "CMS · Release documents"
-              : "Fallback resmi · Artist catalog",
-            items: releaseItems(documents),
-          },
+          { title: "Platform", detail: "Streaming links", icon: Link2, editType: "siteSettings", sourceLabel: "Site settings", items: platforms.map(l => linkItem(l.label, l.href)) },
+          { title: "Katalog", detail: "Semua rilisan", icon: Radio, editType: "release", sourceLabel: "Releases", items: documentsOf(documents, "release").length ? documentsOf(documents, "release").map(d => linkItem(stringValue(d.payload, "title") || d.slug, stringValue(d.payload, "url") || "")) : releases.map(r => linkItem(r.title, r.href)) },
         ],
       },
       {
         route: "/visuals",
         title: "Visuals",
-        marker: "MOVING IMAGE BOARD",
-        summary: "Kartu visual resmi, thumbnail, label, dan URL video.",
+        marker: "Video",
+        summary: "Video & foto.",
         sections: [
-          {
-            title: "Photo Story homepage",
-            detail:
-              "Foto editorial yang dipakai pada scene cerita homepage dan dapat ditambah dari Studio.",
-            icon: ImageIcon,
-            editType: "photoStory",
-            sourceLabel: photoStoryDocuments.length
-              ? "CMS · Photo Story documents"
-              : "Fallback resmi · Portrait studies",
-            items: photoStoryDocuments.length
-              ? photoStoryDocuments.map(document =>
-                  mediaItem(
-                    stringValue(document.payload, "title") || document.slug,
-                    stringValue(document.payload, "imageUrl")
-                  )
-                )
-              : portraitStudies
-                  .slice(0, 2)
-                  .map(study => mediaItem(study.titleId, study.src)),
-          },
-          {
-            title: "Visual archive cards",
-            detail:
-              "Setiap kartu visual yang muncul pada halaman Visuals dan homepage.",
-            icon: ImageIcon,
-            editType: "visual",
-            sourceLabel: documentsOf(documents, "visual").length
-              ? "CMS · Visual documents"
-              : "Fallback resmi · Video catalog",
-            items: visualItems(documents),
-          },
-        ],
-      },
-      {
-        /* Rute /visuals/portraits dihapus (Phase 3 §2 baris 5): kini seksi
-           in-page di /visuals#portraits (sub-fase 5d). Mirror mengikuti. */
-        route: "/visuals#portraits",
-        title: "Visual Portraits",
-        marker: "PORTRAIT STUDIES",
-        summary:
-          "Studi potret (seksi in-page /visuals), foto, label, caption, dan alt text.",
-        sections: [
-          {
-            title: "Portrait study cards",
-            detail:
-              "Setiap foto dan copy yang tampil pada gallery studi potret.",
-            icon: ImageIcon,
-            editType: "portrait",
-            sourceLabel: documentsOf(documents, "portrait").length
-              ? "CMS · Portrait documents"
-              : "Fallback resmi · Portrait studies",
-            items: documentsOf(documents, "portrait").length
-              ? documentsOf(documents, "portrait")
-                  .map(document => {
-                    const payload = document.payload;
-                    return [
-                      mediaItem(
-                        stringValue(payload, "title") || document.slug,
-                        stringValue(payload, "imageUrl")
-                      ),
-                      textItem(
-                        `${stringValue(payload, "title") || document.slug} · caption`,
-                        stringValue(payload, "copyId") ||
-                          stringValue(payload, "copyEn")
-                      ),
-                      textItem(
-                        `${stringValue(payload, "title") || document.slug} · alt`,
-                        stringValue(payload, "altId") ||
-                          stringValue(payload, "altEn")
-                      ),
-                    ].filter(item => item.value);
-                  })
-                  .flat()
-              : portraitStudies
-                  .map(study =>
-                    [
-                      mediaItem(study.titleId, study.src),
-                      textItem(
-                        `${study.titleId} · caption`,
-                        study.copyId || ""
-                      ),
-                      textItem(`${study.titleId} · alt`, study.altId || ""),
-                    ].filter(item => item.value)
-                  )
-                  .flat(),
-          },
-          {
-            title: "Portrait navigation",
-            detail: "Link antar halaman yang terlihat pada gallery portrait.",
-            icon: Link2,
-            sourceLabel: "Fixed route · Visual archive navigation",
-            items: [
-              linkItem("Back to Visuals", "/visuals"),
-              linkItem("Return Home", "/"),
-            ],
-          },
+          { title: "Visual cards", detail: "Kartu visual", icon: ImageIcon, editType: "visual", sourceLabel: "Visual docs", items: documentsOf(documents, "visual").length ? documentsOf(documents, "visual").map(d => linkItem(stringValue(d.payload, "title") || d.slug, stringValue(d.payload, "url") || "")) : videos.map(v => linkItem(v.title, v.href)) },
         ],
       },
       {
         route: "/live",
         title: "Live",
-        marker: "LIVE SIGNAL",
-        summary:
-          "Status pertunjukan, event terkonfirmasi, poster, tiket, RSVP, dan lokasi.",
+        marker: "Show",
+        summary: "Status & jadwal.",
         sections: [
-          {
-            title: "Live status",
-            detail: "Pesan status dan CTA yang tampil pada halaman Live.",
-            icon: Radio,
-            editType: "live",
-            sourceLabel: firstDocument(documents, "live")
-              ? "CMS · Live signal"
-              : "Fallback resmi · Live standby",
-            items: [
-              textItem("Status", stringValue(live, "status") || "standby"),
-              textItem(
-                "Message",
-                stringValue(live, "message") ||
-                  "Belum ada jadwal pertunjukan yang diumumkan."
-              ),
-              linkItem(
-                "Action URL",
-                stringValue(live, "actionUrl") || "#signal"
-              ),
-            ],
-          },
-          {
-            title: "Event cards & location links",
-            detail: "Tanggal, venue, Google Maps, poster, tiket, dan RSVP.",
-            icon: Link2,
-            editType: "event",
-            sourceLabel: documentsOf(documents, "event").length
-              ? "CMS · Event documents"
-              : "Fallback resmi · No confirmed event",
-            items: [
-              ...eventItems(documents),
-              ...documentsOf(documents, "event").flatMap(document => {
-                const payload = document.payload;
-                return [
-                  linkItem(
-                    `${stringValue(payload, "title") || document.slug} · Maps`,
-                    stringValue(payload, "mapsUrl")
-                  ),
-                  linkItem(
-                    `${stringValue(payload, "title") || document.slug} · Ticket`,
-                    stringValue(payload, "ticketUrl")
-                  ),
-                  linkItem(
-                    `${stringValue(payload, "title") || document.slug} · RSVP`,
-                    stringValue(payload, "rsvpUrl")
-                  ),
-                  mediaItem(
-                    `${stringValue(payload, "title") || document.slug} · Poster`,
-                    stringValue(payload, "posterUrl")
-                  ),
-                ].filter(item => item.value);
-              }),
-            ],
-          },
-        ],
-      },
-      {
-        route: "/universe",
-        title: "Archive / Universe",
-        marker: "UNIVERSE ARCHIVE",
-        summary: "Arah visual, artwork rilisan, dan jalur kontak resmi.",
-        sections: [
-          {
-            title: "Artist Journey",
-            detail:
-              "Journey yang juga menjadi dasar cerita pada Archive dan homepage.",
-            icon: FileText,
-            editType: "journey",
-            sourceLabel: firstDocument(documents, "journey")
-              ? "CMS · Artist Journey"
-              : "Fallback resmi · Artist profile",
-            items: [
-              textItem("Intro", stringValue(journey, "intro") || profileBio),
-              ...journeyMilestones,
-            ].filter(item => item.value),
-          },
-          {
-            title: "Archive artwork",
-            detail: "Artwork utama yang menjadi visual pembuka Archive.",
-            icon: ImageIcon,
-            sourceLabel: "Fallback resmi · Archive artwork",
-            items: [
-              mediaItem("Archive portrait", officialBrand.archivePortrait),
-            ],
-          },
-          {
-            title: "Archive releases & official routes",
-            detail: "Empat rilisan dan link resmi yang tampil di Archive.",
-            icon: Link2,
-            editType: "release",
-            sourceLabel: documentsOf(documents, "release").length
-              ? "CMS · Release documents"
-              : "Fallback resmi · Artist catalog",
-            items: releaseItems(documents).slice(0, 4),
-          },
-        ],
-      },
-      {
-        route: "/about",
-        title: "About",
-        marker: "ARTIST PROFILE",
-        summary:
-          "Portrait profile, bio, lokasi, Google Maps, genre, statement, dan CTA.",
-        sections: [
-          {
-            title: "Profile portrait & location",
-            detail: "Foto, asal, dan link lokasi yang tampil pada About.",
-            icon: ImageIcon,
-            editType: "profile",
-            sourceLabel: firstDocument(documents, "profile")
-              ? "CMS · Profile document"
-              : "Fallback resmi · Artist profile",
-            items: [
-              mediaItem("Profile portrait", portrait),
-              textItem("Location", profileLocation),
-              linkItem("Google Maps", stringValue(profile, "locationUrl")),
-            ].filter(item => item.value),
-          },
-          {
-            title: "Homepage journey source",
-            detail:
-              "Journey homepage mengambil copy terverifikasi dari dokumen ini.",
-            icon: FileText,
-            editType: "journey",
-            sourceLabel: firstDocument(documents, "journey")
-              ? "CMS · Artist Journey"
-              : "Fallback resmi · Artist profile",
-            items: [
-              textItem(
-                "Journey intro",
-                stringValue(journey, "intro") || profileBio
-              ),
-              ...journeyMilestones,
-            ].filter(item => item.value),
-          },
-          {
-            title: "Bio, statement & genres",
-            detail: "Copy profil dan tag genre yang tampil pada About.",
-            icon: FileText,
-            editType: "profile",
-            sourceLabel: firstDocument(documents, "profile")
-              ? "CMS · Profile document"
-              : "Fallback resmi · Artist profile",
-            items: [
-              textItem(
-                "Short bio",
-                stringValue(profile, "shortBio") ||
-                  verifiedArtistProfile.shortBio
-              ),
-              textItem("Long bio", profileBio),
-              textItem(
-                "Artist statement",
-                stringValue(profile, "artistStatement")
-              ),
-              textItem(
-                "Genres",
-                stringValue(profile, "genresText") ||
-                  verifiedArtistProfile.genres.join(", ")
-              ),
-            ].filter(item => item.value),
-          },
+          { title: "Status", detail: "Pesan live", icon: Radio, editType: "live", sourceLabel: "Live signal", items: [textItem("Status", stringValue(live, "status") || "standby"), textItem("Message", stringValue(live, "message") || "Belum ada jadwal")] },
         ],
       },
       {
         route: "/epk",
-        title: "EPK / Press & Booking",
-        marker: "PRESS / BOOKING",
-        summary:
-          "Foto Editorial/Press, intro, snapshot, capabilities, contact, aset, rilisan, dan platform.",
+        title: "EPK",
+        marker: "Press",
+        summary: "Press & booking.",
         sections: [
-          {
-            title: "Editorial / Press card",
-            detail:
-              "Foto yang muncul di kartu Editorial / Press bagian atas EPK.",
-            icon: ImageIcon,
-            editType: "pressKit",
-            sourceLabel: firstDocument(documents, "pressKit")
-              ? "CMS · Press & Booking"
-              : "Fallback resmi · Editorial portrait",
-            items: [
-              mediaItem("Foto editorial / Press card", editorialImage),
-              textItem("Displayed location", pressLocation),
-              textItem("Displayed alias", pressAlias),
-            ],
-          },
-          {
-            title: "EPK intro & Artist Snapshot",
-            detail: "Semua copy snapshot yang tampil pada halaman EPK.",
-            icon: FileText,
-            editType: "pressKit",
-            sourceLabel: firstDocument(documents, "pressKit")
-              ? "CMS · Press & Booking"
-              : "Fallback resmi · EPK profile",
-            items: [
-              textItem(
-                "EPK intro",
-                stringValue(pressKit, "intro") ||
-                  "Informasi untuk promoter, media, playlist editor, dan kolaborator."
-              ),
-              textItem("Snapshot bio", pressBio),
-              textItem("Snapshot location", pressLocation),
-              textItem("Snapshot genres", pressGenres),
-              textItem("Snapshot alias", pressAlias),
-              textItem(
-                "Capabilities intro",
-                stringValue(pressKit, "capabilitiesIntro") ||
-                  "Format kerja yang tersedia untuk performance, produksi, kolaborasi, dan penggunaan musik."
-              ),
-              textItem(
-                "Licensing note",
-                stringValue(pressKit, "licensingNote") ||
-                  verifiedArtistProfile.licensing
-              ),
-            ].filter(item => item.value),
-          },
-          {
-            title: "EPK contacts & official assets",
-            detail:
-              "Email kontak dan URL aset yang ditawarkan kepada promotor/media.",
-            icon: Link2,
-            editType: "pressKit",
-            sourceLabel: firstDocument(documents, "pressKit")
-              ? "CMS · Press & Booking"
-              : "Fallback resmi · Press contact",
-            items: [
-              linkItem("Press email", `mailto:${pressEmail}`),
-              linkItem(
-                "Booking email",
-                `mailto:${stringValue(pressKit, "bookingEmail") || verifiedArtistProfile.bookingEmail}`
-              ),
-              ...[
-                "oneSheetUrl",
-                "photoPackUrl",
-                "logoPackUrl",
-                "technicalRiderUrl",
-              ]
-                .map(key => linkItem(key, stringValue(pressKit, key)))
-                .filter(item => item.value),
-            ],
-          },
-          {
-            title: "Selected releases & platforms",
-            detail:
-              "Tiga rilisan pilihan dan lima kanal resmi pada bagian akhir EPK.",
-            icon: Radio,
-            editType: "release",
-            sourceLabel:
-              documentsOf(documents, "release").length ||
-              firstDocument(documents, "siteSettings")
-                ? "CMS · Release / Site settings"
-                : "Fallback resmi",
-            items: [
-              ...releaseItems(documents).slice(0, 3),
-              ...platforms
-                .slice(0, 5)
-                .map(link => linkItem(link.label, link.href)),
-            ],
-          },
-        ],
-      },
-      {
-        route: "/inquire",
-        title: "Contact / Inquiry",
-        marker: "INQUIRY ROUTE",
-        summary:
-          "Form booking, remix, collaboration, dan licensing serta jalur review owner.",
-        sections: [
-          {
-            title: "Inquiry types & source routes",
-            detail:
-              "Pilihan yang bisa dipilih pengunjung dan sumber CTA yang mengarah ke form.",
-            icon: Link2,
-            sourceLabel: "Fixed form · Inquiry workflow",
-            items: [
-              linkItem("Booking", "/inquire?type=booking&source=epk"),
-              linkItem("Remix", "/inquire?type=remix&source=epk"),
-              linkItem(
-                "Collaboration",
-                "/inquire?type=collaboration&source=epk"
-              ),
-              linkItem("Licensing", "/inquire?type=licensing&source=licensing"),
-              linkItem("Licensing page", "/licensing"),
-            ],
-          },
-          {
-            title: "Form fields & submission",
-            detail:
-              "Field yang tampil pada form. Data dikirim melalui workflow inquiry yang sudah ada.",
-            icon: FileText,
-            sourceLabel: "Fixed form · Tidak dikelola sebagai copy CMS",
-            items: [
-              "Name",
-              "Email",
-              "Organization / Artist name",
-              "Project / Event title",
-              "Location / Market",
-              "Timeline",
-              "Budget context",
-              "Message",
-            ].map(label => textItem(label, "Field form publik")),
-          },
-        ],
-      },
-      {
-        route: "/licensing",
-        title: "Music Licensing",
-        marker: "MUSIC USAGE",
-        summary:
-          "Informasi penggunaan musik, konteks licensing, terms, dan CTA menuju inquiry.",
-        sections: [
-          {
-            title: "Licensing posture & inquiry CTA",
-            detail:
-              "Copy resmi dan link yang tampil pada halaman Music Licensing.",
-            icon: FileText,
-            editType: "profile",
-            sourceLabel: "Fallback resmi · Artist licensing profile",
-            items: [
-              textItem("Licensing note", verifiedArtistProfile.licensing),
-              linkItem(
-                "Kirim permintaan",
-                "/inquire?type=licensing&source=licensing"
-              ),
-            ],
-          },
-          {
-            title: "Usage routes",
-            detail: "Tiga konteks penggunaan yang dijelaskan kepada pemohon.",
-            icon: Link2,
-            sourceLabel: "Fixed page copy · Licensing route",
-            items: [
-              textItem(
-                "Content & social",
-                "Penggunaan pada konten publik, kanal brand, atau distribusi tertentu."
-              ),
-              textItem(
-                "Event & performance",
-                "Penggunaan rekaman, custom arrangement, atau format performance."
-              ),
-              textItem(
-                "Commercial & brand",
-                "Kampanye, sinkronisasi, wilayah, durasi, dan bentuk pemakaian."
-              ),
-            ],
-          },
-        ],
-      },
-      {
-        route: "/privacy",
-        title: "Privacy Policy",
-        marker: "DATA NOTE",
-        summary:
-          "Legal intro, lima section kebijakan, effective date, layanan pihak ketiga, dan kontak data.",
-        sections: [
-          {
-            title: "Reviewed legal document",
-            detail:
-              "Copy kebijakan yang bisa diubah melalui dokumen Legal di Studio.",
-            icon: FileText,
-            editType: "legal",
-            sourceLabel: firstDocument(documents, "legal")
-              ? "CMS · Legal document"
-              : "Fallback resmi · Privacy policy",
-            items: [
-              textItem(
-                "Title",
-                stringValue(legal, "title") || "Privacy Policy"
-              ),
-              textItem("Version", stringValue(legal, "version") || "Current"),
-              textItem(
-                "Effective date",
-                stringValue(legal, "effectiveDate") || "25 Aug 2026"
-              ),
-              textItem(
-                "Intro",
-                stringValue(legal, "intro") ||
-                  "Penjelasan tentang data yang diproses saat memakai situs resmi."
-              ),
-            ],
-          },
-          {
-            title: "Privacy contact & fixed disclosures",
-            detail:
-              "Link kontak data dan disclosure yang tetap hadir pada halaman publik.",
-            icon: Link2,
-            sourceLabel: "Mixed · Legal document + fixed privacy disclosures",
-            items: [
-              linkItem(
-                "Ask about your data",
-                `mailto:${stringValue(settings, "pressEmail") || verifiedArtistProfile.bookingEmail}`
-              ),
-              textItem(
-                "Leaderboard",
-                "Username publik dan score saja; tanpa email, IP, user-agent, atau login."
-              ),
-              textItem(
-                "Gallery analytics",
-                "Kunjungan agregat dengan penanda anonim browser."
-              ),
-            ],
-          },
+          { title: "Editorial", detail: "Foto press card", icon: ImageIcon, editType: "pressKit", sourceLabel: "PressKit", items: [mediaItem("Foto editorial", editorialImage), textItem("Lokasi", stringValue(pressKit, "snapshotLocation") || profileLocation)] },
+          { title: "Bio", detail: "Snapshot", icon: FileText, editType: "pressKit", sourceLabel: "PressKit", items: [textItem("Bio", pressBio)] },
         ],
       },
       {
         route: "/game/jedag-run",
-        title: "JEDAG RUN",
-        marker: "GAME MINI",
-        summary:
-          "Gate username, copy game, audio, leaderboard, dan CTA kembali ke website.",
+        title: "Game",
+        marker: "Mini",
+        summary: "JEDAG RUN.",
         sections: [
-          {
-            title: "Game copy & availability",
-            detail:
-              "Kontrol yang benar-benar memengaruhi route game dan teaser homepage.",
-            icon: Sparkles,
-            editType: "game",
-            sourceLabel: firstDocument(documents, "game")
-              ? "CMS · Game document"
-              : "Fallback resmi · JEDAG RUN",
-            items: [
-              textItem(
-                "Title",
-                stringValue(game, "title") || "JEDAG RUN — NIGHT FREQUENCY"
-              ),
-              textItem("Kicker", stringValue(game, "kicker") || "GAME MINI"),
-              textItem(
-                "Intro",
-                stringValue(game, "intro") ||
-                  "Lari ikut ketukan, kumpulkan not, dan kejar drop-nya."
-              ),
-              textItem(
-                "Status",
-                game.isEnabled === false ? "Disabled" : "Enabled"
-              ),
-            ],
-          },
-          {
-            title: "Game audio & sharing",
-            detail: "BGM, SFX, dan label share yang dikelola dari Studio.",
-            icon: Radio,
-            editType: "game",
-            sourceLabel: firstDocument(documents, "game")
-              ? "CMS · Game audio"
-              : "Fallback Web Audio",
-            items: [
-              "bgmUrl",
-              "jumpSfxUrl",
-              "collectSfxUrl",
-              "hitSfxUrl",
-              "dropSfxUrl",
-              "gameOverSfxUrl",
-            ]
-              .map(key => mediaItem(key, stringValue(game, key)))
-              .filter(item => item.value)
-              .concat([
-                textItem(
-                  "Share label",
-                  stringValue(game, "shareLabel") || "SHARE SCORE"
-                ),
-              ]),
-          },
+          { title: "Copy & status", detail: "Judul & intro", icon: FileText, editType: "game", sourceLabel: "Game", items: [textItem("Title", stringValue(game, "title") || "JEDAG RUN"), textItem("Intro", stringValue(game, "intro") || "")] },
         ],
       },
     ];
     return { pages };
   }, [documents]);
 
-  const selectedPage =
-    content.pages.find(page => page.route === selectedRoute) ||
-    content.pages[0];
+  const selectedPage = content.pages.find(p => p.route === selectedRoute) || content.pages[0];
+
   return (
-    <section
-      id="studio-page-mirror"
-      className="scroll-mt-24 overflow-hidden rounded-2xl border border-cyan-200/10 bg-cyan-200/[0.025] shadow-2xl shadow-black/10"
-    >
-      <header className="border-b border-cyan-200/10 px-5 py-5 sm:px-7">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+    <section className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/30">
+      <header className="border-b border-zinc-800 px-5 py-5">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-200/70">
-              <FileText size={13} />
-              Page mirror / public source map
-            </div>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-white">
-              Edit berdasarkan halaman, bukan tebak-tebakan field.
-            </h2>
-            <p className="mt-2 max-w-3xl text-xs leading-5 text-white/45">
-              Pilih halaman publik untuk melihat foto, copy, link, rilisan, dan
-              asset yang benar-benar dipakai. Tombol Edit mengarah ke workflow
-              CMS yang mengontrol bagian tersebut.
-            </p>
+            <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-zinc-500"><FileText size={12} /> Page mirror</div>
+            <h2 className="mt-2 text-[18px] font-semibold text-white">Lihat isi per halaman, bukan tebak field.</h2>
+            <p className="mt-1 max-w-2xl text-[12px] leading-5 text-zinc-400">Pilih halaman publik, lihat apa yang tampil, klik Edit untuk langsung ubah.</p>
           </div>
-          <a
-            href={selectedPage.route}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-cyan-200/20 bg-cyan-200/[0.06] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-cyan-100/80 transition hover:bg-cyan-200/[0.12]"
-          >
-            Buka halaman publik <ExternalLink size={13} />
-          </a>
+          <a href={selectedPage.route} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-[11px] text-zinc-300 hover:text-white">Buka <ExternalLink size={12} /></a>
         </div>
-        <div className="mt-5 flex gap-2 overflow-x-auto pb-1">
+        <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
           {content.pages.map(page => (
-            <button
-              type="button"
-              key={page.route}
-              onClick={() => setSelectedRoute(page.route)}
-              className={`shrink-0 rounded-xl border px-3 py-2 text-left transition ${selectedPage.route === page.route ? "border-cyan-200/45 bg-cyan-200/[0.12] text-cyan-100" : "border-white/10 bg-black/[0.12] text-white/55 hover:border-cyan-200/25 hover:text-white/80"}`}
-            >
-              <span className="block font-mono text-[8px] uppercase tracking-[0.14em] text-white/35">
-                {page.marker}
-              </span>
-              <span className="mt-1 block text-xs font-medium">
-                {page.title}
-              </span>
+            <button key={page.route} type="button" onClick={() => setSelectedRoute(page.route)} className={`shrink-0 rounded-lg border px-3 py-2 text-left transition ${selectedPage.route === page.route ? "border-zinc-600 bg-zinc-800 text-white" : "border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:text-zinc-200"}`}>
+              <span className="block font-mono text-[9px] uppercase tracking-wider text-zinc-500">{page.marker}</span>
+              <span className="mt-0.5 block text-[12px] font-medium">{page.title}</span>
             </button>
           ))}
         </div>
       </header>
-      <div className="border-b border-white/[0.07] bg-black/[0.12] px-5 py-4 sm:px-7">
-        <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-cyan-100/55">
-          {selectedPage.route}
-        </p>
-        <h3 className="mt-1 text-lg font-semibold text-white">
-          {selectedPage.title}
-        </h3>
-        <p className="mt-1 text-xs leading-5 text-white/40">
-          {selectedPage.summary}
-        </p>
+      <div className="border-b border-zinc-800 bg-zinc-950/50 px-5 py-3">
+        <p className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">{selectedPage.route}</p>
+        <h3 className="mt-1 text-[14px] font-semibold text-white">{selectedPage.title}</h3>
+        <p className="mt-0.5 text-[12px] text-zinc-500">{selectedPage.summary}</p>
       </div>
-      <div className="grid gap-4 p-5 sm:p-7 lg:grid-cols-2">
-        {selectedPage.sections.map(section => (
-          <MirrorSectionCard
-            key={section.title}
-            section={section}
-            onEditType={onEditType}
-          />
-        ))}
+      <div className="grid gap-4 p-5 lg:grid-cols-2">
+        {selectedPage.sections.map(s => <MirrorSectionCard key={s.title} section={s} onEditType={onEditType} />)}
       </div>
     </section>
   );
