@@ -11,6 +11,15 @@
         background: #101211;
         color: #f1efe9;
         pointer-events: all;
+        /* If JavaScript fails to load, the server-rendered page must unblock. */
+        animation: an-splash-failsafe 1ms linear 1.6s forwards;
+      }
+      @keyframes an-splash-failsafe {
+        to {
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+        }
       }
       #akbar-preloader::after {
         content: "";
@@ -40,7 +49,7 @@
         text-transform: uppercase;
         color: #777a74;
         opacity: 0;
-        animation: an-splash-fade 0.6s ease 0.1s forwards;
+        animation: an-splash-fade 0.24s ease 0.03s forwards;
       }
       .an-splash-live {
         display: inline-flex;
@@ -53,7 +62,7 @@
         height: 6px;
         border-radius: 50%;
         background: #9bb9c1;
-        animation: an-splash-pulse 2.4s ease-in-out infinite;
+        animation: an-splash-pulse 1.6s ease-in-out infinite;
       }
       .an-splash-line {
         display: block;
@@ -70,11 +79,11 @@
         letter-spacing: 0.02em;
         text-transform: uppercase;
         transform: translateY(105%);
-        animation: an-splash-rise 0.72s cubic-bezier(0.16, 1, 0.3, 1) 0.3s
+        animation: an-splash-rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.06s
           forwards;
       }
       .an-splash-line:nth-child(3) .an-splash-word {
-        animation-delay: 0.4s;
+        animation-delay: 0.11s;
       }
       @keyframes an-splash-rise {
         to {
@@ -92,7 +101,7 @@
         clip-path: inset(0 100% 0 0);
         /* Beat pertama: aksara ditulis lebih dulu, baru nama Latin naik.
            Yang memimpin layar pembuka adalah identitasnya, bukan wordmark. */
-        animation: an-splash-write 0.62s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation: an-splash-write 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       }
       @keyframes an-splash-write {
         to {
@@ -106,25 +115,28 @@
       #akbar-preloader.an-splash-quick .an-splash-top,
       #akbar-preloader.an-splash-quick .an-splash-steps,
       #akbar-preloader.an-splash-quick .an-splash-meter,
-      #akbar-preloader.an-splash-quick .an-splash-caption,
       #akbar-preloader.an-splash-quick .an-splash-birthday {
         display: none;
       }
       #akbar-preloader.an-splash-quick .an-splash-aksara {
-        animation-duration: 0.26s;
+        animation-duration: 0.12s;
       }
       #akbar-preloader.an-splash-quick .an-splash-word {
-        animation-duration: 0.3s;
-        animation-delay: 0.12s;
+        animation-duration: 0.13s;
+        animation-delay: 0.03s;
       }
       #akbar-preloader.an-splash-quick
         .an-splash-line:nth-child(3)
         .an-splash-word {
-        animation-delay: 0.18s;
+        animation-delay: 0.08s;
       }
       #akbar-preloader.an-splash-quick .an-splash-rule {
-        animation-duration: 0.34s;
-        animation-delay: 0.22s;
+        animation-duration: 0.18s;
+        animation-delay: 0.05s;
+      }
+      #akbar-preloader.an-splash-quick .an-splash-caption {
+        animation-duration: 0.12s;
+        animation-delay: 0.08s;
       }
 
       /* Pola langkah drum: delapan ketukan yang menyala berurutan. */
@@ -139,7 +151,7 @@
         width: 3px;
         height: 8px;
         background: rgba(236, 234, 229, 0.22);
-        animation: an-splash-step 1.15s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        animation: an-splash-step 0.9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
       }
       .an-splash-steps span:nth-child(1) {
         animation-delay: 0s;
@@ -183,7 +195,7 @@
         background: #9bb9c1;
         transform-origin: left center;
         transform: scaleX(0);
-        animation: an-splash-wipe 0.78s cubic-bezier(0.22, 1, 0.36, 1) 0.62s
+        animation: an-splash-wipe 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.11s
           forwards;
       }
       @keyframes an-splash-wipe {
@@ -218,7 +230,7 @@
         text-transform: uppercase;
         color: #777a74;
         opacity: 0;
-        animation: an-splash-fade 0.6s ease 0.42s forwards;
+        animation: an-splash-fade 0.24s ease 0.23s forwards;
       }
       .an-splash-elapsed {
         color: #f1efe9;
@@ -247,15 +259,21 @@
         }
       }
       #akbar-preloader.an-fade-out {
-        animation: an-splash-lift 0.52s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+        animation: an-splash-lift 0.22s cubic-bezier(0.76, 0, 0.24, 1) forwards;
         pointer-events: none;
       }
       @keyframes an-splash-lift {
         to {
           transform: translateY(-101%);
+          opacity: 0;
+          visibility: hidden;
         }
       }
+      #akbar-preloader.an-splash-quick.an-fade-out {
+        animation-duration: 0.15s;
+      }
       @media (prefers-reduced-motion: reduce) {
+        #akbar-preloader,
         .an-splash-word,
         .an-splash-aksara,
         .an-splash-rule,
@@ -268,7 +286,9 @@
           animation-delay: 0ms !important;
           animation-iteration-count: 1 !important;
         }
-        #akbar-preloader.an-fade-out {
+        #akbar-preloader {
           opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
         }
       }

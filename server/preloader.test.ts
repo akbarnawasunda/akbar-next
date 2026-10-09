@@ -16,6 +16,13 @@ const read = (path: string) =>
 
 const indexHtml = read("client/index.html");
 const entryClient = read("client/src/entry-client.tsx");
+const nextPreloaderScript = read("public/assets/js/preloader.js");
+const nextPreloaderCss = read("app/preloader.css");
+const nextLayout = read("app/layout.tsx");
+const preloaderComponent = read("app/_components/Preloader.tsx");
+const routeView = read("app/_components/RouteView.tsx");
+const routeStateBoundary = read("app/_components/RouteStateBoundary.tsx");
+const routeTransition = read("client/src/components/RouteTransition.tsx");
 
 describe("splash pembuka", () => {
   it("tertanam inline supaya tidak ada kedipan sebelum bundle jalan", () => {
@@ -51,6 +58,26 @@ describe("splash pembuka", () => {
     expect(indexHtml).toContain("setTimeout");
     expect(entryClient).toContain("__dismissAkbarPreloader");
     expect(entryClient).toContain("requestAnimationFrame");
+  });
+
+  it("Next melepas splash setelah paint tanpa menunggu hydration", () => {
+    expect(nextPreloaderScript).toContain("window.requestAnimationFrame");
+    expect(nextPreloaderScript).toContain("var minimumVisible = seen ? 240 : 530;");
+    expect(nextPreloaderScript).toContain("var maximumVisible = seen ? 650 : 1300;");
+    expect(nextPreloaderScript).toContain("window.setTimeout(drop, maximumVisible + 40)");
+    expect(nextPreloaderCss).toContain("an-splash-failsafe");
+    expect(nextPreloaderCss).toMatch(/prefers-reduced-motion: reduce/);
+    expect(preloaderComponent).toContain("Loading page · Producer · Remixer · West Bandung");
+    expect(preloaderComponent).toContain("Memuat halaman · Produser · Remixer · Bandung Barat");
+    expect(nextLayout).toContain('<script defer src="/assets/js/preloader.js" />');
+  });
+
+  it("menampilkan fallback rute yang bilingual dan tidak menahan navigasi", () => {
+    expect(routeView).toContain("loading: () => <PageLoading />");
+    expect(routeStateBoundary).toContain("fallback={<PageLoading />}");
+    expect(routeTransition).toContain('const MIN_VISIBLE_MS = 160;');
+    expect(routeTransition).toContain('const EXIT_MS = 180;');
+    expect(routeTransition).toContain('english ? "Loading page" : "Memuat halaman"');
   });
 });
 

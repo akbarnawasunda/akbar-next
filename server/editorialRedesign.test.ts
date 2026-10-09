@@ -197,21 +197,22 @@ describe("aset statis redesign", () => {
   const read = (path: string) =>
     readFileSync(resolve(process.cwd(), path), "utf8");
 
-  it("splash punya versi penuh dan versi ringkas dengan batas durasi jelas", () => {
+  it("splash punya versi penuh/ringkas, keluar cepat, dan memiliki batas keras", () => {
     const indexHtml = read("client/index.html");
+    const nextScript = read("public/assets/js/preloader.js");
+    const nextCss = read("app/preloader.css");
     expect(indexHtml).toContain("an-splash-seen");
     expect(indexHtml).toContain("sessionStorage");
-    // KONTRAK BERUBAH (Fase 6F, disengaja): kunjungan kedua dalam satu sesi
-    // dulu melewatkan splash sepenuhnya, dan itu membuat layar pembuka
-    // terasa "tidak ada" di desktop (sekali reload, hilang sampai tab
-    // ditutup). Sekarang kunjungan kedua mendapat versi RINGKAS 460ms,
-    // bukan tidak sama sekali. Kunjungan pertama naik 1400 → 1450ms karena
-    // sekuensnya kini berakhir di ±1,40 dtk; di 1400ms garis terakhirnya
-    // terpotong.
-    expect(indexHtml).toContain("MIN_VISIBLE = seen ? 460 : 1450");
-    expect(indexHtml).toContain("MAX_VISIBLE = seen ? 900 : 2200");
+    expect(indexHtml).toContain("var minimumVisible = seen ? 240 : 530;");
+    expect(indexHtml).toContain("var maximumVisible = seen ? 650 : 1300;");
+    expect(indexHtml).toContain("var exitDuration = seen ? 150 : 220;");
     expect(indexHtml).toContain("an-splash-quick");
     expect(indexHtml).toMatch(/prefers-reduced-motion: reduce/);
+    expect(nextScript).toContain("window.requestAnimationFrame");
+    expect(nextScript).toContain("window.setTimeout(drop, maximumVisible + 40)");
+    expect(nextCss).toContain("an-splash-failsafe");
+    expect(indexHtml).toContain(nextScript.trim());
+    expect(indexHtml).toContain(nextCss.trim());
   });
 
   it("design system editorial tidak memakai efek kaca", () => {

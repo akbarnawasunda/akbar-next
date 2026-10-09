@@ -2,9 +2,10 @@
 
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
+import { PageLoading } from "@/components/RouteTransition";
 
 const page = (loader: () => Promise<ComponentType<any> | { default: ComponentType<any> }>) =>
-  dynamic(loader, { loading: () => null });
+  dynamic(loader, { loading: () => <PageLoading /> });
 
 const routes = {
   home: page(() => import("@/pages/Home")),

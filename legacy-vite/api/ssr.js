@@ -71,7 +71,7 @@ import { TRPCError } from "@trpc/server";
 
 // server/_core/env.ts
 var ENV = {
-  appId: process.env.VITE_APP_ID ?? "",
+  appId: process.env.APP_ID ?? process.env.NEXT_PUBLIC_APP_ID ?? process.env.VITE_APP_ID ?? "",
   cookieSecret: process.env.JWT_SECRET ?? process.env.SESSION_SECRET ?? "",
   databaseUrl: process.env.DATABASE_URL ?? "",
   oAuthServerUrl: process.env.OAUTH_SERVER_URL ?? "",

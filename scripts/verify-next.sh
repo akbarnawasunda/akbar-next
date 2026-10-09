@@ -66,6 +66,22 @@ check_page "/game/jedag-run" "id" "JEDAG RUN"
 check_page "/music/masih-mencintainya-papinka" "id" "Masih Mencintainya"
 check_page "/en/music/masih-mencintainya-papinka" "en" "Masih Mencintainya"
 
+check_loading_copy() {
+  local path="$1" expected="$2"
+  local status
+  status="$(curl -sS --max-time 20 -o "$TMP/loading.html" -w '%{http_code}' "$BASE$path")"
+  if [[ "$status" == "200" ]] && grep -Fq "$expected" "$TMP/loading.html" \
+    && grep -q 'aria-live="polite"' "$TMP/loading.html" \
+    && grep -q 'defer="" src="/assets/js/preloader.js"' "$TMP/loading.html"; then
+    pass "$path has clear, accessible loading copy and deferred splash script"
+  else
+    fail "$path loading copy/script missing (status=$status)"
+  fi
+}
+
+check_loading_copy "/" "Memuat halaman · Produser"
+check_loading_copy "/en" "Loading page · Producer"
+
 for path in /studio /admin /assets; do
   status="$(curl -sS --max-time 20 -o "$TMP/private.html" -w '%{http_code}' "$BASE$path")"
   if [[ "$status" == "200" ]] && grep -qi 'name="robots" content="noindex' "$TMP/private.html"; then

@@ -57,7 +57,7 @@
   <body>
     <!-- Splash pembuka: identitas brand, tanpa telemetri palsu dan tanpa persentase karangan. -->
     <style id="akbar-preloader-styles">
-      /* Splash pembuka: tanda tangan Akbar — wordmark, pola langkah drum
+/* Splash pembuka: tanda tangan Akbar — wordmark, pola langkah drum
          (breakbeat), jam WIB yang hidup, dan durasi muat yang jujur.
          Tanpa persentase karangan, tanpa angka acak. */
       #akbar-preloader {
@@ -70,6 +70,15 @@
         background: #101211;
         color: #f1efe9;
         pointer-events: all;
+        /* If JavaScript fails to load, the server-rendered page must unblock. */
+        animation: an-splash-failsafe 1ms linear 1.6s forwards;
+      }
+      @keyframes an-splash-failsafe {
+        to {
+          opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
+        }
       }
       #akbar-preloader::after {
         content: "";
@@ -99,7 +108,7 @@
         text-transform: uppercase;
         color: #777a74;
         opacity: 0;
-        animation: an-splash-fade 0.6s ease 0.1s forwards;
+        animation: an-splash-fade 0.24s ease 0.03s forwards;
       }
       .an-splash-live {
         display: inline-flex;
@@ -112,7 +121,7 @@
         height: 6px;
         border-radius: 50%;
         background: #9bb9c1;
-        animation: an-splash-pulse 2.4s ease-in-out infinite;
+        animation: an-splash-pulse 1.6s ease-in-out infinite;
       }
       .an-splash-line {
         display: block;
@@ -129,11 +138,11 @@
         letter-spacing: 0.02em;
         text-transform: uppercase;
         transform: translateY(105%);
-        animation: an-splash-rise 0.72s cubic-bezier(0.16, 1, 0.3, 1) 0.3s
+        animation: an-splash-rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.06s
           forwards;
       }
       .an-splash-line:nth-child(3) .an-splash-word {
-        animation-delay: 0.4s;
+        animation-delay: 0.11s;
       }
       @keyframes an-splash-rise {
         to {
@@ -151,7 +160,7 @@
         clip-path: inset(0 100% 0 0);
         /* Beat pertama: aksara ditulis lebih dulu, baru nama Latin naik.
            Yang memimpin layar pembuka adalah identitasnya, bukan wordmark. */
-        animation: an-splash-write 0.62s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        animation: an-splash-write 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
       }
       @keyframes an-splash-write {
         to {
@@ -165,25 +174,28 @@
       #akbar-preloader.an-splash-quick .an-splash-top,
       #akbar-preloader.an-splash-quick .an-splash-steps,
       #akbar-preloader.an-splash-quick .an-splash-meter,
-      #akbar-preloader.an-splash-quick .an-splash-caption,
       #akbar-preloader.an-splash-quick .an-splash-birthday {
         display: none;
       }
       #akbar-preloader.an-splash-quick .an-splash-aksara {
-        animation-duration: 0.26s;
+        animation-duration: 0.12s;
       }
       #akbar-preloader.an-splash-quick .an-splash-word {
-        animation-duration: 0.3s;
-        animation-delay: 0.12s;
+        animation-duration: 0.13s;
+        animation-delay: 0.03s;
       }
       #akbar-preloader.an-splash-quick
         .an-splash-line:nth-child(3)
         .an-splash-word {
-        animation-delay: 0.18s;
+        animation-delay: 0.08s;
       }
       #akbar-preloader.an-splash-quick .an-splash-rule {
-        animation-duration: 0.34s;
-        animation-delay: 0.22s;
+        animation-duration: 0.18s;
+        animation-delay: 0.05s;
+      }
+      #akbar-preloader.an-splash-quick .an-splash-caption {
+        animation-duration: 0.12s;
+        animation-delay: 0.08s;
       }
 
       /* Pola langkah drum: delapan ketukan yang menyala berurutan. */
@@ -198,7 +210,7 @@
         width: 3px;
         height: 8px;
         background: rgba(236, 234, 229, 0.22);
-        animation: an-splash-step 1.15s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+        animation: an-splash-step 0.9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
       }
       .an-splash-steps span:nth-child(1) {
         animation-delay: 0s;
@@ -242,7 +254,7 @@
         background: #9bb9c1;
         transform-origin: left center;
         transform: scaleX(0);
-        animation: an-splash-wipe 0.78s cubic-bezier(0.22, 1, 0.36, 1) 0.62s
+        animation: an-splash-wipe 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.11s
           forwards;
       }
       @keyframes an-splash-wipe {
@@ -277,7 +289,7 @@
         text-transform: uppercase;
         color: #777a74;
         opacity: 0;
-        animation: an-splash-fade 0.6s ease 0.42s forwards;
+        animation: an-splash-fade 0.24s ease 0.23s forwards;
       }
       .an-splash-elapsed {
         color: #f1efe9;
@@ -306,15 +318,21 @@
         }
       }
       #akbar-preloader.an-fade-out {
-        animation: an-splash-lift 0.52s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+        animation: an-splash-lift 0.22s cubic-bezier(0.76, 0, 0.24, 1) forwards;
         pointer-events: none;
       }
       @keyframes an-splash-lift {
         to {
           transform: translateY(-101%);
+          opacity: 0;
+          visibility: hidden;
         }
       }
+      #akbar-preloader.an-splash-quick.an-fade-out {
+        animation-duration: 0.15s;
+      }
       @media (prefers-reduced-motion: reduce) {
+        #akbar-preloader,
         .an-splash-word,
         .an-splash-aksara,
         .an-splash-rule,
@@ -327,8 +345,10 @@
           animation-delay: 0ms !important;
           animation-iteration-count: 1 !important;
         }
-        #akbar-preloader.an-fade-out {
+        #akbar-preloader {
           opacity: 0;
+          visibility: hidden;
+          pointer-events: none;
         }
       }
     </style>
@@ -337,9 +357,10 @@
       id="akbar-preloader"
       role="status"
       aria-label="Memuat situs Akbar Nawasunda"
+      aria-live="polite"
     >
       <div class="an-splash-inner">
-        <p class="an-splash-top">
+        <p class="an-splash-top" aria-hidden="true">
           <span class="an-splash-live">
             <i aria-hidden="true"></i>WIB
             <span id="an-splash-clock">--.--.--</span>
@@ -367,209 +388,206 @@
         <div class="an-splash-meter" aria-hidden="true">
           <i id="an-splash-meter-fill"></i>
         </div>
-        <div class="an-splash-caption">
-          <span>Producer &middot; Remixer &middot; Bandung Barat</span>
+        <div class="an-splash-caption" aria-hidden="true">
+          <span>Memuat halaman &middot; Produser &middot; Remixer &middot; Bandung Barat</span>
           <span class="an-splash-elapsed"
             ><span id="an-splash-elapsed">0.0</span>s</span
           >
         </div>
-        <p class="an-splash-birthday" id="an-splash-birthday" hidden>
+        <p class="an-splash-birthday" id="an-splash-birthday" hidden aria-hidden="true">
           Selamat ulang tahun, Akbar &middot; 01 November
         </p>
       </div>
     </div>
 
     <script id="akbar-preloader-script">
-      (function () {
-        var preloader = document.getElementById("akbar-preloader");
-        if (!preloader) return;
+(function () {
+  var preloader = document.getElementById("akbar-preloader");
+  if (!preloader) return;
 
-        var reduced = false;
-        try {
-          reduced =
-            window.matchMedia &&
-            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        } catch (error) {
-          reduced = false;
-        }
+  var reducedMotion = false;
+  try {
+    reducedMotion =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (error) {
+    reducedMotion = false;
+  }
 
-        // Splash hanya untuk kunjungan pertama dalam satu sesi. Kunjungan
-        // berikutnya (dan navigasi antar-rute) langsung melihat konten.
-        var seen = false;
-        try {
-          seen = sessionStorage.getItem("an-splash-seen") === "1";
-          sessionStorage.setItem("an-splash-seen", "1");
-        } catch (error) {
-          seen = false;
-        }
+  // Full signature on first visit; repeat visits keep only the quick wordmark.
+  var seen = false;
+  try {
+    seen = sessionStorage.getItem("an-splash-seen") === "1";
+    sessionStorage.setItem("an-splash-seen", "1");
+  } catch (error) {
+    seen = false;
+  }
+  if (seen) preloader.classList.add("an-splash-quick");
 
-        // --- Jam studio: selalu waktu Jakarta (WIB), apa pun zona perangkat. ---
-        var jakartaFormat = null;
-        try {
-          jakartaFormat = new Intl.DateTimeFormat("en-GB", {
-            timeZone: "Asia/Jakarta",
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hourCycle: "h23",
-            weekday: "long",
-          });
-        } catch (error) {
-          jakartaFormat = null;
-        }
+  var clockEl = document.getElementById("an-splash-clock");
+  var dateEl = document.getElementById("an-splash-date");
+  var elapsedEl = document.getElementById("an-splash-elapsed");
+  var meterFill = document.getElementById("an-splash-meter-fill");
+  var birthdayEl = document.getElementById("an-splash-birthday");
+  var months = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+  ];
 
-        var MONTHS = [
-          "Januari",
-          "Februari",
-          "Maret",
-          "April",
-          "Mei",
-          "Juni",
-          "Juli",
-          "Agustus",
-          "September",
-          "Oktober",
-          "November",
-          "Desember",
-        ];
+  function now() {
+    return window.performance && typeof window.performance.now === "function"
+      ? window.performance.now()
+      : Date.now();
+  }
 
-        function jakartaStamp(date) {
-          if (jakartaFormat) {
-            try {
-              var out = {};
-              var parts = jakartaFormat.formatToParts(date);
-              for (var i = 0; i < parts.length; i++) {
-                if (parts[i].type !== "literal")
-                  out[parts[i].type] = parts[i].value;
-              }
-              return {
-                h: Number(out.hour) % 24,
-                m: Number(out.minute),
-                s: Number(out.second),
-                day: Number(out.day),
-                month: Number(out.month),
-                year: Number(out.year),
-                weekday: out.weekday || "",
-              };
-            } catch (error) {
-              /* jatuh ke waktu perangkat di bawah */
-            }
-          }
-          return {
-            h: date.getHours(),
-            m: date.getMinutes(),
-            s: date.getSeconds(),
-            day: date.getDate(),
-            month: date.getMonth() + 1,
-            year: date.getFullYear(),
-            weekday: "",
-          };
-        }
+  function pad(value) {
+    return value < 10 ? "0" + value : String(value);
+  }
 
-        var clockEl = document.getElementById("an-splash-clock");
-        var dateEl = document.getElementById("an-splash-date");
-        var elapsedEl = document.getElementById("an-splash-elapsed");
-        var meterFill = document.getElementById("an-splash-meter-fill");
-        var birthdayEl = document.getElementById("an-splash-birthday");
+  function getJakartaStamp(date) {
+    try {
+      var parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Jakarta",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hourCycle: "h23",
+        weekday: "long",
+      }).formatToParts(date);
+      var values = {};
+      for (var i = 0; i < parts.length; i++) {
+        if (parts[i].type !== "literal") values[parts[i].type] = parts[i].value;
+      }
+      return {
+        hour: Number(values.hour) % 24,
+        minute: Number(values.minute),
+        second: Number(values.second),
+        day: Number(values.day),
+        month: Number(values.month),
+        year: Number(values.year),
+        weekday: values.weekday || "",
+      };
+    } catch (error) {
+      return {
+        hour: date.getHours(),
+        minute: date.getMinutes(),
+        second: date.getSeconds(),
+        day: date.getDate(),
+        month: date.getMonth() + 1,
+        year: date.getFullYear(),
+        weekday: "",
+      };
+    }
+  }
 
-        function pad(value) {
-          return value < 10 ? "0" + value : String(value);
-        }
+  function paintTime() {
+    var stamp = getJakartaStamp(new Date());
+    if (clockEl) {
+      clockEl.textContent =
+        pad(stamp.hour) + "." + pad(stamp.minute) + "." + pad(stamp.second);
+    }
+    if (dateEl) {
+      var weekday = stamp.weekday
+        ? stamp.weekday.toUpperCase().slice(0, 3) + " · "
+        : "";
+      dateEl.textContent =
+        weekday + stamp.day + " " + months[stamp.month - 1].toUpperCase() + " " + stamp.year;
+    }
+    if (stamp.month === 11 && stamp.day === 1) {
+      document.documentElement.setAttribute("data-birthday", "on");
+      preloader.classList.add("is-birthday");
+      if (birthdayEl) birthdayEl.hidden = false;
+    }
+  }
 
-        function paintTime() {
-          var stamp = jakartaStamp(new Date());
-          if (clockEl) {
-            clockEl.textContent =
-              pad(stamp.h) + "." + pad(stamp.m) + "." + pad(stamp.s);
-          }
-          if (dateEl) {
-            var day = stamp.weekday
-              ? stamp.weekday.toUpperCase().slice(0, 3) + " · "
-              : "";
-            dateEl.textContent =
-              day +
-              stamp.day +
-              " " +
-              MONTHS[stamp.month - 1].toUpperCase() +
-              " " +
-              stamp.year;
-          }
-          // 1 November waktu Jakarta: situs merayakan sendiri, tiap tahun.
-          if (stamp.month === 11 && stamp.day === 1) {
-            document.documentElement.setAttribute("data-birthday", "on");
-            preloader.classList.add("is-birthday");
-            if (birthdayEl) birthdayEl.hidden = false;
-          }
-        }
+  var startedAt = now();
+  var minimumVisible = seen ? 240 : 530;
+  // The deadline includes the exit animation; hardRemoveTimer is a final guard.
+  var maximumVisible = seen ? 650 : 1300;
+  var exitDuration = seen ? 150 : 220;
+  var clockTimer = 0;
+  var progressTimer = 0;
+  var dismissTimer = 0;
+  var forcedDismissTimer = 0;
+  var hardRemoveTimer = 0;
+  var dismissed = false;
+  var removed = false;
 
-        paintTime();
-        var clockTimer = setInterval(paintTime, 1000);
+  function clearTimers() {
+    window.clearInterval(clockTimer);
+    window.clearInterval(progressTimer);
+    window.clearTimeout(dismissTimer);
+    window.clearTimeout(forcedDismissTimer);
+    window.clearTimeout(hardRemoveTimer);
+  }
 
-        function drop() {
-          clearInterval(clockTimer);
-          clearInterval(progressTimer);
-          if (preloader && preloader.parentNode) {
-            preloader.parentNode.removeChild(preloader);
-          }
-        }
+  function drop() {
+    if (removed) return;
+    removed = true;
+    clearTimers();
+    if (window.__dismissAkbarPreloader === requestDismiss) {
+      window.__dismissAkbarPreloader = undefined;
+    }
+    if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
+  }
 
-        if (reduced) {
-          window.__dismissAkbarPreloader = drop;
-          drop();
-          return;
-        }
+  function startExit() {
+    if (removed) return;
+    preloader.classList.add("an-fade-out");
+    // Give the browser one extra frame after the CSS transition has ended.
+    dismissTimer = window.setTimeout(drop, exitDuration + 30);
+  }
 
-        // Kunjungan kedua dalam satu sesi TIDAK lagi melewatkan splash diam-
-        // diam — dulu inilah sebabnya layar pembuka terasa "tidak ada" di
-        // desktop (sekali reload, hilang selamanya sampai tab ditutup).
-        // Sekarang ia tampil ringkas: hanya aksara + nama, ±0,46 dtk.
-        if (seen) preloader.classList.add("an-splash-quick");
+  function requestDismiss() {
+    if (dismissed || removed) return;
+    dismissed = true;
+    window.clearTimeout(forcedDismissTimer);
+    var elapsed = now() - startedAt;
+    var remaining = Math.max(0, minimumVisible - elapsed);
+    dismissTimer = window.setTimeout(startExit, remaining);
+  }
 
-        var dismissed = false;
-        var shownAt = Date.now();
-        // Durasi splash: minimal 1.4 detik supaya seluruh sekuens terbaca,
-        // dan tidak pernah lebih dari 2.2 detik.
-        // Sekuens penuh selesai di ±1,25 dtk (aksara 0-0,62; nama 0,3-1,12;
-        // garis 0,62-1,40). MIN_VISIBLE tidak boleh lebih pendek dari itu,
-        // kalau tidak animasinya terpotong di tengah pada koneksi cepat.
-        var MIN_VISIBLE = seen ? 460 : 1450;
-        var MAX_VISIBLE = seen ? 900 : 2200;
+  if (reducedMotion) {
+    drop();
+    return;
+  }
 
-        // Angka durasi = waktu yang benar-benar berjalan sejak splash tampil.
-        function paintProgress() {
-          var elapsed = Date.now() - shownAt;
-          if (elapsedEl) elapsedEl.textContent = (elapsed / 1000).toFixed(1);
-          if (meterFill) {
-            meterFill.style.transform =
-              "scaleX(" + Math.min(1, elapsed / MAX_VISIBLE) + ")";
-          }
-        }
-        paintProgress();
-        var progressTimer = setInterval(paintProgress, 100);
+  window.__dismissAkbarPreloader = requestDismiss;
+  paintTime();
+  clockTimer = window.setInterval(paintTime, 1000);
 
-        function remove() {
-          if (!preloader) return;
-          preloader.classList.add("an-fade-out");
-          setTimeout(drop, 560);
-        }
+  function paintProgress() {
+    var elapsed = now() - startedAt;
+    if (elapsedEl) elapsedEl.textContent = (elapsed / 1000).toFixed(1);
+    if (meterFill) {
+      var activeDuration = Math.max(1, maximumVisible - exitDuration);
+      meterFill.style.transform = "scaleX(" + Math.min(1, elapsed / activeDuration) + ")";
+    }
+  }
+  paintProgress();
+  progressTimer = window.setInterval(paintProgress, 200);
 
-        window.__dismissAkbarPreloader = function () {
-          if (dismissed) return;
-          dismissed = true;
-          var wait = Math.max(0, MIN_VISIBLE - (Date.now() - shownAt));
-          setTimeout(remove, wait);
-        };
+  // Do not wait for React hydration: the page HTML already exists beneath the
+  // splash. Dismiss after the first paint, with a short floor for the motion.
+  if (window.requestAnimationFrame) {
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(requestDismiss);
+    });
+  } else {
+    window.setTimeout(requestDismiss, 16);
+  }
 
-        // Jaring pengaman: splash tidak pernah menahan konten lebih lama dari ini.
-        setTimeout(function () {
-          if (typeof window.__dismissAkbarPreloader === "function") {
-            window.__dismissAkbarPreloader();
-          }
-        }, MAX_VISIBLE);
-      })();
+  // Force the exit to begin early enough that it finishes inside this deadline.
+  forcedDismissTimer = window.setTimeout(
+    requestDismiss,
+    Math.max(0, maximumVisible - exitDuration),
+  );
+  // If timers or the animation are interrupted, never leave a blocking layer.
+  hardRemoveTimer = window.setTimeout(drop, maximumVisible + 40);
+})();
     </script>
 
     <div id="root"><!--app-html--></div>

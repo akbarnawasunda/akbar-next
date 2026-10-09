@@ -84,16 +84,6 @@ export function SiteProviders({ children }: { children: ReactNode }) {
     return () => script.remove();
   }, []);
 
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const dismiss = (window as Window & { __dismissAkbarPreloader?: () => void })
-          .__dismissAkbarPreloader;
-        if (typeof dismiss === "function") dismiss();
-      });
-    });
-  }, []);
-
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>

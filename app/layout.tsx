@@ -48,9 +48,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <link rel="preload" href="/assets/fonts/fontsource/noto-sans-sundanese-400.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
       <body>
-        <Preloader />
+        <Preloader locale={lang} />
         <SiteProviders>{children}</SiteProviders>
-        <script src="/assets/js/preloader.js" />
+        <script defer src="/assets/js/preloader.js" />
       </body>
     </html>
   );

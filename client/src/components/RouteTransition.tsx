@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useLocation } from "@/lib/navigation";
 import "./RouteTransition.css";
@@ -41,8 +43,8 @@ function useRoutePending() {
   return useSyncExternalStore(subscribe, getPending, getServerPending);
 }
 
-const MIN_VISIBLE_MS = 420;
-const EXIT_MS = 320;
+const MIN_VISIBLE_MS = 160;
+const EXIT_MS = 180;
 
 export function RouteProgress() {
   const [location] = useLocation();
@@ -91,10 +93,11 @@ export function RouteProgress() {
   );
 }
 
-const LOADING_WORD = "MEMUAT";
-
 export function PageLoading() {
-  const [elapsed, setElapsed] = useState(0);
+  const [location] = useLocation();
+  const english = location === "/en" || location.startsWith("/en/");
+  const word = english ? "LOADING" : "MEMUAT";
+  const label = english ? "Loading page" : "Memuat halaman";
 
   useEffect(() => {
     pendingCount += 1;
@@ -105,31 +108,26 @@ export function PageLoading() {
     };
   }, []);
 
-  // Durasi nyata: berapa lama halaman ini benar-benar ditunggu.
-  useEffect(() => {
-    const startedAt = Date.now();
-    const timer = window.setInterval(() => {
-      setElapsed(Date.now() - startedAt);
-    }, 100);
-    return () => window.clearInterval(timer);
-  }, []);
-
   return (
-    <div className="an-page-loading" role="status" aria-label="Memuat halaman">
+    <div
+      className="an-page-loading"
+      role="status"
+      aria-label={label}
+      aria-live="polite"
+      aria-busy="true"
+    >
       <p className="an-page-loading-word" aria-hidden="true">
-        {LOADING_WORD.split("").map((letter, index) => (
+        {word.split("").map((letter, index) => (
           <span
             key={`${letter}-${index}`}
-            style={{ animationDelay: `${index * 70}ms` }}
+            style={{ animationDelay: `${index * 45}ms` }}
           >
             {letter}
           </span>
         ))}
       </p>
       <span className="an-page-loading-rule" aria-hidden="true" />
-      <span className="an-page-loading-elapsed" aria-hidden="true">
-        {(elapsed / 1000).toFixed(1)}s
-      </span>
+      <span className="an-page-loading-label">{label}…</span>
     </div>
   );
 }
