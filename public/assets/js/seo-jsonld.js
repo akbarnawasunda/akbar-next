@@ -65,7 +65,7 @@
   });
 
   /* ===== GRAPH 2: RELEASES (dinamis dari data/releases.json) ===== */
-  fetch('data/releases.json', { cache: 'no-cache' })
+  fetch('/data/releases.json', { cache: 'no-cache' })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (db) {
       if (!db || !Array.isArray(db.releases) || !db.releases.length) return;

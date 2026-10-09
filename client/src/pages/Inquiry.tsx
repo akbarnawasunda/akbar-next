@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useSearch } from "@/lib/navigation";
 import { toast } from "sonner";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
@@ -271,7 +271,13 @@ export function InquiryView({ locale = "id" }: { locale?: "id" | "en" }) {
     ? (params.get("source") as InquirySource)
     : "epk";
   const [type, setType] = useState<InquiryType>(initialType);
-  const [source] = useState<InquirySource>(initialSource);
+  const [source, setSource] = useState<InquirySource>(initialSource);
+
+  useEffect(() => {
+    setType(initialType);
+    setSource(initialSource);
+  }, [initialType, initialSource]);
+
   const [form, setForm] = useState({
     name: "",
     email: "",

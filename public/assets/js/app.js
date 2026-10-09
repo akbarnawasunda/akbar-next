@@ -476,15 +476,33 @@ function esc(s) {
 function norm(s) {
   return String(s || '').toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
 }
+var itunesCallbackSequence = 0;
 function itunesSearch(term, done) {
-  var url = 'https://itunes.apple.com/search?term=' + encodeURIComponent(term) + '&entity=song&limit=50';
-  fetch(url)
-    .then(function(response) {
-      if (!response.ok) throw new Error('iTunes search failed');
-      return response.json();
-    })
-    .then(function(data) { done(data); })
-    .catch(function() { done(null); });
+  // iTunes Search supports browser JSONP; fetch is blocked by cross-origin policy.
+  var callbackName = '__itunesSearch' + Date.now() + '_' + (++itunesCallbackSequence);
+  var script = document.createElement('script');
+  var settled = false;
+  var timeout = window.setTimeout(function() { finish(null); }, 8000);
+
+  function finish(data) {
+    if (settled) return;
+    settled = true;
+    window.clearTimeout(timeout);
+    try { delete window[callbackName]; }
+    catch (error) { window[callbackName] = undefined; }
+    script.onload = null;
+    script.onerror = null;
+    if (script.parentNode) script.parentNode.removeChild(script);
+    done(data);
+  }
+
+  window[callbackName] = function(data) { finish(data); };
+  script.async = true;
+  script.onerror = function() { finish(null); };
+  script.src = 'https://itunes.apple.com/search?term=' + encodeURIComponent(term) +
+    '&entity=song&limit=50&callback=' + encodeURIComponent(callbackName);
+  try { document.head.appendChild(script); }
+  catch (error) { finish(null); }
 }
 var mapPromise = null;
 function getMap() {
@@ -567,7 +585,7 @@ function applyReleaseFilter() {
     c.style.display = c.dataset.cat === tab ? '' : 'none';
   });
 }
-fetch('data/releases.json', { cache: 'no-cache' })
+fetch('/data/releases.json', { cache: 'no-cache' })
   .then(function(r) { if (!r.ok) throw 0; return r.json(); })
   .then(function(db) { renderReleases(db); applyReleaseFilter(); loadThumbs(); })
   .catch(function() { applyReleaseFilter(); loadThumbs(); });

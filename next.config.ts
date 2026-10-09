@@ -38,6 +38,7 @@ const nextConfig: NextConfig = {
     return [
       { source: "/index.html", destination: "/", permanent: true },
       { source: "/epk.html", destination: "/epk", permanent: true },
+      { source: "/privacy.html", destination: "/privacy", permanent: true },
       { source: "/archive", destination: "/universe", permanent: true },
       { source: "/archive/:path*", destination: "/universe/:path*", permanent: true },
       { source: "/visuals/portraits", destination: "/visuals#portraits", permanent: true },

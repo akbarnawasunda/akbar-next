@@ -269,7 +269,7 @@ const sync=()=>{document.body.classList.toggle('rave',spkState.textContent.trim(
 sync();
 new MutationObserver(sync).observe(spkState,{childList:true,characterData:true,subtree:true});
 })();
-fetch('data/content.json',{cache:'no-cache'})
+fetch('/data/content.json',{cache:'no-cache'})
 .then(r=>r.ok?r.json():null)
 .then(db=>{
 if(!db)return;

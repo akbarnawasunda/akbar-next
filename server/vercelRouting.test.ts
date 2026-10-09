@@ -9,6 +9,7 @@ describe("Next.js canonical routing", () => {
     expect(nextConfig).toContain('source: "/index.html", destination: "/", permanent: true');
     expect(nextConfig).toContain('source: "/archive", destination: "/universe", permanent: true');
     expect(nextConfig).toContain('source: "/epk.html", destination: "/epk", permanent: true');
+    expect(nextConfig).toContain('source: "/privacy.html", destination: "/privacy", permanent: true');
   });
 
   it("redirects removed portrait routes to the in-page section in both locales", () => {

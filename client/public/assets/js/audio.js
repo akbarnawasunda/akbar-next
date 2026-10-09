@@ -28,7 +28,7 @@ hat(when,vol){const ac=actx(),t=when||ac.currentTime,v=vol==null?1:vol,s=ac.crea
 snare(when,vol){const ac=actx(),t=when||ac.currentTime,v=vol==null?1:vol,s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain(),o=ac.createOscillator(),g2=ac.createGain();s.buffer=noiseBuf(ac);f.type='bandpass';f.frequency.value=1800;g.gain.setValueAtTime(v*.7,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);s.connect(f).connect(g).connect(master);o.type='triangle';o.frequency.value=200;g2.gain.setValueAtTime(v*.4,t);g2.gain.exponentialRampToValueAtTime(.001,t+.12);o.connect(g2).connect(master);s.start(t);s.stop(t+.2);o.start(t);o.stop(t+.15)}
 };
 const buffers={};let samplesLoading=false;
-const SAMPLE_FILES={kick:['assets/media/KICK.mp3','assets/media/kick.mp3'],bass:['assets/media/KENDANG.mp3','assets/media/kendang.mp3'],hat:['assets/media/HIHAT.mp3','assets/media/hihat.mp3'],snare:['assets/media/SNARE.mp3','assets/media/snare.mp3']};
+const SAMPLE_FILES={kick:['/assets/media/KICK.mp3','/assets/media/kick.mp3'],bass:['/assets/media/KENDANG.mp3','/assets/media/kendang.mp3'],hat:['/assets/media/HIHAT.mp3','/assets/media/hihat.mp3'],snare:['/assets/media/SNARE.mp3','/assets/media/snare.mp3']};
 function loadSamples(){
 if(samplesLoading)return;samplesLoading=true;
 const ac=actx();
@@ -67,7 +67,7 @@ over(){const ac=actx(),t=ac.currentTime;[392,330,262,196].forEach((f,i)=>{const 
 drop(){const ac=actx(),t=ac.currentTime,s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();s.buffer=noiseBuf(ac);f.type='highpass';f.frequency.setValueAtTime(300,t);f.frequency.exponentialRampToValueAtTime(4000,t+.3);g.gain.setValueAtTime(.2,t);g.gain.exponentialRampToValueAtTime(.001,t+.32);s.connect(f).connect(g).connect(master);s.start(t);s.stop(t+.33);const o=ac.createOscillator(),g2=ac.createGain();o.type='sawtooth';o.frequency.setValueAtTime(110,t);o.frequency.exponentialRampToValueAtTime(220,t+.25);g2.gain.setValueAtTime(.15,t);g2.gain.exponentialRampToValueAtTime(.001,t+.3);o.connect(g2).connect(master);o.start(t);o.stop(t+.31)}
 };
 const GA={};let gaLoading=false;let bgmNode=null;
-const GA_FILES={boing:'assets/media/BOING.mp3',pop:'assets/media/BUBBLEPOP.mp3',crash:'assets/media/CRASH-CARTOON.mp3',over:'assets/media/GAME-OVER.mp3',swoosh:'assets/media/RISER-SWOOSH.mp3',thud:'assets/media/THUD-2.mp3',bgm:'assets/media/BACKSOUNDING.mp3'};
+const GA_FILES={boing:'/assets/media/BOING.mp3',pop:'/assets/media/BUBBLEPOP.mp3',crash:'/assets/media/CRASH-CARTOON.mp3',over:'/assets/media/GAME-OVER.mp3',swoosh:'/assets/media/RISER-SWOOSH.mp3',thud:'/assets/media/THUD-2.mp3',bgm:'/assets/media/BACKSOUNDING.mp3'};
 function loadGameAudio(){
 if(gaLoading)return;gaLoading=true;
 const ac=actx();

@@ -47,14 +47,16 @@ export async function GET(request: NextRequest) {
     const response = NextResponse.redirect(new URL("/", request.url), 302);
     response.cookies.set(OAUTH_STATE_COOKIE, "", {
       path: "/",
-      secure: cookieOptions.secure,
+      // The __Host- cookie was always written Secure; preserve that attribute
+      // when expiring it even when the callback is served over local HTTP.
+      secure: true,
       sameSite: "none",
       maxAge: 0,
     });
     response.cookies.set(COOKIE_NAME, sessionToken, {
       httpOnly: true,
       path: "/",
-      sameSite: "none",
+      sameSite: cookieOptions.sameSite,
       secure: cookieOptions.secure,
       maxAge: Math.floor(ONE_YEAR_MS / 1000),
     });

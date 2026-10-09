@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Akbar Nawasunda — EPK / Press Kit</title>
 <meta name="description" content="Electronic Press Kit of Akbar Nawasunda aka DJ Akbar Remix — stats, bio, platforms, booking contact.">
-<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="icon" type="image/jpeg" href="/assets/akbar-favicon.jpg">
 <style>
 :root{--bg:#050508;--panel:#0c0c12;--line:rgba(255,255,255,.09);--txt:#fff;--dim:#8b8b96;--acc:#6c63ff;--acc2:#9a94ff}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -51,7 +51,7 @@ section{break-inside:avoid}
 <body>
 <div class="epk">
 <header>
-<img src="/logo-an.png" class="logo" alt="Akbar Nawasunda logo">
+<img src="/assets/media/logo-an.png" class="logo" alt="Akbar Nawasunda logo">
 <div>
 <p class="kicker mono">ELECTRONIC PRESS KIT — 2026</p>
 <h1>AKBAR NAWASUNDA</h1>
@@ -79,7 +79,7 @@ section{break-inside:avoid}
 </section>
 <section class="contact">
 <h2 class="mono">BOOKING & CONTACT</h2>
-<p>Remix requests, custom arrangements, collabs & licensing: <b>akbarnawasunda@gmail.com</b> (reply &lt; 24h) or via the form at <b>akbarnawasunda.my.id/#collab</b>.</p>
+<p>Remix requests, custom arrangements, collabs & licensing: <b>akbarnawasunda@gmail.com</b> or via the <a href="/en/inquire">inquiry form</a>.</p>
 </section>
 <div class="actions no-print">
 <button onclick="window.print()">⬇ DOWNLOAD PDF</button>
@@ -88,7 +88,7 @@ section{break-inside:avoid}
 <footer class="mono">© 2026 AKBAR NAWASUNDA — LIVE DATA FROM AKBARNAWASUNDA.MY.ID</footer>
 </div>
 <script>
-fetch('data/content.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).then(function(db){
+fetch('/data/content.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).then(function(db){
 if(!db)return;
 var q=function(s){return document.querySelector(s)};
 if(db.stats){

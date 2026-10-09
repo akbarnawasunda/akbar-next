@@ -20,6 +20,8 @@ import { PublicShell } from "@/shell/PublicShell";
 function RouteFrame({ children }: { children: ReactNode }) {
   const pathname = usePathname() || "/";
   useEffect(() => {
+    document.documentElement.lang =
+      pathname === "/en" || pathname.startsWith("/en/") ? "en" : "id";
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [pathname]);
   return (
@@ -82,6 +84,13 @@ export function SiteProviders({ children }: { children: ReactNode }) {
     script.dataset.websiteId = websiteId;
     document.head.appendChild(script);
     return () => script.remove();
+  }, []);
+
+  useEffect(() => {
+    // Update the previous Vite worker for existing visitors; v5 caches static
+    // assets only and will never intercept route HTML or authenticated APIs.
+    if (!("serviceWorker" in navigator)) return;
+    navigator.serviceWorker.register("/sw.js").catch(() => undefined);
   }, []);
 
   return (

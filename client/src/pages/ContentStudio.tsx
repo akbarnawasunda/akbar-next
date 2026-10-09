@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { useLocation, useSearch } from "@/lib/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
 import AssetPicker from "@/components/AssetPicker";
 import {
@@ -1111,6 +1112,8 @@ function StudioField({
 }
 
 export default function ContentStudio() {
+  const search = useSearch();
+  const [, navigate] = useLocation();
   const { user, loading } = useAuth();
   const utils = trpc.useUtils();
   const [documentType, setDocumentType] = useState<DocumentType>("hero");
@@ -1211,12 +1214,9 @@ export default function ContentStudio() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // Command palette mengirim ?compose=<tipe> untuk membuka editor langsung.
+  // Command palette bisa hanya mengubah query ketika /studio tetap terpasang.
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    const requested = new URLSearchParams(window.location.search).get(
-      "compose"
-    );
+    const requested = new URLSearchParams(search).get("compose");
     if (!requested) return;
     const known = documentTypes.some(type => type.value === requested);
     if (known) {
@@ -1227,8 +1227,13 @@ export default function ContentStudio() {
       );
       setTab("compose");
     }
-    window.history.replaceState({}, "", window.location.pathname);
-  }, []);
+    const remainingSearch = new URLSearchParams(window.location.search);
+    remainingSearch.delete("compose");
+    const query = remainingSearch.toString();
+    const nextLocation =
+      `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`;
+    navigate(nextLocation, { replace: true });
+  }, [navigate, search]);
 
   const fields = useMemo(() => fieldsByType[documentType], [documentType]);
   const selectedType = documentTypes.find(type => type.value === documentType);
