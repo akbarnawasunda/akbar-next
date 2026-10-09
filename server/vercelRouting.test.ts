@@ -19,6 +19,6 @@ describe("Next.js canonical routing", () => {
   it("serves the app through Next.js on Vercel", () => {
     const vercel = JSON.parse(readFileSync(resolve(process.cwd(), "vercel.json"), "utf8"));
     expect(vercel.framework).toBe("nextjs");
-    expect(vercel.outputDirectory).toBeUndefined();
+    expect(vercel.outputDirectory).toBe(".next");
   });
 });
