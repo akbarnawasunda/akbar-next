@@ -1,6 +1,6 @@
 # Deployment checklist
 
-Aplikasi aktif memakai **Next.js App Router** di Vercel. Halaman dirender lewat Next.js; tRPC dan OAuth callback ditangani oleh Route Handlers yang memanggil router/server services yang sudah ada. Database, Drizzle, dan logika bisnis tidak perlu dipindahkan untuk deploy website.
+Aplikasi aktif memakai **Next.js App Router** di Vercel. Halaman dirender lewat Next.js; tRPC dan OAuth callback ditangani oleh Route Handlers yang memanggil router/server services yang sudah ada. Database, Drizzle, dan logika bisnis tidak perlu dipindahkan untuk deploy website. Vercel harus memakai framework **Next.js** dan output directory **`.next`**—jangan mempertahankan override `dist` dari deployment Vite lama. Nilai `.next` juga ditetapkan di `vercel.json`.
 
 ## Environment variables
 
