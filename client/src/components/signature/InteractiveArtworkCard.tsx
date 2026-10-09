@@ -1,6 +1,6 @@
 import { ArrowUpRight, Play, Square } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { Link } from "wouter";
+import { Link } from "@/lib/navigation";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { useSignatureRuntime, useSignatureState } from "@/signature/useSignature";
 import "./InteractiveArtworkCard.css";

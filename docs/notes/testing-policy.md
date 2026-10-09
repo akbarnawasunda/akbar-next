@@ -1,55 +1,28 @@
-# Cara menulis tes di repo ini
+# Testing policy
 
-## Aturan utama: uji yang dilihat pengunjung, bukan isi file
+## Active website: Next.js App Router
 
-Banyak tes lama di `server/*.test.ts` membaca file source sebagai teks lalu
-memeriksa `expect(source).toContain("...")`. Pola itu terlihat seperti tes,
-tapi sebenarnya mengunci source code: ganti nama variabel, pindahkan komponen,
-atau perbaiki satu kalimat copy — tes merah, padahal situs baik-baik saja.
-Sebaliknya, tes seperti itu tetap hijau kalau halaman benar-benar rusak saat
-dirender.
+The deployment contract is the actual production Next.js server. CI builds the app, starts `next start`, and runs `scripts/verify-next.sh` against raw HTTP responses. The smoke test checks crawler-visible route HTML, language, unique canonical/title tags, Open Graph/Twitter metadata, server JSON-LD, noindex behavior, permanent redirects, 404 status, and the tRPC handler.
 
-Standar baru:
+## Retained Vite SSR tests
 
-1. **Default: render halamannya.** `client/src/entry-server.tsx` mengekspor
-   `render(url, prefetch)`. Prefetch bisa di-stub, jadi tes berjalan tanpa
-   database:
+The old Vite SSR implementation remains available as a rollback/reference path while the migration is validated. Tests that import `client/src/entry-server.tsx` deliberately exercise that legacy implementation; they do not replace the production Next.js smoke tests.
 
-   ```ts
-   const { html, head } = await render("/music", {
-     documents: async () => [],
-   });
-   ```
+## General rules
 
-   Contoh lengkap: `server/publicPageRendering.test.ts`.
+1. Prefer testing rendered behavior over source strings when practical.
+2. Source-level assertions are still reasonable for static policy/configuration that is not directly observable in rendered HTML (for example sitemap files, CSS guardrails, and redirect declarations). Name those tests accordingly.
+3. Keep server tests independent from live credentials and external services; stub the database and network-dependent behavior.
+4. When production routing or metadata changes, update both `next.config.ts` and the Next-specific routing tests.
 
-2. **Periksa HTML hasil render**, bukan teks source. Kalau sesuatu penting
-   untuk pengunjung (teks, link, thumbnail, atribut aksesibilitas), pasti
-   terlihat di sana.
-
-3. **Tes source hanya untuk yang memang tidak muncul di HTML**: aturan CSS
-   (`prefers-reduced-motion`), media query di dalam hook, isi file statis
-   seperti `sitemap.xml` atau `client/index.html`. Beri komentar alasannya.
-   Contoh: blok kedua di `server/homeEnhancements.test.ts`.
-
-4. **Jangan menulis assertion pada nama impor, nama variabel, atau baris JSX.**
-   Itu bukan kontrak; itu detail implementasi.
-
-5. **Level crawler diuji terpisah** oleh `scripts/verify-ssr.sh` (status code,
-   canonical, `og:*`, redirect, 404) terhadap server produksi asli di CI.
-
-## Menjalankan tes
+## Commands
 
 ```bash
-pnpm test            # vitest, hanya mengumpulkan server/**
-pnpm check           # typecheck
-pnpm build           # build client + SSR + serverless
-bash scripts/verify-ssr.sh   # butuh BASE=... ke server yang sudah jalan
+corepack pnpm test
+corepack pnpm check
+corepack pnpm build
+PORT=4101 corepack pnpm start
+BASE=http://localhost:4101 bash scripts/verify-next.sh
 ```
 
-## Utang teknis yang disadari
-
-Masih ada belasan file di `server/` yang memakai pola `toContain` pada source.
-Aturannya: **jangan tambah yang baru**, dan setiap kali salah satunya pecah
-karena refactor, tulis ulang jadi tes render seperti di atas, jangan tambal
-string-nya.
+For the old Vite server only, use `pnpm dev:legacy`, `pnpm build:legacy`, and `pnpm start:legacy`.

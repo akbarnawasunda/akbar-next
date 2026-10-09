@@ -8,7 +8,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import { Link } from "wouter";
+import { Link } from "@/lib/navigation";
 import JedagRunCanvas from "@/components/JedagRunCanvas";
 import type { PublicGameConfig } from "@/game/jedagRun/types";
 import { usePublicArtistContent } from "@/content/publicContent";

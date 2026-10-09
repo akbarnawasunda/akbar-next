@@ -9,16 +9,19 @@
     "node": "24.x"
   },
   "scripts": {
-    "dev": "NODE_ENV=development tsx watch server/_core/index.ts",
-    "build": "NODE_ENV=production vite build && NODE_ENV=production vite build --config vite.config.ssr.ts && NODE_ENV=production esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && NODE_ENV=production esbuild server/vercelTrpcHandler.js --platform=node --packages=external --bundle --format=esm --outfile=api/trpc.js && NODE_ENV=production esbuild server/vercelSsrHandler.ts --platform=node --packages=external --bundle --format=esm --outfile=api/ssr.js",
-    "start": "NODE_ENV=production node dist/index.js",
+    "dev": "next dev --hostname 0.0.0.0 --port 3000",
+    "build": "next build",
+    "start": "next start --hostname 0.0.0.0 --port ${PORT:-3000}",
     "lint": "tsc --noEmit",
     "check": "tsc --noEmit",
     "audit:layout": "node scripts/audit-layout.mjs",
     "format": "prettier --write .",
     "test": "vitest run",
     "db:push": "drizzle-kit generate && drizzle-kit migrate",
-    "db:migrate-content": "tsx scripts/migrate-content.ts"
+    "db:migrate-content": "tsx scripts/migrate-content.ts",
+    "dev:legacy": "NODE_ENV=development tsx watch server/_core/index.ts",
+    "build:legacy": "NODE_ENV=production vite build && NODE_ENV=production vite build --config vite.config.ssr.ts && NODE_ENV=production esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist && NODE_ENV=production esbuild server/vercelTrpcHandler.js --platform=node --packages=external --bundle --format=esm --outfile=legacy-vite/api/trpc.js && NODE_ENV=production esbuild server/vercelSsrHandler.ts --platform=node --packages=external --bundle --format=esm --outfile=legacy-vite/api/ssr.js",
+    "start:legacy": "NODE_ENV=production node dist/index.js"
   },
   "dependencies": {
     "@builder.io/vite-plugin-jsx-loc": "^0.1.1",
@@ -69,6 +72,7 @@
     "lucide-react": "^0.453.0",
     "mysql2": "^3.15.0",
     "nanoid": "^5.1.5",
+    "next": "^16.4.0",
     "next-themes": "^0.4.6",
     "react": "^19.2.1",
     "react-day-picker": "^9.11.1",
@@ -87,6 +91,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/vite": "^4.1.3",
     "@types/express": "4.17.21",
     "@types/node": "^24.7.0",

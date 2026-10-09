@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { useLocation } from "wouter";
+import { useLocation } from "@/lib/navigation";
 import { CommandPalette } from "@/components/CommandPalette";
 import { LightboxProvider } from "@/components/signature/LightboxProvider";
 import { SignalMark } from "@/components/signature/SignalMark";

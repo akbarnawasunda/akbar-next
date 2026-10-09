@@ -1,7 +1,7 @@
 import { ArrowUpRight, MapPin, Radio, Ticket } from "lucide-react";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { EventCountdown } from "@/components/editorial/EditorialKit";
-import { Link } from "wouter";
+import { Link } from "@/lib/navigation";
 import { officialBrand, verifiedArtistProfile } from "@/content/artistPlatform";
 import {
   publicConfirmedEvents,

@@ -1,0 +1,18 @@
+Cultura Estropeada
+By Woodcutter (MMXXVI) — same foundry as Central Station.
+Source: https://es.fonts2u.com/cultura-estropeada-black.fuente
+
+License: "Gratis solo para uso personal. Licencias comerciales
+disponibles" — Free for personal use only, commercial licenses
+available. Contact: woodcuttermanero@gmail.com (same as Central Station
+/ Complete Destroy). Donation link: paypal.me/woodcuttermanero
+
+[RISK ACCEPTED BY SITE OWNER] This is a commercial artist website, which
+this license does not cover. Same situation as the other Fase 13 fonts —
+the site owner was told this pattern applies here too and chose to
+proceed, accepting the legal/financial risk personally.
+
+Used only for the word "NAWASUNDA" (second word) in the homepage hero
+title (--font-hero-nawasunda token, client/src/index.css, applied via
+.hero-title-mask:nth-of-type(2) in client/src/pages/Home.css). Not used
+anywhere else.

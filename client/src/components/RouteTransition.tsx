@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { useLocation } from "wouter";
+import { useLocation } from "@/lib/navigation";
 import "./RouteTransition.css";
 
 /**

@@ -36,21 +36,22 @@ The public site keeps official links and media references visible even when an e
 
 ## Technology
 
-The current application uses:
+The active website uses:
 
-- React 19 and TypeScript;
-- Vite for the frontend build;
-- Express and tRPC for the application/API layer;
-- Drizzle ORM with MySQL/TiDB-compatible database support;
-- Tailwind CSS, Radix UI, Framer Motion, Three.js, and Lucide icons;
-- Vercel deployment with a serverless tRPC entry point;
-- Node.js 24.x and pnpm.
+- Next.js App Router, React 19, and TypeScript;
+- Server-rendered route pages with route-aware metadata, structured data, and locale alternates;
+- Next.js Route Handlers for tRPC and the OAuth callback, backed by the existing tRPC router;
+- Express-compatible authentication context and Drizzle ORM with MySQL/TiDB support;
+- Tailwind CSS 4, Radix UI, and the existing interactive React components;
+- Vercel's native Next.js deployment and Node.js 24.x with pnpm.
+
+The original Vite/Express SSR implementation is retained as a rollback/reference path (`pnpm dev:legacy`, `pnpm build:legacy`, and `pnpm start:legacy`) while the Next.js deployment is validated.
 
 Media files are served through the project’s configured storage layer or approved public asset routes. Secrets and environment values are kept outside the repository.
 
 ## Typography system
 
-The public site uses a self-hosted, role-based type system. Font files live in `client/public/assets/fonts/fontsource/`; the canonical `@font-face` declarations and CSS tokens live in `client/src/index.css`.
+The public site uses a self-hosted, role-based type system. Next.js serves the font files from `public/assets/fonts/fontsource/`; the canonical `@font-face` declarations and CSS tokens remain in `client/src/index.css`.
 
 | Role | Font | Primary use |
 |---|---|---|
@@ -67,15 +68,15 @@ For the public-page coverage map, see [`docs/audit-tipografi-teks-publik.md`](do
 
 ## SEO and discoverability
 
-Public routes are server-side rendered with route-aware metadata so crawlers and social platforms receive complete content without relying on client-side JavaScript.
+Public routes are rendered by the Next.js App Router with route-aware metadata so crawlers and social platforms receive complete content without relying on client-side JavaScript.
 
 - Each indexable route emits a route-aware title, meta description, canonical URL, Open Graph metadata, and Twitter card metadata.
-- Indonesian and English public routes publish reciprocal `hreflang` alternates plus an `x-default` URL.
+- Indonesian and English public routes publish reciprocal `hreflang` alternates plus an `x-default` URL; the server-rendered `<html lang>` follows the requested locale.
 - JSON-LD is rendered server-side for the site, public page, and artist/music context; release detail pages receive route-specific titles, descriptions, and artwork.
-- [`client/public/sitemap.xml`](client/public/sitemap.xml) lists all public ID/EN routes, while [`client/public/robots.txt`](client/public/robots.txt) exposes that sitemap and blocks admin/studio surfaces.
-- 404 and non-public surfaces emit `noindex, follow`; canonical redirects are handled in the Vercel SSR handler.
+- [`public/sitemap.xml`](public/sitemap.xml) lists the public ID/EN routes, while [`public/robots.txt`](public/robots.txt) exposes that sitemap and blocks admin/studio surfaces.
+- 404 and non-public surfaces emit `noindex`; canonical redirects and media rewrites live in `next.config.ts`.
 
-SEO coverage is protected by SSR, internationalization, sitemap-indexability, and routing tests in `server/`.
+SEO coverage is protected by sitemap/indexability tests and the production crawler smoke suite in [`scripts/verify-next.sh`](scripts/verify-next.sh).
 
 ## Local development
 
@@ -91,12 +92,16 @@ The development server is available at `http://localhost:3000` unless the enviro
 Useful project commands:
 
 ```bash
+pnpm dev           # Next.js App Router at http://localhost:3000
 pnpm check         # TypeScript validation
 pnpm test          # Run the Vitest suite
-pnpm build         # Build the frontend, server bundle, and API entry point
+pnpm build         # Build the Next.js production app
+pnpm start         # Serve the production build
 pnpm audit:layout  # Check CSS/layout and local-font policy guardrails
 pnpm format        # Format project files with Prettier
 ```
+
+For rollback/reference only, the previous Vite + Express implementation remains available through `pnpm dev:legacy`, `pnpm build:legacy`, and `pnpm start:legacy`.
 
 Node 24 and pnpm 10 are expected; the exact pnpm version is pinned in the `packageManager` field of `package.json` and activated through Corepack (`corepack enable`). Editor defaults (UTF-8, LF, two-space indent) come from `.editorconfig`.
 
@@ -104,16 +109,9 @@ Database-backed features require the project environment to provide the appropri
 
 ## Testing
 
-Tests render the real pages through the production SSR entry point and assert
-on the HTML a visitor receives, instead of grepping source files. The policy,
-the stub-prefetch pattern, and the remaining legacy tests are documented in
-[`docs/notes/testing-policy.md`](docs/notes/testing-policy.md). A reference
-suite lives in `server/publicPageRendering.test.ts`.
+The retained Vite SSR contract tests continue to protect legacy/reference behavior. The production gate now builds Next.js, starts the actual production server, and crawls the raw HTML through `scripts/verify-next.sh` to check route status, locale, canonical/OG/Twitter metadata, JSON-LD, noindex rules, redirects, and the tRPC endpoint. The test policy and remaining source-level legacy tests are documented in [`docs/notes/testing-policy.md`](docs/notes/testing-policy.md).
 
-Every push and pull request runs `.github/workflows/quality.yml`: typecheck,
-tests, a full build, then a real production SSR server is booted and crawled by
-`scripts/verify-ssr.sh` to verify status codes, canonical tags, Open Graph
-metadata, redirects, and the 404 response.
+Every push and pull request runs `.github/workflows/quality.yml`: typecheck, unit/integration tests, a full Next.js build, then production HTTP smoke tests.
 
 ## Public routes
 

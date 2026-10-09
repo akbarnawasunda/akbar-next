@@ -1,7 +1,7 @@
 import { ArrowUpRight, Radio, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation } from "@/lib/navigation";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import "./NightFrequencyChrome.css";

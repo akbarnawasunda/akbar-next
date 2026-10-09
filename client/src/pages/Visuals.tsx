@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Link } from "wouter";
+import { Link } from "@/lib/navigation";
 import { CtaPanel, FilterBar } from "@/components/editorial/EditorialKit";
 import { OfficialMediaFrame } from "@/components/OfficialMediaFrame";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";

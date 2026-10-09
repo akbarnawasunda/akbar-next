@@ -7,6 +7,7 @@ export default defineConfig({
   root: templateRoot,
   resolve: {
     alias: {
+      "@/lib/navigation": path.resolve(templateRoot, "client/src/lib/navigation.vite.tsx"),
       "@": path.resolve(templateRoot, "client", "src"),
       "@shared": path.resolve(templateRoot, "shared"),
       "@assets": path.resolve(templateRoot, "attached_assets"),

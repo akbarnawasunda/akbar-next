@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { useLocation } from "wouter";
+import { useLocation } from "@/lib/navigation";
 import { usePublicArtistContent, publicUpcomingEvents } from "@/content/publicContent";
 import { releases as catalogReleases } from "@/content/artistPlatform";
 import { useSignatureRuntime, useSignatureState } from "@/signature/useSignature";

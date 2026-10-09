@@ -1,5 +1,5 @@
 import { ArrowDown, ArrowUpRight } from "lucide-react";
-import { Link } from "wouter";
+import { Link } from "@/lib/navigation";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { releases } from "@/content/artistPlatform";
 import {

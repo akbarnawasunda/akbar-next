@@ -13,8 +13,8 @@ describe("lightweight RMX brand mark", () => {
     expect(content).toContain('rmxMark: "/assets/akbar-rmx-mark.webp"');
     const proxy = source("server/brandAssetProxy.ts");
     expect(proxy).toContain('app.get("/api/brand/rmx-mark"');
-    const vercel = source("vercel.json");
-    expect(vercel).toContain('"source": "/api/brand/rmx-mark"');
+    const nextConfig = source("next.config.ts");
+    expect(nextConfig).toContain('source: "/api/brand/rmx-mark"');
   });
 
   it("tidak lagi mengirim komponen mark berbasis canvas ke publik", () => {

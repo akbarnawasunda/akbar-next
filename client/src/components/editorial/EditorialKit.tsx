@@ -7,7 +7,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
-import { Link } from "wouter";
+import { Link } from "@/lib/navigation";
 import "./EditorialKit.css";
 
 /* ============================================================

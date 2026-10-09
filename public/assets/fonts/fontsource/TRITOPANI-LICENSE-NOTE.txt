@@ -1,0 +1,22 @@
+Tritopani
+Designed by Riyadh Rahman (Ergibi Studio).
+Source: https://www.dafont.com/tritopani.font
+
+License on dafont.com: "Free for personal use" ONLY. The author's own
+note explicitly states this is a demo font for personal use, and that
+commercial use (ads, promotion, TV, film, video, motion graphics,
+YouTube, merchandise, packaging, or any profit-generating use) requires
+buying a commercial license first:
+  https://ergibistudio.com/product/tritopani/
+Contact for custom licensing: riyadhrahmanunir@gmail.com
+
+[RISK ACCEPTED BY SITE OWNER] This is a commercial artist website, which
+the author's license does not cover. The site owner was explicitly told
+this (including the author's note citing Indonesian Copyright Law No.
+28/2014) and chose to proceed anyway, accepting the legal/financial risk
+personally. This is not a recommendation from this build session — if
+the site owner wants to resolve the licensing status, use the purchase
+link above.
+
+Used only for the Latin transliteration next to the Sundanese script
+(.an-sunda-latin, --font-signature token, client/src/index.css).

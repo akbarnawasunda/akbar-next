@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "wouter";
+import { useLocation } from "@/lib/navigation";
 import { useSignatureState } from "@/signature/useSignature";
 import "./SignalMark.css";
 

@@ -6,7 +6,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Fragment, type CSSProperties, useEffect, useState } from "react";
-import { Link } from "wouter";
+import { Link } from "@/lib/navigation";
 import { PlatformIcon } from "@/components/PlatformIcon";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { requestLatestReleasePlayback } from "@/components/signature/GlobalAudioPlayer";

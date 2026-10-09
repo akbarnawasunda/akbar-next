@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Download, Mail, Printer } from "lucide-react";
-import { Link } from "wouter";
+import { Link } from "@/lib/navigation";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { EmailText } from "@/components/EmailText";
 import { PlatformIcon } from "@/components/PlatformIcon";

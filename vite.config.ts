@@ -10,6 +10,7 @@ export default defineConfig({
   plugins,
   resolve: {
     alias: {
+      "@/lib/navigation": path.resolve(import.meta.dirname ?? process.cwd(), "client/src/lib/navigation.vite.tsx"),
       "@": path.resolve(import.meta.dirname, "client", "src"),
       "@shared": path.resolve(import.meta.dirname, "shared"),
       "@assets": path.resolve(import.meta.dirname, "attached_assets"),

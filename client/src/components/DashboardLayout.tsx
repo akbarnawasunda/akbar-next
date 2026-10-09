@@ -33,7 +33,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useLocation } from "wouter";
+import { useLocation } from "@/lib/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,

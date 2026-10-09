@@ -18,7 +18,7 @@ import {
   publicPlatformLinks,
   usePublicArtistContent,
 } from "@/content/publicContent";
-import { Link } from "wouter";
+import { Link } from "@/lib/navigation";
 import { AudioPlayerShell, CtaPanel } from "@/components/editorial/EditorialKit";
 import "./EcosystemPages.css";
 import "./CatalogStage.css";

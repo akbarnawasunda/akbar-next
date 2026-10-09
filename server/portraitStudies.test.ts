@@ -30,7 +30,7 @@ describe("portrait studies CMS and public gallery", () => {
   it("merges the portrait gallery into /visuals with 301 redirects (Phase 3 §2 baris 5)", () => {
     const app = source("client/src/App.tsx");
     const visuals = source("client/src/pages/Visuals.tsx");
-    const vercel = source("vercel.json");
+    const nextConfig = source("next.config.ts");
     const sitemap = source("client/public/sitemap.xml");
     const section = source("client/src/components/PortraitStudiesSection.tsx");
     // Rute lama tidak lagi ada; seksi studi potret kini in-page (#portraits).
@@ -44,18 +44,8 @@ describe("portrait studies CMS and public gallery", () => {
     expect(section).toContain("study.altEn || study.altId || titleOf(study)");
     expect(section).toContain("t.fallbackTitle");
     // 301 permanen di kedua bahasa; sitemap tidak lagi mempublikasikan rute lama.
-    const redirects: { source: string; destination: string; permanent: boolean }[] =
-      JSON.parse(vercel).redirects;
-    const idRedirect = redirects.find(
-      r => r.source === "/visuals/portraits"
-    );
-    const enRedirect = redirects.find(
-      r => r.source === "/en/visuals/portraits"
-    );
-    expect(idRedirect?.destination).toBe("/visuals#portraits");
-    expect(idRedirect?.permanent).toBe(true);
-    expect(enRedirect?.destination).toBe("/en/visuals#portraits");
-    expect(enRedirect?.permanent).toBe(true);
+    expect(nextConfig).toContain('source: "/visuals/portraits", destination: "/visuals#portraits", permanent: true');
+    expect(nextConfig).toContain('source: "/en/visuals/portraits", destination: "/en/visuals#portraits", permanent: true');
     expect(sitemap).not.toContain("/visuals/portraits");
   });
 });

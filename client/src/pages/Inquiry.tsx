@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, type FormEvent } from "react";
-import { useSearch } from "wouter";
+import { useSearch } from "@/lib/navigation";
 import { toast } from "sonner";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { EmailText } from "@/components/EmailText";

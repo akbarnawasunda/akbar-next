@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, type ReactNode } from "react";
-import { useLocation } from "wouter";
+import { useLocation } from "@/lib/navigation";
 import { capabilityChanged, detectCapability } from "./capability";
 import { createAudioSignal, type AudioSignalController } from "./audioSignal";
 import { attachPointerSignal } from "./pointerSignal";

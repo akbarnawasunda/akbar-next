@@ -14,7 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { useLocation } from "wouter";
+import { useLocation } from "@/lib/navigation";
 import { soundcloudEmbedUrl } from "@/components/MusicEmbed";
 import { currentRelease } from "@/content/artistPlatform";
 import { usePublicArtistContent } from "@/content/publicContent";

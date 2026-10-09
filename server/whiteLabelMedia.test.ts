@@ -22,14 +22,14 @@ describe("white-label public media", () => {
     expect(localMediaFallback("/media/unknown.jpg")).toBeUndefined();
   });
 
-  it("keeps the proxy allowlisted and ordered before the generic SSR route", () => {
+  it("keeps the proxy allowlisted and its upstream routes in Next config", () => {
     const proxy = source("server/brandMediaProxy.ts");
-    const vercel = source("vercel.json");
+    const nextConfig = source("next.config.ts");
     expect(proxy).toContain("BRAND_MEDIA_PATHS");
     expect(proxy).not.toContain("req.query");
     expect(source("server/routers.ts")).toContain("sanitizePublicDocuments");
-    expect(vercel).toContain('"source": "/media/portrait/neon-portrait.jpg"');
-    expect(vercel).toContain('"source": "/media/portrait/kx07-portrait.jpg"');
-    expect(vercel.indexOf('"source": "/media/portrait/neon-portrait.jpg"')).toBeLessThan(vercel.indexOf('"source": "/(.*)"'));
+    expect(nextConfig).toContain('source: "/media/portrait/neon-portrait.jpg"');
+    expect(nextConfig).toContain('source: "/media/portrait/kx07-portrait.jpg"');
+    expect(nextConfig.indexOf('source: "/media/portrait/neon-portrait.jpg"')).toBeGreaterThan(nextConfig.indexOf("async rewrites()"));
   });
 });

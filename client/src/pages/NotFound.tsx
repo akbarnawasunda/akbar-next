@@ -1,5 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation } from "@/lib/navigation";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { OptimizedEditorialImage } from "@/components/OptimizedEditorialImage";
 import { officialBrand } from "@/content/artistPlatform";
