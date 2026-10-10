@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { render } from "./test-renderer";
 import { intrinsicSize, remoteIntrinsicSize } from "../client/src/lib/responsiveImage";
@@ -46,5 +48,28 @@ describe("artwork platform intrinsic sizing", () => {
         expect(img, `${route} ${src} tanpa width/height`).toMatch(/height="\d+"/);
       }
     }
+  });
+});
+
+describe("pemulihan gambar yang gagal sebelum hidrasi", () => {
+  const source = readFileSync(
+    join(process.cwd(), "client/src/components/ResilientArtworkImage.tsx"),
+    "utf8",
+  );
+
+  it("memeriksa keadaan <img> nyata setelah hidrasi, bukan hanya onError", () => {
+    // onError tidak berbunyi untuk kegagalan yang terjadi SEBELUM hidrasi —
+    // pemeriksaan `complete && naturalWidth === 0` wajib ada.
+    expect(source).toMatch(/img\.complete && img\.naturalWidth === 0/);
+    // dan harus idempoten per sumber (StrictMode menjalankan efek dua kali).
+    expect(source).toMatch(/checkedSourceRef\.current === source/);
+  });
+
+  it("mesin state fallback ter-render di SSR (rantaian terpasang)", async () => {
+    const page = await render("/music", prefetch);
+    // `is-fallback` baru aktif SETELAH runtime advance (bukan di SSR) —
+    // yang wajib ada di SSR adalah mesin state + kelas dasar komponennya.
+    expect(page.html).toMatch(/an-resilient-artwork/);
+    expect(page.html).toMatch(/data-image-state="none"/);
   });
 });

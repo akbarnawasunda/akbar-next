@@ -8,7 +8,6 @@ import { GlobalAudioPlayer } from "@/components/signature/GlobalAudioPlayer";
 import { RouteSignalCurtain } from "@/components/signature/RouteSignalCurtain";
 import { SignatureBackground } from "@/components/signature/SignatureBackground";
 import { NightAtmosphere } from "@/components/signature/NightAtmosphere";
-import { MotionOrchestrator } from "@/components/MotionOrchestrator";
 import { SignatureProvider } from "@/signature/SignatureProvider";
 import { languageOf } from "@/signature/routeSignal";
 import { useSignatureState } from "@/signature/useSignature";
@@ -94,11 +93,12 @@ function ShellBody({ children }: { children: ReactNode }) {
             `.is-motion-in-view`), tapi komponennya sendiri tidak pernah
             di-mount di mana pun — jadi SELURUH halaman `.nf-page` (semua
             rute publik kecuali beranda `/`, studio, dan game) render
-            statis tanpa animasi masuk sama sekali. Dipasang di sini
-            (bukan di dalam ShellSurfaces yang nunggu `mounted`) supaya
-            section langsung diobservasi begitu halaman di-render. */}
+            statis tanpa animasi masuk sama sekali. Pemasangannya kini ada di
+            `RouteStateBoundary` (se-mount dengan halaman di dalam Suspense
+            yang sama) — BUKAN di sini: dari shell, effect-nya bisa memutasi
+            `className` section sebelum subtree halaman yang lazy selesai
+            di-hydrate, yang memicu hydration mismatch (React #418). */}
         {isEditorialRoute && <SmoothScroll />}
-        {isEditorialRoute && <MotionOrchestrator />}
         {isEditorialRoute && <ShellSurfaces />}
       </div>
     </LightboxProvider>

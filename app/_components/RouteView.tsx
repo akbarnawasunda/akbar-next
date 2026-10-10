@@ -2,10 +2,39 @@
 
 import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
+import { MotionOrchestrator } from "@/components/MotionOrchestrator";
 import { PageLoading } from "@/components/RouteTransition";
 
-const page = (loader: () => Promise<ComponentType<any> | { default: ComponentType<any> }>) =>
-  dynamic(loader, { loading: () => <PageLoading /> });
+// [BUGFIX #418] `MotionOrchestrator` memutasi `className` section lewat
+// classList di effect. Jika ia ter-mount sebagai saudara yang berada DI LUAR
+// modul halaman lazy (mis. di shell), effect-nya bisa berjalan SEBELUM subtree
+// halaman yang lazy selesai di-hydrate — React lalu menemukan kelas tambahan
+// (`reveal-pending`, `is-motion-in-view`) pada node yang belum di-hydrate →
+// hydration mismatch className yang meng-regenerasi seluruh pohon. Karena itu
+// ia dibungkus ke DALAM modul halaman itu sendiri: komponen baru render (dan
+// effect-nya jalan) dalam commit yang sama dengan — atau setelah — hidrasi
+// halaman. `MotionOrchestrator` mengembalikan null, jadi markup SSR tidak
+// berubah.
+function page(
+  loader: () => Promise<ComponentType<any> | { default: ComponentType<any> }>,
+) {
+  return dynamic(
+    () =>
+      loader().then(mod => {
+        const Component =
+          (mod as { default?: ComponentType<any> }).default ??
+          (mod as ComponentType<any>);
+        const PageWithMotion = (props: Record<string, unknown>) => (
+          <>
+            <Component {...props} />
+            <MotionOrchestrator />
+          </>
+        );
+        return { default: PageWithMotion };
+      }),
+    { loading: () => <PageLoading /> },
+  );
+}
 
 const routes = {
   home: page(() => import("@/pages/Home")),

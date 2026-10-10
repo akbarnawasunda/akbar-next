@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { officialBrand } from "@/content/artistPlatform";
 import {
   IMAGE_SIZES,
@@ -43,6 +43,8 @@ export function ResilientArtworkImage({
 }: ResilientArtworkImageProps) {
   const chain = fallbackChain(src, backupSrc, officialBrand.logoFallback);
   const [sourceIndex, setSourceIndex] = useState(0);
+  const imgRef = useRef<HTMLImageElement | null>(null);
+  const checkedSourceRef = useRef<string>("");
 
   useEffect(() => {
     setSourceIndex(0);
@@ -59,8 +61,30 @@ export function ResilientArtworkImage({
         ? "local"
         : "backup";
 
-  const advance = () =>
-    setSourceIndex(index => (index < chain.length - 1 ? index + 1 : index));
+  const advance = useCallback(
+    () =>
+      setSourceIndex(index => (index < chain.length - 1 ? index + 1 : index)),
+    [chain.length],
+  );
+
+  // [BUGFIX] Error gambar SEBELUM hidrasi tidak pernah sampai ke onError
+  // (handler React baru aktif setelah hidrasi). Kalau CDN sudah gagal duluan,
+  // `onError` tidak akan pernah berbunyi lagi dan state macet di "none" —
+  // gambar rusak + alt text tampil selamanya (ini yang terlihat di /music).
+  // Pemeriksaan pasca-hidrasi ini membaca keadaan <img> yang sebenarnya:
+  // `complete && naturalWidth === 0` berarti pemuatan sudah gagal, jadi rantai
+  // fallback langsung diteruskan. Guard `checkedSourceRef` membuat pemeriksaan
+  // idempoten per sumber — StrictMode yang menjalankan efek dua kali tidak
+  // boleh melompati dua sumber sekaligus.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (!img) return;
+    if (checkedSourceRef.current === source) return;
+    checkedSourceRef.current = source;
+    if (img.complete && img.naturalWidth === 0 && img.src) {
+      advance();
+    }
+  }, [source, advance]);
 
   const sizesAttribute =
     sizes ?? (srcSet || sources.length ? IMAGE_SIZES[sizePreset] : undefined);
@@ -90,7 +114,8 @@ export function ResilientArtworkImage({
         ))}
         <img
           {...imageProps}
-          className={`an-resilient-artwork ${className}`}
+          ref={imgRef}
+          className={`an-resilient-artwork ${fallbackMode !== "none" ? "is-fallback" : ""} ${className}`}
           src={source}
           onError={advance}
         />
@@ -101,6 +126,7 @@ export function ResilientArtworkImage({
   return (
     <img
       {...imageProps}
+      ref={imgRef}
       className={`an-resilient-artwork ${fallbackMode !== "none" ? "is-fallback" : ""} ${className}`}
       src={source}
       onError={advance}

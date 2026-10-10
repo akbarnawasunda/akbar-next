@@ -6,6 +6,7 @@ function usePublicSectionReveal(location: string) {
   useEffect(() => {
     let cancelled = false;
     let retryId: number | undefined;
+    let retries = 0;
     let observer: IntersectionObserver | undefined;
     let safetyId: number | undefined;
 
@@ -14,7 +15,9 @@ function usePublicSectionReveal(location: string) {
 
       const publicPage = document.querySelector<HTMLElement>(".nf-page");
       if (!publicPage) {
-        if (document.querySelector(".an-site")) return;
+        // Halaman non-editorial (studio / beranda) tidak punya `.nf-page` —
+        // berhenti mencari. Retry dibatasi supaya tidak berputar selamanya.
+        if (document.querySelector(".an-site") || retries++ >= 40) return;
         retryId = window.setTimeout(setup, 50);
         return;
       }
@@ -25,6 +28,7 @@ function usePublicSectionReveal(location: string) {
         )
       );
       if (!sections.length) {
+        if (retries++ >= 40) return;
         retryId = window.setTimeout(setup, 50);
         return;
       }
