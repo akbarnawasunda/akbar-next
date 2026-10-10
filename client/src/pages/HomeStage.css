@@ -913,3 +913,14 @@
   border-color: var(--band-accent);
   color: var(--band-accent);
 }
+
+/* [BUGFIX] Petunjuk "GULIR" di hero desktop diposisikan absolut di sudut
+   kiri bawah, tepat di bawah baris statistik (BASIS / SEJAK / GENRE). Di
+   1280px keduanya bertumpuk: teks "GULIR" menempel di bawah "BANDUNG BARAT".
+   Petunjuk ini hanya dekorasi (hero sudah bisa digulir), jadi di desktop ia
+   disembunyikan; ponsel tetap memakainya. */
+@media (min-width: 900px) {
+  .an-site .an-hero-scroll {
+    display: none;
+  }
+}
