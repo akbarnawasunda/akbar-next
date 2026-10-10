@@ -458,12 +458,7 @@ export function createParticleField(
     return built;
   }
 
-  function targetsFor(
-    mode: SignatureFieldMode,
-    index: number,
-    total: number,
-    wanted: number
-  ) {
+  function targetsFor(mode: SignatureFieldMode, wanted: number) {
     const stage = signals.stage;
     switch (mode) {
       case "wordmark":
@@ -500,42 +495,20 @@ export function createParticleField(
         // Label tujuan selalu di tengah viewport, bukan di panggung.
         return sampleTextTargets([transitLabel], 0.74, 0.5, wanted);
       }
-      case "signal": {
-        const list: { x: number; y: number }[] = [];
-        const baseline = height * 0.46;
-        const steps = Math.max(240, Math.floor(width / 2));
-        for (let i = 0; i < steps; i++) {
-          const x = (i / steps) * width;
-          const wave =
-            Math.sin((i / steps) * TAU * 3) * height * 0.08 +
-            Math.sin((i / steps) * TAU * 7.5) * height * 0.03;
-          list.push({ x, y: baseline + wave });
-        }
-        return list;
-      }
-      case "era": {
-        const list: { x: number; y: number }[] = [];
-        const lanes = Math.max(1, total || 1);
-        const laneHeight = height / (lanes + 1);
-        for (let lane = 0; lane < lanes; lane++) {
-          const y = laneHeight * (lane + 1);
-          const density = lane === index ? 220 : 90;
-          for (let i = 0; i < density; i++) {
-            list.push({
-              x: width * (0.08 + Math.random() * 0.84),
-              y:
-                y +
-                (Math.random() - 0.5) *
-                  laneHeight *
-                  (lane === index ? 0.5 : 0.22),
-            });
-          }
-        }
-        return list;
-      }
+      case "signal":
+      case "era":
       case "dust":
       case "quiet":
       default:
+        // [BUGFIX] Dulu signal membangun pita gelombang tipis di 46% tinggi
+        // viewport dan era membangun lajur-lajur bertepi keras — keduanya
+        // terlihat sebagai gumpalan titik yang TERPOTONG di tepi pita/lajur
+        // (keluhan "partikel kepotong"). Daftar target kosong berarti setiap
+        // titik mendapat posisi acak merata di seluruh viewport (perilaku
+        // fallback `retarget`) — medan ambient yang lembut tanpa satu pun
+        // tepi geometris, jadi tidak ada lagi yang terlihat terpotong.
+        // Wordmark/frequency (panggung beranda) dan label transit tidak
+        // tersentuh — keduanya punya kontrak tes sendiri.
         return [];
     }
   }
@@ -565,7 +538,7 @@ export function createParticleField(
     const mode = resolveMode(state);
     transitLabel = state.transitLabel;
     const count = countFor(mode, state.capability);
-    const targets = targetsFor(mode, state.era.index, state.era.total, count);
+    const targets = targetsFor(mode, count);
     const textMode = TEXT_MODES.includes(mode);
     const stage = signals.stage;
     const anchored = textMode && mode !== "transit" && Boolean(stage);
@@ -638,7 +611,7 @@ export function createParticleField(
       buildPoints();
       return;
     }
-    const targets = targetsFor(mode, state.era.index, state.era.total, desired);
+    const targets = targetsFor(mode, desired);
     points.forEach((point, index) => {
       const target = targets.length
         ? targets[
@@ -674,7 +647,7 @@ export function createParticleField(
     const state = readState();
     const mode = resolveMode(state);
     const desired = countFor(mode, state.capability);
-    const targets = targetsFor(mode, state.era.index, state.era.total, desired);
+    const targets = targetsFor(mode, desired);
     if (!targets.length) return;
     const boxWidth = Math.max(1, stageWidth || width);
     for (let i = 0; i < points.length; i++) {
