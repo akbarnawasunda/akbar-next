@@ -436,141 +436,6 @@ describe("particle field", () => {
     expect(band.length / dom.drawn.length).toBeGreaterThan(0.9);
   });
 
-  it("menyusun wordmark di dalam panggung, bukan di tengah layar", () => {
-    // Panggung setinggi 360px yang pusatnya ada di 70% tinggi viewport.
-    const stage = {
-      x: 720,
-      y: 630,
-      w: 1200,
-      h: 360,
-      visibility: 1,
-      progress: 0,
-    };
-    const dom = runWordmark(1440, 900, "full", stage);
-
-    const inside = dom.drawn.filter(
-      point =>
-        point.x > stage.x - stage.w / 2 - 8 &&
-        point.x < stage.x + stage.w / 2 + 8 &&
-        point.y > stage.y - stage.h / 2 - 8 &&
-        point.y < stage.y + stage.h / 2 + 8
-    );
-    expect(inside.length / dom.drawn.length).toBeGreaterThan(0.9);
-
-    // Area judul hero (sepertiga atas layar) harus bersih.
-    const overTitle = dom.drawn.filter(point => point.y < 300);
-    expect(overTitle.length / dom.drawn.length).toBeLessThan(0.02);
-  });
-
-  it("membentuk huruf menyapu dari kiri ke kanan", () => {
-    const stage = { x: 720, y: 450, w: 1200, h: 360, visibility: 1, progress: 0 };
-    const dom = runWordmark(1440, 900, "full", stage);
-
-    // Hanya hitung titik yang benar-benar di dalam panggung — titik yang
-    // masih menunggu di luar layar tidak boleh ikut terhitung.
-    const inStage = (point: Drawn) =>
-      point.y > stage.y - stage.h / 2 &&
-      point.y < stage.y + stage.h / 2 &&
-      point.x > stage.x - stage.w / 2 &&
-      point.x < stage.x + stage.w / 2;
-    // Pita kiri dan kanan diambil di dalam rentang teks (teks tiruan
-    // menempati 20%–80% lebar panggung).
-    const leftOf = (point: Drawn) =>
-      inStage(point) &&
-      point.x > stage.x - stage.w * 0.3 &&
-      point.x < stage.x - stage.w * 0.15;
-    const rightOf = (point: Drawn) =>
-      inStage(point) &&
-      point.x > stage.x + stage.w * 0.15 &&
-      point.x < stage.x + stage.w * 0.3;
-    const leftBand = dom.mid.filter(leftOf).length;
-    const rightBand = dom.mid.filter(rightOf).length;
-    // Di pertengahan animasi, huruf kiri sudah terbentuk sementara huruf
-    // kanan masih dalam perjalanan.
-    expect(leftBand).toBeGreaterThan(40);
-    expect(leftBand).toBeGreaterThan(rightBand * 1.6);
-
-    // Di akhir, kedua sisi sama-sama penuh.
-    const leftFinal = dom.drawn.filter(leftOf).length;
-    const rightFinal = dom.drawn.filter(rightOf).length;
-    expect(leftFinal).toBeGreaterThan(40);
-    expect(rightFinal).toBeGreaterThan(leftFinal * 0.6);
-  });
-
-  it("mengganti kata yang disusun saat jalur panggung digulir", () => {
-    const stage = {
-      x: 720,
-      y: 450,
-      w: 1200,
-      h: 360,
-      visibility: 1,
-      progress: 0,
-    };
-    const dom = setupDom(1440, 900);
-    const signals = signalsStub(stage);
-    const field = createParticleField(
-      dom.canvas as unknown as HTMLCanvasElement,
-      signals,
-      () => ({
-        mode: "wordmark" as const,
-        capability: capability("full"),
-        frequency: false,
-        era: { index: 0, total: 0 },
-        transition: "idle" as const,
-        transitLabel: "",
-        intensity: 1,
-      })
-    );
-
-    const run = (frames: number, from: number) => {
-      for (let i = 0; i < frames; i++) {
-        let next = dom.frames.pop();
-        if (!next) {
-          // Mode idle: bangunkan lewat timeout, lalu ambil frame berikutnya.
-          const timer = dom.timeouts.pop();
-          if (timer) {
-            timer();
-            next = dom.frames.pop();
-          }
-        }
-        dom.frames.length = 0;
-        if (!next) break;
-        dom.drawn.length = 0;
-        next((from + i) * 16.67);
-      }
-    };
-
-    run(170, 0);
-    const first = dom.drawn.map(point => `${Math.round(point.x)}:${Math.round(point.y)}`);
-
-    // Gulir ke sepertiga kedua jalur → kata berganti.
-    if (signals.stage) signals.stage.progress = 0.5;
-    run(10, 170);
-    const breaking = dom.drawn.length;
-    run(170, 180);
-    const second = dom.drawn.map(point => `${Math.round(point.x)}:${Math.round(point.y)}`);
-
-    expect(breaking).toBeGreaterThan(0);
-    // Susunan titiknya benar-benar berbeda: huruf yang dibentuk berganti.
-    const shared = second.filter(key => first.includes(key)).length;
-    expect(shared / second.length).toBeLessThan(0.5);
-
-    // Dan tetap rapi di dalam panggung.
-    const inside = dom.drawn.filter(
-      point =>
-        point.x > stage.x - stage.w / 2 - 8 &&
-        point.x < stage.x + stage.w / 2 + 8 &&
-        point.y > stage.y - stage.h / 2 - 8 &&
-        point.y < stage.y + stage.h / 2 + 8
-    );
-    expect(inside.length / dom.drawn.length).toBeGreaterThan(0.9);
-
-    teardown = () => {
-      field.destroy();
-      dom.restore();
-    };
-  });
-
   it("menulis label tujuan di tengah layar saat pindah halaman", () => {
     // Panggung tetap ada di bawah layar, tapi selama transisi label tujuan
     // yang menang: huruf harus muncul di tengah viewport.
@@ -640,113 +505,6 @@ describe("particle field", () => {
     };
   });
 
-  it("melepas titik saat panggung terlewat, bukan menyembunyikannya", () => {
-    // Keluhan aslinya: lewat panggung, efeknya cuma memudar. Dulu 55% titik
-    // berhenti digambar dan sisanya turun ke alpha 0,12 — terlihat seperti
-    // mati, bukan buyar. Sekarang titik tetap digambar; yang hilang hanya
-    // yang benar-benar terbang keluar layar.
-    const stage = {
-      x: 720,
-      y: 450,
-      w: 1200,
-      h: 320,
-      visibility: 1,
-      progress: 0,
-    };
-    const run = scenario(1440, 900, stage, { seed: 7 });
-    run.frames(170);
-    const locked = run.drawn().length;
-    expect(locked).toBeGreaterThan(2000);
-
-    const inStageBox = (point: Drawn) =>
-      point.x > stage.x - stage.w / 2 &&
-      point.x < stage.x + stage.w / 2 &&
-      point.y > stage.y - stage.h / 2 &&
-      point.y < stage.y + stage.h / 2;
-    expect(run.drawn().filter(inStageBox).length / locked).toBeGreaterThan(0.9);
-
-    // Gulir melewati panggung.
-    stage.progress = 0.95;
-    stage.visibility = 0.45;
-    run.signals.scrollVelocity = 2.4;
-    run.frames(4);
-    // Tidak ada pemangkasan: jumlah titik yang tergambar tetap hampir sama.
-    expect(run.drawn().length).toBeGreaterThan(locked * 0.95);
-
-    run.frames(40);
-    const flying = run.drawn();
-    // Masih hampir semua titik hidup…
-    expect(flying.length).toBeGreaterThan(locked * 0.8);
-    // …dan mereka sudah menyebar jauh melampaui kotak panggung.
-    const outside = flying.filter(point => !inStageBox(point));
-    expect(outside.length / flying.length).toBeGreaterThan(0.45);
-    const spreadY =
-      Math.max(...flying.map(point => point.y)) -
-      Math.min(...flying.map(point => point.y));
-    expect(spreadY).toBeGreaterThan(stage.h * 1.6);
-  });
-
-  it("menyisakan debu yang tetap bergerak setelah panggung hilang", () => {
-    const stage = { x: 720, y: 450, w: 1200, h: 320, visibility: 1, progress: 0 };
-    const run = scenario(1440, 900, stage, { seed: 11 });
-    run.frames(170);
-    const locked = run.drawn().length;
-
-    stage.progress = 1;
-    stage.visibility = 0.01;
-    run.signals.scrollVelocity = 3;
-    run.frames(220);
-    run.signals.scrollVelocity = 0;
-    run.frames(60);
-
-    const dust = run.drawn();
-    // Sepertiga titik ditahan sebagai debu ambient: tidak hilang total.
-    expect(dust.length / locked).toBeGreaterThan(0.25);
-    expect(dust.length / locked).toBeLessThan(0.45);
-
-    // Dan debunya benar-benar masih bergerak, bukan membeku.
-    const before = run.drawn().map(point => `${point.x.toFixed(2)}`);
-    run.frames(1);
-    const after = run.drawn().map(point => `${point.x.toFixed(2)}`);
-    const moved = after.filter((key, index) => key !== before[index]).length;
-    expect(moved / after.length).toBeGreaterThan(0.5);
-  });
-
-  it("menerbangkan titik masuk lagi saat digulir balik ke atas", () => {
-    const stage = { x: 720, y: 450, w: 1200, h: 320, visibility: 1, progress: 0 };
-    const run = scenario(1440, 900, stage, { seed: 3 });
-    run.frames(170);
-    const locked = run.drawn().length;
-
-    // Gulir melewati panggung dengan kecepatan wajar, lalu berhenti.
-    stage.progress = 0.9;
-    stage.visibility = 0.3;
-    run.signals.scrollVelocity = 1.8;
-    run.frames(50);
-    stage.progress = 1;
-    stage.visibility = 0.02;
-    run.frames(40);
-    run.signals.scrollVelocity = 0;
-    run.frames(130);
-    expect(run.drawn().length).toBeLessThan(locked * 0.6);
-
-    // Gulir balik: panggung terlihat lagi.
-    stage.progress = 0.1;
-    stage.visibility = 1;
-    run.frames(200);
-    const back = run.drawn();
-    expect(back.length).toBeGreaterThan(locked * 0.9);
-    const inStageBox = back.filter(
-      point =>
-        point.x > stage.x - stage.w / 2 - 8 &&
-        point.x < stage.x + stage.w / 2 + 8 &&
-        point.y > stage.y - stage.h / 2 - 8 &&
-        point.y < stage.y + stage.h / 2 + 8
-    );
-    // Mereka menyusun nama lagi, bukan menggantung di tempatnya.
-    expect(inStageBox.length / back.length).toBeGreaterThan(0.9);
-  });
-
   it("mendorong lebih jauh saat gulirnya lebih cepat", () => {
     // Dua jalan identik (Math.random diseed sama) yang hanya berbeda
     // kecepatan gulir: dorongan harus sebanding dengan kecepatannya.
@@ -777,6 +535,60 @@ describe("particle field", () => {
     // Gulir turun menyapu titik ke atas layar.
     expect(fast.dy).toBeLessThan(0);
     expect(Math.abs(fast.dy)).toBeGreaterThan(Math.abs(slow.dy) * 2);
+  });
+
+  // [BUGFIX] Panggung beranda sekarang medan ambient (lihat `resolveMode`):
+  // titik TIDAK lagi dikunci menjadi huruf, judul tampil sebagai tipografi
+  // DOM. Tes-tes lama yang mengukur "huruf terbentuk/menyapu/diganti" sudah
+  // tidak berlaku dan diganti dengan kontrak ambient di bawah ini.
+  it("panggung tidak menyusun huruf: titik tersebar merata, tidak membentuk pita", () => {
+    const stage = { x: 720, y: 450, w: 1200, h: 320, visibility: 1, progress: 0 };
+    const run = scenario(1440, 900, stage, { seed: 21 });
+    run.frames(170);
+    const pts = run.drawn();
+    expect(pts.length).toBeGreaterThan(300);
+
+    // Semua titik tetap di dalam viewport — tidak ada yang kepotong di tepi.
+    const inside = pts.filter(
+      point => point.x >= 0 && point.x <= 1440 && point.y >= 0 && point.y <= 900
+    );
+    expect(inside.length / pts.length).toBeGreaterThan(0.98);
+
+    // Sebaran merata: tidak ada kantong padat (gumpalan/pita huruf). Grid 9×9
+    // di dalam viewport; bin terpadat tidak boleh melampaui ~2,2× rata-rata.
+    const bins = new Array(81).fill(0);
+    for (const point of inside) {
+      const bx = Math.min(8, Math.floor((point.x / 1440) * 9));
+      const by = Math.min(8, Math.floor((point.y / 900) * 9));
+      bins[by * 9 + bx] += 1;
+    }
+    const mean = inside.length / 81;
+    expect(Math.max(...bins) / mean).toBeLessThan(2.2);
+  });
+
+  it("medan ambient tetap hidup dan bergerak setelah panggung dilewati", () => {
+    const stage = { x: 720, y: 450, w: 1200, h: 320, visibility: 1, progress: 0 };
+    const run = scenario(1440, 900, stage, { seed: 11 });
+    run.frames(170);
+    const before = run.drawn().length;
+    expect(before).toBeGreaterThan(300);
+
+    // Gulir melewati panggung: titik tidak dipangkas dan tidak hilang total.
+    stage.progress = 0.95;
+    stage.visibility = 0.45;
+    run.signals.scrollVelocity = 2;
+    run.frames(60);
+    run.signals.scrollVelocity = 0;
+    run.frames(20);
+    const after = run.drawn();
+    expect(after.length).toBeGreaterThan(before * 0.8);
+
+    // Dan masih bergerak, bukan membeku di tempat.
+    const snapshot = after.map(point => `${point.x.toFixed(2)}`);
+    run.frames(1);
+    const next = run.drawn().map(point => `${point.x.toFixed(2)}`);
+    const moved = next.filter((key, index) => key !== snapshot[index]).length;
+    expect(moved / next.length).toBeGreaterThan(0.3);
   });
 
   it("menjaga kerapatan wordmark meski titiknya lebih kecil", () => {

@@ -51,31 +51,34 @@
   border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
 }
 
-.an-signature-stage-word {
+/* [BUGFIX] Judul panggung = tipografi display statis, bukan partikel.
+   Akar masalahnya ada di sampler teks engine (lihat particleField.ts,
+   `resolveMode`): di kotak sempit huruf partikel tidak pernah terbaca.
+   Sekarang judul tampil utuh dengan font display (--font-title) dan
+   ukurannya dikunci ke lebar layar lewat vw, bukan lewat tinggi kotak. */
+.an-signature-stage .an-signature-stage-word {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0 0.28em;
+  gap: 0 0.22em;
   font-family: var(--font-title, inherit);
   font-weight: 700;
-  font-size: clamp(2.1rem, 11vw, 9rem);
-  line-height: 0.92;
+  font-size: clamp(2.4rem, 11.5vw, 13rem);
+  line-height: 0.86;
   letter-spacing: 0.01em;
   text-align: center;
+  text-transform: uppercase;
   color: var(--paper);
-  transition: opacity 420ms ease;
-}
-
-/* Particle field hidup → teks statis mundur, partikel yang bicara.
-   Teks tetap ada di DOM untuk screen reader dan mesin pencari. */
-.an-signature-stage[data-live="true"] .an-signature-stage-word {
-  opacity: 0;
 }
 
 .an-signature-stage-word span {
   display: inline-block;
   max-width: 100%;
+  /* [BUGFIX] Satu kata = satu baris. Tanpa ini `overflow-wrap: anywhere`
+     memotong kata di tengah ("NAWASUND / A"), dan huruf sisanya pindah
+     baris sendirian. Ukuran judul di ponsel dibuat muat, bukan dipotong. */
+  white-space: nowrap;
   /* Nama panjang tidak boleh mendorong layout melebar di layar 320px. */
   overflow-wrap: anywhere;
 }
@@ -300,11 +303,9 @@ button.an-signature-stage-phrase:focus-visible {
 }
 
 /* Layar sangat lebar: wordmark tetap punya margin, tidak menempel tepi. */
-@media (min-width: 1600px) {
-  .an-signature-stage-word {
-    font-size: clamp(5rem, 8vw, 10rem);
-  }
-}
+/* [BUGFIX] Override lebar 1600px dihapus: pada 1440 ia membuat "NAWASUNDA"
+   melebihi kotak dan huruf terakhir pindah ke baris sendiri. Ukuran tunggal
+   berbasis vw sudah cukup untuk semua lebar. */
 
 @media (prefers-reduced-motion: reduce) {
   .an-signature-stage-track {
@@ -314,11 +315,38 @@ button.an-signature-stage-phrase:focus-visible {
     position: static;
     min-height: 0;
   }
-  /* Tidak ada partikel → wordmark tetap tampil sebagai teks penuh. */
-  .an-signature-stage[data-live="true"] .an-signature-stage-word {
-    opacity: 1;
-  }
-  .an-signature-stage-word {
+  .an-signature-stage .an-signature-stage-word {
     transition: none;
+  }
+}
+
+/* [REDESIGN] Panggung beranda dibuat setenang MG: judul adalah satu-satunya
+   pernyataan besar. Statistik (RILISAN/MULAI/PLATFORM) sudah tampil di hero
+   dan di kanal resmi, jadi di sini disembunyikan secara visual. Elemen tetap
+   ada di DOM dan dibaca screen reader lewat <dl>. Daftar frasa tetap tampil:
+   ia satu-satunya tempat alias bisa dilihat dan ditekan. */
+.an-signature-stage .an-signature-stage-context {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+  padding: 0;
+}
+
+/* [BUGFIX] Aturan `.an-site h2` global di index.css (≤420px, 8.5vw, font
+   NEXROID) memiliki spesifisitas (0,1,1) dan dulu mengalahkan aturan judul
+   panggung (0,1,0): ukuran dan font judul di ponsel TIDAK pernah berubah
+   walau CSS-nya ditulis. Selector sekarang (0,2,0) sehingga menang. */
+/* [REDESIGN] Di ponsel judul boleh lebih besar: "NAWASUNDA" hanya memakai
+   ±216px dari kotak ±316px pada ukuran 11.5vw. 13vw (±47px) muat satu baris
+   per kata. 15.5vw (±56px) terbukti pecah dan melewati tepi kanan. */
+@media (max-width: 640px) {
+  .an-signature-stage .an-signature-stage-word {
+    font-size: 12vw;
   }
 }

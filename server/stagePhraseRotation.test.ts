@@ -1,26 +1,22 @@
 /**
- * BUKTI PERILAKU: panggung benar-benar menyusun KEDUA nama.
+ * BUKTI PERILAKU: panggung beranda TIDAK lagi menyusun nama dari partikel.
  *
- * Tes lain mengunci konstanta (frasa harus Latin, keterangan harus cocok).
- * Yang itu tidak cukup — kerusakan yang pernah terjadi adalah alias
- * "DJ AKBAR REMIX" tidak pernah sampai ke layar meskipun konstantanya ada.
- * Jadi tes ini menjalankan engine partikel yang sesungguhnya, menggerakkan
- * posisi gulir panggung dari atas ke bawah, lalu memeriksa teks apa saja
- * yang BENAR-BENAR dirasterkan untuk diambil titiknya.
+ * [BUGFIX] Dulu tes ini memastikan kedua nama dirasterkan menjadi titik.
+ * Itu justru sumber bug "partikel kepotong": di lebar mobile huruf partikel
+ * tidak pernah terbaca. Sekarang judul panggung tampil sebagai tipografi
+ * DOM yang utuh (SignatureStage.tsx), dan engine hanya menjalankan medan
+ * ambient. Kontrak yang dijaga tes ini:
+ *   - engine tidak merasterkan satu pun nama di panggung (baik nama resmi,
+ *     alias, maupun saat gulir melewati keduanya dan di layar ponsel);
+ *   - aksara Sunda tetap tidak pernah masuk ke rasterisasi.
+ * Nama tetap ada sebagai teks DOM (h2 + daftar frasa), dicek di tes DOM.
  *
- * Caranya: kanvas sampel palsu mencatat setiap `fillText`. Itulah satu-
- * satunya jalan teks masuk ke engine, jadi kalau sebuah nama tidak pernah
- * muncul di catatan itu, nama tersebut tidak pernah disusun partikel.
- *
- * Sesuai docs/notes/testing-policy.md bagian 3: engine diuji sebagai modul,
- * bukan lewat teks source.
+ * Kanvas sampel palsu tetap mencatat setiap `fillText`: kalau satu pun
+ * nama muncul di catatan itu, berarti engine masih menyusun huruf.
  */
 import { afterEach, describe, expect, it } from "vitest";
 import { createParticleField } from "../client/src/signature/field/particleField";
-import {
-  PHRASE_SCROLL_TARGET,
-  STAGE_PHRASES,
-} from "../client/src/signature/stagePhrases";
+import { PHRASE_SCROLL_TARGET } from "../client/src/signature/stagePhrases";
 import type {
   SignatureCapability,
   SignatureSignals,
@@ -258,37 +254,20 @@ function scrollThroughStage(width = 1440, height = 900) {
   return { afterFirst, afterSecond };
 }
 
-describe("panggung menyusun kedua nama", () => {
-  it("merasterkan nama resmi di bagian awal jalur", () => {
+describe("panggung ambient: nama tidak disusun partikel", () => {
+  it("tidak merasterkan nama resmi di bagian awal jalur", () => {
     const { afterFirst } = scrollThroughStage();
-    const joined = afterFirst.join(" | ");
-    for (const word of STAGE_PHRASES[0]) {
-      expect(joined, `"${word}" disusun partikel`).toContain(word);
-    }
+    expect(afterFirst).toEqual([]);
   });
 
-  it("merasterkan ALIAS saat gulir mencapai bagian keduanya", () => {
-    const { afterFirst, afterSecond } = scrollThroughStage();
-    const before = afterFirst.join(" | ");
-    const after = afterSecond.join(" | ");
-
-    // Ini inti tes: alias tidak boleh berhenti di konstanta.
-    for (const word of STAGE_PHRASES[1]) {
-      expect(after, `"${word}" disusun partikel setelah digulir`).toContain(
-        word
-      );
-    }
-    // Dan ia memang BARU muncul sesudah bergulir — bukan kebetulan ikut
-    // terasterkan sejak awal.
-    expect(before).not.toContain("REMIX");
+  it("tidak merasterkan alias saat gulir mencapai bagian keduanya", () => {
+    const { afterSecond } = scrollThroughStage();
+    expect(afterSecond).toEqual([]);
   });
 
-  it("tetap bekerja di layar ponsel (kata dipecah dua baris)", () => {
+  it("tetap tanpa rasterisasi di layar ponsel (judul dipecah dua baris)", () => {
     const { afterSecond } = scrollThroughStage(390, 780);
-    const after = afterSecond.join(" | ");
-    for (const word of STAGE_PHRASES[1]) {
-      expect(after, `"${word}" disusun partikel di 390px`).toContain(word);
-    }
+    expect(afterSecond).toEqual([]);
   });
 
   it("tidak pernah diminta merasterkan aksara Sunda", () => {

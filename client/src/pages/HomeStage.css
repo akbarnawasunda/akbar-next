@@ -127,7 +127,10 @@
   font-size: 0.58rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--paper) 62%, transparent);
+  /* [BUGFIX] 62% di atas foto yang terang membuat caption hampir hilang
+     (terukur sulit dibaca di 1280). Naikkan kontras + bayangan tipis. */
+  color: color-mix(in srgb, var(--paper) 88%, transparent);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
 }
 
 .an-site .an-hero-inner {
@@ -909,4 +912,126 @@
 .an-site .an-channels .an-btn--quiet:focus-visible {
   border-color: var(--band-accent);
   color: var(--band-accent);
+}
+
+/* [BUGFIX] Petunjuk "GULIR" di hero desktop diposisikan absolut di sudut
+   kiri bawah, tepat di bawah baris statistik (BASIS / SEJAK / GENRE). Di
+   1280px keduanya bertumpuk: teks "GULIR" menempel di bawah "BANDUNG BARAT".
+   Petunjuk ini hanya dekorasi (hero sudah bisa digulir), jadi di desktop ia
+   disembunyikan; ponsel tetap memakainya. */
+@media (min-width: 900px) {
+  .an-site .an-hero-scroll {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------
+   RILISAN TERBARU — grid tile ala MG (redesign beranda)
+   Artwork persegi besar, meta kecil di bawah, hover halus. Kolom
+   menyesuaikan lebar: 2 di ponsel, 3 di tablet, 6 di desktop.
+   ------------------------------------------------------------ */
+.an-site .an-home-tiles {
+  padding: clamp(56px, 9vw, 120px) var(--hx-gutter, clamp(20px, 5vw, 88px));
+  border-top: 1px solid color-mix(in srgb, var(--paper) 12%, transparent);
+}
+
+.an-site .an-home-tiles-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(24px, 3.5vw, 44px);
+}
+
+.an-site .an-home-tiles-head h2 {
+  margin: 0;
+  font-family: var(--font-title, inherit);
+  font-size: clamp(2rem, 4.4vw, 4rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: var(--paper);
+}
+
+.an-site .an-home-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 28px) clamp(12px, 1.6vw, 22px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 720px) {
+  .an-site .an-home-tiles-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1080px) {
+  .an-site .an-home-tiles-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.an-site .an-home-tile {
+  display: grid;
+  gap: 10px;
+  color: var(--paper);
+  text-decoration: none;
+  min-width: 0;
+}
+
+.an-site .an-home-tile-art {
+  display: block;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--ink-soft, #151515);
+}
+
+.an-site .an-home-tile-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 520ms var(--ease, ease);
+}
+
+.an-site .an-home-tile:hover .an-home-tile-art img,
+.an-site .an-home-tile:focus-visible .an-home-tile-art img {
+  transform: scale(1.04);
+}
+
+.an-site .an-home-tile-meta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.an-site .an-home-tile-meta small,
+.an-site .an-home-tile-meta em {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--mute-soft, #8a8a8a);
+}
+
+.an-site .an-home-tile-meta strong {
+  font-family: var(--font-title, inherit);
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.an-site .an-home-tile:hover .an-home-tile-meta strong {
+  color: var(--acid, #cfe3e6);
+}
+
+/* [REDESIGN] Maskot mengambang di pojok kanan atas hero dihapus dari
+   tampilan. Ia dekoratif (aria-hidden) dan bertabrakan dengan foto di
+   ponsel; gaya MG tidak punya badge seperti ini di atas hero. */
+.an-site .an-hero-mascot {
+  display: none;
 }

@@ -12,6 +12,7 @@ import {
   currentRelease,
   formatPublicIndex,
   officialBrand,
+  releaseSlug,
   releases,
 } from "@/content/artistPlatform";
 import {
@@ -33,14 +34,6 @@ const soundcloudDrops = [
     url: "https://soundcloud.com/akbarnawasunda/ngertenono_ati_medium_hall_mbfrecords",
   },
 ];
-
-const releaseSlug = (value: string) =>
-  value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
 
 /**
  * Salinan katalog dua bahasa. `MusicView` dipakai `/music` dan `/en/music`,
