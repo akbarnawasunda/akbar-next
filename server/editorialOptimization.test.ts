@@ -1,9 +1,9 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 
-const assetPath = (name: string) => resolve(process.cwd(), "client/public/assets", name);
+const assetPath = (name: string) => resolve(process.cwd(), "public/assets", name);
 const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
 const prefetch = { documents: async () => [] as never };
 
@@ -41,20 +41,14 @@ describe("high-performance image optimization & non-Google typography", () => {
     expect(page.html, "tanpa <picture> untuk varian mobile").toContain("<picture");
   });
 
-  it("route potret lama redirect ke seksi in-page /visuals#portraits (Phase 3 §2 baris 5)", async () => {
-    for (const [route, target] of [
-      ["/visuals/portraits", "/visuals#portraits"],
-      ["/en/visuals/portraits", "/en/visuals#portraits"],
-    ] as const) {
-      const page = await render(route, prefetch);
-      expect(page.html, `${route}: tanpa meta refresh`).toContain(
-        `content="0; url=${target}"`
-      );
-      // Galeri tidak lagi dirender di rute lama.
-      expect(page.html, `${route}: markup gallery bocor`).not.toContain(
-        "an-opt-img-element"
-      );
-    }
+  it("redirects removed portrait routes to the in-page /visuals#portraits section", () => {
+    const nextConfig = source("next.config.ts");
+    expect(nextConfig).toContain(
+      'source: "/visuals/portraits", destination: "/visuals#portraits", permanent: true'
+    );
+    expect(nextConfig).toContain(
+      'source: "/en/visuals/portraits", destination: "/en/visuals#portraits", permanent: true'
+    );
   });
 
   it("memakai ukuran intrinsik untuk gambar aset lokal", async () => {
@@ -107,7 +101,7 @@ describe("high-performance image optimization & non-Google typography", () => {
     expect(indexCss).not.toMatch(/--font-[\w-]+:\s*[^;]*(?:Noctavell|Velomino)/i);
 
     // Tidak ada CDN huruf di pembuka aplikasi maupun sistem token.
-    for (const file of ["client/index.html", "client/src/index.css"]) {
+    for (const file of ["app/layout.tsx", "app/preloader.css", "client/src/index.css"]) {
       const text = source(file);
       expect(text).not.toMatch(/fonts\.googleapis\.com|fonts\.gstatic\.com|api\.fontshare\.com|fonts\.cdnfonts\.com/);
     }

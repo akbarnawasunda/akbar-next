@@ -1,7 +1,8 @@
 import { ArrowUpRight, Radio, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Link, useLocation } from "wouter";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ResilientBrandImage } from "@/components/ResilientBrandImage";
 import { useLockBodyScroll } from "@/hooks/useLockBodyScroll";
 import "./NightFrequencyChrome.css";
@@ -137,7 +138,7 @@ export function MobileNav({
   const baseItems = navItems ?? (lang === "en" ? defaultEnNavItems : defaultIdNavItems);
   // Baris jadwal hanya muncul (di ujung) kalau ada jadwal terkonfirmasi.
   const items = withScheduleItem(baseItems, lang, hasConfirmedEvents);
-  const [currentLocation] = useLocation();
+  const currentLocation = usePathname() || "/";
   const pathname = customPathname ?? currentLocation;
   const panelRef = useRef<HTMLElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
@@ -279,7 +280,7 @@ export function MobileNav({
         </div>
 
         {/* Scrollable Body */}
-        <div className="nf-mobile-drawer-body">
+        <div className="nf-mobile-drawer-body" data-lenis-prevent>
           <div className="nf-mobile-drawer-eyebrow">
             <span>
               {lang === "en"

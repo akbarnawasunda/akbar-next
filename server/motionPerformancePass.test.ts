@@ -20,6 +20,9 @@ const pointer = source("client/src/signature/pointerSignal.ts");
 const mark = source("client/src/components/signature/SignalMark.tsx");
 const markCss = source("client/src/components/signature/SignalMark.css");
 const smooth = source("client/src/lib/smoothScroll.ts");
+const smoothComponent = source("client/src/components/SmoothScroll.tsx");
+const shell = source("client/src/shell/PublicShell.tsx");
+const commandPalette = source("client/src/components/CommandPalette.tsx");
 const chrome = source("client/src/components/NightFrequencyChrome.tsx");
 const era = source("client/src/components/signature/EraTimeline.tsx");
 const player = source("client/src/components/signature/GlobalAudioPlayer.tsx");
@@ -66,6 +69,13 @@ describe("mesin idle engine partikel", () => {
   it("berhenti total saat tab disembunyikan dan saat dihancurkan", () => {
     expect(field).toContain('document.addEventListener("visibilitychange", onVisibility)');
     expect(field).toMatch(/function stop\(\)\s*\{[\s\S]*?clearTimeout\(idleTimer\)/);
+  });
+
+  it("mengukur cadence rAF selain biaya loop JS agar raster yang berat ikut terdeteksi", () => {
+    expect(field).toContain("FRAME_WINDOW");
+    expect(field).toContain("FRAME_CUT_MS");
+    expect(field).toContain("frameInterval");
+    expect(field).toContain("frameAverage < FRAME_GROW_MS");
   });
 
   it("mengukur laju idle di bench (bukti: frame tereksekusi per 10 detik)", () => {
@@ -118,6 +128,34 @@ describe("Signal Mark — tanpa loop runtime tambahan", () => {
 });
 
 describe("scroll — komputasi seminimal mungkin", () => {
+  it("memasang SmoothScroll hanya di shell editorial dan meresetnya saat rute berubah", () => {
+    expect(shell).toContain('import { SmoothScroll } from "@/components/SmoothScroll"');
+    expect(shell).toContain("{isEditorialRoute && <SmoothScroll />}");
+    expect(smoothComponent).toContain("const pathname = usePathname()");
+    expect(smoothComponent).toContain("resetSmoothScroll();");
+    expect(smoothComponent).toContain("[pathname]");
+  });
+
+  it("memakai lerp responsif dan menyerahkan hash/scroll restoration ke browser + Next", () => {
+    expect(smooth).toContain("lerp: 0.12");
+    expect(smooth).not.toContain("duration: 0.85");
+    expect(smooth).toContain("stopInertiaOnNavigate: true");
+    expect(smooth).toContain("anchors: false");
+    expect(smooth).toContain("resetBeforeNativeNavigation");
+    expect(smooth).toContain('window.addEventListener("popstate", stopInertia)');
+    expect(smooth).not.toContain("event.preventDefault()");
+    expect(smooth).not.toContain("lenis.scrollTo(destination");
+    expect(commandPalette).toContain("data-lenis-prevent");
+  });
+
+  it("membiarkan reduced-motion, sentuh, daya rendah, dan hemat data memakai native scroll", () => {
+    expect(smooth).toContain("prefers-reduced-motion: reduce");
+    expect(smooth).toContain("(hover: none), (pointer: coarse)");
+    expect(smooth).toContain("cores <= 2 || memory <= 2");
+    expect(smooth).toContain("connection?.saveData");
+    expect(smooth).toContain("effectiveType");
+  });
+
   it("lenis berhenti memompa rAF saat idle dan bangun dari event", () => {
     // Pompa hanya lanjut saat lenis masih bekerja.
     expect(smooth).toMatch(/if \(lenis\.isScrolling\) rafId = requestAnimationFrame\(raf\)/);

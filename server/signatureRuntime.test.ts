@@ -1,16 +1,15 @@
 /**
  * Kontrak Signature Runtime.
  *
- * Aturannya sama dengan docs/notes/testing-policy.md: apa pun yang dilihat
- * pengunjung diuji lewat HTML hasil `entry-server.tsx`. Hanya hal yang memang
- * tidak muncul di HTML (aturan CSS, token, fungsi murni runtime) yang diuji
- * dari source/modul, dan setiap kasusnya diberi alasan.
+ * Aturannya sama dengan docs/notes/testing-policy.md: perilaku komponen
+ * diperiksa lewat route-rendering harness, sedangkan CSS, token, dan fungsi
+ * runtime murni diuji dari sumber/modul. Production smoke test tetap memakai
+ * HTTP server Next.js untuk menangkap perilaku khusus deployment.
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
-import { buildHeadTags, composeHtml } from "./_core/ssrHtml";
+import { render } from "./test-renderer";
 import { particleBudget } from "../client/src/signature/capability";
 import { attachPointerSignal } from "../client/src/signature/pointerSignal";
 import { routeInfo, isPublicRoute } from "../client/src/signature/routeSignal";
@@ -192,20 +191,18 @@ describe("metadata dan structured data", () => {
     expect(englishPage.inLanguage).toBe("en");
   });
 
-  it("hanya menyuntik satu og:site_name, dari ssrHtml", async () => {
+  it("uses Next metadata generation for the canonical page head", async () => {
     const home = await renderPage("/");
-    const tags = buildHeadTags(home.head);
-    expect(tags.match(/property="og:site_name"/g)?.length).toBe(1);
+    const pageModule = source("app/_lib/site-page.tsx");
 
-    const document = composeHtml(
-      '<html lang="id"><head><!--app-head--></head><body><!--app-html--></body></html>',
-      home.html,
-      home.head,
-      {}
-    );
-    expect(document.match(/og:site_name/g)?.length).toBe(1);
-    expect(document).toContain('rel="canonical"');
-    expect(document).toContain('hreflang="x-default"');
+    expect(home.head.canonicalPath).toBe("/");
+    expect(home.head.title).toBe("Akbar Nawasunda | Official Website");
+    expect(home.head.structuredData).toBeDefined();
+    expect(pageModule).toContain("export async function createPageMetadata");
+    expect(pageModule).toContain('siteName: "Akbar Nawasunda"');
+    expect(pageModule).toContain("languages:");
+    expect(pageModule).toContain("canonical:");
+    expect(pageModule).toContain("twitter:");
   });
 
   it("menjaga tautan penting tetap ada di halaman publik", async () => {

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "wouter";
+import { usePathname } from "next/navigation";
 import { usePublicArtistContent } from "@/content/publicContent";
 import { buildSiteStructuredData } from "@/content/structuredData";
 
@@ -11,7 +11,7 @@ import { buildSiteStructuredData } from "@/content/structuredData";
  * + entitas rute). Script hanya diperbarui saat isinya memang berubah.
  */
 export function StructuredData() {
-  const [location] = useLocation();
+  const location = usePathname() || "/";
   const cms = usePublicArtistContent();
 
   useEffect(() => {

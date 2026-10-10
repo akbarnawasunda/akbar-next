@@ -1,16 +1,14 @@
 /**
  * Kontrak redesign editorial.
  *
- * Semua pemeriksaan di bawah merender halaman lewat jalur SSR produksi
- * (`client/src/entry-server.tsx`) dan memeriksa HTML yang benar-benar diterima
- * pengunjung — bukan membaca source JSX sebagai teks. Satu blok terakhir
- * memeriksa file statis (index.html, CSS) karena isinya memang tidak muncul
- * sebagai markup hasil render.
+ * Pemeriksaan perilaku menggunakan render helper yang memetakan rute App
+ * Router ke komponen aktif. Aturan loading/global layout yang tidak muncul
+ * sebagai markup halaman diperiksa lewat sumber Next yang memilikinya.
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 import { releases } from "../client/src/content/artistPlatform";
 
 const slugify = (value: string) =>
@@ -197,21 +195,22 @@ describe("aset statis redesign", () => {
   const read = (path: string) =>
     readFileSync(resolve(process.cwd(), path), "utf8");
 
-  it("splash punya versi penuh dan versi ringkas dengan batas durasi jelas", () => {
-    const indexHtml = read("client/index.html");
-    expect(indexHtml).toContain("an-splash-seen");
-    expect(indexHtml).toContain("sessionStorage");
-    // KONTRAK BERUBAH (Fase 6F, disengaja): kunjungan kedua dalam satu sesi
-    // dulu melewatkan splash sepenuhnya, dan itu membuat layar pembuka
-    // terasa "tidak ada" di desktop (sekali reload, hilang sampai tab
-    // ditutup). Sekarang kunjungan kedua mendapat versi RINGKAS 460ms,
-    // bukan tidak sama sekali. Kunjungan pertama naik 1400 → 1450ms karena
-    // sekuensnya kini berakhir di ±1,40 dtk; di 1400ms garis terakhirnya
-    // terpotong.
-    expect(indexHtml).toContain("MIN_VISIBLE = seen ? 460 : 1450");
-    expect(indexHtml).toContain("MAX_VISIBLE = seen ? 900 : 2200");
-    expect(indexHtml).toContain("an-splash-quick");
-    expect(indexHtml).toMatch(/prefers-reduced-motion: reduce/);
+  it("splash punya versi penuh/ringkas, keluar cepat, dan memiliki batas keras", () => {
+    const preloader = read("app/_components/Preloader.tsx");
+    const nextScript = read("public/assets/js/preloader.js");
+    const nextCss = read("app/preloader.css");
+    expect(nextScript).toContain("an-splash-seen");
+    expect(nextScript).toContain("sessionStorage");
+    expect(nextScript).toContain("var minimumVisible = seen ? 240 : 530;");
+    expect(nextScript).toContain("var maximumVisible = seen ? 650 : 1300;");
+    expect(nextScript).toContain("var exitDuration = seen ? 150 : 220;");
+    expect(nextScript).toContain("an-splash-quick");
+    expect(nextCss).toMatch(/prefers-reduced-motion: reduce/);
+    expect(nextScript).toContain("window.requestAnimationFrame");
+    expect(nextScript).toContain("window.setTimeout(drop, maximumVisible + 40)");
+    expect(nextCss).toContain("an-splash-failsafe");
+    expect(preloader).toContain("an-splash-word");
+    expect(preloader).not.toContain("an-splash-elapsed");
   });
 
   it("design system editorial tidak memakai efek kaca", () => {
@@ -242,7 +241,7 @@ describe("aset statis redesign", () => {
       "client/src/components/MusicEmbed.css",
       "client/src/components/NightFrequencyChrome.css",
       "client/src/pages/Home.css",
-      "client/index.html",
+      "app/preloader.css",
     ]) {
       const content = read(file);
       for (const hex of banned) {

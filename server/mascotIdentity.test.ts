@@ -8,7 +8,7 @@
  * ikut menampilkannya di setiap kaki halaman.
  */
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 
 const mascotSrc = "/assets/akbar-mascot-doodle.webp";
 

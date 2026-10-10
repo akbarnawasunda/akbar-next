@@ -320,7 +320,12 @@ function scenario(
   viewportWidth: number,
   viewportHeight: number,
   stage: SignatureSignals["stage"],
-  options: { seed?: number; frameCostMs?: number; tier?: SignatureCapability["tier"] } = {}
+  options: {
+    seed?: number;
+    frameCostMs?: number;
+    frameIntervalMs?: number;
+    tier?: SignatureCapability["tier"];
+  } = {}
 ) {
   const dom = setupDom(viewportWidth, viewportHeight, options);
   const signals = signalsStub(stage);
@@ -356,7 +361,7 @@ function scenario(
         dom.frames.length = 0;
         if (!next) break;
         dom.drawn.length = 0;
-        clock += 16.67;
+        clock += options.frameIntervalMs ?? 16.67;
         next(clock);
       }
       return api;
@@ -786,7 +791,7 @@ describe("particle field", () => {
     expect(density(phone.drawn)).toBeGreaterThan(45);
   });
 
-  it("menurunkan jumlah titik sendiri saat frame-nya melar", () => {
+  it("menurunkan jumlah titik sendiri saat biaya loop JavaScript-nya tinggi", () => {
     const stage = { x: 720, y: 450, w: 1200, h: 320, visibility: 1, progress: 0 };
     // Frame murah: tidak ada alasan memangkas apa pun.
     const cheap = scenario(1440, 900, stage, { seed: 5, frameCostMs: 0.4 });
@@ -795,13 +800,38 @@ describe("particle field", () => {
     cheap.teardown();
     expect(full).toBeGreaterThan(2000);
 
-    // Frame 12ms (di atas ambang 9ms): jumlah titik aktif turun bertahap.
+    // Pengaman biaya loop lama tetap bekerja secara independen.
     const heavy = scenario(1440, 900, { ...stage }, { seed: 5, frameCostMs: 12 });
     heavy.frames(260);
     const trimmed = heavy.drawn().length;
     heavy.teardown();
     expect(trimmed).toBeLessThan(full * 0.9);
-    // …tapi tidak pernah di bawah lantai keterbacaan.
+    expect(trimmed).toBeGreaterThan(full * 0.25);
+  });
+
+  it("menurunkan beban particle saat cadence rAF turun meski loop JS murah", () => {
+    const stage = { x: 720, y: 450, w: 1200, h: 320, visibility: 1, progress: 0 };
+    const smooth = scenario(1440, 900, stage, {
+      seed: 12,
+      frameIntervalMs: 16.67,
+    });
+    smooth.signals.scrollVelocity = 3;
+    smooth.frames(220);
+    const full = smooth.drawn().length;
+    smooth.teardown();
+
+    const slow = scenario(1440, 900, { ...stage }, {
+      seed: 12,
+      frameIntervalMs: 33.34,
+    });
+    slow.signals.scrollVelocity = 3;
+    slow.frames(220);
+    const trimmed = slow.drawn().length;
+    slow.teardown();
+
+    expect(full).toBeGreaterThan(2000);
+    expect(trimmed).toBeLessThan(full * 0.85);
+    // Adaptive quality must preserve enough points to keep the wordmark legible.
     expect(trimmed).toBeGreaterThan(full * 0.25);
   });
 

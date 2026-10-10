@@ -1,9 +1,9 @@
 /**
  * Sapuan aksesibilitas untuk seluruh rute publik.
  *
- * Semuanya dibaca dari HTML hasil `entry-server.tsx` sesuai
- * docs/notes/testing-policy.md: yang diperiksa adalah apa yang benar-benar
- * dikirim ke pengunjung, bukan isi file source.
+ * Semuanya dibaca dari HTML yang dihasilkan route-rendering harness sesuai
+ * docs/notes/testing-policy.md. Produksi tetap diverifikasi terpisah melalui
+ * HTTP smoke test atas server Next.js yang benar-benar dibangun.
  *
  * Catatan jujur soal cakupan: overflow dan tabrakan elemen pada lebar layar
  * tertentu tidak bisa diukur dari HTML — itu butuh browser sungguhan. Yang
@@ -11,7 +11,7 @@
  * label kontrol, urutan heading, id ganda, dan jebakan tabindex.
  */
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 
 const ID_ROUTES = [
   "/",

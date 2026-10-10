@@ -187,11 +187,13 @@ describe("layout layar kecil", () => {
     expect(css).toContain("--an-embed-audio-h, 166px");
   });
 
-  it("memakai meta viewport yang aman untuk zoom", () => {
-    const html = source("client/index.html");
-    expect(html).toContain("viewport-fit=cover");
+  it("uses the Next viewport API without disabling browser zoom", () => {
+    const layout = source("app/layout.tsx");
+    expect(layout).toContain('width: "device-width"');
+    expect(layout).toContain('viewportFit: "cover"');
+    expect(layout).toContain("initialScale: 1");
     // Mematikan zoom adalah pelanggaran aksesibilitas; pastikan tidak ada.
-    expect(html).not.toMatch(/user-scalable\s*=\s*no/);
-    expect(html).not.toMatch(/maximum-scale\s*=\s*1/);
+    expect(layout).not.toMatch(/userScalable:\s*false/);
+    expect(layout).not.toMatch(/maximumScale:/);
   });
 });

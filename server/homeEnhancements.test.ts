@@ -9,7 +9,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 
 const source = (path: string) =>
   readFileSync(resolve(process.cwd(), path), "utf8");
@@ -92,15 +92,17 @@ describe("hal yang tidak terlihat di HTML hasil render", () => {
     expect(pointer).toContain("(hover: hover) and (pointer: fine)");
   });
 
-  it("menjaga dokumen HTML dan sitemap tetap layak crawl", () => {
-    const index = source("client/index.html");
-    const ssr = source("server/_core/ssrHtml.ts");
-    const sitemap = source("client/public/sitemap.xml");
+  it("keeps the App Router document metadata and sitemap crawlable", async () => {
+    const layout = source("app/layout.tsx");
+    const pageMetadata = source("app/_lib/site-page.tsx");
+    const sitemap = source("public/sitemap.xml");
+    const homePage = await render("/", { documents: async () => [] as never });
 
-    expect(index).toContain('<html lang="id">');
-    expect(index).toContain("<!--app-head-->");
-    expect(ssr).toContain('rel="canonical"');
-    expect(ssr).toContain('property="og:url"');
+    expect(layout).toContain("<html lang={lang}");
+    expect(pageMetadata).toContain("canonical:");
+    expect(pageMetadata).toContain("openGraph:");
+    expect(homePage.head.canonicalPath).toBe("/");
+    expect(homePage.head.structuredData).toBeDefined();
     expect(sitemap).toContain("https://akbarnawasunda.my.id/music");
   });
 

@@ -1,44 +1,46 @@
-# Cleanup Decisions
+# Cleanup decisions: single Next.js runtime
 
-Tanggal review: 2026-08-22
+Tanggal migrasi: 2026-10-10
 
-## Backup
+## Keputusan arsitektur
 
-Backup branch dibuat sebelum perubahan destructive:
+Next.js App Router adalah satu-satunya runtime situs. Kode Vite/Express lama tidak dipertahankan sebagai rollback atau referensi executable. Jalur data/editorial, UI React yang dipakai halaman, dan layanan server yang masih dibutuhkan dipindahkan ke halaman App Router, Route Handlers, dan adapter request/cookie framework-netral.
 
-`backup/pre-cleanup-20260822-175717`
+URL publik yang masih masuk lewat rute legacy yang diketahui diarahkan dengan redirect permanen di `next.config.ts`. URL aset aplikasi lama yang tidak mempunyai padanan tidak disajikan lagi. Aset statis aktif hanya berada di `public/`, dan splash pre-hydration dimuat dari `public/assets/js/preloader.js`.
 
-Branch tersebut menunjuk ke commit sebelum cleanup dan tidak dihapus.
+## Dihapus setelah audit referensi
 
-## Deleted
+- Entri situs Vite (`client/index.html`, `client/src/App.tsx`, `main.tsx`, entry client/server), konfigurasi Vite aplikasi, dan helper navigasi Wouter.
+- Server Express, Vite SSR, handler Vercel SSR/tRPC lama, proxy Express lama, dan skrip smoke test khusus implementasi tersebut.
+- `legacy-next/`, `legacy-vite/`, serta `client/public/` yang merupakan salinan dari root `public/`.
+- HTML/CSS legacy, JavaScript halaman statis lama, komponen `LegacyDocument`, template scaffold Vite, dan konfigurasi TypeScript khusus Vite yang tidak dipakai oleh halaman Next.
+- Dependency aplikasi Wouter/Express dan plugin Vite aplikasi. Vite hanya tersisa sebagai dependency dev yang dipakai engine transform Vitest; tidak ada script, config, output, maupun entry point aplikasi Vite.
 
-### `legacy-vite-scaffold/`
+## Dipertahankan
 
-Folder ini dihapus seluruhnya karena hanya berisi scaffold contoh yang tidak dipakai oleh build aktif. Halaman representative-nya merender `Example Page`, `Loader2`, contoh markdown, dan contoh button. Folder tersebut juga dikecualikan dari `tsconfig.json`, sedangkan build aktif memakai `client/` sebagai root Vite.
+- `client/src/pages/` dan komponen React yang masih menjadi UI App Router; path direktori belum dipindah agar impor CSS, komponen, dan alias aset tetap stabil.
+- `client/src/lib/route-prefetch.ts`, helper server-only yang dipakai Next untuk data query dan metadata rute. Ini bukan entry point Vite.
+- `server/routers.ts`, Drizzle, database helpers, auth, dan layanan domain yang masih dipanggil Route Handlers atau Server Components.
+- `public/data/content.json` dan `public/data/releases.json` sebagai input migrasi konten idempoten, bersama aset, font, dan audio yang masih dipakai situs.
+- Redirect permanen untuk URL legacy yang telah diketahui, tanpa menghidupkan ulang dokumen atau runtime lama.
 
-### `public/vercel.json`
+## Visibilitas managed storage
 
-File ini dihapus karena tidak memiliki referensi dari source aktif dan mendeskripsikan konfigurasi asset deployment lama. Deployment aktif memakai root `vercel.json`, dengan Vite `root` di `client`, `publicDir` di `client/public`, dan output `dist/public`.
+Rute unduh membatasi key ke `users/{id}/assets/*` dan `generated/*`, tetapi sengaja tidak meminta sesi login karena URL tersebut dipakai pada konten situs publik. URL bersifat **public-by-URL**, bukan private storage: suffix UUID membuat tebakan sulit, tetapi bukan kontrol akses. UI Asset Library/Asset Picker kini memperingatkan agar file rahasia atau data pribadi tidak diunggah. Jika file privat kelak dibutuhkan, gunakan rute autentikasi dan signed URL terpisah.
 
-## Preserved
+## Validasi Node 24.x
 
-### `client/public/legacy/`
+Dijalankan dengan Node `v24.21.0` dan pnpm `10.34.6`:
 
-Dipertahankan karena `client/src/components/LegacyDocument.tsx` masih mengambil `/legacy/privacy.html`, `/legacy/404.html`, dan `/legacy/style.css`. Menghapusnya akan mematahkan route privacy dan fallback 404.
+- `pnpm install --frozen-lockfile` — berhasil.
+- `pnpm check` — berhasil.
+- `pnpm test` — 72 file, 417 tes lulus.
+- `pnpm audit` — tidak ada kerentanan yang diketahui.
+- `pnpm audit:layout` — tidak ada pelanggaran kebijakan fondasi; laporan informasional masih mencatat 1.141 deklarasi `!important` dan meminta pemeriksaan visual browser pada lebar ponsel.
+- `pnpm build` — berhasil dengan Next.js 16.4.0/Turbopack.
+- `scripts/verify-next.sh` terhadap `next start` Node 24 — 51 pemeriksaan HTTP lulus, termasuk HTML mentah kedua locale, loading, redirects, 404 slug/rute, media fallback, noindex, aset aktif, dan tRPC health.
+- URL storage dengan nama file berisi spasi, `#`, dan `?` sudah diuji melewati router setelah percent-encoding; respons berhenti di guard konfigurasi (503) karena credential Forge tidak tersedia, bukan 400 dari validasi path.
 
-### `legacy-next/`
+## Batas verifikasi
 
-Dipertahankan sebagai arsip karena bukan bagian typecheck/build aktif, tetapi mungkin masih dibutuhkan untuk historical reference atau deployment Next.js lama. Penghapusannya memerlukan verifikasi deployment eksternal terpisah.
-
-### `dist/` dan `.manus-logs/`
-
-Tidak diubah oleh cleanup repository. `dist/` adalah build output yang sudah di-ignore Git, sedangkan `.manus-logs/` adalah artifact development lokal. Keduanya dapat dibersihkan lokal tanpa commit repository.
-
-## Verification requirement
-
-Setelah penghapusan, jalankan typecheck, test suite, build, dan smoke test route publik serta endpoint API. Jangan menghapus `client/src`, `server`, `shared`, database configuration, route files, atau environment handling berdasarkan nama folder saja.
-
-
-## Validation result
-
-Typecheck, 42-test suite, and production build passed after the cleanup. On the local server, `/` returned HTML 200, `/privacy` rendered the preserved privacy page through `LegacyDocument`, `/route-that-does-not-exist` rendered the preserved 404 page, and `/api/trpc/auth.me` returned JSON 200. No active route was observed to depend on `legacy-vite-scaffold` or `public/vercel.json`.
+Hasil di atas membuktikan konsistensi typecheck, kontrak unit, dependency audit, build, dan smoke HTTP yang diuji; hasil ini **bukan** bukti bahwa semua bug situs sudah ditemukan. Audit layout sendiri tidak mengukur overflow/tumpang-tindih visual pada perangkat nyata, dan tidak ada browser automation/browser binary di sandbox untuk visual QA manual. Akses database, OAuth, email, form produksi, dan storage/media upstream tidak diverifikasi dengan kredensial/layanan produksi; smoke media di sandbox memverifikasi fallback lokal ketika upstream tidak tersedia, sedangkan route storage yang valid mengembalikan 503 karena `BUILT_IN_FORGE_API_URL`/`BUILT_IN_FORGE_API_KEY` tidak dikonfigurasi.

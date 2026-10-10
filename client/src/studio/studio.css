@@ -208,7 +208,6 @@
 .studio-side-scroll {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
   padding: 6px 10px 14px;
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.14) transparent;

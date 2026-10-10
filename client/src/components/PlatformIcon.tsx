@@ -1,33 +1,120 @@
-import appleMusic from "simple-icons/icons/applemusic.svg?raw";
-import deezer from "simple-icons/icons/deezer.svg?raw";
-import instagram from "simple-icons/icons/instagram.svg?raw";
-import soundcloud from "simple-icons/icons/soundcloud.svg?raw";
-import spotify from "simple-icons/icons/spotify.svg?raw";
-import tidal from "simple-icons/icons/tidal.svg?raw";
-import tiktok from "simple-icons/icons/tiktok.svg?raw";
-import x from "simple-icons/icons/x.svg?raw";
-import youtube from "simple-icons/icons/youtube.svg?raw";
+import {
+  siApplemusic,
+  siDeezer,
+  siInstagram,
+  siSoundcloud,
+  siSpotify,
+  siTidal,
+  siTiktok,
+  siX,
+  siYoutube,
+} from "simple-icons";
 import "./PlatformIcon.css";
 
-const amazonMusic = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.7 16.5c3 2.1 7.9 2.4 11.8.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="m15.7 15.8 2.2.3-.7 2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 14.3V5.8l7-1.3v8.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.8" cy="15.2" r="2" fill="currentColor"/><circle cx="13.8" cy="13.9" r="2" fill="currentColor"/></svg>';
-const musicNote = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l9-2v12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="18" r="2.5" fill="currentColor"/><circle cx="15.5" cy="16" r="2.5" fill="currentColor"/></svg>';
-
-const iconMarkup: Record<string, string> = {
-  spotify, youtube, soundcloud, instagram, "apple music": appleMusic, deezer, "amazon music": amazonMusic, tidal, tiktok, x,
+const musicPlatforms: Record<string, string> = {
+  spotify: siSpotify.path,
+  youtube: siYoutube.path,
+  soundcloud: siSoundcloud.path,
+  instagram: siInstagram.path,
+  "apple music": siApplemusic.path,
+  deezer: siDeezer.path,
+  tidal: siTidal.path,
+  tiktok: siTiktok.path,
+  x: siX.path,
 };
 
-export function PlatformIcon({ label, className = "" }: { label: string; className?: string }) {
-  const normalizedLabel = label.trim().toLowerCase().replace(/[\u00a0\s]+/g, " ");
-  const canonicalLabel = ({
-    applemusic: "apple music",
-    "apple-music": "apple music",
-    amazonmusic: "amazon music",
-    "amazon-music": "amazon music",
-    twitter: "x",
-    "x / twitter": "x",
-  } as Record<string, string>)[normalizedLabel.replace(/\s+/g, "")] || normalizedLabel;
-  const markup = iconMarkup[canonicalLabel] || musicNote;
-  const cleanMarkup = markup.replace(/<title[^>]*>.*?<\/title>/gi, "");
+const aliases: Record<string, string> = {
+  applemusic: "apple music",
+  amazonmusic: "amazon music",
+  twitter: "x",
+  twitterx: "x",
+  xtwitter: "x",
+  x: "x",
+};
+
+function AmazonMusicIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        d="M5.7 16.5c3 2.1 7.9 2.4 11.8.3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="m15.7 15.8 2.2.3-.7 2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 14.3V5.8l7-1.3v8.6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="6.8" cy="15.2" r="2" fill="currentColor" />
+      <circle cx="13.8" cy="13.9" r="2" fill="currentColor" />
+    </svg>
+  );
+}
+
+function GenericMusicIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path
+        d="M9 18V6l9-2v12"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="6.5" cy="18" r="2.5" fill="currentColor" />
+      <circle cx="15.5" cy="16" r="2.5" fill="currentColor" />
+    </svg>
+  );
+}
+
+function canonicalPlatformLabel(label: string) {
+  const normalized = label
+    .trim()
+    .toLowerCase()
+    .replace(/[\u00a0\s]+/g, " ");
+  const compact = normalized.replace(/[^a-z0-9]+/g, "");
+  return aliases[compact] ?? normalized;
+}
+
+export function PlatformIcon({
+  label,
+  className = "",
+}: {
+  label: string;
+  className?: string;
+}) {
+  const canonicalLabel = canonicalPlatformLabel(label);
   const iconClass = canonicalLabel.replace(/\s+/g, "-");
-  return <span className={`an-platform-icon an-platform-${iconClass} ${className}`} aria-hidden="true" dangerouslySetInnerHTML={{ __html: cleanMarkup }} />;
+  const iconPath = musicPlatforms[canonicalLabel];
+
+  return (
+    <span
+      className={`an-platform-icon an-platform-${iconClass} ${className}`.trim()}
+      aria-hidden="true"
+    >
+      {iconPath ? (
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d={iconPath} />
+        </svg>
+      ) : canonicalLabel === "amazon music" ? (
+        <AmazonMusicIcon />
+      ) : (
+        <GenericMusicIcon />
+      )}
+    </span>
+  );
 }

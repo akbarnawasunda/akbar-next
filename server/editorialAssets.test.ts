@@ -2,7 +2,7 @@ import { existsSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const assetPath = (name: string) => resolve(process.cwd(), "client/public/assets", name);
+const assetPath = (name: string) => resolve(process.cwd(), "public/assets", name);
 
 describe("editorial artwork assets", () => {
   it("keeps the red editorial portrait available as a lightweight WebP", () => {

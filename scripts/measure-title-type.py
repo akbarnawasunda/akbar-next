@@ -23,9 +23,9 @@ except ImportError:  # pragma: no cover - alat bantu, bukan bagian build
     sys.exit("Butuh fontTools: pip install fonttools brotli")
 
 FONTS = {
-    "Recons (primary display)": "client/public/assets/fonts/fontsource/Recons-Regular.woff2",
-    "NEXROID (secondary display)": "client/public/assets/fonts/fontsource/NEXROID-Regular.woff2",
-    "Good Times (text/UI)": "client/public/assets/fonts/fontsource/Good Times Rg.woff2",
+    "Recons (primary display)": "public/assets/fonts/fontsource/Recons-Regular.woff2",
+    "NEXROID (secondary display)": "public/assets/fonts/fontsource/NEXROID-Regular.woff2",
+    "Good Times (text/UI)": "public/assets/fonts/fontsource/Good Times Rg.woff2",
 }
 WORDS = ["NAWASUNDA.", "NAWASUNDA", "AKBAR", "AKBAR NAWASUNDA"]
 TRACKING = [0.0, 0.02]

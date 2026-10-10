@@ -21,7 +21,7 @@ import {
   jakartaWeekdayIndex,
   msUntilJakartaMidnight,
 } from "../client/src/lib/jakartaTime";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 
 const read = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
 
@@ -122,28 +122,29 @@ describe("jam dan perayaan tidak ikut ter-render di server", () => {
   });
 });
 
-describe("splash memuat jam hidup, durasi terukur, dan varian ulang tahun", () => {
-  const indexHtml = read("client/index.html");
+describe("splash with live Jakarta clock and birthday accent", () => {
+  const preloader = read("app/_components/Preloader.tsx");
+  const preloaderScript = read("public/assets/js/preloader.js");
 
-  it("menampilkan jam Jakarta yang berdetak dan tanggal berjalan", () => {
-    expect(indexHtml).toContain("an-splash-clock");
-    expect(indexHtml).toContain("Asia/Jakarta");
-    expect(indexHtml).toContain("an-splash-date");
-    expect(indexHtml).toContain("setInterval(paintTime, 1000)");
+  it("shows the live Jakarta clock and current date", () => {
+    expect(preloader).toContain("an-splash-clock");
+    expect(preloaderScript).toContain("Asia/Jakarta");
+    expect(preloader).toContain("an-splash-date");
+    expect(preloaderScript).toContain("setInterval(paintTime, 1000)");
   });
 
-  it("menampilkan durasi yang benar-benar berjalan, bukan persentase karangan", () => {
-    expect(indexHtml).toContain("an-splash-elapsed");
-    expect(indexHtml).toContain("an-splash-meter-fill");
-    expect(indexHtml).toContain("paintProgress");
-    expect(indexHtml).toContain("toFixed(1)");
-    expect(indexHtml).toMatch(/an-splash-elapsed">0\.0<\/span>s</);
+  it("keeps visual progress but does not print elapsed numbers", () => {
+    expect(preloader).toContain("an-splash-meter-fill");
+    expect(preloaderScript).toContain("paintProgress");
+    expect(preloader).not.toContain("an-splash-elapsed");
+    expect(preloaderScript).not.toContain("an-splash-elapsed");
+    expect(preloaderScript).not.toContain("toFixed(1)");
   });
 
-  it("menyiapkan varian ulang tahun 1 November", () => {
-    expect(indexHtml).toContain("an-splash-birthday");
-    expect(indexHtml).toContain("01 November");
-    expect(indexHtml).toMatch(/stamp\.month === 11 && stamp\.day === 1/);
-    expect(indexHtml).toContain('setAttribute("data-birthday", "on")');
+  it("prepares the November 1 birthday accent in both locales", () => {
+    expect(preloader).toContain("an-splash-birthday");
+    expect(preloader).toContain("01 November");
+    expect(preloaderScript).toMatch(/stamp\.month === 11 && stamp\.day === 1/);
+    expect(preloaderScript).toContain('setAttribute("data-birthday", "on")');
   });
 });

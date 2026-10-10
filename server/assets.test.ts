@@ -25,6 +25,36 @@ describe("assets procedures", () => {
     await expect(appRouter.createCaller(context(user)).assets.upload({ fileName: "too-large.bin", mimeType: "application/octet-stream", size: 10 * 1024 * 1024 + 1, base64: "AA==" })).rejects.toMatchObject({ code: "BAD_REQUEST" });
   });
 
+  it("rejects unsafe upload path segments and malformed MIME/base64 input", async () => {
+    const user = { id: 1, openId: "asset-test", role: "user" } as TrpcContext["user"];
+    const caller = appRouter.createCaller(context(user));
+
+    await expect(
+      caller.assets.upload({
+        fileName: "../private.txt",
+        mimeType: "text/plain",
+        size: 1,
+        base64: "AA==",
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(
+      caller.assets.upload({
+        fileName: "safe.txt",
+        mimeType: "text/plain\r\nX-Injected: yes",
+        size: 1,
+        base64: "AA==",
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+    await expect(
+      caller.assets.upload({
+        fileName: "safe.txt",
+        mimeType: "text/plain",
+        size: 1,
+        base64: "not-base64!",
+      }),
+    ).rejects.toMatchObject({ code: "BAD_REQUEST" });
+  });
+
   it("uploads a valid asset and returns persisted metadata", async () => {
     const user = { id: 1, openId: "asset-test", role: "user" } as TrpcContext["user"];
     const result = await appRouter.createCaller(context(user)).assets.upload({ fileName: "demo.png", mimeType: "image/png", size: 1, base64: "AA==" });

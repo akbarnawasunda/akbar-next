@@ -1,5 +1,5 @@
 import { createHash, timingSafeEqual } from "node:crypto";
-import type { Request, Response } from "express";
+import type { AppRequest, CookieResponse } from "./_core/httpTypes";
 import { TRPCError } from "@trpc/server";
 import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -19,7 +19,7 @@ type AttemptState = {
 
 const attempts = new Map<string, AttemptState>();
 
-function clientKey(req: Request): string {
+function clientKey(req: AppRequest): string {
   const forwarded = req.headers["x-forwarded-for"];
   const firstForwarded = Array.isArray(forwarded) ? forwarded[0] : forwarded?.split(",")[0];
   return (firstForwarded || req.ip || "unknown").trim();
@@ -68,8 +68,8 @@ function clearFailures(key: string): void {
 }
 
 export async function loginWithDashboardPassword(
-  req: Request,
-  res: Response,
+  req: AppRequest,
+  res: CookieResponse,
   username: string,
   password: string,
 ) {

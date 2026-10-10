@@ -1,5 +1,6 @@
 import { ArrowLeft, ArrowUpRight, Disc3, Music2, Play } from "lucide-react";
-import { Link, useParams } from "wouter";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { officialBrand, releases } from "@/content/artistPlatform";

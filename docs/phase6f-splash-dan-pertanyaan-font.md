@@ -1,5 +1,9 @@
 # Fase 6F — Splash kepotong, splash "tidak ada", dan jawaban soal sumber font
 
+> Catatan historis: durasi 460/1450 ms di bawah sudah disupersede oleh optimasi
+> 9 Oktober 2026. Kontrak loading aktif sekarang dirangkum di
+> `docs/notes/loading-and-transition.md`.
+
 ## 1. "Bisa ambil font selain Google Fonts?"
 
 [FACT] Bisa, dan situs ini **sudah** melakukannya: Clash Display, General

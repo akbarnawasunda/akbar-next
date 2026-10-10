@@ -1,5 +1,5 @@
 import { ArrowUpRight, Mail } from "lucide-react";
-import { Link } from "wouter";
+import Link from "next/link";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { verifiedArtistProfile } from "@/content/artistPlatform";
 import { usePublicArtistContent } from "@/content/publicContent";

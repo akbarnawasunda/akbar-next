@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
+import { usePathname } from "next/navigation";
 import "./NightFrequencySignature.css";
 
 type Chapter = {
@@ -34,7 +34,7 @@ function collectChapters(): Chapter[] {
 }
 
 export function NightFrequencySignature() {
-  const [location] = useLocation();
+  const location = usePathname() || "/";
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [activeChapter, setActiveChapter] = useState(0);
 

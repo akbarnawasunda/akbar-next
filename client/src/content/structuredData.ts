@@ -11,10 +11,9 @@ import { slugify } from "@shared/slug";
 /**
  * Structured data bersama.
  *
- * Dipakai dua jalur sekaligus: SSR (`client/src/ssr/prefetch.ts`) dan
- * pembaruan di client (`components/StructuredData.tsx`). Sebelumnya keduanya
- * membangun graph sendiri-sendiri, sehingga hidrasi menimpa JSON-LD server
- * dengan versi yang lebih miskin. Satu builder = satu kebenaran.
+ * Dipakai untuk metadata/JSON-LD App Router dan pembaruan di client
+ * (`components/StructuredData.tsx`). Satu builder menjaga graph di HTML awal
+ * dan state React tetap konsisten.
  */
 
 export const SITE_NAME = "Akbar Nawasunda | Official Website";

@@ -14,7 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { useLocation } from "wouter";
+import { usePathname } from "next/navigation";
 import { soundcloudEmbedUrl } from "@/components/MusicEmbed";
 import { currentRelease } from "@/content/artistPlatform";
 import { usePublicArtistContent } from "@/content/publicContent";
@@ -82,7 +82,7 @@ export function GlobalAudioPlayer() {
   const [mounted, setMounted] = useState(false);
   const [hasOpened, setHasOpened] = useState(false);
   const [autoPlay, setAutoPlay] = useState(false);
-  const [location] = useLocation();
+  const location = usePathname() || "/";
   const onGame = isGameRoute(location);
 
   const state = useSignatureState(snapshot => snapshot.audio.state);

@@ -6,8 +6,8 @@ const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf
 
 describe("mature artist palette", () => {
   it("loads the mature palette after earlier public visual layers", () => {
-    const app = source("client/src/App.tsx");
-    expect(app).toContain('import "./components/MaturePalette.css"');
+    const appLayout = source("app/layout.tsx");
+    expect(appLayout).toContain('import "@/components/MaturePalette.css"');
   });
 
   it("uses graphite, copper, and parchment instead of plasma cyan as the public signal system", () => {

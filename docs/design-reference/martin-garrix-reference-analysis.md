@@ -149,7 +149,7 @@ Mixed photography then stays consistent without filters or overlays. This is a p
 
 ### Meaningful (keep)
 
-- **Route progress line** (`RouteTransition.tsx`): immediate click feedback, with a 420ms minimum visible time and a 320ms exit. This gives the user confidence that the click landed.
+- **Route progress line** (`RouteTransition.tsx`): immediate click feedback, with a 160ms minimum visible time and a 180ms exit. This keeps the acknowledgement visible without delaying a fast route.
 - **Scroll-driven signal stage with phrase jump buttons** (`SignatureStage.tsx`): scroll is also navigation. Buttons compute a scroll target and call `window.scrollTo`. Reduced-motion users get an instant jump. Scrolling is not intercepted.
 - **Release player toggle** (`aria-expanded`): one state, one clear control.
 - **Scroll progress bar** (`ScrollProgress.tsx`): tells the user where they are on long pages.

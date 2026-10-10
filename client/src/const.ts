@@ -2,30 +2,46 @@ import { OAUTH_STATE_COOKIE, encodeOAuthState } from "@shared/const";
 
 export { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 
-// Start the Manus OAuth login. Call this from an event handler or effect at the
-// moment you want to navigate, e.g. `onClick={() => startLogin()}`.
-//
-// It has SIDE EFFECTS — it mints a one-time nonce, writes the __Host- state
-// cookie, and navigates immediately — so the cookie nonce always matches the
-// `state` it sends. Do NOT call it during render (no `href={startLogin()}` /
-// `loginUrl={...}`): each call overwrites the cookie, so a stray render-phase
-// call would desync it from an in-flight login and the callback would reject it
-// with "invalid oauth state". It returns void by design, so there is no URL to
-// stash across renders.
-export const startLogin = () => {
-  const oauthPortalUrl = import.meta.env.VITE_OAUTH_PORTAL_URL;
-  const appId = import.meta.env.VITE_APP_ID;
-  const redirectUri = `${window.location.origin}/api/oauth/callback`;
+function oauthConfiguration() {
+  return {
+    portalUrl: process.env.NEXT_PUBLIC_OAUTH_PORTAL_URL?.trim() ?? "",
+    appId: process.env.NEXT_PUBLIC_APP_ID?.trim() ?? "",
+  };
+}
 
+export function isOAuthLoginConfigured() {
+  const { portalUrl, appId } = oauthConfiguration();
+  if (!portalUrl || !appId) return false;
+
+  try {
+    const url = new URL(portalUrl);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+// Start the Manus OAuth login from an event handler. A one-time nonce binds
+// the callback to this browser; never call this during render.
+export function startLogin(): boolean {
+  const { portalUrl, appId } = oauthConfiguration();
+  if (!isOAuthLoginConfigured()) return false;
+
+  const portal = new URL(portalUrl);
+  portal.pathname = `${portal.pathname.replace(/\/+$/, "")}/app-auth`;
+  portal.search = "";
+  portal.hash = "";
+
+  const redirectUri = `${window.location.origin}/api/oauth/callback`;
   const nonce = crypto.randomUUID();
   document.cookie = `${OAUTH_STATE_COOKIE}=${nonce}; Path=/; Max-Age=600; SameSite=None; Secure`;
   const state = encodeOAuthState({ redirectUri, nonce });
 
-  const url = new URL(`${oauthPortalUrl}/app-auth`);
-  url.searchParams.set("appId", appId);
-  url.searchParams.set("redirectUri", redirectUri);
-  url.searchParams.set("state", state);
-  url.searchParams.set("type", "signIn");
+  portal.searchParams.set("appId", appId);
+  portal.searchParams.set("redirectUri", redirectUri);
+  portal.searchParams.set("state", state);
+  portal.searchParams.set("type", "signIn");
 
-  window.location.href = url.toString();
-};
+  window.location.href = portal.toString();
+  return true;
+}

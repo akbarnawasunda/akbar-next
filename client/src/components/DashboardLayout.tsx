@@ -33,7 +33,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useLocation } from "wouter";
+import { usePathname, useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -142,7 +142,9 @@ export default function DashboardLayout({
   kicker?: string;
 }) {
   const { loading, user, logout } = useAuth();
-  const [location, setLocation] = useLocation();
+  const location = usePathname() || "/";
+  const router = useRouter();
+  const setLocation = useCallback((href: string) => router.push(href), [router]);
   const [rail, setRail] = useState(false);
   const [drawer, setDrawer] = useState(false);
   const [palette, setPalette] = useState(false);

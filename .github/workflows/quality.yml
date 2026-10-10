@@ -11,8 +11,8 @@ permissions:
 
 jobs:
   validate:
-    name: Validate SSR, hydration, and public routes
-    runs-on: ubuntu-24.04 # dipin supaya hasil CI reprodusibel
+    name: Validate Next.js SSR, tRPC, and public routes
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout
@@ -22,13 +22,9 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 24
-          # setup-node v5 membaca field "packageManager" dan mencoba menyiapkan
-          # cache pnpm sebelum pnpm terpasang. Cache dimatikan supaya Corepack
-          # yang mengurus pnpm, tanpa action pihak ketiga.
           package-manager-cache: false
 
       - name: Enable pnpm
-        # Versi pnpm mengikuti field "packageManager" di package.json.
         run: |
           corepack enable
           pnpm --version
@@ -36,37 +32,37 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Audit production and development dependencies
+        run: pnpm audit
+
       - name: Typecheck
         run: pnpm check
 
       - name: Unit and integration tests
-        run: pnpm test -- --run
+        run: pnpm test
 
-      - name: Build client, SSR, and serverless artifacts
-        run: pnpm build
+      - name: Build Next.js production app
+        run: NEXT_PUBLIC_SITE_URL=http://localhost:4101 pnpm build
 
-      - name: Start production SSR server
+      - name: Start production Next.js server
         run: |
-          CANONICAL_ORIGIN=http://localhost:4101 \
-          SITE_NAME="Akbar Nawasunda | Official Website" \
-          PORT=4101 NODE_ENV=production \
-          node dist/index.js > /tmp/akbar-ssr-ci.log 2>&1 &
-          echo $! > /tmp/akbar-ssr-ci.pid
-          for attempt in $(seq 1 30); do
+          NEXT_PUBLIC_SITE_URL=http://localhost:4101 PORT=4101 pnpm start > /tmp/akbar-next-ci.log 2>&1 &
+          echo $! > /tmp/akbar-next-ci.pid
+          for attempt in $(seq 1 40); do
             if curl --fail --silent --show-error http://localhost:4101/robots.txt >/dev/null; then
               exit 0
             fi
             sleep 1
           done
-          cat /tmp/akbar-ssr-ci.log
+          cat /tmp/akbar-next-ci.log
           exit 1
 
-      - name: Verify crawler-visible SSR and redirects
-        run: BASE=http://localhost:4101 bash scripts/verify-ssr.sh
+      - name: Verify crawler-visible HTML, redirects, and API
+        run: BASE=http://localhost:4101 bash scripts/verify-next.sh
 
-      - name: Stop production SSR server
+      - name: Stop production Next.js server
         if: always()
         run: |
-          if [ -f /tmp/akbar-ssr-ci.pid ]; then
-            kill "$(cat /tmp/akbar-ssr-ci.pid)" 2>/dev/null || true
+          if [ -f /tmp/akbar-next-ci.pid ]; then
+            kill "$(cat /tmp/akbar-next-ci.pid)" 2>/dev/null || true
           fi

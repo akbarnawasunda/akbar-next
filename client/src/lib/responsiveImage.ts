@@ -61,7 +61,7 @@ export const MOBILE_VARIANTS: Record<string, string> = {
 };
 
 /**
- * Kandidat AVIF. Kosong selama belum ada file .avif di `client/public/assets`
+ * Kandidat AVIF. Kosong selama belum ada file .avif di `public/assets`
  * (kecuali maskot). Isi hanya setelah file-nya benar-benar ada di repo.
  */
 export const AVIF_VARIANTS: Record<string, string> = {

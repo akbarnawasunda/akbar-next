@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { useLocation } from "wouter";
+import { useRouter } from "next/navigation";
 import { usePublicArtistContent, publicUpcomingEvents } from "@/content/publicContent";
 import { releases as catalogReleases } from "@/content/artistPlatform";
 import { useSignatureRuntime, useSignatureState } from "@/signature/useSignature";
@@ -15,7 +15,7 @@ import { slugify } from "@shared/slug";
  * Command palette (Cmd/Ctrl + K).
  *
  * Hanya hidup setelah interaksi di client — tidak pernah bocor ke HTML SSR.
- * Navigasi memakai router yang sudah ada (wouter), fokus terkunci selama
+ * Navigasi memakai App Router Next.js, fokus terkunci selama
  * terbuka, ESC menutup, dan seluruh daftar bisa dijelajahi dengan panah.
  */
 
@@ -67,7 +67,7 @@ type Command = {
 };
 
 export function CommandPalette() {
-  const [, navigate] = useLocation();
+  const router = useRouter();
   const { actions } = useSignatureRuntime();
   const lang = useSignatureState(snapshot => snapshot.route.lang);
   const frequency = useSignatureState(snapshot => snapshot.frequency);
@@ -269,7 +269,7 @@ export function CommandPalette() {
       window.open(command.href, "_blank", "noreferrer");
       return;
     }
-    navigate(command.href);
+    router.push(command.href);
   };
 
   const onDialogKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -354,7 +354,13 @@ export function CommandPalette() {
           placeholder={copy.placeholder}
         />
 
-        <div className="an-command-results" id={listId} role="listbox" aria-label={copy.title}>
+        <div
+          className="an-command-results"
+          id={listId}
+          role="listbox"
+          aria-label={copy.title}
+          data-lenis-prevent
+        >
           {results.length === 0 ? (
             <p className="an-command-empty">{copy.empty}</p>
           ) : (

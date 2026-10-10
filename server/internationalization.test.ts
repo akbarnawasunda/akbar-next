@@ -1,19 +1,25 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 
 const source = (path: string) => readFileSync(resolve(process.cwd(), path), "utf8");
 
 describe("international artist layer", () => {
   it("registers separate English public URLs without replacing Indonesian routes", () => {
-    const app = source("client/src/App.tsx");
+    const routeView = source("app/_components/RouteView.tsx");
+    const idHome = source("app/(id)/page.tsx");
+    const enHome = source("app/(en)/en/page.tsx");
+    const enRelease = source("app/(en)/en/music/[slug]/page.tsx");
+    const enEpk = source("app/(en)/en/epk/page.tsx");
+    const enPrivacy = source("app/(en)/en/privacy/page.tsx");
     const english = source("client/src/pages/EnglishPages.tsx");
-    expect(app).toContain('path={"/"} component={Home}');
-    expect(app).toContain('path={"/en"} component={EnglishHome}');
-    expect(app).toContain('path={"/en/music/:slug"} component={EnglishReleaseDetail}');
-    expect(app).toContain('path={"/en/epk"} component={EnglishEpk}');
-    expect(app).toContain('path={"/en/privacy"} component={EnglishPrivacy}');
+    expect(idHome).toContain("pathname='/' route='home'");
+    expect(enHome).toContain("pathname='/en' route='enHome'");
+    expect(enRelease).toContain("route='enRelease'");
+    expect(enEpk).toContain("pathname='/en/epk' route='enEpk'");
+    expect(enPrivacy).toContain("pathname='/en/privacy' route='enPrivacy'");
+    expect(routeView).toContain("enHome: page(");
     // Hero EN kini memakai satu bio terverifikasi (HomeView locale="en" di
     // Home.tsx), bukan parafrase terpisah yang dulu hidup di EnglishPages.tsx
     // — sama pola dengan About.tsx di baris berikut.
@@ -64,23 +70,18 @@ describe("international artist layer", () => {
   });
 
   it("emits route-aware canonical, language alternates, and only factual schema types", async () => {
-    const app = source("client/src/App.tsx");
-    const index = source("client/index.html");
-    const ssr = source("server/_core/ssrHtml.ts");
-    const robots = source("client/public/robots.txt");
-    const sitemap = source("client/public/sitemap.xml");
-    expect(app).toContain('document.documentElement.lang = isEnglish ? "en" : "id"');
-    expect(app).toContain('meta.setAttribute("content", value)');
-    expect(app).toContain('setMeta(\'meta[property="og:image"]\'');
-    expect(app).toContain('setMeta(\'meta[name="twitter:title"]\', resolvedTitle)');
-    expect(app).toContain('setMeta(\'meta[name="twitter:description"]\', resolvedDescription)');
-    expect(app).toContain('setMeta(\'meta[name="twitter:image"]\', resolvedImage)');
-    expect(app).toContain('link.dataset.languageLink = "true"');
-    expect(ssr).toContain('<html lang="${language}">');
-    expect(ssr).toContain('hreflang="${language}"');
-    expect(ssr).toContain('name="twitter:card"');
-    expect(ssr).toContain('name="twitter:image"');
-    expect(index).toContain('rel="apple-touch-icon"');
+    const siteProviders = source("app/_components/SiteProviders.tsx");
+    const sitePage = source("app/_lib/site-page.tsx");
+    const layout = source("app/layout.tsx");
+    const robots = source("public/robots.txt");
+    const sitemap = source("public/sitemap.xml");
+    expect(siteProviders).toContain('document.documentElement.lang =');
+    expect(sitePage).toContain("alternates:");
+    expect(sitePage).toContain('"x-default"');
+    expect(sitePage).toContain("canonical:");
+    expect(sitePage).toContain("openGraph:");
+    expect(sitePage).toContain("twitter:");
+    expect(layout).toContain("apple:");
     expect(robots).toContain("Sitemap: https://akbarnawasunda.my.id/sitemap.xml");
     expect(robots).toContain("Disallow: /studio");
     expect(sitemap).toContain("https://akbarnawasunda.my.id/en/music");
@@ -119,10 +120,11 @@ describe("international artist layer", () => {
 
   it("shares one public custom-content query between page data and metadata", () => {
     const publicContent = source("client/src/content/publicContent.ts");
-    const app = source("client/src/App.tsx");
+    const sitePage = source("app/_lib/site-page.tsx");
     expect(publicContent).toContain("trpc.content.documents.useQuery()");
     expect(publicContent).toContain("customDocumentsToPublicContent");
-    expect(app).toContain("trpc.content.documents.useQuery()");
+    expect(sitePage).toContain("caller.content.documents()");
+    expect(sitePage).toContain("prefetchForPath");
     expect(publicContent).not.toContain("@sanity/client");
     expect(publicContent).not.toContain("_type ==");
   });

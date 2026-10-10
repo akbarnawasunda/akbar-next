@@ -1,29 +1,73 @@
-/* AN SW v3 — direct asset paths — navigasi network-first, asset stale-while-revalidate */
-var CACHE='an-shell-v3';
-self.addEventListener('install',function(e){
-e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(['/','/manifest.webmanifest','/assets/media/favicon.png'])}));
-self.skipWaiting();
-});
-self.addEventListener('activate',function(e){
-e.waitUntil(caches.keys().then(function(ks){return Promise.all(ks.filter(function(k){return k!==CACHE}).map(function(k){return caches.delete(k)}))}));
-self.clients.claim();
-});
-self.addEventListener('fetch',function(e){
-var u=new URL(e.request.url);
-if(e.request.method!=='GET'||u.origin!==self.location.origin)return;
-if(u.pathname.indexOf('/data/')===0||u.pathname.indexOf('/admin')===0||u.pathname.indexOf('/epk')===0)return;
-if(e.request.mode==='navigate'){
-e.respondWith(fetch(e.request).then(function(res){
-var copy=res.clone();caches.open(CACHE).then(function(c){c.put('/index.html',copy)});
-return res;
-}).catch(function(){return caches.match('/index.html')}));
-return;
+/* AN SW v5 — cache only versioned/static assets, never pages or API responses. */
+var CACHE = "an-shell-v5";
+var PRECACHE = ["/manifest.webmanifest", "/assets/akbar-favicon.jpg"];
+
+function isStaticAsset(pathname) {
+  return pathname.indexOf("/assets/") === 0 || pathname.indexOf("/_next/static/") === 0;
 }
-e.respondWith(caches.match(e.request).then(function(hit){
-var fetched=fetch(e.request).then(function(res){
-if(res.ok&&res.type==='basic'){var copy=res.clone();caches.open(CACHE).then(function(c){c.put(e.request,copy)})}
-return res;
+
+self.addEventListener("install", function (event) {
+  event.waitUntil(
+    caches.open(CACHE).then(function (cache) {
+      return cache.addAll(PRECACHE);
+    }),
+  );
+  self.skipWaiting();
 });
-return hit||fetched;
-}));
+
+self.addEventListener("activate", function (event) {
+  event.waitUntil(
+    caches.keys().then(function (keys) {
+      return Promise.all(
+        keys
+          .filter(function (key) {
+            return (
+              key !== CACHE &&
+              (key.indexOf("an-shell-v") === 0 || key.indexOf("an-static-v") === 0)
+            );
+          })
+          .map(function (key) {
+            return caches.delete(key);
+          }),
+      );
+    }),
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", function (event) {
+  var request = event.request;
+  var url = new URL(request.url);
+  if (request.method !== "GET" || url.origin !== self.location.origin) return;
+
+  // Do not cache Next.js pages, routes, JSON content, or authenticated APIs.
+  // In particular, never map every page response to a shared `/index.html` key.
+  if (!isStaticAsset(url.pathname) && url.pathname !== "/manifest.webmanifest") return;
+
+  event.respondWith(
+    caches.open(CACHE).then(function (cache) {
+      return fetch(request)
+        .then(function (response) {
+          if (response.ok && response.type === "basic") {
+            // Cache.put rejects partial (206) media responses in browsers. A
+            // cache failure must never turn a successful network fetch into an
+            // offline error.
+            return cache.put(request, response.clone()).then(
+              function () {
+                return response;
+              },
+              function () {
+                return response;
+              },
+            );
+          }
+          return response;
+        })
+        .catch(function () {
+          return cache.match(request).then(function (cached) {
+            return cached || Response.error();
+          });
+        });
+    }),
+  );
 });
