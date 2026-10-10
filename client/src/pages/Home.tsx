@@ -30,8 +30,12 @@ import {
   usePublicArtistContent,
 } from "@/content/publicContent";
 import {
+  artworkThumb,
   currentRelease,
+  formatPublicIndex,
   officialBrand,
+  releaseSlug,
+  releases as legacyReleases,
   verifiedArtistProfile,
 } from "@/content/artistPlatform";
 import { SignatureStage } from "@/components/signature/SignatureStage";
@@ -445,6 +449,40 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
   const displayHeroTitle = (heroTitle || "AKBAR NAWASUNDA.").trim();
   const heroTitleWords = displayHeroTitle.split(/\s+/);
 
+  // Sumber tile rilisan: CMS dulu, lalu katalog lama yang belum ada di CMS.
+  const homeTiles = (() => {
+    const fromCms = cmsReleases.map(item => {
+      const archive = legacyReleases.find(
+        release =>
+          release.title.trim().toLowerCase() === item.title.trim().toLowerCase()
+      );
+      return {
+        title: item.title,
+        format: item.format || archive?.format || "Single",
+        year: item.year || archive?.year || "—",
+        platform: item.platform || archive?.platform || "Official link",
+        image: item.artworkUrl || archive?.image || officialBrand.socialPreview,
+      };
+    });
+    const rest = legacyReleases
+      .filter(
+        legacy =>
+          !fromCms.some(
+            current =>
+              current.title.trim().toLowerCase() ===
+              legacy.title.trim().toLowerCase()
+          )
+      )
+      .map(legacy => ({
+        title: legacy.title,
+        format: legacy.format,
+        year: legacy.year,
+        platform: legacy.platform,
+        image: legacy.image,
+      }));
+    return [...fromCms, ...rest].slice(0, 6);
+  })();
+
   return (
     <main id="top" tabIndex={-1}>
       {/* ADEGAN 1 — pembuka sinematik: satu foto resmi sebagai panggung,
@@ -653,6 +691,50 @@ export function HomeView({ locale = "id" }: { locale?: HomeLocale }) {
           </div>
         </section>
       </Reveal>
+
+      {/* [BUGFIX/REDESIGN] Grid "Rilisan terbaru" ala MG: enam tile artwork
+          persegi dengan meta kecil, bukan satu kartu. Urutan dan sumber data
+          sama dengan /music (CMS dulu, lalu katalog lama yang belum ada di
+          CMS), dan tiap tile menuju halaman rilisan yang sama. */}
+      {homeTiles.length ? (
+        <section className="an-home-tiles" aria-labelledby="home-tiles-title">
+          <header className="an-home-tiles-head">
+            <h2 id="home-tiles-title">
+              {locale === "en" ? "Latest releases" : "Rilisan terbaru"}
+            </h2>
+            <Link className="an-btn an-btn--quiet" href={`${prefix}/music`}>
+              {locale === "en" ? "View all releases" : "Lihat semua rilisan"}{" "}
+              <ArrowRight size={14} />
+            </Link>
+          </header>
+          <ul className="an-home-tiles-grid">
+            {homeTiles.map((release, index) => (
+              <li key={`${release.title}-${index}`}>
+                <Link
+                  className="an-home-tile"
+                  href={`${prefix}/music/${releaseSlug(release.title)}`}
+                >
+                  <span className="an-home-tile-art">
+                    <ResilientArtworkImage
+                      src={artworkThumb(release.image)}
+                      backupSrc={release.image}
+                      alt={`Artwork ${release.title}`}
+                    />
+                  </span>
+                  <span className="an-home-tile-meta">
+                    <small>
+                      {formatPublicIndex(index)} · {release.format} ·{" "}
+                      {release.year}
+                    </small>
+                    <strong>{release.title}</strong>
+                    <em>{release.platform}</em>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {/* ADEGAN 4 — kanal resmi sebagai daftar tipografis, bukan deretan
           kartu identik. Marquee di bawahnya tetap dipakai sebagai ritme. */}

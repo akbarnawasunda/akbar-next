@@ -66,6 +66,15 @@ export const portraitStudies = [
   },
 ] as const;
 
+/** Slug URL rilisan (dipakai /music dan beranda — satu sumber kebenaran). */
+export const releaseSlug = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
 export const formatPublicIndex = (index: number) =>
   String(index + 1).padStart(2, "0");
 
