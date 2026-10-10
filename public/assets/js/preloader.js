@@ -127,6 +127,10 @@
     if (window.__dismissAkbarPreloader === requestDismiss) {
       window.__dismissAkbarPreloader = undefined;
     }
+    // Hapus hanya node splash di dalam pembungkus statis. Pembungkusnya milik
+    // React (Server Component) dan harus tetap di DOM — menghapus/mengganti
+    // node milik React sebelum hidrasi memicu hydration mismatch (React #418)
+    // yang meng-regenerasi seluruh pohon di klien.
     if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
   }
 

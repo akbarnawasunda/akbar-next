@@ -33,6 +33,25 @@ describe("App Router first-paint splash", () => {
     expect(en).not.toContain("an-splash-elapsed");
   });
 
+  it("owns the splash outside the React tree so pre-hydration DOM churn cannot mismatch", () => {
+    // preloader.js memutasi teks jam/kelas/atribut lalu menghapus #akbar-preloader
+    // sebelum hidrasi. Itu hanya aman jika React tidak pernah mem-patch isi
+    // splash — yaitu saat splash dikirim lewat dangerouslySetInnerHTML di dalam
+    // pembungkus statis #akbar-splash-root. Mengembalikannya ke JSX biasa akan
+    // memicu React #418 di semua rute.
+    const source = read("app/_components/Preloader.tsx");
+    const markup = renderToStaticMarkup(createElement(Preloader, { locale: "id" }));
+
+    expect(source).toContain("dangerouslySetInnerHTML");
+    expect(markup).toContain('id="akbar-splash-root"');
+    expect(markup.indexOf('id="akbar-splash-root"')).toBeLessThan(
+      markup.indexOf('id="akbar-preloader"'),
+    );
+    // Skrip splash hanya boleh menyentuh node di dalam pembungkus, tidak
+    // boleh menghapus/mengganti node milik React.
+    expect(preloaderScript).not.toContain("akbar-splash-root");
+  });
+
   it("uses the brand palette, reduced-motion support, and a 1.6 second CSS failsafe", () => {
     expect(preloaderCss).toContain("#101211");
     expect(preloaderCss).toContain("#9bb9c1");
