@@ -1028,3 +1028,10 @@
 .an-site .an-home-tile:hover .an-home-tile-meta strong {
   color: var(--acid, #cfe3e6);
 }
+
+/* [REDESIGN] Maskot mengambang di pojok kanan atas hero dihapus dari
+   tampilan. Ia dekoratif (aria-hidden) dan bertabrakan dengan foto di
+   ponsel; gaya MG tidak punya badge seperti ini di atas hero. */
+.an-site .an-hero-mascot {
+  display: none;
+}
