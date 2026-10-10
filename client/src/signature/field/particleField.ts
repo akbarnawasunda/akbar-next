@@ -300,9 +300,21 @@ export function createParticleField(
   function resolveMode(
     state: ReturnType<FieldStateReader>
   ): SignatureFieldMode {
-    return state.transition !== "idle" && state.transitLabel
-      ? "transit"
-      : state.mode;
+    if (state.transition !== "idle" && state.transitLabel) return "transit";
+    // [BUGFIX] Panggung beranda (ada kotak `signals.stage`) TIDAK lagi
+    // menjadi mode teks. Sebelumnya mode `wordmark` memakai jalur teks:
+    // titik lahir jauh di luar layar, diberi anggaran TEXT_CEILING (ribuan),
+    // dan saat target kosong ditempatkan acak di SELURUH viewport — jadi
+    // tanpa huruf pun ia tetap terbang ke tempat yang salah. Sekarang ia
+    // diperlakukan sebagai medan ambient (`signal`): anggaran biasa, lahir
+    // di tempat, menyebar merata. Huruf judul tampil sebagai DOM statis.
+    if (
+      signals.stage &&
+      (state.mode === "wordmark" || state.mode === "frequency")
+    ) {
+      return "signal";
+    }
+    return state.mode;
   }
 
   /* ---------------------------------------------------------------- targets */
@@ -463,14 +475,23 @@ export function createParticleField(
     switch (mode) {
       case "wordmark":
       case "frequency": {
-        // Ada panggung khusus → wordmark disusun di dalam kotak itu, dalam
-        // koordinat lokal panggung, jadi tidak pernah menimpa judul hero.
-        const boxWidth = stage ? stage.w : width;
-        const boxHeight = stage ? stage.h : height;
+        // [BUGFIX] Panggung beranda TIDAK lagi menyusun huruf dari titik.
+        // Akar masalah "partikel kepotong/berantakan" ada di sampler teks:
+        // di lebar mobile kotak panggung (±316×192) memaksa nama jadi dua
+        // baris dengan font yang diperkecil ke ±33px; mode tepi (`edgeOnly`)
+        // lalu menaikkan langkah sampling sampai 7px, sehingga sapuan huruf
+        // yang tipisnya ±3px hilang dan yang tersisa gumpalan titik acak
+        // yang berkelompok. Tidak ada angka `wanted` yang bisa memperbaikinya
+        // di kotak sekecil itu. Judul sekarang tampil sebagai tipografi
+        // display statis (utuh, terbaca di semua lebar), dan partikel di
+        // panggung hanya atmosfer tipis tanpa bentuk huruf.
+        if (stage) return [];
+        // Tanpa panggung (fallback sebelum panggung terukur) wordmark tetap
+        // disusun di seluruh viewport.
+        const boxWidth = width;
+        const boxHeight = height;
         const compact = boxWidth < 900;
-        const phrase = stage
-          ? STAGE_PHRASES[phraseIndex] || WORDMARK
-          : WORDMARK;
+        const phrase = WORDMARK;
         const lines = compact ? phrase : [phrase.join(" ").replace(" .", ".")];
         return cachedTextTargets(
           `${mode}|${lines.join("/")}|${Math.round(boxWidth)}x${Math.round(
@@ -480,7 +501,7 @@ export function createParticleField(
             sampleTextTargets(
               lines,
               compact ? 0.92 : 0.9,
-              stage ? 0.5 : compact ? 0.36 : 0.44,
+              compact ? 0.36 : 0.44,
               wanted,
               boxWidth,
               boxHeight,

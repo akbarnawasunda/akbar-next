@@ -51,26 +51,25 @@
   border-bottom: 1px solid color-mix(in srgb, var(--paper) 14%, transparent);
 }
 
+/* [BUGFIX] Judul panggung = tipografi display statis, bukan partikel.
+   Akar masalahnya ada di sampler teks engine (lihat particleField.ts,
+   `resolveMode`): di kotak sempit huruf partikel tidak pernah terbaca.
+   Sekarang judul tampil utuh dengan font display (--font-title) dan
+   ukurannya dikunci ke lebar layar lewat vw, bukan lewat tinggi kotak. */
 .an-signature-stage-word {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0 0.28em;
+  gap: 0 0.22em;
   font-family: var(--font-title, inherit);
   font-weight: 700;
-  font-size: clamp(2.1rem, 11vw, 9rem);
-  line-height: 0.92;
+  font-size: clamp(2.3rem, 12vw, 8.5rem);
+  line-height: 0.9;
   letter-spacing: 0.01em;
   text-align: center;
+  text-transform: uppercase;
   color: var(--paper);
-  transition: opacity 420ms ease;
-}
-
-/* Particle field hidup → teks statis mundur, partikel yang bicara.
-   Teks tetap ada di DOM untuk screen reader dan mesin pencari. */
-.an-signature-stage[data-live="true"] .an-signature-stage-word {
-  opacity: 0;
 }
 
 .an-signature-stage-word span {
@@ -313,10 +312,6 @@ button.an-signature-stage-phrase:focus-visible {
   .an-signature-stage-sticky {
     position: static;
     min-height: 0;
-  }
-  /* Tidak ada partikel → wordmark tetap tampil sebagai teks penuh. */
-  .an-signature-stage[data-live="true"] .an-signature-stage-word {
-    opacity: 1;
   }
   .an-signature-stage-word {
     transition: none;
