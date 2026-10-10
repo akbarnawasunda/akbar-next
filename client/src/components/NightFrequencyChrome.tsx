@@ -1,6 +1,7 @@
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "wouter";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
   usePublicArtistContent,
   publicConfirmedEvents,
@@ -102,7 +103,8 @@ export function NightHeader({
   active?: string;
   lang?: Lang;
 }) {
-  const [pathname, navigate] = useLocation();
+  const pathname = usePathname() || "/";
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const cms = usePublicArtistContent();
@@ -182,17 +184,17 @@ export function NightHeader({
 
       const key = e.key.toLowerCase();
       if (key === "m") {
-        navigate(`${prefix}/music`);
+        router.push(`${prefix}/music`);
       } else if (key === "v") {
-        navigate(`${prefix}/visuals`);
+        router.push(`${prefix}/visuals`);
       } else if (key === "e") {
-        navigate(`${prefix}/epk`);
+        router.push(`${prefix}/epk`);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [navigate, prefix]);
+  }, [router, prefix]);
 
   const closeAndReturnFocus = () => {
     setIsOpen(false);
@@ -289,7 +291,7 @@ export function NightHeader({
 export function NightFooter({ lang = "id" }: { lang?: Lang } = {}) {
   const cms = usePublicArtistContent();
   const links = publicPlatformLinks(cms.data);
-  const [pathname] = useLocation();
+  const pathname = usePathname() || "/";
   const prefix = lang === "en" ? "/en" : "";
   const copy =
     lang === "en"

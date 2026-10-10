@@ -1,4 +1,9 @@
-# Verification Notes
+# Verification Notes — Historical Archive
+
+> Catatan berikut berasal dari runtime Vite/Express sebelum migrasi App Router.
+> Deskripsi route, asset, dan hasil browser di bawah bersifat historis; jangan
+> menganggapnya sebagai perilaku situs saat ini. Runtime aktif sekarang Next.js;
+> verifikasi terkini ada di `docs/cleanup-decisions.md` dan `scripts/verify-next.sh`.
 
 The managed preview URL `https://3000-itqexk8kschlc1tn0h7bp-268b7a1a.sg1.manus.computer/` was opened after restarting the full-stack server. The browser displayed a blank white page with no detected interactive elements and the preview banner stated that the page is not live and cannot be shared directly. Route-level visual verification could not be completed from this preview session, so the route verification TODOs must remain pending until a working preview URL is available.
 
@@ -24,7 +29,7 @@ The refreshed guarded page exposed the fetched release preview controls. Activat
 
 After exercising both the mode toggle and a release preview, the browser console remained empty. No opaque `Script error.` or new runtime error was recorded.
 
-The restarted preview now serves the redesigned AN // NIGHT FREQUENCY homepage. Desktop verification confirmed the fixed top navigation, a readable cinematic hero with the new original midnight-indigo asset, clear release context, primary listening CTA, and Fan Signal entry point. The previous legacy homepage remains available at `/lab` for the interactive tools.
+The restarted preview now serves the redesigned AN // NIGHT FREQUENCY homepage. Desktop verification confirmed the fixed top navigation, a readable cinematic hero with the new original midnight-indigo asset, clear release context, primary listening CTA, and Fan Signal entry point. At the time of this historical check, the legacy homepage was reachable at `/lab`; that route and runtime were removed in the App Router migration and are not available now.
 
 Mobile full-page verification at 390px confirmed that the premium homepage collapses into a readable single-column sequence while retaining the release, visual, live, Lab, future-platform, signup, and footer modules. Separate desktop verification confirmed `/lab` still resolves to the original interactive audio and canvas experience, including the main Jedag controls.
 

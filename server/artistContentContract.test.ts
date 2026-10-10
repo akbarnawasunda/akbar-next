@@ -63,7 +63,9 @@ describe("artist content contract", () => {
     const editor = source("client/src/pages/ContentStudio.tsx");
     const codec = source("server/customContent.ts");
     const publicContent = source("client/src/content/publicContent.ts");
-    const app = source("client/src/App.tsx");
+    const routes = source("app/_components/RouteView.tsx");
+    const idGameRoute = source("app/(id)/game/jedag-run/page.tsx");
+    const enGameRoute = source("app/(en)/en/game/jedag-run/page.tsx");
     const gamePage = source("client/src/pages/GameJedagRun.tsx");
     const canvas = source("client/src/components/JedagRunCanvas.tsx");
     const preview = source("client/src/components/StudioDocumentPreview.tsx");
@@ -75,8 +77,10 @@ describe("artist content contract", () => {
     expect(codec).toContain('"game"');
     expect(publicContent).toContain("game?: CmsGameConfig");
     expect(publicContent).toContain("bgmUrl: publicMediaUrl");
-    expect(app).toContain('path={"/game/jedag-run"}');
-    expect(app).toContain('path={"/en/game/jedag-run"}');
+    expect(routes).toContain('game: page(() => import("@/pages/GameJedagRun"))');
+    expect(routes).toContain('enGame: page(() => import("@/pages/GameJedagRun").then(m => m.EnglishGameJedagRun))');
+    expect(idGameRoute).toContain("pathname='/game/jedag-run'");
+    expect(enGameRoute).toContain("pathname='/en/game/jedag-run'");
     expect(gamePage).toContain("JEDAG RUN — NIGHT FREQUENCY");
     expect(canvas).toContain("new JedagRunAudio(config)");
     expect(preview).toContain('game: { route: "/game/jedag-run"');
@@ -124,8 +128,10 @@ describe("artist content contract", () => {
     const music = source("client/src/pages/Music.tsx");
     const content = source("client/src/content/artistPlatform.ts");
 
-    expect(icon).toContain("simple-icons/icons/spotify.svg?raw");
-    expect(icon).toContain("simple-icons/icons/soundcloud.svg?raw");
+    expect(icon).toContain("siSpotify.path");
+    expect(icon).toContain("siSoundcloud.path");
+    expect(icon).not.toContain("?raw");
+    expect(icon).not.toContain("dangerouslySetInnerHTML");
     expect(home).toContain("<PlatformIcon label={platform.label}");
     expect(music).toContain("<PlatformIcon label={platform.label}");
     expect(content).toContain('image: "https://i.scdn.co/image/');

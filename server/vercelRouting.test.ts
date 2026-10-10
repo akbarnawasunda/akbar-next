@@ -2,36 +2,24 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const vercelConfig = readFileSync(
-  resolve(process.cwd(), "vercel.json"),
-  "utf8"
-);
+const nextConfig = readFileSync(resolve(process.cwd(), "next.config.ts"), "utf8");
 
-describe("Vercel canonical routing", () => {
-  it("routes index.html through SSR before the filesystem handler", () => {
-    const indexRoute = vercelConfig.indexOf('"source": "/index.html"');
-    const ssrDestination = vercelConfig.indexOf(
-      '"destination": "/api/ssr.js"',
-      indexRoute
-    );
-    const filesystemHandler = vercelConfig.indexOf('"handle": "filesystem"');
-
-    expect(indexRoute).toBeGreaterThan(-1);
-    expect(ssrDestination).toBeGreaterThan(indexRoute);
-    expect(filesystemHandler).toBeGreaterThan(ssrDestination);
+describe("Next.js canonical routing", () => {
+  it("keeps legacy index and archive URLs on permanent redirects", () => {
+    expect(nextConfig).toContain('source: "/index.html", destination: "/", permanent: true');
+    expect(nextConfig).toContain('source: "/archive", destination: "/universe", permanent: true');
+    expect(nextConfig).toContain('source: "/epk.html", destination: "/epk", permanent: true');
+    expect(nextConfig).toContain('source: "/privacy.html", destination: "/privacy", permanent: true');
   });
 
-  it("keeps the legacy index redirect target canonical", () => {
-    expect(vercelConfig).toContain('"source": "/index.html"');
-    expect(vercelConfig).toContain('"destination": "/"');
-    expect(vercelConfig).toContain('"source": "/archive"');
-    expect(vercelConfig).toContain('"destination": "/universe"');
+  it("redirects removed portrait routes to the in-page section in both locales", () => {
+    expect(nextConfig).toContain('source: "/visuals/portraits", destination: "/visuals#portraits", permanent: true');
+    expect(nextConfig).toContain('source: "/en/visuals/portraits", destination: "/en/visuals#portraits", permanent: true');
   });
 
-  it("redirects the removed portrait routes to the in-page section (Phase 3 §2 baris 5)", () => {
-    expect(vercelConfig).toContain('"source": "/visuals/portraits"');
-    expect(vercelConfig).toContain('"destination": "/visuals#portraits"');
-    expect(vercelConfig).toContain('"source": "/en/visuals/portraits"');
-    expect(vercelConfig).toContain('"destination": "/en/visuals#portraits"');
+  it("serves the app through Next.js on Vercel", () => {
+    const vercel = JSON.parse(readFileSync(resolve(process.cwd(), "vercel.json"), "utf8"));
+    expect(vercel.framework).toBe("nextjs");
+    expect(vercel.outputDirectory).toBe(".next");
   });
 });

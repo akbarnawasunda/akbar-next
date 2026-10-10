@@ -1,6 +1,10 @@
 User-agent: *
-    Allow: /
-    Disallow: /admin.html
-    Disallow: /404.html
+Allow: /
+Disallow: /admin
+Disallow: /studio
+Disallow: /studio/inquiries
+Disallow: /studio/broadcasts
+Disallow: /admin.html
+Disallow: /404.html
 
-    Sitemap: https://akbarnawasunda.my.id/sitemap.xml
+Sitemap: https://akbarnawasunda.my.id/sitemap.xml

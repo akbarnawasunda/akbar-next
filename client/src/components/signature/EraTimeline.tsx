@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
-import { Link } from "wouter";
+import Link from "next/link";
 import type { Era } from "@/content/eras";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { useSignatureRuntime } from "@/signature/useSignature";

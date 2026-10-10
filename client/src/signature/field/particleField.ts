@@ -148,15 +148,19 @@ const TEXT_DENSITY_FULL = 280;
 const TEXT_DENSITY_LITE = 250;
 
 /**
- * Pengaman adaptif. Rata-rata bergulir 60 frame; di atas 9ms jumlah titik
- * dipangkas 10% bertahap, dan baru dinaikkan lagi setelah 2 detik stabil di
- * bawah 5ms. Dengan ini ceiling di atas adalah batas atas yang aman, bukan
- * beban tetap: perangkat lemah menurunkan sendiri tanpa kita mematikan efek.
+ * Pengaman adaptif: biaya loop JavaScript dan interval rAF dipantau terpisah.
+ * Biaya loop tinggi memangkas 10% setelah rata-rata 60 frame; interval rAF
+ * yang terus melar ikut terdeteksi meski fillRect/raster-lah yang mahal.
+ * Jumlah titik hanya pulih setelah biaya JS ringan dan frame kembali stabil.
  */
 const COST_WINDOW = 60;
 const COST_CUT_MS = 9;
 const COST_GROW_MS = 5;
 const COST_GROW_HOLD_MS = 2000;
+const FRAME_WINDOW = 24;
+const FRAME_CUT_MS = 20.5;
+const FRAME_GROW_MS = 18;
+const FRAME_CUT_HOLD_MS = 450;
 /** Lantai: di bawah ini wordmark mulai tidak terbaca. */
 const COST_FLOOR_RATIO = 0.3;
 
@@ -259,6 +263,11 @@ export function createParticleField(
   let costFilled = 0;
   let costSum = 0;
   let steadySince = -1;
+  const frameSamples = new Float32Array(FRAME_WINDOW);
+  let frameIndex = 0;
+  let frameFilled = 0;
+  let frameSum = 0;
+  let lastFrameCutAt = Number.NEGATIVE_INFINITY;
 
   function resetCostWindow() {
     costSamples.fill(0);
@@ -794,7 +803,8 @@ export function createParticleField(
     }
 
     const started = performance.now();
-    const delta = Math.min(2.2, (time - lastTime) / 16.67 || 1);
+    const frameInterval = time - lastTime;
+    const delta = Math.min(2.2, frameInterval / 16.67 || 1);
     lastTime = time;
 
     const amplitude = signals.amplitude;
@@ -1260,19 +1270,62 @@ export function createParticleField(
 
     if (sweepEnergy > 0.001) sweepEnergy *= 0.9;
 
+    // --- mode idle: aktivitas menentukan jadwal frame berikutnya ---------
+    // Aktif = ada interaksi yang baru terjadi (pointer, tekan, gulir yang
+    // belum mereda, audio yang menyala, transisi rute, burst, pembentukan,
+    // atau pelepasan yang sedang berjalan). Tanpa itu, engine tidur ke
+    // frekuensi rendah — pembaca mendapatkan hening dengan sisa hidup.
+    // `pointerAge` sudah dihitung di atas (dipakai efek seret).
+    const active =
+      (signals.pointerActive && pointerAge < POINTER_ACTIVE_MS) ||
+      signals.pointerPressed ||
+      signals.scrollVelocity !== 0 ||
+      signals.amplitude > AMPLITUDE_ACTIVE ||
+      state.transition !== "idle" ||
+      signals.bursts.length > 0 ||
+      releasing ||
+      formation < 1 ||
+      flyingCore > 0;
+
+    // The loop-cost budget misses canvas raster/GPU work. Track the actual
+    // requestAnimationFrame cadence while interactive; ignore idle's
+    // intentional 120ms timer so it cannot downgrade the field by itself.
+    if (active && frameInterval > 0 && frameInterval <= 100) {
+      frameSum += frameInterval - frameSamples[frameIndex];
+      frameSamples[frameIndex] = frameInterval;
+      frameIndex = (frameIndex + 1) % FRAME_WINDOW;
+      if (frameFilled < FRAME_WINDOW) frameFilled++;
+    }
+    const frameAverage = frameSum / FRAME_WINDOW;
+
     // --- pengaman adaptif -------------------------------------------------
     const cost = performance.now() - started;
     costSum += cost - costSamples[costIndex];
     costSamples[costIndex] = cost;
     costIndex = (costIndex + 1) % COST_WINDOW;
     if (costFilled < COST_WINDOW) costFilled++;
-    if (costFilled >= COST_WINDOW) {
+
+    const floor = Math.max(1, Math.round(points.length * COST_FLOOR_RATIO));
+    const frameBudgetExceeded =
+      frameFilled >= FRAME_WINDOW && frameAverage > FRAME_CUT_MS;
+    if (
+      frameBudgetExceeded &&
+      time - lastFrameCutAt >= FRAME_CUT_HOLD_MS &&
+      activeCount > floor
+    ) {
+      activeCount = Math.max(floor, Math.round(activeCount * 0.9));
+      lastFrameCutAt = time;
+      resetCostWindow();
+    } else if (costFilled >= COST_WINDOW) {
       const average = costSum / COST_WINDOW;
-      const floor = Math.max(1, Math.round(points.length * COST_FLOOR_RATIO));
       if (average > COST_CUT_MS && activeCount > floor) {
         activeCount = Math.max(floor, Math.round(activeCount * 0.9));
         resetCostWindow();
-      } else if (average < COST_GROW_MS) {
+      } else if (
+        average < COST_GROW_MS &&
+        frameFilled >= FRAME_WINDOW &&
+        frameAverage < FRAME_GROW_MS
+      ) {
         if (steadySince < 0) {
           steadySince = time;
         } else if (
@@ -1290,22 +1343,6 @@ export function createParticleField(
       }
     }
 
-    // --- mode idle: aktivitas menentukan jadwal frame berikutnya ---------
-    // Aktif = ada interaksi yang baru terjadi (pointer, tekan, gulir yang
-    // belum mereda, audio yang menyala, transisi rute, burst, pembentukan,
-    // atau pelepasan yang sedang berjalan). Tanpa itu, engine tidur ke
-    // frekuensi rendah — pembaca mendapatkan hening dengan sisa hidup.
-    // `pointerAge` sudah dihitung di atas (dipakai efek seret).
-    const active =
-      (signals.pointerActive && pointerAge < POINTER_ACTIVE_MS) ||
-      signals.pointerPressed ||
-      signals.scrollVelocity !== 0 ||
-      signals.amplitude > AMPLITUDE_ACTIVE ||
-      state.transition !== "idle" ||
-      signals.bursts.length > 0 ||
-      releasing ||
-      formation < 1 ||
-      flyingCore > 0;
     scheduleNext(active);
   }
 

@@ -9,13 +9,13 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 
 const ORIGIN = "https://akbarnawasunda.my.id";
 
 function sitemapPaths(): string[] {
   const xml = readFileSync(
-    resolve(process.cwd(), "client/public/sitemap.xml"),
+    resolve(process.cwd(), "public/sitemap.xml"),
     "utf8"
   );
 

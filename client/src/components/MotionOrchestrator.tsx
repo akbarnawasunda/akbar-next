@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "wouter";
+import { usePathname } from "next/navigation";
 import "./MotionOrchestrator.css";
 
 function usePublicSectionReveal(location: string) {
@@ -94,7 +94,7 @@ function usePublicSectionReveal(location: string) {
 }
 
 export function MotionOrchestrator() {
-  const [location] = useLocation();
+  const location = usePathname() || "/";
   usePublicSectionReveal(location);
   return null;
 }

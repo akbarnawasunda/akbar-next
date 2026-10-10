@@ -8,7 +8,7 @@
  * ketahuan.
  */
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 import { releases } from "../client/src/content/artistPlatform";
 
 const PUBLIC_ROUTES = [

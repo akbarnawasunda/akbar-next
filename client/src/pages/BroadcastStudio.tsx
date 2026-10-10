@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
-import { startLogin } from "@/const";
+import { isOAuthLoginConfigured, startLogin } from "@/const";
 import { useAuth } from "@/_core/hooks/useAuth";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Input } from "@/components/ui/input";
@@ -41,6 +41,9 @@ type BroadcastForm = {
 };
 
 function AccessGate({ authenticated }: { authenticated: boolean }) {
+  const [loginUnavailable, setLoginUnavailable] = useState(false);
+  const oauthReady = isOAuthLoginConfigured();
+
   return (
     <main className="studio-os grid min-h-dvh place-items-center p-6">
       <section className="st-panel relative z-[1] max-w-md p-8 text-center">
@@ -62,11 +65,19 @@ function AccessGate({ authenticated }: { authenticated: boolean }) {
             type="button"
             className="st-btn mx-auto mt-6"
             data-variant="primary"
-            onClick={() => startLogin()}
+            onClick={() => {
+              if (!startLogin()) setLoginUnavailable(true);
+            }}
+            disabled={!oauthReady}
           >
             Masuk untuk melanjutkan
           </button>
         )}
+        {loginUnavailable || (!authenticated && !oauthReady) ? (
+          <p className="mt-4 text-xs leading-5 text-amber-100/75" role="status">
+            Login OAuth sedang tidak dikonfigurasi. Silakan masuk melalui admin.
+          </p>
+        ) : null}
       </section>
     </main>
   );

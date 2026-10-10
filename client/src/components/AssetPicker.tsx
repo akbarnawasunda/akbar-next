@@ -254,7 +254,7 @@ export default function AssetPicker({
         </p>
       ) : null}
       <p className="text-[10px] leading-4 text-white/35">
-        Path internal <code>/assets/...</code> dan <code>/manus-storage/...</code> juga valid. Field ini tidak memaksa URL harus diawali <code>https://</code>.
+        Path internal <code>/assets/...</code> dan <code>/manus-storage/...</code> juga valid; URL tidak harus diawali <code>https://</code>. URL managed storage dapat dibuka tanpa login oleh siapa pun yang memilikinya—jangan unggah file rahasia.
       </p>
       {value ? (
         <StudioAssetPreview

@@ -189,6 +189,12 @@ export default function AssetLibrary() {
           }
         />
 
+        <p className="rounded-xl border border-amber-200/15 bg-amber-200/[0.04] px-4 py-3 text-xs leading-5 text-amber-100/70">
+          Catatan privasi: file managed storage dapat dibuka tanpa login oleh
+          siapa pun yang memiliki URL. Jangan unggah dokumen rahasia atau data
+          pribadi.
+        </p>
+
         <input
           ref={inputRef}
           className="hidden"

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "wouter";
+import { usePathname } from "next/navigation";
 import { useSignatureState } from "@/signature/useSignature";
 import "./SignalMark.css";
 
@@ -20,7 +20,7 @@ import "./SignalMark.css";
 export function SignalMark() {
   const audioState = useSignatureState(snapshot => snapshot.audio.state);
   const phase = useSignatureState(snapshot => snapshot.transition.phase);
-  const [location] = useLocation();
+  const location = usePathname() || "/";
   const [nearFooter, setNearFooter] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 

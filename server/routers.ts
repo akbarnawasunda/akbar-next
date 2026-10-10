@@ -14,6 +14,7 @@ import { LEADERBOARD_MAX_SCORE, normalizeLeaderboardUsername } from "../shared/g
 import { sanitizePublicDocuments, whiteLabelMediaUrl } from "./publicMediaPolicy";
 
 const MAX_ASSET_BYTES = 10 * 1024 * 1024;
+const BASE64_PATTERN = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
 
 export const appRouter = router({
   system: systemRouter,
@@ -106,10 +107,30 @@ export const appRouter = router({
     list: protectedProcedure.query(({ ctx }) => listStoredAssets(ctx.user.id)),
     upload: protectedProcedure
       .input(z.object({
-        fileName: z.string().min(1).max(255),
-        mimeType: z.string().min(1).max(128),
+        fileName: z
+          .string()
+          .trim()
+          .min(1)
+          .max(255)
+          .refine(
+            value =>
+              value !== "." &&
+              value !== ".." &&
+              !/[\\/\u0000-\u001f\u007f]/.test(value),
+            "File name must be a single safe path segment",
+          ),
+        mimeType: z
+          .string()
+          .trim()
+          .min(1)
+          .max(128)
+          .regex(/^[a-z0-9!#$&^_.+-]+\/[a-z0-9!#$&^_.+-]+$/i),
         size: z.number().int().positive().max(MAX_ASSET_BYTES),
-        base64: z.string().min(1),
+        base64: z
+          .string()
+          .min(1)
+          .max(Math.ceil(MAX_ASSET_BYTES / 3) * 4)
+          .regex(BASE64_PATTERN, "Upload body must be valid base64"),
       }))
       .mutation(async ({ ctx, input }) => {
         const bytes = Buffer.from(input.base64, "base64");

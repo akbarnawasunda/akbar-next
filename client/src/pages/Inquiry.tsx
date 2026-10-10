@@ -1,5 +1,5 @@
-import { useMemo, useRef, useState, type FormEvent } from "react";
-import { useSearch } from "wouter";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { EmailText } from "@/components/EmailText";
@@ -259,8 +259,7 @@ const copy = {
 
 export function InquiryView({ locale = "id" }: { locale?: "id" | "en" }) {
   const t = copy[locale];
-  const search = useSearch();
-  const params = useMemo(() => new URLSearchParams(search), [search]);
+  const params = useSearchParams();
   const requestedType = params.get("type") ?? "";
   const initialType = validTypes.includes(requestedType as InquiryType)
     ? (requestedType as InquiryType)
@@ -271,7 +270,13 @@ export function InquiryView({ locale = "id" }: { locale?: "id" | "en" }) {
     ? (params.get("source") as InquirySource)
     : "epk";
   const [type, setType] = useState<InquiryType>(initialType);
-  const [source] = useState<InquirySource>(initialSource);
+  const [source, setSource] = useState<InquirySource>(initialSource);
+
+  useEffect(() => {
+    setType(initialType);
+    setSource(initialSource);
+  }, [initialType, initialSource]);
+
   const [form, setForm] = useState({
     name: "",
     email: "",

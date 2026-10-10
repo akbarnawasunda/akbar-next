@@ -13,7 +13,7 @@ import { existsSync } from "node:fs";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 
 const source = (path: string) =>
   readFileSync(resolve(process.cwd(), path), "utf8");
@@ -48,7 +48,7 @@ describe("kursor native — sistem kursor kustom dihapus bersih", () => {
       "client/src/components/signature/CursorSignal.css",
       "client/src/signature/cursorPose.ts",
       "server/cursorPose.test.ts",
-      "client/public/assets/cursor",
+      "public/assets/cursor",
     ];
     for (const path of gone) {
       expect(existsSync(resolve(process.cwd(), path)), `${path} masih ada`).toBe(
@@ -57,7 +57,7 @@ describe("kursor native — sistem kursor kustom dihapus bersih", () => {
     }
     // Maskot hero (pakai non-kursor) tetap ada.
     expect(
-      existsSync(resolve(process.cwd(), "client/public/assets/akbar-mascot-doodle.webp"))
+      existsSync(resolve(process.cwd(), "public/assets/akbar-mascot-doodle.webp"))
     ).toBe(true);
   });
 

@@ -6,37 +6,65 @@ let rafId = 0;
 let wakePump: (() => void) | null = null;
 
 /**
- * Smooth scroll sengaja dibatasi: hanya desktop dengan mouse/trackpad.
- * Di layar sentuh dan perangkat lemah, inersia Lenis bikin scroll terasa
- * berat dan telat, padahal scroll bawaan sudah mulus.
+ * Smooth scroll sengaja dibatasi ke desktop yang mampu dan memakai mouse /
+ * trackpad. Layar sentuh, reduced motion, hemat data, jaringan 2G, dan mesin
+ * yang benar-benar rendah daya tetap memakai scroll native.
  */
 export function shouldUseSmoothScroll() {
   if (typeof window === "undefined") return false;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
     return false;
-  // Perangkat sentuh → pakai scroll native.
   if (window.matchMedia("(hover: none), (pointer: coarse)").matches)
     return false;
   if (window.innerWidth < 1024) return false;
-  // CPU inti sedikit → jangan tambah beban rAF terus-menerus.
-  const cores = (navigator as Navigator & { hardwareConcurrency?: number })
-    .hardwareConcurrency;
-  if (typeof cores === "number" && cores > 0 && cores <= 4) return false;
+
+  const device = navigator as Navigator & {
+    hardwareConcurrency?: number;
+    deviceMemory?: number;
+    connection?: { saveData?: boolean; effectiveType?: string };
+  };
+  const cores =
+    typeof device.hardwareConcurrency === "number" &&
+    device.hardwareConcurrency > 0
+      ? device.hardwareConcurrency
+      : 4;
+  const memory =
+    typeof device.deviceMemory === "number" && device.deviceMemory > 0
+      ? device.deviceMemory
+      : 4;
+  if (cores <= 2 || memory <= 2) return false;
+
+  const connection = device.connection;
+  if (
+    connection?.saveData ||
+    /^(?:slow-)?2g$/.test(connection?.effectiveType || "")
+  ) {
+    return false;
+  }
+
   return true;
 }
 
-export async function setupSmoothScroll() {
-  if (!shouldUseSmoothScroll()) return () => {};
+export async function setupSmoothScroll(signal?: AbortSignal) {
+  if (!shouldUseSmoothScroll() || signal?.aborted) return () => {};
   if (lenisInstance) return () => {};
 
   const { default: LenisCtor } = await import("lenis");
+  // The component can unmount while the optional Lenis chunk is downloading.
+  // Re-check after the await so Strict Mode and route changes cannot leave a
+  // detached instance running in the background.
+  if (signal?.aborted || lenisInstance) return () => {};
+
   const lenis = new LenisCtor({
-    duration: 0.85,
-    easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    // A short, responsive lerp feels smooth without the long catch-up caused
+    // by a fixed 0.85s wheel duration. Touch input remains native (syncTouch is
+    // deliberately off), as does all reduced-motion and low-power scrolling.
+    lerp: 0.12,
     smoothWheel: true,
     wheelMultiplier: 1,
-    touchMultiplier: 1.6,
     infinite: false,
+    anchors: false,
+    stopInertiaOnNavigate: true,
   });
 
   lenisInstance = lenis;
@@ -49,7 +77,7 @@ export async function setupSmoothScroll() {
    * terakhir — timeout-nya milik lenis, terlepas dari rAF). Saat idle, pompa
    * BERHENTI: halaman yang sedang dibaca tidak menjalankan loop scroll sama
    * sekali. Bangun instan oleh event (wheel/touch/scroll/keydown) dan setiap
-   * scrollTo programmatic (docs/motion-performance-liquid-signal-pass.md §5.6).
+   * scrollTo programmatic. The canvas has its own frame-budget governor.
    */
   const raf = (time: number) => {
     lenis.raf(time);
@@ -59,44 +87,69 @@ export async function setupSmoothScroll() {
   const wake = () => {
     if (!rafId) rafId = requestAnimationFrame(raf);
   };
+  const stopInertia = () => {
+    // Use Lenis' public scrollTo API (reset is private in its type surface).
+    // Setting the animated target to the current native position is immediate.
+    lenis.scrollTo(lenis.actualScroll, { immediate: true, force: true });
+  };
   wakePump = wake;
   rafId = requestAnimationFrame(raf);
 
   window.addEventListener("wheel", wake, { passive: true });
   window.addEventListener("touchmove", wake, { passive: true });
-  // Scroll native (scrollbar, keyboard): lenis menandainya "native" dan
-  // meresetnya sendiri 400ms setelah scroll terakhir.
   window.addEventListener("scroll", wake, { passive: true });
+  window.addEventListener("popstate", stopInertia);
+  window.addEventListener("hashchange", stopInertia);
   document.addEventListener("keydown", wake);
 
-  const handleAnchorClick = (event: MouseEvent) => {
+  // Do not hijack same-page anchors: browser/Next keeps ownership of the URL
+  // hash and scroll restoration. Only clear Lenis inertia before the native
+  // anchor action, otherwise its old target could pull the page back afterward.
+  const resetBeforeNativeNavigation = (event: MouseEvent) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
-    const anchor = target.closest<HTMLAnchorElement>('a[href^="#"]');
-    if (!anchor) return;
-    const href = anchor.getAttribute("href");
-    if (!href || href === "#") return;
-    const destination = document.querySelector<HTMLElement>(href);
-    if (!destination) return;
-    event.preventDefault();
-    lenis.scrollTo(destination, { offset: -80, duration: 1.4 });
-    // scrollTo menghidupkan animasi — pompa harus ikut bangun.
-    wake();
+    const anchor = target.closest<HTMLAnchorElement>("a[href]");
+    if (!anchor || anchor.hasAttribute("download")) return;
+    if (anchor.target && anchor.target.toLowerCase() !== "_self") return;
+
+    const destination = new URL(anchor.href, window.location.href);
+    const current = new URL(window.location.href);
+    if (destination.origin !== current.origin) return;
+
+    const isHashNavigation =
+      destination.pathname === current.pathname &&
+      (Boolean(destination.hash) || anchor.getAttribute("href")?.endsWith("#"));
+    if (isHashNavigation) stopInertia();
   };
-  document.addEventListener("click", handleAnchorClick);
+  document.addEventListener("click", resetBeforeNativeNavigation);
 
   return () => {
-    cancelAnimationFrame(rafId);
+    if (rafId) cancelAnimationFrame(rafId);
     rafId = 0;
     wakePump = null;
     window.removeEventListener("wheel", wake);
     window.removeEventListener("touchmove", wake);
     window.removeEventListener("scroll", wake);
+    window.removeEventListener("popstate", stopInertia);
+    window.removeEventListener("hashchange", stopInertia);
     document.removeEventListener("keydown", wake);
-    document.removeEventListener("click", handleAnchorClick);
+    document.removeEventListener("click", resetBeforeNativeNavigation);
     lenis.destroy();
-    lenisInstance = null;
+    if (lenisInstance === lenis) lenisInstance = null;
   };
+}
+
+/**
+ * Route transitions can also be triggered programmatically (without a link
+ * click). Clear any old interpolation after Next has applied its route/scroll
+ * restoration; Lenis then adopts the actual native position.
+ */
+export function resetSmoothScroll() {
+  if (!lenisInstance) return;
+  lenisInstance.scrollTo(lenisInstance.actualScroll, {
+    immediate: true,
+    force: true,
+  });
 }
 
 export function scrollToTop(immediate = true) {

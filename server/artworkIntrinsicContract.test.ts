@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 import { intrinsicSize, remoteIntrinsicSize } from "../client/src/lib/responsiveImage";
 
 const prefetch = { documents: async () => [] as never };

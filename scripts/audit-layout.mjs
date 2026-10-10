@@ -19,11 +19,14 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
 const ROOT = process.cwd();
-const SCAN_DIRS = ["client/src", "client/index.html"];
+const SCAN_DIRS = ["client/src", "app"];
 const SHELL_FILE = "client/src/shell/PublicShell.css";
 
 /** File yang memang memuat hukum: satu jaring pengaman di public shell. */
 const OVERFLOW_ALLOWLIST = [SHELL_FILE];
+
+/** Permukaan privat Studio bukan bagian dari halaman publik. */
+const PRIVATE_UI_FILES = new Set(["client/src/studio/studio.css"]);
 
 const LOCAL_FONTS = [
   // Core type system: semua aset di-host lokal oleh aplikasi.
@@ -127,7 +130,7 @@ for (const file of files) {
   const blur = [...source.matchAll(/(?:-webkit-)?backdrop-filter\s*:\s*([^;]+);/g)]
     .map(match => match[1].trim())
     .filter(value => !/^none$/i.test(value));
-  if (blur.length) {
+  if (blur.length && !PRIVATE_UI_FILES.has(file)) {
     findings.error.push(
       `${file}: backdrop-filter non-none (${blur[0]}) dilarang di permukaan publik.`
     );

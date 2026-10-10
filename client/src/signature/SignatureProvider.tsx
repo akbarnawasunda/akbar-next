@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, type ReactNode } from "react";
-import { useLocation } from "wouter";
+import { usePathname } from "next/navigation";
 import { capabilityChanged, detectCapability } from "./capability";
 import { createAudioSignal, type AudioSignalController } from "./audioSignal";
 import { attachPointerSignal } from "./pointerSignal";
@@ -37,7 +37,7 @@ function writeSession(key: string, value: string) {
 }
 
 export function SignatureProvider({ children }: { children: ReactNode }) {
-  const [location] = useLocation();
+  const location = usePathname() || "/";
   const storeRef = useRef(createSignatureStore());
   const store = storeRef.current;
   const audioRef = useRef<AudioSignalController | null>(null);

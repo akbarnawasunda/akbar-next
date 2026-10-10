@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
-import { Link, useLocation } from "wouter";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { OptimizedEditorialImage } from "@/components/OptimizedEditorialImage";
 import { officialBrand } from "@/content/artistPlatform";
@@ -20,7 +21,7 @@ type Props = {
  * salinan + satu plate potret resmi — sehingga 404 tetap terasa bagian situs.
  */
 export default function NotFound({ locale = "id" }: Props) {
-  const [location] = useLocation();
+  const location = usePathname() || "/";
   const english = locale === "en";
   const home = english ? "/en" : "/";
   const music = english ? "/en/music" : "/music";

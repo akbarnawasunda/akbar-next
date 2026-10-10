@@ -1,13 +1,13 @@
 /**
  * Slug rilisan hanya boleh punya satu sumber.
  *
- * Sesuai docs/notes/testing-policy.md, kontraknya diuji lewat HTML hasil
- * `entry-server.tsx`: setiap judul rilisan di katalog di-slug memakai
- * `shared/slug.ts` yang sama dengan yang dipakai katalog, command palette,
- * prefetch SSR, dan JSON-LD — lalu halamannya harus benar-benar terisi.
+ * Kontrak markup diuji lewat route-rendering harness; production smoke test
+ * memverifikasi status HTTP slug rilisan yang valid dan tidak valid. Setiap
+ * judul katalog di-slug memakai `shared/slug.ts` yang sama dengan katalog,
+ * command palette, prefetch data, dan JSON-LD — lalu halamannya harus terisi.
  */
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 import { releases } from "../client/src/content/artistPlatform";
 import { slugify } from "../shared/slug";
 

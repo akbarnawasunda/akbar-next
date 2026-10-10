@@ -205,3 +205,41 @@ seret, burst), reaktivitas amplitudo audio (termasuk penanda jujur
 JEDAG RUN, splash, tirai rute, reduced-motion (tier `off` = tanpa canvas,
 kursor, dan lenis), strategi mobile (tanpa lenis/kursor, tier lite — kini juga
 idle-hemat baterai), dan seluruh arsitektur z-index/layer dari pass sebelumnya.
+
+---
+
+## 9. Follow-up: scroll lebih responsif tanpa mengambil alih navigasi
+
+Catatan penting: sebelum pass ini, `SmoothScroll`/Lenis hanya berupa komponen
+helper dan **belum pernah dirender**. Jadi uraian Lenis di §5 dan §8 sebelumnya
+mendeskripsikan wrapper yang tersedia di source, bukan scroll yang benar-benar
+aktif di website. Follow-up ini mengaktifkannya secara terbatas:
+
+- `PublicShell` kini memasang `SmoothScroll` hanya pada rute editorial. Halaman
+game, studio/admin, dan aset tetap memakai scroll native.
+- Desktop yang memakai mouse/trackpad memakai `lerp: 0.12` (tanpa durasi roda
+  tetap 0,85 detik). Reduced motion, pointer sentuh, layar sempit, perangkat
+  sangat rendah daya, hemat data, dan koneksi 2G tetap native.
+- Lenis **tidak** mencegat anchor. Klik hash mereset inersia dahulu, lalu
+  browser/Next menangani navigasi hash; `popstate`, `hashchange`, dan perubahan
+  pathname juga mereset inersia. `anchors: false` dan `stopInertiaOnNavigate`
+  menjaga perilaku hash dan pemulihan posisi scroll Next.
+- Daftar command palette dan drawer yang bisa digulir ditandai
+  `data-lenis-prevent`, agar roda mouse tetap menggulir kontainer tersebut.
+- Pengaman partikel kini memantau cadence rAF bergulir selama interaksi, bukan
+  hanya durasi loop JavaScript. Jika 24 frame aktif rata-rata melampaui
+  20,5 ms, jumlah titik dikurangi 10% tiap 450 ms; pemulihan mensyaratkan biaya
+  loop <5 ms dan cadence <18 ms, tetap dibatasi lantai 30% agar wordmark tidak
+  hilang. Tes mensimulasikan cadence 60 fps dan 30 fps.
+
+Validasi source/tes tidak membuktikan rasa gulir atau frame pacing nyata.
+Browser visual/profiling masih tidak tersedia di sandbox; perlu pemeriksaan
+manual di perangkat desktop dan trackpad untuk memastikan respons Lenis cocok
+dengan preferensi pengguna dan tidak ada regresi visual.
+
+Verifikasi source pada Node `v24.21.0` / pnpm `10.34.6`: `pnpm check` lulus;
+`pnpm test` lulus **72 file / 422 tes**; `pnpm audit --audit-level=moderate`
+tidak menemukan kerentanan; `pnpm build` lulus (Next.js 16.4.0, 31 halaman);
+smoke production `scripts/verify-next.sh` lulus **51/51**. `audit:layout` tidak
+menemukan pelanggaran kebijakan fondasi, tetapi tetap tidak menggantikan QA
+viewport nyata.

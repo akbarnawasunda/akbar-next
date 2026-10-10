@@ -1,5 +1,5 @@
 import { ArrowUpRight, MapPin, Radio } from "lucide-react";
-import { Link } from "wouter";
+import Link from "next/link";
 import { NightFooter, NightHeader } from "@/components/NightFrequencyChrome";
 import { ResilientArtworkImage } from "@/components/ResilientArtworkImage";
 import { Reveal } from "@/components/Reveal";

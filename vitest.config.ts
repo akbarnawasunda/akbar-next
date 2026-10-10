@@ -7,6 +7,8 @@ export default defineConfig({
   root: templateRoot,
   resolve: {
     alias: {
+      "next/navigation": path.resolve(templateRoot, "server/test-navigation/next-navigation.tsx"),
+      "next/link": path.resolve(templateRoot, "server/test-navigation/next-link.tsx"),
       "@": path.resolve(templateRoot, "client", "src"),
       "@shared": path.resolve(templateRoot, "shared"),
       "@assets": path.resolve(templateRoot, "attached_assets"),

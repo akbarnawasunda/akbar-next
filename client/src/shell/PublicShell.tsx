@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { useLocation } from "wouter";
+import { usePathname } from "next/navigation";
 import { CommandPalette } from "@/components/CommandPalette";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { LightboxProvider } from "@/components/signature/LightboxProvider";
 import { SignalMark } from "@/components/signature/SignalMark";
 import { GlobalAudioPlayer } from "@/components/signature/GlobalAudioPlayer";
@@ -65,7 +66,7 @@ function ShellSurfaces() {
 }
 
 function ShellBody({ children }: { children: ReactNode }) {
-  const [location] = useLocation();
+  const location = usePathname() || "/";
   const lang = languageOf(location);
   // Rute tak dikenal tetap bagian situs: halaman 404 resmi memakai partikel,
   // cursor, player, dan command palette yang sama. Yang benar-benar di luar
@@ -96,6 +97,7 @@ function ShellBody({ children }: { children: ReactNode }) {
             statis tanpa animasi masuk sama sekali. Dipasang di sini
             (bukan di dalam ShellSurfaces yang nunggu `mounted`) supaya
             section langsung diobservasi begitu halaman di-render. */}
+        {isEditorialRoute && <SmoothScroll />}
         {isEditorialRoute && <MotionOrchestrator />}
         {isEditorialRoute && <ShellSurfaces />}
       </div>

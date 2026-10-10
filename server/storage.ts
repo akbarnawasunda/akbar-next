@@ -21,8 +21,18 @@ function normalizeKey(relKey: string): string {
   return relKey.replace(/^\/+/, "");
 }
 
+export function storageUrlForKey(key: string): string {
+  const encodedKey = key
+    .split("/")
+    .map(segment => encodeURIComponent(segment))
+    .join("/");
+  return `/manus-storage/${encodedKey}`;
+}
+
 function appendHashSuffix(relKey: string): string {
-  const hash = crypto.randomUUID().replace(/-/g, "").slice(0, 8);
+  // These object URLs are public-by-URL: keep the full UUID suffix so they are
+  // difficult to guess. This is not an access-control mechanism.
+  const hash = crypto.randomUUID().replace(/-/g, "");
   const lastDot = relKey.lastIndexOf(".");
   if (lastDot === -1) return `${relKey}_${hash}`;
   return `${relKey.slice(0, lastDot)}_${hash}${relKey.slice(lastDot)}`;
@@ -68,12 +78,12 @@ export async function storagePut(
     throw new Error(`Storage upload to S3 failed (${uploadResp.status})`);
   }
 
-  return { key, url: `/manus-storage/${key}` };
+  return { key, url: storageUrlForKey(key) };
 }
 
 export async function storageGet(relKey: string): Promise<{ key: string; url: string }> {
   const key = normalizeKey(relKey);
-  return { key, url: `/manus-storage/${key}` };
+  return { key, url: storageUrlForKey(key) };
 }
 
 export async function storageGetSignedUrl(relKey: string): Promise<string> {

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { render } from "../client/src/entry-server";
+import { render } from "./test-renderer";
 
 const source = (path: string) =>
   readFileSync(resolve(process.cwd(), path), "utf8");
@@ -11,10 +11,13 @@ describe("lightweight RMX brand mark", () => {
     const content = source("client/src/content/artistPlatform.ts");
     expect(content).toContain("rmxMark");
     expect(content).toContain('rmxMark: "/assets/akbar-rmx-mark.webp"');
-    const proxy = source("server/brandAssetProxy.ts");
-    expect(proxy).toContain('app.get("/api/brand/rmx-mark"');
-    const vercel = source("vercel.json");
-    expect(vercel).toContain('"source": "/api/brand/rmx-mark"');
+    const mediaPolicy = source("server/publicMediaPolicy.ts");
+    const mediaRoute = source("app/media/[...path]/route.ts");
+    const nextConfig = source("next.config.ts");
+    expect(mediaPolicy).toContain('"/media/brand/rmx-mark.jpg"');
+    expect(mediaRoute).toContain("localMediaFallback(pathname)");
+    expect(nextConfig).toContain('source: "/api/brand/rmx-mark"');
+    expect(nextConfig).toContain('destination: "/media/brand/rmx-mark.jpg"');
   });
 
   it("tidak lagi mengirim komponen mark berbasis canvas ke publik", () => {

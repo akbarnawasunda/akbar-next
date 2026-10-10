@@ -1,20 +1,23 @@
-# REFACTOR STATE — Akbar Nawasunda Website
+# Arsip Refactor State — Akbar Nawasunda Website
 
-> File ini single source of truth untuk status migrasi.
-> Setiap sesi Manus baru WAJIB baca file ini dulu.
-> Setiap sesi selesai WAJIB update file ini.
+> Dokumen ini adalah **log historis** dari fase refactor sebelum migrasi App Router.
+> Bukan sumber status, kontrak desain, atau instruksi rollback yang berlaku saat ini.
+> Runtime aktif sekarang adalah Next.js App Router; kode Vite/Express lama telah dihapus.
+> Status dan cara verifikasi terkini ada di `docs/cleanup-decisions.md`,
+> `docs/deployment-checklist.md`, dan `docs/notes/testing-policy.md`.
+> Entri di bawah dipertahankan sebagai riwayat, bukan pekerjaan yang masih menunggu.
 
 ---
 
 ## STATUS SEKARANG
 
-**Fase aktif:** FASE 5B — Animasi (menunggu approval)
-**Terakhir update:** 2026-09-19
-**Terakhir commit:** corrective typography + restrained visual hierarchy
+**Status arsip:** fase lama berakhir; tidak ada fase desain lama yang masih menunggu approval.
+**Runtime aktif:** Next.js App Router saja.
+**Diarsipkan:** 2026-10-10 (riwayat aktif terakhir: 2026-09-19).
 
 ---
 
-## CHECKLIST FASE
+## CHECKLIST FASE LAMA (ARSIP — BUKAN STATUS SAAT INI)
 
 - [ ] **FASE 1** — Audit repo
 - [ ] **FASE 2** — Fix bug kritis (halaman blank, text invisible, import rusak)
@@ -28,7 +31,7 @@
 
 ---
 
-## DESIGN TOKENS (JANGAN UBAH)
+## DESIGN TOKENS LAMA (ARSIP — BUKAN KONTRAK SAAT INI)
 
 --ink: #0a0a09
 --ink-soft: #131211
@@ -47,7 +50,7 @@ Hanya boleh didefinisikan di client/src/index.css.
 
 ---
 
-## ATURAN MUTLAK
+## ATURAN LAMA (ARSIP — JANGAN IKUTI TANPA KONFIRMASI TERKINI)
 
 ### Warna DILARANG
 ungu #8a5cff, cyan #76efff, mint #79d6c7, pink #c4428e,
@@ -69,28 +72,6 @@ Space Grotesk, DM Serif Display, IBM Plex Mono, Inter, Clash Display
 - Push commit beruntun (Vercel cancel build)
 - Hapus test karena gagal (update test kalau usang)
 - Ubah index.css tanpa izin user
-
----
-
-## WORKFLOW WAJIB
-
-1. Baca file ini dulu
-2. Baca file yang akan diubah
-3. Cek siapa yang import file itu
-4. Tulis rencana. Tunggu user setuju.
-5. Ubah 1 file
-6. Jalankan pnpm build. Gagal → rollback.
-7. Jalankan pnpm test. Gagal → fix atau update test.
-8. Commit: [scope] deskripsi
-9. Update file ini
-10. Push. Tunggu 1 menit. Cek Vercel.
-
----
-
-## ROLLBACK
-
-git reset --hard HEAD~1
-git checkout <file>
 
 ---
 
